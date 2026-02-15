@@ -87,270 +87,388 @@ def pad_mpio(v):
     if v.lower() == 'nan': return ""
     return v.zfill(3) if v.isdigit() else v
 
-def buscar_info_terceros(nits_list, progress_bar=None):
-    """Busca info de terceros usando múltiples fuentes:
-    1) RUES (Registro Único Empresarial)
-    2) datos.gov.co (Datos Abiertos Colombia)
-    3) Búsqueda web (DuckDuckGo) como fallback
-    Retorna: (dict_encontrados, bool_api_fallida)
+def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
+    """Busca info de terceros usando múltiples fuentes de internet.
+    log_fn: función para escribir mensajes visibles al usuario (ej: st.write)
     """
     import requests
     from time import sleep
     import re
 
+    def log(msg):
+        if log_fn:
+            log_fn(msg)
+
     encontrados = {}
     total = len(nits_list)
-    errores_seguidos_global = 0
+    errores_seguidos = 0
 
     HEADERS = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'application/json, text/html, */*; q=0.01',
-        'Accept-Language': 'es-CO,es;q=0.9,en;q=0.8',
+        'Accept': '*/*',
+        'Accept-Language': 'es-CO,es;q=0.9',
     }
 
-    # --- FUENTE 1: RUES ---
+    # --- FUENTE: RUES ---
     def buscar_rues(nit):
-        endpoints = [
-            ('GET', 'https://www.rues.org.co/RM/ConsultaNit_Api', {'nit': str(nit), 'tipo': 'N'}),
-            ('POST', 'https://www.rues.org.co/RM', None),
-        ]
-        for method, url, params in endpoints:
-            try:
-                headers_rues = {**HEADERS, 'Referer': 'https://www.rues.org.co/',
-                                'X-Requested-With': 'XMLHttpRequest'}
-                if method == 'GET':
-                    resp = requests.get(url, params=params, headers=headers_rues, timeout=10)
-                else:
-                    resp = requests.post(url, data={'Nit': str(nit), 'Tipo': 'N'},
-                                         headers=headers_rues, timeout=10)
-                if resp.status_code == 200:
-                    data = resp.json()
-                    registros = data if isinstance(data, list) else \
-                                data.get('registros', data.get('data', [data])) if isinstance(data, dict) else []
-                    if registros and len(registros) > 0:
-                        return extraer_info_dict(registros[0])
-            except Exception:
-                continue
-        return None
-
-    # --- FUENTE 2: Datos Abiertos Colombia ---
-    def buscar_datos_gov(nit):
         try:
-            # Dataset de Confecámaras en datos.gov.co
-            url = "https://www.datos.gov.co/resource/c82q-fe7j.json"
-            resp = requests.get(url, params={
-                '$where': f"nit='{nit}'",
-                '$limit': 1
-            }, headers=HEADERS, timeout=10)
+            resp = requests.get(
+                'https://www.rues.org.co/RM/ConsultaNit_Api',
+                params={'nit': str(nit), 'tipo': 'N'},
+                headers={**HEADERS, 'Referer': 'https://www.rues.org.co/',
+                         'X-Requested-With': 'XMLHttpRequest',
+                         'Accept': 'application/json'},
+                timeout=12
+            )
             if resp.status_code == 200:
                 data = resp.json()
-                if data and len(data) > 0:
-                    return extraer_info_dict(data[0])
-        except Exception:
-            pass
-        return None
+                registros = data if isinstance(data, list) else \
+                            data.get('registros', data.get('data', [])) if isinstance(data, dict) else []
+                if registros and len(registros) > 0:
+                    return extraer_info_dict(registros[0]), None
+                return None, "Sin resultados"
+            return None, f"HTTP {resp.status_code}"
+        except Exception as e:
+            return None, str(e)[:80]
 
-    # --- FUENTE 3: Búsqueda web ---
-    def buscar_web(nit):
-        """Busca en la web y extrae info del NIT desde los snippets"""
+    # --- FUENTE: datos.gov.co (consulta en lote) ---
+    def buscar_datos_gov_lote(nits_batch):
+        """Consulta múltiples NITs de una vez en datos.gov.co"""
+        resultados = {}
+        # Datasets conocidos de registro mercantil en datos.gov.co
+        datasets = [
+            "c82q-fe7j",  # Confecámaras
+            "8yz5-t3jw",  # Cámara de Comercio
+        ]
+        for ds_id in datasets:
+            try:
+                nits_str = "','".join(str(n) for n in nits_batch)
+                resp = requests.get(
+                    f"https://www.datos.gov.co/resource/{ds_id}.json",
+                    params={
+                        '$where': f"nit in ('{nits_str}')",
+                        '$limit': 5000
+                    },
+                    headers=HEADERS,
+                    timeout=20
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    if data and isinstance(data, list):
+                        for emp in data:
+                            nit_val = str(emp.get('nit', emp.get('NIT', ''))).strip()
+                            if nit_val:
+                                info = extraer_info_dict(emp)
+                                if info:
+                                    resultados[nit_val] = info
+                                    resultados[nit_val]['_fuente'] = 'Datos.gov.co'
+                        if resultados:
+                            return resultados, None
+                    return {}, f"Dataset {ds_id}: sin datos"
+                else:
+                    continue
+            except Exception as e:
+                continue
+        return {}, "Ningún dataset respondió"
+
+    # --- FUENTE: einforma.co ---
+    def buscar_einforma(nit):
         try:
-            # Usar DuckDuckGo HTML (no requiere API key)
+            resp = requests.get(
+                f'https://www.einforma.co/servlet/app/portal/ENTP/prod/ETIQUETA_EMPRESA_498/nif/{nit}',
+                headers=HEADERS,
+                timeout=12,
+                allow_redirects=True
+            )
+            if resp.status_code == 200:
+                info = {'razon_social': '', 'dv': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
+                texto = resp.text
+
+                # Razón social
+                rs_match = re.findall(r'<h1[^>]*class="[^"]*nombre[^"]*"[^>]*>([^<]+)</h1>', texto, re.IGNORECASE)
+                if not rs_match:
+                    rs_match = re.findall(r'<title>([^<]+?)[\s\-|]', texto)
+                if rs_match:
+                    rs = rs_match[0].strip()
+                    if len(rs) > 3 and str(nit) not in rs.lower():
+                        info['razon_social'] = rs.upper()
+
+                # Dirección
+                dir_match = re.findall(
+                    r'(?:Direcci[oó]n|Domicilio)[:\s]*</[^>]+>\s*<[^>]+>([^<]+)',
+                    texto, re.IGNORECASE
+                )
+                if dir_match:
+                    info['dir'] = dir_match[0].strip()
+
+                if info.get('razon_social') or info.get('dir'):
+                    return info, None
+            return None, f"HTTP {resp.status_code}"
+        except Exception as e:
+            return None, str(e)[:80]
+
+    # --- FUENTE: Búsqueda web (Google via scraping) ---
+    def buscar_web_google(nit):
+        try:
+            query = f"NIT+{nit}+Colombia+empresa+direccion"
+            resp = requests.get(
+                f'https://www.google.com/search?q={query}&hl=es&gl=co',
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept': 'text/html',
+                    'Accept-Language': 'es-CO,es;q=0.9',
+                },
+                timeout=12
+            )
+            if resp.status_code == 200:
+                return extraer_info_web(nit, resp.text), None
+            return None, f"HTTP {resp.status_code}"
+        except Exception as e:
+            return None, str(e)[:80]
+
+    # --- FUENTE: Búsqueda web (DuckDuckGo) ---
+    def buscar_web_ddg(nit):
+        try:
             resp = requests.get(
                 'https://html.duckduckgo.com/html/',
                 params={'q': f'NIT {nit} Colombia empresa direccion'},
-                headers={
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                },
-                timeout=15
+                headers=HEADERS,
+                timeout=12
             )
-            if resp.status_code != 200:
-                return None
+            if resp.status_code == 200:
+                return extraer_info_web(nit, resp.text), None
+            return None, f"HTTP {resp.status_code}"
+        except Exception as e:
+            return None, str(e)[:80]
 
-            texto = resp.text
-            info = {'razon_social': '', 'dv': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
-
-            # Extraer razón social de los títulos de resultados
-            # Buscar patrones como "NIT 890904997 - EMPRESA XYZ"
-            patron_rs = re.findall(
-                r'(?:NIT|nit|Nit)[\s.:]*' + re.escape(str(nit)) + r'[\s\-–—:]+([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s&.,]+)',
-                texto
+    # --- FUENTE: Búsqueda web (Bing) ---
+    def buscar_web_bing(nit):
+        try:
+            resp = requests.get(
+                f'https://www.bing.com/search?q=NIT+{nit}+Colombia+empresa+direccion&setlang=es',
+                headers=HEADERS,
+                timeout=12
             )
-            if patron_rs:
-                rs = patron_rs[0].strip().rstrip('.,;:-')
-                if len(rs) > 3 and len(rs) < 120:
-                    info['razon_social'] = rs
+            if resp.status_code == 200:
+                return extraer_info_web(nit, resp.text), None
+            return None, f"HTTP {resp.status_code}"
+        except Exception as e:
+            return None, str(e)[:80]
 
-            # Si no encontró por patrón NIT, buscar en títulos de resultado
-            if not info['razon_social']:
-                titulos = re.findall(r'class="result__a"[^>]*>([^<]+)<', texto)
-                for titulo in titulos[:5]:
-                    # Quitar partes genéricas
-                    titulo_clean = titulo.strip()
-                    if str(nit) in titulo_clean:
-                        # Quitar el NIT del título para quedarse con el nombre
-                        rs_candidato = re.sub(r'NIT[\s.:]*\d+[\-\d]*', '', titulo_clean).strip(' -–—:')
-                        if len(rs_candidato) > 3:
-                            info['razon_social'] = rs_candidato.upper()
-                            break
+    # --- Extractor de info desde HTML de búsqueda web ---
+    def extraer_info_web(nit, html):
+        info = {'razon_social': '', 'dv': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
+        nit_str = str(nit)
 
-            # Extraer dirección de los snippets
-            snippets = re.findall(r'class="result__snippet"[^>]*>(.*?)</[^>]+>', texto, re.DOTALL)
-            for snippet in snippets[:5]:
-                snippet_clean = re.sub(r'<[^>]+>', '', snippet)
-                # Buscar patrones de dirección colombiana
-                patron_dir = re.findall(
-                    r'(?:Direcci[oó]n|Dir|Direc)[:\s]+([A-Za-z]{2,3}[\s.]*\d+[\w\s#\-.,No°]+)',
-                    snippet_clean, re.IGNORECASE
-                )
-                if patron_dir:
-                    dir_candidata = patron_dir[0].strip()[:100]
-                    if len(dir_candidata) > 5:
-                        info['dir'] = dir_candidata
-                        break
+        # Quitar tags HTML para buscar en texto plano
+        texto = re.sub(r'<[^>]+>', ' ', html)
+        texto = re.sub(r'\s+', ' ', texto)
 
-                # Patrón más flexible: CL, CR, KR, TV, DG + número
-                patron_dir2 = re.findall(
-                    r'(?:CL|CR|KR|TV|DG|CALLE|CARRERA|TRANSVERSAL|DIAGONAL|AV|AVENIDA)[\s.]*(?:No\.?\s*)?\d+[\w\s#\-.,No°]*\d',
-                    snippet_clean, re.IGNORECASE
-                )
-                if patron_dir2:
-                    dir_candidata = patron_dir2[0].strip()[:100]
-                    if len(dir_candidata) > 5:
-                        info['dir'] = dir_candidata
-                        break
+        # Buscar razón social cerca del NIT
+        patrones_rs = [
+            r'(?:NIT|Nit|nit)[\s.:]*' + re.escape(nit_str) + r'[\s\-–—:,.]+([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s&.,]+)',
+            r'([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s&.,]{5,50}?)[\s\-–—:,.]+(?:NIT|Nit|nit)[\s.:]*' + re.escape(nit_str),
+            r'([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s&.,]{5,50}?)\s*[-–—]\s*NIT[\s.:]*' + re.escape(nit_str),
+        ]
+        for patron in patrones_rs:
+            matches = re.findall(patron, texto)
+            if matches:
+                rs = matches[0].strip().rstrip('.,;:-– ')
+                if 3 < len(rs) < 120:
+                    info['razon_social'] = rs.upper()
+                    break
 
-            if info.get('razon_social') or info.get('dir'):
-                return info
-        except Exception:
-            pass
+        # Buscar dirección con patrones colombianos
+        patrones_dir = [
+            r'(?:Direcci[oó]n|Dir\.?|Ubicaci[oó]n)[:\s]+([A-Za-z]{2,3}[\s.]*(?:No\.?\s*)?\d+[\w\s#\-.,No°]+?\d)',
+            r'((?:CL|CR|KR|TV|DG|CALLE|CARRERA|AV|AVENIDA|TRANSVERSAL|DIAGONAL)[\s.]*(?:No\.?\s*)?\d+[\w\s#\-.,No°]*\d)',
+        ]
+        for patron in patrones_dir:
+            matches = re.findall(patron, texto, re.IGNORECASE)
+            if matches:
+                dir_candidata = matches[0].strip()[:100]
+                if len(dir_candidata) > 5:
+                    info['dir'] = dir_candidata
+                    break
+
+        if info.get('razon_social') or info.get('dir'):
+            return info
         return None
 
-    # --- Extractor genérico de campos ---
+    # --- Extractor genérico de campos desde dict (APIs) ---
     def extraer_info_dict(emp):
-        """Extrae info de un diccionario de datos independiente del formato"""
         if not isinstance(emp, dict):
             return None
         info = {'razon_social': '', 'dv': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
 
-        # Razón social
         for campo in ['razon_social', 'Razon_Social', 'nombre', 'Nombre',
                        'razonSocial', 'RazonSocial', 'nombre_razon_social',
-                       'NombreEstablecimiento', 'organizacion', 'razon_social_empresa',
-                       'nombre_empresa', 'empresa']:
+                       'NombreEstablecimiento', 'organizacion', 'nombre_empresa']:
             val = emp.get(campo, '')
             if val:
                 info['razon_social'] = str(val).strip().upper()
                 break
 
-        # DV
         for campo in ['digito_verificacion', 'Digito_Verificacion', 'dv', 'DV',
-                       'digitoVerificacion', 'DigitoVerificacion']:
+                       'digitoVerificacion']:
             val = emp.get(campo, '')
             if val is not None and str(val).strip():
                 info['dv'] = str(val).strip()
                 break
 
-        # Dirección
         for campo in ['direccion', 'Direccion', 'direccion_comercial',
-                       'DireccionComercial', 'direccionNotificacion',
-                       'direccion_empresa', 'dir_comercial']:
+                       'DireccionComercial', 'dir_comercial']:
             val = emp.get(campo, '')
             if val:
                 info['dir'] = str(val).strip()
                 break
 
-        # Departamento
-        for campo in ['codigo_departamento', 'departamento', 'Departamento',
-                       'cod_departamento', 'CodigoDepartamento', 'dep_codigo',
-                       'codigo_depto', 'cod_depto']:
+        for campo in ['codigo_departamento', 'departamento', 'cod_departamento',
+                       'CodigoDepartamento', 'dep_codigo', 'cod_depto']:
             val = emp.get(campo, '')
             if val:
                 info['dp'] = pad_dpto(str(val).strip())
                 break
 
-        # Municipio
-        for campo in ['codigo_municipio', 'municipio', 'Municipio',
-                       'cod_municipio', 'CodigoMunicipio', 'mun_codigo',
-                       'ciudad', 'codigo_ciudad', 'cod_ciudad']:
+        for campo in ['codigo_municipio', 'municipio', 'cod_municipio',
+                       'CodigoMunicipio', 'mun_codigo', 'ciudad', 'cod_ciudad']:
             val = emp.get(campo, '')
             if val:
                 info['mp'] = pad_mpio(str(val).strip())
                 break
 
-        tiene_datos = info.get('razon_social') or info.get('dir')
-        return info if tiene_datos else None
+        return info if (info.get('razon_social') or info.get('dir')) else None
 
-    # --- FLUJO PRINCIPAL: intentar cada fuente ---
-    # Detectar qué fuentes están disponibles
-    fuentes = []
+    # ============================================================
+    #  FLUJO PRINCIPAL
+    # ============================================================
 
-    if progress_bar:
-        progress_bar.progress(0, text="🔌 Detectando fuentes disponibles...")
+    # PASO 1: Intentar datos.gov.co en lote (una sola petición para todos)
+    log("📡 **Paso 1:** Consultando datos.gov.co (lote completo)...")
+    try:
+        lote_result, lote_error = buscar_datos_gov_lote(nits_list)
+        if lote_result:
+            encontrados.update(lote_result)
+            log(f"  ✅ datos.gov.co: {len(lote_result)} terceros encontrados")
+        else:
+            log(f"  ❌ datos.gov.co: {lote_error}")
+    except Exception as e:
+        log(f"  ❌ datos.gov.co: Error — {str(e)[:80]}")
 
-    # Probar RUES con el primer NIT
-    primer_nit = nits_list[0] if nits_list else None
-    if primer_nit:
+    # PASO 2: Probar RUES con primer NIT no encontrado
+    nits_faltantes = [n for n in nits_list if n not in encontrados]
+    rues_funciona = False
+    if nits_faltantes:
+        log(f"📡 **Paso 2:** Probando RUES ({len(nits_faltantes)} NITs pendientes)...")
+        test_nit = nits_faltantes[0]
         try:
-            resultado = buscar_rues(primer_nit)
+            resultado, error = buscar_rues(test_nit)
             if resultado:
-                encontrados[primer_nit] = resultado
-                fuentes.append(('RUES', buscar_rues))
-        except Exception:
-            pass
+                resultado['_fuente'] = 'RUES'
+                encontrados[test_nit] = resultado
+                rues_funciona = True
+                log(f"  ✅ RUES funciona (NIT {test_nit} encontrado)")
+            else:
+                log(f"  ❌ RUES: {error}")
+        except Exception as e:
+            log(f"  ❌ RUES no disponible: {str(e)[:80]}")
 
-        # Probar datos.gov.co
-        if not fuentes:
+    # PASO 3: Detectar qué buscador web funciona
+    nits_faltantes = [n for n in nits_list if n not in encontrados]
+    buscador_web = None
+    buscadores = [
+        ('DuckDuckGo', buscar_web_ddg),
+        ('Bing', buscar_web_bing),
+        ('Google', buscar_web_google),
+    ]
+
+    if nits_faltantes:
+        log(f"📡 **Paso 3:** Probando buscadores web...")
+        test_nit = nits_faltantes[0]
+        for nombre_b, fn_b in buscadores:
             try:
-                resultado = buscar_datos_gov(primer_nit)
+                resultado, error = fn_b(test_nit)
                 if resultado:
-                    encontrados[primer_nit] = resultado
-                    fuentes.append(('Datos.gov.co', buscar_datos_gov))
-            except Exception:
-                pass
-
-        # Siempre agregar búsqueda web como fallback
-        fuentes.append(('Búsqueda Web', buscar_web))
-
-    if not fuentes:
-        fuentes.append(('Búsqueda Web', buscar_web))
-
-    nombres_fuentes = ', '.join(f[0] for f in fuentes)
-
-    # Consultar todos los NITs
-    for i, nit in enumerate(nits_list):
-        if nit in encontrados:
-            continue
-
-        if progress_bar:
-            progress_bar.progress(
-                (i + 1) / total,
-                text=f"🔍 Buscando {nit} ({i+1}/{total}) — [{nombres_fuentes}] — Encontrados: {len(encontrados)}"
-            )
-
-        if errores_seguidos_global >= 15:
-            break
-
-        encontro = False
-        for nombre_fuente, fn_buscar in fuentes:
-            try:
-                resultado = fn_buscar(nit)
-                if resultado:
-                    resultado['_fuente'] = nombre_fuente
-                    encontrados[nit] = resultado
-                    encontro = True
-                    errores_seguidos_global = 0
+                    resultado['_fuente'] = nombre_b
+                    encontrados[test_nit] = resultado
+                    buscador_web = (nombre_b, fn_b)
+                    log(f"  ✅ {nombre_b} funciona")
                     break
+                else:
+                    log(f"  ⚠️ {nombre_b}: {error}")
+            except Exception as e:
+                log(f"  ❌ {nombre_b}: {str(e)[:60]}")
+
+        if not buscador_web:
+            log("  ❌ Ningún buscador web funcionó")
+
+    # PASO 4: Buscar el resto de NITs con las fuentes que funcionaron
+    nits_faltantes = [n for n in nits_list if n not in encontrados]
+    if nits_faltantes and (rues_funciona or buscador_web):
+        fuentes_activas = []
+        if rues_funciona:
+            fuentes_activas.append(('RUES', buscar_rues))
+        if buscador_web:
+            fuentes_activas.append(buscador_web)
+
+        nombres = " → ".join(f[0] for f in fuentes_activas)
+        log(f"🔍 **Paso 4:** Buscando {len(nits_faltantes)} NITs restantes [{nombres}]...")
+
+        for i, nit in enumerate(nits_faltantes):
+            if progress_bar:
+                progress_bar.progress(
+                    (i + 1) / len(nits_faltantes),
+                    text=f"🔍 {nit} ({i+1}/{len(nits_faltantes)}) — Encontrados: {len(encontrados)}"
+                )
+
+            if errores_seguidos >= 15:
+                log(f"  ⛔ Detenido tras {errores_seguidos} errores seguidos")
+                break
+
+            encontro = False
+            for nombre_f, fn_f in fuentes_activas:
+                try:
+                    resultado, error = fn_f(nit)
+                    if resultado:
+                        resultado['_fuente'] = nombre_f
+                        encontrados[nit] = resultado
+                        encontro = True
+                        errores_seguidos = 0
+                        break
+                except Exception:
+                    continue
+
+            if not encontro:
+                errores_seguidos += 1
+
+            sleep(0.8)
+
+    # PASO 5: Intentar einforma.co para los que aún faltan
+    nits_faltantes = [n for n in nits_list if n not in encontrados]
+    if nits_faltantes and len(nits_faltantes) < 30:
+        log(f"📡 **Paso 5:** Probando einforma.co ({len(nits_faltantes)} NITs pendientes)...")
+        errores_ein = 0
+        for nit in nits_faltantes:
+            if errores_ein >= 5:
+                break
+            try:
+                resultado, error = buscar_einforma(nit)
+                if resultado:
+                    resultado['_fuente'] = 'einforma.co'
+                    encontrados[nit] = resultado
+                    errores_ein = 0
+                else:
+                    errores_ein += 1
             except Exception:
-                continue
+                errores_ein += 1
+            sleep(1.0)
 
-        if not encontro:
-            errores_seguidos_global += 1
+    # Resumen final
+    n_dir = sum(1 for d in encontrados.values() if d.get('dir'))
+    n_rs = sum(1 for d in encontrados.values() if d.get('razon_social'))
+    log(f"\n📊 **Resumen:** {len(encontrados)}/{total} terceros — {n_dir} con dirección, {n_rs} con razón social")
 
-        # Rate limit (más agresivo para web search)
-        tiene_web = any(f[0] == 'Búsqueda Web' for f in fuentes if f[0] == fuentes[-1][0])
-        sleep(1.0 if len(fuentes) == 1 and fuentes[0][0] == 'Búsqueda Web' else 0.5)
-
-    return encontrados, errores_seguidos_global >= 15
+    return encontrados, len(encontrados) == 0 and total > 0
 
 
 def normalizar_texto(t):
@@ -1586,11 +1704,12 @@ if uploaded_file:
                             nits_unicos.add(nit_val)
 
                     nits_list = sorted(list(nits_unicos))
-                    st.write(f"Se encontraron **{len(nits_list)}** NITs únicos para consultar")
+                    st.write(f"**{len(nits_list)}** NITs únicos para consultar")
 
                     progress_bar = st.progress(0, text="🔍 Conectando con fuentes de internet...")
 
-                    datos_rues, api_fallida = buscar_info_terceros(nits_list, progress_bar)
+                    # Pasar st.write como función de log para ver TODO en la UI
+                    datos_rues, api_fallida = buscar_info_terceros(nits_list, progress_bar, log_fn=st.write)
                     progress_bar.empty()
 
                     if datos_rues:
