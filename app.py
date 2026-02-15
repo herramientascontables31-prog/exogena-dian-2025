@@ -1686,75 +1686,120 @@ if uploaded_file:
 
         if st.button("🚀 PROCESAR EXÓGENA", type="primary", use_container_width=True):
 
-            # Búsqueda en RUES si se activó
+            # Búsqueda en internet si se activó
             datos_rues = None
             df_dir_auto = None
             if buscar_auto:
-                st.info("🌐 Buscando información de terceros en internet...")
+                import requests as _req
 
-                # Extraer NITs únicos del balance
-                nits_unicos = set()
-                for _, row in df.iterrows():
-                    nit_val = safe_str(row.iloc[3])
-                    if nit_val and nit_val != NM:
-                        if '.' in nit_val:
-                            try: nit_val = str(int(float(nit_val)))
-                            except: pass
-                        nits_unicos.add(nit_val)
+                st.markdown("---")
+                st.markdown("### 🌐 Búsqueda de terceros en internet")
 
-                nits_list = sorted(list(nits_unicos))
-                st.write(f"**{len(nits_list)}** NITs únicos para consultar")
+                # PASO 0: Test de conexión a internet
+                st.write("**Probando conexión a internet...**")
+                _test_urls = [
+                    ("Google", "https://www.google.com", 5),
+                    ("datos.gov.co", "https://www.datos.gov.co", 5),
+                    ("RUES", "https://www.rues.org.co", 5),
+                    ("DuckDuckGo", "https://html.duckduckgo.com", 5),
+                    ("Bing", "https://www.bing.com", 5),
+                ]
+                _test_results = []
+                for nombre, url, timeout in _test_urls:
+                    try:
+                        r = _req.get(url, timeout=timeout, headers={
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                        })
+                        _test_results.append(f"✅ {nombre}: HTTP {r.status_code}")
+                    except _req.exceptions.Timeout:
+                        _test_results.append(f"⏱️ {nombre}: Timeout ({timeout}s)")
+                    except _req.exceptions.ConnectionError as e:
+                        err = str(e)[:60]
+                        _test_results.append(f"❌ {nombre}: Conexión fallida — {err}")
+                    except Exception as e:
+                        _test_results.append(f"❌ {nombre}: {type(e).__name__}: {str(e)[:60]}")
 
-                progress_bar = st.progress(0, text="🔍 Conectando...")
+                # Mostrar resultados del test de conexión
+                for tr in _test_results:
+                    st.write(tr)
 
-                # Acumular log en lista para mostrarlo todo al final
-                _log_msgs = []
-                def _log_fn(msg):
-                    _log_msgs.append(msg)
+                hay_internet = any("✅" in tr for tr in _test_results)
 
-                datos_rues, api_fallida = buscar_info_terceros(nits_list, progress_bar, log_fn=_log_fn)
-                progress_bar.empty()
+                if not hay_internet:
+                    st.error("⛔ **No hay acceso a internet desde esta aplicación.** "
+                             "Streamlit Cloud puede estar bloqueando las conexiones salientes. "
+                             "Usa la plantilla de directorio para agregar direcciones manualmente.")
+                else:
+                    st.write("---")
 
-                # Mostrar log completo en un expander que queda visible
-                with st.expander("📋 **Log de búsqueda en internet** (clic para ver detalle)", expanded=True):
+                    # Extraer NITs únicos del balance
+                    nits_unicos = set()
+                    for _, row in df.iterrows():
+                        nit_val = safe_str(row.iloc[3])
+                        if nit_val and nit_val != NM:
+                            if '.' in nit_val:
+                                try: nit_val = str(int(float(nit_val)))
+                                except: pass
+                            nits_unicos.add(nit_val)
+
+                    nits_list = sorted(list(nits_unicos))
+                    st.write(f"**{len(nits_list)}** NITs únicos para consultar")
+
+                    progress_bar = st.progress(0, text="🔍 Buscando...")
+
+                    # Acumular log
+                    _log_msgs = []
+                    def _log_fn(msg):
+                        _log_msgs.append(msg)
+
+                    try:
+                        datos_rues, api_fallida = buscar_info_terceros(nits_list, progress_bar, log_fn=_log_fn)
+                    except Exception as e:
+                        _log_msgs.append(f"💥 **ERROR INESPERADO:** {type(e).__name__}: {str(e)}")
+                        datos_rues = {}
+                        api_fallida = True
+
+                    progress_bar.empty()
+
+                    # Mostrar log
+                    st.write("**📋 Log de búsqueda:**")
                     for msg in _log_msgs:
                         st.markdown(msg)
 
-                if datos_rues:
-                    n_con_dir_rues = sum(1 for d in datos_rues.values() if d.get('dir'))
-                    n_con_rs = sum(1 for d in datos_rues.values() if d.get('razon_social'))
-                    st.success(f"✅ **{len(datos_rues)}** terceros encontrados — "
-                               f"{n_con_dir_rues} con dirección, {n_con_rs} con razón social")
+                    if datos_rues:
+                        n_con_dir_rues = sum(1 for d in datos_rues.values() if d.get('dir'))
+                        n_con_rs = sum(1 for d in datos_rues.values() if d.get('razon_social'))
+                        st.success(f"✅ **{len(datos_rues)}** terceros encontrados — "
+                                   f"{n_con_dir_rues} con dirección, {n_con_rs} con razón social")
 
-                    # Mostrar desglose por fuente
-                    fuentes_usadas = {}
-                    for d in datos_rues.values():
-                        f_nombre = d.get('_fuente', 'Desconocida')
-                        fuentes_usadas[f_nombre] = fuentes_usadas.get(f_nombre, 0) + 1
-                    if fuentes_usadas:
-                        desglose = " | ".join(f"{f}: {n}" for f, n in fuentes_usadas.items())
-                        st.info(f"🔗 Fuentes: {desglose}")
+                        fuentes_usadas = {}
+                        for d in datos_rues.values():
+                            f_nombre = d.get('_fuente', 'Desconocida')
+                            fuentes_usadas[f_nombre] = fuentes_usadas.get(f_nombre, 0) + 1
+                        if fuentes_usadas:
+                            desglose = " | ".join(f"{f}: {n}" for f, n in fuentes_usadas.items())
+                            st.info(f"🔗 Fuentes: {desglose}")
 
-                    # Si no se subió directorio, usar datos de internet para direcciones
-                    if not uploaded_dir:
-                        rows_auto = []
-                        for nit_e, datos_e in datos_rues.items():
-                            if datos_e.get('dir'):
-                                rows_auto.append({
-                                    'NIT': nit_e,
-                                    'Direccion': datos_e['dir'],
-                                    'Cod_Depto': datos_e['dp'],
-                                    'Cod_Mpio': datos_e['mp'],
-                                    'Cod_Pais': datos_e.get('pais', '169'),
-                                })
-                        if rows_auto:
-                            df_dir_auto = pd.DataFrame(rows_auto)
+                        if not uploaded_dir:
+                            rows_auto = []
+                            for nit_e, datos_e in datos_rues.items():
+                                if datos_e.get('dir'):
+                                    rows_auto.append({
+                                        'NIT': nit_e,
+                                        'Direccion': datos_e['dir'],
+                                        'Cod_Depto': datos_e['dp'],
+                                        'Cod_Mpio': datos_e['mp'],
+                                        'Cod_Pais': datos_e.get('pais', '169'),
+                                    })
+                            if rows_auto:
+                                df_dir_auto = pd.DataFrame(rows_auto)
 
-                elif api_fallida:
-                    st.error("❌ No se pudo conectar con ninguna fuente de internet. "
-                             "Revisa el log arriba para ver los errores específicos.")
-                else:
-                    st.warning("⚠️ Las fuentes respondieron pero no encontraron datos para estos NITs.")
+                    elif api_fallida:
+                        st.error("❌ No se encontraron datos. Revisa el log arriba.")
+                    else:
+                        st.warning("⚠️ Las fuentes respondieron pero sin datos para estos NITs.")
+
+                st.markdown("---")
 
             dir_final = df_dir if df_dir is not None else df_dir_auto
 
