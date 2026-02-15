@@ -201,8 +201,13 @@ def safe_num(v):
 def safe_str(v):
     if v is None:
         return ""
+    # Celdas vacías en Excel a veces se leen como 0 o 0.0
+    if isinstance(v, (int, float)):
+        import math
+        if v == 0 or (isinstance(v, float) and math.isnan(v)):
+            return ""
     s = str(v).strip()
-    if s.lower() == 'nan':
+    if s.lower() == 'nan' or s == '0.0':
         return ""
     return s
 
@@ -1007,12 +1012,13 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
 
     for f in bal:
         cta = f['cta']
+        # Retenciones: usar saldo acumulado anual
         if en_rango(cta, "236505", "236530"):
-            ret_fte_por_nit[f['nit']] += f['cred']
+            ret_fte_por_nit[f['nit']] += abs(f['saldo'])
         elif en_rango(cta, "2367", "2367"):
-            ret_iva_por_nit[f['nit']] += f['cred']
-        if cta[:2] in ("51", "52", "53") and f['deb'] > 0:
-            gastos_por_nit[f['nit']] += f['deb']
+            ret_iva_por_nit[f['nit']] += abs(f['saldo'])
+        if cta[:2] in ("51", "52", "53") and abs(f['saldo']) > 0:
+            gastos_por_nit[f['nit']] += abs(f['saldo'])
 
     # ========== F1001 ==========
     h = ["Concepto", "Tipo Doc", "No ID", "DV", "Apellido1", "Apellido2", "Nombre1", "Nombre2",
@@ -1025,14 +1031,16 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     # Conceptos de nómina que SOLO van a F2276, NO a F1001
     CONCEPTOS_NOMINA = {"5001", "5024", "5025", "5027", "5023"}
     for f in bal:
-        if f['deb'] == 0:
-            continue  # No incluir filas sin débito
+        # Usar SALDO FINAL (acumulado anual), no débitos del periodo
+        valor = abs(f['saldo'])
+        if valor == 0:
+            continue  # No incluir filas sin saldo
         conc, ded = concepto_1001(f['cta'], f.get('nom_cta', ''))
         if not conc or conc in CONCEPTOS_NOMINA:
             continue  # Nómina y aportes van SOLO a F2276
         k = (conc, f['nit'])
-        if ded: dic[k][0] += f['deb']
-        else: dic[k][1] += f['deb']
+        if ded: dic[k][0] += valor
+        else: dic[k][1] += valor
         nits_en_1001.add(f['nit'])
 
     nit_conceptos = defaultdict(list)
@@ -1091,14 +1099,16 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     for f in bal:
         conc = buscar_concepto(f['cta'], PARAM_1003, f.get('nom_cta', ''), KEYWORDS_1003)
         if not conc: continue
-        # 1355 son cuentas de activo: débitos = retenciones que le practicaron
-        dic3[(conc, f['nit'])][1] += f['deb']
+        # Usar saldo final (acumulado anual) para retenciones
+        valor = abs(f['saldo'])
+        if valor > 0:
+            dic3[(conc, f['nit'])][1] += valor
 
     # Calcular base gravable: ingresos recibidos del mismo NIT (cuentas 4xxx)
     ingresos_por_nit = defaultdict(float)
     for f in bal:
-        if f['cta'][:1] == "4" and f['cred'] > 0:
-            ingresos_por_nit[f['nit']] += f['cred']
+        if f['cta'][:1] == "4" and abs(f['saldo']) > 0:
+            ingresos_por_nit[f['nit']] += abs(f['saldo'])
     
     for (conc, nit), v in dic3.items():
         if v[1] > 0:
@@ -1126,8 +1136,12 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
 
     dic5 = defaultdict(float)
     for f in bal:
-        if en_rango(f['cta'], "2408", "2408") and f['deb'] > 0:
-            dic5[f['nit']] += f['deb']
+        # IVA Descontable: cuentas 240810+ o nombre contiene "descontable"
+        if en_rango(f['cta'], "2408", "2408") and abs(f['saldo']) > 0:
+            nom = normalizar_nombre(f.get('nom_cta', ''))
+            es_descontable = 'descontable' in nom or f['cta'][:6] >= '240810'
+            if es_descontable:
+                dic5[f['nit']] += abs(f['saldo'])
 
     fila = 2
     for nit, val in sorted(dic5.items()):
@@ -1146,8 +1160,13 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
 
     dic6 = defaultdict(float)
     for f in bal:
-        if en_rango(f['cta'], "2408", "2408") and f['cred'] > 0:
-            dic6[f['nit']] += f['cred']
+        # IVA Generado: cuentas 2408 que NO son descontable
+        # 240801-240809 = IVA generado, 240810+ = IVA descontable
+        if en_rango(f['cta'], "2408", "2408"):
+            nom = normalizar_nombre(f.get('nom_cta', ''))
+            es_descontable = 'descontable' in nom or f['cta'][:6] >= '240810'
+            if not es_descontable and abs(f['saldo']) > 0:
+                dic6[f['nit']] += abs(f['saldo'])
 
     fila = 2
     for nit, val in sorted(dic6.items()):
@@ -1169,8 +1188,10 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     for f in bal:
         conc = buscar_concepto(f['cta'], PARAM_1007, f.get('nom_cta', ''), KEYWORDS_1007)
         if not conc: continue
-        if f['cred'] > 0:
-            dic7[(conc, f['nit'])] += f['cred']
+        # Usar saldo final (acumulado anual) para ingresos
+        valor = abs(f['saldo'])
+        if valor > 0:
+            dic7[(conc, f['nit'])] += valor
 
     final7 = {}
     men7 = defaultdict(float)
@@ -1310,32 +1331,35 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
 
     dic26 = defaultdict(lambda: [0.0] * 19)
     for f in bal:
-        if not en_rango(f['cta'], "5105", "5105") or f['deb'] == 0: continue
+        if not en_rango(f['cta'], "5105", "5105"): continue
+        # Usar saldo final (acumulado anual)
+        valor = abs(f['saldo'])
+        if valor == 0: continue
         nit = f['nit']
         nom = normalizar_nombre(f.get('nom_cta', ''))
         sc = f['cta'][4:6] if len(f['cta']) >= 6 else ""
         clasificado = False
 
         if sc in ("06", "07", "08", "09", "10", "15"):
-            dic26[nit][0] += f['deb']; clasificado = True
+            dic26[nit][0] += valor; clasificado = True
         elif sc in ("27",):
-            dic26[nit][10] += f['deb']; clasificado = True
+            dic26[nit][10] += valor; clasificado = True
         elif sc in ("30", "33"):
-            dic26[nit][8] += f['deb']; clasificado = True
+            dic26[nit][8] += valor; clasificado = True
         elif sc in ("36",):
-            dic26[nit][10] += f['deb']; clasificado = True
+            dic26[nit][10] += valor; clasificado = True
         elif sc in ("39",):
-            dic26[nit][7] += f['deb']; clasificado = True
+            dic26[nit][7] += valor; clasificado = True
         elif sc in ("42", "45"):
-            dic26[nit][10] += f['deb']; clasificado = True
+            dic26[nit][10] += valor; clasificado = True
         elif sc in ("01", "03", "05"):
             d2 = t(nit)
             if d2['td'] == "13":
-                dic26[nit][3] += f['deb']; clasificado = True
+                dic26[nit][3] += valor; clasificado = True
         elif sc in ("02",):
-            dic26[nit][12] += f['deb']; clasificado = True
+            dic26[nit][12] += valor; clasificado = True
         elif sc in ("04",):
-            dic26[nit][13] += f['deb']; clasificado = True
+            dic26[nit][13] += valor; clasificado = True
         elif sc in ("68", "72", "75"):
             clasificado = True
 
@@ -1343,34 +1367,34 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
             palabras = set(nom.split())
             if any(kw in palabras for kw in ["sueldo", "salario", "basico", "jornal"]) or \
                any(kw in nom for kw in ["hora extra", "horas extra", "recargo"]):
-                dic26[nit][0] += f['deb']
+                dic26[nit][0] += valor
             elif any(kw in nom for kw in ["cesantia", "interes sobre cesantia", "intereses cesantia"]):
-                dic26[nit][8] += f['deb']
+                dic26[nit][8] += valor
             elif any(kw in palabras for kw in ["vacacion", "vacaciones"]):
-                dic26[nit][7] += f['deb']
+                dic26[nit][7] += valor
             elif any(kw in nom for kw in ["prima de servicio", "prima servicio"]):
-                dic26[nit][10] += f['deb']
+                dic26[nit][10] += valor
             elif any(kw in palabras for kw in ["incapacidad", "incapacidades"]):
-                dic26[nit][9] += f['deb']
+                dic26[nit][9] += valor
             elif any(kw in nom for kw in ["aporte salud", "aporte eps", "aportes eps", "aportes a eps"]):
-                dic26[nit][12] += f['deb']
+                dic26[nit][12] += valor
             elif any(kw in nom for kw in ["aporte pension", "aportes pension", "aportes a pension"]):
-                dic26[nit][13] += f['deb']
+                dic26[nit][13] += valor
             elif any(kw in palabras for kw in ["dotacion", "bonificacion", "auxilio"]):
-                dic26[nit][10] += f['deb']
+                dic26[nit][10] += valor
             elif any(kw in palabras for kw in ["honorario", "honorarios"]):
                 d2 = t(nit)
-                if d2['td'] == "13": dic26[nit][3] += f['deb']
-                else: dic26[nit][10] += f['deb']
+                if d2['td'] == "13": dic26[nit][3] += valor
+                else: dic26[nit][10] += valor
             elif any(kw in palabras for kw in ["parafiscal", "parafiscales", "icbf", "sena",
                                                 "compensar", "comfama", "cafam"]):
                 pass
             else:
-                dic26[nit][10] += f['deb']
+                dic26[nit][10] += valor
 
     for f in bal:
         if en_rango(f['cta'], "2365", "2365") and f['nit'] in dic26:
-            dic26[f['nit']][17] += f['cred']
+            dic26[f['nit']][17] += abs(f['saldo'])
 
     for nit in dic26:
         dic26[nit][11] = sum(dic26[nit][:11])
