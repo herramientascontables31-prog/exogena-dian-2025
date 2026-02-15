@@ -263,6 +263,155 @@
   }
   .spec-item::before { content: '→'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
 
+  /* ===== PRICING SECTION ===== */
+  .pricing {
+    padding: 100px 48px;
+    background: var(--navy);
+    position: relative;
+    overflow: hidden;
+  }
+  .pricing::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(212,168,67,0.06) 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, rgba(31,78,121,0.06) 0%, transparent 50%);
+    animation: pricingGlow 15s ease-in-out infinite;
+  }
+  @keyframes pricingGlow {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-2%, 2%); }
+  }
+  .pricing .section-label {
+    color: var(--gold);
+    text-align: center;
+    position: relative; z-index: 1;
+  }
+  .pricing .section-title {
+    color: var(--white);
+    text-align: center;
+    position: relative; z-index: 1;
+  }
+  .pricing .section-subtitle {
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    max-width: 550px;
+    margin: 0 auto 60px;
+    position: relative; z-index: 1;
+  }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1050px;
+    margin: 0 auto;
+    position: relative; z-index: 1;
+    align-items: stretch;
+  }
+  .pricing-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 24px;
+    padding: 44px 32px 36px;
+    display: flex; flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    backdrop-filter: blur(10px);
+  }
+  .pricing-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(255,255,255,0.14);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+  }
+  .pricing-card.featured {
+    background: rgba(212,168,67,0.08);
+    border-color: rgba(212,168,67,0.25);
+    transform: scale(1.04);
+    box-shadow: 0 12px 48px rgba(212,168,67,0.1);
+  }
+  .pricing-card.featured:hover {
+    transform: scale(1.04) translateY(-8px);
+    box-shadow: 0 24px 64px rgba(212,168,67,0.15);
+  }
+  .pricing-badge {
+    position: absolute;
+    top: -14px; left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--navy);
+    font-size: 0.72rem; font-weight: 800;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 7px 22px; border-radius: 30px;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(212,168,67,0.3);
+  }
+  .pricing-plan-name {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.8rem; letter-spacing: 2.5px;
+    text-transform: uppercase; margin-bottom: 6px; font-weight: 600;
+  }
+  .pricing-plan-title {
+    color: var(--white);
+    font-size: 1.35rem; font-weight: 700; margin-bottom: 24px;
+  }
+  .pricing-price {
+    display: flex; align-items: baseline; gap: 2px; margin-bottom: 6px;
+  }
+  .pricing-currency {
+    color: rgba(255,255,255,0.45);
+    font-size: 1.2rem; font-weight: 700;
+    align-self: flex-start; margin-top: 8px;
+  }
+  .pricing-amount {
+    color: var(--white);
+    font-size: 3.2rem; font-weight: 800;
+    line-height: 1; letter-spacing: -2px;
+  }
+  .pricing-period {
+    color: rgba(255,255,255,0.35);
+    font-size: 0.85rem; margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .pricing-features {
+    list-style: none; padding: 0;
+    margin: 0 0 36px; flex: 1;
+  }
+  .pricing-features li {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.92rem; padding: 7px 0;
+    display: flex; align-items: flex-start; gap: 10px; line-height: 1.5;
+  }
+  .pricing-features li::before {
+    content: '✓'; color: var(--gold);
+    font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  }
+  .pricing-features li.highlight {
+    color: var(--gold-light); font-weight: 600;
+  }
+  .wompi-btn-container { margin-top: auto; }
+  .wompi-btn-container form { width: 100%; }
+  .pricing-footer {
+    text-align: center; margin-top: 48px;
+    position: relative; z-index: 1;
+  }
+  .pricing-guarantee {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.88rem; margin-bottom: 20px;
+  }
+  .pricing-guarantee span { color: rgba(255,255,255,0.6); }
+  .pricing-methods {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .pricing-methods span {
+    color: rgba(255,255,255,0.35);
+    font-size: 0.78rem; padding: 6px 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px; background: rgba(255,255,255,0.02);
+  }
+
   /* CTA */
   .cta { padding: 100px 48px; text-align: center; }
   .cta-box {
@@ -325,6 +474,10 @@
     .formats { padding: 40px 24px 60px; }
     .specs { padding: 40px 24px; }
     .specs-box { grid-template-columns: 1fr; gap: 24px; }
+    .pricing { padding: 60px 24px; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+    .pricing-card.featured { transform: scale(1); order: -1; }
+    .pricing-card.featured:hover { transform: translateY(-8px); }
     .cta { padding: 60px 24px; }
     .cta-box { padding: 48px 28px; }
     footer { padding: 30px 24px; }
@@ -339,6 +492,7 @@
     <a href="#como-funciona">Cómo funciona</a>
     <a href="#features">Funcionalidades</a>
     <a href="#formatos">Formatos</a>
+    <a href="#precios">Precios</a>
     <a href="https://exogena-dian-2025.streamlit.app" target="_blank" class="btn btn-primary">Abrir App →</a>
   </div>
 </nav>
@@ -348,9 +502,9 @@
     <div class="hero-text">
       <div class="hero-badge"><div class="badge-dot"></div> Resolución 000227/2025 · UVT $49.799</div>
       <h1>Tu información <span>Exógena</span> lista en minutos</h1>
-      <p>Sube tu balance de prueba por tercero y genera automáticamente los 10 formatos principales de información exógena para la DIAN. Gratis, sin registro, sin instalación.</p>
+      <p>Sube tu balance de prueba por tercero y genera automáticamente los 10 formatos principales de información exógena para la DIAN. Sin registro, sin instalación.</p>
       <div class="hero-actions">
-        <a href="https://exogena-dian-2025.streamlit.app" target="_blank" class="btn btn-primary">Comenzar ahora →</a>
+        <a href="#precios" class="btn btn-primary">Ver planes →</a>
         <a href="#como-funciona" class="btn btn-outline">¿Cómo funciona?</a>
       </div>
     </div>
@@ -446,7 +600,116 @@
       <div class="spec-item">Tope saldos: 12 UVT ($597.588)</div>
       <div class="spec-item">Acepta Excel (.xlsx, .xls) y CSV</div>
       <div class="spec-item">Salida: Excel con formato profesional</div>
-      <div class="spec-item">100% gratuito, sin registro</div>
+      <div class="spec-item">Sin registro, sin instalación</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN DE PRECIOS CON WOMPI -->
+<section class="pricing fade-in" id="precios">
+  <div class="section-label">Planes y precios</div>
+  <h2 class="section-title">Elige el plan ideal para ti</h2>
+  <p class="section-subtitle">Genera tu información exógena en minutos. Paga solo por lo que necesitas.</p>
+
+  <div class="pricing-grid">
+    <!-- PLAN INDIVIDUAL -->
+    <div class="pricing-card">
+      <p class="pricing-plan-name">Individual</p>
+      <h3 class="pricing-plan-title">1 Exógena</h3>
+      <div class="pricing-price">
+        <span class="pricing-currency">$</span>
+        <span class="pricing-amount">35.000</span>
+      </div>
+      <p class="pricing-period">Pago único · 1 empresa</p>
+      <ul class="pricing-features">
+        <li>1 carga de balance de prueba</li>
+        <li>10 formatos generados automáticamente</li>
+        <li>Búsqueda de direcciones incluida</li>
+        <li>Excel listo para prevalidador DIAN</li>
+        <li>Validación de terceros y DV</li>
+      </ul>
+      <div class="wompi-btn-container">
+        <script
+          src="https://checkout.wompi.co/widget.js"
+          data-render="button"
+          data-public-key="pub_test_ocKLD2EUwi1h0QHmcOCkXJc2p41i5hgN"
+          data-currency="COP"
+          data-amount-in-cents="3500000"
+          data-reference="EXOGENA-IND-001"
+          data-redirect-url="https://exogenadian.com/"
+        ></script>
+      </div>
+    </div>
+
+    <!-- PLAN CONTADOR (DESTACADO) -->
+    <div class="pricing-card featured">
+      <span class="pricing-badge">⭐ Más popular</span>
+      <p class="pricing-plan-name">Contador</p>
+      <h3 class="pricing-plan-title">3 Exógenas</h3>
+      <div class="pricing-price">
+        <span class="pricing-currency">$</span>
+        <span class="pricing-amount">89.000</span>
+      </div>
+      <p class="pricing-period">Pago único · Hasta 3 empresas</p>
+      <ul class="pricing-features">
+        <li>3 cargas de balance de prueba</li>
+        <li>10 formatos por cada carga</li>
+        <li>Búsqueda de direcciones incluida</li>
+        <li>Excel listo para prevalidador DIAN</li>
+        <li>Validación de terceros y DV</li>
+        <li class="highlight">Ahorra $16.000 vs plan individual</li>
+      </ul>
+      <div class="wompi-btn-container">
+        <script
+          src="https://checkout.wompi.co/widget.js"
+          data-render="button"
+          data-public-key="pub_test_ocKLD2EUwi1h0QHmcOCkXJc2p41i5hgN"
+          data-currency="COP"
+          data-amount-in-cents="8900000"
+          data-reference="EXOGENA-CONT-001"
+          data-redirect-url="https://exogenadian.com/"
+        ></script>
+      </div>
+    </div>
+
+    <!-- PLAN FIRMA -->
+    <div class="pricing-card">
+      <p class="pricing-plan-name">Firma Contable</p>
+      <h3 class="pricing-plan-title">Ilimitadas</h3>
+      <div class="pricing-price">
+        <span class="pricing-currency">$</span>
+        <span class="pricing-amount">350.000</span>
+      </div>
+      <p class="pricing-period">Pago único · Año gravable 2025</p>
+      <ul class="pricing-features">
+        <li>Cargas ilimitadas de balances</li>
+        <li>10 formatos por cada carga</li>
+        <li>Búsqueda de direcciones incluida</li>
+        <li>Excel listo para prevalidador DIAN</li>
+        <li>Validación de terceros y DV</li>
+        <li class="highlight">Se paga solo desde 10 clientes</li>
+      </ul>
+      <div class="wompi-btn-container">
+        <script
+          src="https://checkout.wompi.co/widget.js"
+          data-render="button"
+          data-public-key="pub_test_ocKLD2EUwi1h0QHmcOCkXJc2p41i5hgN"
+          data-currency="COP"
+          data-amount-in-cents="35000000"
+          data-reference="EXOGENA-FIRMA-001"
+          data-redirect-url="https://exogenadian.com/"
+        ></script>
+      </div>
+    </div>
+  </div>
+
+  <div class="pricing-footer">
+    <p class="pricing-guarantee">🔒 <span>Pago seguro procesado por Wompi</span> · Respaldado por Bancolombia</p>
+    <div class="pricing-methods">
+      <span>💳 Tarjeta crédito / débito</span>
+      <span>🏦 PSE</span>
+      <span>📱 Nequi</span>
+      <span>💵 Efecty</span>
     </div>
   </div>
 </section>
@@ -455,9 +718,8 @@
   <div class="cta-box">
     <h2>¿Listo para generar tu exógena?</h2>
     <p>Sube tu balance de prueba y en minutos tendrás todos los formatos listos.</p>
-    <a href="https://exogena-dian-2025.streamlit.app" target="_blank" class="btn-gold">Abrir aplicación ↗</a>
-    <br>
-    <a href="https://github.com/herramientascontables31-prog/exogena-dian-2025" target="_blank" class="btn-gh">⭐ Ver código en GitHub</a>
+    <a href="#precios" class="btn-gold">Ver planes y comprar ↗</a>
+
   </div>
 </section>
 
@@ -465,18 +727,32 @@
   <p>
     Exógena DIAN AG 2025 · Resolución 000227/2025 · UVT $49.799<br>
     ⚠️ Esta herramienta es un asistente. El contador debe validar los resultados antes de presentar a la DIAN.<br>
-    <a href="https://github.com/herramientascontables31-prog/exogena-dian-2025" target="_blank">GitHub</a> ·
     Hecho con ❤️ para contadores colombianos
   </p>
 </footer>
 
 <script>
+  // Nav scroll effect
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+
+  // Fade-in on scroll
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.15 });
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Genera referencias únicas para Wompi (necesario en producción)
+  document.addEventListener('DOMContentLoaded', function() {
+    const timestamp = Date.now();
+    const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const wompiScripts = document.querySelectorAll('script[data-reference]');
+    wompiScripts.forEach((script, index) => {
+      const plans = ['IND', 'CONT', 'FIRMA'];
+      const plan = plans[index] || 'GEN';
+      script.setAttribute('data-reference', 'EXOG-' + plan + '-' + timestamp + '-' + random);
+    });
+  });
 </script>
 </body>
 </html>
