@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exógena DIAN AG 2025 — Genera tus formatos automáticamente</title>
+<meta name="description" content="Genera automáticamente los formatos de información exógena DIAN (1001, 1003, 1005, 1006, 1007, 1008, 1009, 1010, 1012, 2276) a partir del balance de prueba por tercero.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B1D3A;
+    --blue: #1F4E79;
+    --gold: #D4A843;
+    --gold-light: #F2D98B;
+    --cream: #FAF6EE;
+    --white: #FFFFFF;
+    --slate: #64748B;
+    --green: #22C55E;
+    --green-dark: #16A34A;
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(250,246,238,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(11,29,58,0.06);
+    transition: box-shadow .3s;
+  }
+  nav.scrolled { box-shadow: 0 4px 30px rgba(11,29,58,0.08); }
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem;
+    color: var(--navy);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--navy);
+    border-radius: 10px;
+    display: grid; place-items: center;
+    color: var(--gold);
+    font-size: 1.1rem;
+    font-weight: 800;
+    font-family: 'Manrope', sans-serif;
+  }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    text-decoration: none; color: var(--slate);
+    font-size: 0.9rem; font-weight: 500; transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--navy); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 28px; border-radius: 50px;
+    font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 0.95rem;
+    text-decoration: none; transition: all .25s; cursor: pointer; border: none;
+  }
+  .btn-primary {
+    background: var(--navy); color: var(--gold-light);
+    box-shadow: 0 4px 20px rgba(11,29,58,0.25);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(11,29,58,0.35); }
+  .btn-outline {
+    background: transparent; color: var(--navy);
+    border: 2px solid rgba(11,29,58,0.15);
+  }
+  .btn-outline:hover { border-color: var(--navy); background: rgba(11,29,58,0.04); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 140px 48px 80px; position: relative;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: 0; right: -10%; width: 60vw; height: 60vw;
+    background: radial-gradient(circle, rgba(212,168,67,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-content {
+    max-width: 1200px; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    align-items: center; position: relative; z-index: 1;
+  }
+  .hero-text { animation: fadeUp .8s ease-out; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(34,197,94,0.1); color: var(--green-dark);
+    padding: 6px 16px; border-radius: 50px;
+    font-size: 0.8rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 24px;
+  }
+  .badge-dot {
+    width: 8px; height: 8px; background: var(--green);
+    border-radius: 50%; animation: pulse 2s infinite;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.5rem, 5vw, 3.8rem);
+    line-height: 1.1; margin-bottom: 24px;
+  }
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    font-size: 1.15rem; line-height: 1.7; color: var(--slate);
+    margin-bottom: 36px; max-width: 480px;
+  }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .hero-visual { animation: fadeUp .8s .2s ease-out both; position: relative; }
+  .preview-card {
+    background: var(--white); border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(11,29,58,0.1), 0 1px 3px rgba(11,29,58,0.06);
+    overflow: hidden; border: 1px solid rgba(11,29,58,0.06);
+  }
+  .preview-topbar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 20px; background: var(--navy);
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot-r { background: #EF4444; } .dot-y { background: #F59E0B; } .dot-g { background: #22C55E; }
+  .preview-url {
+    flex: 1; text-align: center;
+    font-size: 0.72rem; color: rgba(255,255,255,0.5); font-family: monospace;
+  }
+  .preview-body { padding: 28px; }
+  .preview-block {
+    height: 14px; border-radius: 8px;
+    background: linear-gradient(90deg, rgba(11,29,58,0.06), rgba(11,29,58,0.1), rgba(11,29,58,0.06));
+    background-size: 200% 100%; animation: shimmer 2.5s infinite;
+  }
+  .preview-row { display: flex; gap: 12px; margin-bottom: 14px; }
+  .preview-table { margin-top: 20px; }
+  .preview-table-header {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 8px;
+    padding: 10px 14px; background: rgba(31,78,121,0.06);
+    border-radius: 10px; margin-bottom: 8px;
+  }
+  .preview-table-header div { height: 10px; border-radius: 6px; background: rgba(31,78,121,0.15); }
+  .preview-table-row {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 8px;
+    padding: 12px 14px; border-bottom: 1px solid rgba(11,29,58,0.04);
+  }
+  .preview-table-row div { height: 10px; border-radius: 6px; background: rgba(11,29,58,0.06); }
+  .preview-table-row:nth-child(even) div { background: rgba(31,78,121,0.1); }
+  .preview-badge-wrap { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .preview-badge { padding: 6px 14px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; }
+  .pb-green { background: rgba(34,197,94,0.12); color: var(--green-dark); }
+  .pb-gold { background: rgba(212,168,67,0.15); color: #A07C2A; }
+  .pb-blue { background: rgba(31,78,121,0.1); color: var(--blue); }
+
+  .float-badge {
+    position: absolute; background: var(--white); border-radius: 14px;
+    padding: 14px 18px; box-shadow: 0 10px 40px rgba(11,29,58,0.12);
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.85rem; font-weight: 600; animation: float 4s ease-in-out infinite;
+  }
+  .float-badge.top-left { top: -20px; left: -30px; }
+  .float-badge.bottom-right { bottom: -20px; right: -30px; animation-delay: 2s; }
+  .float-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: grid; place-items: center; font-size: 1.1rem;
+  }
+  .fi-green { background: rgba(34,197,94,0.12); }
+  .fi-gold { background: rgba(212,168,67,0.15); }
+
+  /* STEPS */
+  .steps { padding: 80px 48px; max-width: 1200px; margin: 0 auto; }
+  .steps-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+    margin-top: 48px; position: relative;
+  }
+  .steps-grid::before {
+    content: ''; position: absolute; top: 40px; left: 12%; right: 12%; height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+    opacity: 0.3; z-index: 0;
+  }
+  .step { text-align: center; position: relative; z-index: 1; }
+  .step-num {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--navy); color: var(--gold-light);
+    font-family: 'DM Serif Display', serif; font-size: 1.4rem;
+    display: grid; place-items: center; margin: 0 auto 16px;
+    box-shadow: 0 4px 16px rgba(11,29,58,0.2);
+  }
+  .step h3 { font-size: 1rem; margin-bottom: 8px; }
+  .step p { font-size: 0.85rem; color: var(--slate); line-height: 1.5; }
+
+  /* FEATURES */
+  .features { padding: 100px 48px; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--gold); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem); margin-bottom: 16px;
+  }
+  .section-subtitle {
+    color: var(--slate); font-size: 1.05rem; max-width: 520px;
+    line-height: 1.6; margin-bottom: 56px;
+  }
+  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .feature-card {
+    background: var(--white); border-radius: var(--radius); padding: 36px 30px;
+    border: 1px solid rgba(11,29,58,0.06); transition: all .3s;
+    position: relative; overflow: hidden;
+  }
+  .feature-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    opacity: 0; transition: opacity .3s;
+  }
+  .feature-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(11,29,58,0.08); }
+  .feature-card:hover::after { opacity: 1; }
+  .feature-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: grid; place-items: center; font-size: 1.4rem;
+    margin-bottom: 20px; background: rgba(31,78,121,0.06);
+  }
+  .feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+  .feature-card p { color: var(--slate); font-size: 0.9rem; line-height: 1.6; }
+
+  /* FORMATS */
+  .formats { padding: 80px 48px 100px; max-width: 1200px; margin: 0 auto; }
+  .formats-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;
+  }
+  .format-pill {
+    background: var(--white); border: 1px solid rgba(11,29,58,0.08);
+    border-radius: 12px; padding: 20px; text-align: center;
+    font-weight: 700; font-size: 0.95rem; color: var(--navy); transition: all .25s;
+  }
+  .format-pill:hover { border-color: var(--gold); background: rgba(212,168,67,0.06); transform: translateY(-2px); }
+  .format-pill span { display: block; font-size: 0.7rem; font-weight: 500; color: var(--slate); margin-top: 4px; }
+
+  /* SPECS */
+  .specs { padding: 60px 48px; max-width: 1200px; margin: 0 auto; }
+  .specs-box {
+    background: var(--white); border-radius: 20px; padding: 40px;
+    border: 1px solid rgba(11,29,58,0.06);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+  }
+  .spec-col h3 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; color: var(--blue); }
+  .spec-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-bottom: 12px; font-size: 0.9rem; color: var(--slate); line-height: 1.5;
+  }
+  .spec-item::before { content: '→'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
+
+  /* CTA */
+  .cta { padding: 100px 48px; text-align: center; }
+  .cta-box {
+    max-width: 800px; margin: 0 auto; background: var(--navy);
+    border-radius: 28px; padding: 72px 56px; position: relative; overflow: hidden;
+  }
+  .cta-box::before {
+    content: ''; position: absolute; top: -50%; right: -20%; width: 60%; height: 150%;
+    background: radial-gradient(circle, rgba(212,168,67,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-box h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    color: var(--white); margin-bottom: 16px; position: relative;
+  }
+  .cta-box p { color: rgba(255,255,255,0.6); font-size: 1.05rem; margin-bottom: 36px; position: relative; }
+  .btn-gold {
+    background: var(--gold); color: var(--navy); font-size: 1.05rem;
+    padding: 16px 36px; position: relative;
+    display: inline-flex; align-items: center; gap: 8px;
+    border-radius: 50px; font-family: 'Manrope', sans-serif; font-weight: 700;
+    text-decoration: none; transition: all .25s;
+  }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,168,67,0.3); }
+  .btn-gh {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.6); text-decoration: none;
+    font-size: 0.9rem; margin-top: 20px; transition: color .2s; position: relative;
+  }
+  .btn-gh:hover { color: var(--white); }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 48px; text-align: center; color: var(--slate);
+    font-size: 0.85rem; border-top: 1px solid rgba(11,29,58,0.06); line-height: 1.8;
+  }
+  footer a { color: var(--blue); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(1.3); } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .fade-in { opacity: 0; transform: translateY(24px); transition: all .6s ease-out; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 14px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 120px 24px 60px; }
+    .hero-content { grid-template-columns: 1fr; gap: 48px; }
+    .float-badge { display: none; }
+    .steps { padding: 60px 24px; }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .steps-grid::before { display: none; }
+    .features { padding: 60px 24px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .formats { padding: 40px 24px 60px; }
+    .specs { padding: 40px 24px; }
+    .specs-box { grid-template-columns: 1fr; gap: 24px; }
+    .cta { padding: 60px 24px; }
+    .cta-box { padding: 48px 28px; }
+    footer { padding: 30px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#" class="logo"><div class="logo-icon">📊</div> Exógena DIAN</a>
+  <div class="nav-links">
+    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#features">Funcionalidades</a>
+    <a href="#formatos">Formatos</a>
+    <a href="https://exogena-dian-2025.streamlit.app" target="_blank" class="btn btn-primary">Abrir App →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-badge"><div class="badge-dot"></div> Resolución 000227/2025 · UVT $49.799</div>
+      <h1>Tu información <span>Exógena</span> lista en minutos</h1>
+      <p>Sube tu balance de prueba por tercero y genera automáticamente los 10 formatos principales de información exógena para la DIAN. Gratis, sin registro, sin instalación.</p>
+      <div class="hero-actions">
+        <a href="https://exogena-dian-2025.streamlit.app" target="_blank" class="btn btn-primary">Comenzar ahora →</a>
+        <a href="#como-funciona" class="btn btn-outline">¿Cómo funciona?</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="float-badge top-left"><div class="float-icon fi-green">✓</div> 10 formatos generados</div>
+      <div class="preview-card">
+        <div class="preview-topbar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <div class="preview-url">exogena-dian-2025.streamlit.app</div>
+        </div>
+        <div class="preview-body">
+          <div class="preview-row"><div class="preview-block" style="width:45%"></div><div class="preview-block" style="width:25%"></div></div>
+          <div class="preview-row"><div class="preview-block" style="width:70%"></div></div>
+          <div class="preview-table">
+            <div class="preview-table-header"><div></div><div></div><div></div><div></div></div>
+            <div class="preview-table-row"><div></div><div></div><div></div><div></div></div>
+            <div class="preview-table-row"><div></div><div></div><div></div><div></div></div>
+            <div class="preview-table-row"><div></div><div></div><div></div><div></div></div>
+            <div class="preview-table-row"><div></div><div></div><div></div><div></div></div>
+          </div>
+          <div class="preview-badge-wrap">
+            <div class="preview-badge pb-green">Validación OK</div>
+            <div class="preview-badge pb-gold">Excel generado</div>
+            <div class="preview-badge pb-blue">DV verificado</div>
+          </div>
+        </div>
+      </div>
+      <div class="float-badge bottom-right"><div class="float-icon fi-gold">↓</div> .xlsx descargado</div>
+    </div>
+  </div>
+</section>
+
+<section class="steps fade-in" id="como-funciona">
+  <div class="section-label">Proceso</div>
+  <h2 class="section-title">En 4 pasos simples</h2>
+  <div class="steps-grid">
+    <div class="step"><div class="step-num">1</div><h3>Sube el balance</h3><p>Carga tu balance de prueba por tercero en Excel o CSV</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Agrega direcciones</h3><p>Sube un directorio o deja que la app busque en internet automáticamente</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Procesa</h3><p>La app clasifica cuentas por concepto DIAN y genera todos los formatos</p></div>
+    <div class="step"><div class="step-num">4</div><h3>Descarga</h3><p>Obtén un Excel con todas las hojas listas para el prevalidador</p></div>
+  </div>
+</section>
+
+<section class="features fade-in" id="features">
+  <div class="section-label">Funcionalidades</div>
+  <h2 class="section-title">Todo lo que necesitas para reportar</h2>
+  <p class="section-subtitle">Automatizamos el proceso más tedioso del cierre fiscal para que te concentres en la revisión.</p>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon">🧠</div><h3>Clasificación inteligente</h3><p>Clasifica cuentas por concepto DIAN usando el nombre de la cuenta y el código PUC. Reconoce nómina, honorarios, arriendos, servicios y más.</p></div>
+    <div class="feature-card"><div class="feature-icon">🌐</div><h3>Búsqueda en internet</h3><p>Busca direcciones y razones sociales automáticamente en RUES, Datos.gov.co, einforma y buscadores web.</p></div>
+    <div class="feature-card"><div class="feature-icon">✅</div><h3>Validación de terceros</h3><p>Cruza información del balance contra fuentes públicas: dígito de verificación, razón social y genera alertas de diferencias.</p></div>
+    <div class="feature-card"><div class="feature-icon">📐</div><h3>Cuantías menores</h3><p>Acumula automáticamente en cuantías menores los terceros que no superan los topes de 3 UVT o 12 UVT según cada formato.</p></div>
+    <div class="feature-card"><div class="feature-icon">🔢</div><h3>Cálculo de DV</h3><p>Calcula automáticamente el dígito de verificación de todos los NITs usando el algoritmo oficial de la DIAN.</p></div>
+    <div class="feature-card"><div class="feature-icon">📊</div><h3>Retenciones cruzadas</h3><p>Distribuye proporcionalmente las retenciones de cuentas 2365xx entre los conceptos de gasto del mismo tercero.</p></div>
+  </div>
+</section>
+
+<section class="formats fade-in" id="formatos">
+  <div class="section-label">Formatos generados</div>
+  <h2 class="section-title">10 formatos de exógena + validación</h2>
+  <p class="section-subtitle">Todos en un solo archivo Excel con hojas separadas, listos para el prevalidador DIAN.</p>
+  <div class="formats-grid">
+    <div class="format-pill">1001 <span>Pagos y abonos</span></div>
+    <div class="format-pill">1003 <span>Retenciones</span></div>
+    <div class="format-pill">1005 <span>IVA descontable</span></div>
+    <div class="format-pill">1006 <span>IVA generado</span></div>
+    <div class="format-pill">1007 <span>Ingresos</span></div>
+    <div class="format-pill">1008 <span>Cuentas × cobrar</span></div>
+    <div class="format-pill">1009 <span>Cuentas × pagar</span></div>
+    <div class="format-pill">1010 <span>Socios</span></div>
+    <div class="format-pill">1012 <span>Inversiones</span></div>
+    <div class="format-pill">2276 <span>Rentas de trabajo</span></div>
+  </div>
+</section>
+
+<section class="specs fade-in">
+  <div class="specs-box">
+    <div class="spec-col">
+      <h3>📋 Estructura del balance requerida</h3>
+      <div class="spec-item">Columna A: Cuenta contable (PUC)</div>
+      <div class="spec-item">Columna B: Nombre de la cuenta</div>
+      <div class="spec-item">Columna C: Tipo documento tercero</div>
+      <div class="spec-item">Columna D: NIT / Cédula</div>
+      <div class="spec-item">Columna E: Razón social / Nombre</div>
+      <div class="spec-item">Columnas F–H: Débito, Crédito, Saldo</div>
+      <div class="spec-item">Columnas I–L: (Opcionales) CC, Base, Tarifa, Retención</div>
+    </div>
+    <div class="spec-col">
+      <h3>⚡ Especificaciones técnicas</h3>
+      <div class="spec-item">Año gravable: 2025</div>
+      <div class="spec-item">UVT: $49.799</div>
+      <div class="spec-item">Tope pagos: 3 UVT ($149.397)</div>
+      <div class="spec-item">Tope saldos: 12 UVT ($597.588)</div>
+      <div class="spec-item">Acepta Excel (.xlsx, .xls) y CSV</div>
+      <div class="spec-item">Salida: Excel con formato profesional</div>
+      <div class="spec-item">100% gratuito, sin registro</div>
+    </div>
+  </div>
+</section>
+
+<section class="cta fade-in" id="app">
+  <div class="cta-box">
+    <h2>¿Listo para generar tu exógena?</h2>
+    <p>Sube tu balance de prueba y en minutos tendrás todos los formatos listos.</p>
+    <a href="https://exogena-dian-2025.streamlit.app" target="_blank" class="btn-gold">Abrir aplicación ↗</a>
+    <br>
+    <a href="https://github.com/herramientascontables31-prog/exogena-dian-2025" target="_blank" class="btn-gh">⭐ Ver código en GitHub</a>
+  </div>
+</section>
+
+<footer>
+  <p>
+    Exógena DIAN AG 2025 · Resolución 000227/2025 · UVT $49.799<br>
+    ⚠️ Esta herramienta es un asistente. El contador debe validar los resultados antes de presentar a la DIAN.<br>
+    <a href="https://github.com/herramientascontables31-prog/exogena-dian-2025" target="_blank">GitHub</a> ·
+    Hecho con ❤️ para contadores colombianos
+  </p>
+</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
