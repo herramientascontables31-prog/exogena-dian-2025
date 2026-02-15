@@ -921,12 +921,14 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     direc = {}
     for f in bal:
         if f['nit'] not in direc:
-            td = f['td']
+            td = f['td'] if f['td'] else detectar_tipo_doc(f['nit'])
             r = f['razon']
-            d = {'td': td, 'dv': calc_dv(f['nit']),
+            dv = calc_dv(f['nit'])
+            d = {'td': td, 'dv': dv,
                  'a1': '', 'a2': '', 'n1': '', 'n2': '',
                  'rs': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
             if td == "13":
+                # Persona natural: separar Apellido1 Apellido2 Nombre1 Nombre2
                 p = r.split()
                 if len(p) >= 1: d['a1'] = p[0]
                 if len(p) >= 2: d['a2'] = p[1]
@@ -968,15 +970,18 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     def escribir_tercero(ws, fila, col, nit, con_pais=False):
         d = t(nit)
         c = col
-        valores = [d['td'], nit, d['dv'], d['a1'], d['a2'], d['n1'], d['n2'], d['rs'], d['dir'], d['dp'], d['mp']]
+        # Asegurar que td y dv siempre tengan valor
+        td_val = d.get('td', '') or detectar_tipo_doc(nit)
+        dv_val = d.get('dv', '') or calc_dv(nit)
+        valores = [td_val, nit, dv_val, d['a1'], d['a2'], d['n1'], d['n2'], d['rs'], d['dir'], d['dp'], d['mp']]
         for v in valores:
             cell = ws.cell(fila, c)
-            cell.value = v
+            cell.value = str(v) if v else ""
             cell.number_format = '@'
             c += 1
         if con_pais:
             cell = ws.cell(fila, c)
-            cell.value = d.get('pais', '169') or "169"
+            cell.value = str(d.get('pais', '169') or "169")
             cell.number_format = '@'
             c += 1
         return c
@@ -1017,9 +1022,14 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
 
     dic = defaultdict(lambda: [0.0] * 5)
     nits_en_1001 = set()
+    # Conceptos de nómina que SOLO van a F2276, NO a F1001
+    CONCEPTOS_NOMINA = {"5001", "5024", "5025", "5027", "5023"}
     for f in bal:
+        if f['deb'] == 0:
+            continue  # No incluir filas sin débito
         conc, ded = concepto_1001(f['cta'], f.get('nom_cta', ''))
-        if not conc or conc == "5001": continue
+        if not conc or conc in CONCEPTOS_NOMINA:
+            continue  # Nómina y aportes van SOLO a F2276
         k = (conc, f['nit'])
         if ded: dic[k][0] += f['deb']
         else: dic[k][1] += f['deb']
