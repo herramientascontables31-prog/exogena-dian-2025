@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exógena DIAN AG 2025 — Genera tus formatos automáticamente</title>
-<meta name="description" content="Genera automáticamente los formatos de información exógena DIAN (1001, 1003, 1005, 1006, 1007, 1008, 1009, 1010, 1012, 2276) a partir del balance de prueba por tercero.">
+<title>Exógena DIAN AG 2025 — Tu información exógena lista en minutos</title>
+<meta name="description" content="Servicio profesional de generación de información exógena DIAN. Envía tu balance de prueba y recibe los 10 formatos listos para el prevalidador. Rápido, seguro y confiable.">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -437,20 +437,31 @@
     text-decoration: none; transition: all .25s;
   }
   .btn-gold:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,168,67,0.3); }
-  .btn-gh {
-    display: inline-flex; align-items: center; gap: 8px;
-    color: rgba(255,255,255,0.6); text-decoration: none;
-    font-size: 0.9rem; margin-top: 20px; transition: color .2s; position: relative;
+
+  /* WHATSAPP FLOAT */
+  .wa-float {
+    position: fixed;
+    bottom: 28px; right: 28px;
+    z-index: 99;
+    width: 60px; height: 60px;
+    background: #25D366;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    box-shadow: 0 6px 24px rgba(37,211,102,0.4);
+    transition: all 0.3s;
+    text-decoration: none;
+    font-size: 1.8rem;
   }
-  .btn-gh:hover { color: var(--white); }
+  .wa-float:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 32px rgba(37,211,102,0.5);
+  }
 
   /* FOOTER */
   footer {
     padding: 40px 48px; text-align: center; color: var(--slate);
     font-size: 0.85rem; border-top: 1px solid rgba(11,29,58,0.06); line-height: 1.8;
   }
-  footer a { color: var(--blue); text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
 
   /* ANIMATIONS */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -490,10 +501,10 @@
   <a href="#" class="logo"><div class="logo-icon">📊</div> Exógena DIAN</a>
   <div class="nav-links">
     <a href="#como-funciona">Cómo funciona</a>
-    <a href="#features">Funcionalidades</a>
+    <a href="#features">Qué incluye</a>
     <a href="#formatos">Formatos</a>
     <a href="#precios">Precios</a>
-    <a href="https://exogena-dian-2025.streamlit.app" target="_blank" class="btn btn-primary">Abrir App →</a>
+    <a href="#precios" class="btn btn-primary">Contratar servicio →</a>
   </div>
 </nav>
 
@@ -502,7 +513,7 @@
     <div class="hero-text">
       <div class="hero-badge"><div class="badge-dot"></div> Resolución 000227/2025 · UVT $49.799</div>
       <h1>Tu información <span>Exógena</span> lista en minutos</h1>
-      <p>Sube tu balance de prueba por tercero y genera automáticamente los 10 formatos principales de información exógena para la DIAN. Sin registro, sin instalación.</p>
+      <p>Envíanos tu balance de prueba por tercero y te entregamos los 10 formatos principales de información exógena listos para el prevalidador DIAN. Sin software, sin complicaciones.</p>
       <div class="hero-actions">
         <a href="#precios" class="btn btn-primary">Ver planes →</a>
         <a href="#como-funciona" class="btn btn-outline">¿Cómo funciona?</a>
@@ -513,7 +524,7 @@
       <div class="preview-card">
         <div class="preview-topbar">
           <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-          <div class="preview-url">exogena-dian-2025.streamlit.app</div>
+          <div class="preview-url">Excel listo para prevalidador DIAN</div>
         </div>
         <div class="preview-body">
           <div class="preview-row"><div class="preview-block" style="width:45%"></div><div class="preview-block" style="width:25%"></div></div>
@@ -532,7 +543,7 @@
           </div>
         </div>
       </div>
-      <div class="float-badge bottom-right"><div class="float-icon fi-gold">↓</div> .xlsx descargado</div>
+      <div class="float-badge bottom-right"><div class="float-icon fi-gold">↓</div> .xlsx entregado</div>
     </div>
   </div>
 </section>
@@ -541,29 +552,29 @@
   <div class="section-label">Proceso</div>
   <h2 class="section-title">En 4 pasos simples</h2>
   <div class="steps-grid">
-    <div class="step"><div class="step-num">1</div><h3>Sube el balance</h3><p>Carga tu balance de prueba por tercero en Excel o CSV</p></div>
-    <div class="step"><div class="step-num">2</div><h3>Agrega direcciones</h3><p>Sube un directorio o deja que la app busque en internet automáticamente</p></div>
-    <div class="step"><div class="step-num">3</div><h3>Procesa</h3><p>La app clasifica cuentas por concepto DIAN y genera todos los formatos</p></div>
-    <div class="step"><div class="step-num">4</div><h3>Descarga</h3><p>Obtén un Excel con todas las hojas listas para el prevalidador</p></div>
+    <div class="step"><div class="step-num">1</div><h3>Elige tu plan</h3><p>Selecciona el plan que se ajuste a tu necesidad y realiza el pago seguro con Wompi</p></div>
+    <div class="step"><div class="step-num">2</div><h3>Envía tu balance</h3><p>Después de pagar, envíanos tu balance de prueba por tercero por WhatsApp</p></div>
+    <div class="step"><div class="step-num">3</div><h3>Lo procesamos</h3><p>Clasificamos cuentas, validamos terceros y generamos todos los formatos</p></div>
+    <div class="step"><div class="step-num">4</div><h3>Recibe tu Excel</h3><p>Te entregamos por WhatsApp el archivo listo con todas las hojas para el prevalidador</p></div>
   </div>
 </section>
 
 <section class="features fade-in" id="features">
-  <div class="section-label">Funcionalidades</div>
+  <div class="section-label">Qué incluye el servicio</div>
   <h2 class="section-title">Todo lo que necesitas para reportar</h2>
-  <p class="section-subtitle">Automatizamos el proceso más tedioso del cierre fiscal para que te concentres en la revisión.</p>
+  <p class="section-subtitle">Nos encargamos del proceso más tedioso del cierre fiscal para que te concentres en la revisión.</p>
   <div class="features-grid">
-    <div class="feature-card"><div class="feature-icon">🧠</div><h3>Clasificación inteligente</h3><p>Clasifica cuentas por concepto DIAN usando el nombre de la cuenta y el código PUC. Reconoce nómina, honorarios, arriendos, servicios y más.</p></div>
-    <div class="feature-card"><div class="feature-icon">🌐</div><h3>Búsqueda en internet</h3><p>Busca direcciones y razones sociales automáticamente en RUES, Datos.gov.co, einforma y buscadores web.</p></div>
-    <div class="feature-card"><div class="feature-icon">✅</div><h3>Validación de terceros</h3><p>Cruza información del balance contra fuentes públicas: dígito de verificación, razón social y genera alertas de diferencias.</p></div>
-    <div class="feature-card"><div class="feature-icon">📐</div><h3>Cuantías menores</h3><p>Acumula automáticamente en cuantías menores los terceros que no superan los topes de 3 UVT o 12 UVT según cada formato.</p></div>
-    <div class="feature-card"><div class="feature-icon">🔢</div><h3>Cálculo de DV</h3><p>Calcula automáticamente el dígito de verificación de todos los NITs usando el algoritmo oficial de la DIAN.</p></div>
-    <div class="feature-card"><div class="feature-icon">📊</div><h3>Retenciones cruzadas</h3><p>Distribuye proporcionalmente las retenciones de cuentas 2365xx entre los conceptos de gasto del mismo tercero.</p></div>
+    <div class="feature-card"><div class="feature-icon">🧠</div><h3>Clasificación inteligente</h3><p>Clasificamos cuentas por concepto DIAN usando el nombre de la cuenta y el código PUC. Reconoce nómina, honorarios, arriendos, servicios y más.</p></div>
+    <div class="feature-card"><div class="feature-icon">🌐</div><h3>Búsqueda de direcciones</h3><p>Buscamos direcciones y razones sociales automáticamente en RUES, Datos.gov.co, einforma y buscadores web.</p></div>
+    <div class="feature-card"><div class="feature-icon">✅</div><h3>Validación de terceros</h3><p>Cruzamos información del balance contra fuentes públicas: dígito de verificación, razón social y generamos alertas de diferencias.</p></div>
+    <div class="feature-card"><div class="feature-icon">📐</div><h3>Cuantías menores</h3><p>Acumulamos automáticamente en cuantías menores los terceros que no superan los topes de 3 UVT o 12 UVT según cada formato.</p></div>
+    <div class="feature-card"><div class="feature-icon">🔢</div><h3>Cálculo de DV</h3><p>Calculamos automáticamente el dígito de verificación de todos los NITs usando el algoritmo oficial de la DIAN.</p></div>
+    <div class="feature-card"><div class="feature-icon">📊</div><h3>Retenciones cruzadas</h3><p>Distribuimos proporcionalmente las retenciones de cuentas 2365xx entre los conceptos de gasto del mismo tercero.</p></div>
   </div>
 </section>
 
 <section class="formats fade-in" id="formatos">
-  <div class="section-label">Formatos generados</div>
+  <div class="section-label">Formatos que recibes</div>
   <h2 class="section-title">10 formatos de exógena + validación</h2>
   <p class="section-subtitle">Todos en un solo archivo Excel con hojas separadas, listos para el prevalidador DIAN.</p>
   <div class="formats-grid">
@@ -599,8 +610,8 @@
       <div class="spec-item">Tope pagos: 3 UVT ($149.397)</div>
       <div class="spec-item">Tope saldos: 12 UVT ($597.588)</div>
       <div class="spec-item">Acepta Excel (.xlsx, .xls) y CSV</div>
-      <div class="spec-item">Salida: Excel con formato profesional</div>
-      <div class="spec-item">Sin registro, sin instalación</div>
+      <div class="spec-item">Entrega: Excel con formato profesional</div>
+      <div class="spec-item">Tiempo de entrega: menos de 24 horas</div>
     </div>
   </div>
 </section>
@@ -609,7 +620,7 @@
 <section class="pricing fade-in" id="precios">
   <div class="section-label">Planes y precios</div>
   <h2 class="section-title">Elige el plan ideal para ti</h2>
-  <p class="section-subtitle">Genera tu información exógena en minutos. Paga solo por lo que necesitas.</p>
+  <p class="section-subtitle">Paga en línea y envíanos tu balance por WhatsApp. Recibes tu Excel listo en menos de 24 horas.</p>
 
   <div class="pricing-grid">
     <!-- PLAN INDIVIDUAL -->
@@ -618,15 +629,15 @@
       <h3 class="pricing-plan-title">1 Exógena</h3>
       <div class="pricing-price">
         <span class="pricing-currency">$</span>
-        <span class="pricing-amount">35.000</span>
+        <span class="pricing-amount">110.000</span>
       </div>
       <p class="pricing-period">Pago único · 1 empresa</p>
       <ul class="pricing-features">
-        <li>1 carga de balance de prueba</li>
-        <li>10 formatos generados automáticamente</li>
+        <li>1 balance procesado</li>
+        <li>10 formatos generados</li>
         <li>Búsqueda de direcciones incluida</li>
         <li>Excel listo para prevalidador DIAN</li>
-        <li>Validación de terceros y DV</li>
+        <li>Entrega por WhatsApp en menos de 24h</li>
       </ul>
       <div class="wompi-btn-container">
         <script
@@ -634,9 +645,9 @@
           data-render="button"
           data-public-key="pub_test_ocKLD2EUwi1h0QHmcOCkXJc2p41i5hgN"
           data-currency="COP"
-          data-amount-in-cents="3500000"
+          data-amount-in-cents="11000000"
           data-reference="EXOGENA-IND-001"
-          data-redirect-url="https://exogenadian.com/"
+          data-redirect-url="https://exogenadian.com/gracias.html"
         ></script>
       </div>
     </div>
@@ -648,16 +659,16 @@
       <h3 class="pricing-plan-title">3 Exógenas</h3>
       <div class="pricing-price">
         <span class="pricing-currency">$</span>
-        <span class="pricing-amount">89.000</span>
+        <span class="pricing-amount">205.000</span>
       </div>
       <p class="pricing-period">Pago único · Hasta 3 empresas</p>
       <ul class="pricing-features">
-        <li>3 cargas de balance de prueba</li>
-        <li>10 formatos por cada carga</li>
+        <li>3 balances procesados</li>
+        <li>10 formatos por cada balance</li>
         <li>Búsqueda de direcciones incluida</li>
         <li>Excel listo para prevalidador DIAN</li>
-        <li>Validación de terceros y DV</li>
-        <li class="highlight">Ahorra $16.000 vs plan individual</li>
+        <li>Entrega por WhatsApp en menos de 24h</li>
+        <li class="highlight">Ahorra $125.000 vs plan individual</li>
       </ul>
       <div class="wompi-btn-container">
         <script
@@ -665,9 +676,9 @@
           data-render="button"
           data-public-key="pub_test_ocKLD2EUwi1h0QHmcOCkXJc2p41i5hgN"
           data-currency="COP"
-          data-amount-in-cents="8900000"
+          data-amount-in-cents="20500000"
           data-reference="EXOGENA-CONT-001"
-          data-redirect-url="https://exogenadian.com/"
+          data-redirect-url="https://exogenadian.com/gracias.html"
         ></script>
       </div>
     </div>
@@ -675,19 +686,19 @@
     <!-- PLAN FIRMA -->
     <div class="pricing-card">
       <p class="pricing-plan-name">Firma Contable</p>
-      <h3 class="pricing-plan-title">Ilimitadas</h3>
+      <h3 class="pricing-plan-title">10 Exógenas</h3>
       <div class="pricing-price">
         <span class="pricing-currency">$</span>
-        <span class="pricing-amount">350.000</span>
+        <span class="pricing-amount">550.000</span>
       </div>
-      <p class="pricing-period">Pago único · Año gravable 2025</p>
+      <p class="pricing-period">Pago único · Hasta 10 empresas</p>
       <ul class="pricing-features">
-        <li>Cargas ilimitadas de balances</li>
-        <li>10 formatos por cada carga</li>
+        <li>10 balances procesados</li>
+        <li>10 formatos por cada balance</li>
         <li>Búsqueda de direcciones incluida</li>
         <li>Excel listo para prevalidador DIAN</li>
-        <li>Validación de terceros y DV</li>
-        <li class="highlight">Se paga solo desde 10 clientes</li>
+        <li>Entrega prioritaria por WhatsApp</li>
+        <li class="highlight">Solo $55.000 por exógena</li>
       </ul>
       <div class="wompi-btn-container">
         <script
@@ -695,9 +706,9 @@
           data-render="button"
           data-public-key="pub_test_ocKLD2EUwi1h0QHmcOCkXJc2p41i5hgN"
           data-currency="COP"
-          data-amount-in-cents="35000000"
+          data-amount-in-cents="55000000"
           data-reference="EXOGENA-FIRMA-001"
-          data-redirect-url="https://exogenadian.com/"
+          data-redirect-url="https://exogenadian.com/gracias.html"
         ></script>
       </div>
     </div>
@@ -714,14 +725,16 @@
   </div>
 </section>
 
-<section class="cta fade-in" id="app">
+<section class="cta fade-in">
   <div class="cta-box">
     <h2>¿Listo para generar tu exógena?</h2>
-    <p>Sube tu balance de prueba y en minutos tendrás todos los formatos listos.</p>
-    <a href="#precios" class="btn-gold">Ver planes y comprar ↗</a>
-
+    <p>Paga en línea, envíanos tu balance por WhatsApp y recibe tu Excel listo en menos de 24 horas.</p>
+    <a href="#precios" class="btn-gold">Ver planes y contratar ↗</a>
   </div>
 </section>
+
+<!-- BOTÓN FLOTANTE WHATSAPP -->
+<a href="https://wa.me/573156178610?text=Hola%2C%20estoy%20interesado%20en%20el%20servicio%20de%20Ex%C3%B3gena%20DIAN" target="_blank" class="wa-float" title="Escríbenos por WhatsApp">💬</a>
 
 <footer>
   <p>
@@ -742,7 +755,7 @@
   }, { threshold: 0.15 });
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-  // Genera referencias únicas para Wompi (necesario en producción)
+  // Genera referencias únicas para Wompi
   document.addEventListener('DOMContentLoaded', function() {
     const timestamp = Date.now();
     const random = Math.random().toString(36).substring(2, 8).toUpperCase();
