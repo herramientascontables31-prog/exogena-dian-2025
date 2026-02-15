@@ -206,6 +206,75 @@ def safe_str(v):
         return ""
     return s
 
+def detectar_columnas(df):
+    """Detecta automáticamente qué columna corresponde a cada campo del balance.
+    Busca por nombre de columna (flexible, sin importar mayúsculas/tildes/orden).
+    Retorna un dict con los índices de columna para cada campo."""
+    
+    import unicodedata
+    
+    def normalizar(texto):
+        """Quita tildes, pasa a minúsculas, quita espacios extra"""
+        if not texto:
+            return ""
+        texto = str(texto).lower().strip()
+        texto = ''.join(c for c in unicodedata.normalize('NFD', texto) if unicodedata.category(c) != 'Mn')
+        for ch in '.,;:-_/\\()[]{}#"\'':
+            texto = texto.replace(ch, ' ')
+        return ' '.join(texto.split())
+    
+    columnas = {}
+    nombres = [normalizar(str(c)) for c in df.columns]
+    
+    # === Mapeo de nombres posibles para cada campo ===
+    mapeo = {
+        'cuenta': ['cuenta', 'codigo cuenta', 'cod cuenta', 'cuenta contable', 'codigo', 'account'],
+        'nombre': ['descripcion cuenta', 'descripcion', 'nombre cuenta', 'nombre', 'detalle', 
+                    'concepto', 'account name', 'desc cuenta'],
+        'nit': ['tercero', 'nit', 'identificacion', 'documento', 'id tercero', 'nro documento',
+                'num documento', 'cedula', 'numero identificacion'],
+        'razon_social': ['razon social', 'nombre tercero', 'tercero nombre', 'razon', 'beneficiario',
+                         'proveedor', 'cliente', 'nombre razon social'],
+        'debito': ['debitos', 'debito', 'debe', 'movimiento debito', 'mov debito', 'cargos',
+                   'debits', 'debit'],
+        'credito': ['creditos', 'credito', 'haber', 'movimiento credito', 'mov credito', 'abonos',
+                    'credits', 'credit'],
+        'saldo': ['saldo final', 'saldo', 'saldo actual', 'balance', 'saldo cierre',
+                  'saldo a diciembre', 'saldo dic'],
+    }
+    
+    for campo, keywords in mapeo.items():
+        for i, nom in enumerate(nombres):
+            if i in columnas.values():
+                continue  # Ya asignada
+            for kw in keywords:
+                if kw == nom or kw in nom:
+                    columnas[campo] = i
+                    break
+            if campo in columnas:
+                break
+    
+    # Si no encontró "saldo" pero hay "saldo final", ya lo detectó arriba
+    # Si hay "saldo inicial" asegurarse de NO confundirlo con "saldo"
+    for i, nom in enumerate(nombres):
+        if ('saldo inicial' in nom or 'saldo anterior' in nom) and columnas.get('saldo') == i:
+            # Ups, detectamos saldo inicial como saldo — buscar otra columna
+            del columnas['saldo']
+            for j, nom2 in enumerate(nombres):
+                if j not in columnas.values() and j != i:
+                    if 'saldo final' in nom2 or (nom2 == 'saldo' and 'inicial' not in nom2):
+                        columnas['saldo'] = j
+                        break
+    
+    return columnas
+
+def validar_columnas(columnas_detectadas):
+    """Valida que se encontraron las columnas mínimas necesarias.
+    Retorna (ok, campos_faltantes)."""
+    requeridas = ['cuenta', 'nit', 'debito', 'credito']
+    faltantes = [c for c in requeridas if c not in columnas_detectadas]
+    return len(faltantes) == 0, faltantes
+
 def en_rango(cta, d, h):
     n = len(d)
     return cta[:n] >= d and cta[:n] <= h
@@ -765,14 +834,25 @@ def buscar_concepto(cta, params, nom_cta="", tabla_keywords=None):
     return ""
 
 # === PROCESAMIENTO PRINCIPAL ===
-def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
+def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=None):
     """Procesa el balance y retorna un workbook con todos los formatos.
     
-    FORMATO DE ENTRADA SIMPLIFICADO (7 columnas):
-    Col A: Cuenta | Col B: Nombre | Col C: NIT | Col D: Razón Social | Col E: Débito | Col F: Crédito | Col G: Saldo
-    
-    El tipo de documento se detecta automáticamente según el NIT.
+    col_map: dict con los índices de columna detectados automáticamente.
+    Campos: cuenta, nombre, nit, razon_social, debito, credito, saldo
     """
+    
+    # Si no se pasó mapeo, detectar automáticamente
+    if col_map is None:
+        col_map = detectar_columnas(df_balance)
+    
+    # Índices de columna (con defaults seguros)
+    CI = col_map.get('cuenta', 0)
+    NI = col_map.get('nombre', 1)
+    TI = col_map.get('nit', 2)
+    RI = col_map.get('razon_social', 3)
+    DI = col_map.get('debito', 4)
+    KI = col_map.get('credito', 5)
+    SI = col_map.get('saldo', 6)
 
     # Cargar directorio externo de direcciones
     dir_externo = {}
@@ -800,11 +880,11 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                     'pais': info_r.get('pais', '169'),
                 }
 
-    # === LEER BALANCE (formato simplificado de 7 columnas) ===
+    # === LEER BALANCE (columnas detectadas automáticamente) ===
     bal = []
     for _, row in df_balance.iterrows():
-        cta = safe_str(row.iloc[0])       # Col A: Cuenta
-        nit = safe_str(row.iloc[2])       # Col C: NIT
+        cta = safe_str(row.iloc[CI])       # Cuenta
+        nit = safe_str(row.iloc[TI]) if TI < len(row) else ""  # NIT/Tercero
         if not cta or not nit:
             continue
         # Limpiar NIT
@@ -813,13 +893,13 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
             except: pass
         bal.append({
             'cta': cta,
-            'nom_cta': safe_str(row.iloc[1]),                          # Col B: Nombre cuenta
-            'td': detectar_tipo_doc(nit),                              # Auto-detectado
+            'nom_cta': safe_str(row.iloc[NI]) if NI < len(row) else "",          # Nombre cuenta
+            'td': detectar_tipo_doc(nit),                                          # Auto-detectado
             'nit': nit,
-            'razon': safe_str(row.iloc[3]) if len(row) > 3 else "",   # Col D: Razón Social
-            'deb': safe_num(row.iloc[4]) if len(row) > 4 else 0,      # Col E: Débito
-            'cred': safe_num(row.iloc[5]) if len(row) > 5 else 0,     # Col F: Crédito
-            'saldo': safe_num(row.iloc[6]) if len(row) > 6 else 0,    # Col G: Saldo
+            'razon': safe_str(row.iloc[RI]) if RI < len(row) else "",             # Razón Social
+            'deb': safe_num(row.iloc[DI]) if DI < len(row) else 0,               # Débito
+            'cred': safe_num(row.iloc[KI]) if KI < len(row) else 0,              # Crédito
+            'saldo': safe_num(row.iloc[SI]) if SI is not None and SI < len(row) else 0,  # Saldo
         })
 
     # Directorio
@@ -1425,20 +1505,19 @@ col1, col2 = st.columns([2, 1])
 with col1:
     st.markdown("### 📁 Sube el Balance de Prueba por Tercero")
     st.markdown("""
-    El archivo Excel debe tener esta estructura desde la **fila de datos** (puede tener encabezados arriba):
-
-    | Col A | Col B | Col C | Col D | Col E | Col F | Col G |
-    |-------|-------|-------|-------|-------|-------|-------|
-    | Cuenta | Nombre Cuenta | NIT | Razón Social | Débito | Crédito | Saldo |
-
-    💡 *El tipo de documento (NIT/Cédula) se detecta automáticamente según el número de identificación.*
+    Sube el archivo Excel de tu balance de prueba por tercero.  
+    La app **detecta automáticamente** las columnas — no importa el orden ni formato.
+    
+    Columnas que busca: **Cuenta, Nombre/Descripción, NIT/Tercero, Razón Social, Débitos, Créditos, Saldo Final**
+    
+    💡 *El tipo de documento (NIT/Cédula) se detecta automáticamente.*
     """)
 
     uploaded_file = st.file_uploader("Selecciona el archivo Excel", type=['xlsx', 'xls', 'csv'])
 
 with col2:
     st.markdown("### ⚙️ Configuración")
-    fila_encabezado = st.number_input("Fila del encabezado", min_value=1, max_value=20, value=3,
+    fila_encabezado = st.number_input("Fila del encabezado", min_value=1, max_value=20, value=1,
                                        help="Fila donde están los títulos de columna (ej: 1, 3)")
     nombre_hoja = st.text_input("Nombre de la hoja (dejar vacío = primera hoja)", value="",
                                  help="Si tu archivo tiene varias hojas, escribe el nombre de la del balance")
@@ -1547,6 +1626,28 @@ if uploaded_file:
 
         st.success(f"✅ Archivo cargado: **{len(df)} filas** x {len(df.columns)} columnas")
 
+        # === DETECCIÓN AUTOMÁTICA DE COLUMNAS ===
+        col_map = detectar_columnas(df)
+        cols_ok, cols_faltantes = validar_columnas(col_map)
+        
+        if cols_ok:
+            # Mostrar columnas detectadas
+            nombres_campos = {
+                'cuenta': '📋 Cuenta', 'nombre': '📝 Nombre', 'nit': '🔢 NIT/Tercero',
+                'razon_social': '🏢 Razón Social', 'debito': '➕ Débitos',
+                'credito': '➖ Créditos', 'saldo': '💰 Saldo Final'
+            }
+            detectadas_texto = " | ".join(
+                f"{nombres_campos.get(campo, campo)}: **Col {chr(65+idx)}** ({df.columns[idx]})"
+                for campo, idx in sorted(col_map.items(), key=lambda x: x[1])
+            )
+            st.info(f"🔍 **Columnas detectadas:** {detectadas_texto}")
+        else:
+            st.error(f"❌ No se encontraron las columnas: **{', '.join(cols_faltantes)}**. "
+                     f"Verifica que el encabezado esté en la fila correcta. "
+                     f"Columnas encontradas: {list(df.columns)}")
+            st.stop()
+
         with st.expander("👁 Vista previa del balance", expanded=False):
             st.dataframe(df.head(20), use_container_width=True)
 
@@ -1609,9 +1710,12 @@ if uploaded_file:
                              "Usa la plantilla de directorio para agregar direcciones manualmente.")
                 else:
                     st.write("---")
+                    # Extraer NITs únicos del balance
+                    col_map_temp = detectar_columnas(df)
+                    nit_col_idx = col_map_temp.get('nit', 2)
                     nits_unicos = set()
                     for _, row in df.iterrows():
-                        nit_val = safe_str(row.iloc[2])  # Col C: NIT (nuevo índice)
+                        nit_val = safe_str(row.iloc[nit_col_idx])
                         if nit_val and nit_val != NM:
                             if '.' in nit_val:
                                 try: nit_val = str(int(float(nit_val)))
@@ -1672,7 +1776,7 @@ if uploaded_file:
             dir_final = df_dir if df_dir is not None else df_dir_auto
 
             with st.spinner("Procesando formatos..."):
-                wb, resultados, n_filas, n_terceros, n_con_dir, validaciones = procesar_balance(df, dir_final, datos_rues)
+                wb, resultados, n_filas, n_terceros, n_con_dir, validaciones = procesar_balance(df, dir_final, datos_rues, col_map)
 
             st.markdown('<div class="success-box">', unsafe_allow_html=True)
             st.markdown("### ✅ Procesamiento completado")
