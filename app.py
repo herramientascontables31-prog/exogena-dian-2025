@@ -1139,6 +1139,9 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     dic3 = defaultdict(lambda: [0.0, 0.0])
     for f in bal:
         if not f['nit']: continue
+        # F1003 solo al nivel de subcuenta detalle (mín 8 dígitos)
+        # Esto evita atrapar filas resumen como "135515 retencion en la fuente"
+        if len(f['cta']) < 8: continue
         conc = buscar_concepto(f['cta'], PARAM_1003, f.get('nom_cta', ''), KEYWORDS_1003)
         if not conc: continue
 
@@ -1301,12 +1304,6 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
 
     # Pre-cálculo: saldos de impuestos a nivel de cuenta madre (sin tercero)
     saldos_impuestos_dian = {}
-    CI = col_map.get('cuenta', 0)
-    TI = col_map.get('nit', 2)
-    SI = col_map.get('saldo', -1) if 'saldo' in col_map else None
-    if SI is None:
-        DI = col_map.get('debitos', 3)
-        CRI = col_map.get('creditos', 4)
     for _, row in df_balance.iterrows():
         cta_raw = safe_str(row.iloc[CI]).replace('.', '').strip()
         nit_raw = safe_str(row.iloc[TI]).strip()
@@ -1314,12 +1311,15 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         if not nit_raw or nit_raw == '0' or nit_raw == '':
             for prefix in CUENTAS_IMPUESTOS_DIAN:
                 if cta_raw == prefix or (cta_raw.startswith(prefix) and len(cta_raw) <= len(prefix) + 2):
-                    if SI is not None:
-                        saldo_v = abs(safe_num(row.iloc[SI]))
-                    else:
-                        deb_v = safe_num(row.iloc[DI])
-                        cre_v = safe_num(row.iloc[CRI])
-                        saldo_v = abs(cre_v - deb_v)
+                    try:
+                        if 'saldo' in col_map:
+                            saldo_v = abs(safe_num(row.iloc[SI]))
+                        else:
+                            deb_v = safe_num(row.iloc[DI])
+                            cre_v = safe_num(row.iloc[KI])
+                            saldo_v = abs(cre_v - deb_v)
+                    except:
+                        saldo_v = 0
                     if saldo_v > 0:
                         if prefix not in saldos_impuestos_dian:
                             saldos_impuestos_dian[prefix] = 0
@@ -1719,6 +1719,24 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     total_nomina = sum(abs(f['saldo']) for f in bal if en_rango(f['cta'], '5105', '5105') and f.get('nit') and abs(f['saldo']) > 0)
     total_f1001 = sum(v[0] + v[1] for v in dic.values())
 
+    # Totales de balance para saldos (F1008, F1009, F1012)
+    total_bal_cxc = sum(abs(f['saldo']) for f in bal
+                        if f['cta'][:2] == '13' and not f['cta'].startswith('1355')
+                        and f.get('nit') and abs(f['saldo']) > 0)
+    total_bal_cxp = sum(abs(f['saldo']) for f in bal
+                        if f['cta'][:2] in ('22','23','24','25','26','27','28')
+                        and f.get('nit') and abs(f['saldo']) > 0)
+    total_bal_inv = sum(abs(f['saldo']) for f in bal
+                        if (f['cta'][:4] in ('1105','1110','1115','1120') or f['cta'][:2] == '12')
+                        and f.get('nit') and abs(f['saldo']) > 0)
+
+    # Nómina completa que va a F2276 (para explicar diferencia F1001)
+    total_nomina_f2276 = sum(abs(f['saldo']) for f in bal
+                             if en_rango(f['cta'], '5101', '5110') and f.get('nit') and abs(f['saldo']) > 0)
+    # Retención por salarios (Cta 2365 a empleados → diferencia en F1001 vs Cta 2365 total)
+    total_ret_salarios = sum(abs(f['saldo']) for f in bal
+                             if en_rango(f['cta'], '236505', '236505') and f.get('nit') and abs(f['saldo']) > 0)
+
     validaciones_auto = []
     if total_gastos_5 + total_costos_6 > 0 and total_iva_desc > 0:
         pct_iva = (total_iva_desc / (total_gastos_5 + total_costos_6)) * 100
@@ -1828,14 +1846,6 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     total_f1012 = sum(dic12.values()) if dic12 else 0
     total_f2276 = sum(sum(v) for v in dic26.values()) if dic26 else 0
 
-    # Calcular autorretenciones (2365 total balance - retenciones F1001)
-    total_2365_balance = sum(abs(f['saldo']) for f in bal
-                            if f['cta'].startswith('2365') and not f.get('nit'))
-    if total_2365_balance == 0:
-        total_2365_balance = sum(abs(f['saldo']) for f in bal
-                                if f['cta'] == '2365' and f.get('nit'))
-    posible_autoret = max(0, total_ret_fte_2365 - total_f1001_retfte)
-
     rv_row = 2
 
     def _rv_titulo(texto):
@@ -1907,12 +1917,33 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     _rv_titulo("📋 MOVIMIENTOS DEL AÑO (INGRESOS, COSTOS Y GASTOS)")
     _rv_linea("F1007", "Ingresos recibidos", len(final7),
               total_f1007, "Cta 4xxx", total_ingresos_4)
+    dif_1007 = total_f1007 - total_ingresos_4
+    if abs(dif_1007) > 1000 and total_ingresos_4 > 0:
+        cuantias_menores_7 = total_ingresos_4 - total_f1007
+        _rv_nota(f"↳ Diferencia F1007: ${dif_1007:,.0f}. Cta 4 del balance = ${total_ingresos_4:,.0f}, "
+                 f"Exógena F1007 = ${total_f1007:,.0f}. Puede deberse a: cuantías menores agrupadas al NIT 222222222, "
+                 f"ingresos sin tercero en el balance, o ajustes de cierre.")
+
     _rv_linea("F1001", "Pagos y abonos en cuenta", len(final),
-              total_f1001_pagos, "Cta 5xxx + 6xxx", total_gastos_5 + total_costos_6)
+              total_f1001_pagos, "Cta 5+6", total_gastos_5 + total_costos_6)
+    dif_1001 = total_f1001_pagos - (total_gastos_5 + total_costos_6)
+    if abs(dif_1001) > 1000:
+        _rv_nota(f"↳ Diferencia F1001: ${dif_1001:,.0f}. Es normal porque el gasto de nómina "
+                 f"(${total_nomina_f2276:,.0f}) va al F2276 y no al F1001. También las retenciones por "
+                 f"salarios y los parafiscales se excluyen del F1001.")
+
     _rv_linea("F1001", "  → Retención Fte practicada", "",
               total_f1001_retfte, "Cta 2365", total_ret_fte_2365, es_sub=True)
+    dif_ret = total_ret_fte_2365 - total_f1001_retfte
+    if dif_ret > 1000:
+        _rv_nota(f"↳ Cta 2365 (${total_ret_fte_2365:,.0f}) > RetFte F1001 (${total_f1001_retfte:,.0f}). "
+                 f"Diferencia ${dif_ret:,.0f}: incluye retenciones por salarios (van en F2276) "
+                 f"y posibles autorretenciones (Cta 236575/236540) que se declaran en Form 350 Rng 50-56, "
+                 f"NO en exógena por tercero.")
+
     _rv_linea("F1001", "  → Retención IVA practicada", "",
               total_f1001_retiva, "Cta 2367", total_ret_iva_2367, es_sub=True)
+
     _rv_linea("F1003", "Retenciones que le practicaron", len(dic3),
               total_f1003, "Cta 1355 (débitos)", total_ret_1355)
     _rv_linea("F1005", "IVA Descontable", len(dic5),
@@ -1921,27 +1952,45 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
               total_f1006, "Cta 2408 (ventas)", total_iva_gen)
     _rv_linea("F2276", "Rentas de trabajo y pensiones", len(dic26),
               total_f2276, "Cta 5105 (nómina)", total_nomina)
+    if total_ret_salarios > 0:
+        _rv_nota(f"↳ F2276: Las retenciones por salarios en el 2276 deben coincidir con la retención "
+                 f"por pagos laborales (Cta 236505 = ${total_ret_salarios:,.0f}).")
 
     # Notas de seguridad social / PILA
     _rv_nota("⚠️ CONCEPTOS 5011, 5012, 5013, 5023-5027: Solo reportan entidades (EPS, AFP, ARL, Cajas). "
              "Estos valores deben coincidir con la planilla PILA. Verifique con el formato de pagos a la seguridad social.")
 
     # Nota autorretenciones
-    if posible_autoret > 0:
-        _rv_nota(f"⚠️ AUTORRETENCIONES: La Cta 2365 del balance (${total_ret_fte_2365:,.0f}) es mayor que la RetFte del F1001 "
-                 f"(${total_f1001_retfte:,.0f}). La diferencia de ${posible_autoret:,.0f} podría corresponder a autorretenciones "
-                 f"(Cta 236575 / 236540). Estas NO se reportan en exógena por tercero — se declaran en Form 350 renglones 50-56.")
+    posible_autoret = max(0, total_ret_fte_2365 - total_f1001_retfte)
+    if posible_autoret > total_ret_fte_2365 * 0.1:  # Solo si es significativo
+        _rv_nota(f"⚠️ AUTORRETENCIONES: Posibles autorretenciones por ${posible_autoret:,.0f}. "
+                 f"Verifique Cta 236575/236540. Se declaran en Form 350 renglones 50-56, NO en exógena.")
 
     # ========== SECCIÓN 2: SALDOS A DICIEMBRE 31 ==========
     _rv_titulo("📋 SALDOS A DICIEMBRE 31 (PATRIMONIO)")
     _rv_linea("F1008", "Cuentas por cobrar", len(final8),
-              total_f1008, "Ctas 13xx (saldos)", None)
+              total_f1008, "Ctas 13xx (sin 1355)", total_bal_cxc)
+    dif_1008 = total_f1008 - total_bal_cxc
+    if abs(dif_1008) > 1000 and total_bal_cxc > 0:
+        _rv_nota(f"↳ Diferencia F1008: ${dif_1008:,.0f}. Ctas 13xx balance = ${total_bal_cxc:,.0f}, "
+                 f"Exógena = ${total_f1008:,.0f}. Puede deberse a cuantías menores agrupadas o "
+                 f"cuentas sin tercero.")
+
     _rv_linea("F1009", "Cuentas por pagar", len(final9),
-              total_f1009, "Ctas 2xxx (saldos)", None)
+              total_f1009, "Ctas 22-28xx", total_bal_cxp)
+    dif_1009 = total_f1009 - total_bal_cxp
+    if abs(dif_1009) > 1000 and total_bal_cxp > 0:
+        _rv_nota(f"↳ Diferencia F1009: ${dif_1009:,.0f}. Balance CxP = ${total_bal_cxp:,.0f}, "
+                 f"Exógena = ${total_f1009:,.0f}. Incluye impuestos agrupados a la DIAN (Cta 2365, 2367, 2408).")
+
     _rv_linea("F1010", "Socios y accionistas", len(dic10),
               total_f1010, "Cta 3xxx (capital)", None)
     _rv_linea("F1012", "Inversiones y ctas bancarias", len(dic12),
-              total_f1012, "Ctas 1110-1120-12xx", None)
+              total_f1012, "Ctas 11xx + 12xx", total_bal_inv)
+    dif_1012 = total_f1012 - total_bal_inv
+    if abs(dif_1012) > 1000 and total_bal_inv > 0:
+        _rv_nota(f"↳ Diferencia F1012: ${dif_1012:,.0f}. Balance bancos+inversiones = ${total_bal_inv:,.0f}, "
+                 f"Exógena = ${total_f1012:,.0f}. Verifique que todos los bancos tengan NIT asignado.")
 
     # ========== SECCIÓN 3: FORMATOS NO INCLUIDOS ==========
     _rv_titulo("📋 FORMATOS QUE REQUIEREN INFORMACIÓN ADICIONAL")
@@ -1981,9 +2030,9 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         'F1005 IVA Descontable': (total_f1005, total_iva_desc),
         'F1006 IVA Generado':    (total_f1006, total_iva_gen),
         'F2276 Nómina':          (total_f2276, total_nomina),
-        'F1008 CxC':             (total_f1008, None),
-        'F1009 CxP':             (total_f1009, None),
-        'F1012 Inversiones':     (total_f1012, None),
+        'F1008 CxC':             (total_f1008, total_bal_cxc),
+        'F1009 CxP':             (total_f1009, total_bal_cxp),
+        'F1012 Inversiones':     (total_f1012, total_bal_inv),
     }
 
     return wb, resultados, len(bal), len(direc), n_con_dir, nits_nuevos, cruces
@@ -2112,15 +2161,15 @@ if uploaded_file:
 
     etiquetas_balance = {
         'F1007 Ingresos':        'Cta 4xxx',
-        'F1001 Pagos':           'Cta 5xxx + 6xxx',
+        'F1001 Pagos':           'Cta 5+6',
         '  → Ret Fte (F1001)':   'Cta 2365',
         '  → Ret IVA (F1001)':   'Cta 2367',
         'F1003 Retenciones':     'Cta 1355 (déb)',
         'F1005 IVA Descontable': 'Cta 2408',
         'F1006 IVA Generado':    'Cta 2408',
         'F1008 CxC':             'Ctas 13xx',
-        'F1009 CxP':             'Ctas 2xxx',
-        'F1012 Inversiones':     'Ctas 11xx-12xx',
+        'F1009 CxP':             'Ctas 22-28xx',
+        'F1012 Inversiones':     'Ctas 11+12xx',
         'F2276 Nómina':          'Cta 5105',
     }
 
@@ -2156,15 +2205,24 @@ if uploaded_file:
     for nombre, (val_exo, val_bal) in cruces.items():
         if val_bal is not None and val_bal != 0:
             pct = abs((val_exo - val_bal) / val_bal) * 100
-            if pct > 5:
-                alertas_cruce.append(f"**{nombre}**: Exógena ${val_exo:,.0f} vs Balance ${val_bal:,.0f} (dif {pct:.1f}%)")
+            dif = val_exo - val_bal
+            if pct > 5 and abs(dif) > 10000:
+                explicacion = ""
+                if 'F1001 Pagos' in nombre:
+                    explicacion = " → Normal: nómina va al F2276, no al F1001."
+                elif 'Ret Fte' in nombre and dif < 0:
+                    explicacion = " → Incluye ret. salarios (F2276) y posibles autorretenciones."
+                elif 'F1007' in nombre:
+                    explicacion = " → Puede incluir cuantías menores agrupadas o ingresos sin tercero."
+                alertas_cruce.append(f"**{nombre}**: Exógena ${val_exo:,.0f} vs Balance ${val_bal:,.0f} (dif {pct:.1f}%){explicacion}")
     if alertas_cruce:
-        with st.expander(f"⚠️ {len(alertas_cruce)} diferencia(s) mayores al 5%", expanded=True):
+        with st.expander(f"📊 {len(alertas_cruce)} diferencia(s) significativas — ver explicación", expanded=True):
             for a in alertas_cruce:
                 st.warning(a)
 
-    st.info("💡 **Conceptos 5011, 5012, 5013 (seguros, EPS, AFP, ARL, Cajas):** Solo se reportan a entidades. "
-            "Estos valores deben coincidir con la planilla de pagos a la seguridad social (PILA).")
+    st.info("💡 **Conceptos 5011, 5012, 5013 (EPS, AFP, ARL, Cajas):** Solo se reportan a entidades. "
+            "Estos valores deben coincidir con la planilla de pagos a la seguridad social (PILA). "
+            "Ver hoja 'Resumen Valores' para más detalle.")
 
     if nits_nuevos:
         with st.expander(f"🆕 {len(nits_nuevos)} direcciones nuevas encontradas", expanded=False):
