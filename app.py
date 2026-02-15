@@ -71,6 +71,57 @@ def calc_dv(n):
     r = s % 11
     return str(11 - r) if r >= 2 else str(r)
 
+def detectar_tipo_doc(nit):
+    """Detecta automáticamente el tipo de documento DIAN según el número de identificación.
+    
+    Tipos soportados:
+    - 31: NIT (empresas colombianas, 9 dígitos que inician con 8 o 9)
+    - 13: Cédula de ciudadanía (personas naturales colombianas)
+    - 12: Tarjeta de identidad (menores de edad) — no distinguible por número
+    - 22: Cédula de extranjería — no distinguible por número  
+    - 41: Pasaporte (contiene letras)
+    - 42: Documento de identificación extranjero (contiene letras)
+    - 43: Cuantías menores / sin identificación
+    
+    Limitación: los tipos 12, 13 y 22 no se pueden distinguir solo por el número.
+    Se asume 13 (CC) como default para personas. El contador debe ajustar manualmente
+    los casos de TI (12) y CE (22) en el archivo de salida.
+    """
+    if not nit or nit == NM:
+        return TDM  # "43" para cuantías menores
+    
+    nit = str(nit).strip()
+    
+    # Limpiar formato decimal (ej: "890904997.0" → "890904997")
+    if '.' in nit:
+        try:
+            nit = str(int(float(nit)))
+        except:
+            pass
+    
+    # Si contiene letras → documento extranjero o pasaporte
+    if not nit.isdigit():
+        # Pasaportes suelen tener formato: 2 letras + números (ej: AB123456)
+        # o patrones alfanuméricos cortos
+        letras = sum(1 for c in nit if c.isalpha())
+        if letras <= 3:
+            return "41"  # Pasaporte (pocas letras + números)
+        else:
+            return "42"  # Documento de identificación extranjero
+    
+    # NIT de empresa: 9 dígitos, empieza con 8 o 9
+    # Ej: 800123456, 890904997, 900555111
+    if len(nit) == 9 and nit[0] in ('8', '9'):
+        return "31"  # NIT
+    
+    # NIT de entidad pública o especial: 9+ dígitos con 8 o 9
+    if len(nit) >= 9 and nit[0] in ('8', '9'):
+        return "31"  # NIT
+    
+    # Todo lo demás se asume cédula de ciudadanía
+    # Nota: TI (12) y CE (22) no se pueden distinguir automáticamente
+    return "13"  # Cédula de ciudadanía
+
 def safe_num(v):
     if v is None or v == "":
         return 0.0
@@ -122,9 +173,7 @@ def pad_mpio(v):
     return v.zfill(3) if v.isdigit() else v
 
 def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
-    """Busca info de terceros usando múltiples fuentes de internet.
-    log_fn: función para escribir mensajes visibles al usuario (ej: st.write)
-    """
+    """Busca info de terceros usando múltiples fuentes de internet."""
     import requests
     from time import sleep
     import re
@@ -143,7 +192,6 @@ def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
         'Accept-Language': 'es-CO,es;q=0.9',
     }
 
-    # --- FUENTE: RUES ---
     def buscar_rues(nit):
         try:
             resp = requests.get(
@@ -165,26 +213,16 @@ def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
         except Exception as e:
             return None, str(e)[:80]
 
-    # --- FUENTE: datos.gov.co (consulta en lote) ---
     def buscar_datos_gov_lote(nits_batch):
-        """Consulta múltiples NITs de una vez en datos.gov.co"""
         resultados = {}
-        # Datasets conocidos de registro mercantil en datos.gov.co
-        datasets = [
-            "c82q-fe7j",  # Confecámaras
-            "8yz5-t3jw",  # Cámara de Comercio
-        ]
+        datasets = ["c82q-fe7j", "8yz5-t3jw"]
         for ds_id in datasets:
             try:
                 nits_str = "','".join(str(n) for n in nits_batch)
                 resp = requests.get(
                     f"https://www.datos.gov.co/resource/{ds_id}.json",
-                    params={
-                        '$where': f"nit in ('{nits_str}')",
-                        '$limit': 5000
-                    },
-                    headers=HEADERS,
-                    timeout=20
+                    params={'$where': f"nit in ('{nits_str}')", '$limit': 5000},
+                    headers=HEADERS, timeout=20
                 )
                 if resp.status_code == 200:
                     data = resp.json()
@@ -205,20 +243,15 @@ def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
                 continue
         return {}, "Ningún dataset respondió"
 
-    # --- FUENTE: einforma.co ---
     def buscar_einforma(nit):
         try:
             resp = requests.get(
                 f'https://www.einforma.co/servlet/app/portal/ENTP/prod/ETIQUETA_EMPRESA_498/nif/{nit}',
-                headers=HEADERS,
-                timeout=12,
-                allow_redirects=True
+                headers=HEADERS, timeout=12, allow_redirects=True
             )
             if resp.status_code == 200:
                 info = {'razon_social': '', 'dv': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
                 texto = resp.text
-
-                # Razón social
                 rs_match = re.findall(r'<h1[^>]*class="[^"]*nombre[^"]*"[^>]*>([^<]+)</h1>', texto, re.IGNORECASE)
                 if not rs_match:
                     rs_match = re.findall(r'<title>([^<]+?)[\s\-|]', texto)
@@ -226,79 +259,52 @@ def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
                     rs = rs_match[0].strip()
                     if len(rs) > 3 and str(nit) not in rs.lower():
                         info['razon_social'] = rs.upper()
-
-                # Dirección
-                dir_match = re.findall(
-                    r'(?:Direcci[oó]n|Domicilio)[:\s]*</[^>]+>\s*<[^>]+>([^<]+)',
-                    texto, re.IGNORECASE
-                )
+                dir_match = re.findall(r'(?:Direcci[oó]n|Domicilio)[:\s]*</[^>]+>\s*<[^>]+>([^<]+)', texto, re.IGNORECASE)
                 if dir_match:
                     info['dir'] = dir_match[0].strip()
-
                 if info.get('razon_social') or info.get('dir'):
                     return info, None
             return None, f"HTTP {resp.status_code}"
         except Exception as e:
             return None, str(e)[:80]
 
-    # --- FUENTE: Búsqueda web (Google via scraping) ---
+    def buscar_web_ddg(nit):
+        try:
+            resp = requests.get('https://html.duckduckgo.com/html/',
+                params={'q': f'NIT {nit} Colombia empresa direccion'}, headers=HEADERS, timeout=12)
+            if resp.status_code == 200:
+                return extraer_info_web(nit, resp.text), None
+            return None, f"HTTP {resp.status_code}"
+        except Exception as e:
+            return None, str(e)[:80]
+
+    def buscar_web_bing(nit):
+        try:
+            resp = requests.get(f'https://www.bing.com/search?q=NIT+{nit}+Colombia+empresa+direccion&setlang=es',
+                headers=HEADERS, timeout=12)
+            if resp.status_code == 200:
+                return extraer_info_web(nit, resp.text), None
+            return None, f"HTTP {resp.status_code}"
+        except Exception as e:
+            return None, str(e)[:80]
+
     def buscar_web_google(nit):
         try:
             query = f"NIT+{nit}+Colombia+empresa+direccion"
-            resp = requests.get(
-                f'https://www.google.com/search?q={query}&hl=es&gl=co',
-                headers={
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                    'Accept': 'text/html',
-                    'Accept-Language': 'es-CO,es;q=0.9',
-                },
-                timeout=12
-            )
+            resp = requests.get(f'https://www.google.com/search?q={query}&hl=es&gl=co',
+                headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept': 'text/html', 'Accept-Language': 'es-CO,es;q=0.9'}, timeout=12)
             if resp.status_code == 200:
                 return extraer_info_web(nit, resp.text), None
             return None, f"HTTP {resp.status_code}"
         except Exception as e:
             return None, str(e)[:80]
 
-    # --- FUENTE: Búsqueda web (DuckDuckGo) ---
-    def buscar_web_ddg(nit):
-        try:
-            resp = requests.get(
-                'https://html.duckduckgo.com/html/',
-                params={'q': f'NIT {nit} Colombia empresa direccion'},
-                headers=HEADERS,
-                timeout=12
-            )
-            if resp.status_code == 200:
-                return extraer_info_web(nit, resp.text), None
-            return None, f"HTTP {resp.status_code}"
-        except Exception as e:
-            return None, str(e)[:80]
-
-    # --- FUENTE: Búsqueda web (Bing) ---
-    def buscar_web_bing(nit):
-        try:
-            resp = requests.get(
-                f'https://www.bing.com/search?q=NIT+{nit}+Colombia+empresa+direccion&setlang=es',
-                headers=HEADERS,
-                timeout=12
-            )
-            if resp.status_code == 200:
-                return extraer_info_web(nit, resp.text), None
-            return None, f"HTTP {resp.status_code}"
-        except Exception as e:
-            return None, str(e)[:80]
-
-    # --- Extractor de info desde HTML de búsqueda web ---
     def extraer_info_web(nit, html):
         info = {'razon_social': '', 'dv': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
         nit_str = str(nit)
-
-        # Quitar tags HTML para buscar en texto plano
         texto = re.sub(r'<[^>]+>', ' ', html)
         texto = re.sub(r'\s+', ' ', texto)
-
-        # Buscar razón social cerca del NIT
         patrones_rs = [
             r'(?:NIT|Nit|nit)[\s.:]*' + re.escape(nit_str) + r'[\s\-–—:,.]+([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s&.,]+)',
             r'([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s&.,]{5,50}?)[\s\-–—:,.]+(?:NIT|Nit|nit)[\s.:]*' + re.escape(nit_str),
@@ -311,8 +317,6 @@ def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
                 if 3 < len(rs) < 120:
                     info['razon_social'] = rs.upper()
                     break
-
-        # Buscar dirección con patrones colombianos
         patrones_dir = [
             r'(?:Direcci[oó]n|Dir\.?|Ubicaci[oó]n)[:\s]+([A-Za-z]{2,3}[\s.]*(?:No\.?\s*)?\d+[\w\s#\-.,No°]+?\d)',
             r'((?:CL|CR|KR|TV|DG|CALLE|CARRERA|AV|AVENIDA|TRANSVERSAL|DIAGONAL)[\s.]*(?:No\.?\s*)?\d+[\w\s#\-.,No°]*\d)',
@@ -324,60 +328,43 @@ def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
                 if len(dir_candidata) > 5:
                     info['dir'] = dir_candidata
                     break
-
         if info.get('razon_social') or info.get('dir'):
             return info
         return None
 
-    # --- Extractor genérico de campos desde dict (APIs) ---
     def extraer_info_dict(emp):
         if not isinstance(emp, dict):
             return None
         info = {'razon_social': '', 'dv': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
-
-        for campo in ['razon_social', 'Razon_Social', 'nombre', 'Nombre',
-                       'razonSocial', 'RazonSocial', 'nombre_razon_social',
-                       'NombreEstablecimiento', 'organizacion', 'nombre_empresa']:
+        for campo in ['razon_social', 'Razon_Social', 'nombre', 'Nombre', 'razonSocial', 'RazonSocial',
+                       'nombre_razon_social', 'NombreEstablecimiento', 'organizacion', 'nombre_empresa']:
             val = emp.get(campo, '')
             if val:
                 info['razon_social'] = str(val).strip().upper()
                 break
-
-        for campo in ['digito_verificacion', 'Digito_Verificacion', 'dv', 'DV',
-                       'digitoVerificacion']:
+        for campo in ['digito_verificacion', 'Digito_Verificacion', 'dv', 'DV', 'digitoVerificacion']:
             val = emp.get(campo, '')
             if val is not None and str(val).strip():
                 info['dv'] = str(val).strip()
                 break
-
-        for campo in ['direccion', 'Direccion', 'direccion_comercial',
-                       'DireccionComercial', 'dir_comercial']:
+        for campo in ['direccion', 'Direccion', 'direccion_comercial', 'DireccionComercial', 'dir_comercial']:
             val = emp.get(campo, '')
             if val:
                 info['dir'] = str(val).strip()
                 break
-
-        for campo in ['codigo_departamento', 'departamento', 'cod_departamento',
-                       'CodigoDepartamento', 'dep_codigo', 'cod_depto']:
+        for campo in ['codigo_departamento', 'departamento', 'cod_departamento', 'CodigoDepartamento', 'dep_codigo', 'cod_depto']:
             val = emp.get(campo, '')
             if val:
                 info['dp'] = pad_dpto(str(val).strip())
                 break
-
-        for campo in ['codigo_municipio', 'municipio', 'cod_municipio',
-                       'CodigoMunicipio', 'mun_codigo', 'ciudad', 'cod_ciudad']:
+        for campo in ['codigo_municipio', 'municipio', 'cod_municipio', 'CodigoMunicipio', 'mun_codigo', 'ciudad', 'cod_ciudad']:
             val = emp.get(campo, '')
             if val:
                 info['mp'] = pad_mpio(str(val).strip())
                 break
-
         return info if (info.get('razon_social') or info.get('dir')) else None
 
-    # ============================================================
-    #  FLUJO PRINCIPAL
-    # ============================================================
-
-    # PASO 1: Intentar datos.gov.co en lote (una sola petición para todos)
+    # FLUJO PRINCIPAL
     log("📡 **Paso 1:** Consultando datos.gov.co (lote completo)...")
     try:
         lote_result, lote_error = buscar_datos_gov_lote(nits_list)
@@ -389,7 +376,6 @@ def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
     except Exception as e:
         log(f"  ❌ datos.gov.co: Error — {str(e)[:80]}")
 
-    # PASO 2: Probar RUES con primer NIT no encontrado
     nits_faltantes = [n for n in nits_list if n not in encontrados]
     rues_funciona = False
     if nits_faltantes:
@@ -407,14 +393,9 @@ def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
         except Exception as e:
             log(f"  ❌ RUES no disponible: {str(e)[:80]}")
 
-    # PASO 3: Detectar qué buscador web funciona
     nits_faltantes = [n for n in nits_list if n not in encontrados]
     buscador_web = None
-    buscadores = [
-        ('DuckDuckGo', buscar_web_ddg),
-        ('Bing', buscar_web_bing),
-        ('Google', buscar_web_google),
-    ]
+    buscadores = [('DuckDuckGo', buscar_web_ddg), ('Bing', buscar_web_bing), ('Google', buscar_web_google)]
 
     if nits_faltantes:
         log(f"📡 **Paso 3:** Probando buscadores web...")
@@ -432,33 +413,24 @@ def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
                     log(f"  ⚠️ {nombre_b}: {error}")
             except Exception as e:
                 log(f"  ❌ {nombre_b}: {str(e)[:60]}")
-
         if not buscador_web:
             log("  ❌ Ningún buscador web funcionó")
 
-    # PASO 4: Buscar el resto de NITs con las fuentes que funcionaron
     nits_faltantes = [n for n in nits_list if n not in encontrados]
     if nits_faltantes and (rues_funciona or buscador_web):
         fuentes_activas = []
-        if rues_funciona:
-            fuentes_activas.append(('RUES', buscar_rues))
-        if buscador_web:
-            fuentes_activas.append(buscador_web)
-
+        if rues_funciona: fuentes_activas.append(('RUES', buscar_rues))
+        if buscador_web: fuentes_activas.append(buscador_web)
         nombres = " → ".join(f[0] for f in fuentes_activas)
         log(f"🔍 **Paso 4:** Buscando {len(nits_faltantes)} NITs restantes [{nombres}]...")
 
         for i, nit in enumerate(nits_faltantes):
             if progress_bar:
-                progress_bar.progress(
-                    (i + 1) / len(nits_faltantes),
-                    text=f"🔍 {nit} ({i+1}/{len(nits_faltantes)}) — Encontrados: {len(encontrados)}"
-                )
-
+                progress_bar.progress((i + 1) / len(nits_faltantes),
+                    text=f"🔍 {nit} ({i+1}/{len(nits_faltantes)}) — Encontrados: {len(encontrados)}")
             if errores_seguidos >= 15:
                 log(f"  ⛔ Detenido tras {errores_seguidos} errores seguidos")
                 break
-
             encontro = False
             for nombre_f, fn_f in fuentes_activas:
                 try:
@@ -471,20 +443,16 @@ def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
                         break
                 except Exception:
                     continue
-
             if not encontro:
                 errores_seguidos += 1
-
             sleep(0.8)
 
-    # PASO 5: Intentar einforma.co para los que aún faltan
     nits_faltantes = [n for n in nits_list if n not in encontrados]
     if nits_faltantes and len(nits_faltantes) < 30:
         log(f"📡 **Paso 5:** Probando einforma.co ({len(nits_faltantes)} NITs pendientes)...")
         errores_ein = 0
         for nit in nits_faltantes:
-            if errores_ein >= 5:
-                break
+            if errores_ein >= 5: break
             try:
                 resultado, error = buscar_einforma(nit)
                 if resultado:
@@ -497,39 +465,26 @@ def buscar_info_terceros(nits_list, progress_bar=None, log_fn=None):
                 errores_ein += 1
             sleep(1.0)
 
-    # Resumen final
     n_dir = sum(1 for d in encontrados.values() if d.get('dir'))
     n_rs = sum(1 for d in encontrados.values() if d.get('razon_social'))
     log(f"\n📊 **Resumen:** {len(encontrados)}/{total} terceros — {n_dir} con dirección, {n_rs} con razón social")
-
     return encontrados, len(encontrados) == 0 and total > 0
 
 
 def normalizar_texto(t):
-    """Normaliza texto para comparación: quita tildes, puntuación, espacios extra, unifica abreviaturas"""
     import unicodedata
-    if not t:
-        return ""
+    if not t: return ""
     t = str(t).upper().strip()
-    # Quitar tildes
     t = ''.join(c for c in unicodedata.normalize('NFD', t) if unicodedata.category(c) != 'Mn')
-    # Quitar puntos, comas, guiones
     for ch in '.,;:-_/\\()[]{}#"\'':
         t = t.replace(ch, ' ')
-    # Quitar espacios múltiples
     t = ' '.join(t.split())
-    # Unificar abreviaturas comunes colombianas
     reemplazos = [
-        ('S A S', 'SAS'), ('S A  S', 'SAS'),
-        ('S A', 'SA'), ('S  A', 'SA'),
-        ('E S P', 'ESP'), ('E  S  P', 'ESP'),
-        ('E U', 'EU'), ('E  U', 'EU'),
-        ('C I', 'CI'), ('C  I', 'CI'),
-        ('N I T', 'NIT'),
-        ('SOCIEDAD ANONIMA', 'SA'),
-        ('SOCIEDAD POR ACCIONES SIMPLIFICADA', 'SAS'),
-        ('EMPRESA DE SERVICIOS PUBLICOS', 'ESP'),
-        ('LIMITADA', 'LTDA'),
+        ('S A S', 'SAS'), ('S A  S', 'SAS'), ('S A', 'SA'), ('S  A', 'SA'),
+        ('E S P', 'ESP'), ('E  S  P', 'ESP'), ('E U', 'EU'), ('E  U', 'EU'),
+        ('C I', 'CI'), ('C  I', 'CI'), ('N I T', 'NIT'),
+        ('SOCIEDAD ANONIMA', 'SA'), ('SOCIEDAD POR ACCIONES SIMPLIFICADA', 'SAS'),
+        ('EMPRESA DE SERVICIOS PUBLICOS', 'ESP'), ('LIMITADA', 'LTDA'),
     ]
     for viejo, nuevo in reemplazos:
         t = t.replace(viejo, nuevo)
@@ -537,18 +492,13 @@ def normalizar_texto(t):
 
 
 def similitud_textos(a, b):
-    """Calcula similitud entre dos textos (0.0 a 1.0)"""
     a = normalizar_texto(a)
     b = normalizar_texto(b)
-    if not a or not b:
-        return 0.0
-    if a == b:
-        return 1.0
-    # Similitud por palabras comunes
+    if not a or not b: return 0.0
+    if a == b: return 1.0
     pa = set(a.split())
     pb = set(b.split())
-    if not pa or not pb:
-        return 0.0
+    if not pa or not pb: return 0.0
     comunes = pa & pb
     return len(comunes) / max(len(pa), len(pb))
 
@@ -563,25 +513,15 @@ PARAM_1001_NOMINA_SUB = {
 }
 
 PARAM_1001_RANGOS = [
-    # Específicos primero (evitar solapamiento)
-    ("5005", "5120", "5120", True),  # Arrendamientos
-    ("5005", "5220", "5220", True),  # Arrendamientos ventas
-    ("5011", "5230", "5230", True),  # Seguros
-    ("5011", "5130", "5130", True),  # Seguros admón
-    ("5055", "5115", "5115", True),  # Impuestos
-    ("5004", "5110", "5110", True),  # Servicios (solo 5110, no el rango completo)
-    ("5016", "5125", "5125", True),  # Contribuciones y afiliaciones
-    ("5016", "5135", "5139", True),  # Mantenimiento y reparaciones
-    ("5016", "5140", "5199", True),  # Gastos de viaje, depreciaciones, diversos
-    ("5016", "5210", "5219", True),  # Gastos de ventas
-    ("5016", "5235", "5249", True),  # Otros gastos ventas
-    ("5016", "5295", "5299", True),  # Diversos ventas
-    ("5055", "5115", "5115", True),  # Impuestos
-    ("5006", "5305", "5305", True),  # Gastos financieros
-    ("5101", "530515", "530515", True),  # GMF
-    ("5007", "1435", "1499", True),  # Inventarios
-    ("5010", "1504", "1699", True),  # Inversiones temporales
-    ("5010", "1520", "1540", True),  # Activos fijos
+    ("5005", "5120", "5120", True), ("5005", "5220", "5220", True),
+    ("5011", "5230", "5230", True), ("5011", "5130", "5130", True),
+    ("5055", "5115", "5115", True), ("5004", "5110", "5110", True),
+    ("5016", "5125", "5125", True), ("5016", "5135", "5139", True),
+    ("5016", "5140", "5199", True), ("5016", "5210", "5219", True),
+    ("5016", "5235", "5249", True), ("5016", "5295", "5299", True),
+    ("5055", "5115", "5115", True), ("5006", "5305", "5305", True),
+    ("5101", "530515", "530515", True), ("5007", "1435", "1499", True),
+    ("5010", "1504", "1699", True), ("5010", "1520", "1540", True),
 ]
 
 PARAM_1003 = [
@@ -608,87 +548,49 @@ MAPEO_1012 = [
 ]
 
 # === CLASIFICADOR INTELIGENTE POR NOMBRE DE CUENTA ===
-# Mapeo de palabras clave → concepto F1001
-# Prioridad: más específico primero
 KEYWORDS_1001 = [
-    # Nómina y prestaciones sociales (concepto 5001 - Salarios y pagos laborales)
     ("5001", True, ["sueldo", "salario", "basico", "jornal", "horas extra", "recargo",
                      "auxilio transporte", "auxilio de transporte", "rodamiento"]),
-    # Honorarios (concepto 5002)
     ("5002", True, ["honorario", "honorarios"]),
-    # Comisiones (concepto 5002)
     ("5002", True, ["comision", "comisiones"]),
-    # Aportes EPS / Salud (concepto 5024)
     ("5024", True, ["aporte salud", "aporte eps", "aportes a eps", "aporte a eps",
                      "aporte a salud", "cotizacion salud", "aportes eps"]),
-    # Aportes Pensión (concepto 5025)
     ("5025", True, ["aporte pension", "aporte a pension", "aportes a pension",
-                     "pension obligatoria", "cotizacion pension", "fondo pension",
-                     "aportes pension"]),
-    # Aportes ARL / Riesgos Laborales (concepto 5027)
+                     "pension obligatoria", "cotizacion pension", "fondo pension", "aportes pension"]),
     ("5027", True, ["arl", "riesgo laboral", "riesgos laborales", "riesgos profesionales",
                      "aporte arl", "aporte riesgo", "aportes arl"]),
-    # Parafiscales: ICBF, SENA, Cajas (concepto 5023)
     ("5023", True, ["parafiscal", "parafiscales", "icbf", "sena", "caja de compensacion",
-                     "compensacion familiar", "comfama", "compensar", "cafam",
-                     "colsubsidio", "comfenalco"]),
-    # Vacaciones (concepto 5001)
+                     "compensacion familiar", "comfama", "compensar", "cafam", "colsubsidio", "comfenalco"]),
     ("5001", True, ["vacacion", "vacaciones"]),
-    # Cesantías e intereses (concepto 5001)
     ("5001", True, ["cesantia", "cesantias", "interes sobre cesantia", "intereses cesantia",
                      "intereses sobre cesantias"]),
-    # Prima de servicios (concepto 5001)
     ("5001", True, ["prima de servicio", "prima servicio", "prima legal"]),
-    # Dotación (concepto 5001)
     ("5001", True, ["dotacion", "suministro a trabajador"]),
-    # Incapacidades (concepto 5001)
     ("5001", True, ["incapacidad", "incapacidades"]),
-    # Bonificaciones laborales (concepto 5001)
     ("5001", True, ["bonificacion", "bonificaciones"]),
-    # Seguros (concepto 5011) - ANTES de servicios para evitar conflicto
     ("5011", True, ["seguro", "poliza", "prima de seguro", "todo riesgo", "cumplimiento"]),
-    # Arrendamientos (concepto 5005) - ANTES de servicios
     ("5005", True, ["arriendo", "arrendamiento", "arrendamientos", "canon", "alquiler"]),
-    # Servicios públicos (concepto 5004)
     ("5004", True, ["acueducto", "alcantarillado", "energia", "electrica", "telefono",
-                     "telecomunicacion", "internet", "gas", "servicio publico",
-                     "servicios publicos", "vigilancia", "correo", "portes"]),
-    # Transporte y fletes (concepto 5004)
-    ("5004", True, ["transporte", "flete", "acarreo", "taxi", "taxis", "buses",
-                     "envio", "mensajeria"]),
-    # Impuestos (concepto 5055)
+                     "telecomunicacion", "internet", "gas", "servicio publico", "servicios publicos",
+                     "vigilancia", "correo", "portes"]),
+    ("5004", True, ["transporte", "flete", "acarreo", "taxi", "taxis", "buses", "envio", "mensajeria"]),
     ("5055", True, ["impuesto", "ica", "industria y comercio", "predial", "vehiculo",
                      "timbre", "estampilla", "estampillas"]),
-    # Gastos financieros (concepto 5006)
-    ("5006", True, ["interes bancario", "intereses bancarios", "interes mora",
-                     "gmf", "4x1000", "4 x 1000",
-                     "comision bancaria", "comisiones bancarias",
-                     "gasto financiero", "gastos financieros",
+    ("5006", True, ["interes bancario", "intereses bancarios", "interes mora", "gmf", "4x1000", "4 x 1000",
+                     "comision bancaria", "comisiones bancarias", "gasto financiero", "gastos financieros",
                      "diferencia en cambio", "gravamen", "rendimiento financiero"]),
-    # Gastos de personal no nómina (concepto 5010)
-    ("5010", True, ["gastos de personal", "personal admn", "bienestar",
-                     "medicina prepagada", "auxilio funerario",
-                     "auxilio educativo", "capacitacion empleado"]),
-    # Gastos de viaje (concepto 5016)
+    ("5010", True, ["gastos de personal", "personal admn", "bienestar", "medicina prepagada",
+                     "auxilio funerario", "auxilio educativo", "capacitacion empleado"]),
     ("5016", True, ["viaje", "viatico", "pasaje", "tiquete", "hospedaje", "hotel"]),
-    # Mantenimiento y reparaciones (concepto 5016)
     ("5016", True, ["mantenimiento", "reparacion", "adecuacion", "instalacion electrica"]),
-    # Gastos legales (concepto 5016)
     ("5016", True, ["legal", "notarial", "registro", "licencia"]),
-    # Depreciaciones y amortizaciones (concepto 5016)
     ("5016", True, ["depreciacion", "amortizacion", "agotamiento", "provision"]),
-    # Diversos / otros gastos (concepto 5016)
-    ("5016", True, ["aseo y cafeteria", "cafeteria", "papeleria", "utiles",
-                     "fotocopia", "parqueadero", "casino", "restaurante",
-                     "representacion", "suscripcion", "afiliacion",
-                     "publicidad", "propaganda", "seminario",
-                     "elemento de aseo", "diversos"]),
-    # Inventarios / compras (concepto 5007)
-    ("5007", True, ["inventario", "compra de", "mercancia", "materia prima",
-                     "material", "insumo", "repuesto"]),
+    ("5016", True, ["aseo y cafeteria", "cafeteria", "papeleria", "utiles", "fotocopia", "parqueadero",
+                     "casino", "restaurante", "representacion", "suscripcion", "afiliacion",
+                     "publicidad", "propaganda", "seminario", "elemento de aseo", "diversos"]),
+    ("5007", True, ["inventario", "compra de", "mercancia", "materia prima", "material", "insumo", "repuesto"]),
 ]
 
-# Mapeo de palabras clave → concepto F1007 (Ingresos)
 KEYWORDS_1007 = [
     ("4001", ["ingreso operacional", "consultoria", "asesoria", "soporte tecnico",
               "capacitacion", "outsourcing", "desarrollo software", "servicio",
@@ -698,14 +600,12 @@ KEYWORDS_1007 = [
     ("4003", ["arrendamiento recibido", "arriendo recibido", "canon recibido"]),
 ]
 
-# Mapeo de palabras clave → concepto F1003 (Retenciones practicadas)
 KEYWORDS_1003 = [
     ("1301", ["retefuente honorario", "retfte honorario", "retencion honorario"]),
     ("1302", ["retefuente comision", "retfte comision", "retencion comision"]),
     ("1303", ["retefuente servicio", "retfte servicio", "retencion servicio"]),
     ("1304", ["retefuente arriendo", "retfte arriendo", "retencion arriendo"]),
-    ("1305", ["retefuente rendimiento", "retfte rendimiento", "retencion rendimiento",
-              "retencion financiero"]),
+    ("1305", ["retefuente rendimiento", "retfte rendimiento", "retencion rendimiento", "retencion financiero"]),
     ("1306", ["retefuente compra", "retfte compra", "retencion compra"]),
     ("1307", ["retencion ica", "rete ica", "reteica"]),
     ("1308", ["otras retencion", "otra retencion", "retencion otro"]),
@@ -713,29 +613,21 @@ KEYWORDS_1003 = [
 ]
 
 def normalizar_nombre(nom):
-    """Normaliza nombre de cuenta para búsqueda de keywords"""
     import unicodedata
-    if not nom:
-        return ""
+    if not nom: return ""
     nom = str(nom).lower().strip()
-    # Quitar tildes
     nom = ''.join(c for c in unicodedata.normalize('NFD', nom) if unicodedata.category(c) != 'Mn')
-    # Quitar caracteres especiales
     for ch in '.,;:-_/\\()[]{}#"\'&$%@!¿?':
         nom = nom.replace(ch, ' ')
     return ' '.join(nom.split())
 
 
 def stem_es(palabra):
-    """Stemming muy simple para español: quita plurales comunes"""
-    if not palabra or len(palabra) < 4:
-        return palabra
+    if not palabra or len(palabra) < 4: return palabra
     if palabra.endswith('es') and len(palabra) > 5:
-        # "comisiones" → "comision", "incapacidades" → "incapacidad"
         base = palabra[:-2]
         if base.endswith('ion') or base.endswith('dad') or base.endswith('idad'):
             return base
-        # "buses" → "bus" etc.
         return base
     if palabra.endswith('s') and not palabra.endswith('ss'):
         return palabra[:-1]
@@ -743,17 +635,12 @@ def stem_es(palabra):
 
 
 def clasificar_por_nombre(nom, tabla_keywords):
-    """Busca en tabla de keywords y retorna el concepto si encuentra match.
-    Prioriza coincidencias multi-palabra sobre palabra simple.
-    Usa stemming para manejar plurales."""
     nom_n = normalizar_nombre(nom)
-    if not nom_n:
-        return None
+    if not nom_n: return None
     palabras_nom = set(nom_n.split())
     stems_nom = set(stem_es(p) for p in palabras_nom)
     nom_stemmed = ' '.join(stem_es(p) for p in nom_n.split())
 
-    # PRIMERA PASADA: solo keywords multi-palabra (más específicas)
     for item in tabla_keywords:
         if len(item) == 3:
             conc, ded, keywords = item
@@ -761,13 +648,11 @@ def clasificar_por_nombre(nom, tabla_keywords):
             conc, keywords = item
             ded = True
         for kw in keywords:
-            if ' ' not in kw:
-                continue
+            if ' ' not in kw: continue
             kw_stemmed = ' '.join(stem_es(p) for p in kw.split())
             if kw_stemmed in nom_stemmed or kw in nom_n:
                 return (conc, ded) if len(item) == 3 else conc
 
-    # SEGUNDA PASADA: keywords de palabra simple
     for item in tabla_keywords:
         if len(item) == 3:
             conc, ded, keywords = item
@@ -775,8 +660,7 @@ def clasificar_por_nombre(nom, tabla_keywords):
             conc, keywords = item
             ded = True
         for kw in keywords:
-            if ' ' in kw:
-                continue
+            if ' ' in kw: continue
             kw_stem = stem_es(kw)
             if kw in palabras_nom or kw_stem in stems_nom:
                 return (conc, ded) if len(item) == 3 else conc
@@ -784,54 +668,36 @@ def clasificar_por_nombre(nom, tabla_keywords):
 
 
 def concepto_1001(cta, nom_cta=""):
-    """Clasifica cuenta de gasto para F1001. Usa nombre como prioridad, PUC como respaldo."""
-
-    # 1) Nómina: 5105xx — nombre es prioridad porque subcuentas varían mucho
     if en_rango(cta, "5105", "5105"):
         if nom_cta:
             resultado = clasificar_por_nombre(nom_cta, KEYWORDS_1001)
-            if resultado:
-                return resultado
-        # Fallback: subcuenta
+            if resultado: return resultado
         sc = cta[4:6] if len(cta) >= 6 else cta[4:] if len(cta) > 4 else ""
         for conc, subs in PARAM_1001_NOMINA_SUB.items():
-            if sc in subs:
-                return conc, True
-        return "5001", True  # Default nómina si no clasificó
+            if sc in subs: return conc, True
+        return "5001", True
 
-    # 2) Otras cuentas de gasto (51xx-53xx): nombre primero, rango como respaldo
     if cta[:2] in ("51", "52", "53"):
-        # Primero por nombre (más confiable cuando las subcuentas varían)
         if nom_cta:
             resultado = clasificar_por_nombre(nom_cta, KEYWORDS_1001)
-            if resultado:
-                return resultado
-        # Segundo: por rango PUC estándar
+            if resultado: return resultado
         for conc, d, h, ded in PARAM_1001_RANGOS:
-            if en_rango(cta, d, h):
-                return conc, ded
-        return "5016", True  # Default: otros gastos deducibles
+            if en_rango(cta, d, h): return conc, ded
+        return "5016", True
 
-    # 3) Compras / inventarios (14xx)
     if cta[:2] == "14":
         for conc, d, h, ded in PARAM_1001_RANGOS:
-            if en_rango(cta, d, h):
-                return conc, ded
+            if en_rango(cta, d, h): return conc, ded
         if nom_cta:
             resultado = clasificar_por_nombre(nom_cta, KEYWORDS_1001)
-            if resultado:
-                return resultado
+            if resultado: return resultado
 
     return None, True
 
 
 def buscar_concepto(cta, params, nom_cta="", tabla_keywords=None):
-    """Busca concepto primero por rango, luego por nombre si hay keywords disponibles."""
-    # Primero por rango PUC
     for c, d, h in params:
-        if en_rango(cta, d, h):
-            return c
-    # Si no encontró y hay tabla de keywords, buscar por nombre
+        if en_rango(cta, d, h): return c
     if tabla_keywords and nom_cta:
         resultado = clasificar_por_nombre(nom_cta, tabla_keywords)
         if resultado:
@@ -840,20 +706,23 @@ def buscar_concepto(cta, params, nom_cta="", tabla_keywords=None):
 
 # === PROCESAMIENTO PRINCIPAL ===
 def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
-    """Procesa el balance y retorna un workbook con todos los formatos"""
+    """Procesa el balance y retorna un workbook con todos los formatos.
+    
+    FORMATO DE ENTRADA SIMPLIFICADO (7 columnas):
+    Col A: Cuenta | Col B: Nombre | Col C: NIT | Col D: Razón Social | Col E: Débito | Col F: Crédito | Col G: Saldo
+    
+    El tipo de documento se detecta automáticamente según el NIT.
+    """
 
     # Cargar directorio externo de direcciones
     dir_externo = {}
     if df_directorio is not None:
         for _, row in df_directorio.iterrows():
             nit_d = safe_str(row.iloc[0])
-            if not nit_d:
-                continue
+            if not nit_d: continue
             if '.' in nit_d:
-                try:
-                    nit_d = str(int(float(nit_d)))
-                except:
-                    pass
+                try: nit_d = str(int(float(nit_d)))
+                except: pass
             dir_externo[nit_d] = {
                 'dir': safe_str(row.iloc[1]) if len(row) > 1 else "",
                 'dp': pad_dpto(safe_str(row.iloc[2])) if len(row) > 2 else "",
@@ -861,7 +730,6 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                 'pais': safe_str(row.iloc[4]) if len(row) > 4 else "169",
             }
 
-    # Integrar datos de internet al directorio externo (solo si no tiene ya datos)
     if datos_rues:
         for nit_r, info_r in datos_rues.items():
             if nit_r not in dir_externo:
@@ -872,43 +740,33 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                     'pais': info_r.get('pais', '169'),
                 }
 
-    # Leer balance
+    # === LEER BALANCE (formato simplificado de 7 columnas) ===
     bal = []
     for _, row in df_balance.iterrows():
-        cta = safe_str(row.iloc[0])
-        nit = safe_str(row.iloc[3])
+        cta = safe_str(row.iloc[0])       # Col A: Cuenta
+        nit = safe_str(row.iloc[2])       # Col C: NIT
         if not cta or not nit:
             continue
-        # Limpiar NIT (ej: "890904997.0" -> "890904997")
+        # Limpiar NIT
         if '.' in nit:
-            try:
-                nit = str(int(float(nit)))
-            except:
-                pass
+            try: nit = str(int(float(nit)))
+            except: pass
         bal.append({
             'cta': cta,
-            'nom_cta': safe_str(row.iloc[1]),
-            'td': safe_str(row.iloc[2]) if len(row) > 2 else "31",
+            'nom_cta': safe_str(row.iloc[1]),                          # Col B: Nombre cuenta
+            'td': detectar_tipo_doc(nit),                              # Auto-detectado
             'nit': nit,
-            'razon': safe_str(row.iloc[4]) if len(row) > 4 else "",
-            'deb': safe_num(row.iloc[5]) if len(row) > 5 else 0,
-            'cred': safe_num(row.iloc[6]) if len(row) > 6 else 0,
-            'saldo': safe_num(row.iloc[7]) if len(row) > 7 else 0,
-            'base': safe_num(row.iloc[9]) if len(row) > 9 else 0,
-            'ret': safe_num(row.iloc[11]) if len(row) > 11 else 0,
+            'razon': safe_str(row.iloc[3]) if len(row) > 3 else "",   # Col D: Razón Social
+            'deb': safe_num(row.iloc[4]) if len(row) > 4 else 0,      # Col E: Débito
+            'cred': safe_num(row.iloc[5]) if len(row) > 5 else 0,     # Col F: Crédito
+            'saldo': safe_num(row.iloc[6]) if len(row) > 6 else 0,    # Col G: Saldo
         })
 
     # Directorio
     direc = {}
     for f in bal:
         if f['nit'] not in direc:
-            td = f['td'] if f['td'] else "31"
-            # Limpiar tipo doc (ej: "31.0" -> "31")
-            if '.' in td:
-                try:
-                    td = str(int(float(td)))
-                except:
-                    pass
+            td = f['td']
             r = f['razon']
             d = {'td': td, 'dv': calc_dv(f['nit']),
                  'a1': '', 'a2': '', 'n1': '', 'n2': '',
@@ -921,7 +779,6 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                 if len(p) >= 4: d['n2'] = ' '.join(p[3:])
             else:
                 d['rs'] = r
-            # Aplicar direcciones del directorio externo
             if f['nit'] in dir_externo:
                 ext = dir_externo[f['nit']]
                 if ext['dir']: d['dir'] = ext['dir']
@@ -933,7 +790,7 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                  'rs': 'CUANTIAS MENORES', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
 
     def t(nit):
-        return direc.get(nit, {'td': '31', 'dv': calc_dv(nit),
+        return direc.get(nit, {'td': detectar_tipo_doc(nit), 'dv': calc_dv(nit),
                                 'a1': '', 'a2': '', 'n1': '', 'n2': '',
                                 'rs': nit, 'dir': '', 'dp': '', 'mp': '', 'pais': '169'})
 
@@ -956,12 +813,11 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
     def escribir_tercero(ws, fila, col, nit, con_pais=False):
         d = t(nit)
         c = col
-        campos_texto = ['td', 'nit', 'dv', 'a1', 'a2', 'n1', 'n2', 'rs', 'dir', 'dp', 'mp']
         valores = [d['td'], nit, d['dv'], d['a1'], d['a2'], d['n1'], d['n2'], d['rs'], d['dir'], d['dp'], d['mp']]
         for v in valores:
             cell = ws.cell(fila, c)
             cell.value = v
-            cell.number_format = '@'  # Formato texto para preservar ceros a la izquierda
+            cell.number_format = '@'
             c += 1
         if con_pais:
             cell = ws.cell(fila, c)
@@ -985,21 +841,16 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
     resultados = {}
 
     # ========== PRE-CALCULAR RETENCIONES Y BASES POR NIT ==========
-    # Retenciones por NIT desde cuentas 2365xx (créditos)
-    ret_fte_por_nit = defaultdict(float)       # ReteFte Renta (236505-236530)
-    ret_iva_por_nit = defaultdict(float)       # Ret IVA (2367xx)
-    # Bases: total de gastos deducibles por NIT (débitos de 51xx-53xx)
+    ret_fte_por_nit = defaultdict(float)
+    ret_iva_por_nit = defaultdict(float)
     gastos_por_nit = defaultdict(float)
 
     for f in bal:
         cta = f['cta']
-        # Retenciones en la fuente por renta (236505 a 236530)
         if en_rango(cta, "236505", "236530"):
             ret_fte_por_nit[f['nit']] += f['cred']
-        # Retenciones de IVA (2367xx)
         elif en_rango(cta, "2367", "2367"):
             ret_iva_por_nit[f['nit']] += f['cred']
-        # Gastos como base (51xx, 52xx, 53xx = débitos)
         if cta[:2] in ("51", "52", "53") and f['deb'] > 0:
             gastos_por_nit[f['nit']] += f['deb']
 
@@ -1013,59 +864,50 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
     nits_en_1001 = set()
     for f in bal:
         conc, ded = concepto_1001(f['cta'], f.get('nom_cta', ''))
-        if not conc or conc == "5001":
-            continue
+        if not conc or conc == "5001": continue
         k = (conc, f['nit'])
-        if ded:
-            dic[k][0] += f['deb']
-        else:
-            dic[k][1] += f['deb']
+        if ded: dic[k][0] += f['deb']
+        else: dic[k][1] += f['deb']
         nits_en_1001.add(f['nit'])
 
-    # Asignar retenciones desde cuentas 2365xx cruzando por NIT
-    # Distribuir proporcionalmente la retención entre los conceptos del mismo NIT
     nit_conceptos = defaultdict(list)
     for (conc, nit), v in dic.items():
-        nit_conceptos[nit].append((conc, v[0] + v[1]))  # (concepto, total pagado)
+        nit_conceptos[nit].append((conc, v[0] + v[1]))
 
     for nit in nit_conceptos:
         ret_total = ret_fte_por_nit.get(nit, 0)
         ret_iva = ret_iva_por_nit.get(nit, 0)
-        if ret_total == 0 and ret_iva == 0:
-            continue
+        if ret_total == 0 and ret_iva == 0: continue
         total_pagado = sum(v for _, v in nit_conceptos[nit])
-        if total_pagado == 0:
-            continue
+        if total_pagado == 0: continue
         for conc, pago in nit_conceptos[nit]:
             proporcion = pago / total_pagado if total_pagado > 0 else 0
-            dic[(conc, nit)][2] += ret_total * proporcion  # Ret Fte Renta
-            dic[(conc, nit)][4] += ret_iva * proporcion     # Ret IVA
+            dic[(conc, nit)][2] += ret_total * proporcion
+            dic[(conc, nit)][4] += ret_iva * proporcion
 
     final = {}
     menores = defaultdict(lambda: [0.0] * 5)
     for (c, n), v in dic.items():
-        tiene_retencion = v[2] > 0 or v[4] > 0  # Ret Fte o Ret IVA
+        tiene_retencion = v[2] > 0 or v[4] > 0
         if v[0] + v[1] < C3UVT and not tiene_retencion:
-            for i in range(5):
-                menores[(c, NM)][i] += v[i]
+            for i in range(5): menores[(c, NM)][i] += v[i]
         else:
             final[(c, n)] = v
     for k, v in menores.items():
-        if k not in final:
-            final[k] = v
+        if k not in final: final[k] = v
 
     fila = 2
     for (conc, nit), v in sorted(final.items()):
         ws.cell(fila, 1).value = conc
         escribir_tercero(ws, fila, 2, nit, True)
-        ws.cell(fila, 14).value = int(v[0])     # Pago Deducible
-        ws.cell(fila, 15).value = int(v[1])     # Pago No Deducible
-        ws.cell(fila, 16).value = 0              # IVA Ded
-        ws.cell(fila, 17).value = 0              # IVA No Ded
-        ws.cell(fila, 18).value = int(v[2])     # Ret Fte Renta
-        ws.cell(fila, 19).value = 0              # Ret Fte Asumida
-        ws.cell(fila, 20).value = int(v[4])     # Ret IVA R.Comun
-        ws.cell(fila, 21).value = 0              # Ret IVA No Dom
+        ws.cell(fila, 14).value = int(v[0])
+        ws.cell(fila, 15).value = int(v[1])
+        ws.cell(fila, 16).value = 0
+        ws.cell(fila, 17).value = 0
+        ws.cell(fila, 18).value = int(v[2])
+        ws.cell(fila, 19).value = 0
+        ws.cell(fila, 20).value = int(v[4])
+        ws.cell(fila, 21).value = 0
         fmt(ws, fila, range(14, 22))
         zebra(ws, fila)
         fila += 1
@@ -1079,18 +921,12 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
     dic3 = defaultdict(lambda: [0.0, 0.0])
     for f in bal:
         conc = buscar_concepto(f['cta'], PARAM_1003, f.get('nom_cta', ''), KEYWORDS_1003)
-        if not conc:
-            continue
-        # Retención = crédito de la cuenta 2365xx
+        if not conc: continue
         dic3[(conc, f['nit'])][1] += f['cred']
-        # Base: si la columna J tiene dato, usarla; si no, tomar del gasto del mismo NIT
-        if f['base'] > 0:
-            dic3[(conc, f['nit'])][0] += f['base']
 
-    # Para NITs sin base explícita, usar el total de gastos como base
+    # Usar gastos del NIT como base gravable
     for (conc, nit), v in dic3.items():
         if v[0] == 0 and v[1] > 0:
-            # Usar gastos del mismo NIT como base gravable
             v[0] = gastos_por_nit.get(nit, 0)
 
     fila = 2
@@ -1153,20 +989,16 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
     dic7 = defaultdict(float)
     for f in bal:
         conc = buscar_concepto(f['cta'], PARAM_1007, f.get('nom_cta', ''), KEYWORDS_1007)
-        if not conc:
-            continue
+        if not conc: continue
         dic7[(conc, f['nit'])] += f['cred']
 
     final7 = {}
     men7 = defaultdict(float)
     for (c, n), v in dic7.items():
-        if v < C3UVT:
-            men7[(c, NM)] += v
-        else:
-            final7[(c, n)] = v
+        if v < C3UVT: men7[(c, NM)] += v
+        else: final7[(c, n)] = v
     for k, v in men7.items():
-        if k not in final7:
-            final7[k] = v
+        if k not in final7: final7[k] = v
 
     fila = 2
     for (conc, nit), val in sorted(final7.items()):
@@ -1187,23 +1019,18 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
     dic8 = defaultdict(float)
     for f in bal:
         conc = buscar_concepto(f['cta'], PARAM_1008, f.get('nom_cta', ''))
-        if not conc:
-            continue
+        if not conc: continue
         s = abs(f['saldo'])
-        if s == 0:
-            continue
+        if s == 0: continue
         dic8[(conc, f['nit'])] += s
 
     final8 = {}
     men8 = defaultdict(float)
     for (c, n), v in dic8.items():
-        if v < C12UVT:
-            men8[(c, NM)] += v
-        else:
-            final8[(c, n)] = v
+        if v < C12UVT: men8[(c, NM)] += v
+        else: final8[(c, n)] = v
     for k, v in men8.items():
-        if k not in final8:
-            final8[k] = v
+        if k not in final8: final8[k] = v
 
     fila = 2
     for (conc, nit), val in sorted(final8.items()):
@@ -1223,23 +1050,18 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
     dic9 = defaultdict(float)
     for f in bal:
         conc = buscar_concepto(f['cta'], PARAM_1009, f.get('nom_cta', ''))
-        if not conc:
-            continue
+        if not conc: continue
         s = abs(f['saldo'])
-        if s == 0:
-            continue
+        if s == 0: continue
         dic9[(conc, f['nit'])] += s
 
     final9 = {}
     men9 = defaultdict(float)
     for (c, n), v in dic9.items():
-        if v < C12UVT:
-            men9[(c, NM)] += v
-        else:
-            final9[(c, n)] = v
+        if v < C12UVT: men9[(c, NM)] += v
+        else: final9[(c, n)] = v
     for k, v in men9.items():
-        if k not in final9:
-            final9[k] = v
+        if k not in final9: final9[k] = v
 
     fila = 2
     for (conc, nit), val in sorted(final9.items()):
@@ -1308,14 +1130,12 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
 
     dic26 = defaultdict(lambda: [0.0] * 19)
     for f in bal:
-        if not en_rango(f['cta'], "5105", "5105") or f['deb'] == 0:
-            continue
+        if not en_rango(f['cta'], "5105", "5105") or f['deb'] == 0: continue
         nit = f['nit']
         nom = normalizar_nombre(f.get('nom_cta', ''))
         sc = f['cta'][4:6] if len(f['cta']) >= 6 else ""
         clasificado = False
 
-        # Intentar primero por subcuenta estándar
         if sc in ("06", "07", "08", "09", "10", "15"):
             dic26[nit][0] += f['deb']; clasificado = True
         elif sc in ("27",):
@@ -1333,13 +1153,12 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
             if d2['td'] == "13":
                 dic26[nit][3] += f['deb']; clasificado = True
         elif sc in ("02",):
-            dic26[nit][12] += f['deb']; clasificado = True  # Aporte Salud
+            dic26[nit][12] += f['deb']; clasificado = True
         elif sc in ("04",):
-            dic26[nit][13] += f['deb']; clasificado = True  # Aporte Pensión
+            dic26[nit][13] += f['deb']; clasificado = True
         elif sc in ("68", "72", "75"):
-            clasificado = True  # Parafiscales - no van en F2276
+            clasificado = True
 
-        # Si no clasificó por subcuenta, intentar por nombre
         if not clasificado and nom:
             palabras = set(nom.split())
             if any(kw in palabras for kw in ["sueldo", "salario", "basico", "jornal"]) or \
@@ -1361,15 +1180,13 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                 dic26[nit][10] += f['deb']
             elif any(kw in palabras for kw in ["honorario", "honorarios"]):
                 d2 = t(nit)
-                if d2['td'] == "13":
-                    dic26[nit][3] += f['deb']
-                else:
-                    dic26[nit][10] += f['deb']
+                if d2['td'] == "13": dic26[nit][3] += f['deb']
+                else: dic26[nit][10] += f['deb']
             elif any(kw in palabras for kw in ["parafiscal", "parafiscales", "icbf", "sena",
                                                 "compensar", "comfama", "cafam"]):
-                pass  # Parafiscales no van en F2276
+                pass
             else:
-                dic26[nit][10] += f['deb']  # Otros pagos laborales
+                dic26[nit][10] += f['deb']
 
     for f in bal:
         if en_rango(f['cta'], "2365", "2365") and f['nit'] in dic26:
@@ -1399,31 +1216,26 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
     # ========== VALIDACION TERCEROS (vs INTERNET) ==========
     validaciones = []
     if datos_rues:
-        warn_fill = PatternFill('solid', fgColor='FFF3CD')  # Amarillo
-        err_fill = PatternFill('solid', fgColor='F8D7DA')   # Rojo
-        ok_fill = PatternFill('solid', fgColor='D4EDDA')    # Verde
+        warn_fill = PatternFill('solid', fgColor='FFF3CD')
+        err_fill = PatternFill('solid', fgColor='F8D7DA')
+        ok_fill = PatternFill('solid', fgColor='D4EDDA')
 
         h_val = ["NIT", "Campo", "Valor en Balance", "Valor en Internet", "Estado", "Observación"]
         ws_val = nueva_hoja("Validacion Terceros", h_val)
 
         fila_val = 2
         for nit_v, info_rues in sorted(datos_rues.items()):
-            if nit_v not in direc or nit_v == NM:
-                continue
-
+            if nit_v not in direc or nit_v == NM: continue
             d_bal = direc[nit_v]
 
-            # --- Validar Dígito de Verificación ---
             dv_calculado = calc_dv(nit_v)
             dv_rues = str(info_rues.get('dv', '')).strip()
             if dv_rues and dv_calculado:
                 if dv_calculado == dv_rues:
-                    estado_dv = "✅ OK"
-                    fill_dv = ok_fill
+                    estado_dv = "✅ OK"; fill_dv = ok_fill
                     obs_dv = "DV coincide con internet y cálculo"
                 else:
-                    estado_dv = "❌ ERROR"
-                    fill_dv = err_fill
+                    estado_dv = "❌ ERROR"; fill_dv = err_fill
                     obs_dv = f"DV calculado={dv_calculado}, Internet={dv_rues}. REVISAR"
                     validaciones.append(('dv_error', nit_v))
 
@@ -1440,13 +1252,10 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                     ws_val.cell(fila_val, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
                 fila_val += 1
 
-            # --- Validar Razón Social ---
             rs_balance = d_bal.get('rs', '').strip()
-            # Si es persona natural, armar nombre completo del balance
             if d_bal.get('td') == '13':
                 partes = [d_bal.get('a1',''), d_bal.get('a2',''), d_bal.get('n1',''), d_bal.get('n2','')]
                 rs_balance = ' '.join(p for p in partes if p).strip()
-
             rs_rues = info_rues.get('razon_social', '').strip()
 
             if rs_rues and rs_balance:
@@ -1455,17 +1264,14 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                 rs_norm_rues = normalizar_texto(rs_rues)
 
                 if rs_norm_bal == rs_norm_rues:
-                    estado_rs = "✅ OK"
-                    fill_rs = ok_fill
+                    estado_rs = "✅ OK"; fill_rs = ok_fill
                     obs_rs = "Razón social coincide exactamente"
                 elif sim >= 0.7:
-                    estado_rs = "⚠️ SIMILAR"
-                    fill_rs = warn_fill
+                    estado_rs = "⚠️ SIMILAR"; fill_rs = warn_fill
                     obs_rs = f"Similitud {sim:.0%}. Verificar ortografía"
                     validaciones.append(('rs_warn', nit_v))
                 else:
-                    estado_rs = "❌ DIFERENTE"
-                    fill_rs = err_fill
+                    estado_rs = "❌ DIFERENTE"; fill_rs = err_fill
                     obs_rs = f"Similitud {sim:.0%}. Razón social NO coincide con fuente pública"
                     validaciones.append(('rs_error', nit_v))
 
@@ -1482,14 +1288,12 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                     ws_val.cell(fila_val, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
                 fila_val += 1
 
-        # Ajustar anchos
         anchos_val = [18, 22, 40, 40, 16, 50]
         for i, ancho in enumerate(anchos_val, 1):
             ws_val.column_dimensions[openpyxl.utils.get_column_letter(i)].width = ancho
         ws_val.freeze_panes = 'A2'
 
     # ========== RESUMEN ==========
-    # Contar terceros con dirección
     n_con_dir = sum(1 for d in direc.values() if d.get('dir', ''))
 
     wsr = wb.active
@@ -1505,7 +1309,6 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
     wsr['A6'] = "Con dirección:"
     wsr['B6'] = n_con_dir
 
-    # Info de validación en resumen
     if datos_rues:
         n_dv_err = sum(1 for tipo, _ in validaciones if tipo == 'dv_error')
         n_rs_err = sum(1 for tipo, _ in validaciones if tipo == 'rs_error')
@@ -1514,12 +1317,10 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
         wsr['B7'] = len(datos_rues)
         wsr['A8'] = "  ❌ DV con error:"
         wsr['B8'] = n_dv_err
-        if n_dv_err > 0:
-            wsr['B8'].font = Font(bold=True, color='CC0000')
+        if n_dv_err > 0: wsr['B8'].font = Font(bold=True, color='CC0000')
         wsr['A9'] = "  ❌ Razón social diferente:"
         wsr['B9'] = n_rs_err
-        if n_rs_err > 0:
-            wsr['B9'].font = Font(bold=True, color='CC0000')
+        if n_rs_err > 0: wsr['B9'].font = Font(bold=True, color='CC0000')
         wsr['A10'] = "  ⚠️ Razón social similar:"
         wsr['B10'] = n_rs_warn
         fila_inicio_formatos = 12
@@ -1566,11 +1367,11 @@ with col1:
     st.markdown("""
     El archivo Excel debe tener esta estructura desde la **fila de datos** (puede tener encabezados arriba):
 
-    | Col A | Col B | Col C | Col D | Col E | Col F | Col G | Col H |
-    |-------|-------|-------|-------|-------|-------|-------|-------|
-    | Cuenta | Nombre | Tipo Doc | NIT | Razón Social | Débito | Crédito | Saldo |
+    | Col A | Col B | Col C | Col D | Col E | Col F | Col G |
+    |-------|-------|-------|-------|-------|-------|-------|
+    | Cuenta | Nombre Cuenta | NIT | Razón Social | Débito | Crédito | Saldo |
 
-    Columnas opcionales: I=Centro Costo, J=Base Gravable, K=Tarifa Ret, L=Valor Retención
+    💡 *El tipo de documento (NIT/Cédula) se detecta automáticamente según el número de identificación.*
     """)
 
     uploaded_file = st.file_uploader("Selecciona el archivo Excel", type=['xlsx', 'xls', 'csv'])
@@ -1610,7 +1411,6 @@ with col_dir2:
     st.markdown("#### 📥 Plantilla")
     st.markdown("Descarga la plantilla y llénala con los datos de tus terceros:")
 
-    # Generar plantilla de directorio
     from io import BytesIO as _BytesIO
     wb_plantilla = openpyxl.Workbook()
     ws_p = wb_plantilla.active
@@ -1623,7 +1423,6 @@ with col_dir2:
         cell.font = hfont_p
         cell.fill = hf_p
         cell.alignment = Alignment(horizontal='center')
-    # Ejemplos
     ejemplos = [
         ("890904997", "CL 30 65-15", "05", "001", "169"),
         ("800123456", "KR 7 32-16 OF 801", "11", "001", "169"),
@@ -1635,7 +1434,6 @@ with col_dir2:
             cell.value = v
             cell.number_format = '@'
 
-    # Hoja de códigos DIAN
     ws_cod = wb_plantilla.create_sheet("Codigos DIAN")
     ws_cod['A1'] = "DEPARTAMENTOS DIAN"
     ws_cod['A1'].font = Font(bold=True, size=11)
@@ -1651,18 +1449,14 @@ with col_dir2:
         ("85","Casanare"),("86","Putumayo"),("88","San Andrés"),("91","Amazonas"),
         ("94","Guainía"),("95","Guaviare"),("97","Vaupés"),("99","Vichada"),
     ]
-    ws_cod['A2'] = "Código"
-    ws_cod['B2'] = "Departamento"
-    ws_cod['A2'].font = Font(bold=True)
-    ws_cod['B2'].font = Font(bold=True)
+    ws_cod['A2'] = "Código"; ws_cod['B2'] = "Departamento"
+    ws_cod['A2'].font = Font(bold=True); ws_cod['B2'].font = Font(bold=True)
     for i, (cod, nom) in enumerate(dptos, 3):
         ws_cod.cell(i, 1).value = cod
         ws_cod.cell(i, 1).number_format = '@'
         ws_cod.cell(i, 2).value = nom
-    ws_cod['D2'] = "Código"
-    ws_cod['E2'] = "País"
-    ws_cod['D2'].font = Font(bold=True)
-    ws_cod['E2'].font = Font(bold=True)
+    ws_cod['D2'] = "Código"; ws_cod['E2'] = "País"
+    ws_cod['D2'].font = Font(bold=True); ws_cod['E2'].font = Font(bold=True)
     paises_ej = [("169","Colombia"),("249","Estados Unidos"),("200","México"),
                  ("210","Panamá"),("234","España"),("240","Venezuela")]
     for i, (cod, nom) in enumerate(paises_ej, 3):
@@ -1696,7 +1490,6 @@ if uploaded_file:
         with st.expander("👁 Vista previa del balance", expanded=False):
             st.dataframe(df.head(20), use_container_width=True)
 
-        # Cargar directorio si fue subido
         df_dir = None
         if uploaded_dir:
             try:
@@ -1716,8 +1509,6 @@ if uploaded_file:
                                         help="Busca direcciones y razón social en RUES, Datos Abiertos y web")
 
         if btn_normal or btn_internet:
-
-            # Búsqueda en internet si se eligió ese botón
             datos_rues = None
             df_dir_auto = None
             if btn_internet:
@@ -1726,7 +1517,6 @@ if uploaded_file:
                 st.markdown("---")
                 st.markdown("### 🌐 Búsqueda de terceros en internet")
 
-                # PASO 0: Test de conexión a internet
                 st.write("**Probando conexión a internet...**")
                 _test_urls = [
                     ("Google", "https://www.google.com", 5),
@@ -1739,18 +1529,15 @@ if uploaded_file:
                 for nombre, url, timeout in _test_urls:
                     try:
                         r = _req.get(url, timeout=timeout, headers={
-                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                        })
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
                         _test_results.append(f"✅ {nombre}: HTTP {r.status_code}")
                     except _req.exceptions.Timeout:
                         _test_results.append(f"⏱️ {nombre}: Timeout ({timeout}s)")
                     except _req.exceptions.ConnectionError as e:
-                        err = str(e)[:60]
-                        _test_results.append(f"❌ {nombre}: Conexión fallida — {err}")
+                        _test_results.append(f"❌ {nombre}: Conexión fallida — {str(e)[:60]}")
                     except Exception as e:
                         _test_results.append(f"❌ {nombre}: {type(e).__name__}: {str(e)[:60]}")
 
-                # Mostrar resultados del test de conexión
                 for tr in _test_results:
                     st.write(tr)
 
@@ -1762,11 +1549,9 @@ if uploaded_file:
                              "Usa la plantilla de directorio para agregar direcciones manualmente.")
                 else:
                     st.write("---")
-
-                    # Extraer NITs únicos del balance
                     nits_unicos = set()
                     for _, row in df.iterrows():
-                        nit_val = safe_str(row.iloc[3])
+                        nit_val = safe_str(row.iloc[2])  # Col C: NIT (nuevo índice)
                         if nit_val and nit_val != NM:
                             if '.' in nit_val:
                                 try: nit_val = str(int(float(nit_val)))
@@ -1777,11 +1562,8 @@ if uploaded_file:
                     st.write(f"**{len(nits_list)}** NITs únicos para consultar")
 
                     progress_bar = st.progress(0, text="🔍 Buscando...")
-
-                    # Acumular log
                     _log_msgs = []
-                    def _log_fn(msg):
-                        _log_msgs.append(msg)
+                    def _log_fn(msg): _log_msgs.append(msg)
 
                     try:
                         datos_rues, api_fallida = buscar_info_terceros(nits_list, progress_bar, log_fn=_log_fn)
@@ -1791,8 +1573,6 @@ if uploaded_file:
                         api_fallida = True
 
                     progress_bar.empty()
-
-                    # Mostrar log
                     st.write("**📋 Log de búsqueda:**")
                     for msg in _log_msgs:
                         st.markdown(msg)
@@ -1816,15 +1596,12 @@ if uploaded_file:
                             for nit_e, datos_e in datos_rues.items():
                                 if datos_e.get('dir'):
                                     rows_auto.append({
-                                        'NIT': nit_e,
-                                        'Direccion': datos_e['dir'],
-                                        'Cod_Depto': datos_e['dp'],
-                                        'Cod_Mpio': datos_e['mp'],
+                                        'NIT': nit_e, 'Direccion': datos_e['dir'],
+                                        'Cod_Depto': datos_e['dp'], 'Cod_Mpio': datos_e['mp'],
                                         'Cod_Pais': datos_e.get('pais', '169'),
                                     })
                             if rows_auto:
                                 df_dir_auto = pd.DataFrame(rows_auto)
-
                     elif api_fallida:
                         st.error("❌ No se encontraron datos. Revisa el log arriba.")
                     else:
@@ -1847,7 +1624,6 @@ if uploaded_file:
             c3.metric("Con dirección", f"{n_con_dir:,}")
             c4.metric("Registros generados", f"{sum(resultados.values()):,}")
 
-            # Mostrar resultados de validación si hay
             if validaciones:
                 n_dv_err = sum(1 for tipo, _ in validaciones if tipo == 'dv_error')
                 n_rs_err = sum(1 for tipo, _ in validaciones if tipo == 'rs_error')
@@ -1855,19 +1631,12 @@ if uploaded_file:
 
                 st.markdown("### 🔍 Validación vs Internet")
                 cv1, cv2, cv3 = st.columns(3)
-                if n_dv_err > 0:
-                    cv1.error(f"❌ **{n_dv_err}** DV con error")
-                else:
-                    cv1.success("✅ Todos los DV correctos")
-                if n_rs_err > 0:
-                    cv2.error(f"❌ **{n_rs_err}** razones sociales diferentes")
-                else:
-                    cv2.success("✅ Razones sociales correctas")
-                if n_rs_warn > 0:
-                    cv3.warning(f"⚠️ **{n_rs_warn}** razones sociales similares (verificar)")
-                else:
-                    cv3.success("✅ Sin advertencias")
-
+                if n_dv_err > 0: cv1.error(f"❌ **{n_dv_err}** DV con error")
+                else: cv1.success("✅ Todos los DV correctos")
+                if n_rs_err > 0: cv2.error(f"❌ **{n_rs_err}** razones sociales diferentes")
+                else: cv2.success("✅ Razones sociales correctas")
+                if n_rs_warn > 0: cv3.warning(f"⚠️ **{n_rs_warn}** razones sociales similares (verificar)")
+                else: cv3.success("✅ Sin advertencias")
                 st.info("📋 Revisa la hoja **'Validacion Terceros'** en el archivo descargado para ver el detalle completo.")
             elif btn_internet and datos_rues:
                 st.success("✅ Validación completada: no se encontraron diferencias.")
@@ -1878,7 +1647,6 @@ if uploaded_file:
                 with cols[i % 5]:
                     st.metric(nombre.split(" ", 1)[0], f"{n} reg")
 
-            # Generar descarga
             output = BytesIO()
             wb.save(output)
             output.seek(0)
@@ -1905,5 +1673,4 @@ st.markdown("""
     ⚠️ Esta herramienta es un asistente. El contador debe validar los resultados antes de presentar a la DIAN.
 </div>
 """, unsafe_allow_html=True)
-
 
