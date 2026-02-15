@@ -13,8 +13,7 @@
     --cream: #FAF6EE;
     --white: #FFFFFF;
     --slate: #64748B;
-    --green: #22C55E;
-    --green-dark: #16A34A;
+    --green: #25D366;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -31,7 +30,7 @@
   }
   .success-icon {
     width: 80px; height: 80px;
-    background: rgba(34,197,94,0.12);
+    background: rgba(37,211,102,0.12);
     border-radius: 50%;
     display: grid; place-items: center;
     margin: 0 auto 28px;
@@ -41,6 +40,10 @@
   @keyframes popIn {
     from { transform: scale(0); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   h1 {
     font-family: 'DM Serif Display', serif;
@@ -53,56 +56,52 @@
     line-height: 1.6;
     margin-bottom: 36px;
   }
-  .password-box {
+
+  .whatsapp-box {
     background: var(--navy);
     border-radius: 20px;
     padding: 36px 32px;
     margin-bottom: 32px;
     animation: fadeUp 0.6s 0.2s ease-out both;
   }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .password-label {
+  .whatsapp-label {
     color: rgba(255,255,255,0.5);
     font-size: 0.8rem;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
     font-weight: 600;
   }
-  .password-value {
-    color: var(--gold-light);
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: 2px;
-    font-family: 'Manrope', monospace;
-    user-select: all;
-    margin-bottom: 18px;
-    word-break: break-all;
+  .whatsapp-msg {
+    color: rgba(255,255,255,0.8);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
   }
-  .copy-btn {
-    background: rgba(255,255,255,0.1);
+  .whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--green);
     color: var(--white);
-    border: 1px solid rgba(255,255,255,0.15);
-    padding: 10px 28px;
+    padding: 16px 36px;
     border-radius: 50px;
     font-family: 'Manrope', sans-serif;
-    font-weight: 600;
-    font-size: 0.88rem;
-    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-decoration: none;
     transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(37,211,102,0.3);
   }
-  .copy-btn:hover {
-    background: rgba(255,255,255,0.18);
-    border-color: rgba(255,255,255,0.3);
+  .whatsapp-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(37,211,102,0.4);
+    background: #20BD5A;
   }
-  .copy-btn.copied {
-    background: rgba(34,197,94,0.2);
-    border-color: rgba(34,197,94,0.4);
-    color: #86efac;
+  .whatsapp-btn svg {
+    width: 22px; height: 22px; fill: var(--white);
   }
+
   .steps-box {
     background: var(--white);
     border: 1px solid rgba(11,29,58,0.08);
@@ -138,26 +137,24 @@
     flex-shrink: 0;
     margin-top: 1px;
   }
-  .open-app-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--navy);
-    color: var(--gold-light);
-    padding: 16px 36px;
-    border-radius: 50px;
-    font-family: 'Manrope', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    text-decoration: none;
-    transition: all 0.25s;
-    box-shadow: 0 4px 20px rgba(11,29,58,0.25);
-    animation: fadeUp 0.6s 0.6s ease-out both;
+
+  .format-info {
+    background: rgba(31,78,121,0.05);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    text-align: left;
+    animation: fadeUp 0.6s 0.5s ease-out both;
   }
-  .open-app-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(11,29,58,0.35);
+  .format-info p {
+    font-size: 0.85rem;
+    color: var(--slate);
+    line-height: 1.6;
+    margin-bottom: 8px;
   }
+  .format-info p:last-child { margin-bottom: 0; }
+  .format-info strong { color: var(--navy); }
+
   .back-link {
     display: block;
     margin-top: 20px;
@@ -165,6 +162,7 @@
     font-size: 0.85rem;
     text-decoration: none;
     transition: color 0.2s;
+    animation: fadeUp 0.6s 0.6s ease-out both;
   }
   .back-link:hover { color: var(--navy); }
 </style>
@@ -174,38 +172,32 @@
 <div class="container">
   <div class="success-icon">✅</div>
   <h1>¡Gracias por tu compra!</h1>
-  <p class="subtitle">Tu pago fue procesado exitosamente. Usa la contraseña de abajo para acceder a la aplicación.</p>
+  <p class="subtitle">Tu pago fue procesado exitosamente. Ahora envíanos tu balance de prueba por WhatsApp y te entregamos tu Excel listo.</p>
 
-  <div class="password-box">
-    <p class="password-label">Tu contraseña de acceso</p>
-    <p class="password-value" id="password">ExoDIAN-2025-PRO</p>
-    <button class="copy-btn" id="copyBtn" onclick="copyPassword()">📋 Copiar contraseña</button>
+  <div class="whatsapp-box">
+    <p class="whatsapp-label">Siguiente paso</p>
+    <p class="whatsapp-msg">Haz clic en el botón de abajo para enviarnos tu balance de prueba por tercero. Te responderemos con tu Excel listo en menos de 24 horas.</p>
+    <a href="https://wa.me/573156178610?text=Hola%2C%20acabo%20de%20pagar%20el%20servicio%20de%20Ex%C3%B3gena%20DIAN.%20Les%20env%C3%ADo%20mi%20balance%20de%20prueba." target="_blank" class="whatsapp-btn">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Enviar balance por WhatsApp
+    </a>
   </div>
 
   <div class="steps-box">
-    <p class="steps-title">Pasos para usar la aplicación:</p>
-    <div class="step-item"><div class="step-num">1</div> Haz clic en "Abrir aplicación" aquí abajo</div>
-    <div class="step-item"><div class="step-num">2</div> Ingresa la contraseña que copiaste</div>
-    <div class="step-item"><div class="step-num">3</div> Sube tu balance de prueba y genera tus formatos</div>
+    <p class="steps-title">¿Qué pasa ahora?</p>
+    <div class="step-item"><div class="step-num">1</div> Haz clic en el botón de WhatsApp</div>
+    <div class="step-item"><div class="step-num">2</div> Adjunta tu balance de prueba por tercero (Excel o CSV)</div>
+    <div class="step-item"><div class="step-num">3</div> Nosotros lo procesamos y te devolvemos el Excel listo</div>
+    <div class="step-item"><div class="step-num">4</div> Cargas el archivo en el prevalidador DIAN y listo</div>
   </div>
 
-  <a href="https://exogena-dian-2025.streamlit.app" target="_blank" class="open-app-btn">Abrir aplicación →</a>
+  <div class="format-info">
+    <p><strong>📋 Recuerda:</strong> Tu balance debe tener esta estructura:</p>
+    <p>Columna A: Cuenta (PUC) · Columna B: Nombre · Columna C: Tipo doc · Columna D: NIT · Columna E: Razón social · Columnas F–H: Débito, Crédito, Saldo</p>
+  </div>
+
   <a href="https://exogenadian.com" class="back-link">← Volver al inicio</a>
 </div>
 
-<script>
-function copyPassword() {
-  const password = document.getElementById('password').textContent;
-  navigator.clipboard.writeText(password).then(() => {
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = '✅ ¡Copiada!';
-    btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = '📋 Copiar contraseña';
-      btn.classList.remove('copied');
-    }, 3000);
-  });
-}
-</script>
 </body>
 </html>
