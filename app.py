@@ -1687,13 +1687,14 @@ if uploaded_file:
 
         if st.button("🚀 PROCESAR EXÓGENA", type="primary", use_container_width=True):
 
-            # Debug: mostrar estado del checkbox
-            st.write(f"🔧 Debug: buscar_auto = **{buscar_auto}**")
+            # Leer del session_state directamente (el checkbox se resetea en rerun)
+            buscar_auto_val = st.session_state.get("buscar_internet", False)
+            st.write(f"🔧 Debug: buscar_auto = **{buscar_auto_val}**")
 
             # Búsqueda en internet si se activó
             datos_rues = None
             df_dir_auto = None
-            if buscar_auto:
+            if buscar_auto_val:
                 import requests as _req
 
                 st.markdown("---")
