@@ -673,13 +673,22 @@ PARAM_1008 = [
 ]
 
 # =====================================================================
-# PARAM_1009 — Cuentas por pagar (incluye impuestos por tercero)
+# PARAM_1009 — Cuentas por pagar: TODAS las de clase 2 (pasivo)
+# Impuestos y retenciones → se agrupan a DIAN en el procesamiento
 # =====================================================================
 PARAM_1009 = [
-    ("2201", "2205", "2209"),    # Proveedores nacionales
     ("2202", "2105", "2199"),    # Obligaciones financieras
-    ("2207", "2380", "2389"),    # Acreedores varios
-    ("2210", "2335", "2369"),    # Costos por pagar, acreedores oficiales, retenciones
+    ("2201", "2205", "2295"),    # Proveedores nacionales y del exterior
+    ("2204", "2305", "2334"),    # Cuentas corrientes, costos por pagar
+    ("2210", "2335", "2364"),    # Costos por pagar, dividendos, acreedores oficiales
+    ("2206", "2365", "2369"),    # Retenciones y aportes de nómina → DIAN
+    ("2207", "2380", "2399"),    # Acreedores varios
+    ("2208", "2404", "2499"),    # Impuestos por pagar → DIAN
+    ("2209", "2505", "2599"),    # Obligaciones laborales
+    ("2210", "2605", "2699"),    # Pasivos estimados y provisiones
+    ("2210", "2705", "2799"),    # Diferidos
+    ("2210", "2805", "2899"),    # Otros pasivos
+    ("2210", "2905", "2999"),    # Bonos y papeles comerciales
 ]
 
 MAPEO_1012 = [
@@ -1130,30 +1139,47 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     resultados['F1001 Pagos'] = len(final)
 
     # =====================================================================
-    # CORRECCIÓN 5: F1003 — Usar DÉBITOS para cuentas 1355
+    # F1003 — Retenciones que le practicaron
+    # Solo cta 1355 con terceros reales (excluye DIAN, ICA, saldos a favor)
+    # Si saldo = 0: usar débitos (la retención se cruzó en el año)
+    # Si saldo > 0: usar saldo (pendiente de cruzar)
     # =====================================================================
     h = ["Concepto", "Tipo Doc", "No ID", "DV", "Apellido1", "Apellido2", "Nombre1", "Nombre2",
          "Razon Social", "Direccion", "Dpto", "Mpio", "Base Retencion", "Retencion Acumulada"]
     ws = nueva_hoja("F1003 Retenciones", h)
 
+    # NITs a excluir del F1003 (DIAN, entes territoriales)
+    NITS_EXCLUIR_1003 = {NIT_DIAN, "899999090", "899999063"}  # DIAN, Bogotá, etc.
+
     dic3 = defaultdict(lambda: [0.0, 0.0])
     for f in bal:
         if not f['nit']: continue
-        # F1003 solo al nivel de subcuenta detalle (mín 8 dígitos)
-        # Esto evita atrapar filas resumen como "135515 retencion en la fuente"
-        if len(f['cta']) < 8: continue
-        conc = buscar_concepto(f['cta'], PARAM_1003, f.get('nom_cta', ''), KEYWORDS_1003)
-        if not conc: continue
+        cta = f['cta']
+        if not cta.startswith('1355'): continue
+        # Solo subcuentas detalle (mín 6 dígitos para nivel de concepto)
+        if len(cta) < 6: continue
+        # Excluir: ICA (135518), saldos a favor (135595), autorretenciones (135599)
+        if cta.startswith('135518'): continue   # ReteICA → no va en F1003
+        if cta.startswith('135595'): continue   # Saldos a favor
+        if cta.startswith('135599'): continue   # Autorretenciones
+        # Excluir terceros institucionales (DIAN, entes territoriales)
+        if f['nit'] in NITS_EXCLUIR_1003: continue
 
-        # CORRECCIÓN: Para 1355xx usar DÉBITOS (lo que retuvieron en el año)
-        # El saldo puede estar en $0 porque el cliente ya cruzó contra la DIAN
-        if f['cta'].startswith('1355'):
-            val = f['deb']
+        # Lógica de valor:
+        saldo = abs(f['saldo'])
+        deb = f['deb']
+        if saldo > 0:
+            val = saldo    # Tiene saldo pendiente → reportar saldo
+        elif deb > 0:
+            val = deb      # Saldo en 0 pero tuvo movimiento → reportar débitos
         else:
-            val = abs(f['saldo'])
+            continue       # Sin saldo ni movimiento → no reportar
 
-        if val > 0:
-            dic3[(conc, f['nit'])][1] += val
+        # Buscar concepto por rango de subcuenta
+        conc = buscar_concepto(cta, PARAM_1003, f.get('nom_cta', ''), KEYWORDS_1003)
+        if not conc: conc = "1308"  # Otras retenciones como default
+
+        dic3[(conc, f['nit'])][1] += val
 
     ingresos_por_nit = defaultdict(float)
     for f in bal:
@@ -1295,67 +1321,54 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     resultados['F1008 CxC'] = len(final8)
 
     # =====================================================================
-    # F1009 — Cuentas por Pagar
-    # CORRECCIÓN 6: Impuestos (2365, 2367, 2404, 2408) agrupados a DIAN
+    # F1009 — Cuentas por Pagar (TODO el pasivo — clase 2)
+    # Impuestos y retenciones (2365, 2367, 24xx) → agrupados a la DIAN
+    # Saldo = 0 → no se reporta
     # =====================================================================
     h = ["Concepto", "Tipo Doc", "No ID", "DV", "Apellido1", "Apellido2", "Nombre1", "Nombre2",
          "Razon Social", "Direccion", "Dpto", "Mpio", "Saldo CxP Dic31"]
     ws = nueva_hoja("F1009 CxP", h)
 
-    # Pre-cálculo: saldos de impuestos a nivel de cuenta madre (sin tercero)
-    saldos_impuestos_dian = {}
-    for _, row in df_balance.iterrows():
-        cta_raw = safe_str(row.iloc[CI]).replace('.', '').strip()
-        nit_raw = safe_str(row.iloc[TI]).strip()
-        # Filas sin tercero = resumen de cuenta
-        if not nit_raw or nit_raw == '0' or nit_raw == '':
-            for prefix in CUENTAS_IMPUESTOS_DIAN:
-                if cta_raw == prefix or (cta_raw.startswith(prefix) and len(cta_raw) <= len(prefix) + 2):
-                    try:
-                        if 'saldo' in col_map:
-                            saldo_v = abs(safe_num(row.iloc[SI]))
-                        else:
-                            deb_v = safe_num(row.iloc[DI])
-                            cre_v = safe_num(row.iloc[KI])
-                            saldo_v = abs(cre_v - deb_v)
-                    except:
-                        saldo_v = 0
-                    if saldo_v > 0:
-                        if prefix not in saldos_impuestos_dian:
-                            saldos_impuestos_dian[prefix] = 0
-                        saldos_impuestos_dian[prefix] = max(saldos_impuestos_dian[prefix], saldo_v)
+    # Cuentas que se agrupan a la DIAN (impuestos y retenciones de nómina)
+    PREFIJOS_DIAN_F1009 = ("2365", "2367", "2368", "2404", "2408", "2412")
+
+    # Asegurar que DIAN esté en el directorio
+    if NIT_DIAN not in direc:
+        direc[NIT_DIAN] = {
+            'td': '31', 'dv': calc_dv(NIT_DIAN),
+            'a1': '', 'a2': '', 'n1': '', 'n2': '',
+            'rs': 'DIRECCIÓN DE IMPUESTOS Y ADUANAS NACIONALES - DIAN',
+            'dir': 'CRA 8 # 6C-38', 'dp': '11', 'mp': '11001', 'pais': '169',
+        }
 
     dic9 = defaultdict(float)
     for f in bal:
-        if not f['nit']: continue
         cta = f['cta']
+        if cta[:1] != '2': continue  # Solo clase 2 (pasivo)
         s = abs(f['saldo'])
-        if s == 0: continue
-        # Saltar cuentas de impuestos (van agrupadas a DIAN)
-        es_impuesto = any(cta.startswith(p) for p in CUENTAS_IMPUESTOS_DIAN)
-        if es_impuesto:
-            continue
-        conc = buscar_concepto(cta, PARAM_1009, f.get('nom_cta', ''))
-        if not conc: continue
-        dic9[(conc, f['nit'])] += s
+        if s == 0: continue  # Saldo cero → no reportar
 
-    # Agregar impuestos agrupados a nombre de la DIAN
-    total_impuestos_dian = sum(saldos_impuestos_dian.values())
-    if total_impuestos_dian > 0:
-        dic9[("2210", NIT_DIAN)] = total_impuestos_dian
-        # Asegurar que DIAN esté en el directorio
-        if NIT_DIAN not in direc:
-            direc[NIT_DIAN] = {
-                'td': '31', 'dv': calc_dv(NIT_DIAN),
-                'a1': '', 'a2': '', 'n1': '', 'n2': '',
-                'rs': 'DIRECCIÓN DE IMPUESTOS Y ADUANAS NACIONALES - DIAN',
-                'dir': 'CRA 8 # 6C-38', 'dp': '11', 'mp': '11001', 'pais': '169',
-            }
+        # Buscar concepto
+        conc = buscar_concepto(cta, PARAM_1009, f.get('nom_cta', ''))
+        if not conc:
+            # Default: todo lo de clase 2 que no matcheó → 2210 (otros pasivos)
+            conc = "2210"
+
+        # Cuentas de impuestos/retenciones → agrupar a la DIAN
+        es_impuesto_dian = any(cta.startswith(p) for p in PREFIJOS_DIAN_F1009)
+        if es_impuesto_dian:
+            dic9[(conc, NIT_DIAN)] += s
+        elif f['nit']:
+            dic9[(conc, f['nit'])] += s
+        # Sin NIT y no es impuesto → cuantía menor
 
     final9 = {}
     men9 = defaultdict(float)
     for (c, n), v in dic9.items():
-        if v < C12UVT:
+        if n == NIT_DIAN:
+            # DIAN siempre va identificada (no se agrupa a cuantías menores)
+            final9[(c, n)] = final9.get((c, n), 0) + v
+        elif v < C12UVT:
             men9[(c, NM)] += v
         else:
             final9[(c, n)] = v
@@ -1426,8 +1439,16 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
                                 'mp': '', 'pais': '169'
                             }
                         break
-                if not nit: continue
+                if not nit:
+                    # Banco sin tercero identificado → incluir con NM para diligenciar después
+                    nit = NM
             dic12[("8301", nit)] += saldo
+            continue
+
+        # Caja (1105): incluir aunque no tenga tercero
+        if en_rango(cta, "1105", "1105"):
+            nit = f['nit'] if f['nit'] else NM
+            dic12[("8302", nit)] += saldo
             continue
 
         # Resto de inversiones
@@ -1457,6 +1478,12 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     ws = nueva_hoja("F2276 Rentas Trabajo", h)
 
     dic26 = defaultdict(lambda: [0.0] * 19)
+    # Índices del array → columnas Excel:
+    # 0=Salarios, 1=EmolEcles, 2=Honor383, 3=Serv383, 4=Comis383,
+    # 5=Pensiones, 6=Vacaciones, 7=CesantíaseInt, 8=Incapacidades,
+    # 9=OtrosPagLab, 10=TotalBruto, 11=AporteSalud, 12=AportePension,
+    # 13=SolPensional, 14=VolEmpleador, 15=VolTrabajador, 16=AFC,
+    # 17=RetFte, 18=TotalPagos
     for f in bal:
         if not f['nit']: continue
         if not en_rango(f['cta'], "5105", "5105"): continue
@@ -1466,64 +1493,82 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         nom = normalizar_nombre(f.get('nom_cta', ''))
         sc = f['cta'][4:6] if len(f['cta']) >= 6 else ""
         clasificado = False
-        if sc in ("06", "07", "08", "09", "10", "15"):
+
+        # Subcuentas por código PUC
+        if sc in ("03",):
+            # 510503 = Salario integral → va en Salarios
+            dic26[nit][0] += valor; clasificado = True
+        elif sc in ("06", "07", "08", "09", "10", "15"):
+            # Sueldos, horas extra, recargos, auxilio transporte
             dic26[nit][0] += valor; clasificado = True
         elif sc in ("27",):
-            dic26[nit][10] += valor; clasificado = True
+            # Auxilio de transporte → Salarios (hace parte del ingreso laboral)
+            dic26[nit][0] += valor; clasificado = True
         elif sc in ("30", "33"):
-            dic26[nit][8] += valor; clasificado = True
-        elif sc in ("36",):
-            dic26[nit][10] += valor; clasificado = True
-        elif sc in ("39",):
+            # Cesantías e intereses → [7]
             dic26[nit][7] += valor; clasificado = True
+        elif sc in ("36",):
+            # Prima de servicios → [9] Otros pagos laborales
+            dic26[nit][9] += valor; clasificado = True
+        elif sc in ("39",):
+            # Vacaciones → [6]
+            dic26[nit][6] += valor; clasificado = True
         elif sc in ("42", "45"):
-            dic26[nit][10] += valor; clasificado = True
-        elif sc in ("01", "03", "05"):
+            # Bonificaciones, dotación → [9] Otros pagos laborales
+            dic26[nit][9] += valor; clasificado = True
+        elif sc in ("01", "05"):
+            # Honorarios a personas naturales → [2] Honor 383
             d2 = t(nit)
             if d2['td'] == "13":
-                dic26[nit][3] += valor; clasificado = True
+                dic26[nit][2] += valor; clasificado = True
         elif sc in ("02",):
-            dic26[nit][12] += valor; clasificado = True
+            # Aportes a salud (EPS) → [11] Aporte Salud
+            dic26[nit][11] += valor; clasificado = True
         elif sc in ("04",):
-            dic26[nit][13] += valor; clasificado = True
+            # Aportes a pensión → [12] Aporte Pension
+            dic26[nit][12] += valor; clasificado = True
         elif sc in ("68", "72", "75"):
+            # Parafiscales (ICBF, SENA, Cajas) → no van en F2276
             clasificado = True
+
         if not clasificado and nom:
             palabras = set(nom.split())
-            if any(kw in palabras for kw in ["sueldo", "salario", "basico", "jornal"]) or \
+            if any(kw in nom for kw in ["salario integral", "integral"]):
+                dic26[nit][0] += valor
+            elif any(kw in palabras for kw in ["sueldo", "salario", "basico", "jornal"]) or \
                any(kw in nom for kw in ["hora extra", "horas extra", "recargo"]):
                 dic26[nit][0] += valor
             elif any(kw in nom for kw in ["cesantia", "interes sobre cesantia", "intereses cesantia"]):
-                dic26[nit][8] += valor
-            elif any(kw in palabras for kw in ["vacacion", "vacaciones"]):
                 dic26[nit][7] += valor
+            elif any(kw in palabras for kw in ["vacacion", "vacaciones"]):
+                dic26[nit][6] += valor
             elif any(kw in nom for kw in ["prima de servicio", "prima servicio"]):
-                dic26[nit][10] += valor
-            elif any(kw in palabras for kw in ["incapacidad", "incapacidades"]):
                 dic26[nit][9] += valor
+            elif any(kw in palabras for kw in ["incapacidad", "incapacidades"]):
+                dic26[nit][8] += valor
             elif any(kw in nom for kw in ["aporte salud", "aporte eps", "aportes eps", "aportes a eps"]):
-                dic26[nit][12] += valor
+                dic26[nit][11] += valor
             elif any(kw in nom for kw in ["aporte pension", "aportes pension", "aportes a pension"]):
-                dic26[nit][13] += valor
+                dic26[nit][12] += valor
             elif any(kw in palabras for kw in ["dotacion", "bonificacion", "auxilio"]):
-                dic26[nit][10] += valor
+                dic26[nit][9] += valor
             elif any(kw in palabras for kw in ["honorario", "honorarios"]):
                 d2 = t(nit)
-                if d2['td'] == "13": dic26[nit][3] += valor
-                else: dic26[nit][10] += valor
+                if d2['td'] == "13": dic26[nit][2] += valor
+                else: dic26[nit][9] += valor
             elif any(kw in palabras for kw in ["parafiscal", "parafiscales", "icbf", "sena",
                                                 "compensar", "comfama", "cafam"]):
                 pass
             else:
-                dic26[nit][10] += valor
+                dic26[nit][9] += valor
 
     for f in bal:
         if not f['nit']: continue
         if en_rango(f['cta'], "2365", "2365") and f['nit'] in dic26:
             dic26[f['nit']][17] += valor_impuesto(f, 'pasivo')
     for nit in dic26:
-        dic26[nit][11] = sum(dic26[nit][:11])
-        dic26[nit][18] = dic26[nit][11]
+        dic26[nit][10] = sum(dic26[nit][:10])   # Total Bruto = sum(Salarios..OtrosPagLab)
+        dic26[nit][18] = dic26[nit][10]          # Total Pagos = Total Bruto
 
     fila = 2
     for nit, v in sorted(dic26.items()):
@@ -1724,8 +1769,9 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
                         if f['cta'][:2] == '13' and not f['cta'].startswith('1355')
                         and f.get('nit') and abs(f['saldo']) > 0)
     total_bal_cxp = sum(abs(f['saldo']) for f in bal
-                        if f['cta'][:2] in ('22','23','24','25','26','27','28')
-                        and f.get('nit') and abs(f['saldo']) > 0)
+                        if f['cta'][:1] == '2' and abs(f['saldo']) > 0)
+    # También sumar clase 2 sin NIT (filas que no entraron a bal pero sí son pasivo)
+    # Para que total_bal_cxp cuadre con el total del pasivo del balance
     total_bal_inv = sum(abs(f['saldo']) for f in bal
                         if (f['cta'][:4] in ('1105','1110','1115','1120') or f['cta'][:2] == '12')
                         and f.get('nit') and abs(f['saldo']) > 0)
@@ -1844,7 +1890,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     total_f1009 = sum(final9.values()) if final9 else 0
     total_f1010 = sum(dic10.values()) if dic10 else 0
     total_f1012 = sum(dic12.values()) if dic12 else 0
-    total_f2276 = sum(sum(v) for v in dic26.values()) if dic26 else 0
+    total_f2276 = sum(v[10] for v in dic26.values()) if dic26 else 0  # Total Bruto sin retenciones
 
     rv_row = 2
 
@@ -1952,9 +1998,12 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
               total_f1006, "Cta 2408 (ventas)", total_iva_gen)
     _rv_linea("F2276", "Rentas de trabajo y pensiones", len(dic26),
               total_f2276, "Cta 5105 (nómina)", total_nomina)
-    if total_ret_salarios > 0:
-        _rv_nota(f"↳ F2276: Las retenciones por salarios en el 2276 deben coincidir con la retención "
-                 f"por pagos laborales (Cta 236505 = ${total_ret_salarios:,.0f}).")
+    # Calcular retención F2276
+    total_ret_f2276 = sum(v[17] for v in dic26.values()) if dic26 else 0
+    if total_ret_salarios > 0 or total_ret_f2276 > 0:
+        _rv_nota(f"↳ F2276 Total Bruto: ${total_f2276:,.0f} (sin retenciones). "
+                 f"Retenciones F2276: ${total_ret_f2276:,.0f}. "
+                 f"Debe coincidir con RetFte por salarios (Cta 236505 = ${total_ret_salarios:,.0f}).")
 
     # Notas de seguridad social / PILA
     _rv_nota("⚠️ CONCEPTOS 5011, 5012, 5013, 5023-5027: Solo reportan entidades (EPS, AFP, ARL, Cajas). "
@@ -1977,11 +2026,11 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
                  f"cuentas sin tercero.")
 
     _rv_linea("F1009", "Cuentas por pagar", len(final9),
-              total_f1009, "Ctas 22-28xx", total_bal_cxp)
+              total_f1009, "Total Pasivo (cta 2)", total_bal_cxp)
     dif_1009 = total_f1009 - total_bal_cxp
     if abs(dif_1009) > 1000 and total_bal_cxp > 0:
-        _rv_nota(f"↳ Diferencia F1009: ${dif_1009:,.0f}. Balance CxP = ${total_bal_cxp:,.0f}, "
-                 f"Exógena = ${total_f1009:,.0f}. Incluye impuestos agrupados a la DIAN (Cta 2365, 2367, 2408).")
+        _rv_nota(f"↳ Diferencia F1009: ${dif_1009:,.0f}. Total pasivo balance = ${total_bal_cxp:,.0f}, "
+                 f"Exógena = ${total_f1009:,.0f}. Puede incluir cuentas sin tercero o saldos menores agrupados.")
 
     _rv_linea("F1010", "Socios y accionistas", len(dic10),
               total_f1010, "Cta 3xxx (capital)", None)
@@ -2168,7 +2217,7 @@ if uploaded_file:
         'F1005 IVA Descontable': 'Cta 2408',
         'F1006 IVA Generado':    'Cta 2408',
         'F1008 CxC':             'Ctas 13xx',
-        'F1009 CxP':             'Ctas 22-28xx',
+        'F1009 CxP':             'Total Pasivo (cta 2)',
         'F1012 Inversiones':     'Ctas 11+12xx',
         'F2276 Nómina':          'Cta 5105',
     }
