@@ -8,6 +8,40 @@ from io import BytesIO
 
 st.set_page_config(page_title="Exógena DIAN 2025", page_icon="📊", layout="wide")
 
+# === PROTECCIÓN CON CONTRASEÑA ===
+CLAVE_ACCESO = "ExoDIAN-2025-PRO"
+
+if "autenticado" not in st.session_state:
+    st.session_state.autenticado = False
+
+if not st.session_state.autenticado:
+    st.markdown("""
+    <div style="max-width: 450px; margin: 80px auto; text-align: center;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.2rem;">📊</h1>
+        <h2 style="font-family: serif; font-size: 1.8rem; color: #0B1D3A; margin-bottom: 0.5rem;">Exógena DIAN 2025</h2>
+        <p style="color: #64748B; font-size: 0.95rem; margin-bottom: 2rem;">Ingresa tu contraseña de acceso para continuar</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        clave = st.text_input("Contraseña", type="password", placeholder="Ingresa tu contraseña aquí")
+        if st.button("Ingresar", use_container_width=True, type="primary"):
+            if clave == CLAVE_ACCESO:
+                st.session_state.autenticado = True
+                st.rerun()
+            else:
+                st.error("❌ Contraseña incorrecta. Verifica tu compra en exogenadian.com")
+        
+        st.markdown("""
+        <div style="text-align: center; margin-top: 2rem;">
+            <p style="color: #94a3b8; font-size: 0.82rem;">
+                ¿No tienes contraseña? <a href="https://exogenadian.com/#precios" target="_blank" style="color: #1F4E79;">Compra tu acceso aquí</a>
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+    st.stop()
+
 # === ESTILOS ===
 st.markdown("""
 <style>
@@ -1871,4 +1905,5 @@ st.markdown("""
     ⚠️ Esta herramienta es un asistente. El contador debe validar los resultados antes de presentar a la DIAN.
 </div>
 """, unsafe_allow_html=True)
+
 
