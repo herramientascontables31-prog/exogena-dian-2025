@@ -8,11 +8,60 @@ from io import BytesIO
 
 st.set_page_config(page_title="Exógena DIAN 2025", page_icon="📊", layout="wide")
 
-# === PROTECCIÓN CON CONTRASEÑA ===
-CLAVE_ACCESO = "ExoDIAN-2025-PRO"
+# === PROTECCIÓN CON CONTRASEÑA (Google Sheets) ===
+# Instrucciones:
+# 1. Crea un Google Sheet con columnas: clave | nombre | estado
+# 2. Publícalo como CSV: Archivo → Compartir → Publicar en la web → CSV
+# 3. Pega la URL aquí abajo:
+GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/TU_ID_AQUI/pub?output=csv"
+
+# Contraseña de respaldo (funciona siempre, por si Google Sheets falla)
+CLAVE_ADMIN = "ExoDIAN-2025-ADMIN"
+
+@st.cache_data(ttl=300)  # Cache 5 minutos para no consultar Google en cada click
+def cargar_clientes():
+    """Carga la lista de clientes desde Google Sheets publicado como CSV."""
+    try:
+        df = pd.read_csv(GOOGLE_SHEET_CSV_URL, dtype=str)
+        df.columns = df.columns.str.strip().str.lower()
+        clientes = {}
+        for _, row in df.iterrows():
+            clave = str(row.get('clave', '')).strip()
+            nombre = str(row.get('nombre', '')).strip()
+            estado = str(row.get('estado', '')).strip().lower()
+            if clave and clave.lower() != 'nan':
+                clientes[clave] = {
+                    'nombre': nombre if nombre.lower() != 'nan' else '',
+                    'activo': estado in ('activo', 'si', 'sí', '1', 'true', 'yes'),
+                }
+        return clientes, None
+    except Exception as e:
+        return {}, str(e)
+
+def verificar_clave(clave_ingresada):
+    """Verifica la clave contra Google Sheets. Retorna (valida, nombre, mensaje_error)."""
+    # Clave de administrador (siempre funciona)
+    if clave_ingresada == CLAVE_ADMIN:
+        return True, "🔑 Administrador", None
+    
+    clientes, error = cargar_clientes()
+    
+    if error:
+        # Si Google Sheets falla, solo funciona la clave admin
+        return False, "", f"⚠️ No se pudo verificar. Contacta al administrador. ({error[:60]})"
+    
+    if clave_ingresada in clientes:
+        cliente = clientes[clave_ingresada]
+        if cliente['activo']:
+            return True, cliente['nombre'], None
+        else:
+            return False, "", "🚫 Tu acceso está **desactivado**. Contacta al administrador."
+    
+    return False, "", "❌ Contraseña incorrecta. Verifica tu compra en exogenadian.com"
 
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
+    st.session_state.nombre_cliente = ""
 
 if not st.session_state.autenticado:
     st.markdown("""
@@ -27,11 +76,13 @@ if not st.session_state.autenticado:
     with col2:
         clave = st.text_input("Contraseña", type="password", placeholder="Ingresa tu contraseña aquí")
         if st.button("Ingresar", use_container_width=True, type="primary"):
-            if clave == CLAVE_ACCESO:
+            valida, nombre, msg_error = verificar_clave(clave)
+            if valida:
                 st.session_state.autenticado = True
+                st.session_state.nombre_cliente = nombre
                 st.rerun()
             else:
-                st.error("❌ Contraseña incorrecta. Verifica tu compra en exogenadian.com")
+                st.error(msg_error)
         
         st.markdown("""
         <div style="text-align: center; margin-top: 2rem;">
@@ -41,6 +92,15 @@ if not st.session_state.autenticado:
         </div>
         """, unsafe_allow_html=True)
     st.stop()
+
+# === Mostrar nombre del cliente conectado ===
+if st.session_state.get('nombre_cliente'):
+    st.sidebar.markdown(f"### 👤 {st.session_state.nombre_cliente}")
+    st.sidebar.markdown("---")
+    if st.sidebar.button("🚪 Cerrar sesión"):
+        st.session_state.autenticado = False
+        st.session_state.nombre_cliente = ""
+        st.rerun()
 
 # === ESTILOS ===
 st.markdown("""
