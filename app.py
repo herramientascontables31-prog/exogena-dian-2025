@@ -654,11 +654,22 @@ PARAM_1001_RANGOS = [
 ]
 
 PARAM_1003 = [
-    ("1301", "236505", "236509"), ("1302", "236510", "236514"),
-    ("1303", "236515", "236519"), ("1304", "236520", "236524"),
-    ("1305", "236525", "236529"), ("1306", "236530", "236539"),
-    ("1307", "236540", "236549"), ("1308", "236595", "236599"),
-    ("1311", "236575", "236579"),
+    # Retenciones en la fuente que le practicaron (135515xx)
+    ("1301", "13551505", "13551509"),  # Salarios y pagos laborales
+    ("1301", "13551510", "13551514"),  # Honorarios
+    ("1302", "13551515", "13551519"),  # Comisiones
+    ("1303", "13551520", "13551524"),  # Servicios
+    ("1305", "13551525", "13551529"),  # Rendimientos financieros
+    ("1304", "13551530", "13551534"),  # Arrendamientos
+    ("1306", "13551535", "13551539"),  # Compras
+    ("1308", "13551540", "13551594"),  # Otros conceptos
+    ("1308", "13551595", "13551599"),  # Otros
+    # Retención ICA que le practicaron (135518xx)
+    ("1307", "135518", "135518"),      # ICA retenido
+    # Autorretenciones (135599xx con nombre)
+    ("1311", "135599", "135599"),      # Otros anticipos / autorretenciones
+    # Rangos amplios por si usan estructura simplificada
+    ("1303", "135515", "135515"),      # Retención en la fuente (genérico)
 ]
 
 PARAM_1007 = [
@@ -730,15 +741,19 @@ KEYWORDS_1007 = [
 ]
 
 KEYWORDS_1003 = [
-    ("1301", ["retefuente honorario", "retfte honorario", "retencion honorario"]),
-    ("1302", ["retefuente comision", "retfte comision", "retencion comision"]),
-    ("1303", ["retefuente servicio", "retfte servicio", "retencion servicio"]),
-    ("1304", ["retefuente arriendo", "retfte arriendo", "retencion arriendo"]),
-    ("1305", ["retefuente rendimiento", "retfte rendimiento", "retencion rendimiento", "retencion financiero"]),
-    ("1306", ["retefuente compra", "retfte compra", "retencion compra"]),
-    ("1307", ["retencion ica", "rete ica", "reteica"]),
-    ("1308", ["otras retencion", "otra retencion", "retencion otro"]),
-    ("1311", ["autorretencion", "auto retencion", "autoretefte"]),
+    ("1301", ["retencion honorario", "retfte honorario", "retefuente honorario", "rete fuente honorario"]),
+    ("1302", ["retencion comision", "retfte comision", "retefuente comision"]),
+    ("1303", ["retencion servicio", "retfte servicio", "retefuente servicio"]),
+    ("1304", ["retencion arriendo", "retfte arriendo", "retefuente arriendo", "retencion arrendamiento"]),
+    ("1305", ["retencion rendimiento", "retfte rendimiento", "retefuente rendimiento", 
+              "retencion financiero", "rendimientos financieros", "rendimiento financiero"]),
+    ("1306", ["retencion compra", "retfte compra", "retefuente compra", "retencion enajenacion"]),
+    ("1307", ["retencion ica", "rete ica", "reteica", "industria y comercio retenido",
+              "ica retenido", "impuesto de industria y comercio"]),
+    ("1308", ["otras retencion", "otra retencion", "retencion otro", "retencion otros",
+              "retenciones por cobrar"]),
+    ("1311", ["autorretencion", "auto retencion", "autoretefte", "autoretfte",
+              "anticipo autorretencion"]),
 ]
 
 def normalizar_nombre(nom):
@@ -1028,13 +1043,17 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     final = {}
     menores = defaultdict(lambda: [0.0] * 5)
     for (c, n), v in dic.items():
+        total_pago = v[0] + v[1]
+        if total_pago == 0:
+            continue  # No incluir registros sin movimiento
         tiene_retencion = v[2] > 0 or v[4] > 0
-        if v[0] + v[1] < C3UVT and not tiene_retencion:
+        if total_pago < C3UVT and not tiene_retencion:
             for i in range(5): menores[(c, NM)][i] += v[i]
         else:
             final[(c, n)] = v
     for k, v in menores.items():
-        if k not in final: final[k] = v
+        if v[0] + v[1] > 0:  # Solo cuantías menores con valor
+            if k not in final: final[k] = v
 
     fila = 2
     for (conc, nit), v in sorted(final.items()):
@@ -1062,12 +1081,22 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     for f in bal:
         conc = buscar_concepto(f['cta'], PARAM_1003, f.get('nom_cta', ''), KEYWORDS_1003)
         if not conc: continue
-        dic3[(conc, f['nit'])][1] += f['cred']
+        # 1355 son cuentas de activo: débitos = retenciones que le practicaron
+        dic3[(conc, f['nit'])][1] += f['deb']
 
-    # Usar gastos del NIT como base gravable
+    # Calcular base gravable: ingresos recibidos del mismo NIT (cuentas 4xxx)
+    ingresos_por_nit = defaultdict(float)
+    for f in bal:
+        if f['cta'][:1] == "4" and f['cred'] > 0:
+            ingresos_por_nit[f['nit']] += f['cred']
+    
     for (conc, nit), v in dic3.items():
-        if v[0] == 0 and v[1] > 0:
-            v[0] = gastos_por_nit.get(nit, 0)
+        if v[1] > 0:
+            # Base = ingresos del mismo NIT, o estimar desde retención
+            v[0] = ingresos_por_nit.get(nit, 0)
+
+    # Filtrar registros con retención en cero
+    dic3 = {k: v for k, v in dic3.items() if v[1] > 0}
 
     fila = 2
     for (conc, nit), v in sorted(dic3.items()):
@@ -1130,7 +1159,8 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     for f in bal:
         conc = buscar_concepto(f['cta'], PARAM_1007, f.get('nom_cta', ''), KEYWORDS_1007)
         if not conc: continue
-        dic7[(conc, f['nit'])] += f['cred']
+        if f['cred'] > 0:
+            dic7[(conc, f['nit'])] += f['cred']
 
     final7 = {}
     men7 = defaultdict(float)
