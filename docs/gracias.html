@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Gracias por tu compra! — Exógena DIAN</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0B1D3A;
+    --gold: #D4A843;
+    --gold-light: #F2D98B;
+    --cream: #FAF6EE;
+    --white: #FFFFFF;
+    --slate: #64748B;
+    --green: #22C55E;
+    --green-dark: #16A34A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--cream);
+    color: var(--navy);
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .container {
+    max-width: 580px; width: 100%;
+    text-align: center;
+  }
+  .success-icon {
+    width: 80px; height: 80px;
+    background: rgba(34,197,94,0.12);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    margin: 0 auto 28px;
+    font-size: 2.2rem;
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popIn {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    margin-bottom: 12px;
+  }
+  .subtitle {
+    color: var(--slate);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 36px;
+  }
+  .password-box {
+    background: var(--navy);
+    border-radius: 20px;
+    padding: 36px 32px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s 0.2s ease-out both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .password-label {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .password-value {
+    color: var(--gold-light);
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-family: 'Manrope', monospace;
+    user-select: all;
+    margin-bottom: 18px;
+    word-break: break-all;
+  }
+  .copy-btn {
+    background: rgba(255,255,255,0.1);
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 10px 28px;
+    border-radius: 50px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .copy-btn:hover {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.3);
+  }
+  .copy-btn.copied {
+    background: rgba(34,197,94,0.2);
+    border-color: rgba(34,197,94,0.4);
+    color: #86efac;
+  }
+  .steps-box {
+    background: var(--white);
+    border: 1px solid rgba(11,29,58,0.08);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: left;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s 0.4s ease-out both;
+  }
+  .steps-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+  }
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    color: var(--slate);
+    line-height: 1.5;
+  }
+  .step-item:last-child { margin-bottom: 0; }
+  .step-num {
+    width: 24px; height: 24px;
+    background: var(--navy);
+    color: var(--gold-light);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 0.72rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .open-app-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--navy);
+    color: var(--gold-light);
+    padding: 16px 36px;
+    border-radius: 50px;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.25s;
+    box-shadow: 0 4px 20px rgba(11,29,58,0.25);
+    animation: fadeUp 0.6s 0.6s ease-out both;
+  }
+  .open-app-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(11,29,58,0.35);
+  }
+  .back-link {
+    display: block;
+    margin-top: 20px;
+    color: var(--slate);
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--navy); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="success-icon">✅</div>
+  <h1>¡Gracias por tu compra!</h1>
+  <p class="subtitle">Tu pago fue procesado exitosamente. Usa la contraseña de abajo para acceder a la aplicación.</p>
+
+  <div class="password-box">
+    <p class="password-label">Tu contraseña de acceso</p>
+    <p class="password-value" id="password">ExoDIAN-2025-PRO</p>
+    <button class="copy-btn" id="copyBtn" onclick="copyPassword()">📋 Copiar contraseña</button>
+  </div>
+
+  <div class="steps-box">
+    <p class="steps-title">Pasos para usar la aplicación:</p>
+    <div class="step-item"><div class="step-num">1</div> Haz clic en "Abrir aplicación" aquí abajo</div>
+    <div class="step-item"><div class="step-num">2</div> Ingresa la contraseña que copiaste</div>
+    <div class="step-item"><div class="step-num">3</div> Sube tu balance de prueba y genera tus formatos</div>
+  </div>
+
+  <a href="https://exogena-dian-2025.streamlit.app" target="_blank" class="open-app-btn">Abrir aplicación →</a>
+  <a href="https://exogenadian.com" class="back-link">← Volver al inicio</a>
+</div>
+
+<script>
+function copyPassword() {
+  const password = document.getElementById('password').textContent;
+  navigator.clipboard.writeText(password).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ ¡Copiada!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 Copiar contraseña';
+      btn.classList.remove('copied');
+    }, 3000);
+  });
+}
+</script>
+</body>
+</html>
