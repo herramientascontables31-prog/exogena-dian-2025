@@ -1690,69 +1690,71 @@ if uploaded_file:
             datos_rues = None
             df_dir_auto = None
             if buscar_auto:
-                with st.status("🌐 Buscando información en internet...", expanded=True) as status:
-                    st.write("Extrayendo NITs del balance...")
+                st.info("🌐 Buscando información de terceros en internet...")
 
-                    # Extraer NITs únicos del balance
-                    nits_unicos = set()
-                    for _, row in df.iterrows():
-                        nit_val = safe_str(row.iloc[3])
-                        if nit_val and nit_val != NM:
-                            if '.' in nit_val:
-                                try: nit_val = str(int(float(nit_val)))
-                                except: pass
-                            nits_unicos.add(nit_val)
+                # Extraer NITs únicos del balance
+                nits_unicos = set()
+                for _, row in df.iterrows():
+                    nit_val = safe_str(row.iloc[3])
+                    if nit_val and nit_val != NM:
+                        if '.' in nit_val:
+                            try: nit_val = str(int(float(nit_val)))
+                            except: pass
+                        nits_unicos.add(nit_val)
 
-                    nits_list = sorted(list(nits_unicos))
-                    st.write(f"**{len(nits_list)}** NITs únicos para consultar")
+                nits_list = sorted(list(nits_unicos))
+                st.write(f"**{len(nits_list)}** NITs únicos para consultar")
 
-                    progress_bar = st.progress(0, text="🔍 Conectando con fuentes de internet...")
+                progress_bar = st.progress(0, text="🔍 Conectando...")
 
-                    # Pasar st.write como función de log para ver TODO en la UI
-                    datos_rues, api_fallida = buscar_info_terceros(nits_list, progress_bar, log_fn=st.write)
-                    progress_bar.empty()
+                # Acumular log en lista para mostrarlo todo al final
+                _log_msgs = []
+                def _log_fn(msg):
+                    _log_msgs.append(msg)
 
-                    if datos_rues:
-                        n_con_dir_rues = sum(1 for d in datos_rues.values() if d.get('dir'))
-                        n_con_rs = sum(1 for d in datos_rues.values() if d.get('razon_social'))
-                        status.update(label=f"✅ {len(datos_rues)} terceros encontrados en internet", state="complete")
-                        st.write(f"📍 Con dirección: **{n_con_dir_rues}** | 📝 Con razón social: **{n_con_rs}**")
+                datos_rues, api_fallida = buscar_info_terceros(nits_list, progress_bar, log_fn=_log_fn)
+                progress_bar.empty()
 
-                        # Mostrar desglose por fuente
-                        fuentes_usadas = {}
-                        for d in datos_rues.values():
-                            f_nombre = d.get('_fuente', 'Desconocida')
-                            fuentes_usadas[f_nombre] = fuentes_usadas.get(f_nombre, 0) + 1
-                        if fuentes_usadas:
-                            desglose = " | ".join(f"{f}: {n}" for f, n in fuentes_usadas.items())
-                            st.write(f"🔗 Fuentes: {desglose}")
+                # Mostrar log completo en un expander que queda visible
+                with st.expander("📋 **Log de búsqueda en internet** (clic para ver detalle)", expanded=True):
+                    for msg in _log_msgs:
+                        st.markdown(msg)
 
-                        # Si no se subió directorio, usar RUES para direcciones
-                        if not uploaded_dir:
-                            rows_auto = []
-                            for nit_e, datos_e in datos_rues.items():
-                                if datos_e.get('dir'):
-                                    rows_auto.append({
-                                        'NIT': nit_e,
-                                        'Direccion': datos_e['dir'],
-                                        'Cod_Depto': datos_e['dp'],
-                                        'Cod_Mpio': datos_e['mp'],
-                                        'Cod_Pais': datos_e.get('pais', '169'),
-                                    })
-                            if rows_auto:
-                                df_dir_auto = pd.DataFrame(rows_auto)
+                if datos_rues:
+                    n_con_dir_rues = sum(1 for d in datos_rues.values() if d.get('dir'))
+                    n_con_rs = sum(1 for d in datos_rues.values() if d.get('razon_social'))
+                    st.success(f"✅ **{len(datos_rues)}** terceros encontrados — "
+                               f"{n_con_dir_rues} con dirección, {n_con_rs} con razón social")
 
-                    elif api_fallida:
-                        status.update(label="❌ No se pudo conectar con las fuentes de internet", state="error")
-                        st.write("**Se intentaron las siguientes fuentes sin éxito:**")
-                        st.write("• RUES (Registro Único Empresarial y Social)")
-                        st.write("• Datos Abiertos de Colombia (datos.gov.co)")
-                        st.write("• Búsqueda web (DuckDuckGo)")
-                        st.write("")
-                        st.write("💡 **Alternativa:** Descarga la plantilla de directorio, llénala manualmente y súbela.")
-                    else:
-                        status.update(label="⚠️ No se encontraron datos en internet", state="complete")
-                        st.write("Las fuentes respondieron pero no encontraron datos para estos NITs.")
+                    # Mostrar desglose por fuente
+                    fuentes_usadas = {}
+                    for d in datos_rues.values():
+                        f_nombre = d.get('_fuente', 'Desconocida')
+                        fuentes_usadas[f_nombre] = fuentes_usadas.get(f_nombre, 0) + 1
+                    if fuentes_usadas:
+                        desglose = " | ".join(f"{f}: {n}" for f, n in fuentes_usadas.items())
+                        st.info(f"🔗 Fuentes: {desglose}")
+
+                    # Si no se subió directorio, usar datos de internet para direcciones
+                    if not uploaded_dir:
+                        rows_auto = []
+                        for nit_e, datos_e in datos_rues.items():
+                            if datos_e.get('dir'):
+                                rows_auto.append({
+                                    'NIT': nit_e,
+                                    'Direccion': datos_e['dir'],
+                                    'Cod_Depto': datos_e['dp'],
+                                    'Cod_Mpio': datos_e['mp'],
+                                    'Cod_Pais': datos_e.get('pais', '169'),
+                                })
+                        if rows_auto:
+                            df_dir_auto = pd.DataFrame(rows_auto)
+
+                elif api_fallida:
+                    st.error("❌ No se pudo conectar con ninguna fuente de internet. "
+                             "Revisa el log arriba para ver los errores específicos.")
+                else:
+                    st.warning("⚠️ Las fuentes respondieron pero no encontraron datos para estos NITs.")
 
             dir_final = df_dir if df_dir is not None else df_dir_auto
 
