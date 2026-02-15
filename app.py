@@ -1322,17 +1322,16 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
 
     # =====================================================================
     # F1009 — Cuentas por Pagar (TODO el pasivo — clase 2)
-    # Impuestos y retenciones (2365, 2367, 24xx) → agrupados a la DIAN
+    # DIAN: usa saldo del resumen 4 dígitos (ya neteado con pagos/anticipos)
+    # Resto: detalle con tercero, solo saldos crédito (< 0)
     # Saldo = 0 → no se reporta
     # =====================================================================
     h = ["Concepto", "Tipo Doc", "No ID", "DV", "Apellido1", "Apellido2", "Nombre1", "Nombre2",
          "Razon Social", "Direccion", "Dpto", "Mpio", "Saldo CxP Dic31"]
     ws = nueva_hoja("F1009 CxP", h)
 
-    # Cuentas que se agrupan a la DIAN (impuestos y retenciones de nómina)
-    PREFIJOS_DIAN_F1009 = ("2365", "2367", "2368", "2404", "2408", "2412")
+    PREFIJOS_DIAN_F1009 = ("2365", "2367", "2368", "2370", "2404", "2408", "2412")
 
-    # Asegurar que DIAN esté en el directorio
     if NIT_DIAN not in direc:
         direc[NIT_DIAN] = {
             'td': '31', 'dv': calc_dv(NIT_DIAN),
@@ -1341,32 +1340,48 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
             'dir': 'CRA 8 # 6C-38', 'dp': '11', 'mp': '11001', 'pais': '169',
         }
 
-    dic9 = defaultdict(float)
+    # Paso 1: DIAN — Leer saldos de cuentas resumen (4 dígitos, sin NIT)
+    # Estos ya están neteados: retención causada - pagos realizados = saldo real
+    dian_total_f1009 = 0
+    for _, row in df_balance.iterrows():
+        cta_raw = safe_str(row.iloc[CI]).replace('.', '').strip()
+        nit_raw = safe_str(row.iloc[TI]).strip()
+        if nit_raw and nit_raw != 'nan' and nit_raw != '0': continue  # Solo filas resumen
+        if len(cta_raw) != 4: continue
+        if cta_raw not in ('2365', '2367', '2370', '2404', '2408', '2412'): continue
+        saldo_v = safe_num(row.iloc[SI]) if SI is not None and SI < len(row.index) else 0
+        if saldo_v < 0:  # Saldo crédito = pasivo pendiente
+            dian_total_f1009 += abs(saldo_v)
+
+    # Paso 2: No-DIAN — Detalle con tercero, saldos con signo, netear por NIT
+    dic9_signed = defaultdict(float)
     for f in bal:
         cta = f['cta']
-        if cta[:1] != '2': continue  # Solo clase 2 (pasivo)
-        s = abs(f['saldo'])
-        if s == 0: continue  # Saldo cero → no reportar
-
-        # Buscar concepto
+        if cta[:1] != '2': continue
+        s = f['saldo']
+        if s == 0: continue
+        if not f['nit']: continue
+        # Excluir cuentas DIAN (ya van del resumen)
+        es_dian = any(cta.startswith(p) for p in PREFIJOS_DIAN_F1009)
+        if es_dian: continue
         conc = buscar_concepto(cta, PARAM_1009, f.get('nom_cta', ''))
-        if not conc:
-            # Default: todo lo de clase 2 que no matcheó → 2210 (otros pasivos)
-            conc = "2210"
+        if not conc: conc = "2210"
+        dic9_signed[(conc, f['nit'])] += s
 
-        # Cuentas de impuestos/retenciones → agrupar a la DIAN
-        es_impuesto_dian = any(cta.startswith(p) for p in PREFIJOS_DIAN_F1009)
-        if es_impuesto_dian:
-            dic9[(conc, NIT_DIAN)] += s
-        elif f['nit']:
-            dic9[(conc, f['nit'])] += s
-        # Sin NIT y no es impuesto → cuantía menor
+    # Solo reportar saldos netos crédito (< 0)
+    dic9 = {}
+    for k, v in dic9_signed.items():
+        if v < 0:
+            dic9[k] = abs(v)
+
+    # Agregar DIAN consolidado
+    if dian_total_f1009 > 0:
+        dic9[("2206", NIT_DIAN)] = dian_total_f1009
 
     final9 = {}
     men9 = defaultdict(float)
     for (c, n), v in dic9.items():
         if n == NIT_DIAN:
-            # DIAN siempre va identificada (no se agrupa a cuantías menores)
             final9[(c, n)] = final9.get((c, n), 0) + v
         elif v < C12UVT:
             men9[(c, NM)] += v
@@ -1768,10 +1783,14 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     total_bal_cxc = sum(abs(f['saldo']) for f in bal
                         if f['cta'][:2] == '13' and not f['cta'].startswith('1355')
                         and f.get('nit') and abs(f['saldo']) > 0)
-    total_bal_cxp = sum(abs(f['saldo']) for f in bal
-                        if f['cta'][:1] == '2' and abs(f['saldo']) > 0)
-    # También sumar clase 2 sin NIT (filas que no entraron a bal pero sí son pasivo)
-    # Para que total_bal_cxp cuadre con el total del pasivo del balance
+    # Total pasivo: leer directamente de la fila resumen "2" del balance
+    total_bal_cxp = 0
+    for _, row in df_balance.iterrows():
+        cta_raw = safe_str(row.iloc[CI]).replace('.', '').strip()
+        if cta_raw == '2':
+            saldo_v = safe_num(row.iloc[SI]) if SI is not None and SI < len(row.index) else 0
+            total_bal_cxp = abs(saldo_v)
+            break
     total_bal_inv = sum(abs(f['saldo']) for f in bal
                         if (f['cta'][:4] in ('1105','1110','1115','1120') or f['cta'][:2] == '12')
                         and f.get('nit') and abs(f['saldo']) > 0)
