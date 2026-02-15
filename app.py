@@ -633,42 +633,43 @@ def extraer_texto_pdf(archivo_pdf):
 
 
 def _limpiar_valor(s):
-    """Convierte texto de valor numérico a float: '1.234.567' → 1234567.0"""
+    """Convierte texto numérico colombiano a float: '1.234.567' → 1234567.0"""
     if not s:
         return 0.0
-    s = str(s).strip()
-    # Formato colombiano: 1.234.567 o 1,234,567 o sin separadores
-    s = s.replace('$', '').replace(' ', '')
-    # Si tiene punto como separador de miles (ej: 1.234.567)
+    s = str(s).strip().replace('$', '').replace(' ', '')
+    if not s or s == '-' or s == '0':
+        return 0.0
     if '.' in s and ',' not in s:
-        # Si solo un punto, podría ser decimal
         partes = s.split('.')
         if len(partes) == 2 and len(partes[-1]) <= 2:
-            return float(s)  # es decimal
+            return float(s)
         else:
-            return float(s.replace('.', ''))  # separador de miles
+            return float(s.replace('.', ''))
     if ',' in s:
         s = s.replace('.', '').replace(',', '.')
-    return float(s) if s else 0.0
+    try:
+        return float(s)
+    except:
+        return 0.0
 
 
 def detectar_tipo_formulario(texto):
     """Detecta si el PDF es Form 350 (ReteFte), 300 (IVA) o 110/210 (Renta)."""
-    texto_upper = texto.upper()
-    # Patrones para cada tipo
-    if any(kw in texto_upper for kw in [
+    tu = texto.upper()
+    if any(kw in tu for kw in [
         'FORMULARIO 350', 'FORM 350', 'RETENCIONES EN LA FUENTE',
         'DECLARACIÓN MENSUAL DE RETENCIONES', 'DECLARACION MENSUAL DE RETENCIONES',
-        'RETENCION EN LA FUENTE', '350 - ', 'MENSUAL DE RETENCIÓN'
+        'RETENCION EN LA FUENTE', '350 - ', 'MENSUAL DE RETENCIÓN',
+        'RETENCIÓN EN LA FUENTE'
     ]):
         return '350'
-    if any(kw in texto_upper for kw in [
+    if any(kw in tu for kw in [
         'FORMULARIO 300', 'FORM 300', 'IMPUESTO SOBRE LAS VENTAS',
         'DECLARACIÓN DEL IMPUESTO SOBRE LAS VENTAS', 'DECLARACION DEL IVA',
-        '300 - ', 'DECLARACIÓN DE IVA', 'DECLARACION DE IVA'
+        '300 - ', 'DECLARACIÓN DE IVA', 'DECLARACION DE IVA', 'IVA - '
     ]):
         return '300'
-    if any(kw in texto_upper for kw in [
+    if any(kw in tu for kw in [
         'FORMULARIO 110', 'FORM 110', 'FORMULARIO 210', 'FORM 210',
         'DECLARACIÓN DE RENTA', 'DECLARACION DE RENTA',
         'IMPUESTO SOBRE LA RENTA', 'RENTA Y COMPLEMENTARIOS',
@@ -680,210 +681,208 @@ def detectar_tipo_formulario(texto):
 
 def detectar_periodo(texto, tipo_form):
     """Detecta el período de la declaración."""
-    texto_upper = texto.upper()
-
-    # Meses
+    tu = texto.upper()
     MESES = {
-        'ENERO': 1, 'FEBRERO': 2, 'MARZO': 3, 'ABRIL': 4, 'MAYO': 5, 'JUNIO': 6,
-        'JULIO': 7, 'AGOSTO': 8, 'SEPTIEMBRE': 9, 'OCTUBRE': 10, 'NOVIEMBRE': 11, 'DICIEMBRE': 12,
-        'ENE': 1, 'FEB': 2, 'MAR': 3, 'ABR': 4, 'MAY': 5, 'JUN': 6,
-        'JUL': 7, 'AGO': 8, 'SEP': 9, 'OCT': 10, 'NOV': 11, 'DIC': 12,
+        'ENERO':1,'FEBRERO':2,'MARZO':3,'ABRIL':4,'MAYO':5,'JUNIO':6,
+        'JULIO':7,'AGOSTO':8,'SEPTIEMBRE':9,'OCTUBRE':10,'NOVIEMBRE':11,'DICIEMBRE':12,
+        'ENE':1,'FEB':2,'MAR':3,'ABR':4,'MAY':5,'JUN':6,
+        'JUL':7,'AGO':8,'SEP':9,'OCT':10,'NOV':11,'DIC':12,
     }
-    BIMESTRES = {
-        '1': 'Ene-Feb', '2': 'Mar-Abr', '3': 'May-Jun',
-        '4': 'Jul-Ago', '5': 'Sep-Oct', '6': 'Nov-Dic',
-        '01': 'Ene-Feb', '02': 'Mar-Abr', '03': 'May-Jun',
-        '04': 'Jul-Ago', '05': 'Sep-Oct', '06': 'Nov-Dic',
-    }
-    CUATRIMESTRES = {
-        '1': 'Ene-Abr', '2': 'May-Ago', '3': 'Sep-Dic',
-        '01': 'Ene-Abr', '02': 'May-Ago', '03': 'Sep-Dic',
-    }
+    BIMESTRES = {'1':'Ene-Feb','2':'Mar-Abr','3':'May-Jun','4':'Jul-Ago','5':'Sep-Oct','6':'Nov-Dic'}
+    CUATRIMESTRES = {'1':'Ene-Abr','2':'May-Ago','3':'Sep-Dic'}
+    NOMBRES_MES = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                   'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
 
     year = ""
-    y_match = _re.search(r'(?:año|año gravable|vigencia|periodo|gravable)[:\s]*(\d{4})', texto_upper)
-    if y_match:
-        year = y_match.group(1)
+    ym = _re.search(r'(?:AÑO|ANO|GRAVABLE|VIGENCIA|PERIODO)\s*[:\s]*(\d{4})', tu)
+    if ym: year = ym.group(1)
     else:
-        y_match2 = _re.search(r'20(2[4-6])', texto)
-        if y_match2:
-            year = '20' + y_match2.group(1)
+        ym2 = _re.search(r'20(2[4-6])', texto)
+        if ym2: year = '20' + ym2.group(1)
 
     if tipo_form == '350':
-        # Buscar mes
-        for nombre_mes, num_mes in MESES.items():
-            if nombre_mes in texto_upper:
-                return f"{nombre_mes.capitalize()} {year}".strip(), num_mes
-        # Buscar período numérico
-        p_match = _re.search(r'(?:periodo|período|mes)[:\s]*(\d{1,2})', texto_upper)
-        if p_match:
-            mes = int(p_match.group(1))
+        for nombre, num in MESES.items():
+            if nombre in tu:
+                return f"{nombre.capitalize()} {year}".strip(), num
+        pm = _re.search(r'(?:PERIODO|PERÍODO|MES)\s*[:\s]*(\d{1,2})', tu)
+        if pm:
+            mes = int(pm.group(1))
             if 1 <= mes <= 12:
-                nombres = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                           'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
-                return f"{nombres[mes-1]} {year}".strip(), mes
+                return f"{NOMBRES_MES[mes]} {year}".strip(), mes
         return f"Periodo ? {year}".strip(), 0
 
     elif tipo_form == '300':
-        # Buscar bimestre o cuatrimestre
-        for kw in ['CUATRIMESTRE', 'CUATRIMEST']:
-            if kw in texto_upper:
-                c_match = _re.search(r'(?:cuatrimestre|cuatrimest)[:\s]*(\d)', texto_upper)
-                if c_match:
-                    num = c_match.group(1)
-                    return f"Cuatrimestre {num} ({CUATRIMESTRES.get(num, '?')}) {year}".strip(), int(num)
-                return f"Cuatrimestral {year}".strip(), 0
-        for kw in ['BIMESTRE', 'BIMEST']:
-            if kw in texto_upper:
-                b_match = _re.search(r'(?:bimestre|bimest)[:\s]*(\d)', texto_upper)
-                if b_match:
-                    num = b_match.group(1)
-                    return f"Bimestre {num} ({BIMESTRES.get(num, '?')}) {year}".strip(), int(num)
-                return f"Bimestral {year}".strip(), 0
-        # Buscar periodo genérico
-        p_match = _re.search(r'(?:periodo|período)[:\s]*(\d{1,2})', texto_upper)
-        if p_match:
-            num = p_match.group(1)
-            if int(num) <= 6:
-                return f"Bimestre {num} ({BIMESTRES.get(num, '?')}) {year}".strip(), int(num)
-            elif int(num) <= 3:
-                return f"Cuatrimestre {num} ({CUATRIMESTRES.get(num, '?')}) {year}".strip(), int(num)
+        if 'CUATRIMESTRE' in tu or 'CUATRIMEST' in tu:
+            cm = _re.search(r'CUATRIMEST\w*\s*[:\s]*(\d)', tu)
+            if cm:
+                n = cm.group(1)
+                return f"Cuatrimestre {n} ({CUATRIMESTRES.get(n,'?')}) {year}".strip(), int(n)
+            return f"Cuatrimestral {year}".strip(), 0
+        if 'BIMESTRE' in tu or 'BIMEST' in tu:
+            bm = _re.search(r'BIMEST\w*\s*[:\s]*(\d)', tu)
+            if bm:
+                n = bm.group(1)
+                return f"Bimestre {n} ({BIMESTRES.get(n,'?')}) {year}".strip(), int(n)
+            return f"Bimestral {year}".strip(), 0
+        pm = _re.search(r'(?:PERIODO|PERÍODO)\s*[:\s]*(\d{1,2})', tu)
+        if pm:
+            n = pm.group(1)
+            ni = int(n)
+            if ni <= 6:
+                return f"Bimestre {n} ({BIMESTRES.get(n,'?')}) {year}".strip(), ni
+            if ni <= 3:
+                return f"Cuatrimestre {n} ({CUATRIMESTRES.get(n,'?')}) {year}".strip(), ni
         return f"IVA {year}".strip(), 0
 
     elif tipo_form == '110':
         return f"Año Gravable {year}".strip(), 0
-
     return year, 0
 
 
 def _extraer_renglones(texto):
-    """Extrae pares (número_renglón, valor) del texto de la declaración."""
+    """Extrae pares (renglón, valor) del texto de una declaración DIAN."""
     renglones = {}
-    # Patrones comunes en declaraciones DIAN
     patrones = [
-        # "40 Retención servicios 1234567"
         _re.compile(r'(?:^|\n)\s*(\d{1,3})\s+[A-ZÁÉÍÓÚÑa-záéíóúñ].*?[\s.]+([\d.,]+)\s*(?:\n|$)', _re.MULTILINE),
-        # "Renglón 40: 1234567" or "Rng 40 1234567"
         _re.compile(r'(?:rengl[oó]n|rng|ren)\s*[.:]?\s*(\d{1,3})\s*[.:]?\s*([\d.,]+)', _re.IGNORECASE),
-        # Tabular: number at start, value at end of line
         _re.compile(r'^\s*(\d{1,3})\s+.*?([\d]{1,3}(?:[.,]\d{3})*(?:[.,]\d{1,2})?)\s*$', _re.MULTILINE),
     ]
-
     for patron in patrones:
-        matches = patron.findall(texto)
-        for rng_str, val_str in matches:
+        for rng_str, val_str in patron.findall(texto):
             rng = int(rng_str)
-            if 1 <= rng <= 200:  # Renglones válidos
+            if 1 <= rng <= 200:
                 val = _limpiar_valor(val_str)
                 if val > 0 and rng not in renglones:
                     renglones[rng] = val
-
     return renglones
 
 
+def _primer_valor(*renglones_opciones, fuente=None):
+    """Busca el primer renglón con valor > 0 en un dict."""
+    if fuente is None: return 0
+    for r in renglones_opciones:
+        v = fuente.get(r, 0)
+        if v > 0: return v
+    return 0
+
+
 def parsear_declaracion_350(texto):
-    """Extrae valores clave del Formulario 350 (Retención en la Fuente)."""
-    renglones = _extraer_renglones(texto)
+    """Formulario 350 — Retención en la Fuente mensual."""
+    R = _extraer_renglones(texto)
     periodo, num_periodo = detectar_periodo(texto, '350')
 
-    # Renglones clave Form 350 (pueden variar según versión)
-    # 40-49: Retenciones practicadas (honorarios, comisiones, servicios, etc.)
-    # 50-56: Autorretenciones
-    # 57-62: Retenciones IVA
-    # 78 o 80: Total retenciones
+    # Form 350: renglones clave (versión 2024-2025)
+    # 40-49: Retenciones practicadas (honorarios, comisiones, servicios, arrendamientos, etc.)
+    # 50-56: Autorretenciones (renta, CREE, etc.)
+    # 57-62: Retenciones de IVA practicadas
+    # 78/80/82/84: Total retenciones a pagar
+    ret_honorarios = R.get(40, 0)
+    ret_comisiones = R.get(41, 0)
+    ret_servicios = R.get(42, 0)
+    ret_arrendamientos = R.get(43, 0)
+    ret_compras = R.get(45, 0)
+    ret_otros = sum(R.get(r, 0) for r in [44, 46, 47, 48, 49])
+    ret_practicadas = ret_honorarios + ret_comisiones + ret_servicios + ret_arrendamientos + ret_compras + ret_otros
 
-    ret_practicadas = sum(renglones.get(r, 0) for r in range(40, 50))
-    autorretenciones = sum(renglones.get(r, 0) for r in range(50, 57))
-    ret_iva = sum(renglones.get(r, 0) for r in range(57, 63))
+    autorretenciones = sum(R.get(r, 0) for r in range(50, 57))
+    ret_iva = sum(R.get(r, 0) for r in range(57, 63))
 
-    # Total: buscar en renglones típicos de total
     total = 0
-    for r_total in [78, 80, 82, 84, 86]:
-        if renglones.get(r_total, 0) > 0:
-            total = renglones[r_total]
-            break
+    for rt in [78, 80, 82, 84, 86]:
+        if R.get(rt, 0) > 0: total = R[rt]; break
     if total == 0:
         total = ret_practicadas + autorretenciones + ret_iva
 
     return {
-        'tipo': '350',
-        'periodo': periodo,
-        'num_periodo': num_periodo,
+        'tipo': '350', 'periodo': periodo, 'num_periodo': num_periodo,
+        'ret_honorarios': ret_honorarios, 'ret_comisiones': ret_comisiones,
+        'ret_servicios': ret_servicios, 'ret_arrendamientos': ret_arrendamientos,
+        'ret_compras': ret_compras, 'ret_otros': ret_otros,
         'ret_practicadas': ret_practicadas,
-        'autorretenciones': autorretenciones,
-        'ret_iva': ret_iva,
-        'total': total,
-        'renglones': renglones,
+        'autorretenciones': autorretenciones, 'ret_iva': ret_iva,
+        'total': total, 'renglones': R,
     }
 
 
 def parsear_declaracion_300(texto):
-    """Extrae valores clave del Formulario 300 (IVA)."""
-    renglones = _extraer_renglones(texto)
+    """Formulario 300 — IVA (bimestral o cuatrimestral)."""
+    R = _extraer_renglones(texto)
     periodo, num_periodo = detectar_periodo(texto, '300')
 
-    # Renglones clave Form 300 (pueden variar)
-    # 27-29: Ingresos brutos
-    # 40-44: IVA generado
-    # 50-56: IVA descontable
-    # 60: Saldo a pagar / saldo a favor
-
-    ingresos = sum(renglones.get(r, 0) for r in range(27, 30))
+    # Form 300 versión 2024-2025 (renglones aproximados)
+    ingresos = _primer_valor(27, 28, 29, 32, fuente=R)
     if ingresos == 0:
-        ingresos = renglones.get(32, renglones.get(27, 0))
+        ingresos = sum(R.get(r, 0) for r in range(27, 33))
 
-    iva_generado = sum(renglones.get(r, 0) for r in range(40, 45))
+    iva_generado = _primer_valor(40, 41, 47, fuente=R)
     if iva_generado == 0:
-        iva_generado = renglones.get(47, renglones.get(40, 0))
+        iva_generado = sum(R.get(r, 0) for r in range(40, 48))
 
-    iva_descontable = sum(renglones.get(r, 0) for r in range(50, 57))
+    iva_descontable = _primer_valor(50, 51, 56, 60, fuente=R)
     if iva_descontable == 0:
-        iva_descontable = renglones.get(60, renglones.get(50, 0))
+        iva_descontable = sum(R.get(r, 0) for r in range(50, 61))
 
-    saldo_pagar = 0
-    for r_total in [80, 82, 84, 86, 90]:
-        if renglones.get(r_total, 0) > 0:
-            saldo_pagar = renglones[r_total]
-            break
+    saldo_pagar = _primer_valor(80, 82, 84, 86, 90, fuente=R)
 
     return {
-        'tipo': '300',
-        'periodo': periodo,
-        'num_periodo': num_periodo,
-        'ingresos': ingresos,
-        'iva_generado': iva_generado,
-        'iva_descontable': iva_descontable,
-        'saldo_pagar': saldo_pagar,
-        'renglones': renglones,
+        'tipo': '300', 'periodo': periodo, 'num_periodo': num_periodo,
+        'ingresos': ingresos, 'iva_generado': iva_generado,
+        'iva_descontable': iva_descontable, 'saldo_pagar': saldo_pagar,
+        'renglones': R,
     }
 
 
 def parsear_declaracion_110(texto):
-    """Extrae valores clave del Formulario 110/210 (Renta)."""
-    renglones = _extraer_renglones(texto)
+    """Formulario 110/210 — Renta y Complementarios."""
+    R = _extraer_renglones(texto)
     periodo, num_periodo = detectar_periodo(texto, '110')
 
-    # Renglones clave Form 110 (pueden variar según versión)
-    ingresos_brutos = renglones.get(32, renglones.get(33, renglones.get(28, 0)))
-    costos = renglones.get(38, renglones.get(39, renglones.get(35, 0)))
-    deducciones = renglones.get(42, renglones.get(43, renglones.get(40, 0)))
-    renta_liquida = renglones.get(56, renglones.get(58, renglones.get(53, 0)))
-    impuesto_cargo = renglones.get(83, renglones.get(84, renglones.get(80, 0)))
-    retenciones_ag = renglones.get(89, renglones.get(90, renglones.get(86, 0)))
-    total_pagar = renglones.get(96, renglones.get(98, renglones.get(100, 0)))
+    # ===== SECCIÓN PATRIMONIO (renglones 29–45 aprox.) =====
+    efectivo = _primer_valor(29, 30, fuente=R)
+    inversiones = _primer_valor(30, 31, fuente=R)
+    cuentas_x_cobrar = _primer_valor(32, 33, fuente=R)
+    inventarios = _primer_valor(34, fuente=R)
+    activos_fijos = _primer_valor(35, 36, fuente=R)
+    otros_activos = _primer_valor(37, fuente=R)
+    total_patrimonio_bruto = _primer_valor(38, 39, fuente=R)
+    pasivos = _primer_valor(40, 41, fuente=R)
+    total_patrimonio_liquido = _primer_valor(42, 43, fuente=R)
+
+    # ===== SECCIÓN INGRESOS (renglones 53–64 aprox.) =====
+    ingresos_brutos = _primer_valor(56, 57, 53, 54, fuente=R)
+    devoluciones_ing = _primer_valor(58, 59, fuente=R)
+    ingresos_netos = _primer_valor(60, 61, fuente=R)
+
+    # ===== SECCIÓN COSTOS Y DEDUCCIONES (renglones 61–72 aprox.) =====
+    costos = _primer_valor(61, 62, 63, fuente=R)
+    deducciones = _primer_valor(64, 65, 66, fuente=R)
+
+    # ===== SECCIÓN RENTA (renglones 72–90 aprox.) =====
+    renta_liquida = _primer_valor(72, 73, 74, 78, fuente=R)
+    impuesto_cargo = _primer_valor(83, 84, 85, 80, fuente=R)
+    retenciones_ag = _primer_valor(89, 90, 91, 86, 87, fuente=R)
+    anticipo_renta = _primer_valor(92, 93, fuente=R)
+    saldo_pagar = _primer_valor(96, 98, 100, fuente=R)
+    saldo_favor = _primer_valor(97, 99, 101, fuente=R)
 
     return {
-        'tipo': '110',
-        'periodo': periodo,
-        'num_periodo': num_periodo,
-        'ingresos_brutos': ingresos_brutos,
-        'costos': costos,
-        'deducciones': deducciones,
-        'renta_liquida': renta_liquida,
-        'impuesto_cargo': impuesto_cargo,
-        'retenciones_ag': retenciones_ag,
-        'total_pagar': total_pagar,
-        'renglones': renglones,
+        'tipo': '110', 'periodo': periodo, 'num_periodo': num_periodo,
+        # Patrimonio
+        'efectivo': efectivo, 'inversiones': inversiones,
+        'cuentas_x_cobrar': cuentas_x_cobrar, 'inventarios': inventarios,
+        'activos_fijos': activos_fijos, 'otros_activos': otros_activos,
+        'total_patrimonio_bruto': total_patrimonio_bruto,
+        'pasivos': pasivos, 'total_patrimonio_liquido': total_patrimonio_liquido,
+        # Ingresos
+        'ingresos_brutos': ingresos_brutos, 'devoluciones_ing': devoluciones_ing,
+        'ingresos_netos': ingresos_netos,
+        # Costos y deducciones
+        'costos': costos, 'deducciones': deducciones,
+        # Renta
+        'renta_liquida': renta_liquida, 'impuesto_cargo': impuesto_cargo,
+        'retenciones_ag': retenciones_ag, 'anticipo_renta': anticipo_renta,
+        'saldo_pagar': saldo_pagar, 'saldo_favor': saldo_favor,
+        'renglones': R,
     }
 
 
@@ -894,208 +893,342 @@ def parsear_pdf_declaracion(archivo_pdf):
         return None, f"Error leyendo PDF: {error}"
     if not texto.strip():
         return None, "El PDF no tiene texto extraíble. ¿Es un PDF escaneado?"
-
     tipo = detectar_tipo_formulario(texto)
     if not tipo:
         return None, "No se pudo identificar el tipo de formulario (350, 300 o 110/210)"
-
-    if tipo == '350':
-        return parsear_declaracion_350(texto), None
-    elif tipo == '300':
-        return parsear_declaracion_300(texto), None
-    elif tipo == '110':
-        return parsear_declaracion_110(texto), None
-
-    return None, f"Tipo de formulario no soportado: {tipo}"
+    if tipo == '350': return parsear_declaracion_350(texto), None
+    if tipo == '300': return parsear_declaracion_300(texto), None
+    if tipo == '110': return parsear_declaracion_110(texto), None
+    return None, f"Tipo no soportado: {tipo}"
 
 
-def generar_cruce_declaraciones(wb, resultados_exogena, declaraciones_350=None,
-                                  declaraciones_300=None, declaracion_110=None,
-                                  totales_exogena=None):
+# ======================================================================
+# === HOJA DE CRUCE: DECLARACIONES vs EXÓGENA ===
+# ======================================================================
+
+def generar_cruce_declaraciones(wb, declaraciones_350=None,
+                                declaraciones_300=None, declaracion_110=None,
+                                totales_exogena=None):
     """
-    Genera la hoja de cruce entre exógena y declaraciones tributarias.
-
-    totales_exogena: dict con totales calculados del balance:
-        - total_ingresos_4, total_gastos_5, total_costos_6
-        - total_ret_fte_2365, total_ret_iva_2367, total_ret_1355
-        - total_iva_gen, total_iva_desc
-        - total_f1001_pagos, total_f1001_retfte, total_f1001_retiva
+    Genera dos hojas:
+    1. 'Resumen Declaraciones' — qué se extrajo de cada PDF
+    2. 'Cruce Declaraciones'  — comparación Exógena vs Declaraciones
     """
     tiene_datos = bool(declaraciones_350) or bool(declaraciones_300) or bool(declaracion_110)
     if not tiene_datos:
         return
 
-    # Estilos
+    T = totales_exogena or {}
+    thin = Side(style='thin', color='808080')
     hf = PatternFill('solid', fgColor='1F4E79')
     hfont = Font(bold=True, color='FFFFFF', size=10, name='Arial')
-    thin = Side(style='thin', color='808080')
     ok_fill = PatternFill('solid', fgColor='D4EDDA')
     warn_fill = PatternFill('solid', fgColor='FFF3CD')
     err_fill = PatternFill('solid', fgColor='F8D7DA')
     titulo_fill = PatternFill('solid', fgColor='D6EAF8')
     sub_fill = PatternFill('solid', fgColor='EBF5FB')
+    gris_fill = PatternFill('solid', fgColor='F8F9F9')
 
-    headers = ["Concepto", "Valor Exógena", "Valor Declaraciones", "Diferencia", "% Diferencia", "Estado"]
+    def _border(ws, r, cols):
+        for c in range(1, cols + 1):
+            ws.cell(r, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
+
+    # ==========================================================
+    # HOJA 1: RESUMEN DE DECLARACIONES (qué se leyó de los PDF)
+    # ==========================================================
+    h_res = ["Formulario", "Período", "Concepto", "Valor"]
+    ws_res = wb.create_sheet("Resumen Declaraciones")
+    for c, h in enumerate(h_res, 1):
+        cell = ws_res.cell(1, c, h)
+        cell.font = hfont; cell.fill = hf
+        cell.alignment = Alignment(horizontal='center', wrap_text=True)
+        cell.border = Border(top=thin, bottom=thin, left=thin, right=thin)
+
+    fr = 2
+
+    def _res_titulo(texto):
+        nonlocal fr
+        for c in range(1, 5):
+            ws_res.cell(fr, c).fill = titulo_fill
+            ws_res.cell(fr, c).font = Font(bold=True, size=10, name='Arial', color='1F4E79')
+            ws_res.cell(fr, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
+        ws_res.cell(fr, 1).value = texto
+        ws_res.merge_cells(start_row=fr, start_column=1, end_row=fr, end_column=4)
+        fr += 1
+
+    def _res_linea(form, periodo, concepto, valor):
+        nonlocal fr
+        ws_res.cell(fr, 1).value = form
+        ws_res.cell(fr, 2).value = periodo
+        ws_res.cell(fr, 3).value = concepto
+        ws_res.cell(fr, 4).value = int(valor) if valor else 0
+        ws_res.cell(fr, 4).number_format = '#,##0'
+        alt = gris_fill if (fr % 2 == 0) else PatternFill('solid', fgColor='FFFFFF')
+        for c in range(1, 5):
+            ws_res.cell(fr, c).fill = alt
+            ws_res.cell(fr, c).font = Font(size=10, name='Arial')
+            ws_res.cell(fr, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
+        fr += 1
+
+    if declaraciones_350:
+        _res_titulo(f"📋 RETENCIÓN EN LA FUENTE — Form 350 ({len(declaraciones_350)} períodos)")
+        for d in sorted(declaraciones_350, key=lambda x: x.get('num_periodo', 0)):
+            p = d['periodo']
+            _res_linea("350", p, "Ret. honorarios", d.get('ret_honorarios', 0))
+            _res_linea("350", p, "Ret. comisiones", d.get('ret_comisiones', 0))
+            _res_linea("350", p, "Ret. servicios", d.get('ret_servicios', 0))
+            _res_linea("350", p, "Ret. arrendamientos", d.get('ret_arrendamientos', 0))
+            _res_linea("350", p, "Ret. compras", d.get('ret_compras', 0))
+            _res_linea("350", p, "Ret. otros", d.get('ret_otros', 0))
+            _res_linea("350", p, "Autorretenciones", d.get('autorretenciones', 0))
+            _res_linea("350", p, "Ret. IVA practicadas", d.get('ret_iva', 0))
+            _res_linea("350", p, "TOTAL MES", d.get('total', 0))
+            fr += 1  # línea vacía entre períodos
+
+    if declaraciones_300:
+        _res_titulo(f"📋 IVA — Form 300 ({len(declaraciones_300)} períodos)")
+        for d in sorted(declaraciones_300, key=lambda x: x.get('num_periodo', 0)):
+            p = d['periodo']
+            _res_linea("300", p, "Ingresos brutos", d.get('ingresos', 0))
+            _res_linea("300", p, "IVA Generado", d.get('iva_generado', 0))
+            _res_linea("300", p, "IVA Descontable", d.get('iva_descontable', 0))
+            _res_linea("300", p, "Saldo a pagar / favor", d.get('saldo_pagar', 0))
+            fr += 1
+
+    if declaracion_110:
+        d = declaracion_110
+        _res_titulo(f"📋 RENTA — Form 110/210 ({d.get('periodo', '?')})")
+        p = d.get('periodo', '')
+        _res_linea("110", p, "— PATRIMONIO —", "")
+        _res_linea("110", p, "Efectivo y equiv.", d.get('efectivo', 0))
+        _res_linea("110", p, "Inversiones", d.get('inversiones', 0))
+        _res_linea("110", p, "Cuentas por cobrar", d.get('cuentas_x_cobrar', 0))
+        _res_linea("110", p, "Inventarios", d.get('inventarios', 0))
+        _res_linea("110", p, "Activos fijos", d.get('activos_fijos', 0))
+        _res_linea("110", p, "Otros activos", d.get('otros_activos', 0))
+        _res_linea("110", p, "Total patrimonio bruto", d.get('total_patrimonio_bruto', 0))
+        _res_linea("110", p, "Pasivos", d.get('pasivos', 0))
+        _res_linea("110", p, "Total patrimonio líquido", d.get('total_patrimonio_liquido', 0))
+        _res_linea("110", p, "— INGRESOS —", "")
+        _res_linea("110", p, "Ingresos brutos", d.get('ingresos_brutos', 0))
+        _res_linea("110", p, "Devoluciones", d.get('devoluciones_ing', 0))
+        _res_linea("110", p, "Ingresos netos", d.get('ingresos_netos', 0))
+        _res_linea("110", p, "— COSTOS Y DEDUCCIONES —", "")
+        _res_linea("110", p, "Costos", d.get('costos', 0))
+        _res_linea("110", p, "Deducciones", d.get('deducciones', 0))
+        _res_linea("110", p, "— LIQUIDACIÓN —", "")
+        _res_linea("110", p, "Renta líquida", d.get('renta_liquida', 0))
+        _res_linea("110", p, "Impuesto a cargo", d.get('impuesto_cargo', 0))
+        _res_linea("110", p, "Retenciones año gravable", d.get('retenciones_ag', 0))
+        _res_linea("110", p, "Anticipo renta", d.get('anticipo_renta', 0))
+        _res_linea("110", p, "Saldo a pagar", d.get('saldo_pagar', 0))
+        _res_linea("110", p, "Saldo a favor", d.get('saldo_favor', 0))
+
+    # Nota
+    fr += 1
+    ws_res.cell(fr, 1).value = (
+        "NOTA: Si algún valor aparece en $0, es posible que el PDF no se haya podido leer correctamente. "
+        "Verifique manualmente. Los renglones varían según la versión del formulario DIAN."
+    )
+    ws_res.cell(fr, 1).font = Font(size=9, name='Arial', color='999999', italic=True)
+    ws_res.cell(fr, 1).alignment = Alignment(wrap_text=True)
+    ws_res.merge_cells(start_row=fr, start_column=1, end_row=fr, end_column=4)
+
+    anchos_res = [18, 30, 35, 22]
+    for i, a in enumerate(anchos_res, 1):
+        ws_res.column_dimensions[openpyxl.utils.get_column_letter(i)].width = a
+    ws_res.freeze_panes = 'A2'
+
+    # ==========================================================
+    # HOJA 2: CRUCE — EXÓGENA vs DECLARACIONES
+    # ==========================================================
+    headers = ["Cruce", "Fuente Exógena", "Fuente Declaración",
+               "Valor Exógena", "Valor Declaración", "Diferencia", "% Dif", "Estado"]
     ws = wb.create_sheet("Cruce Declaraciones")
     for c, h in enumerate(headers, 1):
         cell = ws.cell(1, c, h)
-        cell.font = hfont
-        cell.fill = hf
+        cell.font = hfont; cell.fill = hf
         cell.alignment = Alignment(horizontal='center', wrap_text=True)
         cell.border = Border(top=thin, bottom=thin, left=thin, right=thin)
 
     fila = 2
-    T = totales_exogena or {}
+    NC = 8
 
-    def escribir_cruce(concepto, val_exo, val_decl, es_titulo=False):
+    def _titulo(texto):
         nonlocal fila
-        if es_titulo:
-            for c in range(1, 7):
-                ws.cell(fila, c).fill = titulo_fill
-                ws.cell(fila, c).font = Font(bold=True, size=10, name='Arial', color='1F4E79')
-                ws.cell(fila, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
-            ws.cell(fila, 1).value = concepto
-            ws.merge_cells(start_row=fila, start_column=1, end_row=fila, end_column=6)
-            fila += 1
-            return
+        for c in range(1, NC + 1):
+            ws.cell(fila, c).fill = titulo_fill
+            ws.cell(fila, c).font = Font(bold=True, size=10, name='Arial', color='1F4E79')
+            ws.cell(fila, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
+        ws.cell(fila, 1).value = texto
+        ws.merge_cells(start_row=fila, start_column=1, end_row=fila, end_column=NC)
+        fila += 1
 
+    def _subtitulo(texto):
+        nonlocal fila
+        for c in range(1, NC + 1):
+            ws.cell(fila, c).fill = sub_fill
+            ws.cell(fila, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
+        ws.cell(fila, 1).value = texto
+        ws.cell(fila, 1).font = Font(size=9, name='Arial', color='2471A3', italic=True)
+        ws.merge_cells(start_row=fila, start_column=1, end_row=fila, end_column=NC)
+        fila += 1
+
+    def _cruce(concepto, fuente_exo, fuente_decl, val_exo, val_decl):
+        nonlocal fila
         ws.cell(fila, 1).value = concepto
-        ws.cell(fila, 2).value = int(val_exo) if val_exo else 0
-        ws.cell(fila, 3).value = int(val_decl) if val_decl else 0
-        ws.cell(fila, 2).number_format = '#,##0'
-        ws.cell(fila, 3).number_format = '#,##0'
+        ws.cell(fila, 2).value = fuente_exo
+        ws.cell(fila, 3).value = fuente_decl
 
-        dif = (val_exo or 0) - (val_decl or 0)
-        ws.cell(fila, 4).value = int(dif)
+        ve = val_exo or 0
+        vd = val_decl or 0
+        ws.cell(fila, 4).value = int(ve)
+        ws.cell(fila, 5).value = int(vd)
         ws.cell(fila, 4).number_format = '#,##0'
+        ws.cell(fila, 5).number_format = '#,##0'
+
+        dif = ve - vd
+        ws.cell(fila, 6).value = int(dif)
+        ws.cell(fila, 6).number_format = '#,##0'
 
         pct = 0
-        if val_decl and val_decl != 0:
-            pct = (dif / val_decl) * 100
-        ws.cell(fila, 5).value = round(pct, 1)
-        ws.cell(fila, 5).number_format = '0.0"%"'
+        if vd != 0:
+            pct = (dif / abs(vd)) * 100
+        elif ve != 0:
+            pct = 100.0
+        ws.cell(fila, 7).value = round(pct, 1)
+        ws.cell(fila, 7).number_format = '0.0"%"'
 
-        # Estado
-        if val_exo == 0 and val_decl == 0:
-            estado = "—"
-            fill = PatternFill('solid', fgColor='F8F9F9')
+        if ve == 0 and vd == 0:
+            estado = "—"; fill = gris_fill
         elif abs(pct) <= 1:
-            estado = "✅ OK"
-            fill = ok_fill
+            estado = "✅ OK"; fill = ok_fill
         elif abs(pct) <= 5:
-            estado = "⚠️ Diferencia menor"
-            fill = warn_fill
+            estado = "⚠️ Revisar"; fill = warn_fill
         else:
-            estado = "❌ Revisar"
-            fill = err_fill
-        ws.cell(fila, 6).value = estado
+            estado = "❌ Diferencia"; fill = err_fill
+        ws.cell(fila, 8).value = estado
 
-        for c in range(1, 7):
+        for c in range(1, NC + 1):
             ws.cell(fila, c).fill = fill
             ws.cell(fila, c).font = Font(size=10, name='Arial')
             ws.cell(fila, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
         fila += 1
 
-    # === CRUCE RETENCIÓN EN LA FUENTE ===
+    # ==========================================
+    # A. CRUCE RETENCIÓN EN LA FUENTE
+    # ==========================================
     if declaraciones_350:
-        escribir_cruce("📋 RETENCIÓN EN LA FUENTE (Form 350 vs Exógena)", 0, 0, es_titulo=True)
-
-        # Sub-banner con períodos cargados
         periodos = [d['periodo'] for d in declaraciones_350]
-        for c in range(1, 7):
-            ws.cell(fila, c).fill = sub_fill
-            ws.cell(fila, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
-        ws.cell(fila, 1).value = f"Períodos cargados ({len(declaraciones_350)}): {', '.join(periodos)}"
-        ws.cell(fila, 1).font = Font(size=9, name='Arial', color='2471A3', italic=True)
-        ws.merge_cells(start_row=fila, start_column=1, end_row=fila, end_column=6)
-        fila += 1
+        _titulo("📋 RETENCIÓN EN LA FUENTE (Form 350 vs Exógena)")
+        _subtitulo(f"Períodos cargados ({len(declaraciones_350)}): {', '.join(periodos)}")
 
         total_350_ret = sum(d.get('ret_practicadas', 0) for d in declaraciones_350)
         total_350_autoret = sum(d.get('autorretenciones', 0) for d in declaraciones_350)
         total_350_retiva = sum(d.get('ret_iva', 0) for d in declaraciones_350)
         total_350 = sum(d.get('total', 0) for d in declaraciones_350)
 
-        escribir_cruce("Retenciones practicadas (Rte Fte)",
-                       T.get('total_f1001_retfte', 0), total_350_ret)
-        escribir_cruce("Retenciones de IVA practicadas",
-                       T.get('total_f1001_retiva', 0), total_350_retiva)
-        escribir_cruce("Autorretenciones",
-                       0, total_350_autoret)
-        escribir_cruce("TOTAL Form 350 (todas las retenciones)",
-                       T.get('total_ret_fte_2365', 0) + T.get('total_ret_iva_2367', 0), total_350)
-
-        # Detalle por mes
-        escribir_cruce("— Detalle por período —", 0, 0, es_titulo=True)
-        for d in sorted(declaraciones_350, key=lambda x: x.get('num_periodo', 0)):
-            escribir_cruce(f"  {d['periodo']}: Ret={d.get('ret_practicadas',0):,.0f}  RetIVA={d.get('ret_iva',0):,.0f}",
-                          None, None, es_titulo=True)
-
+        _cruce("Ret. Fte practicada a terceros",
+               "F1001 (col Ret Fte)", "Form 350 (Rngs 40-49)",
+               T.get('total_f1001_retfte', 0), total_350_ret)
+        _cruce("Ret. IVA practicada",
+               "F1001 (col Ret IVA)", "Form 350 (Rngs 57-62)",
+               T.get('total_f1001_retiva', 0), total_350_retiva)
+        _cruce("Autorretenciones",
+               "—", "Form 350 (Rngs 50-56)",
+               0, total_350_autoret)
+        _cruce("TOTAL retenciones declaradas",
+               "Cta 2365+2367 balance", "Form 350 (Total)",
+               T.get('total_ret_fte_2365', 0) + T.get('total_ret_iva_2367', 0), total_350)
         fila += 1
 
-    # === CRUCE IVA ===
+    # ==========================================
+    # B. CRUCE IVA
+    # ==========================================
     if declaraciones_300:
-        escribir_cruce("📋 IVA (Form 300 vs Exógena)", 0, 0, es_titulo=True)
-
         periodos = [d['periodo'] for d in declaraciones_300]
-        for c in range(1, 7):
-            ws.cell(fila, c).fill = sub_fill
-            ws.cell(fila, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
-        ws.cell(fila, 1).value = f"Períodos cargados ({len(declaraciones_300)}): {', '.join(periodos)}"
-        ws.cell(fila, 1).font = Font(size=9, name='Arial', color='2471A3', italic=True)
-        ws.merge_cells(start_row=fila, start_column=1, end_row=fila, end_column=6)
-        fila += 1
+        _titulo("📋 IVA (Form 300 vs Exógena)")
+        _subtitulo(f"Períodos cargados ({len(declaraciones_300)}): {', '.join(periodos)}")
 
         total_300_ing = sum(d.get('ingresos', 0) for d in declaraciones_300)
         total_300_iva_gen = sum(d.get('iva_generado', 0) for d in declaraciones_300)
         total_300_iva_desc = sum(d.get('iva_descontable', 0) for d in declaraciones_300)
 
-        escribir_cruce("Ingresos brutos (IVA vs F1007)",
-                       T.get('total_ingresos_4', 0), total_300_ing)
-        escribir_cruce("IVA Generado (Form 300 vs F1006)",
-                       T.get('total_iva_gen', 0), total_300_iva_gen)
-        escribir_cruce("IVA Descontable (Form 300 vs F1005)",
-                       T.get('total_iva_desc', 0), total_300_iva_desc)
-
+        _cruce("IVA Descontable",
+               "F1005 (total)", "Form 300 (IVA Descontable)",
+               T.get('total_iva_desc', 0), total_300_iva_desc)
+        _cruce("IVA Generado",
+               "F1006 (total)", "Form 300 (IVA Generado)",
+               T.get('total_iva_gen', 0), total_300_iva_gen)
+        _cruce("Ingresos brutos",
+               "F1007 (total)", "Form 300 (Ingresos)",
+               T.get('total_ingresos_4', 0), total_300_ing)
         fila += 1
 
-    # === CRUCE RENTA ===
+    # ==========================================
+    # C. CRUCE RENTA
+    # ==========================================
     if declaracion_110:
-        escribir_cruce("📋 RENTA (Form 110/210 vs Exógena)", 0, 0, es_titulo=True)
+        d110 = declaracion_110
+        _titulo(f"📋 RENTA (Form 110/210 vs Exógena) — {d110.get('periodo', '?')}")
 
-        for c in range(1, 7):
-            ws.cell(fila, c).fill = sub_fill
-            ws.cell(fila, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
-        ws.cell(fila, 1).value = f"Período: {declaracion_110.get('periodo', '?')}"
-        ws.cell(fila, 1).font = Font(size=9, name='Arial', color='2471A3', italic=True)
-        ws.merge_cells(start_row=fila, start_column=1, end_row=fila, end_column=6)
+        # -- Ingresos y Gastos --
+        _subtitulo("Ingresos, Costos y Deducciones")
+        _cruce("Ingresos brutos",
+               "F1007 (total ingresos)", "Renta (Ingresos brutos)",
+               T.get('total_ingresos_4', 0), d110.get('ingresos_brutos', 0))
+        _cruce("Costos",
+               "Balance cta 6xxx", "Renta (Costos)",
+               T.get('total_costos_6', 0), d110.get('costos', 0))
+        _cruce("Deducciones (gastos)",
+               "Balance cta 51+52+53", "Renta (Deducciones)",
+               T.get('total_gastos_5', 0), d110.get('deducciones', 0))
+        _cruce("Retenciones que le practicaron",
+               "F1003 (total)", "Renta (Retenciones AG)",
+               T.get('total_ret_1355', 0), d110.get('retenciones_ag', 0))
+
+        # -- Patrimonio vs Exógena --
+        _subtitulo("Patrimonio (Renta vs Formatos de saldo)")
+        _cruce("Cuentas por cobrar (F1008 vs Renta)",
+               "F1008 (total CxC)", "Renta (CxC patrimonio)",
+               T.get('total_f1008', 0), d110.get('cuentas_x_cobrar', 0))
+        _cruce("Cuentas por pagar (F1009 vs Renta)",
+               "F1009 (total CxP)", "Renta (Pasivos)",
+               T.get('total_f1009', 0), d110.get('pasivos', 0))
+        _cruce("Inversiones y bancos (F1012 vs Renta)",
+               "F1012 (total)", "Renta (Efectivo + Inversiones)",
+               T.get('total_f1012', 0),
+               d110.get('efectivo', 0) + d110.get('inversiones', 0))
+
         fila += 1
 
-        escribir_cruce("Ingresos brutos (Renta vs F1007)",
-                       T.get('total_ingresos_4', 0), declaracion_110.get('ingresos_brutos', 0))
-        escribir_cruce("Costos (Renta vs balance cta 6)",
-                       T.get('total_costos_6', 0), declaracion_110.get('costos', 0))
-        escribir_cruce("Deducciones (Renta vs balance cta 5)",
-                       T.get('total_gastos_5', 0), declaracion_110.get('deducciones', 0))
-        escribir_cruce("Retenciones año gravable (Renta vs F1003)",
-                       T.get('total_ret_1355', 0), declaracion_110.get('retenciones_ag', 0))
-
+    # ==========================================
+    # D. CRUCE IVA vs RENTA (si ambos disponibles)
+    # ==========================================
+    if declaraciones_300 and declaracion_110:
+        _titulo("📋 CRUCE ENTRE DECLARACIONES (IVA vs Renta)")
+        total_300_ing = sum(d.get('ingresos', 0) for d in declaraciones_300)
+        _cruce("Ingresos IVA vs Ingresos Renta",
+               "Form 300 (Ingresos)", "Form 110 (Ingresos)",
+               total_300_ing, declaracion_110.get('ingresos_brutos', 0))
         fila += 1
 
     # Nota final
     fila += 1
     ws.cell(fila, 1).value = (
-        "NOTA: Los valores de las declaraciones se extraen automáticamente del PDF. "
-        "Si los valores son $0 o parecen incorrectos, verifique manualmente el PDF. "
-        "Los renglones pueden variar según la versión del formulario DIAN."
+        "NOTA INFORMATIVA: Este cruce es una referencia para revisión del contador. "
+        "Los valores se extraen automáticamente del PDF y pueden requerir verificación manual. "
+        "Los renglones varían según la versión del formulario DIAN. "
+        "Las diferencias pueden deberse a ajustes, exclusiones de IVA, ingresos no gravados, etc."
     )
     ws.cell(fila, 1).font = Font(size=9, name='Arial', color='999999', italic=True)
     ws.cell(fila, 1).alignment = Alignment(wrap_text=True)
-    ws.merge_cells(start_row=fila, start_column=1, end_row=fila, end_column=6)
+    ws.merge_cells(start_row=fila, start_column=1, end_row=fila, end_column=NC)
+    ws.row_dimensions[fila].height = 40
 
-    # Anchos
-    anchos = [45, 20, 20, 18, 14, 22]
-    for i, ancho in enumerate(anchos, 1):
-        ws.column_dimensions[openpyxl.utils.get_column_letter(i)].width = ancho
+    anchos = [32, 22, 25, 20, 20, 18, 12, 18]
+    for i, a in enumerate(anchos, 1):
+        ws.column_dimensions[openpyxl.utils.get_column_letter(i)].width = a
     ws.freeze_panes = 'A2'
 
 
@@ -2272,6 +2405,9 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         'total_f1001_pagos': total_f1001,
         'total_f1001_retfte': sum(v[2] for v in final.values()),
         'total_f1001_retiva': sum(v[4] for v in final.values()),
+        'total_f1008': sum(v for v in final8.values()),
+        'total_f1009': sum(v for v in final9.values()),
+        'total_f1012': sum(v for v in dic12.values()),
     }
 
     return wb, resultados, len(bal), len(direc), n_con_dir, nits_nuevos, totales_exogena
@@ -2458,12 +2594,12 @@ if uploaded_file:
         with st.spinner("📊 Generando cruce con declaraciones..."):
             try:
                 generar_cruce_declaraciones(
-                    wb, resultados, declaraciones_350=declaraciones_350,
+                    wb, declaraciones_350=declaraciones_350,
                     declaraciones_300=declaraciones_300,
                     declaracion_110=declaracion_110_data,
                     totales_exogena=totales_exogena,
                 )
-                st.success("✅ Hoja 'Cruce Declaraciones' generada en el archivo")
+                st.success("✅ Hojas 'Resumen Declaraciones' y 'Cruce Declaraciones' generadas")
             except Exception as e:
                 st.warning(f"⚠️ Error en cruce: {str(e)[:80]}")
 
