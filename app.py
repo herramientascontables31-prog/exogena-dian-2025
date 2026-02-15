@@ -1647,23 +1647,6 @@ with col_dir2:
                        file_name="plantilla_directorio_terceros.xlsx",
                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
-# Opción de búsqueda automática y validación
-# Usar callback para guardar valor en session_state separado
-if "buscar_internet_activo" not in st.session_state:
-    st.session_state.buscar_internet_activo = False
-
-def _on_change_buscar():
-    st.session_state.buscar_internet_activo = st.session_state._cb_buscar_internet
-
-st.checkbox("🌐 Buscar información de terceros en internet (RUES, Datos Abiertos, Web)",
-            value=st.session_state.buscar_internet_activo,
-            key="_cb_buscar_internet",
-            on_change=_on_change_buscar,
-            help="Busca automáticamente en múltiples fuentes de internet: "
-                 "RUES, Datos Abiertos de Colombia y búsqueda web. "
-                 "Obtiene direcciones, razón social y dígito de verificación. "
-                 "Puede tardar varios minutos según la cantidad de terceros.")
-
 st.divider()
 
 if uploaded_file:
@@ -1693,16 +1676,17 @@ if uploaded_file:
 
         st.divider()
 
-        if st.button("🚀 PROCESAR EXÓGENA", type="primary", use_container_width=True):
+        col_btn1, col_btn2 = st.columns(2)
+        btn_normal = col_btn1.button("🚀 PROCESAR EXÓGENA", type="primary", use_container_width=True)
+        btn_internet = col_btn2.button("🌐 PROCESAR + BUSCAR INTERNET", use_container_width=True,
+                                        help="Busca direcciones y razón social en RUES, Datos Abiertos y web")
 
-            # Leer del session_state (persiste aunque Streamlit re-ejecute)
-            buscar_auto_val = st.session_state.get("buscar_internet_activo", False)
-            st.write(f"🔧 Debug: buscar_auto = **{buscar_auto_val}**")
+        if btn_normal or btn_internet:
 
-            # Búsqueda en internet si se activó
+            # Búsqueda en internet si se eligió ese botón
             datos_rues = None
             df_dir_auto = None
-            if buscar_auto_val:
+            if btn_internet:
                 import requests as _req
 
                 st.markdown("---")
@@ -1851,7 +1835,7 @@ if uploaded_file:
                     cv3.success("✅ Sin advertencias")
 
                 st.info("📋 Revisa la hoja **'Validacion Terceros'** en el archivo descargado para ver el detalle completo.")
-            elif buscar_auto and datos_rues:
+            elif btn_internet and datos_rues:
                 st.success("✅ Validación completada: no se encontraron diferencias.")
 
             st.markdown("### 📋 Resultados por formato")
