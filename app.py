@@ -1650,6 +1650,7 @@ with col_dir2:
 # Opción de búsqueda automática y validación
 buscar_auto = st.checkbox("🌐 Buscar información de terceros en internet (RUES, Datos Abiertos, Web)",
                            value=False,
+                           key="buscar_internet",
                            help="Busca automáticamente en múltiples fuentes de internet: "
                                 "RUES, Datos Abiertos de Colombia y búsqueda web. "
                                 "Obtiene direcciones, razón social y dígito de verificación. "
@@ -1685,6 +1686,9 @@ if uploaded_file:
         st.divider()
 
         if st.button("🚀 PROCESAR EXÓGENA", type="primary", use_container_width=True):
+
+            # Debug: mostrar estado del checkbox
+            st.write(f"🔧 Debug: buscar_auto = **{buscar_auto}**")
 
             # Búsqueda en internet si se activó
             datos_rues = None
