@@ -87,111 +87,162 @@ def pad_mpio(v):
     if v.lower() == 'nan': return ""
     return v.zfill(3) if v.isdigit() else v
 
-def buscar_info_rues(nits_list, progress_bar=None, status_text=None):
-    """Busca info de terceros en RUES: dirección, razón social, DV.
-    Intenta múltiples endpoints y métodos."""
+def buscar_info_terceros(nits_list, progress_bar=None):
+    """Busca info de terceros usando múltiples fuentes:
+    1) RUES (Registro Único Empresarial)
+    2) datos.gov.co (Datos Abiertos Colombia)
+    3) Búsqueda web (DuckDuckGo) como fallback
+    Retorna: (dict_encontrados, bool_api_fallida)
+    """
     import requests
     from time import sleep
+    import re
 
     encontrados = {}
     total = len(nits_list)
-    errores_seguidos = 0
-    metodo_exitoso = None  # Recordar qué método funcionó
-
-    # Endpoints a intentar (en orden de prioridad)
-    ENDPOINTS = [
-        {
-            'url': 'https://www.rues.org.co/RM/ConsultaNit_Api',
-            'method': 'GET',
-            'params_fn': lambda nit: {'nit': str(nit), 'tipo': 'N'},
-            'data_fn': None,
-        },
-        {
-            'url': 'https://www.rues.org.co/RM',
-            'method': 'POST',
-            'params_fn': None,
-            'data_fn': lambda nit: {'Nit': str(nit), 'Tipo': 'N'},
-        },
-        {
-            'url': 'https://www.rues.org.co/api/Nit',
-            'method': 'GET',
-            'params_fn': lambda nit: {'nit': str(nit)},
-            'data_fn': None,
-        },
-    ]
+    errores_seguidos_global = 0
 
     HEADERS = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Accept': 'application/json, text/html, */*; q=0.01',
         'Accept-Language': 'es-CO,es;q=0.9,en;q=0.8',
-        'Referer': 'https://www.rues.org.co/',
-        'X-Requested-With': 'XMLHttpRequest',
     }
 
-    def intentar_consulta(nit, endpoint):
-        """Intenta una consulta con un endpoint específico"""
-        try:
-            if endpoint['method'] == 'GET':
-                resp = requests.get(
-                    endpoint['url'],
-                    params=endpoint['params_fn'](nit),
-                    headers=HEADERS,
-                    timeout=15
-                )
-            else:
-                resp = requests.post(
-                    endpoint['url'],
-                    data=endpoint['data_fn'](nit),
-                    headers=HEADERS,
-                    timeout=15
-                )
-
-            if resp.status_code == 200:
-                try:
+    # --- FUENTE 1: RUES ---
+    def buscar_rues(nit):
+        endpoints = [
+            ('GET', 'https://www.rues.org.co/RM/ConsultaNit_Api', {'nit': str(nit), 'tipo': 'N'}),
+            ('POST', 'https://www.rues.org.co/RM', None),
+        ]
+        for method, url, params in endpoints:
+            try:
+                headers_rues = {**HEADERS, 'Referer': 'https://www.rues.org.co/',
+                                'X-Requested-With': 'XMLHttpRequest'}
+                if method == 'GET':
+                    resp = requests.get(url, params=params, headers=headers_rues, timeout=10)
+                else:
+                    resp = requests.post(url, data={'Nit': str(nit), 'Tipo': 'N'},
+                                         headers=headers_rues, timeout=10)
+                if resp.status_code == 200:
                     data = resp.json()
-                    if data and isinstance(data, list) and len(data) > 0:
-                        return data[0], None
-                    elif data and isinstance(data, dict):
-                        # Algunos endpoints devuelven dict en vez de list
-                        registros = data.get('registros', data.get('Registros', data.get('data', None)))
-                        if registros and isinstance(registros, list) and len(registros) > 0:
-                            return registros[0], None
-                        return data, None
-                    return None, None  # API respondió pero sin datos
-                except ValueError:
-                    return None, f"Respuesta no es JSON: {resp.text[:100]}"
-            else:
-                return None, f"HTTP {resp.status_code}"
-        except requests.exceptions.Timeout:
-            return None, "Timeout"
-        except requests.exceptions.ConnectionError as e:
-            return None, f"Conexión: {str(e)[:80]}"
-        except Exception as e:
-            return None, f"Error: {str(e)[:80]}"
+                    registros = data if isinstance(data, list) else \
+                                data.get('registros', data.get('data', [data])) if isinstance(data, dict) else []
+                    if registros and len(registros) > 0:
+                        return extraer_info_dict(registros[0])
+            except Exception:
+                continue
+        return None
 
-    def extraer_info(emp):
-        """Extrae información de un registro RUES independiente del formato"""
-        info = {
-            'razon_social': '',
-            'dv': '',
-            'dir': '',
-            'dp': '',
-            'mp': '',
-            'pais': '169',
-        }
+    # --- FUENTE 2: Datos Abiertos Colombia ---
+    def buscar_datos_gov(nit):
+        try:
+            # Dataset de Confecámaras en datos.gov.co
+            url = "https://www.datos.gov.co/resource/c82q-fe7j.json"
+            resp = requests.get(url, params={
+                '$where': f"nit='{nit}'",
+                '$limit': 1
+            }, headers=HEADERS, timeout=10)
+            if resp.status_code == 200:
+                data = resp.json()
+                if data and len(data) > 0:
+                    return extraer_info_dict(data[0])
+        except Exception:
+            pass
+        return None
+
+    # --- FUENTE 3: Búsqueda web ---
+    def buscar_web(nit):
+        """Busca en la web y extrae info del NIT desde los snippets"""
+        try:
+            # Usar DuckDuckGo HTML (no requiere API key)
+            resp = requests.get(
+                'https://html.duckduckgo.com/html/',
+                params={'q': f'NIT {nit} Colombia empresa direccion'},
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                },
+                timeout=15
+            )
+            if resp.status_code != 200:
+                return None
+
+            texto = resp.text
+            info = {'razon_social': '', 'dv': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
+
+            # Extraer razón social de los títulos de resultados
+            # Buscar patrones como "NIT 890904997 - EMPRESA XYZ"
+            patron_rs = re.findall(
+                r'(?:NIT|nit|Nit)[\s.:]*' + re.escape(str(nit)) + r'[\s\-–—:]+([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s&.,]+)',
+                texto
+            )
+            if patron_rs:
+                rs = patron_rs[0].strip().rstrip('.,;:-')
+                if len(rs) > 3 and len(rs) < 120:
+                    info['razon_social'] = rs
+
+            # Si no encontró por patrón NIT, buscar en títulos de resultado
+            if not info['razon_social']:
+                titulos = re.findall(r'class="result__a"[^>]*>([^<]+)<', texto)
+                for titulo in titulos[:5]:
+                    # Quitar partes genéricas
+                    titulo_clean = titulo.strip()
+                    if str(nit) in titulo_clean:
+                        # Quitar el NIT del título para quedarse con el nombre
+                        rs_candidato = re.sub(r'NIT[\s.:]*\d+[\-\d]*', '', titulo_clean).strip(' -–—:')
+                        if len(rs_candidato) > 3:
+                            info['razon_social'] = rs_candidato.upper()
+                            break
+
+            # Extraer dirección de los snippets
+            snippets = re.findall(r'class="result__snippet"[^>]*>(.*?)</[^>]+>', texto, re.DOTALL)
+            for snippet in snippets[:5]:
+                snippet_clean = re.sub(r'<[^>]+>', '', snippet)
+                # Buscar patrones de dirección colombiana
+                patron_dir = re.findall(
+                    r'(?:Direcci[oó]n|Dir|Direc)[:\s]+([A-Za-z]{2,3}[\s.]*\d+[\w\s#\-.,No°]+)',
+                    snippet_clean, re.IGNORECASE
+                )
+                if patron_dir:
+                    dir_candidata = patron_dir[0].strip()[:100]
+                    if len(dir_candidata) > 5:
+                        info['dir'] = dir_candidata
+                        break
+
+                # Patrón más flexible: CL, CR, KR, TV, DG + número
+                patron_dir2 = re.findall(
+                    r'(?:CL|CR|KR|TV|DG|CALLE|CARRERA|TRANSVERSAL|DIAGONAL|AV|AVENIDA)[\s.]*(?:No\.?\s*)?\d+[\w\s#\-.,No°]*\d',
+                    snippet_clean, re.IGNORECASE
+                )
+                if patron_dir2:
+                    dir_candidata = patron_dir2[0].strip()[:100]
+                    if len(dir_candidata) > 5:
+                        info['dir'] = dir_candidata
+                        break
+
+            if info.get('razon_social') or info.get('dir'):
+                return info
+        except Exception:
+            pass
+        return None
+
+    # --- Extractor genérico de campos ---
+    def extraer_info_dict(emp):
+        """Extrae info de un diccionario de datos independiente del formato"""
         if not isinstance(emp, dict):
-            return info
+            return None
+        info = {'razon_social': '', 'dv': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
 
-        # Razón social (probar múltiples nombres de campo)
+        # Razón social
         for campo in ['razon_social', 'Razon_Social', 'nombre', 'Nombre',
                        'razonSocial', 'RazonSocial', 'nombre_razon_social',
-                       'NombreEstablecimiento', 'organizacion']:
+                       'NombreEstablecimiento', 'organizacion', 'razon_social_empresa',
+                       'nombre_empresa', 'empresa']:
             val = emp.get(campo, '')
             if val:
                 info['razon_social'] = str(val).strip().upper()
                 break
 
-        # Dígito de verificación
+        # DV
         for campo in ['digito_verificacion', 'Digito_Verificacion', 'dv', 'DV',
                        'digitoVerificacion', 'DigitoVerificacion']:
             val = emp.get(campo, '')
@@ -201,7 +252,8 @@ def buscar_info_rues(nits_list, progress_bar=None, status_text=None):
 
         # Dirección
         for campo in ['direccion', 'Direccion', 'direccion_comercial',
-                       'DireccionComercial', 'direccionNotificacion']:
+                       'DireccionComercial', 'direccionNotificacion',
+                       'direccion_empresa', 'dir_comercial']:
             val = emp.get(campo, '')
             if val:
                 info['dir'] = str(val).strip()
@@ -209,7 +261,8 @@ def buscar_info_rues(nits_list, progress_bar=None, status_text=None):
 
         # Departamento
         for campo in ['codigo_departamento', 'departamento', 'Departamento',
-                       'cod_departamento', 'CodigoDepartamento', 'dep_codigo']:
+                       'cod_departamento', 'CodigoDepartamento', 'dep_codigo',
+                       'codigo_depto', 'cod_depto']:
             val = emp.get(campo, '')
             if val:
                 info['dp'] = pad_dpto(str(val).strip())
@@ -217,63 +270,87 @@ def buscar_info_rues(nits_list, progress_bar=None, status_text=None):
 
         # Municipio
         for campo in ['codigo_municipio', 'municipio', 'Municipio',
-                       'cod_municipio', 'CodigoMunicipio', 'mun_codigo', 'ciudad']:
+                       'cod_municipio', 'CodigoMunicipio', 'mun_codigo',
+                       'ciudad', 'codigo_ciudad', 'cod_ciudad']:
             val = emp.get(campo, '')
             if val:
                 info['mp'] = pad_mpio(str(val).strip())
                 break
 
-        return info
+        tiene_datos = info.get('razon_social') or info.get('dir')
+        return info if tiene_datos else None
 
-    # Primero: detectar qué endpoint funciona con el primer NIT
+    # --- FLUJO PRINCIPAL: intentar cada fuente ---
+    # Detectar qué fuentes están disponibles
+    fuentes = []
+
+    if progress_bar:
+        progress_bar.progress(0, text="🔌 Detectando fuentes disponibles...")
+
+    # Probar RUES con el primer NIT
     primer_nit = nits_list[0] if nits_list else None
     if primer_nit:
-        for idx, ep in enumerate(ENDPOINTS):
-            if progress_bar:
-                progress_bar.progress(0, text=f"🔌 Probando conexión con RUES (método {idx+1}/{len(ENDPOINTS)})...")
-            emp, error = intentar_consulta(primer_nit, ep)
-            if emp is not None:
-                metodo_exitoso = idx
-                info = extraer_info(emp)
-                if info.get('dir') or info.get('razon_social'):
-                    encontrados[primer_nit] = info
-                break
-            elif error and 'Conexión' not in str(error):
-                # API respondió pero sin datos — el endpoint funciona
-                metodo_exitoso = idx
-                break
+        try:
+            resultado = buscar_rues(primer_nit)
+            if resultado:
+                encontrados[primer_nit] = resultado
+                fuentes.append(('RUES', buscar_rues))
+        except Exception:
+            pass
 
-    if metodo_exitoso is None:
-        if progress_bar:
-            progress_bar.empty()
-        return {}, True  # No se pudo conectar
+        # Probar datos.gov.co
+        if not fuentes:
+            try:
+                resultado = buscar_datos_gov(primer_nit)
+                if resultado:
+                    encontrados[primer_nit] = resultado
+                    fuentes.append(('Datos.gov.co', buscar_datos_gov))
+            except Exception:
+                pass
 
-    # Ahora consultar los demás NITs con el método que funcionó
-    ep = ENDPOINTS[metodo_exitoso]
+        # Siempre agregar búsqueda web como fallback
+        fuentes.append(('Búsqueda Web', buscar_web))
+
+    if not fuentes:
+        fuentes.append(('Búsqueda Web', buscar_web))
+
+    nombres_fuentes = ', '.join(f[0] for f in fuentes)
+
+    # Consultar todos los NITs
     for i, nit in enumerate(nits_list):
         if nit in encontrados:
-            continue  # Ya se consultó (el primero)
+            continue
 
         if progress_bar:
-            progress_bar.progress((i + 1) / total,
-                                  text=f"🔍 Consultando NIT {nit} ({i+1}/{total}) — Encontrados: {len(encontrados)}")
+            progress_bar.progress(
+                (i + 1) / total,
+                text=f"🔍 Buscando {nit} ({i+1}/{total}) — [{nombres_fuentes}] — Encontrados: {len(encontrados)}"
+            )
 
-        if errores_seguidos >= 10:
+        if errores_seguidos_global >= 15:
             break
 
-        emp, error = intentar_consulta(nit, ep)
-        if emp is not None:
-            info = extraer_info(emp)
-            encontrados[nit] = info
-            errores_seguidos = 0
-        elif error is None:
-            errores_seguidos = 0  # API respondió, solo no encontró
-        else:
-            errores_seguidos += 1
+        encontro = False
+        for nombre_fuente, fn_buscar in fuentes:
+            try:
+                resultado = fn_buscar(nit)
+                if resultado:
+                    resultado['_fuente'] = nombre_fuente
+                    encontrados[nit] = resultado
+                    encontro = True
+                    errores_seguidos_global = 0
+                    break
+            except Exception:
+                continue
 
-        sleep(0.5)  # Respetar rate limit
+        if not encontro:
+            errores_seguidos_global += 1
 
-    return encontrados, errores_seguidos >= 10
+        # Rate limit (más agresivo para web search)
+        tiene_web = any(f[0] == 'Búsqueda Web' for f in fuentes if f[0] == fuentes[-1][0])
+        sleep(1.0 if len(fuentes) == 1 and fuentes[0][0] == 'Búsqueda Web' else 0.5)
+
+    return encontrados, errores_seguidos_global >= 15
 
 
 def normalizar_texto(t):
@@ -632,7 +709,7 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                 'pais': safe_str(row.iloc[4]) if len(row) > 4 else "169",
             }
 
-    # Integrar datos del RUES al directorio externo (solo si no tiene ya datos)
+    # Integrar datos de internet al directorio externo (solo si no tiene ya datos)
     if datos_rues:
         for nit_r, info_r in datos_rues.items():
             if nit_r not in dir_externo:
@@ -1167,14 +1244,14 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
         fila += 1
     resultados['F2276 Rentas Trabajo'] = len(dic26)
 
-    # ========== VALIDACION TERCEROS (vs RUES) ==========
+    # ========== VALIDACION TERCEROS (vs INTERNET) ==========
     validaciones = []
     if datos_rues:
         warn_fill = PatternFill('solid', fgColor='FFF3CD')  # Amarillo
         err_fill = PatternFill('solid', fgColor='F8D7DA')   # Rojo
         ok_fill = PatternFill('solid', fgColor='D4EDDA')    # Verde
 
-        h_val = ["NIT", "Campo", "Valor en Balance", "Valor en RUES", "Estado", "Observación"]
+        h_val = ["NIT", "Campo", "Valor en Balance", "Valor en Internet", "Estado", "Observación"]
         ws_val = nueva_hoja("Validacion Terceros", h_val)
 
         fila_val = 2
@@ -1191,11 +1268,11 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                 if dv_calculado == dv_rues:
                     estado_dv = "✅ OK"
                     fill_dv = ok_fill
-                    obs_dv = "DV coincide con RUES y cálculo"
+                    obs_dv = "DV coincide con internet y cálculo"
                 else:
                     estado_dv = "❌ ERROR"
                     fill_dv = err_fill
-                    obs_dv = f"DV calculado={dv_calculado}, RUES={dv_rues}. REVISAR"
+                    obs_dv = f"DV calculado={dv_calculado}, Internet={dv_rues}. REVISAR"
                     validaciones.append(('dv_error', nit_v))
 
                 ws_val.cell(fila_val, 1).value = nit_v
@@ -1237,7 +1314,7 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
                 else:
                     estado_rs = "❌ DIFERENTE"
                     fill_rs = err_fill
-                    obs_rs = f"Similitud {sim:.0%}. Razón social NO coincide con RUES"
+                    obs_rs = f"Similitud {sim:.0%}. Razón social NO coincide con fuente pública"
                     validaciones.append(('rs_error', nit_v))
 
                 ws_val.cell(fila_val, 1).value = nit_v
@@ -1281,7 +1358,7 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
         n_dv_err = sum(1 for tipo, _ in validaciones if tipo == 'dv_error')
         n_rs_err = sum(1 for tipo, _ in validaciones if tipo == 'rs_error')
         n_rs_warn = sum(1 for tipo, _ in validaciones if tipo == 'rs_warn')
-        wsr['A7'] = "Validados vs RUES:"
+        wsr['A7'] = "Validados vs Internet:"
         wsr['B7'] = len(datos_rues)
         wsr['A8'] = "  ❌ DV con error:"
         wsr['B8'] = n_dv_err
@@ -1359,7 +1436,7 @@ st.divider()
 st.markdown("### 📋 Directorio de Terceros (opcional)")
 st.markdown("""
 Sube un archivo con las **direcciones** de tus terceros para que aparezcan en los formatos.
-Si no lo subes, el programa puede **buscar las direcciones automáticamente** en internet (RUES).
+Si no lo subes, el programa puede **buscar las direcciones automáticamente** en internet.
 """)
 
 col_dir1, col_dir2 = st.columns([2, 1])
@@ -1453,11 +1530,12 @@ with col_dir2:
                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
 # Opción de búsqueda automática y validación
-buscar_auto = st.checkbox("🌐 Consultar RUES: buscar direcciones + validar razón social y DV",
+buscar_auto = st.checkbox("🌐 Buscar información de terceros en internet (RUES, Datos Abiertos, Web)",
                            value=False,
-                           help="Consulta el Registro Único Empresarial (RUES) para buscar direcciones, "
-                                "verificar que el dígito de verificación sea correcto y que la razón social "
-                                "coincida con la inscrita en el RUT. Puede tardar varios minutos.")
+                           help="Busca automáticamente en múltiples fuentes de internet: "
+                                "RUES, Datos Abiertos de Colombia y búsqueda web. "
+                                "Obtiene direcciones, razón social y dígito de verificación. "
+                                "Puede tardar varios minutos según la cantidad de terceros.")
 
 st.divider()
 
@@ -1494,7 +1572,7 @@ if uploaded_file:
             datos_rues = None
             df_dir_auto = None
             if buscar_auto:
-                with st.status("🌐 Consultando RUES...", expanded=True) as status:
+                with st.status("🌐 Buscando información en internet...", expanded=True) as status:
                     st.write("Extrayendo NITs del balance...")
 
                     # Extraer NITs únicos del balance
@@ -1510,16 +1588,25 @@ if uploaded_file:
                     nits_list = sorted(list(nits_unicos))
                     st.write(f"Se encontraron **{len(nits_list)}** NITs únicos para consultar")
 
-                    progress_bar = st.progress(0, text="🔍 Conectando con RUES...")
+                    progress_bar = st.progress(0, text="🔍 Conectando con fuentes de internet...")
 
-                    datos_rues, api_fallida = buscar_info_rues(nits_list, progress_bar)
+                    datos_rues, api_fallida = buscar_info_terceros(nits_list, progress_bar)
                     progress_bar.empty()
 
                     if datos_rues:
                         n_con_dir_rues = sum(1 for d in datos_rues.values() if d.get('dir'))
                         n_con_rs = sum(1 for d in datos_rues.values() if d.get('razon_social'))
-                        status.update(label=f"✅ RUES: {len(datos_rues)} terceros encontrados", state="complete")
+                        status.update(label=f"✅ {len(datos_rues)} terceros encontrados en internet", state="complete")
                         st.write(f"📍 Con dirección: **{n_con_dir_rues}** | 📝 Con razón social: **{n_con_rs}**")
+
+                        # Mostrar desglose por fuente
+                        fuentes_usadas = {}
+                        for d in datos_rues.values():
+                            f_nombre = d.get('_fuente', 'Desconocida')
+                            fuentes_usadas[f_nombre] = fuentes_usadas.get(f_nombre, 0) + 1
+                        if fuentes_usadas:
+                            desglose = " | ".join(f"{f}: {n}" for f, n in fuentes_usadas.items())
+                            st.write(f"🔗 Fuentes: {desglose}")
 
                         # Si no se subió directorio, usar RUES para direcciones
                         if not uploaded_dir:
@@ -1537,16 +1624,16 @@ if uploaded_file:
                                 df_dir_auto = pd.DataFrame(rows_auto)
 
                     elif api_fallida:
-                        status.update(label="❌ No se pudo conectar con RUES", state="error")
-                        st.write("**Posibles causas:**")
-                        st.write("• El servicio RUES puede estar temporalmente fuera de línea")
-                        st.write("• Tu conexión a internet puede estar bloqueando la consulta")
-                        st.write("• El sitio rues.org.co puede haber cambiado su API")
+                        status.update(label="❌ No se pudo conectar con las fuentes de internet", state="error")
+                        st.write("**Se intentaron las siguientes fuentes sin éxito:**")
+                        st.write("• RUES (Registro Único Empresarial y Social)")
+                        st.write("• Datos Abiertos de Colombia (datos.gov.co)")
+                        st.write("• Búsqueda web (DuckDuckGo)")
                         st.write("")
                         st.write("💡 **Alternativa:** Descarga la plantilla de directorio, llénala manualmente y súbela.")
                     else:
-                        status.update(label="⚠️ RUES no devolvió resultados", state="complete")
-                        st.write("La API de RUES respondió pero no encontró datos para estos NITs.")
+                        status.update(label="⚠️ No se encontraron datos en internet", state="complete")
+                        st.write("Las fuentes respondieron pero no encontraron datos para estos NITs.")
 
             dir_final = df_dir if df_dir is not None else df_dir_auto
 
@@ -1569,7 +1656,7 @@ if uploaded_file:
                 n_rs_err = sum(1 for tipo, _ in validaciones if tipo == 'rs_error')
                 n_rs_warn = sum(1 for tipo, _ in validaciones if tipo == 'rs_warn')
 
-                st.markdown("### 🔍 Validación vs RUES")
+                st.markdown("### 🔍 Validación vs Internet")
                 cv1, cv2, cv3 = st.columns(3)
                 if n_dv_err > 0:
                     cv1.error(f"❌ **{n_dv_err}** DV con error")
