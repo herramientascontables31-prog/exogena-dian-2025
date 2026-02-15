@@ -20,7 +20,7 @@ GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/TU_ID_AQUI/pub?
 # Google Sheet con NIT | Razón Social | Dirección | Cod Depto | Cod Municipio | Cod País | Tipo Doc | DV
 # Publicar como CSV: Archivo → Compartir → Publicar en la web → CSV
 # La app lo lee para buscar direcciones. Cuando encuentre nuevas, te las descarga para que las pegues.
-DIRECTORIO_CENTRAL_URL = "https://docs.google.com/spreadsheets/d/e/TU_ID_DIRECTORIO/pub?output=csv"
+DIRECTORIO_CENTRAL_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAr6NT6bJmum4GUAPuPmrJ2m-pybG8Nyve1Nv8s_MyuUOFQZ42gIPpKt_dm0efy1J8kqGcE8AwNxdk/pub?gid=0&single=true&output=csv"
 
 # Contraseña de respaldo (funciona siempre, por si Google Sheets falla)
 CLAVE_ADMIN = "ExoDIAN-2025-ADMIN"
