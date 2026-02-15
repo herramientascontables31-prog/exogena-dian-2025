@@ -618,15 +618,15 @@ def similitud_textos(a, b):
 import re as _re
 
 def extraer_texto_pdf(archivo_pdf):
-    """Extrae texto de un PDF de declaración DIAN usando pdfplumber."""
-    import pdfplumber
+    """Extrae texto de un PDF de declaración DIAN usando pypdf."""
+    from pypdf import PdfReader
     texto_completo = ""
     try:
-        with pdfplumber.open(archivo_pdf) as pdf:
-            for page in pdf.pages:
-                t = page.extract_text()
-                if t:
-                    texto_completo += t + "\n"
+        reader = PdfReader(archivo_pdf)
+        for page in reader.pages:
+            t = page.extract_text()
+            if t:
+                texto_completo += t + "\n"
     except Exception as e:
         return "", str(e)
     return texto_completo, None
