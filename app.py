@@ -87,16 +87,173 @@ def pad_mpio(v):
     if v.lower() == 'nan': return ""
     return v.zfill(3) if v.isdigit() else v
 
-def buscar_info_rues(nits_list, progress_bar=None):
-    """Busca info de terceros en RUES: dirección, razón social, DV"""
+def buscar_info_rues(nits_list, progress_bar=None, status_text=None):
+    """Busca info de terceros en RUES: dirección, razón social, DV.
+    Intenta múltiples endpoints y métodos."""
     import requests
     from time import sleep
 
     encontrados = {}
     total = len(nits_list)
     errores_seguidos = 0
+    metodo_exitoso = None  # Recordar qué método funcionó
 
+    # Endpoints a intentar (en orden de prioridad)
+    ENDPOINTS = [
+        {
+            'url': 'https://www.rues.org.co/RM/ConsultaNit_Api',
+            'method': 'GET',
+            'params_fn': lambda nit: {'nit': str(nit), 'tipo': 'N'},
+            'data_fn': None,
+        },
+        {
+            'url': 'https://www.rues.org.co/RM',
+            'method': 'POST',
+            'params_fn': None,
+            'data_fn': lambda nit: {'Nit': str(nit), 'Tipo': 'N'},
+        },
+        {
+            'url': 'https://www.rues.org.co/api/Nit',
+            'method': 'GET',
+            'params_fn': lambda nit: {'nit': str(nit)},
+            'data_fn': None,
+        },
+    ]
+
+    HEADERS = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'Accept-Language': 'es-CO,es;q=0.9,en;q=0.8',
+        'Referer': 'https://www.rues.org.co/',
+        'X-Requested-With': 'XMLHttpRequest',
+    }
+
+    def intentar_consulta(nit, endpoint):
+        """Intenta una consulta con un endpoint específico"""
+        try:
+            if endpoint['method'] == 'GET':
+                resp = requests.get(
+                    endpoint['url'],
+                    params=endpoint['params_fn'](nit),
+                    headers=HEADERS,
+                    timeout=15
+                )
+            else:
+                resp = requests.post(
+                    endpoint['url'],
+                    data=endpoint['data_fn'](nit),
+                    headers=HEADERS,
+                    timeout=15
+                )
+
+            if resp.status_code == 200:
+                try:
+                    data = resp.json()
+                    if data and isinstance(data, list) and len(data) > 0:
+                        return data[0], None
+                    elif data and isinstance(data, dict):
+                        # Algunos endpoints devuelven dict en vez de list
+                        registros = data.get('registros', data.get('Registros', data.get('data', None)))
+                        if registros and isinstance(registros, list) and len(registros) > 0:
+                            return registros[0], None
+                        return data, None
+                    return None, None  # API respondió pero sin datos
+                except ValueError:
+                    return None, f"Respuesta no es JSON: {resp.text[:100]}"
+            else:
+                return None, f"HTTP {resp.status_code}"
+        except requests.exceptions.Timeout:
+            return None, "Timeout"
+        except requests.exceptions.ConnectionError as e:
+            return None, f"Conexión: {str(e)[:80]}"
+        except Exception as e:
+            return None, f"Error: {str(e)[:80]}"
+
+    def extraer_info(emp):
+        """Extrae información de un registro RUES independiente del formato"""
+        info = {
+            'razon_social': '',
+            'dv': '',
+            'dir': '',
+            'dp': '',
+            'mp': '',
+            'pais': '169',
+        }
+        if not isinstance(emp, dict):
+            return info
+
+        # Razón social (probar múltiples nombres de campo)
+        for campo in ['razon_social', 'Razon_Social', 'nombre', 'Nombre',
+                       'razonSocial', 'RazonSocial', 'nombre_razon_social',
+                       'NombreEstablecimiento', 'organizacion']:
+            val = emp.get(campo, '')
+            if val:
+                info['razon_social'] = str(val).strip().upper()
+                break
+
+        # Dígito de verificación
+        for campo in ['digito_verificacion', 'Digito_Verificacion', 'dv', 'DV',
+                       'digitoVerificacion', 'DigitoVerificacion']:
+            val = emp.get(campo, '')
+            if val is not None and str(val).strip():
+                info['dv'] = str(val).strip()
+                break
+
+        # Dirección
+        for campo in ['direccion', 'Direccion', 'direccion_comercial',
+                       'DireccionComercial', 'direccionNotificacion']:
+            val = emp.get(campo, '')
+            if val:
+                info['dir'] = str(val).strip()
+                break
+
+        # Departamento
+        for campo in ['codigo_departamento', 'departamento', 'Departamento',
+                       'cod_departamento', 'CodigoDepartamento', 'dep_codigo']:
+            val = emp.get(campo, '')
+            if val:
+                info['dp'] = pad_dpto(str(val).strip())
+                break
+
+        # Municipio
+        for campo in ['codigo_municipio', 'municipio', 'Municipio',
+                       'cod_municipio', 'CodigoMunicipio', 'mun_codigo', 'ciudad']:
+            val = emp.get(campo, '')
+            if val:
+                info['mp'] = pad_mpio(str(val).strip())
+                break
+
+        return info
+
+    # Primero: detectar qué endpoint funciona con el primer NIT
+    primer_nit = nits_list[0] if nits_list else None
+    if primer_nit:
+        for idx, ep in enumerate(ENDPOINTS):
+            if progress_bar:
+                progress_bar.progress(0, text=f"🔌 Probando conexión con RUES (método {idx+1}/{len(ENDPOINTS)})...")
+            emp, error = intentar_consulta(primer_nit, ep)
+            if emp is not None:
+                metodo_exitoso = idx
+                info = extraer_info(emp)
+                if info.get('dir') or info.get('razon_social'):
+                    encontrados[primer_nit] = info
+                break
+            elif error and 'Conexión' not in str(error):
+                # API respondió pero sin datos — el endpoint funciona
+                metodo_exitoso = idx
+                break
+
+    if metodo_exitoso is None:
+        if progress_bar:
+            progress_bar.empty()
+        return {}, True  # No se pudo conectar
+
+    # Ahora consultar los demás NITs con el método que funcionó
+    ep = ENDPOINTS[metodo_exitoso]
     for i, nit in enumerate(nits_list):
+        if nit in encontrados:
+            continue  # Ya se consultó (el primero)
+
         if progress_bar:
             progress_bar.progress((i + 1) / total,
                                   text=f"🔍 Consultando NIT {nit} ({i+1}/{total}) — Encontrados: {len(encontrados)}")
@@ -104,81 +261,17 @@ def buscar_info_rues(nits_list, progress_bar=None):
         if errores_seguidos >= 10:
             break
 
-        try:
-            resp = requests.get(
-                "https://www.rues.org.co/RM/ConsultaNit_Api",
-                params={"nit": str(nit), "tipo": "N"},
-                headers={
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                    'Accept': 'application/json',
-                    'Referer': 'https://www.rues.org.co/'
-                },
-                timeout=10
-            )
-            if resp.status_code == 200:
-                data = resp.json()
-                if data and isinstance(data, list) and len(data) > 0:
-                    emp = data[0]
-                    # Extraer toda la info disponible
-                    info = {
-                        'razon_social': '',
-                        'dv': '',
-                        'dir': '',
-                        'dp': '',
-                        'mp': '',
-                        'pais': '169',
-                    }
-                    # Razón social
-                    for campo_rs in ['razon_social', 'Razon_Social', 'nombre', 'Nombre',
-                                     'razonSocial', 'RazonSocial', 'nombre_razon_social']:
-                        val = emp.get(campo_rs, '')
-                        if val:
-                            info['razon_social'] = str(val).strip().upper()
-                            break
-                    # Dígito de verificación
-                    for campo_dv in ['digito_verificacion', 'Digito_Verificacion', 'dv',
-                                     'digitoVerificacion', 'DV']:
-                        val = emp.get(campo_dv, '')
-                        if val is not None and str(val).strip():
-                            info['dv'] = str(val).strip()
-                            break
-                    # Dirección
-                    for campo_dir in ['direccion', 'Direccion', 'direccion_comercial']:
-                        val = emp.get(campo_dir, '')
-                        if val:
-                            info['dir'] = str(val).strip()
-                            break
-                    # Departamento
-                    for campo_dp in ['codigo_departamento', 'departamento', 'Departamento',
-                                     'cod_departamento']:
-                        val = emp.get(campo_dp, '')
-                        if val:
-                            info['dp'] = pad_dpto(str(val).strip())
-                            break
-                    # Municipio
-                    for campo_mp in ['codigo_municipio', 'municipio', 'Municipio',
-                                     'cod_municipio', 'ciudad']:
-                        val = emp.get(campo_mp, '')
-                        if val:
-                            info['mp'] = pad_mpio(str(val).strip())
-                            break
+        emp, error = intentar_consulta(nit, ep)
+        if emp is not None:
+            info = extraer_info(emp)
+            encontrados[nit] = info
+            errores_seguidos = 0
+        elif error is None:
+            errores_seguidos = 0  # API respondió, solo no encontró
+        else:
+            errores_seguidos += 1
 
-                    encontrados[nit] = info
-                    errores_seguidos = 0
-                else:
-                    errores_seguidos = 0
-            else:
-                errores_seguidos += 1
-            sleep(0.5)
-        except requests.exceptions.Timeout:
-            errores_seguidos += 1
-            continue
-        except requests.exceptions.ConnectionError:
-            errores_seguidos += 1
-            continue
-        except Exception:
-            errores_seguidos += 1
-            continue
+        sleep(0.5)  # Respetar rate limit
 
     return encontrados, errores_seguidos >= 10
 
@@ -1401,49 +1494,59 @@ if uploaded_file:
             datos_rues = None
             df_dir_auto = None
             if buscar_auto:
-                st.info("🌐 Consultando RUES: buscando direcciones y validando terceros...")
+                with st.status("🌐 Consultando RUES...", expanded=True) as status:
+                    st.write("Extrayendo NITs del balance...")
 
-                # Extraer NITs únicos del balance
-                nits_unicos = set()
-                for _, row in df.iterrows():
-                    nit_val = safe_str(row.iloc[3])
-                    if nit_val and nit_val != NM:
-                        if '.' in nit_val:
-                            try: nit_val = str(int(float(nit_val)))
-                            except: pass
-                        nits_unicos.add(nit_val)
+                    # Extraer NITs únicos del balance
+                    nits_unicos = set()
+                    for _, row in df.iterrows():
+                        nit_val = safe_str(row.iloc[3])
+                        if nit_val and nit_val != NM:
+                            if '.' in nit_val:
+                                try: nit_val = str(int(float(nit_val)))
+                                except: pass
+                            nits_unicos.add(nit_val)
 
-                nits_list = sorted(list(nits_unicos))
-                progress_bar = st.progress(0, text="🔍 Iniciando consulta RUES...")
+                    nits_list = sorted(list(nits_unicos))
+                    st.write(f"Se encontraron **{len(nits_list)}** NITs únicos para consultar")
 
-                datos_rues, api_fallida = buscar_info_rues(nits_list, progress_bar)
-                progress_bar.empty()
+                    progress_bar = st.progress(0, text="🔍 Conectando con RUES...")
 
-                if datos_rues:
-                    n_con_dir_rues = sum(1 for d in datos_rues.values() if d.get('dir'))
-                    n_con_rs = sum(1 for d in datos_rues.values() if d.get('razon_social'))
-                    st.success(f"✅ RUES: **{len(datos_rues)}** terceros encontrados — "
-                               f"{n_con_dir_rues} con dirección, {n_con_rs} con razón social")
+                    datos_rues, api_fallida = buscar_info_rues(nits_list, progress_bar)
+                    progress_bar.empty()
 
-                    # Si no se subió directorio, usar RUES para direcciones
-                    if not uploaded_dir:
-                        rows_auto = []
-                        for nit_e, datos_e in datos_rues.items():
-                            if datos_e.get('dir'):
-                                rows_auto.append({
-                                    'NIT': nit_e,
-                                    'Direccion': datos_e['dir'],
-                                    'Cod_Depto': datos_e['dp'],
-                                    'Cod_Mpio': datos_e['mp'],
-                                    'Cod_Pais': datos_e.get('pais', '169'),
-                                })
-                        if rows_auto:
-                            df_dir_auto = pd.DataFrame(rows_auto)
+                    if datos_rues:
+                        n_con_dir_rues = sum(1 for d in datos_rues.values() if d.get('dir'))
+                        n_con_rs = sum(1 for d in datos_rues.values() if d.get('razon_social'))
+                        status.update(label=f"✅ RUES: {len(datos_rues)} terceros encontrados", state="complete")
+                        st.write(f"📍 Con dirección: **{n_con_dir_rues}** | 📝 Con razón social: **{n_con_rs}**")
 
-                elif api_fallida:
-                    st.warning("⚠️ No se pudo conectar con RUES. Se procesará sin validación.")
-                else:
-                    st.warning("⚠️ No se encontraron terceros en RUES.")
+                        # Si no se subió directorio, usar RUES para direcciones
+                        if not uploaded_dir:
+                            rows_auto = []
+                            for nit_e, datos_e in datos_rues.items():
+                                if datos_e.get('dir'):
+                                    rows_auto.append({
+                                        'NIT': nit_e,
+                                        'Direccion': datos_e['dir'],
+                                        'Cod_Depto': datos_e['dp'],
+                                        'Cod_Mpio': datos_e['mp'],
+                                        'Cod_Pais': datos_e.get('pais', '169'),
+                                    })
+                            if rows_auto:
+                                df_dir_auto = pd.DataFrame(rows_auto)
+
+                    elif api_fallida:
+                        status.update(label="❌ No se pudo conectar con RUES", state="error")
+                        st.write("**Posibles causas:**")
+                        st.write("• El servicio RUES puede estar temporalmente fuera de línea")
+                        st.write("• Tu conexión a internet puede estar bloqueando la consulta")
+                        st.write("• El sitio rues.org.co puede haber cambiado su API")
+                        st.write("")
+                        st.write("💡 **Alternativa:** Descarga la plantilla de directorio, llénala manualmente y súbela.")
+                    else:
+                        status.update(label="⚠️ RUES no devolvió resultados", state="complete")
+                        st.write("La API de RUES respondió pero no encontró datos para estos NITs.")
 
             dir_final = df_dir if df_dir is not None else df_dir_auto
 
