@@ -5,6 +5,15 @@ from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from collections import defaultdict
 from datetime import datetime
 from io import BytesIO
+import difflib
+
+# Google Sheets API (escritura automática)
+try:
+    import gspread
+    from google.oauth2.service_account import Credentials
+    GSPREAD_OK = True
+except ImportError:
+    GSPREAD_OK = False
 
 st.set_page_config(page_title="Exógena DIAN 2025", page_icon="📊", layout="wide")
 
@@ -14,6 +23,109 @@ st.set_page_config(page_title="Exógena DIAN 2025", page_icon="📊", layout="wi
 # 2. Publícalo como CSV: Archivo → Compartir → Publicar en la web → CSV
 # 3. Pega la URL aquí abajo:
 GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/TU_ID_AQUI/pub?output=csv"
+
+# === DIRECTORIO CENTRALIZADO DE TERCEROS ===
+# Opción 1 (solo lectura): URL CSV publicada
+DIRECTORIO_CENTRAL_URL = "https://docs.google.com/spreadsheets/d/e/TU_ID_DIRECTORIO/pub?output=csv"
+
+# Opción 2 (lectura + escritura automática): ID del Google Sheet + cuenta de servicio
+# El ID es la parte entre /d/ y /edit en la URL del Sheet
+# Ejemplo: https://docs.google.com/spreadsheets/d/ABC123xyz/edit → ID = "ABC123xyz"
+DIRECTORIO_SHEET_ID = ""  # ← Pega aquí el ID de tu Google Sheet de directorio
+DIRECTORIO_HOJA_NOMBRE = "Directorio"  # Nombre de la hoja dentro del Sheet
+
+# === CONFIGURACIÓN CUENTA DE SERVICIO GOOGLE ===
+# Para escritura automática en Google Sheets:
+# 1. Ve a console.cloud.google.com → Crear proyecto
+# 2. Habilita "Google Sheets API"
+# 3. Crea una Cuenta de Servicio → descarga el JSON
+# 4. Comparte tu Google Sheet con el email de la cuenta de servicio (permisos de Editor)
+# 5. En Streamlit Cloud → Settings → Secrets → pega el JSON así:
+#
+#    [gcp_service_account]
+#    type = "service_account"
+#    project_id = "tu-proyecto"
+#    private_key_id = "..."
+#    private_key = "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+#    client_email = "exogena@tu-proyecto.iam.gserviceaccount.com"
+#    client_id = "..."
+#    auth_uri = "https://accounts.google.com/o/oauth2/auth"
+#    token_uri = "https://oauth2.googleapis.com/token"
+#    auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
+#    client_x509_cert_url = "..."
+
+def conectar_gsheets():
+    """Conecta a Google Sheets via cuenta de servicio. Retorna (client, error)."""
+    if not GSPREAD_OK:
+        return None, "gspread no instalado. Ejecuta: pip install gspread google-auth"
+    if not DIRECTORIO_SHEET_ID:
+        return None, "DIRECTORIO_SHEET_ID no configurado"
+    try:
+        creds_dict = dict(st.secrets.get("gcp_service_account", {}))
+        if not creds_dict:
+            return None, "Secreto gcp_service_account no configurado en Streamlit"
+        scopes = [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive",
+        ]
+        creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+        client = gspread.authorize(creds)
+        return client, None
+    except Exception as e:
+        return None, str(e)
+
+def agregar_direcciones_a_sheet(nits_nuevos):
+    """Agrega direcciones nuevas al Google Sheet centralizado.
+    Retorna (n_agregados, error)."""
+    client, err = conectar_gsheets()
+    if err:
+        return 0, err
+    try:
+        sh = client.open_by_key(DIRECTORIO_SHEET_ID)
+        ws = sh.worksheet(DIRECTORIO_HOJA_NOMBRE)
+        
+        # Leer NITs existentes para no duplicar
+        nits_existentes = set()
+        col_nits = ws.col_values(1)  # Columna A = NIT
+        for n in col_nits[1:]:  # Saltar header
+            nit_limpio = str(n).replace('.', '').replace('-', '').strip()
+            if nit_limpio:
+                nits_existentes.add(nit_limpio)
+        
+        # Preparar filas nuevas
+        filas_nuevas = []
+        for nit, info in sorted(nits_nuevos.items()):
+            if nit in nits_existentes:
+                continue
+            filas_nuevas.append([
+                nit,
+                info.get('razon', ''),
+                info.get('dir', ''),
+                info.get('dp', ''),
+                info.get('mp', ''),
+                info.get('pais', '169'),
+                info.get('td', ''),
+                info.get('dv', ''),
+            ])
+        
+        if filas_nuevas:
+            ws.append_rows(filas_nuevas, value_input_option='USER_ENTERED')
+        
+        return len(filas_nuevas), None
+    except Exception as e:
+        return 0, str(e)
+
+def sheets_escritura_disponible():
+    """Verifica si la escritura automática en Google Sheets está configurada."""
+    if not GSPREAD_OK:
+        return False
+    if not DIRECTORIO_SHEET_ID:
+        return False
+    try:
+        creds_dict = dict(st.secrets.get("gcp_service_account", {}))
+        return bool(creds_dict)
+    except:
+        return False
 
 # Contraseña de respaldo (funciona siempre, por si Google Sheets falla)
 CLAVE_ADMIN = "ExoDIAN-2025-ADMIN"
@@ -101,6 +213,15 @@ if st.session_state.get('nombre_cliente'):
         st.session_state.autenticado = False
         st.session_state.nombre_cliente = ""
         st.rerun()
+    
+    # Indicador de sincronización
+    st.sidebar.markdown("---")
+    if sheets_escritura_disponible():
+        st.sidebar.success("🔄 Sincronización automática **activa**")
+        st.sidebar.caption("Las direcciones nuevas se agregan al directorio centralizado automáticamente.")
+    else:
+        st.sidebar.warning("📋 Sincronización **manual**")
+        st.sidebar.caption("Las direcciones nuevas se descargan como CSV para pegar manualmente.")
 
 # === ESTILOS ===
 st.markdown("""
@@ -109,9 +230,47 @@ st.markdown("""
     .sub-header { font-size: 1.1rem; color: #666; margin-top: 0; }
     .metric-card { background: #f8f9fa; border-radius: 10px; padding: 1rem; border-left: 4px solid #1F4E79; }
     .success-box { background: #d4edda; border-radius: 10px; padding: 1rem; border-left: 4px solid #28a745; }
+    .privacy-box { background: linear-gradient(135deg, #e8f4fd 0%, #f0f7ee 100%); border-radius: 12px; padding: 1.2rem 1.5rem; border: 1px solid #b8d4e8; margin: 0.8rem 0 1.2rem 0; }
+    .privacy-box h4 { color: #1a5276; margin: 0 0 0.5rem 0; font-size: 1rem; }
+    .privacy-box p { color: #2c3e50; font-size: 0.88rem; line-height: 1.5; margin: 0.3rem 0; }
+    .privacy-box .privacy-icon { font-size: 1.3rem; margin-right: 0.3rem; }
     .stDownloadButton > button { background-color: #1F4E79 !important; color: white !important; font-size: 1.1rem !important; padding: 0.5rem 2rem !important; }
 </style>
 """, unsafe_allow_html=True)
+
+# === DIRECTORIO CENTRALIZADO ===
+@st.cache_data(ttl=600)  # Cache 10 min
+def cargar_directorio_central():
+    """Carga el directorio centralizado de terceros desde Google Sheets."""
+    try:
+        df = pd.read_csv(DIRECTORIO_CENTRAL_URL, dtype=str)
+        df.columns = df.columns.str.strip().str.lower()
+        directorio = {}
+        for _, row in df.iterrows():
+            nit = str(row.get('nit', '')).strip()
+            if not nit or nit.lower() == 'nan':
+                continue
+            # Limpiar NIT
+            nit = nit.replace('.', '').replace('-', '').strip()
+            if '.' in nit:
+                try: nit = str(int(float(nit)))
+                except: pass
+            directorio[nit] = {
+                'razon': str(row.get('razón social', row.get('razon social', ''))).strip(),
+                'dir': str(row.get('dirección', row.get('direccion', ''))).strip(),
+                'depto': str(row.get('cod depto', row.get('depto', ''))).strip(),
+                'mpio': str(row.get('cod municipio', row.get('municipio', ''))).strip(),
+                'pais': str(row.get('cod país', row.get('pais', '169'))).strip(),
+                'td': str(row.get('tipo doc', '')).strip(),
+                'dv': str(row.get('dv', '')).strip(),
+            }
+            # Limpiar nans
+            for k in directorio[nit]:
+                if directorio[nit][k].lower() == 'nan':
+                    directorio[nit][k] = ''
+        return directorio, None
+    except Exception as e:
+        return {}, str(e)
 
 # === CONSTANTES ===
 UVT = 49799
@@ -854,11 +1013,13 @@ def buscar_concepto(cta, params, nom_cta="", tabla_keywords=None):
     return ""
 
 # === PROCESAMIENTO PRINCIPAL ===
-def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=None):
+def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=None, cierra_impuestos=True, dir_central=None):
     """Procesa el balance y retorna un workbook con todos los formatos.
     
     col_map: dict con los índices de columna detectados automáticamente.
-    Campos: cuenta, nombre, nit, razon_social, debito, credito, saldo
+    cierra_impuestos: True = usar saldo final para 1355/2365/2408.
+                      False = usar débitos - créditos (movimiento del periodo).
+    dir_central: dict con directorio centralizado {nit: {dir, depto, mpio, pais, td, dv}}.
     """
     
     # Si no se pasó mapeo, detectar automáticamente
@@ -922,8 +1083,35 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
             'saldo': safe_num(row.iloc[SI]) if SI is not None and SI < len(row) else 0,  # Saldo
         })
 
-    # Directorio
+    # === Helper para valor de cuentas de impuestos ===
+    def valor_impuesto(f, tipo='activo'):
+        """Calcula el valor a reportar para cuentas de impuestos (1355, 2365, 2408).
+        
+        Si cierra_impuestos=True: usa saldo final (ya está limpio).
+        Si cierra_impuestos=False: usa débitos - créditos (movimiento del periodo).
+        
+        tipo='activo' (1355, 2408 descontable): débitos = nuevos, créditos = cierre
+        tipo='pasivo' (2365, 2408 generado): créditos = nuevos, débitos = cierre
+        """
+        if cierra_impuestos:
+            return abs(f['saldo'])
+        else:
+            # Movimiento del periodo
+            if tipo == 'activo':
+                return max(f['deb'] - f['cred'], 0)  # Débitos netos
+            else:
+                return max(f['cred'] - f['deb'], 0)  # Créditos netos
+
+    # Directorio — Capas de búsqueda:
+    # 1. Directorio centralizado (Google Sheet con empresas comunes)
+    # 2. Directorio del cliente (archivo subido)
+    # 3. Datos del balance (nombre, tipo doc auto-detectado)
+    if dir_central is None:
+        dir_central = {}
+    
     direc = {}
+    nits_nuevos = {}  # NITs con dirección encontrada que NO están en el directorio central
+    
     for f in bal:
         if f['nit'] not in direc:
             td = f['td'] if f['td'] else detectar_tipo_doc(f['nit'])
@@ -933,7 +1121,6 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
                  'a1': '', 'a2': '', 'n1': '', 'n2': '',
                  'rs': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
             if td == "13":
-                # Persona natural: separar Apellido1 Apellido2 Nombre1 Nombre2
                 p = r.split()
                 if len(p) >= 1: d['a1'] = p[0]
                 if len(p) >= 2: d['a2'] = p[1]
@@ -941,15 +1128,64 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
                 if len(p) >= 4: d['n2'] = ' '.join(p[3:])
             else:
                 d['rs'] = r
+            
+            # CAPA 1: Directorio centralizado (Google Sheet)
+            if f['nit'] in dir_central:
+                dc = dir_central[f['nit']]
+                if dc.get('dir'): d['dir'] = dc['dir']
+                if dc.get('depto'): d['dp'] = pad_dpto(dc['depto'])
+                if dc.get('mpio'): d['mp'] = pad_mpio(dc['mpio'])
+                if dc.get('pais'): d['pais'] = dc['pais']
+                if dc.get('td'): d['td'] = dc['td']
+                if dc.get('dv'): d['dv'] = dc['dv']
+                if dc.get('razon') and not d['rs'] and td != "13": d['rs'] = dc['razon']
+            
+            # CAPA 2: Directorio del cliente (sobreescribe si tiene datos)
             if f['nit'] in dir_externo:
                 ext = dir_externo[f['nit']]
                 if ext['dir']: d['dir'] = ext['dir']
                 if ext['dp']: d['dp'] = pad_dpto(ext['dp'])
                 if ext['mp']: d['mp'] = pad_mpio(ext['mp'])
                 if ext.get('pais'): d['pais'] = ext['pais']
+            
+            # Registrar NITs con dirección que NO están en el directorio central
+            if d['dir'] and f['nit'] not in dir_central and f['nit'] != NM:
+                nits_nuevos[f['nit']] = {
+                    'razon': d['rs'] or r,
+                    'dir': d['dir'],
+                    'dp': d.get('dp', ''),
+                    'mp': d.get('mp', ''),
+                    'pais': d.get('pais', '169'),
+                    'td': d['td'],
+                    'dv': d['dv'],
+                }
+            
             direc[f['nit']] = d
     direc[NM] = {'td': TDM, 'dv': '', 'a1': '', 'a2': '', 'n1': '', 'n2': '',
                  'rs': 'CUANTIAS MENORES', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
+
+    # === VALIDACIÓN DE RAZÓN SOCIAL vs DIRECTORIO CENTRAL ===
+    alertas_rs = []  # [(nit, rs_balance, rs_central, similitud)]
+    for nit, d in direc.items():
+        if nit == NM or nit not in dir_central:
+            continue
+        rs_central = dir_central[nit].get('razon', '').strip().upper()
+        if not rs_central:
+            continue
+        # Razón social del balance
+        rs_balance = (d.get('rs', '') or '').strip().upper()
+        if not rs_balance:
+            # Para personas naturales, reconstruir nombre
+            partes = [d.get('a1',''), d.get('a2',''), d.get('n1',''), d.get('n2','')]
+            rs_balance = ' '.join(p for p in partes if p).strip().upper()
+        if not rs_balance:
+            continue
+        # Comparar
+        if rs_balance == rs_central:
+            continue
+        sim = difflib.SequenceMatcher(None, rs_balance, rs_central).ratio()
+        if sim < 0.95:  # Solo alertar si hay diferencia significativa
+            alertas_rs.append((nit, rs_balance, rs_central, sim))
 
     def t(nit):
         return direc.get(nit, {'td': detectar_tipo_doc(nit), 'dv': calc_dv(nit),
@@ -1012,11 +1248,11 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
 
     for f in bal:
         cta = f['cta']
-        # Retenciones: usar saldo acumulado anual
+        # Retenciones que practiqué (pasivo 2365): usar valor_impuesto pasivo
         if en_rango(cta, "236505", "236530"):
-            ret_fte_por_nit[f['nit']] += abs(f['saldo'])
+            ret_fte_por_nit[f['nit']] += valor_impuesto(f, 'pasivo')
         elif en_rango(cta, "2367", "2367"):
-            ret_iva_por_nit[f['nit']] += abs(f['saldo'])
+            ret_iva_por_nit[f['nit']] += valor_impuesto(f, 'pasivo')
         if cta[:2] in ("51", "52", "53") and abs(f['saldo']) > 0:
             gastos_por_nit[f['nit']] += abs(f['saldo'])
 
@@ -1025,6 +1261,41 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
          "Razon Social", "Direccion", "Dpto", "Mpio", "Pais", "Pago Deducible", "Pago No Deducible",
          "IVA Ded", "IVA No Ded", "Ret Fte Renta", "Ret Fte Asumida", "Ret IVA R.Comun", "Ret IVA No Dom"]
     ws = nueva_hoja("F1001 Pagos", h)
+
+    # === REGLAS DE DEDUCIBILIDAD ESPECIALES ===
+    # Retorna: 'ded' (100% deducible), 'no_ded' (100% no deducible), 'gmf' (50/50)
+    def clasificar_deducibilidad(cta, nom_cta=""):
+        nom = normalizar_nombre(nom_cta)
+        
+        # GMF / 4x1000 → 50% deducible, 50% no deducible
+        if 'gmf' in nom or '4x1000' in nom or '4 x 1000' in nom or 'gravamen movimiento' in nom:
+            return 'gmf'
+        
+        # Intereses de mora → 100% no deducible
+        if 'interes moratorio' in nom or 'interes de mora' in nom or 'intereses mora' in nom:
+            return 'no_ded'
+        if cta.startswith('53050504'):  # Cuenta específica intereses mora
+            return 'no_ded'
+        
+        # Gastos no deducibles (cuenta 5395xx o nombre)
+        if 'no deducible' in nom or 'no deduci' in nom:
+            return 'no_ded'
+        if cta.startswith('53950520'):  # Gasto no deducible
+            return 'no_ded'
+        
+        # Multas, sanciones, litigios → no deducible
+        if 'multa' in nom or 'sancion' in nom or 'litigio' in nom:
+            return 'no_ded'
+        if cta.startswith('539520'):  # Multas y sanciones
+            return 'no_ded'
+        
+        # Donaciones → normalmente no deducible (salvo entidades art.257 ET)
+        if 'donacion' in nom or 'donaciones' in nom:
+            return 'no_ded'
+        if cta.startswith('539525'):
+            return 'no_ded'
+        
+        return 'ded'  # Default: deducible
 
     dic = defaultdict(lambda: [0.0] * 5)
     nits_en_1001 = set()
@@ -1039,8 +1310,22 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
         if not conc or conc in CONCEPTOS_NOMINA:
             continue  # Nómina y aportes van SOLO a F2276
         k = (conc, f['nit'])
-        if ded: dic[k][0] += valor
-        else: dic[k][1] += valor
+        
+        # Aplicar reglas de deducibilidad
+        tipo_ded = clasificar_deducibilidad(f['cta'], f.get('nom_cta', ''))
+        
+        if tipo_ded == 'gmf':
+            # GMF: 50% deducible, 50% no deducible
+            dic[k][0] += valor * 0.5   # Pago deducible
+            dic[k][1] += valor * 0.5   # Pago no deducible
+        elif tipo_ded == 'no_ded':
+            # 100% no deducible
+            dic[k][1] += valor
+        else:
+            # 100% deducible (default)
+            if ded: dic[k][0] += valor
+            else: dic[k][1] += valor
+        
         nits_en_1001.add(f['nit'])
 
     nit_conceptos = defaultdict(list)
@@ -1099,10 +1384,10 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     for f in bal:
         conc = buscar_concepto(f['cta'], PARAM_1003, f.get('nom_cta', ''), KEYWORDS_1003)
         if not conc: continue
-        # Usar saldo final (acumulado anual) para retenciones
-        valor = abs(f['saldo'])
-        if valor > 0:
-            dic3[(conc, f['nit'])][1] += valor
+        # 1355 = activo (retenciones que me practicaron)
+        val = valor_impuesto(f, 'activo')
+        if val > 0:
+            dic3[(conc, f['nit'])][1] += val
 
     # Calcular base gravable: ingresos recibidos del mismo NIT (cuentas 4xxx)
     ingresos_por_nit = defaultdict(float)
@@ -1137,11 +1422,13 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     dic5 = defaultdict(float)
     for f in bal:
         # IVA Descontable: cuentas 240810+ o nombre contiene "descontable"
-        if en_rango(f['cta'], "2408", "2408") and abs(f['saldo']) > 0:
+        if en_rango(f['cta'], "2408", "2408"):
             nom = normalizar_nombre(f.get('nom_cta', ''))
             es_descontable = 'descontable' in nom or f['cta'][:6] >= '240810'
             if es_descontable:
-                dic5[f['nit']] += abs(f['saldo'])
+                val = valor_impuesto(f, 'activo')  # IVA descontable es como un activo
+                if val > 0:
+                    dic5[f['nit']] += val
 
     fila = 2
     for nit, val in sorted(dic5.items()):
@@ -1165,8 +1452,10 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
         if en_rango(f['cta'], "2408", "2408"):
             nom = normalizar_nombre(f.get('nom_cta', ''))
             es_descontable = 'descontable' in nom or f['cta'][:6] >= '240810'
-            if not es_descontable and abs(f['saldo']) > 0:
-                dic6[f['nit']] += abs(f['saldo'])
+            if not es_descontable:
+                val = valor_impuesto(f, 'pasivo')  # IVA generado es pasivo
+                if val > 0:
+                    dic6[f['nit']] += val
 
     fila = 2
     for nit, val in sorted(dic6.items()):
@@ -1394,7 +1683,7 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
 
     for f in bal:
         if en_rango(f['cta'], "2365", "2365") and f['nit'] in dic26:
-            dic26[f['nit']][17] += abs(f['saldo'])
+            dic26[f['nit']][17] += valor_impuesto(f, 'pasivo')
 
     for nit in dic26:
         dic26[nit][11] = sum(dic26[nit][:11])
@@ -1497,8 +1786,63 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
             ws_val.column_dimensions[openpyxl.utils.get_column_letter(i)].width = ancho
         ws_val.freeze_panes = 'A2'
 
+    # ========== ALERTAS RAZÓN SOCIAL ==========
+    if alertas_rs:
+        h_alert = ["NIT", "Razón Social en Balance", "Razón Social Registrada (DIAN/RUES)", "Similitud %", "Acción Requerida"]
+        ws_alert = nueva_hoja("Alertas Razón Social", h_alert)
+        
+        # Ordenar por similitud (más diferentes primero)
+        alertas_rs.sort(key=lambda x: x[3])
+        
+        fill_rojo = PatternFill('solid', fgColor='FADBD8')
+        fill_naranja = PatternFill('solid', fgColor='FDF2E9')
+        fill_amarillo = PatternFill('solid', fgColor='FEF9E7')
+        
+        for idx, (nit, rs_bal, rs_cen, sim) in enumerate(alertas_rs):
+            r = idx + 2
+            ws_alert.cell(r, 1).value = nit
+            ws_alert.cell(r, 2).value = rs_bal
+            ws_alert.cell(r, 3).value = rs_cen
+            ws_alert.cell(r, 4).value = round(sim * 100, 1)
+            ws_alert.cell(r, 4).number_format = '0.0"%"'
+            
+            # Clasificar severidad
+            if sim < 0.5:
+                accion = "⛔ CRÍTICO — Razón social completamente diferente. Verificar NIT."
+                fill = fill_rojo
+            elif sim < 0.75:
+                accion = "⚠️ DIFERENTE — Verificar con RUT del tercero."
+                fill = fill_naranja
+            else:
+                accion = "🔍 SIMILAR — Posible abreviación o error de digitación. Confirmar."
+                fill = fill_amarillo
+            
+            ws_alert.cell(r, 5).value = accion
+            for c in range(1, 6):
+                ws_alert.cell(r, c).fill = fill
+                ws_alert.cell(r, c).font = Font(size=9, name='Calibri')
+                ws_alert.cell(r, c).alignment = Alignment(wrap_text=True, vertical='center')
+        
+        # Nota al final
+        r_nota = len(alertas_rs) + 3
+        ws_alert.cell(r_nota, 1).value = (
+            "IMPORTANTE: La razón social en la exógena DEBE coincidir exactamente con el RUT del tercero. "
+            "Las diferencias pueden generar rechazo de la información por parte de la DIAN y requerimientos "
+            "bajo el Art. 651 del Estatuto Tributario. Verifique cada caso con el RUT actualizado del tercero."
+        )
+        ws_alert.cell(r_nota, 1).font = Font(size=10, name='Calibri', color='C0392B', bold=True)
+        ws_alert.cell(r_nota, 1).alignment = Alignment(wrap_text=True)
+        ws_alert.merge_cells(start_row=r_nota, start_column=1, end_row=r_nota, end_column=5)
+        
+        anchos_alert = [15, 45, 45, 12, 50]
+        for i, ancho in enumerate(anchos_alert, 1):
+            ws_alert.column_dimensions[openpyxl.utils.get_column_letter(i)].width = ancho
+        ws_alert.freeze_panes = 'A2'
+
     # ========== RESUMEN ==========
     n_con_dir = sum(1 for d in direc.values() if d.get('dir', ''))
+    n_de_central = sum(1 for nit in direc if nit in dir_central and dir_central.get(nit, {}).get('dir', ''))
+    n_de_cliente = sum(1 for nit in direc if nit in dir_externo and dir_externo.get(nit, {}).get('dir', ''))
 
     wsr = wb.active
     wsr.title = "Resumen"
@@ -1512,24 +1856,46 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     wsr['B5'] = len(direc)
     wsr['A6'] = "Con dirección:"
     wsr['B6'] = n_con_dir
+    wsr['A7'] = "  → Del directorio centralizado:"
+    wsr['B7'] = n_de_central
+    wsr['A7'].font = Font(size=9, name='Arial', color='666666')
+    wsr['A8'] = "  → Del directorio del cliente:"
+    wsr['B8'] = n_de_cliente
+    wsr['A8'].font = Font(size=9, name='Arial', color='666666')
+    
+    rr = 9  # Fila dinámica
+    wsr.cell(rr, 1).value = "Direcciones nuevas para agregar:"
+    wsr.cell(rr, 2).value = len(nits_nuevos)
+    wsr.cell(rr, 1).font = Font(size=9, name='Arial', color='0066CC')
+    rr += 1
+    
+    if alertas_rs:
+        wsr.cell(rr, 1).value = "⚠️ Alertas razón social:"
+        wsr.cell(rr, 2).value = len(alertas_rs)
+        wsr.cell(rr, 1).font = Font(size=9, name='Arial', color='CC6600', bold=True)
+        wsr.cell(rr, 2).font = Font(bold=True, color='CC6600')
+        rr += 1
 
     if datos_rues:
         n_dv_err = sum(1 for tipo, _ in validaciones if tipo == 'dv_error')
         n_rs_err = sum(1 for tipo, _ in validaciones if tipo == 'rs_error')
         n_rs_warn = sum(1 for tipo, _ in validaciones if tipo == 'rs_warn')
-        wsr['A7'] = "Validados vs Internet:"
-        wsr['B7'] = len(datos_rues)
-        wsr['A8'] = "  ❌ DV con error:"
-        wsr['B8'] = n_dv_err
-        if n_dv_err > 0: wsr['B8'].font = Font(bold=True, color='CC0000')
-        wsr['A9'] = "  ❌ Razón social diferente:"
-        wsr['B9'] = n_rs_err
-        if n_rs_err > 0: wsr['B9'].font = Font(bold=True, color='CC0000')
-        wsr['A10'] = "  ⚠️ Razón social similar:"
-        wsr['B10'] = n_rs_warn
-        fila_inicio_formatos = 12
-    else:
-        fila_inicio_formatos = 8
+        wsr.cell(rr, 1).value = "Validados vs Internet:"
+        wsr.cell(rr, 2).value = len(datos_rues)
+        rr += 1
+        wsr.cell(rr, 1).value = "  ❌ DV con error:"
+        wsr.cell(rr, 2).value = n_dv_err
+        if n_dv_err > 0: wsr.cell(rr, 2).font = Font(bold=True, color='CC0000')
+        rr += 1
+        wsr.cell(rr, 1).value = "  ❌ Razón social diferente:"
+        wsr.cell(rr, 2).value = n_rs_err
+        if n_rs_err > 0: wsr.cell(rr, 2).font = Font(bold=True, color='CC0000')
+        rr += 1
+        wsr.cell(rr, 1).value = "  ⚠️ Razón social similar:"
+        wsr.cell(rr, 2).value = n_rs_warn
+        rr += 1
+
+    fila_inicio_formatos = rr + 1
 
     wsr.cell(fila_inicio_formatos, 1).value = "Formato"
     wsr.cell(fila_inicio_formatos, 2).value = "Registros"
@@ -1545,8 +1911,375 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
     wsr.cell(row + 1, 2).value = sum(resultados.values())
     wsr.cell(row + 1, 2).font = Font(bold=True)
     wsr.cell(row + 3, 1).value = "F1004, F1011, F1647: requieren datos manuales"
-    wsr.column_dimensions['A'].width = 30
-    wsr.column_dimensions['B'].width = 15
+
+    # === ESTILOS PARA SECCIONES DE ADVERTENCIAS ===
+    # Colores
+    ROJO_BANNER  = 'C0392B'
+    ROJO_CLARO   = 'FADBD8'
+    NARANJA_BANNER = 'E67E22'
+    NARANJA_CLARO  = 'FDF2E9'
+    AZUL_BANNER  = '2471A3'
+    AZUL_CLARO   = 'D6EAF8'
+    VERDE_BANNER = '1D8348'
+    VERDE_CLARO  = 'D5F5E3'
+    GRIS_TEXTO   = '2C3E50'
+    GRIS_CLARO   = 'F8F9F9'
+    BLANCO       = 'FFFFFF'
+    
+    border_thin = Border(
+        left=Side(style='thin', color='D5D8DC'),
+        right=Side(style='thin', color='D5D8DC'),
+        top=Side(style='thin', color='D5D8DC'),
+        bottom=Side(style='thin', color='D5D8DC')
+    )
+    border_bottom_thick = Border(bottom=Side(style='medium', color='ABB2B9'))
+    
+    def banner_row(ws, r, texto, color_fondo, cols=3):
+        """Fila tipo banner con fondo de color y texto blanco."""
+        for c in range(1, cols + 1):
+            cell = ws.cell(r, c)
+            cell.fill = PatternFill('solid', fgColor=color_fondo)
+            cell.font = Font(bold=True, size=12, name='Calibri', color=BLANCO)
+            cell.alignment = Alignment(vertical='center')
+            cell.border = border_thin
+        ws.cell(r, 1).value = texto
+        ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=cols)
+        ws.row_dimensions[r].height = 30
+    
+    def sub_banner(ws, r, texto, color_fondo, color_texto='FFFFFF', cols=3):
+        """Sub-encabezado más sutil."""
+        for c in range(1, cols + 1):
+            cell = ws.cell(r, c)
+            cell.fill = PatternFill('solid', fgColor=color_fondo)
+            cell.font = Font(bold=True, size=10, name='Calibri', color=color_texto)
+            cell.alignment = Alignment(vertical='center')
+            cell.border = border_thin
+        ws.cell(r, 1).value = texto
+        ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=cols)
+        ws.row_dimensions[r].height = 24
+    
+    def item_row(ws, r, titulo, detalle, color_alt, cols=3):
+        """Fila de item con título en col A y detalle en col A de la fila siguiente."""
+        # Título
+        for c in range(1, cols + 1):
+            cell = ws.cell(r, c)
+            cell.fill = PatternFill('solid', fgColor=color_alt)
+            cell.border = border_thin
+        ws.cell(r, 1).value = titulo
+        ws.cell(r, 1).font = Font(bold=True, size=10, name='Calibri', color=GRIS_TEXTO)
+        ws.cell(r, 1).alignment = Alignment(vertical='top', wrap_text=True)
+        ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=cols)
+        # Detalle
+        r2 = r + 1
+        for c in range(1, cols + 1):
+            cell = ws.cell(r2, c)
+            cell.fill = PatternFill('solid', fgColor=BLANCO)
+            cell.border = border_thin
+        ws.cell(r2, 1).value = detalle
+        ws.cell(r2, 1).font = Font(size=9, name='Calibri', color='566573')
+        ws.cell(r2, 1).alignment = Alignment(vertical='top', wrap_text=True)
+        ws.merge_cells(start_row=r2, start_column=1, end_row=r2, end_column=cols)
+        ws.row_dimensions[r2].height = 45
+        return r2 + 1  # Retorna la siguiente fila disponible
+    
+    def valor_row(ws, r, titulo, detalle, color_fondo, cols=3):
+        """Fila para validaciones automáticas con valor numérico destacado."""
+        for c in range(1, cols + 1):
+            cell = ws.cell(r, c)
+            cell.fill = PatternFill('solid', fgColor=color_fondo)
+            cell.border = border_thin
+        ws.cell(r, 1).value = titulo
+        ws.cell(r, 1).font = Font(bold=True, size=10, name='Calibri', color=GRIS_TEXTO)
+        ws.cell(r, 1).alignment = Alignment(vertical='top', wrap_text=True)
+        ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=cols)
+        r2 = r + 1
+        for c in range(1, cols + 1):
+            cell = ws.cell(r2, c)
+            cell.fill = PatternFill('solid', fgColor=BLANCO)
+            cell.border = border_thin
+        ws.cell(r2, 1).value = detalle
+        ws.cell(r2, 1).font = Font(size=9, name='Calibri', color='566573')
+        ws.cell(r2, 1).alignment = Alignment(vertical='top', wrap_text=True)
+        ws.merge_cells(start_row=r2, start_column=1, end_row=r2, end_column=cols)
+        ws.row_dimensions[r2].height = 40
+        return r2 + 1
+
+    NUM_COLS = 3  # Ancho de las secciones (columnas A-C)
+
+    # ================================================================
+    # SECCIÓN 0: COMPROMISO DE CONFIDENCIALIDAD
+    # ================================================================
+    r = row + 6
+    banner_row(wsr, r, "   COMPROMISO DE CONFIDENCIALIDAD Y PROTECCIÓN DE DATOS", VERDE_BANNER, NUM_COLS)
+    r += 1
+    
+    confidencialidad = [
+        ("🛡️  USO EXCLUSIVO DE LA INFORMACIÓN",
+         "Los archivos suministrados por el cliente (balance de prueba, directorio de terceros "
+         "y cualquier otro documento) son utilizados ÚNICA Y EXCLUSIVAMENTE para la generación "
+         "de los formatos de información exógena solicitados. No se utilizan para ningún otro fin."),
+        ("🗑️  ELIMINACIÓN INMEDIATA",
+         "Una vez generada y entregada la información exógena al cliente, TODOS los archivos "
+         "recibidos son ELIMINADOS de forma definitiva e irreversible de nuestros sistemas. "
+         "No se conservan copias, respaldos ni registros del contenido de los archivos del cliente."),
+        ("🚫  NO DIVULGACIÓN A TERCEROS",
+         "La información contable, tributaria y de terceros del cliente NO se comparte, vende, "
+         "cede ni transfiere a ninguna persona natural o jurídica, bajo ninguna circunstancia. "
+         "Esto incluye datos de proveedores, clientes, empleados y cualquier tercero del balance."),
+        ("📋  MARCO LEGAL APLICABLE",
+         "Este compromiso se rige por: Ley 1581 de 2012 (Protección de Datos Personales y Habeas Data), "
+         "Ley 43 de 1990, Art. 63 (Secreto Profesional del Contador Público), "
+         "Estatuto Tributario Art. 583 (Reserva de las declaraciones tributarias), "
+         "y demás normas concordantes sobre confidencialidad de la información financiera."),
+    ]
+    
+    for i, (titulo, detalle) in enumerate(confidencialidad):
+        alt_color = VERDE_CLARO if i % 2 == 0 else GRIS_CLARO
+        r = item_row(wsr, r, f"  {titulo}", f"       {detalle}", alt_color, NUM_COLS)
+
+    # ================================================================
+    # SECCIÓN 1: DESLINDE DE RESPONSABILIDAD
+    # ================================================================
+    r += 2
+    banner_row(wsr, r, "   DESLINDE DE RESPONSABILIDAD", ROJO_BANNER, NUM_COLS)
+    r += 1
+    
+    disclaimer_lines = [
+        ("Esta herramienta es un ASISTENTE de generación de información exógena. "
+         "Los resultados generados son un BORRADOR que requiere revisión profesional."),
+        ("Es responsabilidad exclusiva del CONTADOR PÚBLICO y/o del CONTRIBUYENTE "
+         "verificar, ajustar y validar toda la información antes de presentarla a la DIAN."),
+        ("Ni el desarrollador ni la herramienta se hacen responsables por errores, "
+         "omisiones, sanciones, intereses o multas derivados de información incorrecta, "
+         "ni por clasificaciones de deducibilidad que no correspondan al caso particular."),
+        ("El uso de esta herramienta implica la aceptación total de estos términos. "
+         "Art. 631 y ss. del Estatuto Tributario — Resolución DIAN 000227 de 2025."),
+    ]
+    
+    for i, texto in enumerate(disclaimer_lines):
+        bg = ROJO_CLARO if i % 2 == 0 else BLANCO
+        for c in range(1, NUM_COLS + 1):
+            cell = wsr.cell(r, c)
+            cell.fill = PatternFill('solid', fgColor=bg)
+            cell.border = border_thin
+        wsr.cell(r, 1).value = texto
+        wsr.cell(r, 1).font = Font(size=9, name='Calibri', color=GRIS_TEXTO)
+        wsr.cell(r, 1).alignment = Alignment(wrap_text=True, vertical='center')
+        wsr.merge_cells(start_row=r, start_column=1, end_row=r, end_column=NUM_COLS)
+        wsr.row_dimensions[r].height = 35
+        r += 1
+
+    # ================================================================
+    # SECCIÓN 2: ADVERTENCIAS SOBRE DEDUCIBILIDAD
+    # ================================================================
+    r += 2
+    banner_row(wsr, r, "   ADVERTENCIAS — DEDUCIBILIDAD DE GASTOS", NARANJA_BANNER, NUM_COLS)
+    r += 1
+    sub_banner(wsr, r, "  El contador DEBE verificar los siguientes aspectos que pueden afectar la deducibilidad fiscal.", NARANJA_CLARO, GRIS_TEXTO, NUM_COLS)
+    r += 1
+    
+    advertencias = [
+        ("PAGOS EN EFECTIVO (Art. 771-5 ET)",
+         "No son deducibles los pagos en efectivo que superen el MENOR valor entre: "
+         "el 40% del total pagado, o el 35% de los costos y deducciones totales. "
+         "El contribuyente debe verificar qué pagos se hicieron en efectivo y reclasificarlos."),
+        ("SEGURIDAD SOCIAL NO PAGADA (Art. 664, 108 ET)",
+         "Los salarios y prestaciones solo son deducibles si el empleador está al día "
+         "en aportes a salud, pensión, ARL y parafiscales. Periodos sin pago = gasto NO deducible."),
+        ("PRESTACIONES SOCIALES NO PAGADAS (Art. 108 ET)",
+         "Cesantías, intereses, primas y vacaciones solo son deducibles cuando se pagan. "
+         "Las provisiones contables no pagadas al 31 de diciembre NO son deducibles."),
+        ("INDEPENDIENTES SIN SEGURIDAD SOCIAL (Art. 108 par. 2 ET)",
+         "Pagos por honorarios/servicios a personas naturales independientes NO son deducibles si no "
+         "se verificó el pago de aportes a seguridad social (salud y pensión sobre el 40% del contrato)."),
+        ("FACTURA ELECTRÓNICA / RADIAN (Art. 771-2, 616-1 ET)",
+         "Los costos y gastos deben estar soportados con factura electrónica o DSNO. "
+         "Gastos sin soporte electrónico válido registrado en RADIAN pueden ser rechazados."),
+        ("GASTOS SIN SOPORTE DOCUMENTAL (Art. 771-2 ET)",
+         "Todo gasto requiere soporte idóneo: factura electrónica, documento equivalente, "
+         "comprobante de nómina electrónica o DSNO. Sin soporte = NO deducible."),
+        ("GMF / 4x1000 (Art. 115 ET)",
+         "Deducible SOLO en un 50%. Esta herramienta ya clasifica el GMF automáticamente "
+         "como 50% deducible y 50% no deducible en el formato 1001."),
+        ("INTERESES DE MORA Y SANCIONES (Art. 107, 107-1 ET)",
+         "Intereses moratorios, multas, sanciones y litigios NO son deducibles. "
+         "Esta herramienta los clasifica automáticamente como no deducibles."),
+        ("GASTOS EN EL EXTERIOR (Art. 121, 122, 124 ET)",
+         "Limitados al 15% de la renta líquida, salvo excepciones. Verificar retención en la fuente "
+         "cuando corresponda (Art. 406 ET)."),
+        ("DONACIONES (Art. 257 ET)",
+         "Solo deducibles como descuento tributario (25%) a entidades del régimen especial "
+         "(Art. 19 ET) con certificación. Donaciones a otras entidades NO son deducibles."),
+        ("CAUSALIDAD, NECESIDAD Y PROPORCIONALIDAD (Art. 107 ET)",
+         "Todo gasto debe cumplir: (1) causalidad con la actividad, (2) necesidad, (3) proporcionalidad. "
+         "La herramienta NO evalúa estos criterios — es responsabilidad del contador."),
+        ("LÍMITE COSTOS Y DEDUCCIONES (Art. 177-1 ET)",
+         "No son aceptables costos/deducciones imputables a ingresos no constitutivos de renta. "
+         "Si hay ingresos mixtos, aplicar proporcionalidad en gastos comunes."),
+        ("DEPRECIACIONES Y AMORTIZACIONES (Art. 128-141 ET)",
+         "Solo deducibles sobre el costo fiscal y dentro de la vida útil fiscal. "
+         "Depreciaciones aceleradas o sobre avalúos NO deducibles sin autorización DIAN."),
+    ]
+    
+    for i, (titulo, detalle) in enumerate(advertencias):
+        alt_color = NARANJA_CLARO if i % 2 == 0 else GRIS_CLARO
+        r = item_row(wsr, r, f"  {i+1}. {titulo}", f"       {detalle}", alt_color, NUM_COLS)
+
+    # Nota final advertencias
+    for c in range(1, NUM_COLS + 1):
+        cell = wsr.cell(r, c)
+        cell.fill = PatternFill('solid', fgColor=NARANJA_CLARO)
+        cell.border = border_thin
+    wsr.cell(r, 1).value = ("NOTA: Esta lista NO es exhaustiva. Existen otras limitaciones según tipo de contribuyente, "
+                             "régimen fiscal y actividad económica. Consulte siempre con su asesor tributario.")
+    wsr.cell(r, 1).font = Font(size=9, name='Calibri', italic=True, color='7D6608')
+    wsr.cell(r, 1).alignment = Alignment(wrap_text=True)
+    wsr.merge_cells(start_row=r, start_column=1, end_row=r, end_column=NUM_COLS)
+    r += 1
+
+    # ================================================================
+    # SECCIÓN 3: CRUCES DIAN
+    # ================================================================
+    r += 2
+    banner_row(wsr, r, "   CRUCES DE INFORMACIÓN — POSIBLES REQUERIMIENTOS DIAN", AZUL_BANNER, NUM_COLS)
+    r += 1
+    sub_banner(wsr, r, "  La DIAN cruza la información exógena con otras fuentes. Verifique estos puntos para evitar requerimientos.", AZUL_CLARO, GRIS_TEXTO, NUM_COLS)
+    r += 2
+
+    # --- 3A: Validaciones automáticas ---
+    sub_banner(wsr, r, "  A. VALIDACIONES AUTOMÁTICAS (calculadas de su balance)", VERDE_BANNER, BLANCO, NUM_COLS)
+    r += 1
+
+    total_ingresos_4 = sum(abs(f['saldo']) for f in bal if f['cta'][:1] == '4' and abs(f['saldo']) > 0)
+    total_gastos_5 = sum(abs(f['saldo']) for f in bal if f['cta'][:2] in ('51','52','53') and abs(f['saldo']) > 0)
+    total_costos_6 = sum(abs(f['saldo']) for f in bal if f['cta'][:1] == '6' and abs(f['saldo']) > 0)
+    total_iva_desc = sum(v for v in dic5.values()) if dic5 else 0
+    total_iva_gen = sum(v for v in dic6.values()) if dic6 else 0
+    total_ret_fte_2365 = sum(v for v in ret_fte_por_nit.values())
+    total_ret_iva_2367 = sum(v for v in ret_iva_por_nit.values())
+    total_ret_1355 = sum(v[1] for v in dic3.values()) if dic3 else 0
+    total_nomina = sum(abs(f['saldo']) for f in bal if en_rango(f['cta'], '5105', '5105') and abs(f['saldo']) > 0)
+    total_f1001 = sum(v[0] + v[1] for v in dic.values())
+
+    validaciones_auto = []
+
+    if total_gastos_5 + total_costos_6 > 0 and total_iva_desc > 0:
+        pct_iva = (total_iva_desc / (total_gastos_5 + total_costos_6)) * 100
+        validaciones_auto.append((
+            f"IVA Descontable / (Gastos + Costos) = {pct_iva:.1f}%",
+            f"IVA Descontable: ${total_iva_desc:,.0f}  |  Gastos+Costos: ${total_gastos_5 + total_costos_6:,.0f}\n"
+            f"Si la tarifa general es 19%, este % debería estar cercano al 19% (ajustado por exentos/excluidos). "
+            f"Diferencias grandes → requerimiento al cruzar con declaraciones de IVA."
+        ))
+
+    if total_f1001 > 0 and total_ret_fte_2365 > 0:
+        pct_ret = (total_ret_fte_2365 / total_f1001) * 100
+        validaciones_auto.append((
+            f"Retención Fte Practicada / Pagos F1001 = {pct_ret:.1f}%",
+            f"Ret. Fte (2365): ${total_ret_fte_2365:,.0f}  |  Pagos F1001: ${total_f1001:,.0f}\n"
+            f"La DIAN cruza retenciones practicadas vs certificados de terceros. Diferencias = requerimiento."
+        ))
+
+    if total_ingresos_4 > 0 and total_ret_1355 > 0:
+        pct_ret_ing = (total_ret_1355 / total_ingresos_4) * 100
+        validaciones_auto.append((
+            f"Retenciones Recibidas (1355) / Ingresos = {pct_ret_ing:.1f}%",
+            f"Ret. recibidas: ${total_ret_1355:,.0f}  |  Ingresos: ${total_ingresos_4:,.0f}\n"
+            f"Cruza F1007 vs retenciones certificadas por clientes. Diferencias activan fiscalización."
+        ))
+
+    if total_ingresos_4 > 0:
+        validaciones_auto.append((
+            f"Total Ingresos (4xxx): ${total_ingresos_4:,.0f}",
+            f"Debe coincidir con ingresos brutos de la declaración de renta (renglón 33 del F110). "
+            f"Diferencias entre exógena F1007 y renta son la causa #1 de requerimientos."
+        ))
+
+    if total_gastos_5 + total_costos_6 > 0:
+        validaciones_auto.append((
+            f"Total Gastos: ${total_gastos_5:,.0f}  |  Total Costos: ${total_costos_6:,.0f}",
+            f"Suma: ${total_gastos_5 + total_costos_6:,.0f}. Debe coincidir con costos y deducciones de renta. "
+            f"La DIAN cruza F1001 + F2276 vs declaración de renta."
+        ))
+
+    if total_nomina > 0:
+        validaciones_auto.append((
+            f"Total Nómina (5105): ${total_nomina:,.0f}",
+            f"Cruza F2276 vs: (a) PILA, (b) Nómina electrónica mensual, "
+            f"(c) Certificados de ingresos y retenciones (F220). Los tres deben ser consistentes."
+        ))
+
+    for i, (titulo, detalle) in enumerate(validaciones_auto):
+        alt_color = VERDE_CLARO if i % 2 == 0 else GRIS_CLARO
+        r = valor_row(wsr, r, f"  ✓ {titulo}", f"       {detalle}", alt_color, NUM_COLS)
+
+    # --- 3B: Cruces manuales ---
+    r += 1
+    sub_banner(wsr, r, "  B. CRUCES QUE REALIZA LA DIAN (verificación manual del contador)", AZUL_BANNER, BLANCO, NUM_COLS)
+    r += 1
+
+    cruces_dian = [
+        ("EXÓGENA vs DECLARACIÓN DE IVA (Form. 300)",
+         "IVA generado (F1006) vs IVA declarado bimestralmente  |  IVA descontable (F1005) vs IVA solicitado  |  "
+         "Bases de ingresos F1007 vs bases de IVA. Diferencias → requerimiento ordinario (Art. 686 ET)."),
+        ("EXÓGENA vs DECLARACIÓN DE RENTA (Form. 110/210)",
+         "Ingresos F1007 = Ingresos brutos renta  |  Pagos F1001 + Nómina F2276 = Costos y deducciones  |  "
+         "Retenciones F1003 = Anticipos y retenciones  |  Patrimonio exógena = Patrimonio bruto renta."),
+        ("EXÓGENA vs RETENCIÓN EN LA FUENTE (Form. 350)",
+         "Retenciones 2365 reportadas en F1001 deben coincidir mes a mes con el Form. 350. "
+         "El sistema de la DIAN detecta diferencias mayores a $1 automáticamente."),
+        ("EXÓGENA PROPIA vs EXÓGENA DE TERCEROS",
+         "Su F1001 (pagos) debe coincidir con el F1007 (ingresos) del tercero. "
+         "Sus retenciones practicadas deben coincidir con las retenciones que el tercero reporta en F1003."),
+        ("EXÓGENA vs NÓMINA ELECTRÓNICA Y PILA",
+         "F2276 vs nómina electrónica mensual, PILA (seguridad social) y certificados F220. "
+         "Diferencias en salarios, prestaciones o aportes generan requerimiento."),
+        ("EXÓGENA vs FACTURACIÓN ELECTRÓNICA (RADIAN)",
+         "La DIAN cruza valores de exógena contra facturas en RADIAN. Gastos sin factura electrónica "
+         "o DSNO pueden ser rechazados. Verificar todos los pagos del F1001."),
+        ("EXÓGENA vs ENTIDADES FINANCIERAS",
+         "Bancos reportan: saldos en cuentas, CDTs, inversiones, préstamos, intereses, GMF pagado. "
+         "Cruzan con exógena y renta. Cuentas no reportadas = hallazgo frecuente."),
+        ("EXÓGENA vs REGISTROS PÚBLICOS (SNR, RUNT, CCB)",
+         "Activos vs: inmuebles en Superintendencia de Notariado, vehículos en RUNT, "
+         "inversiones societarias en Cámaras de Comercio. Activos omitidos → requerimiento especial (Art. 685 ET)."),
+        ("CUANTÍAS MENORES vs MATERIALIDAD",
+         "Si el acumulado con NIT genérico 222222222 es muy alto vs el total de pagos, la DIAN "
+         "puede exigir identificación individual. Recomendación: cuantías menores < 5-10% del total."),
+        ("PRECIOS DE TRANSFERENCIA (Art. 260-1 ET)",
+         "Operaciones con vinculados del exterior deben ser consistentes con la declaración informativa "
+         "y documentación comprobatoria. Aplica si patrimonio > 100.000 UVT o ingresos > 61.000 UVT."),
+        ("BENEFICIARIO EFECTIVO / RUB (Ley 2155/2021)",
+         "Las sociedades deben reportar el Registro Único de Beneficiarios Finales. "
+         "La DIAN cruza RUB con pagos al exterior y operaciones con vinculados."),
+    ]
+
+    for i, (titulo, detalle) in enumerate(cruces_dian):
+        alt_color = AZUL_CLARO if i % 2 == 0 else GRIS_CLARO
+        r = item_row(wsr, r, f"  {i+1}. {titulo}", f"       {detalle}", alt_color, NUM_COLS)
+
+    # Nota final — sanción
+    r += 1
+    banner_row(wsr, r, "   RECUERDE: Sanción por errores en exógena — Art. 651 ET", ROJO_BANNER, NUM_COLS)
+    r += 1
+    nota_sancion = (
+        "La sanción por no enviar información, enviarla con errores o enviarla extemporáneamente "
+        "puede ser hasta del 5% de los valores no reportados o reportados incorrectamente, "
+        "sin exceder de 15.000 UVT. La DIAN utiliza sistemas de inteligencia artificial y cruces "
+        "masivos automatizados. Verifique TODA la información antes de presentarla."
+    )
+    for c in range(1, NUM_COLS + 1):
+        cell = wsr.cell(r, c)
+        cell.fill = PatternFill('solid', fgColor=ROJO_CLARO)
+        cell.border = border_thin
+    wsr.cell(r, 1).value = nota_sancion
+    wsr.cell(r, 1).font = Font(size=10, name='Calibri', color=ROJO_BANNER, bold=True)
+    wsr.cell(r, 1).alignment = Alignment(wrap_text=True, vertical='center')
+    wsr.merge_cells(start_row=r, start_column=1, end_row=r, end_column=NUM_COLS)
+    wsr.row_dimensions[r].height = 50
+    wsr.column_dimensions['A'].width = 40
+    wsr.column_dimensions['B'].width = 30
+    wsr.column_dimensions['C'].width = 25
 
     for ws_name in wb.sheetnames:
         ws2 = wb[ws_name]
@@ -1555,12 +2288,23 @@ def procesar_balance(df_balance, df_directorio=None, datos_rues=None, col_map=No
                 ws2.column_dimensions[openpyxl.utils.get_column_letter(col)].width = 16
             ws2.freeze_panes = 'A2'
 
-    return wb, resultados, len(bal), len(direc), n_con_dir, validaciones
+    return wb, resultados, len(bal), len(direc), n_con_dir, validaciones, nits_nuevos, alertas_rs
 
 
 # === INTERFAZ ===
 st.markdown('<p class="main-header">📊 Exógena DIAN — AG 2025</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-header">Genera automáticamente los formatos de información exógena a partir del balance de prueba por tercero</p>', unsafe_allow_html=True)
+
+st.markdown("""
+<div class="privacy-box">
+    <h4><span class="privacy-icon">🔒</span> Compromiso de Confidencialidad y Protección de Datos</h4>
+    <p>Su información contable es tratada con la <strong>máxima confidencialidad</strong>. Al utilizar este servicio, usted cuenta con las siguientes garantías:</p>
+    <p>🛡️ <strong>Uso exclusivo:</strong> Los archivos que nos suministre serán utilizados <strong>única y exclusivamente</strong> para la generación de los formatos de información exógena solicitados. No se utilizarán para ningún otro fin.</p>
+    <p>🗑️ <strong>Eliminación inmediata:</strong> Una vez generada y entregada la información exógena, todos sus archivos (balance de prueba, directorio de terceros y cualquier otro documento) serán <strong>eliminados de forma definitiva e irreversible</strong> de nuestros sistemas.</p>
+    <p>🚫 <strong>No divulgación:</strong> No compartimos, vendemos, cedemos ni transferimos su información contable, tributaria o de terceros a ninguna persona natural o jurídica, bajo ninguna circunstancia.</p>
+    <p>📋 <strong>Marco legal:</strong> Este compromiso se rige por la Ley 1581 de 2012 (Protección de Datos Personales), el Código de Ética del Contador Público (Ley 43 de 1990, Art. 63 — Secreto Profesional) y el Estatuto Tributario (Art. 583 — Reserva de las declaraciones tributarias).</p>
+</div>
+""", unsafe_allow_html=True)
 
 st.divider()
 
@@ -1585,6 +2329,9 @@ with col2:
                                        help="Fila donde están los títulos de columna (ej: 1, 3)")
     nombre_hoja = st.text_input("Nombre de la hoja (dejar vacío = primera hoja)", value="",
                                  help="Si tu archivo tiene varias hojas, escribe el nombre de la del balance")
+    cierra_impuestos = st.toggle("¿La empresa cierra cuentas de impuestos?", value=True,
+                                  help="**SÍ:** Las cuentas 1355, 2365, 2408 se cierran cada año → se usa el Saldo Final.\n\n"
+                                       "**NO:** Esas cuentas acumulan de años anteriores → se usa Débitos - Créditos del periodo.")
 
 st.divider()
 
@@ -1839,8 +2586,14 @@ if uploaded_file:
 
             dir_final = df_dir if df_dir is not None else df_dir_auto
 
+            # Cargar directorio centralizado
+            dir_central, dir_central_err = cargar_directorio_central()
+            if dir_central:
+                st.info(f"📂 Directorio centralizado: **{len(dir_central)} empresas** cargadas")
+            
             with st.spinner("Procesando formatos..."):
-                wb, resultados, n_filas, n_terceros, n_con_dir, validaciones = procesar_balance(df, dir_final, datos_rues, col_map)
+                wb, resultados, n_filas, n_terceros, n_con_dir, validaciones, nits_nuevos, alertas_rs = procesar_balance(
+                    df, dir_final, datos_rues, col_map, cierra_impuestos, dir_central)
 
             st.markdown('<div class="success-box">', unsafe_allow_html=True)
             st.markdown("### ✅ Procesamiento completado")
@@ -1851,6 +2604,113 @@ if uploaded_file:
             c2.metric("Terceros identificados", f"{n_terceros:,}")
             c3.metric("Con dirección", f"{n_con_dir:,}")
             c4.metric("Registros generados", f"{sum(resultados.values()):,}")
+
+            # === ALERTAS DE RAZÓN SOCIAL ===
+            if alertas_rs:
+                criticos = sum(1 for _, _, _, s in alertas_rs if s < 0.5)
+                diferentes = sum(1 for _, _, _, s in alertas_rs if 0.5 <= s < 0.75)
+                similares = sum(1 for _, _, _, s in alertas_rs if s >= 0.75)
+                
+                st.markdown("### ⚠️ Alertas de Razón Social")
+                st.warning(f"Se encontraron **{len(alertas_rs)} terceros** cuya razón social en el balance "
+                           f"**difiere** de la registrada en la base de datos DIAN/RUES. "
+                           f"Revise la hoja **'Alertas Razón Social'** en el Excel.")
+                
+                ca1, ca2, ca3 = st.columns(3)
+                if criticos > 0:
+                    ca1.error(f"⛔ **{criticos}** Críticos (muy diferentes)")
+                else:
+                    ca1.success("✅ Sin críticos")
+                if diferentes > 0:
+                    ca2.warning(f"⚠️ **{diferentes}** Diferentes")
+                else:
+                    ca2.success("✅ Sin diferencias")
+                if similares > 0:
+                    ca3.info(f"🔍 **{similares}** Similares (posible abreviación)")
+                else:
+                    ca3.success("✅ Sin similares")
+                
+                with st.expander("Ver detalle de alertas", expanded=False):
+                    df_alertas = pd.DataFrame([
+                        {
+                            'NIT': nit,
+                            'En Balance': rs_bal,
+                            'Registrada DIAN/RUES': rs_cen,
+                            'Similitud': f"{sim*100:.0f}%",
+                            'Severidad': '⛔ CRÍTICO' if sim < 0.5 else ('⚠️ DIFERENTE' if sim < 0.75 else '🔍 SIMILAR')
+                        }
+                        for nit, rs_bal, rs_cen, sim in sorted(alertas_rs, key=lambda x: x[3])
+                    ])
+                    st.dataframe(df_alertas, use_container_width=True, hide_index=True)
+
+            # Mostrar direcciones nuevas para agregar al directorio central
+            if nits_nuevos:
+                can_write = sheets_escritura_disponible()
+                
+                if can_write:
+                    # === SINCRONIZACIÓN AUTOMÁTICA ===
+                    with st.expander(f"📋 **{len(nits_nuevos)} direcciones nuevas** encontradas", expanded=True):
+                        st.caption("Estas direcciones vienen del directorio del cliente y no estaban en tu base centralizada.")
+                        df_nuevos = pd.DataFrame([
+                            {
+                                'NIT': nit,
+                                'Razón Social': info['razon'],
+                                'Dirección': info['dir'],
+                                'Cod Depto': info['dp'],
+                                'Cod Municipio': info['mp'],
+                            }
+                            for nit, info in sorted(nits_nuevos.items())
+                        ])
+                        st.dataframe(df_nuevos, use_container_width=True, hide_index=True)
+                        
+                        if st.button("🔄 Agregar automáticamente al directorio centralizado", type="primary", use_container_width=True):
+                            with st.spinner("Sincronizando con Google Sheets..."):
+                                n_agregados, err_sync = agregar_direcciones_a_sheet(nits_nuevos)
+                            if err_sync:
+                                st.error(f"❌ Error al sincronizar: {err_sync}")
+                                # Fallback: ofrecer CSV
+                                csv_nuevos = pd.DataFrame([
+                                    {'NIT': nit, 'Razón Social': info['razon'], 'Dirección': info['dir'],
+                                     'Cod Depto': info['dp'], 'Cod Municipio': info['mp'],
+                                     'Cod País': info['pais'], 'Tipo Doc': info['td'], 'DV': info['dv']}
+                                    for nit, info in sorted(nits_nuevos.items())
+                                ]).to_csv(index=False)
+                                st.download_button("⬇️ Descargar CSV como respaldo", csv_nuevos,
+                                                   file_name="direcciones_nuevas.csv", mime="text/csv")
+                            else:
+                                if n_agregados > 0:
+                                    st.success(f"✅ **{n_agregados} direcciones** agregadas al directorio centralizado.")
+                                    st.cache_data.clear()  # Limpiar cache para que la próxima vez lea las nuevas
+                                else:
+                                    st.info("ℹ️ Todas las direcciones ya existían en el directorio. No se agregaron duplicados.")
+                else:
+                    # === MODO MANUAL (sin gspread configurado) ===
+                    with st.expander(f"📋 **{len(nits_nuevos)} direcciones nuevas** para agregar al directorio centralizado", expanded=False):
+                        st.caption("Estas direcciones vienen del directorio del cliente pero NO están en tu Google Sheet centralizado. "
+                                   "Cópialas para que estén disponibles para futuros clientes.")
+                        st.info("💡 **Tip:** Configura la cuenta de servicio de Google para que se agreguen automáticamente. "
+                                "Ver instrucciones en las líneas 25-43 del código.")
+                        df_nuevos = pd.DataFrame([
+                            {
+                                'NIT': nit,
+                                'Razón Social': info['razon'],
+                                'Dirección': info['dir'],
+                                'Cod Depto': info['dp'],
+                                'Cod Municipio': info['mp'],
+                                'Cod País': info['pais'],
+                                'Tipo Doc': info['td'],
+                                'DV': info['dv'],
+                            }
+                            for nit, info in sorted(nits_nuevos.items())
+                        ])
+                        st.dataframe(df_nuevos, use_container_width=True, hide_index=True)
+                        csv_nuevos = df_nuevos.to_csv(index=False)
+                        st.download_button(
+                            "⬇️ Descargar CSV para pegar en Google Sheets",
+                            csv_nuevos,
+                            file_name="direcciones_nuevas.csv",
+                            mime="text/csv"
+                        )
 
             if validaciones:
                 n_dv_err = sum(1 for tipo, _ in validaciones if tipo == 'dv_error')
@@ -1889,6 +2749,15 @@ if uploaded_file:
             )
 
             st.info("💡 **Formatos manuales:** F1004 (Descuentos), F1011 (Declaraciones) y F1647 (Ingresos para terceros) requieren datos que no están en el balance.")
+            
+            st.markdown("""
+            <div style="background: #eafaf1; border-radius: 8px; padding: 0.8rem 1rem; border-left: 4px solid #27ae60; margin-top: 1rem;">
+                <span style="font-size: 0.9rem; color: #1e8449;">
+                    🔒 <strong>Recordatorio:</strong> Sus archivos serán eliminados de nuestros sistemas una vez entregada la información. 
+                    Su información contable no será utilizada para ningún otro fin ni compartida con terceros.
+                </span>
+            </div>
+            """, unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"❌ Error al leer el archivo: {str(e)}")
@@ -1898,7 +2767,8 @@ st.divider()
 st.markdown("""
 <div style="text-align: center; color: #999; font-size: 0.85rem;">
     Exógena DIAN AG 2025 | Resolución 000227/2025 | UVT $49.799<br>
-    ⚠️ Esta herramienta es un asistente. El contador debe validar los resultados antes de presentar a la DIAN.
+    ⚠️ Esta herramienta es un asistente. El contador debe validar los resultados antes de presentar a la DIAN.<br>
+    🔒 Su información es tratada con total confidencialidad — Ley 1581/2012, Ley 43/1990 Art. 63.
 </div>
 """, unsafe_allow_html=True)
 
