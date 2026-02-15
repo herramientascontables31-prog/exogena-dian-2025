@@ -65,6 +65,171 @@ def en_rango(cta, d, h):
     n = len(d)
     return cta[:n] >= d and cta[:n] <= h
 
+def pad_dpto(v):
+    """Formatea código departamento DIAN: 2 dígitos con cero a la izquierda"""
+    if not v:
+        return ""
+    v = str(v).strip()
+    if '.' in v:
+        try: v = str(int(float(v)))
+        except: pass
+    if v.lower() == 'nan': return ""
+    return v.zfill(2) if v.isdigit() else v
+
+def pad_mpio(v):
+    """Formatea código municipio DIAN: 3 dígitos con ceros a la izquierda"""
+    if not v:
+        return ""
+    v = str(v).strip()
+    if '.' in v:
+        try: v = str(int(float(v)))
+        except: pass
+    if v.lower() == 'nan': return ""
+    return v.zfill(3) if v.isdigit() else v
+
+def buscar_info_rues(nits_list, progress_bar=None):
+    """Busca info de terceros en RUES: dirección, razón social, DV"""
+    import requests
+    from time import sleep
+
+    encontrados = {}
+    total = len(nits_list)
+    errores_seguidos = 0
+
+    for i, nit in enumerate(nits_list):
+        if progress_bar:
+            progress_bar.progress((i + 1) / total,
+                                  text=f"🔍 Consultando NIT {nit} ({i+1}/{total}) — Encontrados: {len(encontrados)}")
+
+        if errores_seguidos >= 10:
+            break
+
+        try:
+            resp = requests.get(
+                "https://www.rues.org.co/RM/ConsultaNit_Api",
+                params={"nit": str(nit), "tipo": "N"},
+                headers={
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Accept': 'application/json',
+                    'Referer': 'https://www.rues.org.co/'
+                },
+                timeout=10
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                if data and isinstance(data, list) and len(data) > 0:
+                    emp = data[0]
+                    # Extraer toda la info disponible
+                    info = {
+                        'razon_social': '',
+                        'dv': '',
+                        'dir': '',
+                        'dp': '',
+                        'mp': '',
+                        'pais': '169',
+                    }
+                    # Razón social
+                    for campo_rs in ['razon_social', 'Razon_Social', 'nombre', 'Nombre',
+                                     'razonSocial', 'RazonSocial', 'nombre_razon_social']:
+                        val = emp.get(campo_rs, '')
+                        if val:
+                            info['razon_social'] = str(val).strip().upper()
+                            break
+                    # Dígito de verificación
+                    for campo_dv in ['digito_verificacion', 'Digito_Verificacion', 'dv',
+                                     'digitoVerificacion', 'DV']:
+                        val = emp.get(campo_dv, '')
+                        if val is not None and str(val).strip():
+                            info['dv'] = str(val).strip()
+                            break
+                    # Dirección
+                    for campo_dir in ['direccion', 'Direccion', 'direccion_comercial']:
+                        val = emp.get(campo_dir, '')
+                        if val:
+                            info['dir'] = str(val).strip()
+                            break
+                    # Departamento
+                    for campo_dp in ['codigo_departamento', 'departamento', 'Departamento',
+                                     'cod_departamento']:
+                        val = emp.get(campo_dp, '')
+                        if val:
+                            info['dp'] = pad_dpto(str(val).strip())
+                            break
+                    # Municipio
+                    for campo_mp in ['codigo_municipio', 'municipio', 'Municipio',
+                                     'cod_municipio', 'ciudad']:
+                        val = emp.get(campo_mp, '')
+                        if val:
+                            info['mp'] = pad_mpio(str(val).strip())
+                            break
+
+                    encontrados[nit] = info
+                    errores_seguidos = 0
+                else:
+                    errores_seguidos = 0
+            else:
+                errores_seguidos += 1
+            sleep(0.5)
+        except requests.exceptions.Timeout:
+            errores_seguidos += 1
+            continue
+        except requests.exceptions.ConnectionError:
+            errores_seguidos += 1
+            continue
+        except Exception:
+            errores_seguidos += 1
+            continue
+
+    return encontrados, errores_seguidos >= 10
+
+
+def normalizar_texto(t):
+    """Normaliza texto para comparación: quita tildes, puntuación, espacios extra, unifica abreviaturas"""
+    import unicodedata
+    if not t:
+        return ""
+    t = str(t).upper().strip()
+    # Quitar tildes
+    t = ''.join(c for c in unicodedata.normalize('NFD', t) if unicodedata.category(c) != 'Mn')
+    # Quitar puntos, comas, guiones
+    for ch in '.,;:-_/\\()[]{}#"\'':
+        t = t.replace(ch, ' ')
+    # Quitar espacios múltiples
+    t = ' '.join(t.split())
+    # Unificar abreviaturas comunes colombianas
+    reemplazos = [
+        ('S A S', 'SAS'), ('S A  S', 'SAS'),
+        ('S A', 'SA'), ('S  A', 'SA'),
+        ('E S P', 'ESP'), ('E  S  P', 'ESP'),
+        ('E U', 'EU'), ('E  U', 'EU'),
+        ('C I', 'CI'), ('C  I', 'CI'),
+        ('N I T', 'NIT'),
+        ('SOCIEDAD ANONIMA', 'SA'),
+        ('SOCIEDAD POR ACCIONES SIMPLIFICADA', 'SAS'),
+        ('EMPRESA DE SERVICIOS PUBLICOS', 'ESP'),
+        ('LIMITADA', 'LTDA'),
+    ]
+    for viejo, nuevo in reemplazos:
+        t = t.replace(viejo, nuevo)
+    return ' '.join(t.split())
+
+
+def similitud_textos(a, b):
+    """Calcula similitud entre dos textos (0.0 a 1.0)"""
+    a = normalizar_texto(a)
+    b = normalizar_texto(b)
+    if not a or not b:
+        return 0.0
+    if a == b:
+        return 1.0
+    # Similitud por palabras comunes
+    pa = set(a.split())
+    pb = set(b.split())
+    if not pa or not pb:
+        return 0.0
+    comunes = pa & pb
+    return len(comunes) / max(len(pa), len(pb))
+
 # === PARAMETRIZACION ===
 PARAM_1001_NOMINA_SUB = {
     "5001": ["06", "07", "08", "09", "10", "15", "27", "30", "33", "36", "39", "42", "45"],
@@ -76,13 +241,25 @@ PARAM_1001_NOMINA_SUB = {
 }
 
 PARAM_1001_RANGOS = [
-    ("5004", "5110", "5139", True), ("5005", "5120", "5120", True),
-    ("5005", "5220", "5220", True), ("5011", "5230", "5230", True),
-    ("5016", "5140", "5199", True), ("5016", "5210", "5219", True),
-    ("5016", "5235", "5249", True), ("5016", "5295", "5299", True),
-    ("5055", "5115", "5115", True), ("5006", "5305", "5305", True),
-    ("5101", "530515", "530515", True), ("5007", "1435", "1499", True),
-    ("5010", "1504", "1699", True), ("5010", "1520", "1540", True),
+    # Específicos primero (evitar solapamiento)
+    ("5005", "5120", "5120", True),  # Arrendamientos
+    ("5005", "5220", "5220", True),  # Arrendamientos ventas
+    ("5011", "5230", "5230", True),  # Seguros
+    ("5011", "5130", "5130", True),  # Seguros admón
+    ("5055", "5115", "5115", True),  # Impuestos
+    ("5004", "5110", "5110", True),  # Servicios (solo 5110, no el rango completo)
+    ("5016", "5125", "5125", True),  # Contribuciones y afiliaciones
+    ("5016", "5135", "5139", True),  # Mantenimiento y reparaciones
+    ("5016", "5140", "5199", True),  # Gastos de viaje, depreciaciones, diversos
+    ("5016", "5210", "5219", True),  # Gastos de ventas
+    ("5016", "5235", "5249", True),  # Otros gastos ventas
+    ("5016", "5295", "5299", True),  # Diversos ventas
+    ("5055", "5115", "5115", True),  # Impuestos
+    ("5006", "5305", "5305", True),  # Gastos financieros
+    ("5101", "530515", "530515", True),  # GMF
+    ("5007", "1435", "1499", True),  # Inventarios
+    ("5010", "1504", "1699", True),  # Inversiones temporales
+    ("5010", "1520", "1540", True),  # Activos fijos
 ]
 
 PARAM_1003 = [
@@ -108,29 +285,270 @@ MAPEO_1012 = [
     ("8309", "1265", "1265"),
 ]
 
-def concepto_1001(cta):
+# === CLASIFICADOR INTELIGENTE POR NOMBRE DE CUENTA ===
+# Mapeo de palabras clave → concepto F1001
+# Prioridad: más específico primero
+KEYWORDS_1001 = [
+    # Nómina y prestaciones sociales (concepto 5001 - Salarios y pagos laborales)
+    ("5001", True, ["sueldo", "salario", "basico", "jornal", "horas extra", "recargo",
+                     "auxilio transporte", "auxilio de transporte", "rodamiento"]),
+    # Honorarios (concepto 5002)
+    ("5002", True, ["honorario", "honorarios"]),
+    # Comisiones (concepto 5002)
+    ("5002", True, ["comision", "comisiones"]),
+    # Aportes EPS / Salud (concepto 5024)
+    ("5024", True, ["aporte salud", "aporte eps", "aportes a eps", "aporte a eps",
+                     "aporte a salud", "cotizacion salud", "aportes eps"]),
+    # Aportes Pensión (concepto 5025)
+    ("5025", True, ["aporte pension", "aporte a pension", "aportes a pension",
+                     "pension obligatoria", "cotizacion pension", "fondo pension",
+                     "aportes pension"]),
+    # Aportes ARL / Riesgos Laborales (concepto 5027)
+    ("5027", True, ["arl", "riesgo laboral", "riesgos laborales", "riesgos profesionales",
+                     "aporte arl", "aporte riesgo", "aportes arl"]),
+    # Parafiscales: ICBF, SENA, Cajas (concepto 5023)
+    ("5023", True, ["parafiscal", "parafiscales", "icbf", "sena", "caja de compensacion",
+                     "compensacion familiar", "comfama", "compensar", "cafam",
+                     "colsubsidio", "comfenalco"]),
+    # Vacaciones (concepto 5001)
+    ("5001", True, ["vacacion", "vacaciones"]),
+    # Cesantías e intereses (concepto 5001)
+    ("5001", True, ["cesantia", "cesantias", "interes sobre cesantia", "intereses cesantia",
+                     "intereses sobre cesantias"]),
+    # Prima de servicios (concepto 5001)
+    ("5001", True, ["prima de servicio", "prima servicio", "prima legal"]),
+    # Dotación (concepto 5001)
+    ("5001", True, ["dotacion", "suministro a trabajador"]),
+    # Incapacidades (concepto 5001)
+    ("5001", True, ["incapacidad", "incapacidades"]),
+    # Bonificaciones laborales (concepto 5001)
+    ("5001", True, ["bonificacion", "bonificaciones"]),
+    # Seguros (concepto 5011) - ANTES de servicios para evitar conflicto
+    ("5011", True, ["seguro", "poliza", "prima de seguro", "todo riesgo", "cumplimiento"]),
+    # Arrendamientos (concepto 5005) - ANTES de servicios
+    ("5005", True, ["arriendo", "arrendamiento", "arrendamientos", "canon", "alquiler"]),
+    # Servicios públicos (concepto 5004)
+    ("5004", True, ["acueducto", "alcantarillado", "energia", "electrica", "telefono",
+                     "telecomunicacion", "internet", "gas", "servicio publico",
+                     "servicios publicos", "vigilancia", "correo", "portes"]),
+    # Transporte y fletes (concepto 5004)
+    ("5004", True, ["transporte", "flete", "acarreo", "taxi", "taxis", "buses",
+                     "envio", "mensajeria"]),
+    # Impuestos (concepto 5055)
+    ("5055", True, ["impuesto", "ica", "industria y comercio", "predial", "vehiculo",
+                     "timbre", "estampilla", "estampillas"]),
+    # Gastos financieros (concepto 5006)
+    ("5006", True, ["interes bancario", "intereses bancarios", "interes mora",
+                     "gmf", "4x1000", "4 x 1000",
+                     "comision bancaria", "comisiones bancarias",
+                     "gasto financiero", "gastos financieros",
+                     "diferencia en cambio", "gravamen", "rendimiento financiero"]),
+    # Gastos de personal no nómina (concepto 5010)
+    ("5010", True, ["gastos de personal", "personal admn", "bienestar",
+                     "medicina prepagada", "auxilio funerario",
+                     "auxilio educativo", "capacitacion empleado"]),
+    # Gastos de viaje (concepto 5016)
+    ("5016", True, ["viaje", "viatico", "pasaje", "tiquete", "hospedaje", "hotel"]),
+    # Mantenimiento y reparaciones (concepto 5016)
+    ("5016", True, ["mantenimiento", "reparacion", "adecuacion", "instalacion electrica"]),
+    # Gastos legales (concepto 5016)
+    ("5016", True, ["legal", "notarial", "registro", "licencia"]),
+    # Depreciaciones y amortizaciones (concepto 5016)
+    ("5016", True, ["depreciacion", "amortizacion", "agotamiento", "provision"]),
+    # Diversos / otros gastos (concepto 5016)
+    ("5016", True, ["aseo y cafeteria", "cafeteria", "papeleria", "utiles",
+                     "fotocopia", "parqueadero", "casino", "restaurante",
+                     "representacion", "suscripcion", "afiliacion",
+                     "publicidad", "propaganda", "seminario",
+                     "elemento de aseo", "diversos"]),
+    # Inventarios / compras (concepto 5007)
+    ("5007", True, ["inventario", "compra de", "mercancia", "materia prima",
+                     "material", "insumo", "repuesto"]),
+]
+
+# Mapeo de palabras clave → concepto F1007 (Ingresos)
+KEYWORDS_1007 = [
+    ("4001", ["ingreso operacional", "consultoria", "asesoria", "soporte tecnico",
+              "capacitacion", "outsourcing", "desarrollo software", "servicio",
+              "honorario recibido", "ingreso actividad"]),
+    ("4001", ["venta", "comercio", "producto", "mercancia"]),
+    ("4002", ["ingreso no operacional", "extraordinario", "recuperacion"]),
+    ("4003", ["arrendamiento recibido", "arriendo recibido", "canon recibido"]),
+]
+
+# Mapeo de palabras clave → concepto F1003 (Retenciones practicadas)
+KEYWORDS_1003 = [
+    ("1301", ["retefuente honorario", "retfte honorario", "retencion honorario"]),
+    ("1302", ["retefuente comision", "retfte comision", "retencion comision"]),
+    ("1303", ["retefuente servicio", "retfte servicio", "retencion servicio"]),
+    ("1304", ["retefuente arriendo", "retfte arriendo", "retencion arriendo"]),
+    ("1305", ["retefuente rendimiento", "retfte rendimiento", "retencion rendimiento",
+              "retencion financiero"]),
+    ("1306", ["retefuente compra", "retfte compra", "retencion compra"]),
+    ("1307", ["retencion ica", "rete ica", "reteica"]),
+    ("1308", ["otras retencion", "otra retencion", "retencion otro"]),
+    ("1311", ["autorretencion", "auto retencion", "autoretefte"]),
+]
+
+def normalizar_nombre(nom):
+    """Normaliza nombre de cuenta para búsqueda de keywords"""
+    import unicodedata
+    if not nom:
+        return ""
+    nom = str(nom).lower().strip()
+    # Quitar tildes
+    nom = ''.join(c for c in unicodedata.normalize('NFD', nom) if unicodedata.category(c) != 'Mn')
+    # Quitar caracteres especiales
+    for ch in '.,;:-_/\\()[]{}#"\'&$%@!¿?':
+        nom = nom.replace(ch, ' ')
+    return ' '.join(nom.split())
+
+
+def stem_es(palabra):
+    """Stemming muy simple para español: quita plurales comunes"""
+    if not palabra or len(palabra) < 4:
+        return palabra
+    if palabra.endswith('es') and len(palabra) > 5:
+        # "comisiones" → "comision", "incapacidades" → "incapacidad"
+        base = palabra[:-2]
+        if base.endswith('ion') or base.endswith('dad') or base.endswith('idad'):
+            return base
+        # "buses" → "bus" etc.
+        return base
+    if palabra.endswith('s') and not palabra.endswith('ss'):
+        return palabra[:-1]
+    return palabra
+
+
+def clasificar_por_nombre(nom, tabla_keywords):
+    """Busca en tabla de keywords y retorna el concepto si encuentra match.
+    Prioriza coincidencias multi-palabra sobre palabra simple.
+    Usa stemming para manejar plurales."""
+    nom_n = normalizar_nombre(nom)
+    if not nom_n:
+        return None
+    palabras_nom = set(nom_n.split())
+    stems_nom = set(stem_es(p) for p in palabras_nom)
+    nom_stemmed = ' '.join(stem_es(p) for p in nom_n.split())
+
+    # PRIMERA PASADA: solo keywords multi-palabra (más específicas)
+    for item in tabla_keywords:
+        if len(item) == 3:
+            conc, ded, keywords = item
+        else:
+            conc, keywords = item
+            ded = True
+        for kw in keywords:
+            if ' ' not in kw:
+                continue
+            kw_stemmed = ' '.join(stem_es(p) for p in kw.split())
+            if kw_stemmed in nom_stemmed or kw in nom_n:
+                return (conc, ded) if len(item) == 3 else conc
+
+    # SEGUNDA PASADA: keywords de palabra simple
+    for item in tabla_keywords:
+        if len(item) == 3:
+            conc, ded, keywords = item
+        else:
+            conc, keywords = item
+            ded = True
+        for kw in keywords:
+            if ' ' in kw:
+                continue
+            kw_stem = stem_es(kw)
+            if kw in palabras_nom or kw_stem in stems_nom:
+                return (conc, ded) if len(item) == 3 else conc
+    return None
+
+
+def concepto_1001(cta, nom_cta=""):
+    """Clasifica cuenta de gasto para F1001. Usa nombre como prioridad, PUC como respaldo."""
+
+    # 1) Nómina: 5105xx — nombre es prioridad porque subcuentas varían mucho
     if en_rango(cta, "5105", "5105"):
+        if nom_cta:
+            resultado = clasificar_por_nombre(nom_cta, KEYWORDS_1001)
+            if resultado:
+                return resultado
+        # Fallback: subcuenta
         sc = cta[4:6] if len(cta) >= 6 else cta[4:] if len(cta) > 4 else ""
         for conc, subs in PARAM_1001_NOMINA_SUB.items():
             if sc in subs:
                 return conc, True
-        return "5016", True
-    for conc, d, h, ded in PARAM_1001_RANGOS:
-        if en_rango(cta, d, h):
-            return conc, ded
+        return "5001", True  # Default nómina si no clasificó
+
+    # 2) Otras cuentas de gasto (51xx-53xx): nombre primero, rango como respaldo
     if cta[:2] in ("51", "52", "53"):
-        return "5016", True
+        # Primero por nombre (más confiable cuando las subcuentas varían)
+        if nom_cta:
+            resultado = clasificar_por_nombre(nom_cta, KEYWORDS_1001)
+            if resultado:
+                return resultado
+        # Segundo: por rango PUC estándar
+        for conc, d, h, ded in PARAM_1001_RANGOS:
+            if en_rango(cta, d, h):
+                return conc, ded
+        return "5016", True  # Default: otros gastos deducibles
+
+    # 3) Compras / inventarios (14xx)
+    if cta[:2] == "14":
+        for conc, d, h, ded in PARAM_1001_RANGOS:
+            if en_rango(cta, d, h):
+                return conc, ded
+        if nom_cta:
+            resultado = clasificar_por_nombre(nom_cta, KEYWORDS_1001)
+            if resultado:
+                return resultado
+
     return None, True
 
-def buscar_concepto(cta, params):
+
+def buscar_concepto(cta, params, nom_cta="", tabla_keywords=None):
+    """Busca concepto primero por rango, luego por nombre si hay keywords disponibles."""
+    # Primero por rango PUC
     for c, d, h in params:
         if en_rango(cta, d, h):
             return c
+    # Si no encontró y hay tabla de keywords, buscar por nombre
+    if tabla_keywords and nom_cta:
+        resultado = clasificar_por_nombre(nom_cta, tabla_keywords)
+        if resultado:
+            return resultado if isinstance(resultado, str) else resultado[0]
     return ""
 
 # === PROCESAMIENTO PRINCIPAL ===
-def procesar_balance(df_balance):
+def procesar_balance(df_balance, df_directorio=None, datos_rues=None):
     """Procesa el balance y retorna un workbook con todos los formatos"""
+
+    # Cargar directorio externo de direcciones
+    dir_externo = {}
+    if df_directorio is not None:
+        for _, row in df_directorio.iterrows():
+            nit_d = safe_str(row.iloc[0])
+            if not nit_d:
+                continue
+            if '.' in nit_d:
+                try:
+                    nit_d = str(int(float(nit_d)))
+                except:
+                    pass
+            dir_externo[nit_d] = {
+                'dir': safe_str(row.iloc[1]) if len(row) > 1 else "",
+                'dp': pad_dpto(safe_str(row.iloc[2])) if len(row) > 2 else "",
+                'mp': pad_mpio(safe_str(row.iloc[3])) if len(row) > 3 else "",
+                'pais': safe_str(row.iloc[4]) if len(row) > 4 else "169",
+            }
+
+    # Integrar datos del RUES al directorio externo (solo si no tiene ya datos)
+    if datos_rues:
+        for nit_r, info_r in datos_rues.items():
+            if nit_r not in dir_externo:
+                dir_externo[nit_r] = {
+                    'dir': info_r.get('dir', ''),
+                    'dp': info_r.get('dp', ''),
+                    'mp': info_r.get('mp', ''),
+                    'pais': info_r.get('pais', '169'),
+                }
 
     # Leer balance
     bal = []
@@ -172,7 +590,7 @@ def procesar_balance(df_balance):
             r = f['razon']
             d = {'td': td, 'dv': calc_dv(f['nit']),
                  'a1': '', 'a2': '', 'n1': '', 'n2': '',
-                 'rs': '', 'dir': '', 'dp': '', 'mp': ''}
+                 'rs': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
             if td == "13":
                 p = r.split()
                 if len(p) >= 1: d['a1'] = p[0]
@@ -181,14 +599,21 @@ def procesar_balance(df_balance):
                 if len(p) >= 4: d['n2'] = ' '.join(p[3:])
             else:
                 d['rs'] = r
+            # Aplicar direcciones del directorio externo
+            if f['nit'] in dir_externo:
+                ext = dir_externo[f['nit']]
+                if ext['dir']: d['dir'] = ext['dir']
+                if ext['dp']: d['dp'] = pad_dpto(ext['dp'])
+                if ext['mp']: d['mp'] = pad_mpio(ext['mp'])
+                if ext.get('pais'): d['pais'] = ext['pais']
             direc[f['nit']] = d
     direc[NM] = {'td': TDM, 'dv': '', 'a1': '', 'a2': '', 'n1': '', 'n2': '',
-                 'rs': 'CUANTIAS MENORES', 'dir': '', 'dp': '', 'mp': ''}
+                 'rs': 'CUANTIAS MENORES', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
 
     def t(nit):
         return direc.get(nit, {'td': '31', 'dv': calc_dv(nit),
                                 'a1': '', 'a2': '', 'n1': '', 'n2': '',
-                                'rs': nit, 'dir': '', 'dp': '', 'mp': ''})
+                                'rs': nit, 'dir': '', 'dp': '', 'mp': '', 'pais': '169'})
 
     # === CREAR WORKBOOK ===
     wb = openpyxl.Workbook()
@@ -209,11 +634,17 @@ def procesar_balance(df_balance):
     def escribir_tercero(ws, fila, col, nit, con_pais=False):
         d = t(nit)
         c = col
-        for v in [d['td'], nit, d['dv'], d['a1'], d['a2'], d['n1'], d['n2'], d['rs'], d['dir'], d['dp'], d['mp']]:
-            ws.cell(fila, c).value = v
+        campos_texto = ['td', 'nit', 'dv', 'a1', 'a2', 'n1', 'n2', 'rs', 'dir', 'dp', 'mp']
+        valores = [d['td'], nit, d['dv'], d['a1'], d['a2'], d['n1'], d['n2'], d['rs'], d['dir'], d['dp'], d['mp']]
+        for v in valores:
+            cell = ws.cell(fila, c)
+            cell.value = v
+            cell.number_format = '@'  # Formato texto para preservar ceros a la izquierda
             c += 1
         if con_pais:
-            ws.cell(fila, c).value = "169"
+            cell = ws.cell(fila, c)
+            cell.value = d.get('pais', '169') or "169"
+            cell.number_format = '@'
             c += 1
         return c
 
@@ -231,6 +662,25 @@ def procesar_balance(df_balance):
 
     resultados = {}
 
+    # ========== PRE-CALCULAR RETENCIONES Y BASES POR NIT ==========
+    # Retenciones por NIT desde cuentas 2365xx (créditos)
+    ret_fte_por_nit = defaultdict(float)       # ReteFte Renta (236505-236530)
+    ret_iva_por_nit = defaultdict(float)       # Ret IVA (2367xx)
+    # Bases: total de gastos deducibles por NIT (débitos de 51xx-53xx)
+    gastos_por_nit = defaultdict(float)
+
+    for f in bal:
+        cta = f['cta']
+        # Retenciones en la fuente por renta (236505 a 236530)
+        if en_rango(cta, "236505", "236530"):
+            ret_fte_por_nit[f['nit']] += f['cred']
+        # Retenciones de IVA (2367xx)
+        elif en_rango(cta, "2367", "2367"):
+            ret_iva_por_nit[f['nit']] += f['cred']
+        # Gastos como base (51xx, 52xx, 53xx = débitos)
+        if cta[:2] in ("51", "52", "53") and f['deb'] > 0:
+            gastos_por_nit[f['nit']] += f['deb']
+
     # ========== F1001 ==========
     h = ["Concepto", "Tipo Doc", "No ID", "DV", "Apellido1", "Apellido2", "Nombre1", "Nombre2",
          "Razon Social", "Direccion", "Dpto", "Mpio", "Pais", "Pago Deducible", "Pago No Deducible",
@@ -238,8 +688,9 @@ def procesar_balance(df_balance):
     ws = nueva_hoja("F1001 Pagos", h)
 
     dic = defaultdict(lambda: [0.0] * 5)
+    nits_en_1001 = set()
     for f in bal:
-        conc, ded = concepto_1001(f['cta'])
+        conc, ded = concepto_1001(f['cta'], f.get('nom_cta', ''))
         if not conc or conc == "5001":
             continue
         k = (conc, f['nit'])
@@ -247,12 +698,32 @@ def procesar_balance(df_balance):
             dic[k][0] += f['deb']
         else:
             dic[k][1] += f['deb']
-        dic[k][2] += f['ret']
+        nits_en_1001.add(f['nit'])
+
+    # Asignar retenciones desde cuentas 2365xx cruzando por NIT
+    # Distribuir proporcionalmente la retención entre los conceptos del mismo NIT
+    nit_conceptos = defaultdict(list)
+    for (conc, nit), v in dic.items():
+        nit_conceptos[nit].append((conc, v[0] + v[1]))  # (concepto, total pagado)
+
+    for nit in nit_conceptos:
+        ret_total = ret_fte_por_nit.get(nit, 0)
+        ret_iva = ret_iva_por_nit.get(nit, 0)
+        if ret_total == 0 and ret_iva == 0:
+            continue
+        total_pagado = sum(v for _, v in nit_conceptos[nit])
+        if total_pagado == 0:
+            continue
+        for conc, pago in nit_conceptos[nit]:
+            proporcion = pago / total_pagado if total_pagado > 0 else 0
+            dic[(conc, nit)][2] += ret_total * proporcion  # Ret Fte Renta
+            dic[(conc, nit)][4] += ret_iva * proporcion     # Ret IVA
 
     final = {}
     menores = defaultdict(lambda: [0.0] * 5)
     for (c, n), v in dic.items():
-        if v[0] + v[1] < C3UVT and v[2] == 0:
+        tiene_retencion = v[2] > 0 or v[4] > 0  # Ret Fte o Ret IVA
+        if v[0] + v[1] < C3UVT and not tiene_retencion:
             for i in range(5):
                 menores[(c, NM)][i] += v[i]
         else:
@@ -265,11 +736,14 @@ def procesar_balance(df_balance):
     for (conc, nit), v in sorted(final.items()):
         ws.cell(fila, 1).value = conc
         escribir_tercero(ws, fila, 2, nit, True)
-        ws.cell(fila, 14).value = int(v[0])
-        ws.cell(fila, 15).value = int(v[1])
-        for c in [16, 17, 19, 20, 21]:
-            ws.cell(fila, c).value = 0
-        ws.cell(fila, 18).value = int(v[2])
+        ws.cell(fila, 14).value = int(v[0])     # Pago Deducible
+        ws.cell(fila, 15).value = int(v[1])     # Pago No Deducible
+        ws.cell(fila, 16).value = 0              # IVA Ded
+        ws.cell(fila, 17).value = 0              # IVA No Ded
+        ws.cell(fila, 18).value = int(v[2])     # Ret Fte Renta
+        ws.cell(fila, 19).value = 0              # Ret Fte Asumida
+        ws.cell(fila, 20).value = int(v[4])     # Ret IVA R.Comun
+        ws.cell(fila, 21).value = 0              # Ret IVA No Dom
         fmt(ws, fila, range(14, 22))
         zebra(ws, fila)
         fila += 1
@@ -282,11 +756,20 @@ def procesar_balance(df_balance):
 
     dic3 = defaultdict(lambda: [0.0, 0.0])
     for f in bal:
-        conc = buscar_concepto(f['cta'], PARAM_1003)
+        conc = buscar_concepto(f['cta'], PARAM_1003, f.get('nom_cta', ''), KEYWORDS_1003)
         if not conc:
             continue
-        dic3[(conc, f['nit'])][0] += f['base']
+        # Retención = crédito de la cuenta 2365xx
         dic3[(conc, f['nit'])][1] += f['cred']
+        # Base: si la columna J tiene dato, usarla; si no, tomar del gasto del mismo NIT
+        if f['base'] > 0:
+            dic3[(conc, f['nit'])][0] += f['base']
+
+    # Para NITs sin base explícita, usar el total de gastos como base
+    for (conc, nit), v in dic3.items():
+        if v[0] == 0 and v[1] > 0:
+            # Usar gastos del mismo NIT como base gravable
+            v[0] = gastos_por_nit.get(nit, 0)
 
     fila = 2
     for (conc, nit), v in sorted(dic3.items()):
@@ -347,7 +830,7 @@ def procesar_balance(df_balance):
 
     dic7 = defaultdict(float)
     for f in bal:
-        conc = buscar_concepto(f['cta'], PARAM_1007)
+        conc = buscar_concepto(f['cta'], PARAM_1007, f.get('nom_cta', ''), KEYWORDS_1007)
         if not conc:
             continue
         dic7[(conc, f['nit'])] += f['cred']
@@ -381,7 +864,7 @@ def procesar_balance(df_balance):
 
     dic8 = defaultdict(float)
     for f in bal:
-        conc = buscar_concepto(f['cta'], PARAM_1008)
+        conc = buscar_concepto(f['cta'], PARAM_1008, f.get('nom_cta', ''))
         if not conc:
             continue
         s = abs(f['saldo'])
@@ -417,7 +900,7 @@ def procesar_balance(df_balance):
 
     dic9 = defaultdict(float)
     for f in bal:
-        conc = buscar_concepto(f['cta'], PARAM_1009)
+        conc = buscar_concepto(f['cta'], PARAM_1009, f.get('nom_cta', ''))
         if not conc:
             continue
         s = abs(f['saldo'])
@@ -506,25 +989,65 @@ def procesar_balance(df_balance):
         if not en_rango(f['cta'], "5105", "5105") or f['deb'] == 0:
             continue
         nit = f['nit']
+        nom = normalizar_nombre(f.get('nom_cta', ''))
         sc = f['cta'][4:6] if len(f['cta']) >= 6 else ""
+        clasificado = False
+
+        # Intentar primero por subcuenta estándar
         if sc in ("06", "07", "08", "09", "10", "15"):
-            dic26[nit][0] += f['deb']
+            dic26[nit][0] += f['deb']; clasificado = True
         elif sc in ("27",):
-            dic26[nit][10] += f['deb']
+            dic26[nit][10] += f['deb']; clasificado = True
         elif sc in ("30", "33"):
-            dic26[nit][8] += f['deb']
+            dic26[nit][8] += f['deb']; clasificado = True
         elif sc in ("36",):
-            dic26[nit][10] += f['deb']
+            dic26[nit][10] += f['deb']; clasificado = True
         elif sc in ("39",):
-            dic26[nit][7] += f['deb']
+            dic26[nit][7] += f['deb']; clasificado = True
         elif sc in ("42", "45"):
-            dic26[nit][10] += f['deb']
+            dic26[nit][10] += f['deb']; clasificado = True
         elif sc in ("01", "03", "05"):
-            d = t(nit)
-            if d['td'] == "13":
-                dic26[nit][3] += f['deb']
-        elif sc not in ("02", "04", "68", "72", "75"):
-            dic26[nit][10] += f['deb']
+            d2 = t(nit)
+            if d2['td'] == "13":
+                dic26[nit][3] += f['deb']; clasificado = True
+        elif sc in ("02",):
+            dic26[nit][12] += f['deb']; clasificado = True  # Aporte Salud
+        elif sc in ("04",):
+            dic26[nit][13] += f['deb']; clasificado = True  # Aporte Pensión
+        elif sc in ("68", "72", "75"):
+            clasificado = True  # Parafiscales - no van en F2276
+
+        # Si no clasificó por subcuenta, intentar por nombre
+        if not clasificado and nom:
+            palabras = set(nom.split())
+            if any(kw in palabras for kw in ["sueldo", "salario", "basico", "jornal"]) or \
+               any(kw in nom for kw in ["hora extra", "horas extra", "recargo"]):
+                dic26[nit][0] += f['deb']
+            elif any(kw in nom for kw in ["cesantia", "interes sobre cesantia", "intereses cesantia"]):
+                dic26[nit][8] += f['deb']
+            elif any(kw in palabras for kw in ["vacacion", "vacaciones"]):
+                dic26[nit][7] += f['deb']
+            elif any(kw in nom for kw in ["prima de servicio", "prima servicio"]):
+                dic26[nit][10] += f['deb']
+            elif any(kw in palabras for kw in ["incapacidad", "incapacidades"]):
+                dic26[nit][9] += f['deb']
+            elif any(kw in nom for kw in ["aporte salud", "aporte eps", "aportes eps", "aportes a eps"]):
+                dic26[nit][12] += f['deb']
+            elif any(kw in nom for kw in ["aporte pension", "aportes pension", "aportes a pension"]):
+                dic26[nit][13] += f['deb']
+            elif any(kw in palabras for kw in ["dotacion", "bonificacion", "auxilio"]):
+                dic26[nit][10] += f['deb']
+            elif any(kw in palabras for kw in ["honorario", "honorarios"]):
+                d2 = t(nit)
+                if d2['td'] == "13":
+                    dic26[nit][3] += f['deb']
+                else:
+                    dic26[nit][10] += f['deb']
+            elif any(kw in palabras for kw in ["parafiscal", "parafiscales", "icbf", "sena",
+                                                "compensar", "comfama", "cafam"]):
+                pass  # Parafiscales no van en F2276
+            else:
+                dic26[nit][10] += f['deb']  # Otros pagos laborales
 
     for f in bal:
         if en_rango(f['cta'], "2365", "2365") and f['nit'] in dic26:
@@ -537,17 +1060,13 @@ def procesar_balance(df_balance):
     fila = 2
     for nit, v in sorted(dic26.items()):
         d = t(nit)
-        ws.cell(fila, 1).value = d['td']
-        ws.cell(fila, 2).value = nit
-        ws.cell(fila, 3).value = d['dv']
-        ws.cell(fila, 4).value = d['a1']
-        ws.cell(fila, 5).value = d['a2']
-        ws.cell(fila, 6).value = d['n1']
-        ws.cell(fila, 7).value = d['n2']
-        ws.cell(fila, 8).value = d['dir']
-        ws.cell(fila, 9).value = d['dp']
-        ws.cell(fila, 10).value = d['mp']
-        ws.cell(fila, 11).value = "169"
+        for ci, val in [(1, d['td']), (2, nit), (3, d['dv']),
+                        (4, d['a1']), (5, d['a2']), (6, d['n1']), (7, d['n2']),
+                        (8, d['dir']), (9, d['dp']), (10, d['mp']),
+                        (11, d.get('pais', '169') or '169')]:
+            cell = ws.cell(fila, ci)
+            cell.value = val
+            cell.number_format = '@'
         for i in range(19):
             ws.cell(fila, 12 + i).value = int(v[i])
             ws.cell(fila, 12 + i).number_format = '#,##0'
@@ -555,7 +1074,102 @@ def procesar_balance(df_balance):
         fila += 1
     resultados['F2276 Rentas Trabajo'] = len(dic26)
 
+    # ========== VALIDACION TERCEROS (vs RUES) ==========
+    validaciones = []
+    if datos_rues:
+        warn_fill = PatternFill('solid', fgColor='FFF3CD')  # Amarillo
+        err_fill = PatternFill('solid', fgColor='F8D7DA')   # Rojo
+        ok_fill = PatternFill('solid', fgColor='D4EDDA')    # Verde
+
+        h_val = ["NIT", "Campo", "Valor en Balance", "Valor en RUES", "Estado", "Observación"]
+        ws_val = nueva_hoja("Validacion Terceros", h_val)
+
+        fila_val = 2
+        for nit_v, info_rues in sorted(datos_rues.items()):
+            if nit_v not in direc or nit_v == NM:
+                continue
+
+            d_bal = direc[nit_v]
+
+            # --- Validar Dígito de Verificación ---
+            dv_calculado = calc_dv(nit_v)
+            dv_rues = str(info_rues.get('dv', '')).strip()
+            if dv_rues and dv_calculado:
+                if dv_calculado == dv_rues:
+                    estado_dv = "✅ OK"
+                    fill_dv = ok_fill
+                    obs_dv = "DV coincide con RUES y cálculo"
+                else:
+                    estado_dv = "❌ ERROR"
+                    fill_dv = err_fill
+                    obs_dv = f"DV calculado={dv_calculado}, RUES={dv_rues}. REVISAR"
+                    validaciones.append(('dv_error', nit_v))
+
+                ws_val.cell(fila_val, 1).value = nit_v
+                ws_val.cell(fila_val, 1).number_format = '@'
+                ws_val.cell(fila_val, 2).value = "Dígito Verificación"
+                ws_val.cell(fila_val, 3).value = dv_calculado
+                ws_val.cell(fila_val, 4).value = dv_rues
+                ws_val.cell(fila_val, 5).value = estado_dv
+                ws_val.cell(fila_val, 6).value = obs_dv
+                for c in range(1, 7):
+                    ws_val.cell(fila_val, c).fill = fill_dv
+                    ws_val.cell(fila_val, c).font = Font(size=10, name='Arial')
+                    ws_val.cell(fila_val, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
+                fila_val += 1
+
+            # --- Validar Razón Social ---
+            rs_balance = d_bal.get('rs', '').strip()
+            # Si es persona natural, armar nombre completo del balance
+            if d_bal.get('td') == '13':
+                partes = [d_bal.get('a1',''), d_bal.get('a2',''), d_bal.get('n1',''), d_bal.get('n2','')]
+                rs_balance = ' '.join(p for p in partes if p).strip()
+
+            rs_rues = info_rues.get('razon_social', '').strip()
+
+            if rs_rues and rs_balance:
+                sim = similitud_textos(rs_balance, rs_rues)
+                rs_norm_bal = normalizar_texto(rs_balance)
+                rs_norm_rues = normalizar_texto(rs_rues)
+
+                if rs_norm_bal == rs_norm_rues:
+                    estado_rs = "✅ OK"
+                    fill_rs = ok_fill
+                    obs_rs = "Razón social coincide exactamente"
+                elif sim >= 0.7:
+                    estado_rs = "⚠️ SIMILAR"
+                    fill_rs = warn_fill
+                    obs_rs = f"Similitud {sim:.0%}. Verificar ortografía"
+                    validaciones.append(('rs_warn', nit_v))
+                else:
+                    estado_rs = "❌ DIFERENTE"
+                    fill_rs = err_fill
+                    obs_rs = f"Similitud {sim:.0%}. Razón social NO coincide con RUES"
+                    validaciones.append(('rs_error', nit_v))
+
+                ws_val.cell(fila_val, 1).value = nit_v
+                ws_val.cell(fila_val, 1).number_format = '@'
+                ws_val.cell(fila_val, 2).value = "Razón Social"
+                ws_val.cell(fila_val, 3).value = rs_balance
+                ws_val.cell(fila_val, 4).value = rs_rues
+                ws_val.cell(fila_val, 5).value = estado_rs
+                ws_val.cell(fila_val, 6).value = obs_rs
+                for c in range(1, 7):
+                    ws_val.cell(fila_val, c).fill = fill_rs
+                    ws_val.cell(fila_val, c).font = Font(size=10, name='Arial')
+                    ws_val.cell(fila_val, c).border = Border(top=thin, bottom=thin, left=thin, right=thin)
+                fila_val += 1
+
+        # Ajustar anchos
+        anchos_val = [18, 22, 40, 40, 16, 50]
+        for i, ancho in enumerate(anchos_val, 1):
+            ws_val.column_dimensions[openpyxl.utils.get_column_letter(i)].width = ancho
+        ws_val.freeze_panes = 'A2'
+
     # ========== RESUMEN ==========
+    # Contar terceros con dirección
+    n_con_dir = sum(1 for d in direc.values() if d.get('dir', ''))
+
     wsr = wb.active
     wsr.title = "Resumen"
     wsr['A1'] = "RESUMEN PROCESAMIENTO EXOGENA AG 2025"
@@ -566,11 +1180,35 @@ def procesar_balance(df_balance):
     wsr['B4'] = len(bal)
     wsr['A5'] = "Terceros:"
     wsr['B5'] = len(direc)
-    wsr['A7'] = "Formato"
-    wsr['B7'] = "Registros"
-    wsr['A7'].font = Font(bold=True)
-    wsr['B7'].font = Font(bold=True)
-    row = 8
+    wsr['A6'] = "Con dirección:"
+    wsr['B6'] = n_con_dir
+
+    # Info de validación en resumen
+    if datos_rues:
+        n_dv_err = sum(1 for tipo, _ in validaciones if tipo == 'dv_error')
+        n_rs_err = sum(1 for tipo, _ in validaciones if tipo == 'rs_error')
+        n_rs_warn = sum(1 for tipo, _ in validaciones if tipo == 'rs_warn')
+        wsr['A7'] = "Validados vs RUES:"
+        wsr['B7'] = len(datos_rues)
+        wsr['A8'] = "  ❌ DV con error:"
+        wsr['B8'] = n_dv_err
+        if n_dv_err > 0:
+            wsr['B8'].font = Font(bold=True, color='CC0000')
+        wsr['A9'] = "  ❌ Razón social diferente:"
+        wsr['B9'] = n_rs_err
+        if n_rs_err > 0:
+            wsr['B9'].font = Font(bold=True, color='CC0000')
+        wsr['A10'] = "  ⚠️ Razón social similar:"
+        wsr['B10'] = n_rs_warn
+        fila_inicio_formatos = 12
+    else:
+        fila_inicio_formatos = 8
+
+    wsr.cell(fila_inicio_formatos, 1).value = "Formato"
+    wsr.cell(fila_inicio_formatos, 2).value = "Registros"
+    wsr.cell(fila_inicio_formatos, 1).font = Font(bold=True)
+    wsr.cell(fila_inicio_formatos, 2).font = Font(bold=True)
+    row = fila_inicio_formatos + 1
     for nombre, n in resultados.items():
         wsr.cell(row, 1).value = nombre
         wsr.cell(row, 2).value = n
@@ -590,7 +1228,7 @@ def procesar_balance(df_balance):
                 ws2.column_dimensions[openpyxl.utils.get_column_letter(col)].width = 16
             ws2.freeze_panes = 'A2'
 
-    return wb, resultados, len(bal), len(direc)
+    return wb, resultados, len(bal), len(direc), n_con_dir, validaciones
 
 
 # === INTERFAZ ===
@@ -622,6 +1260,114 @@ with col2:
     nombre_hoja = st.text_input("Nombre de la hoja (dejar vacío = primera hoja)", value="",
                                  help="Si tu archivo tiene varias hojas, escribe el nombre de la del balance")
 
+st.divider()
+
+# === DIRECTORIO DE TERCEROS (DIRECCIONES) ===
+st.markdown("### 📋 Directorio de Terceros (opcional)")
+st.markdown("""
+Sube un archivo con las **direcciones** de tus terceros para que aparezcan en los formatos.
+Si no lo subes, el programa puede **buscar las direcciones automáticamente** en internet (RUES).
+""")
+
+col_dir1, col_dir2 = st.columns([2, 1])
+
+with col_dir1:
+    st.markdown("""
+    | Col A | Col B | Col C | Col D | Col E |
+    |-------|-------|-------|-------|-------|
+    | NIT | Dirección | Cod Depto | Cod Municipio | Cod País |
+
+    Ejemplo: `890904997 | CL 30 65-15 | 05 | 001 | 169`
+
+    *Los códigos deben ser formato DIAN (ej: Antioquia = 05, Medellín = 001, Colombia = 169)*
+    """)
+    uploaded_dir = st.file_uploader("Selecciona el archivo de directorio", type=['xlsx', 'xls', 'csv'],
+                                     key="directorio")
+
+with col_dir2:
+    st.markdown("#### 📥 Plantilla")
+    st.markdown("Descarga la plantilla y llénala con los datos de tus terceros:")
+
+    # Generar plantilla de directorio
+    from io import BytesIO as _BytesIO
+    wb_plantilla = openpyxl.Workbook()
+    ws_p = wb_plantilla.active
+    ws_p.title = "Directorio"
+    headers_p = ["NIT", "Direccion", "Cod Departamento", "Cod Municipio", "Cod Pais"]
+    hf_p = PatternFill('solid', fgColor='1F4E79')
+    hfont_p = Font(bold=True, color='FFFFFF', size=10, name='Arial')
+    for c, h in enumerate(headers_p, 1):
+        cell = ws_p.cell(1, c, h)
+        cell.font = hfont_p
+        cell.fill = hf_p
+        cell.alignment = Alignment(horizontal='center')
+    # Ejemplos
+    ejemplos = [
+        ("890904997", "CL 30 65-15", "05", "001", "169"),
+        ("800123456", "KR 7 32-16 OF 801", "11", "001", "169"),
+        ("900555111", "AV 6 NORTE 23-45", "76", "001", "169"),
+    ]
+    for r, ej in enumerate(ejemplos, 2):
+        for c, v in enumerate(ej, 1):
+            cell = ws_p.cell(r, c)
+            cell.value = v
+            cell.number_format = '@'
+
+    # Hoja de códigos DIAN
+    ws_cod = wb_plantilla.create_sheet("Codigos DIAN")
+    ws_cod['A1'] = "DEPARTAMENTOS DIAN"
+    ws_cod['A1'].font = Font(bold=True, size=11)
+    ws_cod['D1'] = "PAISES"
+    ws_cod['D1'].font = Font(bold=True, size=11)
+    dptos = [
+        ("05","Antioquia"),("08","Atlántico"),("11","Bogotá DC"),("13","Bolívar"),
+        ("15","Boyacá"),("17","Caldas"),("18","Caquetá"),("19","Cauca"),("20","Cesar"),
+        ("23","Córdoba"),("25","Cundinamarca"),("27","Chocó"),("41","Huila"),
+        ("44","La Guajira"),("47","Magdalena"),("50","Meta"),("52","Nariño"),
+        ("54","Norte Santander"),("63","Quindío"),("66","Risaralda"),("68","Santander"),
+        ("70","Sucre"),("73","Tolima"),("76","Valle del Cauca"),("81","Arauca"),
+        ("85","Casanare"),("86","Putumayo"),("88","San Andrés"),("91","Amazonas"),
+        ("94","Guainía"),("95","Guaviare"),("97","Vaupés"),("99","Vichada"),
+    ]
+    ws_cod['A2'] = "Código"
+    ws_cod['B2'] = "Departamento"
+    ws_cod['A2'].font = Font(bold=True)
+    ws_cod['B2'].font = Font(bold=True)
+    for i, (cod, nom) in enumerate(dptos, 3):
+        ws_cod.cell(i, 1).value = cod
+        ws_cod.cell(i, 1).number_format = '@'
+        ws_cod.cell(i, 2).value = nom
+    ws_cod['D2'] = "Código"
+    ws_cod['E2'] = "País"
+    ws_cod['D2'].font = Font(bold=True)
+    ws_cod['E2'].font = Font(bold=True)
+    paises_ej = [("169","Colombia"),("249","Estados Unidos"),("200","México"),
+                 ("210","Panamá"),("234","España"),("240","Venezuela")]
+    for i, (cod, nom) in enumerate(paises_ej, 3):
+        ws_cod.cell(i, 4).value = cod
+        ws_cod.cell(i, 5).value = nom
+
+    for col in range(1, 6):
+        ws_p.column_dimensions[openpyxl.utils.get_column_letter(col)].width = 22
+        ws_cod.column_dimensions[openpyxl.utils.get_column_letter(col)].width = 20
+
+    buf_p = _BytesIO()
+    wb_plantilla.save(buf_p)
+    buf_p.seek(0)
+    st.download_button("📥 Descargar plantilla directorio",
+                       data=buf_p.getvalue(),
+                       file_name="plantilla_directorio_terceros.xlsx",
+                       mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+
+# Opción de búsqueda automática y validación
+buscar_auto = st.checkbox("🌐 Consultar RUES: buscar direcciones + validar razón social y DV",
+                           value=False,
+                           help="Consulta el Registro Único Empresarial (RUES) para buscar direcciones, "
+                                "verificar que el dígito de verificación sea correcto y que la razón social "
+                                "coincida con la inscrita en el RUT. Puede tardar varios minutos.")
+
+st.divider()
+
 if uploaded_file:
     try:
         if uploaded_file.name.endswith('.csv'):
@@ -635,20 +1381,109 @@ if uploaded_file:
         with st.expander("👁 Vista previa del balance", expanded=False):
             st.dataframe(df.head(20), use_container_width=True)
 
+        # Cargar directorio si fue subido
+        df_dir = None
+        if uploaded_dir:
+            try:
+                if uploaded_dir.name.endswith('.csv'):
+                    df_dir = pd.read_csv(uploaded_dir, dtype=str)
+                else:
+                    df_dir = pd.read_excel(uploaded_dir, dtype=str)
+                st.success(f"✅ Directorio cargado: **{len(df_dir)} terceros** con direcciones")
+            except Exception as e:
+                st.warning(f"⚠️ No se pudo leer el directorio: {str(e)}. Se procesará sin direcciones.")
+
         st.divider()
 
         if st.button("🚀 PROCESAR EXÓGENA", type="primary", use_container_width=True):
+
+            # Búsqueda en RUES si se activó
+            datos_rues = None
+            df_dir_auto = None
+            if buscar_auto:
+                st.info("🌐 Consultando RUES: buscando direcciones y validando terceros...")
+
+                # Extraer NITs únicos del balance
+                nits_unicos = set()
+                for _, row in df.iterrows():
+                    nit_val = safe_str(row.iloc[3])
+                    if nit_val and nit_val != NM:
+                        if '.' in nit_val:
+                            try: nit_val = str(int(float(nit_val)))
+                            except: pass
+                        nits_unicos.add(nit_val)
+
+                nits_list = sorted(list(nits_unicos))
+                progress_bar = st.progress(0, text="🔍 Iniciando consulta RUES...")
+
+                datos_rues, api_fallida = buscar_info_rues(nits_list, progress_bar)
+                progress_bar.empty()
+
+                if datos_rues:
+                    n_con_dir_rues = sum(1 for d in datos_rues.values() if d.get('dir'))
+                    n_con_rs = sum(1 for d in datos_rues.values() if d.get('razon_social'))
+                    st.success(f"✅ RUES: **{len(datos_rues)}** terceros encontrados — "
+                               f"{n_con_dir_rues} con dirección, {n_con_rs} con razón social")
+
+                    # Si no se subió directorio, usar RUES para direcciones
+                    if not uploaded_dir:
+                        rows_auto = []
+                        for nit_e, datos_e in datos_rues.items():
+                            if datos_e.get('dir'):
+                                rows_auto.append({
+                                    'NIT': nit_e,
+                                    'Direccion': datos_e['dir'],
+                                    'Cod_Depto': datos_e['dp'],
+                                    'Cod_Mpio': datos_e['mp'],
+                                    'Cod_Pais': datos_e.get('pais', '169'),
+                                })
+                        if rows_auto:
+                            df_dir_auto = pd.DataFrame(rows_auto)
+
+                elif api_fallida:
+                    st.warning("⚠️ No se pudo conectar con RUES. Se procesará sin validación.")
+                else:
+                    st.warning("⚠️ No se encontraron terceros en RUES.")
+
+            dir_final = df_dir if df_dir is not None else df_dir_auto
+
             with st.spinner("Procesando formatos..."):
-                wb, resultados, n_filas, n_terceros = procesar_balance(df)
+                wb, resultados, n_filas, n_terceros, n_con_dir, validaciones = procesar_balance(df, dir_final, datos_rues)
 
             st.markdown('<div class="success-box">', unsafe_allow_html=True)
             st.markdown("### ✅ Procesamiento completado")
             st.markdown('</div>', unsafe_allow_html=True)
 
-            c1, c2, c3 = st.columns(3)
+            c1, c2, c3, c4 = st.columns(4)
             c1.metric("Filas procesadas", f"{n_filas:,}")
             c2.metric("Terceros identificados", f"{n_terceros:,}")
-            c3.metric("Registros generados", f"{sum(resultados.values()):,}")
+            c3.metric("Con dirección", f"{n_con_dir:,}")
+            c4.metric("Registros generados", f"{sum(resultados.values()):,}")
+
+            # Mostrar resultados de validación si hay
+            if validaciones:
+                n_dv_err = sum(1 for tipo, _ in validaciones if tipo == 'dv_error')
+                n_rs_err = sum(1 for tipo, _ in validaciones if tipo == 'rs_error')
+                n_rs_warn = sum(1 for tipo, _ in validaciones if tipo == 'rs_warn')
+
+                st.markdown("### 🔍 Validación vs RUES")
+                cv1, cv2, cv3 = st.columns(3)
+                if n_dv_err > 0:
+                    cv1.error(f"❌ **{n_dv_err}** DV con error")
+                else:
+                    cv1.success("✅ Todos los DV correctos")
+                if n_rs_err > 0:
+                    cv2.error(f"❌ **{n_rs_err}** razones sociales diferentes")
+                else:
+                    cv2.success("✅ Razones sociales correctas")
+                if n_rs_warn > 0:
+                    cv3.warning(f"⚠️ **{n_rs_warn}** razones sociales similares (verificar)")
+                else:
+                    cv3.success("✅ Sin advertencias")
+
+                st.info("📋 Revisa la hoja **'Validacion Terceros'** en el archivo descargado para ver el detalle completo.")
+            elif buscar_auto and datos_rues:
+                st.success("✅ Validación completada: no se encontraron diferencias.")
 
             st.markdown("### 📋 Resultados por formato")
             cols = st.columns(5)
