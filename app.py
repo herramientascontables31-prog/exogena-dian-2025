@@ -181,6 +181,13 @@ BANCOS_COLOMBIANOS = {
     "lulo":             ("900943055", "LULO BANK S.A."),
 }
 
+NIT_DIAN = "800197268"
+CUENTAS_IMPUESTOS_DIAN = ["2365", "2367", "2404", "2408", "2412"]
+
+# Conceptos F1001 que solo deben reportar entidades (NIT jurídico)
+# Los pagos de seguridad social deben coincidir con la planilla PILA
+CONCEPTOS_SOLO_ENTIDADES = {"5011", "5012", "5013", "5023", "5024", "5025", "5027"}
+
 # === FUNCIONES CORE ===
 def calc_dv(n):
     n = str(n).replace(".", "").replace("-", "").strip()
@@ -643,7 +650,6 @@ PARAM_1003 = [
     ("1308", "13551595", "13551599"),
     ("1307", "135518", "135518"),
     ("1311", "135599", "135599"),
-    ("1303", "135515", "135515"),
 ]
 
 # =====================================================================
@@ -1051,12 +1057,21 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     dic = defaultdict(lambda: [0.0] * 5)
     nits_en_1001 = set()
     CONCEPTOS_NOMINA = {"5001", "5024", "5025", "5027", "5023"}
+    nits_pila_persona = []  # Para alertar sobre personas en conceptos de entidad
     for f in bal:
         if not f['nit']: continue
         valor = abs(f['saldo'])
         if valor == 0: continue
         conc, ded = concepto_1001(f['cta'], f.get('nom_cta', ''))
         if not conc or conc in CONCEPTOS_NOMINA: continue
+
+        # Conceptos 5011, 5012, 5013, etc. solo para entidades (NIT jurídico)
+        if conc in CONCEPTOS_SOLO_ENTIDADES:
+            td = detectar_tipo_doc(f['nit'])
+            if td == '13':  # Persona natural → reclasificar a 5016
+                nits_pila_persona.append((f['nit'], conc, valor))
+                conc = '5016'
+
         k = (conc, f['nit'])
         tipo_ded = clasificar_deducibilidad(f['cta'], f.get('nom_cta', ''))
         if tipo_ded == 'gmf':
@@ -1278,10 +1293,37 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
 
     # =====================================================================
     # F1009 — Cuentas por Pagar
+    # CORRECCIÓN 6: Impuestos (2365, 2367, 2404, 2408) agrupados a DIAN
     # =====================================================================
     h = ["Concepto", "Tipo Doc", "No ID", "DV", "Apellido1", "Apellido2", "Nombre1", "Nombre2",
          "Razon Social", "Direccion", "Dpto", "Mpio", "Saldo CxP Dic31"]
     ws = nueva_hoja("F1009 CxP", h)
+
+    # Pre-cálculo: saldos de impuestos a nivel de cuenta madre (sin tercero)
+    saldos_impuestos_dian = {}
+    CI = col_map.get('cuenta', 0)
+    TI = col_map.get('nit', 2)
+    SI = col_map.get('saldo', -1) if 'saldo' in col_map else None
+    if SI is None:
+        DI = col_map.get('debitos', 3)
+        CRI = col_map.get('creditos', 4)
+    for _, row in df_balance.iterrows():
+        cta_raw = safe_str(row.iloc[CI]).replace('.', '').strip()
+        nit_raw = safe_str(row.iloc[TI]).strip()
+        # Filas sin tercero = resumen de cuenta
+        if not nit_raw or nit_raw == '0' or nit_raw == '':
+            for prefix in CUENTAS_IMPUESTOS_DIAN:
+                if cta_raw == prefix or (cta_raw.startswith(prefix) and len(cta_raw) <= len(prefix) + 2):
+                    if SI is not None:
+                        saldo_v = abs(safe_num(row.iloc[SI]))
+                    else:
+                        deb_v = safe_num(row.iloc[DI])
+                        cre_v = safe_num(row.iloc[CRI])
+                        saldo_v = abs(cre_v - deb_v)
+                    if saldo_v > 0:
+                        if prefix not in saldos_impuestos_dian:
+                            saldos_impuestos_dian[prefix] = 0
+                        saldos_impuestos_dian[prefix] = max(saldos_impuestos_dian[prefix], saldo_v)
 
     dic9 = defaultdict(float)
     for f in bal:
@@ -1289,9 +1331,26 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         cta = f['cta']
         s = abs(f['saldo'])
         if s == 0: continue
+        # Saltar cuentas de impuestos (van agrupadas a DIAN)
+        es_impuesto = any(cta.startswith(p) for p in CUENTAS_IMPUESTOS_DIAN)
+        if es_impuesto:
+            continue
         conc = buscar_concepto(cta, PARAM_1009, f.get('nom_cta', ''))
         if not conc: continue
         dic9[(conc, f['nit'])] += s
+
+    # Agregar impuestos agrupados a nombre de la DIAN
+    total_impuestos_dian = sum(saldos_impuestos_dian.values())
+    if total_impuestos_dian > 0:
+        dic9[("2210", NIT_DIAN)] = total_impuestos_dian
+        # Asegurar que DIAN esté en el directorio
+        if NIT_DIAN not in direc:
+            direc[NIT_DIAN] = {
+                'td': '31', 'dv': calc_dv(NIT_DIAN),
+                'a1': '', 'a2': '', 'n1': '', 'n2': '',
+                'rs': 'DIRECCIÓN DE IMPUESTOS Y ADUANAS NACIONALES - DIAN',
+                'dir': 'CRA 8 # 6C-38', 'dp': '11', 'mp': '11001', 'pais': '169',
+            }
 
     final9 = {}
     men9 = defaultdict(float)
@@ -1725,29 +1784,39 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
             ws2.freeze_panes = 'A2'
 
     # =====================================================================
-    # HOJA: RESUMEN DE VALORES POR FORMATO (para comparación rápida)
+    # HOJA: RESUMEN VALORES — CONFRONTACIÓN EXÓGENA vs BALANCE
+    # (se mueve a 2da posición al final)
     # =====================================================================
     ws_rv = wb.create_sheet("Resumen Valores")
 
-    rv_header_fill = PatternFill('solid', fgColor='1F4E79')
-    rv_header_font = Font(bold=True, color='FFFFFF', size=11, name='Calibri')
+    rv_hf = PatternFill('solid', fgColor='1F4E79')
+    rv_hfont = Font(bold=True, color='FFFFFF', size=10, name='Calibri')
     rv_thin = Side(style='thin', color='B0B0B0')
     rv_border = Border(top=rv_thin, bottom=rv_thin, left=rv_thin, right=rv_thin)
-    rv_num_fmt = '#,##0'
+    rv_nfmt = '#,##0'
     rv_titulo_fill = PatternFill('solid', fgColor='D6EAF8')
+    rv_ok_fill = PatternFill('solid', fgColor='D5F5E3')
+    rv_warn_fill = PatternFill('solid', fgColor='FDF2E9')
+    rv_err_fill = PatternFill('solid', fgColor='FADBD8')
+    rv_nota_fill = PatternFill('solid', fgColor='FEF9E7')
     rv_alt1 = PatternFill('solid', fgColor='FFFFFF')
     rv_alt2 = PatternFill('solid', fgColor='F8F9FA')
+    rv_sub_font = Font(size=9, name='Calibri', color='666666', italic=True)
+    rv_norm_font = Font(size=10, name='Calibri')
+    rv_bold_font = Font(size=10, name='Calibri', bold=True)
 
-    rv_headers = ["Formato", "Concepto", "Registros", "Valor Total", "Descripción"]
+    rv_headers = ["Formato", "Concepto", "Regs", "Total Exógena",
+                  "Cuenta Balance", "Total Balance", "Diferencia", "Estado"]
+    NC_RV = len(rv_headers)
     for c, h_txt in enumerate(rv_headers, 1):
         cell = ws_rv.cell(1, c, h_txt)
-        cell.font = rv_header_font; cell.fill = rv_header_fill
+        cell.font = rv_hfont; cell.fill = rv_hf
         cell.alignment = Alignment(horizontal='center', wrap_text=True)
         cell.border = rv_border
 
     # Calcular totales por formato
-    total_f1001_pagos = sum(v[0] for v in final.values())
-    total_f1001_retfte = sum(v[1] for v in final.values())
+    total_f1001_pagos = sum(v[0] + v[1] for v in final.values())
+    total_f1001_retfte = sum(v[2] for v in final.values())
     total_f1001_retiva = sum(v[4] for v in final.values())
     total_f1003 = sum(v[1] for v in dic3.values()) if dic3 else 0
     total_f1005 = sum(dic5.values()) if dic5 else 0
@@ -1759,107 +1828,162 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     total_f1012 = sum(dic12.values()) if dic12 else 0
     total_f2276 = sum(sum(v) for v in dic26.values()) if dic26 else 0
 
-    lineas = [
-        # (formato, concepto, registros, valor, descripcion)
-        ("", "📋 MOVIMIENTOS DEL AÑO (INGRESOS, COSTOS Y GASTOS)", "", "", ""),
-        ("F1001", "Pagos y abonos en cuenta", len(final), total_f1001_pagos,
-         "Total de pagos o abonos a terceros (costos, gastos, compras)"),
-        ("F1001", "  → Retención Fte practicada", "", total_f1001_retfte,
-         "Retención en la fuente que le practicó a terceros"),
-        ("F1001", "  → Retención IVA practicada", "", total_f1001_retiva,
-         "Retención de IVA que le practicó a terceros"),
-        ("F1003", "Retenciones que le practicaron", len(dic3), total_f1003,
-         "Retenciones en la fuente que le practicaron al declarante"),
-        ("F1005", "IVA Descontable", len(dic5), total_f1005,
-         "IVA pagado en compras. Debe coincidir con Form 300"),
-        ("F1006", "IVA Generado", len(dic6), total_f1006,
-         "IVA cobrado en ventas. Debe coincidir con Form 300"),
-        ("F1007", "Ingresos recibidos", len(final7), total_f1007,
-         "Total ingresos por tercero. Debe coincidir con Form 110/210 y Form 300"),
-        ("F2276", "Rentas de trabajo y pensiones", len(dic26), total_f2276,
-         "Pagos laborales por empleado (salarios, prestaciones, aportes)"),
-        ("", "📋 SALDOS A DICIEMBRE 31", "", "", ""),
-        ("F1008", "Cuentas por cobrar", len(final8), total_f1008,
-         "Saldos deudores a Dic 31. Debe coincidir con Renta patrimonio"),
-        ("F1009", "Cuentas por pagar", len(final9), total_f1009,
-         "Saldos acreedores a Dic 31. Debe coincidir con Renta pasivos"),
-        ("F1010", "Socios y accionistas", len(dic10), total_f1010,
-         "Capital social. Debe coincidir con Renta patrimonio"),
-        ("F1012", "Inversiones y ctas bancarias", len(dic12), total_f1012,
-         "Saldos en bancos e inversiones. Debe coincidir con Renta patrimonio"),
-        ("", "", "", "", ""),
-        ("", "📋 TOTALES DE REFERENCIA (del balance)", "", "", ""),
-        ("Balance", "Ingresos (cta 4xxx)", "", total_ingresos_4,
-         "Total cuenta 4 del balance. Comparar con F1007"),
-        ("Balance", "Gastos (cta 51+52+53)", "", total_gastos_5,
-         "Gastos operacionales. Comparar con deducciones de renta"),
-        ("Balance", "Costos (cta 6xxx)", "", total_costos_6,
-         "Costo de ventas. Comparar con costos de renta"),
-        ("Balance", "Nómina (cta 5105)", "", total_nomina,
-         "Gasto de nómina. Comparar con F2276"),
-    ]
+    # Calcular autorretenciones (2365 total balance - retenciones F1001)
+    total_2365_balance = sum(abs(f['saldo']) for f in bal
+                            if f['cta'].startswith('2365') and not f.get('nit'))
+    if total_2365_balance == 0:
+        total_2365_balance = sum(abs(f['saldo']) for f in bal
+                                if f['cta'] == '2365' and f.get('nit'))
+    posible_autoret = max(0, total_ret_fte_2365 - total_f1001_retfte)
 
     rv_row = 2
-    for linea in lineas:
-        formato, concepto, registros, valor, descripcion = linea
-        if concepto.startswith("📋"):
-            # Título de sección
-            for c in range(1, 6):
-                ws_rv.cell(rv_row, c).fill = rv_titulo_fill
-                ws_rv.cell(rv_row, c).font = Font(bold=True, size=10, name='Calibri', color='1F4E79')
-                ws_rv.cell(rv_row, c).border = rv_border
-            ws_rv.cell(rv_row, 2).value = concepto
-            ws_rv.merge_cells(start_row=rv_row, start_column=1, end_row=rv_row, end_column=5)
-            ws_rv.row_dimensions[rv_row].height = 26
-        elif not concepto:
-            pass  # línea vacía
-        else:
-            alt = rv_alt1 if rv_row % 2 == 0 else rv_alt2
-            ws_rv.cell(rv_row, 1).value = formato
-            ws_rv.cell(rv_row, 2).value = concepto
-            ws_rv.cell(rv_row, 3).value = registros if registros != "" else None
-            ws_rv.cell(rv_row, 4).value = int(valor) if valor and valor != "" else None
-            ws_rv.cell(rv_row, 5).value = descripcion
-            ws_rv.cell(rv_row, 4).number_format = rv_num_fmt
-            ws_rv.cell(rv_row, 3).alignment = Alignment(horizontal='center')
-            ws_rv.cell(rv_row, 4).alignment = Alignment(horizontal='right')
-            is_sub = concepto.startswith("  →")
-            for c in range(1, 6):
-                ws_rv.cell(rv_row, c).fill = alt
-                ws_rv.cell(rv_row, c).border = rv_border
-                if is_sub:
-                    ws_rv.cell(rv_row, c).font = Font(size=9, name='Calibri', color='666666', italic=True)
-                else:
-                    ws_rv.cell(rv_row, c).font = Font(size=10, name='Calibri')
+
+    def _rv_titulo(texto):
+        nonlocal rv_row
+        for c in range(1, NC_RV + 1):
+            ws_rv.cell(rv_row, c).fill = rv_titulo_fill
+            ws_rv.cell(rv_row, c).font = Font(bold=True, size=10, name='Calibri', color='1F4E79')
+            ws_rv.cell(rv_row, c).border = rv_border
+        ws_rv.cell(rv_row, 1).value = texto
+        ws_rv.merge_cells(start_row=rv_row, start_column=1, end_row=rv_row, end_column=NC_RV)
+        ws_rv.row_dimensions[rv_row].height = 26
         rv_row += 1
 
-    # Nota al pie
+    def _rv_linea(formato, concepto, regs, val_exo, cta_bal, val_bal, es_sub=False):
+        nonlocal rv_row
+        alt = rv_alt1 if rv_row % 2 == 0 else rv_alt2
+
+        ws_rv.cell(rv_row, 1).value = formato
+        ws_rv.cell(rv_row, 2).value = concepto
+        ws_rv.cell(rv_row, 3).value = regs if regs else None
+        ws_rv.cell(rv_row, 4).value = int(val_exo) if val_exo else None
+        ws_rv.cell(rv_row, 5).value = cta_bal
+        ws_rv.cell(rv_row, 6).value = int(val_bal) if val_bal else None
+        ws_rv.cell(rv_row, 4).number_format = rv_nfmt
+        ws_rv.cell(rv_row, 6).number_format = rv_nfmt
+        ws_rv.cell(rv_row, 3).alignment = Alignment(horizontal='center')
+
+        # Calcular diferencia y estado
+        if val_exo is not None and val_bal is not None and val_bal != "":
+            dif = int(val_exo or 0) - int(val_bal or 0)
+            ws_rv.cell(rv_row, 7).value = dif
+            ws_rv.cell(rv_row, 7).number_format = rv_nfmt
+            pct = abs(dif / val_bal * 100) if val_bal and val_bal != 0 else (100 if dif != 0 else 0)
+            if abs(dif) <= 1000:
+                estado = "✅ OK"; fill_e = rv_ok_fill
+            elif pct <= 5:
+                estado = "⚠️ Revisar"; fill_e = rv_warn_fill
+            else:
+                estado = "❌ Diferencia"; fill_e = rv_err_fill
+            ws_rv.cell(rv_row, 8).value = estado
+            ws_rv.cell(rv_row, 7).fill = fill_e
+            ws_rv.cell(rv_row, 8).fill = fill_e
+        else:
+            ws_rv.cell(rv_row, 7).value = None
+            ws_rv.cell(rv_row, 8).value = "ℹ️"
+
+        fnt = rv_sub_font if es_sub else rv_norm_font
+        for c in range(1, NC_RV + 1):
+            if not ws_rv.cell(rv_row, c).fill or ws_rv.cell(rv_row, c).fill == PatternFill():
+                ws_rv.cell(rv_row, c).fill = alt
+            ws_rv.cell(rv_row, c).font = fnt
+            ws_rv.cell(rv_row, c).border = rv_border
+        rv_row += 1
+
+    def _rv_nota(texto, color_fill=None):
+        nonlocal rv_row
+        fill = color_fill or rv_nota_fill
+        for c in range(1, NC_RV + 1):
+            ws_rv.cell(rv_row, c).fill = fill
+            ws_rv.cell(rv_row, c).border = rv_border
+        ws_rv.cell(rv_row, 1).value = texto
+        ws_rv.cell(rv_row, 1).font = Font(size=9, name='Calibri', color='996600', italic=True)
+        ws_rv.cell(rv_row, 1).alignment = Alignment(wrap_text=True)
+        ws_rv.merge_cells(start_row=rv_row, start_column=1, end_row=rv_row, end_column=NC_RV)
+        ws_rv.row_dimensions[rv_row].height = 35
+        rv_row += 1
+
+    # ========== SECCIÓN 1: INGRESOS, COSTOS Y GASTOS ==========
+    _rv_titulo("📋 MOVIMIENTOS DEL AÑO (INGRESOS, COSTOS Y GASTOS)")
+    _rv_linea("F1007", "Ingresos recibidos", len(final7),
+              total_f1007, "Cta 4xxx", total_ingresos_4)
+    _rv_linea("F1001", "Pagos y abonos en cuenta", len(final),
+              total_f1001_pagos, "Cta 5xxx + 6xxx", total_gastos_5 + total_costos_6)
+    _rv_linea("F1001", "  → Retención Fte practicada", "",
+              total_f1001_retfte, "Cta 2365", total_ret_fte_2365, es_sub=True)
+    _rv_linea("F1001", "  → Retención IVA practicada", "",
+              total_f1001_retiva, "Cta 2367", total_ret_iva_2367, es_sub=True)
+    _rv_linea("F1003", "Retenciones que le practicaron", len(dic3),
+              total_f1003, "Cta 1355 (débitos)", total_ret_1355)
+    _rv_linea("F1005", "IVA Descontable", len(dic5),
+              total_f1005, "Cta 2408 (compras)", total_iva_desc)
+    _rv_linea("F1006", "IVA Generado", len(dic6),
+              total_f1006, "Cta 2408 (ventas)", total_iva_gen)
+    _rv_linea("F2276", "Rentas de trabajo y pensiones", len(dic26),
+              total_f2276, "Cta 5105 (nómina)", total_nomina)
+
+    # Notas de seguridad social / PILA
+    _rv_nota("⚠️ CONCEPTOS 5011, 5012, 5013, 5023-5027: Solo reportan entidades (EPS, AFP, ARL, Cajas). "
+             "Estos valores deben coincidir con la planilla PILA. Verifique con el formato de pagos a la seguridad social.")
+
+    # Nota autorretenciones
+    if posible_autoret > 0:
+        _rv_nota(f"⚠️ AUTORRETENCIONES: La Cta 2365 del balance (${total_ret_fte_2365:,.0f}) es mayor que la RetFte del F1001 "
+                 f"(${total_f1001_retfte:,.0f}). La diferencia de ${posible_autoret:,.0f} podría corresponder a autorretenciones "
+                 f"(Cta 236575 / 236540). Estas NO se reportan en exógena por tercero — se declaran en Form 350 renglones 50-56.")
+
+    # ========== SECCIÓN 2: SALDOS A DICIEMBRE 31 ==========
+    _rv_titulo("📋 SALDOS A DICIEMBRE 31 (PATRIMONIO)")
+    _rv_linea("F1008", "Cuentas por cobrar", len(final8),
+              total_f1008, "Ctas 13xx (saldos)", None)
+    _rv_linea("F1009", "Cuentas por pagar", len(final9),
+              total_f1009, "Ctas 2xxx (saldos)", None)
+    _rv_linea("F1010", "Socios y accionistas", len(dic10),
+              total_f1010, "Cta 3xxx (capital)", None)
+    _rv_linea("F1012", "Inversiones y ctas bancarias", len(dic12),
+              total_f1012, "Ctas 1110-1120-12xx", None)
+
+    # ========== SECCIÓN 3: FORMATOS NO INCLUIDOS ==========
+    _rv_titulo("📋 FORMATOS QUE REQUIEREN INFORMACIÓN ADICIONAL")
+    _rv_nota("F1004 (Descuentos tributarios): Requiere datos manuales del contador.")
+    _rv_nota("F1010 (Socios): Se recomienda solicitar listado detallado de socios como información adicional.")
+    _rv_nota("F1011, F1647: Requieren datos manuales del contador.")
+
+    # Nota final
     rv_row += 1
     ws_rv.cell(rv_row, 1).value = (
-        "💡 Este resumen es informativo. Compare estos valores con las declaraciones tributarias "
-        "(Form 110/210 Renta, Form 300 IVA, Form 350 ReteFte) para validar la consistencia de la exógena."
+        "💡 NOTA INFORMATIVA: Los valores del balance corresponden a saldos acumulados con tercero. "
+        "Pueden existir diferencias por: cuantías menores agrupadas, ajustes, notas débito/crédito, "
+        "o cuentas que no tienen tercero asignado en el balance de prueba."
     )
     ws_rv.cell(rv_row, 1).font = Font(size=9, name='Calibri', color='999999', italic=True)
     ws_rv.cell(rv_row, 1).alignment = Alignment(wrap_text=True)
-    ws_rv.merge_cells(start_row=rv_row, start_column=1, end_row=rv_row, end_column=5)
-    ws_rv.row_dimensions[rv_row].height = 35
+    ws_rv.merge_cells(start_row=rv_row, start_column=1, end_row=rv_row, end_column=NC_RV)
+    ws_rv.row_dimensions[rv_row].height = 40
 
-    rv_anchos = [12, 35, 12, 22, 55]
+    rv_anchos = [10, 32, 6, 18, 18, 18, 16, 16]
     for i, a in enumerate(rv_anchos, 1):
         ws_rv.column_dimensions[openpyxl.utils.get_column_letter(i)].width = a
     ws_rv.freeze_panes = 'A2'
 
+    # === MOVER "Resumen Valores" a la posición 2 (después de "Resumen") ===
+    sheet_names = wb.sheetnames
+    idx_rv = sheet_names.index("Resumen Valores")
+    wb.move_sheet("Resumen Valores", offset=(1 - idx_rv))
+
     # === CRUCES EXÓGENA vs BALANCE (para dashboard) ===
     cruces = {
-        'F1007 Ingresos':       (total_f1007, total_ingresos_4),
-        'F1001 Pagos':          (total_f1001_pagos, total_gastos_5 + total_costos_6),
-        'F1005 IVA Descontable':(total_f1005, total_iva_desc),
-        'F1006 IVA Generado':   (total_f1006, total_iva_gen),
-        'F1003 Retenciones':    (total_f1003, total_ret_1355),
-        'F1008 CxC':            (total_f1008, None),
-        'F1009 CxP':            (total_f1009, None),
-        'F1012 Inversiones':    (total_f1012, None),
-        'F2276 Nómina':         (total_f2276, total_nomina),
+        'F1007 Ingresos':        (total_f1007, total_ingresos_4),
+        'F1001 Pagos':           (total_f1001_pagos, total_gastos_5 + total_costos_6),
+        '  → Ret Fte (F1001)':   (total_f1001_retfte, total_ret_fte_2365),
+        '  → Ret IVA (F1001)':   (total_f1001_retiva, total_ret_iva_2367),
+        'F1003 Retenciones':     (total_f1003, total_ret_1355),
+        'F1005 IVA Descontable': (total_f1005, total_iva_desc),
+        'F1006 IVA Generado':    (total_f1006, total_iva_gen),
+        'F2276 Nómina':          (total_f2276, total_nomina),
+        'F1008 CxC':             (total_f1008, None),
+        'F1009 CxP':             (total_f1009, None),
+        'F1012 Inversiones':     (total_f1012, None),
     }
 
     return wb, resultados, len(bal), len(direc), n_con_dir, nits_nuevos, cruces
@@ -1987,15 +2111,17 @@ if uploaded_file:
     st.caption("Compara los totales generados en cada formato contra las cuentas del balance de prueba.")
 
     etiquetas_balance = {
-        'F1007 Ingresos':       'Balance cta 4xxx',
-        'F1001 Pagos':          'Balance cta 5+6',
-        'F1005 IVA Descontable':'Cta 2408 (IVA)',
-        'F1006 IVA Generado':   'Cta 2408 (IVA)',
-        'F1003 Retenciones':    'Balance cta 1355',
-        'F1008 CxC':            'Saldos deudores a Dic 31',
-        'F1009 CxP':            'Saldos acreedores a Dic 31',
-        'F1012 Inversiones':    'Ctas 1110-1120',
-        'F2276 Nómina':         'Balance cta 5105',
+        'F1007 Ingresos':        'Cta 4xxx',
+        'F1001 Pagos':           'Cta 5xxx + 6xxx',
+        '  → Ret Fte (F1001)':   'Cta 2365',
+        '  → Ret IVA (F1001)':   'Cta 2367',
+        'F1003 Retenciones':     'Cta 1355 (déb)',
+        'F1005 IVA Descontable': 'Cta 2408',
+        'F1006 IVA Generado':    'Cta 2408',
+        'F1008 CxC':             'Ctas 13xx',
+        'F1009 CxP':             'Ctas 2xxx',
+        'F1012 Inversiones':     'Ctas 11xx-12xx',
+        'F2276 Nómina':          'Cta 5105',
     }
 
     cruce_data = []
@@ -2036,6 +2162,9 @@ if uploaded_file:
         with st.expander(f"⚠️ {len(alertas_cruce)} diferencia(s) mayores al 5%", expanded=True):
             for a in alertas_cruce:
                 st.warning(a)
+
+    st.info("💡 **Conceptos 5011, 5012, 5013 (seguros, EPS, AFP, ARL, Cajas):** Solo se reportan a entidades. "
+            "Estos valores deben coincidir con la planilla de pagos a la seguridad social (PILA).")
 
     if nits_nuevos:
         with st.expander(f"🆕 {len(nits_nuevos)} direcciones nuevas encontradas", expanded=False):
