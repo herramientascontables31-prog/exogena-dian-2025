@@ -7,14 +7,6 @@ from datetime import datetime
 from io import BytesIO
 import difflib
 
-# Google Sheets API (escritura automática)
-try:
-    import gspread
-    from google.oauth2.service_account import Credentials
-    GSPREAD_OK = True
-except ImportError:
-    GSPREAD_OK = False
-
 st.set_page_config(page_title="Exógena DIAN 2025", page_icon="📊", layout="wide")
 
 # === PROTECCIÓN CON CONTRASEÑA (Google Sheets) ===
@@ -25,107 +17,10 @@ st.set_page_config(page_title="Exógena DIAN 2025", page_icon="📊", layout="wi
 GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/TU_ID_AQUI/pub?output=csv"
 
 # === DIRECTORIO CENTRALIZADO DE TERCEROS ===
-# Opción 1 (solo lectura): URL CSV publicada
+# Google Sheet con NIT | Razón Social | Dirección | Cod Depto | Cod Municipio | Cod País | Tipo Doc | DV
+# Publicar como CSV: Archivo → Compartir → Publicar en la web → CSV
+# La app lo lee para buscar direcciones. Cuando encuentre nuevas, te las descarga para que las pegues.
 DIRECTORIO_CENTRAL_URL = "https://docs.google.com/spreadsheets/d/e/TU_ID_DIRECTORIO/pub?output=csv"
-
-# Opción 2 (lectura + escritura automática): ID del Google Sheet + cuenta de servicio
-# El ID es la parte entre /d/ y /edit en la URL del Sheet
-# Ejemplo: https://docs.google.com/spreadsheets/d/ABC123xyz/edit → ID = "ABC123xyz"
-DIRECTORIO_SHEET_ID = ""  # ← Pega aquí el ID de tu Google Sheet de directorio
-DIRECTORIO_HOJA_NOMBRE = "Directorio"  # Nombre de la hoja dentro del Sheet
-
-# === CONFIGURACIÓN CUENTA DE SERVICIO GOOGLE ===
-# Para escritura automática en Google Sheets:
-# 1. Ve a console.cloud.google.com → Crear proyecto
-# 2. Habilita "Google Sheets API"
-# 3. Crea una Cuenta de Servicio → descarga el JSON
-# 4. Comparte tu Google Sheet con el email de la cuenta de servicio (permisos de Editor)
-# 5. En Streamlit Cloud → Settings → Secrets → pega el JSON así:
-#
-#    [gcp_service_account]
-#    type = "service_account"
-#    project_id = "tu-proyecto"
-#    private_key_id = "..."
-#    private_key = "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
-#    client_email = "exogena@tu-proyecto.iam.gserviceaccount.com"
-#    client_id = "..."
-#    auth_uri = "https://accounts.google.com/o/oauth2/auth"
-#    token_uri = "https://oauth2.googleapis.com/token"
-#    auth_provider_x509_cert_url = "https://www.googleapis.com/oauth2/v1/certs"
-#    client_x509_cert_url = "..."
-
-def conectar_gsheets():
-    """Conecta a Google Sheets via cuenta de servicio. Retorna (client, error)."""
-    if not GSPREAD_OK:
-        return None, "gspread no instalado. Ejecuta: pip install gspread google-auth"
-    if not DIRECTORIO_SHEET_ID:
-        return None, "DIRECTORIO_SHEET_ID no configurado"
-    try:
-        creds_dict = dict(st.secrets.get("gcp_service_account", {}))
-        if not creds_dict:
-            return None, "Secreto gcp_service_account no configurado en Streamlit"
-        scopes = [
-            "https://www.googleapis.com/auth/spreadsheets",
-            "https://www.googleapis.com/auth/drive",
-        ]
-        creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
-        client = gspread.authorize(creds)
-        return client, None
-    except Exception as e:
-        return None, str(e)
-
-def agregar_direcciones_a_sheet(nits_nuevos):
-    """Agrega direcciones nuevas al Google Sheet centralizado.
-    Retorna (n_agregados, error)."""
-    client, err = conectar_gsheets()
-    if err:
-        return 0, err
-    try:
-        sh = client.open_by_key(DIRECTORIO_SHEET_ID)
-        ws = sh.worksheet(DIRECTORIO_HOJA_NOMBRE)
-        
-        # Leer NITs existentes para no duplicar
-        nits_existentes = set()
-        col_nits = ws.col_values(1)  # Columna A = NIT
-        for n in col_nits[1:]:  # Saltar header
-            nit_limpio = str(n).replace('.', '').replace('-', '').strip()
-            if nit_limpio:
-                nits_existentes.add(nit_limpio)
-        
-        # Preparar filas nuevas
-        filas_nuevas = []
-        for nit, info in sorted(nits_nuevos.items()):
-            if nit in nits_existentes:
-                continue
-            filas_nuevas.append([
-                nit,
-                info.get('razon', ''),
-                info.get('dir', ''),
-                info.get('dp', ''),
-                info.get('mp', ''),
-                info.get('pais', '169'),
-                info.get('td', ''),
-                info.get('dv', ''),
-            ])
-        
-        if filas_nuevas:
-            ws.append_rows(filas_nuevas, value_input_option='USER_ENTERED')
-        
-        return len(filas_nuevas), None
-    except Exception as e:
-        return 0, str(e)
-
-def sheets_escritura_disponible():
-    """Verifica si la escritura automática en Google Sheets está configurada."""
-    if not GSPREAD_OK:
-        return False
-    if not DIRECTORIO_SHEET_ID:
-        return False
-    try:
-        creds_dict = dict(st.secrets.get("gcp_service_account", {}))
-        return bool(creds_dict)
-    except:
-        return False
 
 # Contraseña de respaldo (funciona siempre, por si Google Sheets falla)
 CLAVE_ADMIN = "ExoDIAN-2025-ADMIN"
@@ -213,15 +108,6 @@ if st.session_state.get('nombre_cliente'):
         st.session_state.autenticado = False
         st.session_state.nombre_cliente = ""
         st.rerun()
-    
-    # Indicador de sincronización
-    st.sidebar.markdown("---")
-    if sheets_escritura_disponible():
-        st.sidebar.success("🔄 Sincronización automática **activa**")
-        st.sidebar.caption("Las direcciones nuevas se agregan al directorio centralizado automáticamente.")
-    else:
-        st.sidebar.warning("📋 Sincronización **manual**")
-        st.sidebar.caption("Las direcciones nuevas se descargan como CSV para pegar manualmente.")
 
 # === ESTILOS ===
 st.markdown("""
@@ -2645,72 +2531,86 @@ if uploaded_file:
 
             # Mostrar direcciones nuevas para agregar al directorio central
             if nits_nuevos:
-                can_write = sheets_escritura_disponible()
-                
-                if can_write:
-                    # === SINCRONIZACIÓN AUTOMÁTICA ===
-                    with st.expander(f"📋 **{len(nits_nuevos)} direcciones nuevas** encontradas", expanded=True):
-                        st.caption("Estas direcciones vienen del directorio del cliente y no estaban en tu base centralizada.")
-                        df_nuevos = pd.DataFrame([
-                            {
-                                'NIT': nit,
-                                'Razón Social': info['razon'],
-                                'Dirección': info['dir'],
-                                'Cod Depto': info['dp'],
-                                'Cod Municipio': info['mp'],
-                            }
-                            for nit, info in sorted(nits_nuevos.items())
-                        ])
-                        st.dataframe(df_nuevos, use_container_width=True, hide_index=True)
-                        
-                        if st.button("🔄 Agregar automáticamente al directorio centralizado", type="primary", use_container_width=True):
-                            with st.spinner("Sincronizando con Google Sheets..."):
-                                n_agregados, err_sync = agregar_direcciones_a_sheet(nits_nuevos)
-                            if err_sync:
-                                st.error(f"❌ Error al sincronizar: {err_sync}")
-                                # Fallback: ofrecer CSV
-                                csv_nuevos = pd.DataFrame([
-                                    {'NIT': nit, 'Razón Social': info['razon'], 'Dirección': info['dir'],
-                                     'Cod Depto': info['dp'], 'Cod Municipio': info['mp'],
-                                     'Cod País': info['pais'], 'Tipo Doc': info['td'], 'DV': info['dv']}
-                                    for nit, info in sorted(nits_nuevos.items())
-                                ]).to_csv(index=False)
-                                st.download_button("⬇️ Descargar CSV como respaldo", csv_nuevos,
-                                                   file_name="direcciones_nuevas.csv", mime="text/csv")
-                            else:
-                                if n_agregados > 0:
-                                    st.success(f"✅ **{n_agregados} direcciones** agregadas al directorio centralizado.")
-                                    st.cache_data.clear()  # Limpiar cache para que la próxima vez lea las nuevas
-                                else:
-                                    st.info("ℹ️ Todas las direcciones ya existían en el directorio. No se agregaron duplicados.")
-                else:
-                    # === MODO MANUAL (sin gspread configurado) ===
-                    with st.expander(f"📋 **{len(nits_nuevos)} direcciones nuevas** para agregar al directorio centralizado", expanded=False):
-                        st.caption("Estas direcciones vienen del directorio del cliente pero NO están en tu Google Sheet centralizado. "
-                                   "Cópialas para que estén disponibles para futuros clientes.")
-                        st.info("💡 **Tip:** Configura la cuenta de servicio de Google para que se agreguen automáticamente. "
-                                "Ver instrucciones en las líneas 25-43 del código.")
-                        df_nuevos = pd.DataFrame([
-                            {
-                                'NIT': nit,
-                                'Razón Social': info['razon'],
-                                'Dirección': info['dir'],
-                                'Cod Depto': info['dp'],
-                                'Cod Municipio': info['mp'],
-                                'Cod País': info['pais'],
-                                'Tipo Doc': info['td'],
-                                'DV': info['dv'],
-                            }
-                            for nit, info in sorted(nits_nuevos.items())
-                        ])
-                        st.dataframe(df_nuevos, use_container_width=True, hide_index=True)
-                        csv_nuevos = df_nuevos.to_csv(index=False)
-                        st.download_button(
-                            "⬇️ Descargar CSV para pegar en Google Sheets",
-                            csv_nuevos,
-                            file_name="direcciones_nuevas.csv",
-                            mime="text/csv"
-                        )
+                with st.expander(f"📋 **{len(nits_nuevos)} direcciones nuevas** — agregar al directorio centralizado", expanded=True):
+                    st.markdown("""
+                    <div style="background: #eaf4fe; border-radius: 8px; padding: 0.7rem 1rem; border-left: 4px solid #2196F3; margin-bottom: 0.8rem;">
+                        <span style="font-size: 0.9rem; color: #1565C0;">
+                            📌 Estas direcciones vienen del directorio del cliente pero <strong>no están</strong> en tu Google Sheet centralizado.<br>
+                            Descarga el CSV → abre tu Google Sheet → pega las filas al final. ¡Listo!<br>
+                            Así el próximo cliente que tenga estos mismos terceros ya tendrá las direcciones automáticamente.
+                        </span>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    
+                    df_nuevos = pd.DataFrame([
+                        {
+                            'NIT': nit,
+                            'Razón Social': info['razon'],
+                            'Dirección': info['dir'],
+                            'Cod Depto': info['dp'],
+                            'Cod Municipio': info['mp'],
+                            'Cod País': info['pais'],
+                            'Tipo Doc': info['td'],
+                            'DV': info['dv'],
+                        }
+                        for nit, info in sorted(nits_nuevos.items())
+                    ])
+                    st.dataframe(df_nuevos, use_container_width=True, hide_index=True)
+                    
+                    col_dl1, col_dl2 = st.columns(2)
+                    
+                    # Botón 1: Solo las nuevas (para pegar en Google Sheets)
+                    csv_nuevos = df_nuevos.to_csv(index=False)
+                    col_dl1.download_button(
+                        f"⬇️ Descargar {len(nits_nuevos)} nuevas (CSV)",
+                        csv_nuevos,
+                        file_name=f"direcciones_nuevas_{datetime.now().strftime('%Y%m%d')}.csv",
+                        mime="text/csv",
+                        use_container_width=True,
+                        help="Abre este CSV, selecciona todas las filas (sin encabezado) y pégalas al final de tu Google Sheet"
+                    )
+                    
+                    # Botón 2: Directorio completo actualizado (central + nuevas)
+                    df_central = pd.DataFrame([
+                        {
+                            'NIT': nit,
+                            'Razón Social': info.get('razon', ''),
+                            'Dirección': info.get('dir', ''),
+                            'Cod Depto': info.get('depto', ''),
+                            'Cod Municipio': info.get('mpio', ''),
+                            'Cod País': info.get('pais', '169'),
+                            'Tipo Doc': info.get('td', ''),
+                            'DV': info.get('dv', ''),
+                        }
+                        for nit, info in dir_central.items()
+                    ]) if dir_central else pd.DataFrame()
+                    
+                    if not df_central.empty:
+                        df_completo = pd.concat([df_central, df_nuevos], ignore_index=True)
+                        df_completo = df_completo.drop_duplicates(subset='NIT', keep='last')
+                    else:
+                        df_completo = df_nuevos
+                    
+                    csv_completo = df_completo.to_csv(index=False)
+                    col_dl2.download_button(
+                        f"⬇️ Directorio completo ({len(df_completo)} empresas)",
+                        csv_completo,
+                        file_name=f"directorio_completo_{datetime.now().strftime('%Y%m%d')}.csv",
+                        mime="text/csv",
+                        use_container_width=True,
+                        help="Reemplaza TODO el contenido de tu Google Sheet con este archivo (incluye las existentes + las nuevas)"
+                    )
+                    
+                    st.markdown("""
+                    <div style="background: #f0f0f0; border-radius: 6px; padding: 0.6rem 0.8rem; margin-top: 0.5rem;">
+                        <span style="font-size: 0.82rem; color: #555;">
+                            <strong>¿Cómo pegar?</strong> Opción rápida: descarga las nuevas → abre el CSV → Ctrl+A → Ctrl+C → 
+                            ve a tu Google Sheet → click en la primera celda vacía de la columna A → Ctrl+V → listo.<br>
+                            <strong>Opción completa:</strong> descarga el directorio completo → en Google Sheets: Archivo → Importar → 
+                            Subir → selecciona el CSV → "Reemplazar hoja actual" → Importar.
+                        </span>
+                    </div>
+                    """, unsafe_allow_html=True)
 
             if validaciones:
                 n_dv_err = sum(1 for tipo, _ in validaciones if tipo == 'dv_error')
