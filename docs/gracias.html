@@ -4,38 +4,65 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>¡Gracias por tu compra! — Exógena DIAN</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy: #0B1D3A;
-    --gold: #D4A843;
-    --gold-light: #F2D98B;
-    --cream: #FAF6EE;
+    --green-900: #064E3B;
+    --green-700: #047857;
+    --green-600: #059669;
+    --green-500: #10B981;
+    --green-400: #34D399;
+    --green-300: #6EE7B7;
+    --green-100: #D1FAE5;
+    --green-50: #ECFDF5;
+    --mint: #F0FFF4;
     --white: #FFFFFF;
-    --slate: #64748B;
-    --green: #25D366;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-600: #4B5563;
+    --gray-700: #374151;
+    --gray-800: #1F2937;
+    --gray-900: #111827;
+    --wa-green: #25D366;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    font-family: 'Manrope', sans-serif;
-    background: var(--cream);
-    color: var(--navy);
+    font-family: 'Outfit', sans-serif;
+    background: linear-gradient(170deg, var(--white) 0%, var(--green-50) 50%, var(--mint) 100%);
+    color: var(--gray-900);
     min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
-    padding: 24px;
+    padding: 24px; position: relative; overflow: hidden;
   }
+  body::before {
+    content: ''; position: absolute; top: -20%; right: -15%; width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+  body::after {
+    content: ''; position: absolute; bottom: -15%; left: -10%; width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(52,211,153,0.07) 0%, transparent 70%);
+    border-radius: 50%; pointer-events: none;
+  }
+
   .container {
-    max-width: 580px; width: 100%;
-    text-align: center;
+    max-width: 560px; width: 100%;
+    text-align: center; position: relative; z-index: 1;
   }
+
   .success-icon {
-    width: 80px; height: 80px;
-    background: rgba(37,211,102,0.12);
+    width: 82px; height: 82px;
+    background: var(--green-100);
+    border: 3px solid var(--green-300);
     border-radius: 50%;
     display: grid; place-items: center;
-    margin: 0 auto 28px;
+    margin: 0 auto 24px;
     font-size: 2.2rem;
     animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 8px 30px rgba(16,185,129,0.15);
   }
   @keyframes popIn {
     from { transform: scale(0); opacity: 0; }
@@ -45,145 +72,133 @@
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
   h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.8rem, 4vw, 2.4rem);
-    margin-bottom: 12px;
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.8rem, 4vw, 2.3rem);
+    margin-bottom: 12px; letter-spacing: -0.02em;
+    color: var(--gray-900);
   }
   .subtitle {
-    color: var(--slate);
-    font-size: 1.05rem;
-    line-height: 1.6;
-    margin-bottom: 36px;
+    color: var(--gray-500);
+    font-size: 1.02rem; line-height: 1.65;
+    margin-bottom: 32px;
   }
 
   .ref-box {
     background: var(--white);
-    border: 1px solid rgba(11,29,58,0.08);
+    border: 1.5px solid var(--green-200);
     border-radius: 12px;
-    padding: 14px 20px;
+    padding: 12px 20px;
     margin-bottom: 24px;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.88rem;
-    color: var(--slate);
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 0.86rem; color: var(--gray-500);
     animation: fadeUp 0.6s 0.15s ease-out both;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
   .ref-box strong {
-    color: var(--navy);
-    font-family: monospace;
-    font-size: 0.92rem;
+    color: var(--green-700);
+    font-family: monospace; font-size: 0.9rem;
   }
 
   .whatsapp-box {
-    background: var(--navy);
+    background: linear-gradient(135deg, var(--green-900), #065F46, var(--green-700));
     border-radius: 20px;
     padding: 36px 32px;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
     animation: fadeUp 0.6s 0.2s ease-out both;
+    position: relative; overflow: hidden;
+  }
+  .whatsapp-box::before {
+    content: ''; position: absolute; top: -30%; right: -15%; width: 50%; height: 140%;
+    background: radial-gradient(circle, rgba(52,211,153,0.1) 0%, transparent 70%);
+    pointer-events: none;
   }
   .whatsapp-label {
-    color: rgba(255,255,255,0.5);
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 18px;
-    font-weight: 600;
+    color: var(--green-300);
+    font-size: 0.75rem; letter-spacing: 2.5px;
+    text-transform: uppercase; margin-bottom: 16px;
+    font-weight: 700; position: relative;
   }
   .whatsapp-msg {
-    color: rgba(255,255,255,0.8);
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 24px;
+    color: rgba(255,255,255,0.75);
+    font-size: 0.98rem; line-height: 1.65;
+    margin-bottom: 24px; position: relative;
   }
   .whatsapp-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--green);
-    color: var(--white);
-    padding: 16px 36px;
-    border-radius: 50px;
-    font-family: 'Manrope', sans-serif;
-    font-weight: 700;
-    font-size: 1.05rem;
-    text-decoration: none;
-    transition: all 0.25s;
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--wa-green); color: var(--white);
+    padding: 15px 34px; border-radius: 12px;
+    font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.02rem;
+    text-decoration: none; transition: all 0.25s;
     box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+    position: relative;
   }
   .whatsapp-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 30px rgba(37,211,102,0.4);
     background: #20BD5A;
   }
-  .whatsapp-btn svg {
-    width: 22px; height: 22px; fill: var(--white);
-  }
+  .whatsapp-btn svg { width: 22px; height: 22px; fill: var(--white); }
 
   .steps-box {
     background: var(--white);
-    border: 1px solid rgba(11,29,58,0.08);
+    border: 1.5px solid var(--gray-200);
     border-radius: 16px;
     padding: 28px 24px;
     text-align: left;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
     animation: fadeUp 0.6s 0.4s ease-out both;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
   }
   .steps-title {
-    font-weight: 700;
-    font-size: 0.95rem;
-    margin-bottom: 16px;
+    font-weight: 700; font-size: 0.95rem;
+    margin-bottom: 16px; color: var(--gray-800);
   }
   .step-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 12px;
-    font-size: 0.9rem;
-    color: var(--slate);
-    line-height: 1.5;
+    display: flex; align-items: flex-start; gap: 12px;
+    margin-bottom: 12px; font-size: 0.88rem;
+    color: var(--gray-500); line-height: 1.5;
   }
   .step-item:last-child { margin-bottom: 0; }
   .step-num {
-    width: 24px; height: 24px;
-    background: var(--navy);
-    color: var(--gold-light);
-    border-radius: 50%;
-    display: grid; place-items: center;
-    font-size: 0.72rem;
-    font-weight: 800;
-    flex-shrink: 0;
-    margin-top: 1px;
+    width: 26px; height: 26px;
+    background: var(--green-600); color: white;
+    border-radius: 50%; display: grid; place-items: center;
+    font-size: 0.72rem; font-weight: 800;
+    flex-shrink: 0; margin-top: 0px;
+    box-shadow: 0 2px 8px rgba(5,150,105,0.25);
   }
 
   .format-info {
-    background: rgba(31,78,121,0.05);
-    border-radius: 12px;
+    background: var(--green-50);
+    border: 1px solid var(--green-100);
+    border-radius: 14px;
     padding: 20px 24px;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
     text-align: left;
     animation: fadeUp 0.6s 0.5s ease-out both;
   }
   .format-info p {
-    font-size: 0.85rem;
-    color: var(--slate);
-    line-height: 1.6;
-    margin-bottom: 8px;
+    font-size: 0.84rem; color: var(--gray-500);
+    line-height: 1.6; margin-bottom: 6px;
   }
   .format-info p:last-child { margin-bottom: 0; }
-  .format-info strong { color: var(--navy); }
+  .format-info strong { color: var(--green-700); }
 
   .back-link {
-    display: block;
-    margin-top: 20px;
-    color: var(--slate);
-    font-size: 0.85rem;
-    text-decoration: none;
-    transition: color 0.2s;
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 12px; color: var(--gray-400);
+    font-size: 0.85rem; text-decoration: none;
+    transition: all 0.2s; font-weight: 500;
     animation: fadeUp 0.6s 0.6s ease-out both;
   }
-  .back-link:hover { color: var(--navy); }
+  .back-link:hover { color: var(--green-600); gap: 8px; }
+
+  @media (max-width: 600px) {
+    .whatsapp-box { padding: 28px 20px; }
+    .steps-box { padding: 22px 18px; }
+  }
 </style>
 </head>
 <body>
@@ -194,7 +209,7 @@
   <p class="subtitle">Tu pago fue procesado exitosamente. Ahora envíanos tu balance de prueba por WhatsApp y te entregamos tu Excel listo.</p>
 
   <div class="ref-box" id="refBox" style="display:none;">
-    🧾 Referencia de pago: <strong id="refId"></strong>
+    🧾 Referencia: <strong id="refId"></strong>
   </div>
 
   <div class="whatsapp-box">
@@ -223,29 +238,21 @@
 </div>
 
 <script>
-  // Captura los parámetros de Wompi desde la URL
   const params = new URLSearchParams(window.location.search);
   const referencia = params.get('reference') || params.get('ref') || '';
   const transaccionId = params.get('id') || '';
 
-  // Muestra la referencia si existe
   if (referencia) {
     document.getElementById('refBox').style.display = 'inline-flex';
     document.getElementById('refId').textContent = referencia;
   }
 
-  // Construye el mensaje de WhatsApp con la referencia
   let mensaje = 'Hola, acabo de pagar el servicio de Exógena DIAN.';
-  if (referencia) {
-    mensaje += ' Mi referencia de pago es: ' + referencia + '.';
-  }
-  if (transaccionId) {
-    mensaje += ' ID transacción: ' + transaccionId + '.';
-  }
+  if (referencia) mensaje += ' Mi referencia de pago es: ' + referencia + '.';
+  if (transaccionId) mensaje += ' ID transacción: ' + transaccionId + '.';
   mensaje += ' Les envío mi balance de prueba.';
 
-  const waUrl = 'https://wa.me/573156178610?text=' + encodeURIComponent(mensaje);
-  document.getElementById('waBtn').href = waUrl;
+  document.getElementById('waBtn').href = 'https://wa.me/573156178610?text=' + encodeURIComponent(mensaje);
 </script>
 </body>
 </html>
