@@ -41,16 +41,25 @@ def safe_num(v):
     if v is None or v == "":
         return 0.0
     if isinstance(v, (int, float)):
+        import math
+        if math.isnan(v):
+            return 0.0
         return float(v)
     try:
-        return float(str(v).replace(",", "").replace("$", "").replace(" ", ""))
+        s = str(v).strip()
+        if s.lower() == 'nan' or s == '':
+            return 0.0
+        return float(s.replace(",", "").replace("$", "").replace(" ", ""))
     except:
         return 0.0
 
 def safe_str(v):
     if v is None:
         return ""
-    return str(v).strip()
+    s = str(v).strip()
+    if s.lower() == 'nan':
+        return ""
+    return s
 
 def en_rango(cta, d, h):
     n = len(d)
@@ -130,6 +139,12 @@ def procesar_balance(df_balance):
         nit = safe_str(row.iloc[3])
         if not cta or not nit:
             continue
+        # Limpiar NIT (ej: "890904997.0" -> "890904997")
+        if '.' in nit:
+            try:
+                nit = str(int(float(nit)))
+            except:
+                pass
         bal.append({
             'cta': cta,
             'nom_cta': safe_str(row.iloc[1]),
@@ -148,6 +163,12 @@ def procesar_balance(df_balance):
     for f in bal:
         if f['nit'] not in direc:
             td = f['td'] if f['td'] else "31"
+            # Limpiar tipo doc (ej: "31.0" -> "31")
+            if '.' in td:
+                try:
+                    td = str(int(float(td)))
+                except:
+                    pass
             r = f['razon']
             d = {'td': td, 'dv': calc_dv(f['nit']),
                  'a1': '', 'a2': '', 'n1': '', 'n2': '',
@@ -662,3 +683,4 @@ st.markdown("""
     ⚠️ Esta herramienta es un asistente. El contador debe validar los resultados antes de presentar a la DIAN.
 </div>
 """, unsafe_allow_html=True)
+
