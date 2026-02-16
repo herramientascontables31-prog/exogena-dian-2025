@@ -294,21 +294,33 @@ function toNum(v, fmt) {
 /* ══════════════════════════════════════════
    4. DATE PARSING — handles all Colombian formats
    ══════════════════════════════════════════ */
-function guessYearFromFile(rows, colIdx, startRow) {
-  /* Look for a 4-digit year in date column or in metadata rows */
-  for (let i = 0; i < Math.min(rows.length, startRow + 30); i++) {
-    const v = String(rows[i][colIdx] || '');
-    const m = v.match(/(20[2-3]\d)/);
-    if (m) return +m[1];
-  }
-  /* Scan ALL cells in first rows for a year */
-  for (let i = 0; i < Math.min(rows.length, 10); i++) {
-    for (const c of (rows[i] || [])) {
-      const m = String(c || '').match(/(20[2-3]\d)/);
-      if (m) return +m[1];
+function guessYearFromTransactions(rows, colIdx, dataStart) {
+  /* ONLY look at actual transaction data rows for years — never metadata */
+  const yearCounts = {};
+  for (let i = dataStart; i < Math.min(rows.length, dataStart + 100); i++) {
+    const c = rows[i] ? rows[i][colIdx] : null;
+    if (!c) continue;
+    /* Date objects from Excel */
+    if (c instanceof Date && !isNaN(c)) {
+      const y = c.getFullYear();
+      if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5;
+      continue;
+    }
+    /* Strings like "02-01-2026", "2026/01/02", "2026-01-02" */
+    const s = String(c);
+    const matches = s.match(/20[2-3]\d/g);
+    if (matches) matches.forEach(y => yearCounts[y] = (yearCounts[y]||0) + 1);
+    /* Excel serial numbers → convert and check */
+    if (typeof c === 'number' && c > 40000 && c < 55000) {
+      const d = new Date((c - 25569) * 86400000);
+      const y = d.getFullYear();
+      if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5;
     }
   }
-  return new Date().getFullYear();
+  const years = Object.keys(yearCounts);
+  if (years.length === 0) return null; /* No year found in transactions */
+  years.sort((a,b) => yearCounts[b] - yearCounts[a] || (+b) - (+a));
+  return +years[0];
 }
 
 const MONTHS_ES = {ene:0,feb:1,mar:2,abr:3,may:4,jun:5,jul:6,ago:7,sep:8,oct:9,nov:10,dic:11,enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7,septiembre:8,octubre:9,noviembre:10,diciembre:11};
@@ -541,7 +553,10 @@ function renderFileCard(k) {
   html += '</div>';
 
   /* Parsed preview: show how system interprets the first 5 data rows */
-  const yearHint = f.map.fecha >= 0 ? guessYearFromFile(rows, f.map.fecha, dataStart) : 2026;
+  const ownYear = f.map.fecha >= 0 ? guessYearFromTransactions(rows, f.map.fecha, dataStart) : null;
+  const otherK = k === 'E' ? 'A' : 'E';
+  const otherYear = F[otherK].raw ? getTransactionYear(otherK) : null;
+  const yearHint = ownYear || otherYear || new Date().getFullYear();
   html += '<div style="font-size:.78rem;font-weight:700;color:var(--f600);margin:12px 0 4px">Vista previa interpretada (verifica que los valores se lean bien):</div>';
   html += '<div class="parsed-preview"><table><tr><th>Fecha</th><th>Descripción</th>';
   if (!isE) html += '<th>Tercero</th>';
@@ -624,9 +639,16 @@ function cleanRows(rows) {
 function ejecutar() {
   const tol = +(document.getElementById('optTol').value || 1);
 
+  /* Get year from actual transaction dates in each file */
+  const yearE = getTransactionYear('E');
+  const yearA = getTransactionYear('A');
+  /* Cross-reference: if one file has no year, use the other's */
+  const finalYearE = yearE || yearA || new Date().getFullYear();
+  const finalYearA = yearA || yearE || new Date().getFullYear();
+
   /* Parse records from both files */
-  const ext = buildRecords('E');
-  const aux = buildRecords('A');
+  const ext = buildRecords('E', finalYearE);
+  const aux = buildRecords('A', finalYearA);
   if (ext.length === 0) { alert('No se encontraron movimientos en el extracto. Verifica la fila del encabezado y el mapeo de columnas.'); return; }
   if (aux.length === 0) { alert('No se encontraron movimientos en el auxiliar. Verifica la fila del encabezado y el mapeo de columnas.'); return; }
 
@@ -659,12 +681,18 @@ function ejecutar() {
   hide('step2'); show('step3'); setSI(3);
 }
 
-function buildRecords(k) {
+function getTransactionYear(k) {
+  const f = F[k];
+  if (!f.raw || f.map.fecha < 0) return null;
+  const dataStart = f.noHeader ? 0 : f.headerRow + 1;
+  return guessYearFromTransactions(f.raw, f.map.fecha, dataStart);
+}
+
+function buildRecords(k, yearHint) {
   const f = F[k];
   const hdr = f.noHeader ? 0 : f.headerRow;
   const dataStart = f.noHeader ? 0 : hdr + 1;
   const dataRows = cleanRows(f.raw.slice(dataStart));
-  const yearHint = f.map.fecha >= 0 ? guessYearFromFile(f.raw, f.map.fecha, dataStart) : 2026;
   const fmt = f.numFmt;
   const recs = [];
 
