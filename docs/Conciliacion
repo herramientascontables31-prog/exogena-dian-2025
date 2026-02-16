@@ -273,8 +273,8 @@ const MONTHS_ES = {ene:0,feb:1,mar:2,abr:3,may:4,jun:5,jul:6,ago:7,sep:8,oct:9,n
 
 function parseDate(v, yearHint) {
   if (!v) return null;
-  if (v instanceof Date && !isNaN(v)) return v;
-  if (typeof v === 'number') { if (v > 40000 && v < 55000) return new Date((v - 25569) * 86400000); return null; }
+  if (v instanceof Date && !isNaN(v)) { const d = new Date(v.getFullYear(), v.getMonth(), v.getDate()); return isNaN(d) ? null : d; }
+  if (typeof v === 'number') { if (v > 40000 && v < 55000) { const utc = new Date((v - 25569) * 86400000); return new Date(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate()); } return null; }
   let s = String(v).trim();
   s = s.replace(/\s+\d{1,2}:\d{2}(:\d{2})?.*$/, '');
   let d, m, y, match;
@@ -512,18 +512,43 @@ function ejecutar() {
   const yearA = getTransactionYear('A');
   const finalYearE = yearE || yearA || new Date().getFullYear();
   const finalYearA = yearA || yearE || new Date().getFullYear();
+  console.log('DEBUG yearE=', yearE, 'yearA=', yearA, 'finalE=', finalYearE, 'finalA=', finalYearA);
+  console.log('DEBUG E map=', JSON.stringify(F.E.map), 'numFmt=', F.E.numFmt, 'hdr=', F.E.headerRow);
+  console.log('DEBUG A map=', JSON.stringify(F.A.map), 'numFmt=', F.A.numFmt, 'hdr=', F.A.headerRow);
   const ext = buildRecords('E', finalYearE);
   const aux = buildRecords('A', finalYearA);
   if (ext.length === 0) { alert('No se encontraron movimientos en el extracto.'); return; }
   if (aux.length === 0) { alert('No se encontraron movimientos en el auxiliar.'); return; }
+  console.log('DEBUG ext[0]=', JSON.stringify(ext[0], (k,v) => v instanceof Date ? v.toISOString() : v));
+  console.log('DEBUG ext[1]=', JSON.stringify(ext[1], (k,v) => v instanceof Date ? v.toISOString() : v));
+  console.log('DEBUG aux[0]=', JSON.stringify(aux[0], (k,v) => v instanceof Date ? v.toISOString() : v));
+  console.log('DEBUG aux[1]=', JSON.stringify(aux[1], (k,v) => v instanceof Date ? v.toISOString() : v));
+  // Debug: test one specific match manually
+  let dbgMatchCount = 0;
+  for (let di = 0; di < Math.min(5, ext.length); di++) {
+    for (let dj = 0; dj < Math.min(5, aux.length); dj++) {
+      const am = amtMatch(ext[di], aux[dj], tol, true);
+      const dc = dateClose(ext[di].fecha, aux[dj].fecha, 0);
+      if (am || (ext[di].deb > 0 && aux[dj].deb > 0 && Math.abs(ext[di].deb - aux[dj].deb) < 100)) {
+        console.log(`DEBUG match test E[${di}] vs A[${dj}]: amt=${am} date=${dc}`,
+          `E.deb=${ext[di].deb} E.cre=${ext[di].cre} E.fecha=${ext[di].fecha}`,
+          `A.deb=${aux[dj].deb} A.cre=${aux[dj].cre} A.fecha=${aux[dj].fecha}`);
+        dbgMatchCount++;
+      }
+    }
+  }
+  console.log('DEBUG manual match checks found:', dbgMatchCount);
   const matched = [];
   const uE = new Set(), uA = new Set();
   doPass(ext, aux, uE, uA, matched, tol, 0, true, 'alta', 'Monto, fecha y tipo exactos');
+  console.log('DEBUG after pass1 (exact):', matched.length, 'matches');
   doPass(ext, aux, uE, uA, matched, tol, 2, true, 'alta', 'Monto y tipo, fecha ±2 días');
+  console.log('DEBUG after pass2 (±2d):', matched.length, 'matches');
   doPass(ext, aux, uE, uA, matched, tol, 5, true, 'media', 'Monto y tipo, fecha ±5 días');
   doPassRef(ext, aux, uE, uA, matched, tol, 'media', 'Monto y referencia');
   doPass(ext, aux, uE, uA, matched, tol, 15, true, 'baja', 'Monto y tipo, ±15 días');
   doPass(ext, aux, uE, uA, matched, tol, 31, false, 'baja', 'Solo monto (±31 días)');
+  console.log('DEBUG TOTAL matches:', matched.length);
   const soloE = ext.filter((_,i) => !uE.has(i));
   const soloA = aux.filter((_,i) => !uA.has(i));
   const sE = {d: sum(ext,'deb'), c: sum(ext,'cre')};
@@ -596,16 +621,19 @@ function doPassRef(ext, aux, uE, uA, matched, tol, conf, reason) {
 
 function amtMatch(e, a, tol, chkSign) {
   if (chkSign) {
-    if (e.deb > 0 && a.deb > 0) return Math.abs(e.deb - a.deb) <= tol;
-    if (e.cre > 0 && a.cre > 0) return Math.abs(e.cre - a.cre) <= tol;
+    if (e.deb > 0 && a.deb > 0) return Math.abs(Math.round(e.deb*100) - Math.round(a.deb*100)) <= tol*100;
+    if (e.cre > 0 && a.cre > 0) return Math.abs(Math.round(e.cre*100) - Math.round(a.cre*100)) <= tol*100;
     return false;
   }
-  return Math.abs((e.deb||e.cre) - (a.deb||a.cre)) <= tol;
+  const ve = e.deb||e.cre, va = a.deb||a.cre;
+  return Math.abs(Math.round(ve*100) - Math.round(va*100)) <= tol*100;
 }
 
 function dateClose(d1, d2, tol) {
   if (!d1 || !d2) return tol >= 15;
-  return Math.abs(d1 - d2) / 864e5 <= tol;
+  const t1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
+  const t2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
+  return Math.abs(t1 - t2) / 864e5 <= tol;
 }
 
 function refMatch(e, a) {
@@ -881,45 +909,55 @@ function exportXls() {
   s1.push(['Solo en auxiliar', soloA.length]);
   s1.push(['% Conciliación', Math.round(matched.length/Math.max(ext.length,aux.length)*100)+'%']);
   s1.push([],['Procesado 100% en navegador. ExógenaDIAN no accedió a los datos.']);
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(s1), 'Conciliación Bancaria');
+  // Pad all rows to 6 columns so Explicación column shows
+  const s1w = 6;
+  for (let i = 0; i < s1.length; i++) { while (s1[i].length < s1w) s1[i].push(''); }
+  const ws1 = XLSX.utils.aoa_to_sheet(s1);
+  ws1['!cols'] = [{wch:48},{wch:22},{wch:22},{wch:18},{wch:3},{wch:30}];
+  XLSX.utils.book_append_sheet(wb, ws1, 'Conciliación Bancaria');
 
   /* ── SHEET 2: Extracto sin Contabilizar ── */
   const s2 = [
-    ['PARTIDAS EN EXTRACTO BANCARIO NO REGISTRADAS EN LIBROS CONTABLES'],
-    [soloE.length+' movimientos bancarios sin registro contable — Requieren contabilización'],
-    [],
-    ['INGRESOS EN EXTRACTO SIN REGISTRO CONTABLE'],
+    ['PARTIDAS EN EXTRACTO BANCARIO NO REGISTRADAS EN LIBROS CONTABLES','','','','','',''],
+    [soloE.length+' movimientos bancarios sin registro contable — Requieren contabilización','','','','','',''],
+    ['','','','','','',''],
+    ['INGRESOS EN EXTRACTO SIN REGISTRO CONTABLE','','','','','',''],
     ['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida','Notas'],
   ];
   soloE_in.forEach((e,i) => s2.push([i+1, fD(e.fecha), e.desc, e.deb, tipoProbable(e.desc,true), accionSugerida(e.desc,true), '']));
-  s2.push(['','','SUBTOTAL INGRESOS ('+soloE_in.length+' partidas)', totEIn]);
-  s2.push([]);
-  s2.push(['EGRESOS EN EXTRACTO SIN REGISTRO CONTABLE']);
+  s2.push(['','','SUBTOTAL INGRESOS ('+soloE_in.length+' partidas)', totEIn,'','','']);
+  s2.push(['','','','','','','']);
+  s2.push(['EGRESOS EN EXTRACTO SIN REGISTRO CONTABLE','','','','','','']);
   s2.push(['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida','Notas']);
   soloE_out.forEach((e,i) => s2.push([i+1, fD(e.fecha), e.desc, -e.cre, tipoProbable(e.desc,false), accionSugerida(e.desc,false), '']));
-  s2.push(['','','SUBTOTAL EGRESOS ('+soloE_out.length+' partidas)', -totEOut]);
-  s2.push([],['','','TOTAL NETO SIN CONTABILIZAR', totEIn - totEOut]);
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(s2), 'Extracto sin Contabilizar');
+  s2.push(['','','SUBTOTAL EGRESOS ('+soloE_out.length+' partidas)', -totEOut,'','','']);
+  s2.push([]);
+  s2.push(['','','TOTAL NETO SIN CONTABILIZAR', totEIn - totEOut,'','','']);
+  const ws2 = XLSX.utils.aoa_to_sheet(s2);
+  ws2['!cols'] = [{wch:5},{wch:12},{wch:42},{wch:16},{wch:26},{wch:38},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, ws2, 'Extracto sin Contabilizar');
 
   /* ── SHEET 3: Libros sin Extracto ── */
   const s3 = [
-    ['PARTIDAS EN LIBROS CONTABLES NO REFLEJADAS EN EXTRACTO BANCARIO'],
-    [soloA.length+' registros contables sin movimiento bancario correspondiente'],
-    [],
+    ['PARTIDAS EN LIBROS CONTABLES NO REFLEJADAS EN EXTRACTO BANCARIO','','','','','','','',''],
+    [soloA.length+' registros contables sin movimiento bancario correspondiente','','','','','','','',''],
+    ['','','','','','','','',''],
     ['#','Fecha','Comprobante','Tercero','Descripción','Débito','Crédito','Posible Causa','Notas'],
   ];
   soloA.forEach((a,i) => {
     const causa = a.deb > 0 ? 'Verificar si tiene movimiento bancario asociado' : 'Verificar si pago fue procesado por el banco';
     s3.push([i+1, fD(a.fecha), a.ref, a.tercero, a.desc, a.deb||'', a.cre||'', causa, '']);
   });
-  s3.push(['','','','TOTAL','', totADeb, totACre]);
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(s3), 'Libros sin Extracto');
+  s3.push(['','','','TOTAL','', totADeb, totACre,'','']);
+  const ws3 = XLSX.utils.aoa_to_sheet(s3);
+  ws3['!cols'] = [{wch:5},{wch:12},{wch:14},{wch:38},{wch:30},{wch:16},{wch:16},{wch:42},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, ws3, 'Libros sin Extracto');
 
   /* ── SHEET 4: Partidas Conciliadas ── */
   const s4 = [
-    ['PARTIDAS CONCILIADAS (MATCH EXTRACTO ↔ LIBROS)'],
-    [matched.length+' movimientos conciliados exitosamente'],
-    [],
+    ['PARTIDAS CONCILIADAS (MATCH EXTRACTO ↔ LIBROS)','','','','','','','','',''],
+    [matched.length+' movimientos conciliados exitosamente','','','','','','','','',''],
+    ['','','','','','','','','',''],
     ['Fecha Ext.','Descripción Extracto','Valor Extracto','Fecha Aux.','Comprobante','Tercero','Débito','Crédito','Estado','Notas'],
   ];
   matched.forEach(m => {
@@ -927,7 +965,9 @@ function exportXls() {
     const vE = e.deb > 0 ? e.deb : -e.cre;
     s4.push([fD(e.fecha), e.desc, vE, fD(a.fecha), a.ref, a.tercero, a.deb||'', a.cre||'', '✓ OK', '']);
   });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(s4), 'Partidas Conciliadas');
+  const ws4 = XLSX.utils.aoa_to_sheet(s4);
+  ws4['!cols'] = [{wch:12},{wch:38},{wch:16},{wch:12},{wch:14},{wch:36},{wch:16},{wch:16},{wch:10},{wch:22}];
+  XLSX.utils.book_append_sheet(wb, ws4, 'Partidas Conciliadas');
 
   XLSX.writeFile(wb, 'Conciliacion_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
