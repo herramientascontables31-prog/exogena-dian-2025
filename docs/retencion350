@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario 350 — Generador de Borrador</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#548235;--green2:#E2EFDA;--red:#CC0000;--amber:#D97706;--amber2:#FFF8E1;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);padding:28px 32px;border-radius:16px;margin-bottom:24px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:1.6rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.header h1 span{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:600}
+.header p{opacity:.8;font-size:.85rem;margin-top:4px}
+.header-right{text-align:right;font-size:.8rem;opacity:.7}
+.steps{display:flex;gap:8px;margin-bottom:24px}
+.step-pill{flex:1;padding:12px 16px;background:var(--card);border:2px solid var(--border);border-radius:var(--radius);font-size:.82rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;transition:.3s;cursor:default}
+.step-pill .num{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff}
+.step-pill.active{border-color:var(--pri2);color:var(--pri);background:var(--pri3)}
+.step-pill.active .num{background:var(--pri2)}
+.step-pill.done{border-color:var(--green);color:var(--green)}
+.step-pill.done .num{background:var(--green)}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.drop-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:48px 32px;text-align:center;cursor:pointer;transition:.3s;position:relative}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--pri2);background:var(--pri3)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.dz-icon{font-size:2.5rem;margin-bottom:8px;display:block}.dz-title{font-weight:700;font-size:1.1rem;color:var(--pri)}.dz-hint{color:var(--muted);font-size:.82rem;margin-top:4px}
+.dz-file{margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--green);font-weight:600}
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.config-item{display:flex;flex-direction:column;gap:4px}
+.config-item label{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.config-item input,.config-item select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit}
+.config-item input:focus,.config-item select:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 3px rgba(46,117,182,.15)}
+/* Column mapper */
+.col-mapper{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:16px 0}
+.col-map-item{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px;transition:.3s}
+.col-map-item.mapped{border-color:var(--green);background:var(--green2)}
+.col-map-item.required{border-color:var(--amber)}
+.col-map-item .cml{font-size:.75rem;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.col-map-item .cml .req{color:var(--red);font-weight:800}
+.col-map-item select{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;background:#fff}
+.col-map-item .sample{font-size:.72rem;color:var(--muted);margin-top:6px;font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.col-map-item .sample strong{color:var(--pri)}
+.raw-preview{max-height:180px;overflow:auto;border:1px solid var(--border);border-radius:8px;font-size:.72rem;margin:12px 0}
+.raw-preview table{width:100%;border-collapse:collapse;min-width:800px}
+.raw-preview th,.raw-preview td{padding:4px 8px;border:1px solid var(--border);white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.raw-preview th{background:var(--pri3);position:sticky;top:0;font-weight:600;font-size:.7rem;color:var(--pri)}
+.raw-preview tr.hdr-row td{background:#FFF8E1;font-weight:600}
+.raw-preview tr:hover td{background:#f0f4f8}
+.hdr-selector{display:flex;align-items:center;gap:12px;margin:12px 0;padding:10px 14px;background:#f8fafc;border-radius:8px;border:1px solid var(--border)}
+.hdr-selector label{font-size:.82rem;font-weight:600;color:var(--pri)}
+.hdr-selector select{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit}
+.hdr-selector .hdr-preview{font-size:.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-left:8px}
+/* Tables */
+.map-table{width:100%;border-collapse:separate;border-spacing:0;font-size:.82rem}
+.map-table th{background:var(--pri);color:#fff;padding:10px 12px;text-align:left;font-weight:600;position:sticky;top:0;z-index:1}
+.map-table th:first-child{border-radius:8px 0 0 0}.map-table th:last-child{border-radius:0 8px 0 0}
+.map-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.map-table tr:nth-child(even) td{background:#f8fafc}.map-table tr:hover td{background:var(--pri3)}
+.map-table input,.map-table select{padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-family:inherit;width:100%}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.7rem;font-weight:700}
+.badge-pj{background:#E3F2FD;color:#1565C0}.badge-pn{background:#FFF3E0;color:#E65100}.badge-both{background:#F3E5F5;color:#7B1FA2}
+.form350{border:2px solid var(--pri);border-radius:12px;overflow:hidden}
+.form350-header{background:var(--pri);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
+.form350-header h2{font-size:1.1rem;font-weight:700}.form350-header .f350-num{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;opacity:.8}
+.form350-section{padding:16px 20px;border-bottom:1px solid var(--border)}
+.form350-section h3{font-size:.85rem;font-weight:700;color:var(--pri);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.f350-row{display:grid;grid-template-columns:280px 1fr 1fr 1fr 1fr;gap:1px;margin-bottom:1px}
+.f350-row.header{background:var(--pri2)}.f350-row.header>div{color:#fff;font-weight:700;font-size:.72rem;padding:8px 10px;text-align:center}
+.f350-row>div{background:#fff;padding:6px 10px;font-size:.8rem;border:1px solid #eee}
+.f350-row>div:first-child{font-weight:600;font-size:.78rem}
+.f350-row>div.val{text-align:right;font-family:'JetBrains Mono',monospace;font-size:.78rem}
+.f350-row>div.val.has{background:#f0f7ff;font-weight:600}.f350-row>div.val.negative{color:var(--red)}
+.f350-row.total{background:var(--pri3);font-weight:700}.f350-row.total>div{font-weight:700;border-top:2px solid var(--pri2)}
+.btn{padding:10px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--pri2);color:#fff}.btn-primary:hover{background:var(--pri);transform:translateY(-1px)}
+.btn-success{background:var(--green);color:#fff}.btn-success:hover{opacity:.9}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--pri2);color:var(--pri)}
+.actions{display:flex;gap:12px;justify-content:flex-end;margin-top:20px}
+.alert{padding:14px 18px;border-radius:8px;font-size:.85rem;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.alert-info{background:var(--pri3);color:var(--pri);border:1px solid #B4C6E7}
+.alert-warn{background:var(--amber2);color:#92400E;border:1px solid #FCD34D}
+.alert-success{background:var(--green2);color:var(--green);border:1px solid #A5D6A7}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center}
+.stat-card .val{font-size:1.5rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.stat-card .lbl{font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:4px}
+.stat-card.blue .val{color:var(--pri2)}.stat-card.green .val{color:var(--green)}.stat-card.amber .val{color:var(--amber)}.stat-card.red .val{color:var(--red)}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:16px}
+.tab{padding:10px 20px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s}
+.tab.active{color:var(--pri);border-bottom-color:var(--pri2)}
+.tab-content{display:none}.tab-content.active{display:block}
+.scroll-box{max-height:500px;overflow-y:auto;border:1px solid var(--border);border-radius:8px}
+.hidden{display:none!important}.mono{font-family:'JetBrains Mono',monospace}.text-right{text-align:right}.text-center{text-align:center}.fw600{font-weight:600}.mb12{margin-bottom:12px}.flex{display:flex}.flex-between{display:flex;justify-content:space-between;align-items:center}.gap12{gap:12px}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header"><div>
+    <h1><span>350</span> Declaración Retenciones en la Fuente</h1>
+    <p>Generador automático de borrador desde balance de prueba</p>
+  </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
+  <div class="steps">
+    <div class="step-pill active" id="sp1"><span class="num">1</span> Cargar Archivo</div>
+    <div class="step-pill" id="sp2"><span class="num">2</span> Columnas y Vista Previa</div>
+    <div class="step-pill" id="sp3"><span class="num">3</span> Mapeo Cuentas → 350</div>
+    <div class="step-pill" id="sp4"><span class="num">4</span> Borrador 350</div>
+  </div>
+
+  <!-- STEP 1: Upload -->
+  <div id="step1">
+    <div class="card">
+      <div class="card-title"><span>📄</span> Cargar Balance o Auxiliar</div>
+      <div class="alert alert-info"><span>💡</span><div>Sube el <strong>balance de prueba por terceros</strong> o el <strong>auxiliar de la cuenta 2365</strong>. Compatible con <strong>cualquier software contable</strong> — en el siguiente paso podrás verificar y ajustar las columnas detectadas.</div></div>
+      <div class="drop-zone" id="dz">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileInput">
+        <span class="dz-icon">📊</span>
+        <div class="dz-title">Arrastra tu archivo aquí o haz clic</div>
+        <div class="dz-hint">Excel (.xlsx, .xls) o CSV — Siigo, MidaSoft, World Office, Helisa, Alegra, otros</div>
+        <div class="dz-file" id="fileName"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: Column Mapping + Preview -->
+  <div id="step2" class="hidden">
+    <div class="card">
+      <div class="card-title"><span>🔧</span> Verificar Columnas del Archivo</div>
+      <div class="alert alert-info"><span>💡</span><div>Se detectaron las columnas automáticamente. <strong>Verifica que sean correctas</strong> y ajusta si es necesario. Luego confirma para procesar los datos de retención.</div></div>
+
+      <div class="hdr-selector">
+        <label>📌 Fila de encabezados:</label>
+        <select id="hdrRowSelect" onchange="onHeaderRowChange()"></select>
+        <span class="hdr-preview" id="hdrPreviewText"></span>
+      </div>
+
+      <div class="raw-preview" id="rawPreview"></div>
+
+      <div style="margin:20px 0 8px;font-weight:700;font-size:.9rem;color:var(--pri)">📋 Asignación de columnas <span style="font-weight:400;color:var(--muted);font-size:.8rem">(<span class="req" style="color:var(--red)">*</span> = obligatoria)</span></div>
+      <div class="col-mapper" id="colMapper"></div>
+
+      <div class="config-grid mb12" style="margin-top:20px">
+        <div class="config-item"><label>Año gravable</label><input type="number" id="cfgYear" value="2026" min="2020" max="2035"></div>
+        <div class="config-item"><label>Período (mes)</label><select id="cfgMonth"><option value="01">01 - Enero</option><option value="02">02 - Febrero</option><option value="03">03 - Marzo</option><option value="04">04 - Abril</option><option value="05">05 - Mayo</option><option value="06">06 - Junio</option><option value="07">07 - Julio</option><option value="08">08 - Agosto</option><option value="09">09 - Septiembre</option><option value="10">10 - Octubre</option><option value="11">11 - Noviembre</option><option value="12">12 - Diciembre</option></select></div>
+        <div class="config-item"><label>NIT de la empresa</label><input type="text" id="cfgNit" placeholder="Ej: 901657282-9"></div>
+        <div class="config-item"><label>Razón social</label><input type="text" id="cfgEmpresa" placeholder="Ej: MI EMPRESA S.A.S"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-outline" onclick="goStep(1)">← Cambiar archivo</button>
+        <button class="btn btn-primary" onclick="confirmColumns()">Confirmar y Procesar →</button>
+      </div>
+    </div>
+
+    <!-- Preview after processing -->
+    <div class="card hidden" id="previewCard">
+      <div class="card-title"><span>🔍</span> Resultado del Procesamiento</div>
+      <div id="fileStats" class="stats"></div>
+      <div class="alert alert-warn hidden" id="alertNot2365"><span>⚠️</span><div>No se encontraron cuentas <strong>2365</strong> en el archivo. Verifica las columnas o el archivo.</div></div>
+      <div class="alert alert-success hidden" id="alertOk"><span>✅</span><div id="alertOkText"></div></div>
+      <div class="scroll-box" id="previewTable"></div>
+      <div class="actions"><button class="btn btn-primary" onclick="goToStep3()">Continuar al Mapeo →</button></div>
+    </div>
+  </div>
+
+  <!-- STEP 3: PUC Mapping -->
+  <div id="step3" class="hidden">
+    <div class="card">
+      <div class="card-title"><span>🔗</span> Mapeo Cuentas → Casillas Formulario 350</div>
+      <div class="alert alert-info"><span>💡</span><div>Revisa el mapeo automático. La tarifa calcula la <strong>base = retención ÷ tarifa</strong>.</div></div>
+      <div class="flex-between mb12">
+        <div><strong id="mappedCount">0</strong> subcuentas · <span class="badge badge-pj">PJ</span> <strong id="pjCount">0</strong> · <span class="badge badge-pn">PN</span> <strong id="pnCount">0</strong></div>
+      </div>
+      <div class="scroll-box"><table class="map-table"><thead><tr>
+        <th style="width:100px">Cuenta</th><th>Nombre</th><th style="width:130px">Concepto</th><th style="width:65px">Aplica</th>
+        <th style="width:70px">Tarifa%</th><th style="width:110px">Retenido</th><th style="width:110px">Base Calc.</th><th style="width:65px">Cas.B</th><th style="width:65px">Cas.R</th>
+      </tr></thead><tbody id="mapBody"></tbody></table></div>
+      <div class="actions">
+        <button class="btn btn-outline" onclick="goStep(2)">← Volver</button>
+        <button class="btn btn-primary" onclick="goStep4()">Generar Borrador 350 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4: Form 350 -->
+  <div id="step4" class="hidden">
+    <div class="card">
+      <div class="flex-between mb12">
+        <div class="card-title" style="margin-bottom:0"><span>📋</span> Borrador Formulario 350</div>
+        <div class="flex gap12">
+          <button class="btn btn-outline" onclick="goStep(3)">← Ajustar</button>
+          <button class="btn btn-success" onclick="exportXls350()">📥 Descargar Excel</button>
+        </div>
+      </div>
+      <div id="resultStats" class="stats"></div>
+    </div>
+    <div class="card">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this,'tabForm')">Formulario 350</div>
+        <div class="tab" onclick="switchTab(this,'tabDetail')">Detalle por Tercero</div>
+      </div>
+      <div class="tab-content active" id="tabForm"><div class="form350" id="form350Visual"></div></div>
+      <div class="tab-content" id="tabDetail"><div class="scroll-box" id="detailTable"></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══ DEFAULTS ═══ */
+const DEFAULT_MAP=[
+  {prefix:'236505',name:'Salarios y pagos laborales',concepto:'rentas_trabajo',aplica:'PN',tarifa:0,casPJb:null,casPJr:null,casPNb:77,casPNr:93},
+  {prefix:'236510',name:'Dividendos',concepto:'dividendos',aplica:'AMBOS',tarifa:7.5,casPJb:35,casPJr:48,casPNb:85,casPNr:101},
+  {prefix:'236515',name:'Honorarios',concepto:'honorarios',aplica:'AMBOS',tarifa:11,casPJb:29,casPJr:42,casPNb:79,casPNr:95},
+  {prefix:'236520',name:'Comisiones',concepto:'comisiones',aplica:'AMBOS',tarifa:11,casPJb:30,casPJr:43,casPNb:80,casPNr:96},
+  {prefix:'236525',name:'Servicios',concepto:'servicios',aplica:'AMBOS',tarifa:4,casPJb:31,casPJr:44,casPNb:81,casPNr:97},
+  {prefix:'236530',name:'Arrendamientos',concepto:'arrendamientos',aplica:'AMBOS',tarifa:3.5,casPJb:33,casPJr:46,casPNb:83,casPNr:99},
+  {prefix:'236535',name:'Rendimientos financieros',concepto:'rendimientos',aplica:'AMBOS',tarifa:4,casPJb:32,casPJr:45,casPNb:82,casPNr:98},
+  {prefix:'236540',name:'Compras',concepto:'compras',aplica:'AMBOS',tarifa:2.5,casPJb:36,casPJr:49,casPNb:86,casPNr:102},
+  {prefix:'236545',name:'Enajenación activos PN',concepto:'enajenacion',aplica:'PN',tarifa:1,casPJb:null,casPJr:null,casPNb:89,casPNr:105},
+  {prefix:'236550',name:'Loterías y rifas',concepto:'loterias',aplica:'AMBOS',tarifa:20,casPJb:39,casPJr:52,casPNb:90,casPNr:106},
+  {prefix:'236555',name:'Pagos al exterior',concepto:'exterior_sin',aplica:'AMBOS',tarifa:20,casPJb:55,casPJr:57,casPNb:109,casPNr:111},
+  {prefix:'236560',name:'Hidrocarburos',concepto:'hidrocarburos',aplica:'AMBOS',tarifa:1,casPJb:40,casPJr:53,casPNb:91,casPNr:107},
+  {prefix:'236565',name:'Tarjetas débito/crédito',concepto:'tarjetas',aplica:'AMBOS',tarifa:1.5,casPJb:37,casPJr:50,casPNb:87,casPNr:103},
+  {prefix:'236568',name:'Contratos construcción',concepto:'construccion',aplica:'AMBOS',tarifa:2,casPJb:38,casPJr:51,casPNb:88,casPNr:104},
+  {prefix:'236570',name:'Autorretención especial',concepto:'autoret_114',aplica:'PJ',tarifa:0.80,casPJb:59,casPJr:68,casPNb:null,casPNr:null},
+  {prefix:'236575',name:'Autorretención ventas',concepto:'autoret_ventas',aplica:'PJ',tarifa:0.80,casPJb:60,casPJr:69,casPNb:113,casPNr:121},
+  {prefix:'236580',name:'Autorretención servicios',concepto:'autoret_serv',aplica:'PJ',tarifa:0.80,casPJb:63,casPJr:72,casPNb:null,casPNr:null},
+  {prefix:'236595',name:'Otros pagos',concepto:'otros',aplica:'AMBOS',tarifa:3.5,casPJb:41,casPJr:54,casPNb:92,casPNr:108},
+  {prefix:'236597',name:'Regalías',concepto:'regalias',aplica:'AMBOS',tarifa:3.5,casPJb:34,casPJr:47,casPNb:84,casPNr:100},
+  {prefix:'236599',name:'Pensiones',concepto:'pensiones',aplica:'PN',tarifa:0,casPJb:null,casPJr:null,casPNb:78,casPNr:94},
+];
+const KEYWORDS={
+  rentas_trabajo:['salario','laboral','trabajo','sueldo','383'],pensiones:['pension'],honorarios:['honorar'],
+  comisiones:['comision'],servicios:['servicio','transport','programa','informatico','restaurante'],
+  rendimientos:['rendimiento','interes','financiero'],arrendamientos:['arrend','alquiler'],
+  compras:['compra','adquisicion'],dividendos:['dividend','participacion'],loterias:['loteria','rifa'],
+  exterior_sin:['exterior'],hidrocarburos:['hidrocarburo','carbon','minero'],tarjetas:['tarjeta'],
+  construccion:['construcc','urbaniz'],enajenacion:['enajenacion','activo fijo'],
+  autoret_114:['exonerado','cree','114-1'],autoret_ventas:['autorretencion','decreto 2201','2201'],
+  autoret_serv:['autorretencion.*servic'],otros:['otro'],regalias:['regal','propiedad intelectual'],
+};
+
+/* ═══ GLOBALS ═══ */
+let rawData=[], parsedAccounts=[], mappings=[], result350={};
+let detectedHeaderRow=-1;
+let colMap={code:-1,name:-1,id:-1,tercero:-1,deb:-1,cre:-1};
+
+// Column field definitions for the mapper UI
+const COL_FIELDS=[
+  {key:'code', label:'Código Cuenta', required:true, icon:'🔢', hints:['cuenta','codigo','código','code','account']},
+  {key:'name', label:'Nombre Cuenta', required:false, icon:'📝', hints:['descripcion','nombre cuenta','cuenta contable','description']},
+  {key:'id', label:'ID Tercero', required:true, icon:'🆔', hints:['tercero','identificacion','identificación','nit','cedula','id','document']},
+  {key:'tercero', label:'Nombre Tercero', required:false, icon:'👤', hints:['razon social','razón social','nombre tercero','third party','name']},
+  {key:'deb', label:'Débitos', required:true, icon:'📤', hints:['debito','débito','debitos','débitos','debit']},
+  {key:'cre', label:'Créditos', required:true, icon:'📥', hints:['credito','crédito','creditos','créditos','credit']},
+];
+
+function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()}
+function toNum(v){if(typeof v==='number')return v;if(!v)return 0;let s=String(v).replace(/[$\s]/g,'');if(s.includes(',')&&s.includes('.')){if(s.lastIndexOf(',')>s.lastIndexOf('.'))s=s.replace(/\./g,'').replace(',','.');else s=s.replace(/,/g,'')}else if(s.includes(',')&&!s.includes('.')){const p=s.split(',');if(p[p.length-1].length<=2)s=s.replace(',','.');else s=s.replace(/,/g,'')}return parseFloat(s)||0}
+function fN(n){return(n||0).toLocaleString('es-CO',{minimumFractionDigits:0,maximumFractionDigits:0})}
+function cellStr(v){const s=String(v??'').trim();return(s==='undefined'||s==='null'||s==='NaN')?'':s}
+
+/* ═══ FILE LOADING ═══ */
+document.getElementById('fileInput').addEventListener('change',e=>{if(e.target.files.length)loadFile(e.target.files[0])});
+const dz=document.getElementById('dz');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files.length)loadFile(e.dataTransfer.files[0])});
+
+function loadFile(file){
+  document.getElementById('fileName').textContent='✓ '+file.name;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});
+    rawData=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+    afterFileLoaded();
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function afterFileLoaded(){
+  // Extract meta from first rows
+  extractMeta();
+  // Auto-detect header row
+  detectedHeaderRow = autoDetectHeaderRow();
+  // Go to step 2
+  goStep(2);
+  // Build the column mapper UI
+  buildColumnMapper();
+}
+
+function extractMeta(){
+  for(let i=0;i<Math.min(10,rawData.length);i++){
+    const row=rawData[i];if(!row)continue;
+    for(let j=0;j<row.length;j++){
+      const cs=String(row[j]||'');
+      const cM=cs.match(/Compa[ñn][ií]a:\s*([^\n\\]+)/i);
+      if(cM)document.getElementById('cfgEmpresa').value=cM[1].trim().split('\\n')[0];
+      const pM=cs.match(/Periodos?:\s*(\d{4})(\d{2})_/i);
+      if(pM){document.getElementById('cfgYear').value=pM[1];document.getElementById('cfgMonth').value=pM[2]}
+    }
+    const r0=String(row[0]||'').trim();
+    if(/^\d{9}\s*-\s*\d$/.test(r0))document.getElementById('cfgNit').value=r0;
+    const cv=document.getElementById('cfgEmpresa').value;
+    if(!cv&&/^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s.]{4,}$/.test(r0)&&!/^(MOV|LIB|REP|TOT|ELA)/i.test(r0))document.getElementById('cfgEmpresa').value=r0;
+    const dM=r0.match(/(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre).*?(\d{4})/i);
+    if(dM){
+      document.getElementById('cfgYear').value=dM[2];
+      const mN=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+      const mi=mN.findIndex(m=>norm(r0).includes(m));
+      if(mi>=0)document.getElementById('cfgMonth').value=String(mi+1).padStart(2,'0');
+    }
+  }
+}
+
+function autoDetectHeaderRow(){
+  for(let i=0;i<Math.min(15,rawData.length);i++){
+    const row=rawData[i];if(!row)continue;
+    const rn=row.map(c=>norm(cellStr(c)));
+    // Score: how many cells look like headers?
+    let score=0;
+    const allHints=COL_FIELDS.flatMap(f=>f.hints);
+    for(const h of rn){if(!h)continue;for(const hint of allHints){if(h.includes(hint)){score++;break}}}
+    if(score>=2)return i;
+  }
+  return 0; // default to row 0
+}
+
+function autoDetectColumns(hdrRow){
+  colMap={code:-1,name:-1,id:-1,tercero:-1,deb:-1,cre:-1};
+  const row=rawData[hdrRow];if(!row)return;
+  for(let j=0;j<row.length;j++){
+    const h=norm(cellStr(row[j]));
+    if(!h)continue;
+    for(const field of COL_FIELDS){
+      if(colMap[field.key]!==-1)continue;
+      for(const hint of field.hints){
+        if(h===hint||h.includes(hint)){colMap[field.key]=j;break}
+      }
+    }
+  }
+}
+
+/* ═══ COLUMN MAPPER UI ═══ */
+function buildColumnMapper(){
+  const hdrRow=detectedHeaderRow;
+  
+  // Build header row selector
+  const sel=document.getElementById('hdrRowSelect');
+  sel.innerHTML='';
+  const maxR=Math.min(15,rawData.length);
+  for(let i=0;i<maxR;i++){
+    const row=rawData[i];if(!row)continue;
+    const preview=row.slice(0,4).map(c=>cellStr(c)).filter(Boolean).join(' | ').substring(0,80);
+    const opt=document.createElement('option');
+    opt.value=i;opt.textContent=`Fila ${i}: ${preview}`;
+    if(i===hdrRow)opt.selected=true;
+    sel.appendChild(opt);
+  }
+  updateHdrPreview();
+
+  // Auto-detect columns for the selected header row
+  autoDetectColumns(hdrRow);
+
+  // Render raw data preview
+  renderRawPreview();
+
+  // Render column mapper cards
+  renderColMapper();
+}
+
+function onHeaderRowChange(){
+  detectedHeaderRow=parseInt(document.getElementById('hdrRowSelect').value);
+  autoDetectColumns(detectedHeaderRow);
+  renderRawPreview();
+  renderColMapper();
+  updateHdrPreview();
+}
+
+function updateHdrPreview(){
+  const row=rawData[detectedHeaderRow];
+  if(!row)return;
+  const txt=row.map(c=>cellStr(c)).filter(Boolean).join(' · ');
+  document.getElementById('hdrPreviewText').textContent=txt.substring(0,120)+(txt.length>120?'…':'');
+}
+
+function renderRawPreview(){
+  const hdr=detectedHeaderRow;
+  // Show 2 rows before header + header + 5 data rows
+  const startR=Math.max(0,hdr-2);
+  const endR=Math.min(rawData.length,hdr+8);
+  const maxCols=Math.min((rawData[hdr]||[]).length,12);
+  
+  let h='<table>';
+  // Column index header
+  h+='<tr><th style="background:#eee;color:#999">Fila</th>';
+  for(let j=0;j<maxCols;j++)h+=`<th style="background:#eee;color:#999">Col ${j}</th>`;
+  h+='</tr>';
+  for(let i=startR;i<endR;i++){
+    const row=rawData[i];if(!row)continue;
+    const isHdr=i===hdr;
+    h+=`<tr class="${isHdr?'hdr-row':''}"><td style="font-weight:700;color:${isHdr?'var(--amber)':'#999'};font-size:.7rem">${isHdr?'📌 ':''}${i}</td>`;
+    for(let j=0;j<maxCols;j++){
+      const val=cellStr(row[j]);
+      h+=`<td title="${val}">${val.substring(0,35)}${val.length>35?'…':''}</td>`;
+    }
+    h+='</tr>';
+  }
+  h+='</table>';
+  document.getElementById('rawPreview').innerHTML=h;
+}
+
+function renderColMapper(){
+  const hdr=rawData[detectedHeaderRow]||[];
+  const numCols=hdr.length;
+  // Build options: "— No asignada —" + each column
+  let optsHtml='<option value="-1">— No asignada —</option>';
+  for(let j=0;j<numCols;j++){
+    const label=cellStr(hdr[j]);
+    optsHtml+=`<option value="${j}">Col ${j}: ${label?label.substring(0,25):'(vacía)'}</option>`;
+  }
+
+  let html='';
+  COL_FIELDS.forEach(field=>{
+    const cur=colMap[field.key];
+    const isMapped=cur>=0;
+    const sampleRow=rawData[detectedHeaderRow+1]||[];
+    // Find a row with actual data for better samples
+    let sample='';
+    for(let i=detectedHeaderRow+1;i<Math.min(rawData.length,detectedHeaderRow+50);i++){
+      const r=rawData[i];if(!r)continue;
+      if(cur>=0){
+        const v=cellStr(r[cur]);
+        if(v&&v!=='0'){sample=v;break}
+      }
+    }
+
+    html+=`<div class="col-map-item ${isMapped?'mapped':''} ${field.required&&!isMapped?'required':''}">
+      <div class="cml">${field.icon} ${field.label} ${field.required?'<span class="req">*</span>':''}</div>
+      <select onchange="onColChange('${field.key}',this.value)" id="sel_${field.key}">
+        ${optsHtml.replace(`value="${cur}"`,`value="${cur}" selected`)}
+      </select>
+      <div class="sample" id="samp_${field.key}">${sample?`Ej: <strong>${sample.substring(0,30)}</strong>`:'<em>sin datos</em>'}</div>
+    </div>`;
+  });
+  document.getElementById('colMapper').innerHTML=html;
+}
+
+function onColChange(key,val){
+  const v=parseInt(val);
+  colMap[key]=v;
+  // Update sample
+  let sample='';
+  for(let i=detectedHeaderRow+1;i<Math.min(rawData.length,detectedHeaderRow+50);i++){
+    const r=rawData[i];if(!r)continue;
+    if(v>=0){const s=cellStr(r[v]);if(s&&s!=='0'){sample=s;break}}
+  }
+  const el=document.getElementById('samp_'+key);
+  if(el)el.innerHTML=sample?`Ej: <strong>${sample.substring(0,30)}</strong>`:'<em>sin datos</em>';
+  // Update card styling
+  const card=el?.closest('.col-map-item');
+  if(card){
+    const field=COL_FIELDS.find(f=>f.key===key);
+    card.classList.toggle('mapped',v>=0);
+    card.classList.toggle('required',field?.required&&v<0);
+  }
+}
+
+/* ═══ CONFIRM & PROCESS ═══ */
+function confirmColumns(){
+  // Validate required columns
+  const missing=COL_FIELDS.filter(f=>f.required&&colMap[f.key]<0);
+  if(missing.length){
+    alert('Faltan columnas obligatorias:\n'+missing.map(f=>'• '+f.label).join('\n'));
+    return;
+  }
+  processData();
+}
+
+function processData(){
+  parsedAccounts=[];
+  let skipSub=0;
+  for(let i=detectedHeaderRow+1;i<rawData.length;i++){
+    const row=rawData[i];if(!row)continue;
+    const code=cellStr(row[colMap.code]);
+    if(!code||/^(total|procesado|elaborado)/i.test(code))continue;
+    if(!code.startsWith('2365')&&!code.startsWith('2367')&&!code.startsWith('2368'))continue;
+    const name=colMap.name>=0?cellStr(row[colMap.name]):'';
+    const id=colMap.id>=0?String(row[colMap.id]||'').replace(/\s/g,''):'';
+    const tercero=colMap.tercero>=0?cellStr(row[colMap.tercero]):'';
+    const deb=colMap.deb>=0?toNum(row[colMap.deb]):0;
+    const cre=colMap.cre>=0?toNum(row[colMap.cre]):0;
+    // Skip subtotals (no valid ID)
+    const idClean=id.replace(/[^0-9]/g,'');
+    if(!idClean||idClean.length<4){skipSub++;continue}
+    if(deb===0&&cre===0)continue;
+    const isPJ=idClean.length===9||/S\.?A\.?S|LTDA|S\.?A\b|E\.?U\b|SOCIEDAD|COOPERATIVA|FUNDACI|INC\b|CORP\b/i.test(tercero);
+    parsedAccounts.push({code,name,id:idClean,tercero,deb,cre,isPJ,tipo:isPJ?'PJ':'PN'});
+  }
+  showPreview();
+}
+
+function showPreview(){
+  document.getElementById('previewCard').classList.remove('hidden');
+  const byC={};let tCre=0,tDeb=0;const tercs=new Set();
+  parsedAccounts.forEach(a=>{
+    if(!byC[a.code])byC[a.code]={code:a.code,name:a.name,deb:0,cre:0,count:0,terceros:new Set()};
+    byC[a.code].deb+=a.deb;byC[a.code].cre+=a.cre;byC[a.code].count++;
+    if(a.id){byC[a.code].terceros.add(a.id);tercs.add(a.id)}
+    tCre+=a.cre;tDeb+=a.deb;
+  });
+  const ctas=Object.values(byC);
+  document.getElementById('alertNot2365').classList.toggle('hidden',ctas.length>0);
+  const aOk=document.getElementById('alertOk');
+  if(parsedAccounts.length>0){
+    aOk.classList.remove('hidden');
+    document.getElementById('alertOkText').innerHTML=`<strong>${ctas.length} subcuentas</strong> con <strong>${parsedAccounts.length} movimientos</strong> de ${tercs.size} terceros. Retención neta: <strong>$${fN(tCre-tDeb)}</strong>`;
+  }else aOk.classList.add('hidden');
+  document.getElementById('fileStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${ctas.length}</div><div class="lbl">Subcuentas</div></div>
+    <div class="stat-card green"><div class="val">${parsedAccounts.length}</div><div class="lbl">Movimientos</div></div>
+    <div class="stat-card amber"><div class="val">${tercs.size}</div><div class="lbl">Terceros</div></div>
+    <div class="stat-card red"><div class="val">$${fN(tCre-tDeb)}</div><div class="lbl">Retención neta</div></div>`;
+  let h='<table class="map-table"><thead><tr><th>Cuenta</th><th>Nombre</th><th>Mov.</th><th>Terceros</th><th class="text-right">Débitos</th><th class="text-right">Créditos</th><th class="text-right">Neto</th></tr></thead><tbody>';
+  ctas.sort((a,b)=>a.code.localeCompare(b.code)).forEach(c=>{
+    h+=`<tr><td class="mono fw600">${c.code}</td><td>${c.name}</td><td class="text-center">${c.count}</td><td class="text-center">${c.terceros.size}</td><td class="text-right mono">${fN(c.deb)}</td><td class="text-right mono">${fN(c.cre)}</td><td class="text-right mono fw600">${fN(c.cre-c.deb)}</td></tr>`;
+  });
+  h+='</tbody></table>';
+  document.getElementById('previewTable').innerHTML=h;
+  // Scroll to preview
+  document.getElementById('previewCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ═══ STEP 3: PUC MAPPING ═══ */
+function goToStep3(){if(!parsedAccounts.length){alert('No hay movimientos.');return}goStep(3);buildMappingTable()}
+
+function autoMapAccount(code,name){
+  const n=norm(name),c=String(code);
+  for(const m of DEFAULT_MAP)if(c.startsWith(m.prefix))return{...m};
+  for(const m of DEFAULT_MAP){const kws=KEYWORDS[m.concepto]||[];for(const kw of kws){if(kw.includes('.*')){if(new RegExp(kw).test(n))return{...m,prefix:c}}else if(n.includes(kw))return{...m,prefix:c}}}
+  if(c.startsWith('2367'))return{prefix:c,name:'Retención IVA',concepto:'reteiva',aplica:'AMBOS',tarifa:15,casPJb:null,casPJr:131,casPNb:null,casPNr:131};
+  if(c.startsWith('2368'))return{prefix:c,name:'Retención Timbre',concepto:'timbre',aplica:'AMBOS',tarifa:0,casPJb:null,casPJr:135,casPNb:null,casPNr:135};
+  return{prefix:c,name:name||'Otros',concepto:'otros',aplica:'AMBOS',tarifa:3.5,casPJb:41,casPJr:54,casPNb:92,casPNr:108};
+}
+function extractTarifa(name){const m=name.match(/(\d+[.,]?\d*)\s*%/);return m?parseFloat(m[1].replace(',','.'))||null:null}
+
+function buildMappingTable(){
+  const byCode={};
+  parsedAccounts.forEach(a=>{if(!byCode[a.code])byCode[a.code]={code:a.code,name:a.name,totalDeb:0,totalCre:0,count:0};byCode[a.code].totalDeb+=a.deb;byCode[a.code].totalCre+=a.cre;byCode[a.code].count++});
+  const accs=Object.values(byCode).sort((a,b)=>a.code.localeCompare(b.code));
+  mappings=accs.map(acc=>{
+    const mapped=autoMapAccount(acc.code,acc.name);
+    const tName=extractTarifa(acc.name);
+    return{...acc,...mapped,userTarifa:tName!==null?tName:mapped.tarifa};
+  });
+  const opts=DEFAULT_MAP.map(m=>`<option value="${m.concepto}">${m.name}</option>`).join('')+'<option value="reteiva">Retención IVA</option><option value="timbre">Retención Timbre</option><option value="ignorar">— Ignorar —</option>';
+  const body=document.getElementById('mapBody');body.innerHTML='';
+  mappings.forEach((m,idx)=>{
+    const net=m.totalCre-m.totalDeb;
+    const base=m.userTarifa>0?Math.round(net/(m.userTarifa/100)):0;
+    const badge=m.aplica==='PJ'?'<span class="badge badge-pj">PJ</span>':m.aplica==='PN'?'<span class="badge badge-pn">PN</span>':'<span class="badge badge-both">Ambos</span>';
+    body.innerHTML+=`<tr><td class="mono fw600">${m.code}</td><td>${m.name} <span style="color:#999;font-size:.7rem">(${m.count})</span></td>
+      <td><select onchange="updateMap(${idx},'c',this.value)">${opts.replace('value="'+m.concepto+'"','value="'+m.concepto+'" selected')}</select></td>
+      <td class="text-center">${badge}</td>
+      <td><input type="number" value="${m.userTarifa}" step="0.01" min="0" max="100" onchange="updateMap(${idx},'t',this.value)" style="width:60px"></td>
+      <td class="text-right mono fw600">$${fN(net)}</td>
+      <td class="text-right mono" id="b${idx}">$${fN(base)}</td>
+      <td class="text-center mono">${m.casPJb||m.casPNb||'—'}</td>
+      <td class="text-center mono">${m.casPJr||m.casPNr||'—'}</td></tr>`;
+  });
+  const pjI=new Set(),pnI=new Set();
+  parsedAccounts.forEach(a=>{if(a.isPJ)pjI.add(a.id);else pnI.add(a.id)});
+  document.getElementById('mappedCount').textContent=mappings.length;
+  document.getElementById('pjCount').textContent=pjI.size;
+  document.getElementById('pnCount').textContent=pnI.size;
+}
+
+function updateMap(idx,f,v){
+  if(f==='c'){const d=DEFAULT_MAP.find(m=>m.concepto===v);if(d)Object.assign(mappings[idx],d,{concepto:v});else if(v==='reteiva')Object.assign(mappings[idx],{concepto:'reteiva',casPJr:131,casPNr:131,casPJb:null,casPNb:null});else if(v==='timbre')Object.assign(mappings[idx],{concepto:'timbre',casPJr:135,casPNr:135,casPJb:null,casPNb:null});else mappings[idx].concepto='ignorar'}
+  if(f==='t')mappings[idx].userTarifa=parseFloat(v)||0;
+  const m=mappings[idx],net=m.totalCre-m.totalDeb,base=m.userTarifa>0?Math.round(net/(m.userTarifa/100)):0;
+  const el=document.getElementById('b'+idx);if(el)el.textContent='$'+fN(base);
+}
+
+/* ═══ STEP 4: FORM 350 ═══ */
+function goStep4(){goStep(4);calc350();render350();renderDet()}
+
+function calc350(){
+  const c={};for(let i=29;i<=155;i++)c[i]=0;
+  const cM={};mappings.forEach(m=>{cM[m.code]=m});
+  const det={};
+  parsedAccounts.forEach(a=>{
+    const m=cM[a.code];if(!m||m.concepto==='ignorar')return;
+    const net=a.cre-a.deb;if(net<=0)return;
+    const t=m.userTarifa||0,base=t>0?Math.round(net/(t/100)):0;
+    let cb,cr;
+    if(a.isPJ&&m.casPJr){cb=m.casPJb;cr=m.casPJr}else if(!a.isPJ&&m.casPNr){cb=m.casPNb;cr=m.casPNr}else{cb=m.casPJb||m.casPNb;cr=m.casPJr||m.casPNr}
+    if(cb)c[cb]=(c[cb]||0)+base;if(cr)c[cr]=(c[cr]||0)+net;
+    const k=a.id||'SIN_ID';
+    if(!det[k])det[k]={id:a.id,tercero:a.tercero,isPJ:a.isPJ,conceptos:{}};
+    if(!det[k].conceptos[m.concepto])det[k].conceptos[m.concepto]={name:m.name,base:0,ret:0,cb,cr};
+    det[k].conceptos[m.concepto].base+=base;det[k].conceptos[m.concepto].ret+=net;
+  });
+  c[129]=0;
+  const rr=[42,43,44,45,46,47,48,49,50,51,52,53,54,57,58,68,69,70,71,72,73,74,75,76,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,111,112,121,122,123,124,125,126,127,128];
+  c[130]=rr.reduce((s,x)=>s+(c[x]||0),0)-(c[129]||0);
+  c[133]=0;c[134]=(c[131]||0)+(c[132]||0)-(c[133]||0);
+  c[136]=(c[130]||0)+(c[134]||0)+(c[135]||0);c[137]=0;c[138]=(c[136]||0)+(c[137]||0);
+  result350={cas:c,det};
+}
+
+function render350(){
+  const c=result350.cas;
+  const S=[
+    {t:'RETENCIONES A TÍTULO DE RENTA',r:[
+      {l:'Honorarios',bJ:29,rJ:42,bN:79,rN:95},{l:'Comisiones',bJ:30,rJ:43,bN:80,rN:96},
+      {l:'Servicios',bJ:31,rJ:44,bN:81,rN:97},{l:'Rendimientos financieros',bJ:32,rJ:45,bN:82,rN:98},
+      {l:'Arrendamientos',bJ:33,rJ:46,bN:83,rN:99},{l:'Regalías',bJ:34,rJ:47,bN:84,rN:100},
+      {l:'Dividendos',bJ:35,rJ:48,bN:85,rN:101},{l:'Compras',bJ:36,rJ:49,bN:86,rN:102},
+      {l:'Tarjetas',bJ:37,rJ:50,bN:87,rN:103},{l:'Construcción',bJ:38,rJ:51,bN:88,rN:104},
+      {l:'Enajenación activos PN',bJ:null,rJ:null,bN:89,rN:105},
+      {l:'Loterías/rifas',bJ:39,rJ:52,bN:90,rN:106},{l:'Hidrocarburos',bJ:40,rJ:53,bN:91,rN:107},
+      {l:'Otros pagos',bJ:41,rJ:54,bN:92,rN:108}
+    ]},
+    {t:'RENTAS DE TRABAJO Y PENSIONES',r:[
+      {l:'Rentas de trabajo',bJ:null,rJ:null,bN:77,rN:93},{l:'Pensiones',bJ:null,rJ:null,bN:78,rN:94}
+    ]},
+    {t:'PAGOS AL EXTERIOR',r:[
+      {l:'Sin convenio',bJ:55,rJ:57,bN:109,rN:111},{l:'Con convenio',bJ:56,rJ:58,bN:110,rN:112}
+    ]},
+    {t:'AUTORRETENCIONES',r:[
+      {l:'Exonerados 114-1',bJ:59,rJ:68,bN:null,rN:null},{l:'Ventas',bJ:60,rJ:69,bN:113,rN:121},
+      {l:'Honorarios',bJ:61,rJ:70,bN:114,rN:122},{l:'Comisiones',bJ:62,rJ:71,bN:115,rN:123},
+      {l:'Servicios',bJ:63,rJ:72,bN:116,rN:124},{l:'Rendimientos',bJ:64,rJ:73,bN:117,rN:125},
+      {l:'Otros',bJ:67,rJ:76,bN:120,rN:128}
+    ]}
+  ];
+  let h=`<div class="form350-header"><div><h2>DECLARACIÓN RETENCIONES EN LA FUENTE</h2>
+    <div style="font-size:.8rem;opacity:.8;margin-top:4px">${document.getElementById('cfgEmpresa').value} — NIT ${document.getElementById('cfgNit').value} — Período ${document.getElementById('cfgMonth').value}/${document.getElementById('cfgYear').value}</div>
+  </div><div class="f350-num">350</div></div>`;
+  S.forEach(sec=>{
+    h+=`<div class="form350-section"><h3>${sec.t}</h3><div class="f350-row header"><div>Concepto</div><div>Base PJ</div><div>Ret. PJ</div><div>Base PN</div><div>Ret. PN</div></div>`;
+    sec.r.forEach(it=>{
+      const vbJ=it.bJ?c[it.bJ]||0:0,vrJ=it.rJ?c[it.rJ]||0:0,vbN=it.bN?c[it.bN]||0:0,vrN=it.rN?c[it.rN]||0:0;
+      h+=`<div class="f350-row"><div>${it.l}</div>
+        <div class="val${vbJ?' has':''}">${it.bJ?'['+it.bJ+'] ':''}${vbJ?fN(vbJ):''}</div>
+        <div class="val${vrJ?' has':''}">${it.rJ?'['+it.rJ+'] ':''}${vrJ?fN(vrJ):''}</div>
+        <div class="val${vbN?' has':''}">${it.bN?'['+it.bN+'] ':''}${vbN?fN(vbN):''}</div>
+        <div class="val${vrN?' has':''}">${it.rN?'['+it.rN+'] ':''}${vrN?fN(vrN):''}</div></div>`;
+    });h+='</div>';
+  });
+  h+=`<div class="form350-section"><h3>TOTALES</h3>
+    <div class="f350-row total"><div>(-) Retenciones en exceso (129)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val negative">${fN(c[129])}</div></div>
+    <div class="f350-row total"><div>Total retenciones renta (130)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val has">${fN(c[130])}</div></div>
+    <div class="f350-row total"><div>Ret IVA (131+132-133=134)</div><div class="val">${fN(c[131])}</div><div class="val">${fN(c[132])}</div><div class="val negative">${fN(c[133])}</div><div class="val has">${fN(c[134])}</div></div>
+    <div class="f350-row total"><div>Timbre (135)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val">${fN(c[135])}</div></div>
+    <div class="f350-row total" style="background:var(--pri3)"><div>TOTAL RETENCIONES (136)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val has" style="font-size:1rem">${fN(c[136])}</div></div>
+    <div class="f350-row total"><div>Sanciones (137)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val">${fN(c[137])}</div></div>
+    <div class="f350-row total" style="background:#E2EFDA"><div>TOTAL A PAGAR (138)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val has" style="font-size:1rem;color:var(--green)">${fN(c[138])}</div></div>
+  </div>`;
+  document.getElementById('form350Visual').innerHTML=h;
+  document.getElementById('resultStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">$${fN(c[130])}</div><div class="lbl">Ret. Renta (130)</div></div>
+    <div class="stat-card amber"><div class="val">$${fN(c[134])}</div><div class="lbl">Ret. IVA (134)</div></div>
+    <div class="stat-card green"><div class="val">$${fN(c[136])}</div><div class="lbl">Total Ret. (136)</div></div>
+    <div class="stat-card red"><div class="val">$${fN(c[138])}</div><div class="lbl">Pago Total (138)</div></div>`;
+}
+
+function renderDet(){
+  const entries=Object.values(result350.det).sort((a,b)=>{const tA=Object.values(a.conceptos).reduce((s,c)=>s+c.ret,0);const tB=Object.values(b.conceptos).reduce((s,c)=>s+c.ret,0);return tB-tA});
+  let h='<table class="map-table"><thead><tr><th>ID</th><th>Tercero</th><th>Tipo</th><th>Concepto</th><th class="text-right">Base</th><th class="text-right">Retención</th><th>Cas.B</th><th>Cas.R</th></tr></thead><tbody>';
+  entries.forEach(e=>{
+    const cs=Object.values(e.conceptos);
+    cs.forEach((cc,i)=>{h+=`<tr>${i===0?`<td class="mono" rowspan="${cs.length}">${e.id}</td><td rowspan="${cs.length}">${e.tercero}</td><td class="text-center" rowspan="${cs.length}"><span class="badge ${e.isPJ?'badge-pj':'badge-pn'}">${e.isPJ?'PJ':'PN'}</span></td>`:''}
+      <td>${cc.name}</td><td class="text-right mono">${fN(cc.base)}</td><td class="text-right mono fw600">${fN(cc.ret)}</td>
+      <td class="text-center mono">${cc.cb||'—'}</td><td class="text-center mono">${cc.cr||'—'}</td></tr>`});
+  });
+  h+='</tbody></table>';
+  document.getElementById('detailTable').innerHTML=h;
+}
+
+/* ═══ EXCEL EXPORT ═══ */
+async function exportXls350(){
+  const c=result350.cas,wb=new ExcelJS.Workbook();
+  const C={h:'1B3A5C',w:'FFFFFF',s:'2E75B6',a:'F2F7FB',g:'E2EFDA',gh:'548235',b:'B4C6E7',t:'D6E4F0'};
+  const tb={style:'thin',color:{argb:C.b}},brd={top:tb,bottom:tb,left:tb,right:tb};
+  const fB={name:'Arial',size:10},fBo={name:'Arial',size:10,bold:true},fH={name:'Arial',size:10,bold:true,color:{argb:C.w}},fT={name:'Arial',size:13,bold:true,color:{argb:C.w}};
+  function fl(a){return{type:'pattern',pattern:'solid',fgColor:{argb:a}}}
+  function sR(ws,r,f,fi,b){r.eachCell({includeEmpty:true},c=>{if(f)c.font=f;if(fi)c.fill=fi;if(b)c.border=b;if(typeof c.value==='number')c.numFmt='#,##0'})}
+  const ws1=wb.addWorksheet('Borrador F350');
+  ws1.columns=[{width:32},{width:18},{width:18},{width:18},{width:18},{width:12}];
+  let r;
+  r=ws1.addRow(['BORRADOR FORMULARIO 350','','','','','']);ws1.mergeCells(r.number,1,r.number,6);sR(ws1,r,fT,fl(C.h),brd);r.height=28;
+  r=ws1.addRow([`${document.getElementById('cfgEmpresa').value} — NIT ${document.getElementById('cfgNit').value} — Período ${document.getElementById('cfgMonth').value}/${document.getElementById('cfgYear').value}`,'','','','','']);ws1.mergeCells(r.number,1,r.number,6);sR(ws1,r,{...fB,color:{argb:C.w},italic:true},fl(C.h),brd);
+  ws1.addRow([]);r=ws1.addRow(['Concepto','Base PJ','Retención PJ','Base PN','Retención PN','Casillas']);sR(ws1,r,fH,fl(C.s),brd);
+  const rows=[['Honorarios',c[29],c[42],c[79],c[95],'29/42/79/95'],['Comisiones',c[30],c[43],c[80],c[96],'30/43/80/96'],['Servicios',c[31],c[44],c[81],c[97],'31/44/81/97'],['Rendimientos',c[32],c[45],c[82],c[98],'32/45/82/98'],['Arrendamientos',c[33],c[46],c[83],c[99],'33/46/83/99'],['Regalías',c[34],c[47],c[84],c[100],'34/47/84/100'],['Dividendos',c[35],c[48],c[85],c[101],'35/48/85/101'],['Compras',c[36],c[49],c[86],c[102],'36/49/86/102'],['Tarjetas',c[37],c[50],c[87],c[103],'37/50/87/103'],['Construcción',c[38],c[51],c[88],c[104],'38/51/88/104'],['Enajenación PN',0,0,c[89],c[105],'89/105'],['Loterías',c[39],c[52],c[90],c[106],'39/52/90/106'],['Hidrocarburos',c[40],c[53],c[91],c[107],'40/53/91/107'],['Otros',c[41],c[54],c[92],c[108],'41/54/92/108'],['Rentas trabajo',0,0,c[77],c[93],'77/93'],['Pensiones',0,0,c[78],c[94],'78/94'],['Exterior sin conv.',c[55],c[57],c[109],c[111],'55/57/109/111'],['Exterior con conv.',c[56],c[58],c[110],c[112],'56/58/110/112'],['Autoret. 114-1',c[59],c[68],0,0,'59/68'],['Autoret. Ventas',c[60],c[69],c[113],c[121],'60/69/113/121'],['Autoret. Servicios',c[63],c[72],c[116],c[124],'63/72/116/124'],['Autoret. Otros',c[67],c[76],c[120],c[128],'67/76/120/128']];
+  rows.forEach((fr,i)=>{r=ws1.addRow(fr);sR(ws1,r,fB,i%2?fl(C.a):null,brd)});
+  ws1.addRow([]);
+  r=ws1.addRow(['Total ret. renta (130)','','','',c[130]||0,'130']);sR(ws1,r,fBo,fl(C.t),brd);
+  r=ws1.addRow(['Total ret. IVA (134)','','','',c[134]||0,'134']);sR(ws1,r,fBo,fl(C.t),brd);
+  r=ws1.addRow(['Timbre (135)','','','',c[135]||0,'135']);sR(ws1,r,fBo,fl(C.t),brd);
+  r=ws1.addRow(['TOTAL RETENCIONES (136)','','','',c[136]||0,'136']);sR(ws1,r,{...fBo,size:11},fl(C.g),brd);
+  r=ws1.addRow(['Sanciones (137)','','','',c[137]||0,'137']);sR(ws1,r,fB,null,brd);
+  r=ws1.addRow(['TOTAL A PAGAR (138)','','','',c[138]||0,'138']);sR(ws1,r,{...fBo,size:12,color:{argb:C.gh}},fl(C.g),brd);
+  const ws2=wb.addWorksheet('Detalle Terceros');
+  ws2.columns=[{width:14},{width:36},{width:8},{width:24},{width:18},{width:18},{width:10},{width:10}];
+  r=ws2.addRow(['DETALLE POR TERCERO','','','','','','','']);ws2.mergeCells(r.number,1,r.number,8);sR(ws2,r,fT,fl(C.h),brd);
+  ws2.addRow([]);r=ws2.addRow(['ID','Tercero','Tipo','Concepto','Base','Retención','Cas.B','Cas.R']);sR(ws2,r,fH,fl(C.s),brd);
+  const ent=Object.values(result350.det).sort((a,b)=>{const tA=Object.values(a.conceptos).reduce((s,cc)=>s+cc.ret,0);const tB=Object.values(b.conceptos).reduce((s,cc)=>s+cc.ret,0);return tB-tA});
+  ent.forEach((e,i)=>{Object.values(e.conceptos).forEach(cc=>{r=ws2.addRow([e.id,e.tercero,e.isPJ?'PJ':'PN',cc.name,cc.base,cc.ret,cc.cb||'',cc.cr||'']);sR(ws2,r,fB,i%2?fl(C.a):null,brd)})});
+  const buf=await wb.xlsx.writeBuffer();const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download=`Borrador_F350_${document.getElementById('cfgYear').value}_${document.getElementById('cfgMonth').value}.xlsx`;
+  a.click();URL.revokeObjectURL(url);
+}
+
+/* ═══ NAV ═══ */
+function goStep(n){
+  for(let i=1;i<=4;i++){const el=document.getElementById('step'+i);if(el)el.classList.toggle('hidden',i!==n)}
+  document.querySelectorAll('.step-pill').forEach((el,i)=>{el.classList.remove('active','done');if(i+1<n)el.classList.add('done');if(i+1===n)el.classList.add('active')});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function switchTab(el,id){el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');el.closest('.card').querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active')}
+</script>
+</body>
+</html>
