@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conciliación Bancaria — ExógenaDIAN</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--g700:#047857;--g600:#059669;--g500:#10B981;--g400:#34D399;--g200:#A7F3D0;--g100:#D1FAE5;--g50:#ECFDF5;--w:#FFF;--f50:#F9FAFB;--f100:#F3F4F6;--f200:#E5E7EB;--f300:#D1D5DB;--f400:#9CA3AF;--f500:#6B7280;--f600:#4B5563;--f700:#374151;--f800:#1F2937;--f900:#111827;--blue:#3B82F6;--amber:#F59E0B;--red:#EF4444;--r:14px}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Outfit',sans-serif;background:var(--f50);color:var(--f900);min-height:100vh}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:var(--w);border-bottom:1px solid var(--f200)}.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--f900);font-weight:800;font-size:1.1rem}.nav-mark{width:30px;height:30px;background:linear-gradient(135deg,var(--g600),var(--g400));border-radius:8px;display:grid;place-items:center;color:#fff;font-size:.75rem;font-weight:900}.nav-logo small{font-weight:400;font-size:.6rem;color:var(--f400);display:block}.nav a.back{font-size:.85rem;color:var(--f500);text-decoration:none}
+.container{max-width:1180px;margin:0 auto;padding:32px 24px}.page-header{margin-bottom:28px}.page-header h1{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:700;margin-bottom:6px}.page-header p{color:var(--f500);font-size:.95rem;line-height:1.55}
+.page-badge{display:inline-flex;align-items:center;gap:6px;background:var(--g50);border:1px solid var(--g200);padding:4px 12px;border-radius:8px;font-size:.75rem;font-weight:600;color:var(--g700);margin-bottom:12px}.page-badge::before{content:'🏦';font-size:.85rem}
+.security{display:flex;align-items:flex-start;gap:14px;padding:18px 20px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FDE68A;border-radius:14px;margin-bottom:24px}.sec-icon{font-size:1.6rem;flex-shrink:0;margin-top:2px}.sec-content strong{font-size:.9rem;color:#78350F;display:block;margin-bottom:4px}.sec-content p{font-size:.8rem;color:#92400E;line-height:1.55;margin:0}
+.card{background:var(--w);border-radius:var(--r);border:1px solid var(--f200);padding:24px;margin-bottom:20px}.card-title{font-size:1rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-info{font-size:.78rem;color:var(--g700);background:var(--g50);padding:8px 12px;border-radius:8px;margin-bottom:12px;border-left:3px solid var(--g400)}
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.drop-zone{border:2px dashed var(--f300);border-radius:var(--r);padding:36px 20px;text-align:center;cursor:pointer;transition:all .25s;position:relative;background:var(--w)}.drop-zone:hover,.drop-zone.dragover{border-color:var(--g400);background:var(--g50)}.drop-zone.loaded{border-color:var(--g500);border-style:solid;background:var(--g50)}.drop-zone .dz-icon{font-size:2.2rem;margin-bottom:8px;display:block}.drop-zone .dz-title{font-size:.9rem;font-weight:700;margin-bottom:4px}.drop-zone .dz-hint{font-size:.76rem;color:var(--f400)}.drop-zone .dz-file{font-size:.8rem;color:var(--g700);font-weight:600;margin-top:8px}.drop-zone .dz-rows{font-size:.72rem;color:var(--f400);margin-top:2px}.drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}.drop-zone .dz-clear{position:absolute;top:8px;right:8px;background:var(--f100);border:none;border-radius:6px;padding:4px 8px;font-size:.7rem;font-weight:600;color:var(--f500);cursor:pointer;display:none;z-index:2}.drop-zone.loaded .dz-clear{display:block}
+/* Raw preview: color-coded rows */
+.raw-preview{overflow-x:auto;border:1px solid var(--f200);border-radius:10px;max-height:260px;overflow-y:auto;margin:10px 0;font-size:.7rem}.raw-preview table{width:100%;border-collapse:collapse}.raw-preview th{background:var(--f100);padding:5px 7px;text-align:left;font-weight:700;color:var(--f500);border-bottom:1px solid var(--f200);white-space:nowrap;position:sticky;top:0;z-index:1}.raw-preview td{padding:4px 7px;border-bottom:1px solid var(--f100);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis}
+.raw-preview tr.rSkip td{background:var(--f50);color:var(--f400);font-style:italic}.raw-preview tr.rHead td{background:#DBEAFE;color:#1E40AF;font-weight:700}.raw-preview tr.rData td{background:var(--w);color:var(--f700)}
+.raw-preview td.rn{background:var(--f100);color:var(--f400);font-weight:700;text-align:center;width:30px;min-width:30px;font-size:.65rem;position:sticky;left:0;z-index:1}
+/* Controls */
+.ctrl-row{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0;align-items:end}.ctrl-item{display:flex;flex-direction:column;gap:2px}.ctrl-item label{font-size:.7rem;font-weight:700;color:var(--f500);text-transform:uppercase;letter-spacing:.3px}
+.ctrl-item select,.ctrl-item input[type=number]{padding:5px 10px;border-radius:8px;border:1px solid var(--f300);font-family:'Outfit',sans-serif;font-size:.82rem;background:var(--w)}.ctrl-item input[type=number]{width:70px}
+.ctrl-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--g500)}
+.col-map{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.col-map .map-item{flex:1;min-width:120px}.col-map label{font-size:.72rem;font-weight:600;color:var(--f600)}.col-map select{padding:5px 8px;border-radius:8px;border:1px solid var(--f300);font-family:'Outfit',sans-serif;font-size:.76rem;margin-top:2px;display:block;width:100%;background:var(--w)}.col-map select.mapped{border-color:var(--g500);background:var(--g50)}
+/* Parsed preview */
+.parsed-preview{overflow-x:auto;border:1px solid var(--g200);border-radius:10px;margin:10px 0;background:var(--g50)}.parsed-preview table{width:100%;border-collapse:collapse;font-size:.72rem}.parsed-preview th{background:var(--g100);padding:6px 8px;text-align:left;font-weight:700;color:var(--g700);border-bottom:1px solid var(--g200)}.parsed-preview td{padding:5px 8px;border-bottom:1px solid var(--g100);color:var(--f700)}.parsed-preview .num{text-align:right;font-variant-numeric:tabular-nums}.parsed-preview .ok{color:var(--g600)}.parsed-preview .warn{color:var(--amber)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:600;font-size:.9rem;transition:all .2s;cursor:pointer;border:none;text-decoration:none}.btn-primary{background:var(--g600);color:#fff}.btn-primary:hover{background:var(--g700);transform:translateY(-1px);box-shadow:0 4px 14px rgba(5,150,105,.25)}.btn-primary:disabled{background:var(--f300);cursor:not-allowed;transform:none;box-shadow:none}.btn-outline{background:transparent;color:var(--f700);border:1.5px solid var(--f200)}.btn-outline:hover{border-color:var(--g400);color:var(--g700)}.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+/* Results */
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.summary-card{background:var(--w);border-radius:12px;padding:18px 16px;border:1px solid var(--f200);text-align:center}.sc-val{font-size:1.4rem;font-weight:800;line-height:1;margin-bottom:3px}.sc-label{font-size:.72rem;color:var(--f400);font-weight:500}.sc-green .sc-val{color:var(--g600)}.sc-blue .sc-val{color:var(--blue)}.sc-amber .sc-val{color:var(--amber)}.sc-red .sc-val{color:var(--red)}
+.recon-summary{background:var(--w);border:1.5px solid var(--f200);border-radius:var(--r);padding:20px 24px;margin-bottom:20px}.recon-summary h3{font-size:.95rem;font-weight:700;margin-bottom:12px}.rr{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:.85rem;border-bottom:1px dashed var(--f200)}.rr:last-child{border-bottom:none;font-weight:800;padding-top:10px;font-size:.9rem}.rr-l{color:var(--f600)}.rr-v{font-variant-numeric:tabular-nums;font-weight:600}.rr-pos{color:var(--g700)}.rr-neg{color:var(--red)}.rr-bold{font-weight:800;font-size:.95rem}
+.results-tabs{display:flex;gap:0;border-bottom:2px solid var(--f200)}.results-tab{padding:10px 20px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;background:none;color:var(--f400);border-bottom:2px solid transparent;margin-bottom:-2px;font-family:'Outfit',sans-serif}.results-tab.active{color:var(--g700);border-bottom-color:var(--g500)}.tab-count{background:var(--f100);padding:1px 7px;border-radius:6px;font-size:.72rem;margin-left:4px}.results-tab.active .tab-count{background:var(--g100);color:var(--g700)}
+.results-panel{display:none}.results-panel.active{display:block}.results-scroll{max-height:520px;overflow-y:auto;border:1px solid var(--f200);border-radius:0 0 10px 10px}
+.rtable{width:100%;border-collapse:collapse;font-size:.74rem}.rtable th{background:var(--f50);padding:8px 10px;text-align:left;font-weight:700;color:var(--f500);border-bottom:2px solid var(--f200);position:sticky;top:0;white-space:nowrap;z-index:1}.rtable td{padding:6px 10px;border-bottom:1px solid var(--f100);color:var(--f700)}.rtable tr:hover td{background:#F0FFF4}
+.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}.conf{display:inline-block;padding:2px 8px;border-radius:6px;font-size:.65rem;font-weight:700}.conf-alta{background:var(--g100);color:var(--g700)}.conf-media{background:#DBEAFE;color:#1E40AF}.conf-baja{background:#FEF3C7;color:#92400E}
+.tipo-in{color:var(--g600);font-weight:700}.tipo-out{color:var(--red);font-weight:700}.desc-cell{max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.paywall{text-align:center;padding:40px 20px;background:linear-gradient(180deg,var(--w),var(--f50));border-radius:var(--r);border:1.5px dashed var(--f300);margin-top:16px}.paywall h3{font-size:1rem;font-weight:700;margin-bottom:6px}.paywall p{font-size:.85rem;color:var(--f500);margin-bottom:16px}
+.pricing-mini{display:flex;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}.pm-opt{background:var(--w);border:1.5px solid var(--f200);border-radius:10px;padding:12px 18px;text-align:center;min-width:120px}.pm-opt.selected{border-color:var(--g400);background:var(--g50)}.pm-rows{font-size:.72rem;color:var(--f400);font-weight:600}.pm-price{font-size:1.1rem;font-weight:800;color:var(--g700)}.pm-unit{font-size:.68rem;color:var(--f400)}
+.steps-indicator{display:flex;align-items:center;gap:0;margin-bottom:28px}.step-ind{display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:.82rem;font-weight:600;color:var(--f400)}.step-ind.active{color:var(--g700)}.step-ind.done{color:var(--g500)}.step-num{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.75rem;font-weight:800;background:var(--f100);color:var(--f400)}.step-ind.active .step-num{background:var(--g500);color:#fff}.step-ind.done .step-num{background:var(--g100);color:var(--g700)}.step-arrow{color:var(--f300);font-size:.7rem;margin:0 4px}
+.disclaimer-footer{margin-top:20px;padding:14px 18px;background:var(--f50);border:1px solid var(--f200);border-radius:10px;text-align:center}.disclaimer-footer p{font-size:.76rem;color:var(--f400);margin:0;line-height:1.5}
+.hidden{display:none}
+@media(max-width:768px){.upload-grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr 1fr}.col-map{flex-direction:column}.container{padding:20px 16px}.ctrl-row{flex-direction:column}}
+</style>
+</head>
+<body>
+<nav class="nav"><a href="index.html" class="nav-logo"><div class="nav-mark">E</div><div>ExógenaDIAN<small>Portal Contable</small></div></a><a href="index.html" class="back">← Volver al inicio</a></nav>
+<div class="container">
+<div class="page-header"><div class="page-badge">Conciliación Bancaria Automática</div><h1>Concilia extracto vs libro auxiliar</h1><p>Sube ambos archivos en Excel o CSV. La herramienta detecta automáticamente la estructura y te permite verificar antes de procesar.</p></div>
+<div class="security"><div class="sec-icon">🔒</div><div class="sec-content"><strong>Tu información está 100% protegida</strong><p>Esta herramienta funciona completamente en tu navegador. Tus archivos <u>nunca se suben a ningún servidor</u>, no se transmiten por internet y no quedan almacenados. Ni ExógenaDIAN ni terceros acceden a tu información financiera. Al cerrar la pestaña, todo desaparece.</p></div></div>
+<div class="steps-indicator"><div class="step-ind active" id="si1"><div class="step-num">1</div> Subir</div><div class="step-arrow">→</div><div class="step-ind" id="si2"><div class="step-num">2</div> Verificar</div><div class="step-arrow">→</div><div class="step-ind" id="si3"><div class="step-num">3</div> Resultados</div></div>
+
+<div id="step1">
+<div class="upload-grid">
+<div class="drop-zone" id="dzE"><input type="file" accept=".xlsx,.xls,.csv,.tsv,.txt" id="fE"><button class="dz-clear" onclick="clearFile('E');event.stopPropagation()">✕</button><span class="dz-icon">🏦</span><div class="dz-title">Extracto Bancario</div><div class="dz-hint">Excel o CSV · Bancolombia, Davivienda, Bogotá, otros</div><div class="dz-file" id="nE"></div><div class="dz-rows" id="rE"></div></div>
+<div class="drop-zone" id="dzA"><input type="file" accept=".xlsx,.xls,.csv,.tsv,.txt" id="fA"><button class="dz-clear" onclick="clearFile('A');event.stopPropagation()">✕</button><span class="dz-icon">📒</span><div class="dz-title">Libro Auxiliar Contable</div><div class="dz-hint">Excel o CSV · Siigo, World Office, Helisa, otros</div><div class="dz-file" id="nA"></div><div class="dz-rows" id="rA"></div></div>
+</div>
+<div class="actions"><button class="btn btn-primary" id="btnNext" disabled onclick="goStep2()">Continuar → Verificar columnas</button></div>
+</div>
+
+<div id="step2" class="hidden">
+<div class="card" id="cardE"></div>
+<div class="card" id="cardA"></div>
+<div class="card"><div class="card-title">⚙️ Opciones de cruce</div>
+<div class="ctrl-row"><div class="ctrl-item"><label>Tolerancia monto</label><select id="optTol"><option value="0">Exacto</option><option value="1" selected>± $1</option><option value="10">± $10</option><option value="100">± $100</option><option value="500">± $500</option></select></div></div></div>
+<div class="actions"><button class="btn btn-outline" onclick="goStep1()">← Volver</button><button class="btn btn-primary" onclick="ejecutar()">🔄 Conciliar</button></div>
+</div>
+
+<div id="step3" class="hidden">
+<div class="summary" id="sumCards"></div><div id="reconBox"></div>
+<div class="card" style="padding:0;overflow:hidden"><div class="results-tabs" id="rTabs"></div><div id="rPanels"></div></div>
+<div id="payZone"></div>
+<div class="actions"><button class="btn btn-outline" onclick="goStep1()">← Nueva conciliación</button><button class="btn btn-primary" id="btnXls" onclick="exportXls()">📥 Descargar Excel</button></div>
+<div class="disclaimer-footer"><p>🔒 Ningún dato fue enviado, almacenado ni procesado fuera de tu navegador. Al cerrar esta pestaña, toda la información se elimina automáticamente.</p></div>
+</div>
+</div>
+<script>
+/* ========================================================================
+   CONCILIACIÓN BANCARIA v3 — FINAL BULLETPROOF
+   Filosofía: auto-detectar → mostrar → dejar corregir → procesar
+   ======================================================================== */
+const FREE_LIMIT = 50;
+const PRICING = [{max:50,price:0},{max:200,price:3000,label:'$3.000'},{max:500,price:5000,label:'$5.000'},{max:999999,price:10000,label:'$10.000'}];
+
+/* State per file: E = extracto, A = auxiliar */
+const F = {
+  E: {raw:null,display:null,headerRow:0,noHeader:false,numFmt:'auto',map:{},name:''},
+  A: {raw:null,display:null,headerRow:0,noHeader:false,numFmt:'auto',map:{},name:''}
+};
+let resultados = null;
+
+/* ══════════════════════════════════════════
+   1. FILE READING — handles xlsx, xls, csv
+   ══════════════════════════════════════════ */
+['E','A'].forEach(k => {
+  const dz = document.getElementById('dz'+k);
+  const inp = document.getElementById('f'+k);
+  ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => {e.preventDefault();dz.classList.add('dragover')}));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => {e.preventDefault();dz.classList.remove('dragover')}));
+  dz.addEventListener('drop', e => {if(e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0], k)});
+  inp.addEventListener('change', e => {if(e.target.files[0]) readFile(e.target.files[0], k)});
+});
+
+function readFile(file, k) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const wb = XLSX.read(ev.target.result, {type:'array', cellDates:true});
+      /* Pick sheet with most rows */
+      let best = null, bestN = 0;
+      for (const sn of wb.SheetNames) {
+        const raw = XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:'', raw:true});
+        const disp = XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:'', raw:false});
+        const n = raw.filter(r => r.some(c => c !== '' && c != null)).length;
+        if (n > bestN) { best = {sn, raw, disp}; bestN = n; }
+      }
+      if (!best || bestN < 2) { alert('El archivo parece vacío o no tiene datos suficientes.'); return; }
+
+      /* Remove completely empty rows but keep row indices consistent */
+      const rawClean = [], dispClean = [];
+      for (let i = 0; i < best.raw.length; i++) {
+        if (best.raw[i].some(c => c !== '' && c != null)) {
+          rawClean.push(best.raw[i]);
+          dispClean.push(best.disp[i] || best.raw[i]);
+        }
+      }
+
+      F[k].raw = rawClean;
+      F[k].display = dispClean;
+      F[k].name = file.name;
+      F[k].headerRow = findBestHeaderRow(rawClean);
+      F[k].noHeader = false;
+      F[k].numFmt = 'auto';
+
+      document.getElementById('n'+k).textContent = file.name;
+      document.getElementById('r'+k).textContent = rawClean.length + ' filas · hoja: ' + best.sn;
+      document.getElementById('dz'+k).classList.add('loaded');
+      checkReady();
+    } catch(err) {
+      alert('Error al leer el archivo: ' + err.message + '\n\nAsegúrate de que no tenga contraseña y sea un archivo Excel o CSV válido.');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function clearFile(k) {
+  F[k].raw = null; F[k].display = null;
+  document.getElementById('f'+k).value = '';
+  document.getElementById('n'+k).textContent = '';
+  document.getElementById('r'+k).textContent = '';
+  document.getElementById('dz'+k).classList.remove('loaded');
+  checkReady();
+}
+
+function checkReady() {
+  document.getElementById('btnNext').disabled = !(F.E.raw && F.A.raw);
+}
+
+/* ══════════════════════════════════════════
+   2. HEADER ROW DETECTION
+   Scores each row: header-like text vs numbers
+   Handles Bancolombia (row 14), Siigo (row 0), etc.
+   ══════════════════════════════════════════ */
+const HEADER_KEYWORDS = /^(fecha|descripci|detalle|concepto|valor|monto|saldo|d[eé]bito|cr[eé]dito|referencia|documento|comprobante|cuenta|tercero|nombre|sucursal|dcto|c[oó]digo|tipo|abono|cargo|retiro|identificaci|movimiento|secuencia|centro|cheque|nro|desde|hasta)/i;
+
+function findBestHeaderRow(rows) {
+  let bestI = 0, bestScore = -Infinity;
+  const limit = Math.min(rows.length, 30);
+  for (let i = 0; i < limit; i++) {
+    const r = rows[i];
+    if (!r || r.length < 2) continue;
+    let score = 0, filled = 0;
+    for (const c of r) {
+      if (c == null || c === '') continue;
+      filled++;
+      const s = String(c).trim();
+      if (HEADER_KEYWORDS.test(s)) score += 10;
+      else if (typeof c === 'string' && isNaN(Number(s.replace(/[,$.\-\s]/g,'')))) score += 1;
+      else score -= 1; /* numbers penalize */
+    }
+    /* Bonus: more filled cells = more likely a header */
+    score += filled * 0.5;
+    /* Bonus: next row has numbers (data follows) */
+    if (i + 1 < rows.length) {
+      const next = rows[i+1];
+      if (next) {
+        const nums = next.filter(c => typeof c === 'number' || (c && !isNaN(Number(String(c).replace(/[,$.\-\s]/g,''))))).length;
+        if (nums >= 2) score += 5;
+      }
+    }
+    if (score > bestScore) { bestScore = score; bestI = i; }
+  }
+  return bestI;
+}
+
+/* ══════════════════════════════════════════
+   3. NUMBER FORMAT DETECTION & PARSING
+   Analyzes a column to determine: colombian (1.234,56)
+   vs US (1,234.56) vs plain (1234.56)
+   ══════════════════════════════════════════ */
+function detectNumFormat(rows, colIdx) {
+  let patCOL = 0, patUS = 0, patPlain = 0;
+  for (let i = 0; i < Math.min(rows.length, 50); i++) {
+    const c = rows[i][colIdx];
+    if (c == null || c === '' || typeof c === 'number') { patPlain++; continue; }
+    const s = String(c).trim().replace(/[$\s\-()]/g,'');
+    if (!s || !/\d/.test(s)) continue;
+    /* 1.234,56 or 1.234.567,89 → Colombian */
+    if (/^\d{1,3}(\.\d{3})+(,\d{1,2})?$/.test(s)) { patCOL++; continue; }
+    /* 1,234.56 or 1,234,567.89 → US */
+    if (/^\d{1,3}(,\d{3})+(\.\d{1,2})?$/.test(s)) { patUS++; continue; }
+    /* Has comma as last separator → likely COL decimal */
+    if (/,\d{1,2}$/.test(s) && !s.includes('.')) { patCOL++; continue; }
+    /* Has dot as last separator → likely US decimal or plain */
+    if (/\.\d{1,2}$/.test(s) && !s.includes(',')) { patUS++; continue; }
+    patPlain++;
+  }
+  if (patCOL > patUS && patCOL > patPlain) return 'col';
+  if (patUS > patCOL) return 'us';
+  return 'plain';
+}
+
+function toNum(v, fmt) {
+  if (typeof v === 'number') return v;
+  if (v == null || v === '') return 0;
+  let s = String(v).trim();
+  /* Dashes as zero */
+  if (/^[-–—]+$/.test(s)) return 0;
+  /* Remove currency symbols and spaces */
+  s = s.replace(/[$COP\s]/gi, '');
+  /* Parentheses = negative */
+  let neg = false;
+  if (s.startsWith('(') && s.endsWith(')')) { neg = true; s = s.slice(1,-1); }
+  if (s.startsWith('-')) { neg = true; s = s.substring(1); }
+  s = s.trim();
+  if (!s || !/\d/.test(s)) return 0;
+
+  if (fmt === 'col') {
+    /* Colombian: 1.234.567,89 → dots are thousands, comma is decimal */
+    s = s.replace(/\./g, '').replace(',', '.');
+  } else if (fmt === 'us') {
+    /* US: 1,234,567.89 → commas are thousands, dot is decimal */
+    s = s.replace(/,/g, '');
+  } else {
+    /* Auto/plain: heuristic per-value */
+    if (s.includes('.') && s.includes(',')) {
+      const lastDot = s.lastIndexOf('.'), lastComma = s.lastIndexOf(',');
+      if (lastComma > lastDot) s = s.replace(/\./g,'').replace(',','.');
+      else s = s.replace(/,/g,'');
+    } else if (s.includes(',')) {
+      const afterComma = s.split(',').pop();
+      if (afterComma.length <= 2) s = s.replace(',','.');
+      else s = s.replace(/,/g,'');
+    } else if (s.includes('.')) {
+      const parts = s.split('.');
+      if (parts.length > 2) s = s.replace(/\./g,''); /* multiple dots = thousands */
+      /* else single dot: leave as decimal */
+    }
+  }
+  /* Remove any remaining non-numeric except dot and minus */
+  s = s.replace(/[^\d.]/g, '');
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : (neg ? -n : n);
+}
+
+/* ══════════════════════════════════════════
+   4. DATE PARSING — handles all Colombian formats
+   ══════════════════════════════════════════ */
+function guessYearFromFile(rows, colIdx, startRow) {
+  /* Look for a 4-digit year in date column or in metadata rows */
+  for (let i = 0; i < Math.min(rows.length, startRow + 30); i++) {
+    const v = String(rows[i][colIdx] || '');
+    const m = v.match(/(20[2-3]\d)/);
+    if (m) return +m[1];
+  }
+  /* Scan ALL cells in first rows for a year */
+  for (let i = 0; i < Math.min(rows.length, 10); i++) {
+    for (const c of (rows[i] || [])) {
+      const m = String(c || '').match(/(20[2-3]\d)/);
+      if (m) return +m[1];
+    }
+  }
+  return new Date().getFullYear();
+}
+
+const MONTHS_ES = {ene:0,feb:1,mar:2,abr:3,may:4,jun:5,jul:6,ago:7,sep:8,oct:9,nov:10,dic:11,enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7,septiembre:8,octubre:9,noviembre:10,diciembre:11};
+
+function parseDate(v, yearHint) {
+  if (!v) return null;
+  if (v instanceof Date && !isNaN(v)) return v;
+  if (typeof v === 'number') {
+    if (v > 40000 && v < 55000) return new Date((v - 25569) * 86400000); /* Excel serial */
+    return null;
+  }
+  let s = String(v).trim();
+  /* Remove time part */
+  s = s.replace(/\s+\d{1,2}:\d{2}(:\d{2})?.*$/, '');
+  let d, m, y, match;
+  /* dd-mm-yyyy or dd/mm/yyyy */
+  match = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (match) { d=+match[1]; m=+match[2]; y=+match[3]; return new Date(y, m-1, d); }
+  /* yyyy-mm-dd or yyyy/mm/dd */
+  match = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+  if (match) { y=+match[1]; m=+match[2]; d=+match[3]; return new Date(y, m-1, d); }
+  /* d/mm without year (Bancolombia) */
+  match = s.match(/^(\d{1,2})[\/\-](\d{1,2})$/);
+  if (match) { d=+match[1]; m=+match[2]; return new Date(yearHint||2026, m-1, d); }
+  /* "2 de enero 2026" or "enero 2, 2026" */
+  match = s.toLowerCase().match(/(\d{1,2})\s+de\s+(\w+)(?:\s+(?:de\s+)?(\d{4}))?/);
+  if (match && MONTHS_ES[match[2]] !== undefined) {
+    d=+match[1]; m=MONTHS_ES[match[2]]; y=match[3]?+match[3]:yearHint;
+    return new Date(y, m, d);
+  }
+  /* "Ene 2" or "2 Ene" */
+  match = s.toLowerCase().match(/(\w{3,})\s+(\d{1,2})/);
+  if (match && MONTHS_ES[match[1]] !== undefined) return new Date(yearHint, MONTHS_ES[match[1]], +match[2]);
+  match = s.toLowerCase().match(/(\d{1,2})\s+(\w{3,})/);
+  if (match && MONTHS_ES[match[2]] !== undefined) return new Date(yearHint, MONTHS_ES[match[2]], +match[1]);
+  return null;
+}
+
+/* ══════════════════════════════════════════
+   5. COLUMN AUTO-DETECTION
+   Uses header names + data analysis
+   ══════════════════════════════════════════ */
+/* Columns to NEVER map as value columns */
+const BLACKLIST = /saldo|identificaci|nit|codigo|cuenta|secuencia|centro|sucursal|consecutivo|c[oó]digo/i;
+
+function detectColumns(headers, dataRows, isExtracto) {
+  const h = headers.map(x => norm(x));
+  const map = {fecha:-1, desc:-1, ref:-1, debito:-1, credito:-1, valor:-1, tercero:-1};
+
+  /* Pass 1: keyword matching on headers */
+  const rules = [
+    ['fecha',   ['fecha','date','fec','fch']],
+    ['desc',    ['descripcion','detalle','concepto','observacion','movimiento']],
+    ['ref',     ['referencia','dcto','dcto.','comprobante','nro','cheque','transaccion']],
+    ['debito',  ['debito','cargo','retiro','salida','egreso']],
+    ['credito', ['credito','abono','deposito','entrada','consignacion']],
+    ['valor',   ['valor','monto','importe','amount','vlr']],
+    ['tercero', ['nombre tercero','tercero','razon social','beneficiario']],
+  ];
+  for (const [field, kws] of rules) {
+    for (let i = 0; i < h.length; i++) {
+      /* Already mapped to another field? skip */
+      if (Object.values(map).includes(i)) continue;
+      if (kws.some(k => h[i].includes(k))) {
+        /* Guard: don't map blacklisted columns as values */
+        if (['debito','credito','valor'].includes(field) && BLACKLIST.test(headers[i])) continue;
+        /* Guard: don't map 'saldo' as valor */
+        if (field === 'valor' && h[i].includes('saldo')) continue;
+        /* Guard: desc shouldn't grab 'tercero' or 'cuenta' */
+        if (field === 'desc' && (h[i].includes('tercero') || h[i].includes('cuenta'))) continue;
+        map[field] = i;
+        break;
+      }
+    }
+  }
+
+  /* Pass 2: data analysis for missing fields */
+  if (isExtracto && map.valor === -1 && map.debito === -1 && map.credito === -1) {
+    /* Extracto: find column with both positive and negative values */
+    for (let i = 0; i < headers.length; i++) {
+      if (Object.values(map).includes(i)) continue;
+      if (BLACKLIST.test(headers[i]) || h[i].includes('saldo')) continue;
+      let pos = 0, neg = 0;
+      for (let r = 0; r < Math.min(50, dataRows.length); r++) {
+        const v = typeof dataRows[r][i] === 'number' ? dataRows[r][i] : toNum(dataRows[r][i], 'auto');
+        if (v > 0) pos++; if (v < 0) neg++;
+      }
+      if (pos >= 3 && neg >= 2) { map.valor = i; break; }
+    }
+  }
+
+  if (!isExtracto && map.debito === -1 && map.credito === -1 && map.valor === -1) {
+    /* Auxiliar: find two numeric columns (not blacklisted) */
+    const numCols = [];
+    for (let i = 0; i < headers.length; i++) {
+      if (Object.values(map).includes(i)) continue;
+      if (BLACKLIST.test(headers[i]) || h[i].includes('saldo') || h[i].includes('inicial') || h[i].includes('total')) continue;
+      let cnt = 0;
+      for (let r = 0; r < Math.min(20, dataRows.length); r++) {
+        const v = dataRows[r][i];
+        if (typeof v === 'number') cnt++;
+        else if (v && !isNaN(Number(String(v).replace(/[,$.\-\s()]/g,'')))) cnt++;
+      }
+      if (cnt >= 5) numCols.push(i);
+    }
+    if (numCols.length >= 2) { map.debito = numCols[0]; map.credito = numCols[1]; }
+    else if (numCols.length === 1) { map.valor = numCols[0]; }
+  }
+
+  /* Date fallback: find column with date-like values */
+  if (map.fecha === -1) {
+    for (let i = 0; i < headers.length; i++) {
+      if (Object.values(map).includes(i)) continue;
+      let dc = 0;
+      for (let r = 0; r < Math.min(15, dataRows.length); r++) {
+        const v = dataRows[r][i];
+        if (v instanceof Date) dc++;
+        else if (typeof v === 'number' && v > 40000 && v < 55000) dc++;
+        else if (typeof v === 'string' && /\d{1,2}[\/\-]\d{1,2}/.test(v)) dc++;
+      }
+      if (dc >= 5) { map.fecha = i; break; }
+    }
+  }
+
+  /* Desc fallback: longest text column */
+  if (map.desc === -1) {
+    let best = 0, bestI = -1;
+    for (let i = 0; i < headers.length; i++) {
+      if (Object.values(map).includes(i)) continue;
+      const avg = dataRows.slice(0,20).reduce((s,r) => s + String(r[i]||'').length, 0) / Math.min(20, dataRows.length);
+      if (avg > best) { best = avg; bestI = i; }
+    }
+    if (bestI >= 0) map.desc = bestI;
+  }
+
+  return map;
+}
+
+function norm(s) { return (s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
+
+/* ══════════════════════════════════════════
+   6. STEP 2: RENDER FILE CARDS
+   Shows raw preview, controls, column mapping,
+   and parsed preview — all reactive
+   ══════════════════════════════════════════ */
+function goStep1() { show('step1'); hide('step2'); hide('step3'); setSI(1); }
+function goStep2() {
+  /* Initialize detection for both files */
+  for (const k of ['E','A']) {
+    const f = F[k];
+    const hdr = f.headerRow;
+    const headers = f.noHeader
+      ? f.raw[0].map((_,i) => 'Col_' + String.fromCharCode(65+i))
+      : (f.raw[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
+    const dataStart = f.noHeader ? 0 : hdr + 1;
+    const dataRows = cleanRows(f.raw.slice(dataStart));
+    f.map = detectColumns(headers, dataRows, k === 'E');
+    /* Detect numeric format from value columns */
+    const valCol = f.map.valor >= 0 ? f.map.valor : (f.map.debito >= 0 ? f.map.debito : -1);
+    if (valCol >= 0 && f.numFmt === 'auto') {
+      const detected = detectNumFormat(f.display.slice(dataStart), valCol);
+      f.numFmt = detected;
+    }
+  }
+  renderFileCard('E'); renderFileCard('A');
+  hide('step1'); show('step2'); hide('step3'); setSI(2);
+}
+
+function renderFileCard(k) {
+  const f = F[k];
+  const isE = k === 'E';
+  const label = isE ? '🏦 Extracto Bancario' : '📒 Libro Auxiliar';
+  const rows = f.raw;
+  const hdr = f.headerRow;
+  const noH = f.noHeader;
+  const dataStart = noH ? 0 : hdr + 1;
+  const headers = noH
+    ? rows[0].map((_,i) => 'Col_' + String.fromCharCode(65 + (i % 26)))
+    : (rows[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
+  const dataRows = cleanRows(rows.slice(dataStart));
+
+  let html = `<div class="card-title">${label} — ${esc(f.name)}</div>`;
+
+  /* Controls: header row, no-header, number format */
+  html += `<div class="ctrl-row">
+    <div class="ctrl-item"><label>Fila encabezado</label><input type="number" min="1" max="${rows.length}" value="${hdr+1}" onchange="changeHeader('${k}',+this.value-1)" id="hdrIn${k}" ${noH?'disabled':''}></div>
+    <div class="ctrl-item" style="flex-direction:row;align-items:center;gap:6px;align-self:end"><input type="checkbox" ${noH?'checked':''} onchange="toggleNoHeader('${k}',this.checked)"><label style="text-transform:none;cursor:pointer">Sin encabezado</label></div>
+    <div class="ctrl-item"><label>Formato numérico</label><select onchange="changeNumFmt('${k}',this.value)" id="fmtSel${k}">
+      <option value="auto" ${f.numFmt==='auto'?'selected':''}>Auto-detectar</option>
+      <option value="plain" ${f.numFmt==='plain'?'selected':''}>Sin separador (1234.56)</option>
+      <option value="us" ${f.numFmt==='us'?'selected':''}>Americano (1,234.56)</option>
+      <option value="col" ${f.numFmt==='col'?'selected':''}>Colombiano (1.234,56)</option>
+    </select></div>
+  </div>`;
+
+  /* Info */
+  const valMode = f.map.valor >= 0 ? 'valor único con signo' : (f.map.debito >= 0 ? 'débito/crédito separados' : '⚠ no se detectaron columnas de valor');
+  html += `<div class="card-info">${dataRows.length} movimientos · ${valMode} · formato: ${f.numFmt}</div>`;
+
+  /* Raw preview with colored rows */
+  const showN = Math.min(rows.length, 25);
+  html += `<div class="raw-preview"><table><tr><th style="width:30px">#</th>`;
+  const maxCols = Math.max(...rows.slice(0, showN).map(r => r.length));
+  for (let c = 0; c < Math.min(maxCols, 12); c++) html += `<th>Col ${c+1}</th>`;
+  html += '</tr>';
+  for (let i = 0; i < showN; i++) {
+    const cls = (i === hdr && !noH) ? 'rHead' : (i < dataStart ? 'rSkip' : 'rData');
+    html += `<tr class="${cls}"><td class="rn">${i+1}</td>`;
+    for (let c = 0; c < Math.min(maxCols, 12); c++) {
+      let v = f.display[i] ? f.display[i][c] : '';
+      if (v instanceof Date) v = v.toLocaleDateString('es-CO');
+      html += `<td title="${esc(String(v||''))}">${esc(String(v||'').substring(0,30))}</td>`;
+    }
+    html += '</tr>';
+  }
+  if (rows.length > showN) html += `<tr class="rSkip"><td class="rn">…</td><td colspan="${Math.min(maxCols,12)}">… ${rows.length - showN} filas más</td></tr>`;
+  html += '</table></div>';
+  html += '<div style="font-size:.68rem;color:var(--f400);margin-bottom:8px">🔵 = encabezado · ⬜ = datos · 🔘 = ignorado</div>';
+
+  /* Column mapping */
+  const fields = isE
+    ? [{k:'fecha',l:'📅 Fecha'},{k:'desc',l:'📝 Descripción'},{k:'ref',l:'🔢 Ref/Dcto'},{k:'valor',l:'💰 Valor (±signo)'},{k:'debito',l:'➖ Débito'},{k:'credito',l:'➕ Crédito'}]
+    : [{k:'fecha',l:'📅 Fecha'},{k:'desc',l:'📝 Descripción'},{k:'ref',l:'🔢 Comprobante'},{k:'tercero',l:'👤 Tercero'},{k:'debito',l:'➖ Débito'},{k:'credito',l:'➕ Crédito'},{k:'valor',l:'💰 Valor único'}];
+
+  html += '<div class="col-map">';
+  for (const fld of fields) {
+    const opts = headers.map((h,i) => `<option value="${i}" ${f.map[fld.k]===i?'selected':''}>${esc(h)}</option>`).join('');
+    html += `<div class="map-item"><label>${fld.l}</label><select class="${f.map[fld.k]>=0?'mapped':''}" onchange="changeMap('${k}','${fld.k}',+this.value);this.className=this.value>=0?'mapped':''"><option value="-1">— No aplica —</option>${opts}</select></div>`;
+  }
+  html += '</div>';
+
+  /* Parsed preview: show how system interprets the first 5 data rows */
+  const yearHint = f.map.fecha >= 0 ? guessYearFromFile(rows, f.map.fecha, dataStart) : 2026;
+  html += '<div style="font-size:.78rem;font-weight:700;color:var(--f600);margin:12px 0 4px">Vista previa interpretada (verifica que los valores se lean bien):</div>';
+  html += '<div class="parsed-preview"><table><tr><th>Fecha</th><th>Descripción</th>';
+  if (!isE) html += '<th>Tercero</th>';
+  html += '<th>Ref</th>';
+  if (f.map.valor >= 0) html += '<th>Valor</th>';
+  else { html += '<th>Débito</th><th>Crédito</th>'; }
+  html += '</tr>';
+
+  const previewRows = dataRows.slice(0, 5);
+  for (const r of previewRows) {
+    const fecha = f.map.fecha >= 0 ? parseDate(r[f.map.fecha], yearHint) : null;
+    const desc = f.map.desc >= 0 ? String(r[f.map.desc]||'') : '';
+    const ref = f.map.ref >= 0 ? String(r[f.map.ref]||'') : '';
+    const tercero = f.map.tercero >= 0 ? String(r[f.map.tercero]||'') : '';
+    let valHtml = '';
+    if (f.map.valor >= 0) {
+      const raw = r[f.map.valor];
+      const parsed = toNum(raw, f.numFmt);
+      const cls = parsed === 0 && raw !== 0 && raw !== '' && raw != null ? 'warn' : 'ok';
+      valHtml = `<td class="num ${cls}" title="Original: ${esc(String(raw))}">${fmtN(parsed)}</td>`;
+    } else {
+      const rawD = f.map.debito >= 0 ? r[f.map.debito] : '';
+      const rawC = f.map.credito >= 0 ? r[f.map.credito] : '';
+      const pD = toNum(rawD, f.numFmt), pC = toNum(rawC, f.numFmt);
+      valHtml = `<td class="num" title="Original: ${esc(String(rawD))}">${fmtN(pD)}</td><td class="num" title="Original: ${esc(String(rawC))}">${fmtN(pC)}</td>`;
+    }
+    html += `<tr><td class="${fecha?'ok':'warn'}">${fecha ? fecha.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'}) : '⚠ ?'}</td>`;
+    html += `<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(desc.substring(0,40))}</td>`;
+    if (!isE) html += `<td>${esc(tercero.substring(0,25))}</td>`;
+    html += `<td>${esc(ref.substring(0,20))}</td>${valHtml}</tr>`;
+  }
+  html += '</table></div>';
+  if (previewRows.length === 0) html += '<div class="card-info" style="border-left-color:var(--amber)">⚠ No se encontraron filas de datos. Verifica la fila del encabezado.</div>';
+
+  document.getElementById('card'+k).innerHTML = html;
+}
+
+/* Reactive controls */
+function changeHeader(k, row) {
+  F[k].headerRow = Math.max(0, Math.min(row, F[k].raw.length - 2));
+  refreshDetection(k);
+}
+function toggleNoHeader(k, val) {
+  F[k].noHeader = val;
+  const inp = document.getElementById('hdrIn'+k);
+  if (inp) inp.disabled = val;
+  refreshDetection(k);
+}
+function changeNumFmt(k, fmt) { F[k].numFmt = fmt; renderFileCard(k); }
+function changeMap(k, field, val) { F[k].map[field] = val; renderFileCard(k); }
+function refreshDetection(k) {
+  const f = F[k];
+  const hdr = f.noHeader ? 0 : f.headerRow;
+  const headers = f.noHeader
+    ? f.raw[0].map((_,i) => 'Col_' + String.fromCharCode(65+i))
+    : (f.raw[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
+  const dataStart = f.noHeader ? 0 : hdr + 1;
+  const dataRows = cleanRows(f.raw.slice(dataStart));
+  f.map = detectColumns(headers, dataRows, k === 'E');
+  /* Re-detect number format */
+  const valCol = f.map.valor >= 0 ? f.map.valor : (f.map.debito >= 0 ? f.map.debito : -1);
+  if (valCol >= 0) f.numFmt = detectNumFormat(f.display.slice(dataStart), valCol);
+  renderFileCard(k);
+}
+
+function cleanRows(rows) {
+  return rows.filter(r => {
+    if (!r || r.every(c => c == null || c === '')) return false;
+    const fc = norm(String(r[0]||''));
+    if (fc.startsWith('total') || fc.includes('fin estado') || fc.includes('procesado en') || fc.startsWith('saldo anterior') || fc.startsWith('subtotal') || fc.includes('resumen')) return false;
+    return true;
+  });
+}
+
+/* ══════════════════════════════════════════
+   7. MATCHING ALGORITHM
+   Sign-aware, multi-pass, tolerance-aware
+   Handles duplicates intelligently
+   ══════════════════════════════════════════ */
+function ejecutar() {
+  const tol = +(document.getElementById('optTol').value || 1);
+
+  /* Parse records from both files */
+  const ext = buildRecords('E');
+  const aux = buildRecords('A');
+  if (ext.length === 0) { alert('No se encontraron movimientos en el extracto. Verifica la fila del encabezado y el mapeo de columnas.'); return; }
+  if (aux.length === 0) { alert('No se encontraron movimientos en el auxiliar. Verifica la fila del encabezado y el mapeo de columnas.'); return; }
+
+  const matched = [];
+  const uE = new Set(), uA = new Set();
+
+  /* Pass 1: exact amount + exact date + same sign */
+  doPass(ext, aux, uE, uA, matched, tol, 0, true, 'alta', 'Monto, fecha y tipo exactos');
+  /* Pass 2: exact amount + ±2 days */
+  doPass(ext, aux, uE, uA, matched, tol, 2, true, 'alta', 'Monto y tipo, fecha ±2 días');
+  /* Pass 3: ±5 days */
+  doPass(ext, aux, uE, uA, matched, tol, 5, true, 'media', 'Monto y tipo, fecha ±5 días');
+  /* Pass 4: reference match */
+  doPassRef(ext, aux, uE, uA, matched, tol, 'media', 'Monto y referencia');
+  /* Pass 5: ±15 days */
+  doPass(ext, aux, uE, uA, matched, tol, 15, true, 'baja', 'Monto y tipo, ±15 días');
+  /* Pass 6: loose ±31 days, ignore sign */
+  doPass(ext, aux, uE, uA, matched, tol, 31, false, 'baja', 'Solo monto (±31 días)');
+
+  const soloE = ext.filter((_,i) => !uE.has(i));
+  const soloA = aux.filter((_,i) => !uA.has(i));
+
+  const sE = {d: sum(ext,'deb'), c: sum(ext,'cre')};
+  const sA = {d: sum(aux,'deb'), c: sum(aux,'cre')};
+  const ssE = {d: sum(soloE,'deb'), c: sum(soloE,'cre')};
+  const ssA = {d: sum(soloA,'deb'), c: sum(soloA,'cre')};
+
+  resultados = {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, tol};
+  renderResults();
+  hide('step2'); show('step3'); setSI(3);
+}
+
+function buildRecords(k) {
+  const f = F[k];
+  const hdr = f.noHeader ? 0 : f.headerRow;
+  const dataStart = f.noHeader ? 0 : hdr + 1;
+  const dataRows = cleanRows(f.raw.slice(dataStart));
+  const yearHint = f.map.fecha >= 0 ? guessYearFromFile(f.raw, f.map.fecha, dataStart) : 2026;
+  const fmt = f.numFmt;
+  const recs = [];
+
+  for (const r of dataRows) {
+    const fecha = f.map.fecha >= 0 ? parseDate(r[f.map.fecha], yearHint) : null;
+    const desc = f.map.desc >= 0 ? String(r[f.map.desc]||'').trim() : '';
+    const ref = f.map.ref >= 0 ? String(r[f.map.ref]||'').trim() : '';
+    const tercero = f.map.tercero >= 0 ? String(r[f.map.tercero]||'').trim() : '';
+    let deb = 0, cre = 0;
+
+    if (f.map.valor >= 0 && f.map.debito < 0 && f.map.credito < 0) {
+      const v = toNum(r[f.map.valor], fmt);
+      if (v > 0) deb = v; else if (v < 0) cre = Math.abs(v);
+    } else {
+      deb = f.map.debito >= 0 ? Math.abs(toNum(r[f.map.debito], fmt)) : 0;
+      cre = f.map.credito >= 0 ? Math.abs(toNum(r[f.map.credito], fmt)) : 0;
+    }
+    if (deb === 0 && cre === 0) continue;
+    recs.push({fecha, desc, ref, tercero, deb, cre});
+  }
+  return recs;
+}
+
+function doPass(ext, aux, uE, uA, matched, tol, dayTol, chkSign, conf, reason) {
+  for (let i = 0; i < ext.length; i++) {
+    if (uE.has(i)) continue;
+    for (let j = 0; j < aux.length; j++) {
+      if (uA.has(j)) continue;
+      if (!amtMatch(ext[i], aux[j], tol, chkSign)) continue;
+      if (!dateClose(ext[i].fecha, aux[j].fecha, dayTol)) continue;
+      matched.push({ei:i, ai:j, conf, reason});
+      uE.add(i); uA.add(j); break;
+    }
+  }
+}
+
+function doPassRef(ext, aux, uE, uA, matched, tol, conf, reason) {
+  for (let i = 0; i < ext.length; i++) {
+    if (uE.has(i)) continue;
+    for (let j = 0; j < aux.length; j++) {
+      if (uA.has(j)) continue;
+      if (!amtMatch(ext[i], aux[j], tol, true)) continue;
+      if (!refMatch(ext[i], aux[j])) continue;
+      matched.push({ei:i, ai:j, conf, reason});
+      uE.add(i); uA.add(j); break;
+    }
+  }
+}
+
+function amtMatch(e, a, tol, chkSign) {
+  /* Extracto: deb = entry, cre = exit | Auxiliar: deb = entry, cre = exit (same direction for bank account) */
+  if (chkSign) {
+    if (e.deb > 0 && a.deb > 0) return Math.abs(e.deb - a.deb) <= tol;
+    if (e.cre > 0 && a.cre > 0) return Math.abs(e.cre - a.cre) <= tol;
+    return false;
+  }
+  return Math.abs((e.deb||e.cre) - (a.deb||a.cre)) <= tol;
+}
+
+function dateClose(d1, d2, tol) {
+  if (!d1 || !d2) return tol >= 15;
+  return Math.abs(d1 - d2) / 864e5 <= tol;
+}
+
+function refMatch(e, a) {
+  const ne = (e.ref + ' ' + e.desc).match(/\d{4,}/g) || [];
+  const na = (a.ref + ' ' + a.desc).match(/\d{4,}/g) || [];
+  for (const n of ne) if (na.some(m => m.includes(n) || n.includes(m))) return true;
+  return false;
+}
+
+function sum(arr, field) { return arr.reduce((s, r) => s + (r[field]||0), 0); }
+
+/* ══════════════════════════════════════════
+   8. RENDER RESULTS
+   ══════════════════════════════════════════ */
+function renderResults() {
+  const {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, tol} = resultados;
+  const total = Math.max(ext.length, aux.length);
+  const needsPay = total > FREE_LIMIT;
+  const lim = needsPay ? FREE_LIMIT : 999999;
+
+  /* Summary cards */
+  document.getElementById('sumCards').innerHTML =
+    sc('sc-green', matched.length, 'Conciliadas') +
+    sc('sc-blue', soloE.length, 'Solo extracto') +
+    sc('sc-amber', soloA.length, 'Solo auxiliar') +
+    sc('sc-red', '$'+fmtN(Math.abs((sE.d-sE.c)-(sA.d-sA.c))), 'Diferencia neta');
+
+  /* Reconciliation */
+  const seN = sE.d - sE.c, saN = sA.d - sA.c;
+  document.getElementById('reconBox').innerHTML =
+    '<div class="recon-summary"><h3>📋 Informe de Conciliación</h3>' +
+    rr('Saldo neto extracto (Déb − Cré)', '$'+fmtN(seN), '') +
+    rr('(+) En extracto no en libros (Débitos)', '+ $'+fmtN(ssE.d), 'rr-pos') +
+    rr('(−) En extracto no en libros (Créditos)', '− $'+fmtN(ssE.c), 'rr-neg') +
+    rr('(+) En libros no en extracto (Débitos)', '+ $'+fmtN(ssA.d), 'rr-pos') +
+    rr('(−) En libros no en extracto (Créditos)', '− $'+fmtN(ssA.c), 'rr-neg') +
+    rr('Saldo neto libro auxiliar (Déb − Cré)', '$'+fmtN(saN), 'rr-bold') +
+    '</div>';
+
+  /* Tabs */
+  const tabs = [
+    {id:'conc', l:'✓ Conciliadas', n:matched.length},
+    {id:'ext', l:'🏦 Solo Extracto', n:soloE.length},
+    {id:'aux', l:'📒 Solo Auxiliar', n:soloA.length},
+  ];
+  document.getElementById('rTabs').innerHTML = tabs.map((t,i) =>
+    `<button class="results-tab ${i===0?'active':''}" onclick="swTab('${t.id}',this)">${t.l}<span class="tab-count">${t.n}</span></button>`
+  ).join('');
+
+  let p = '';
+  /* Conciliadas */
+  p += '<div class="results-panel active" id="panel-conc"><div class="results-scroll"><table class="rtable"><tr><th>#</th><th>Fecha Ext</th><th>Desc Extracto</th><th>Tipo</th><th>Valor Ext</th><th>Fecha Aux</th><th>Tercero/Desc Aux</th><th>Valor Aux</th>';
+  if (tol > 0) p += '<th>Dif</th>';
+  p += '<th>Conf</th></tr>';
+  matched.slice(0,lim).forEach((m,idx) => {
+    const e = ext[m.ei], a = aux[m.ai];
+    const tipo = e.deb > 0 ? 'Entrada' : 'Salida';
+    const tc = e.deb > 0 ? 'tipo-in' : 'tipo-out';
+    const ve = e.deb || e.cre, va = a.deb || a.cre;
+    const diff = Math.abs(ve - va);
+    const cl = 'conf-'+m.conf, lb = m.conf==='alta'?'✓ Alta':m.conf==='media'?'~ Media':'? Baja';
+    const ad = a.tercero || a.desc;
+    p += `<tr><td>${idx+1}</td><td>${fD(e.fecha)}</td><td class="desc-cell" title="${esc(e.desc)}">${esc(e.desc)}</td><td class="${tc}">${tipo}</td><td class="num">${fmtN(ve)}</td><td>${fD(a.fecha)}</td><td class="desc-cell" title="${esc(ad)}">${esc(ad)}</td><td class="num">${fmtN(va)}</td>`;
+    if (tol > 0) p += `<td class="num" style="color:${diff>0?'var(--amber)':'var(--f300)'}">${diff > 0 ? fmtN(diff) : '—'}</td>`;
+    p += `<td><span class="conf ${cl}" title="${m.reason}">${lb}</span></td></tr>`;
+  });
+  p += '</table></div></div>';
+
+  /* Solo Extracto */
+  p += '<div class="results-panel" id="panel-ext"><div class="results-scroll"><table class="rtable"><tr><th>#</th><th>Fecha</th><th>Descripción</th><th>Tipo</th><th>Valor</th><th>Posible causa</th></tr>';
+  soloE.slice(0,lim).forEach((e,i) => {
+    const tipo = e.deb > 0 ? 'Entrada' : 'Salida';
+    const tc = e.deb > 0 ? 'tipo-in' : 'tipo-out';
+    p += `<tr><td>${i+1}</td><td>${fD(e.fecha)}</td><td class="desc-cell" title="${esc(e.desc)}">${esc(e.desc)}</td><td class="${tc}">${tipo}</td><td class="num">${fmtN(e.deb||e.cre)}</td><td style="font-size:.7rem;color:var(--f400)">${guessCausa(e.desc)}</td></tr>`;
+  });
+  p += '</table></div></div>';
+
+  /* Solo Auxiliar */
+  p += '<div class="results-panel" id="panel-aux"><div class="results-scroll"><table class="rtable"><tr><th>#</th><th>Fecha</th><th>Tercero</th><th>Descripción</th><th>Ref</th><th>Tipo</th><th>Valor</th></tr>';
+  soloA.slice(0,lim).forEach((a,i) => {
+    const tipo = a.deb > 0 ? 'Débito' : 'Crédito';
+    const tc = a.deb > 0 ? 'tipo-in' : 'tipo-out';
+    p += `<tr><td>${i+1}</td><td>${fD(a.fecha)}</td><td class="desc-cell" title="${esc(a.tercero)}">${esc(a.tercero)}</td><td class="desc-cell" title="${esc(a.desc)}">${esc(a.desc)}</td><td>${esc(a.ref)}</td><td class="${tc}">${tipo}</td><td class="num">${fmtN(a.deb||a.cre)}</td></tr>`;
+  });
+  p += '</table></div></div>';
+  document.getElementById('rPanels').innerHTML = p;
+
+  /* Paywall */
+  if (needsPay) {
+    document.getElementById('payZone').innerHTML =
+      `<div class="paywall"><h3>🔒 Tu archivo tiene ${total} filas (gratis: ${FREE_LIMIT})</h3><p>Se muestran ${FREE_LIMIT} partidas. Para todo + Excel:</p><div class="pricing-mini">${PRICING.filter(p=>p.price>0).map(pr=>`<div class="pm-opt ${total<=pr.max?'selected':''}"><div class="pm-rows">Hasta ${pr.max}</div><div class="pm-price">${pr.label}</div><div class="pm-unit">COP</div></div>`).join('')}</div><button class="btn btn-primary" onclick="alert('Integración Wompi próximamente.')">Desbloquear</button></div>`;
+    document.getElementById('btnXls').style.display = 'none';
+  } else {
+    document.getElementById('payZone').innerHTML = '';
+    document.getElementById('btnXls').style.display = '';
+  }
+}
+
+function guessCausa(desc) {
+  const d = (desc||'').toLowerCase();
+  if (d.includes('4x1000')||d.includes('impto gobierno')||d.includes('gmf')) return 'GMF / 4×1000';
+  if (d.includes('interes')&&(d.includes('ahorro')||d.includes('bancario'))) return 'Intereses bancarios';
+  if (d.includes('comision')||d.includes('cuota manejo')) return 'Comisión bancaria';
+  if (d.includes('bold')||d.includes('nequi')||d.includes('daviplata')||d.includes('pse')) return 'Plataforma digital';
+  if (d.includes('retefuente')||d.includes('retencion')) return 'Retención';
+  return 'Pendiente de registro';
+}
+
+/* ══════════════════════════════════════════
+   9. EXPORT EXCEL
+   ══════════════════════════════════════════ */
+function exportXls() {
+  if (!resultados) return;
+  const {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA} = resultados;
+  const wb = XLSX.utils.book_new();
+  const seN = sE.d-sE.c, saN = sA.d-sA.c;
+
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([
+    ['CONCILIACIÓN BANCARIA'],
+    ['Generado por ExógenaDIAN', new Date().toLocaleDateString('es-CO')],
+    [],['INFORME'],
+    ['Saldo neto extracto', seN],
+    ['(+) En extracto no en libros (Déb)', ssE.d],
+    ['(−) En extracto no en libros (Cré)', ssE.c],
+    ['(+) En libros no en extracto (Déb)', ssA.d],
+    ['(−) En libros no en extracto (Cré)', ssA.c],
+    ['Saldo neto auxiliar', saN],
+    [],['ESTADÍSTICAS'],
+    ['Movimientos extracto', ext.length], ['Movimientos auxiliar', aux.length],
+    ['Conciliadas', matched.length], ['Solo extracto', soloE.length], ['Solo auxiliar', soloA.length],
+    [],['PRIVACIDAD'],['Procesado 100% en navegador. ExógenaDIAN no accedió a los datos.'],
+  ]), 'Resumen');
+
+  const ws1 = [['#','Fecha Ext','Desc Ext','Tipo','Valor Ext','Fecha Aux','Tercero Aux','Desc Aux','Valor Aux','Confianza','Criterio']];
+  matched.forEach((m,i) => {
+    const e=ext[m.ei], a=aux[m.ai];
+    ws1.push([i+1, fD(e.fecha), e.desc, e.deb>0?'Entrada':'Salida', e.deb||e.cre, fD(a.fecha), a.tercero, a.desc, a.deb||a.cre, m.conf, m.reason]);
+  });
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(ws1), 'Conciliadas');
+
+  const ws2 = [['#','Fecha','Descripción','Tipo','Valor','Causa']];
+  soloE.forEach((e,i) => ws2.push([i+1, fD(e.fecha), e.desc, e.deb>0?'Entrada':'Salida', e.deb||e.cre, guessCausa(e.desc)]));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(ws2), 'Solo Extracto');
+
+  const ws3 = [['#','Fecha','Tercero','Descripción','Ref','Tipo','Valor']];
+  soloA.forEach((a,i) => ws3.push([i+1, fD(a.fecha), a.tercero, a.desc, a.ref, a.deb>0?'Débito':'Crédito', a.deb||a.cre]));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(ws3), 'Solo Auxiliar');
+
+  XLSX.writeFile(wb, 'Conciliacion_'+new Date().toISOString().slice(0,10)+'.xlsx');
+}
+
+/* ══════════════════════════════════════════
+   UTILITIES
+   ══════════════════════════════════════════ */
+function show(id){document.getElementById(id).classList.remove('hidden')}
+function hide(id){document.getElementById(id).classList.add('hidden')}
+function setSI(n){for(let i=1;i<=3;i++){const e=document.getElementById('si'+i);e.classList.remove('active','done');if(i<n)e.classList.add('done');if(i===n)e.classList.add('active')}}
+function swTab(id,btn){document.querySelectorAll('.results-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.results-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('panel-'+id).classList.add('active')}
+function fmtN(n){if(typeof n==='string')return n;if(typeof n!=='number'||isNaN(n))return'—';return Math.round(Math.abs(n)).toLocaleString('es-CO')}
+function fD(d){if(!d)return'—';return d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'})}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function sc(cls,val,lab){return`<div class="summary-card ${cls}"><div class="sc-val">${val}</div><div class="sc-label">${lab}</div></div>`}
+function rr(l,v,c){return`<div class="rr"><span class="rr-l">${l}</span><span class="rr-v ${c}">${v}</span></div>`}
+</script>
+</body>
+</html>
