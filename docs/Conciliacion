@@ -41,6 +41,32 @@
 .pricing-mini{display:flex;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}.pm-opt{background:var(--w);border:1.5px solid var(--f200);border-radius:10px;padding:12px 18px;text-align:center;min-width:120px}.pm-opt.selected{border-color:var(--g400);background:var(--g50)}.pm-rows{font-size:.72rem;color:var(--f400);font-weight:600}.pm-price{font-size:1.1rem;font-weight:800;color:var(--g700)}.pm-unit{font-size:.68rem;color:var(--f400)}
 .steps-indicator{display:flex;align-items:center;gap:0;margin-bottom:28px}.step-ind{display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:.82rem;font-weight:600;color:var(--f400)}.step-ind.active{color:var(--g700)}.step-ind.done{color:var(--g500)}.step-num{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.75rem;font-weight:800;background:var(--f100);color:var(--f400)}.step-ind.active .step-num{background:var(--g500);color:#fff}.step-ind.done .step-num{background:var(--g100);color:var(--g700)}.step-arrow{color:var(--f300);font-size:.7rem;margin:0 4px}
 .disclaimer-footer{margin-top:20px;padding:14px 18px;background:var(--f50);border:1px solid var(--f200);border-radius:10px;text-align:center}.disclaimer-footer p{font-size:.76rem;color:var(--f400);margin:0;line-height:1.5}
+/* Analysis grid */
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.analysis-card{background:var(--w);border-radius:var(--r);border:1px solid var(--f200);padding:20px;overflow:hidden}
+.analysis-card h3{font-size:.88rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cat-list{list-style:none;padding:0;margin:0}
+.cat-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--f100);font-size:.82rem}
+.cat-item:last-child{border-bottom:none}
+.cat-icon{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:.8rem;flex-shrink:0}
+.cat-left{display:flex;align-items:center;gap:10px}
+.cat-name{font-weight:600;color:var(--f700)}.cat-count{font-size:.68rem;color:var(--f400);font-weight:500}
+.cat-val{font-weight:700;font-variant-numeric:tabular-nums;font-size:.85rem}
+.cat-val.val-red{color:var(--red)}.cat-val.val-green{color:var(--g600)}.cat-val.val-amber{color:var(--amber)}
+.cat-total{display:flex;justify-content:space-between;padding:10px 0 0;margin-top:6px;border-top:2px solid var(--f200);font-weight:800;font-size:.88rem}
+/* Bridge reconciliation */
+.bridge{background:var(--w);border-radius:var(--r);border:1.5px solid var(--f200);padding:24px;margin-bottom:20px}
+.bridge h3{font-size:.95rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.bridge-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:.85rem;border-radius:8px;margin-bottom:4px}
+.bridge-row.br-start{background:var(--g50);font-weight:700;border:1px solid var(--g200)}
+.bridge-row.br-end{background:var(--g50);font-weight:800;border:1px solid var(--g200);font-size:.9rem;margin-top:8px}
+.bridge-row.br-add{background:#EFF6FF;border:1px solid #BFDBFE;color:#1E40AF}
+.bridge-row.br-sub{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B}
+.bridge-row.br-sep{border:none;padding:4px 12px;font-size:.72rem;color:var(--f400);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:8px}
+.br-label{flex:1}.br-val{font-variant-numeric:tabular-nums;font-weight:700;text-align:right;min-width:120px}
+.bridge-check{display:flex;align-items:center;gap:8px;margin-top:12px;padding:10px 14px;border-radius:10px;font-size:.82rem;font-weight:700}
+.bridge-check.ok{background:var(--g50);color:var(--g700);border:1px solid var(--g200)}
+.bridge-check.diff{background:#FEF2F2;color:#991B1B;border:1px solid #FECACA}
 .hidden{display:none}
 @media(max-width:768px){.upload-grid{grid-template-columns:1fr}.summary{grid-template-columns:1fr 1fr}.col-map{flex-direction:column}.container{padding:20px 16px}.ctrl-row{flex-direction:column}}
 </style>
@@ -69,7 +95,7 @@
 </div>
 
 <div id="step3" class="hidden">
-<div class="summary" id="sumCards"></div><div id="reconBox"></div>
+<div class="summary" id="sumCards"></div><div id="reconBox"></div><div id="analysisBox"></div>
 <div class="card" style="padding:0;overflow:hidden"><div class="results-tabs" id="rTabs"></div><div id="rPanels"></div></div>
 <div id="payZone"></div>
 <div class="actions"><button class="btn btn-outline" onclick="goStep1()">← Nueva conciliación</button><button class="btn btn-primary" id="btnXls" onclick="exportXls()">📥 Descargar Excel</button></div>
@@ -81,7 +107,7 @@
    CONCILIACIÓN BANCARIA v3 — FINAL BULLETPROOF
    Filosofía: auto-detectar → mostrar → dejar corregir → procesar
    ======================================================================== */
-const FREE_LIMIT = 50;
+const FREE_LIMIT = 500;
 const PRICING = [{max:50,price:0},{max:200,price:3000,label:'$3.000'},{max:500,price:5000,label:'$5.000'},{max:999999,price:10000,label:'$10.000'}];
 
 /* State per file: E = extracto, A = auxiliar */
@@ -713,34 +739,160 @@ function refMatch(e, a) {
 function sum(arr, field) { return arr.reduce((s, r) => s + (r[field]||0), 0); }
 
 /* ══════════════════════════════════════════
-   8. RENDER RESULTS
+   8. CATEGORIZATION ENGINE
+   Classifies unconciled items into accounting categories
+   ══════════════════════════════════════════ */
+const CATEGORIES = [
+  {id:'gmf',      name:'GMF / 4×1000',           icon:'🏛️', color:'#DC2626', bg:'#FEF2F2',
+   test: d => d.includes('4x1000')||d.includes('impto gobierno')||d.includes('gmf')||d.includes('4 x 1000')||d.includes('gravamen')},
+  {id:'interes',  name:'Intereses recibidos',     icon:'📈', color:'#059669', bg:'#ECFDF5',
+   test: d => (d.includes('interes')||d.includes('interés'))&&(d.includes('ahorro')||d.includes('bancario')||d.includes('cdt')||d.includes('rendimiento'))},
+  {id:'comision', name:'Comisiones bancarias',     icon:'🏦', color:'#D97706', bg:'#FFFBEB',
+   test: d => d.includes('comision')||d.includes('comisión')||d.includes('cobro servicio')},
+  {id:'cuota',    name:'Cuota de manejo',          icon:'💳', color:'#9333EA', bg:'#F5F3FF',
+   test: d => d.includes('cuota manejo')||d.includes('cuota de manejo')||d.includes('cobro cuota')},
+  {id:'retefte',  name:'Retención en la fuente',   icon:'📋', color:'#BE185D', bg:'#FDF2F8',
+   test: d => d.includes('retefuente')||d.includes('retefte')||(d.includes('retencion')&&d.includes('fuente'))||(d.includes('retención')&&d.includes('fuente'))},
+  {id:'reteiva',  name:'Retención de IVA',         icon:'📑', color:'#0369A1', bg:'#F0F9FF',
+   test: d => (d.includes('retencion')||d.includes('retención'))&&(d.includes('iva')||d.includes('i.v.a'))},
+  {id:'reteica',  name:'Retención de ICA',         icon:'🏢', color:'#4338CA', bg:'#EEF2FF',
+   test: d => (d.includes('retencion')||d.includes('retención'))&&d.includes('ica')},
+  {id:'plataforma', name:'Plataformas digitales',  icon:'📱', color:'#0891B2', bg:'#ECFEFF',
+   test: d => d.includes('bold')||d.includes('nequi')||d.includes('daviplata')||d.includes('pse')||d.includes('rappipay')||d.includes('wompi')},
+  {id:'cheque',   name:'Cheques',                  icon:'📝', color:'#64748B', bg:'#F8FAFC',
+   test: d => d.includes('cheque')||d.includes('chq')},
+  {id:'otro',     name:'Otros sin clasificar',     icon:'❓', color:'#6B7280', bg:'#F9FAFB',
+   test: () => true},
+];
+
+function categorize(items) {
+  const cats = {};
+  CATEGORIES.forEach(c => cats[c.id] = {def:c, items:[], totalDeb:0, totalCre:0});
+  for (const item of items) {
+    const d = (item.desc||'').toLowerCase();
+    for (const c of CATEGORIES) {
+      if (c.test(d)) {
+        cats[c.id].items.push(item);
+        cats[c.id].totalDeb += item.deb || 0;
+        cats[c.id].totalCre += item.cre || 0;
+        break;
+      }
+    }
+  }
+  return cats;
+}
+
+function guessCausa(desc) {
+  const d = (desc||'').toLowerCase();
+  for (const c of CATEGORIES) {
+    if (c.id !== 'otro' && c.test(d)) return c.name;
+  }
+  return 'Pendiente de clasificar';
+}
+
+/* ══════════════════════════════════════════
+   9. RENDER RESULTS
+   Bridge + Analysis + Tabs
    ══════════════════════════════════════════ */
 function renderResults() {
   const {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, tol} = resultados;
   const total = Math.max(ext.length, aux.length);
   const needsPay = total > FREE_LIMIT;
   const lim = needsPay ? FREE_LIMIT : 999999;
+  const pctConc = ext.length > 0 ? Math.round(matched.length / Math.max(ext.length, aux.length) * 100) : 0;
 
   /* Summary cards */
   document.getElementById('sumCards').innerHTML =
     sc('sc-green', matched.length, 'Conciliadas') +
     sc('sc-blue', soloE.length, 'Solo extracto') +
     sc('sc-amber', soloA.length, 'Solo auxiliar') +
-    sc('sc-red', '$'+fmtN(Math.abs((sE.d-sE.c)-(sA.d-sA.c))), 'Diferencia neta');
+    `<div class="summary-card" style="border-color:${pctConc>=90?'var(--g400)':pctConc>=70?'var(--amber)':'var(--red)'}"><div class="sc-val" style="color:${pctConc>=90?'var(--g600)':pctConc>=70?'var(--amber)':'var(--red)'}">${pctConc}%</div><div class="sc-label">Conciliación</div></div>`;
 
-  /* Reconciliation */
-  const seN = sE.d - sE.c, saN = sA.d - sA.c;
-  document.getElementById('reconBox').innerHTML =
-    '<div class="recon-summary"><h3>📋 Informe de Conciliación</h3>' +
-    rr('Saldo neto extracto (Déb − Cré)', '$'+fmtN(seN), '') +
-    rr('(+) En extracto no en libros (Débitos)', '+ $'+fmtN(ssE.d), 'rr-pos') +
-    rr('(−) En extracto no en libros (Créditos)', '− $'+fmtN(ssE.c), 'rr-neg') +
-    rr('(+) En libros no en extracto (Débitos)', '+ $'+fmtN(ssA.d), 'rr-pos') +
-    rr('(−) En libros no en extracto (Créditos)', '− $'+fmtN(ssA.c), 'rr-neg') +
-    rr('Saldo neto libro auxiliar (Déb − Cré)', '$'+fmtN(saN), 'rr-bold') +
-    '</div>';
+  /* ── BRIDGE: Saldo Extracto → Partidas conciliatorias → Saldo Libros ── */
+  const saldoE = sE.d - sE.c;
+  const saldoA = sA.d - sA.c;
+  const diffFinal = saldoE - saldoA;
 
-  /* Tabs */
+  let bh = '<div class="bridge"><h3>🔗 Puente de Conciliación</h3>';
+  bh += br('br-start', 'Saldo neto según extracto bancario', fmtS(saldoE));
+  bh += br('br-sep', 'Partidas registradas en extracto, NO en libros', '');
+  if (ssE.d > 0) bh += br('br-add', '(+) Débitos en extracto no registrados en libros', '+ ' + fmtS(ssE.d));
+  if (ssE.c > 0) bh += br('br-sub', '(−) Créditos en extracto no registrados en libros', '− ' + fmtS(ssE.c));
+  bh += br('br-sep', 'Partidas registradas en libros, NO en extracto', '');
+  if (ssA.d > 0) bh += br('br-sub', '(−) Débitos en libros no reflejados en extracto', '− ' + fmtS(ssA.d));
+  if (ssA.c > 0) bh += br('br-add', '(+) Créditos en libros no reflejados en extracto', '+ ' + fmtS(ssA.c));
+  bh += br('br-end', 'Saldo neto según libro auxiliar', fmtS(saldoA));
+
+  const checkVal = saldoE + ssE.d - ssE.c - ssA.d + ssA.c;
+  const checkOk = Math.abs(checkVal - saldoA) < 2;
+  bh += `<div class="bridge-check ${checkOk ? 'ok' : 'diff'}">${checkOk ? '✓ El puente cuadra correctamente' : '⚠ Diferencia de $ ' + fmtN(Math.abs(checkVal - saldoA)) + ' — revise partidas pendientes'}</div>`;
+  bh += '</div>';
+  document.getElementById('reconBox').innerHTML = bh;
+
+  /* ── ANALYSIS: Categorized bank charges + unconciled items ── */
+  const catsE = categorize(soloE);
+  const catsA = categorize(soloA);
+
+  let ah = '<div class="analysis-grid">';
+  /* Card: Solo extracto por categoría */
+  ah += '<div class="analysis-card"><h3>🏦 Partidas solo en extracto</h3>';
+  ah += renderCatList(catsE, soloE);
+  ah += '</div>';
+  /* Card: Solo auxiliar por categoría */
+  ah += '<div class="analysis-card"><h3>📒 Partidas solo en libros</h3>';
+  ah += renderCatList(catsA, soloA);
+  ah += '</div>';
+  ah += '</div>';
+
+  /* Card: Resumen de gastos bancarios (solo extracto: salidas) */
+  const bankCharges = [
+    {id:'gmf', label:'GMF / 4×1000'},
+    {id:'comision', label:'Comisiones bancarias'},
+    {id:'cuota', label:'Cuota de manejo'},
+    {id:'retefte', label:'Retención en la fuente'},
+    {id:'reteiva', label:'Retención de IVA'},
+    {id:'reteica', label:'Retención de ICA'},
+  ];
+  const hasCharges = bankCharges.some(bc => catsE[bc.id] && catsE[bc.id].items.length > 0);
+  const interestItems = catsE.interes ? catsE.interes.items : [];
+
+  if (hasCharges || interestItems.length > 0) {
+    ah += '<div class="analysis-card" style="grid-column:1/-1"><h3>💰 Resumen contable — Movimientos bancarios pendientes de registro</h3>';
+    ah += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
+
+    /* Gastos bancarios */
+    if (hasCharges) {
+      ah += '<div><div style="font-size:.78rem;font-weight:700;color:var(--red);margin-bottom:8px">Gastos bancarios por registrar</div><ul class="cat-list">';
+      let totalGastos = 0;
+      for (const bc of bankCharges) {
+        const cat = catsE[bc.id];
+        if (!cat || cat.items.length === 0) continue;
+        const val = cat.totalCre;
+        totalGastos += val;
+        ah += `<li class="cat-item"><div class="cat-left"><div class="cat-icon" style="background:${cat.def.bg}">${cat.def.icon}</div><div><div class="cat-name">${bc.label}</div><div class="cat-count">${cat.items.length} movimiento${cat.items.length>1?'s':''}</div></div></div><div class="cat-val val-red">$ ${fmtN(val)}</div></li>`;
+      }
+      ah += `</ul><div class="cat-total"><span>Total gastos bancarios</span><span class="cat-val val-red">$ ${fmtN(totalGastos)}</span></div></div>`;
+    }
+
+    /* Ingresos bancarios */
+    ah += '<div><div style="font-size:.78rem;font-weight:700;color:var(--g600);margin-bottom:8px">Ingresos bancarios por registrar</div><ul class="cat-list">';
+    if (interestItems.length > 0) {
+      const intTotal = catsE.interes.totalDeb;
+      ah += `<li class="cat-item"><div class="cat-left"><div class="cat-icon" style="background:${catsE.interes.def.bg}">${catsE.interes.def.icon}</div><div><div class="cat-name">Intereses recibidos</div><div class="cat-count">${interestItems.length} movimiento${interestItems.length>1?'s':''}</div></div></div><div class="cat-val val-green">$ ${fmtN(intTotal)}</div></li>`;
+      ah += `</ul><div class="cat-total"><span>Total ingresos bancarios</span><span class="cat-val val-green">$ ${fmtN(intTotal)}</span></div>`;
+    } else {
+      ah += '<li class="cat-item" style="color:var(--f400)">No se detectaron ingresos bancarios pendientes</li></ul>';
+    }
+    ah += '</div></div></div>';
+  }
+
+  /* Save categories for export */
+  resultados.catsE = catsE;
+  resultados.catsA = catsA;
+
+  document.getElementById('analysisBox').innerHTML = ah;
+
+  /* ── TABS ── */
   const tabs = [
     {id:'conc', l:'✓ Conciliadas', n:matched.length},
     {id:'ext', l:'🏦 Solo Extracto', n:soloE.length},
@@ -770,11 +922,12 @@ function renderResults() {
   p += '</table></div></div>';
 
   /* Solo Extracto */
-  p += '<div class="results-panel" id="panel-ext"><div class="results-scroll"><table class="rtable"><tr><th>#</th><th>Fecha</th><th>Descripción</th><th>Tipo</th><th>Valor</th><th>Posible causa</th></tr>';
+  p += '<div class="results-panel" id="panel-ext"><div class="results-scroll"><table class="rtable"><tr><th>#</th><th>Fecha</th><th>Descripción</th><th>Tipo</th><th>Valor</th><th>Categoría</th></tr>';
   soloE.slice(0,lim).forEach((e,i) => {
     const tipo = e.deb > 0 ? 'Entrada' : 'Salida';
     const tc = e.deb > 0 ? 'tipo-in' : 'tipo-out';
-    p += `<tr><td>${i+1}</td><td>${fD(e.fecha)}</td><td class="desc-cell" title="${esc(e.desc)}">${esc(e.desc)}</td><td class="${tc}">${tipo}</td><td class="num">${fmtN(e.deb||e.cre)}</td><td style="font-size:.7rem;color:var(--f400)">${guessCausa(e.desc)}</td></tr>`;
+    const cat = guessCausa(e.desc);
+    p += `<tr><td>${i+1}</td><td>${fD(e.fecha)}</td><td class="desc-cell" title="${esc(e.desc)}">${esc(e.desc)}</td><td class="${tc}">${tipo}</td><td class="num">${fmtN(e.deb||e.cre)}</td><td style="font-size:.7rem;color:var(--f500)">${cat}</td></tr>`;
   });
   p += '</table></div></div>';
 
@@ -799,40 +952,75 @@ function renderResults() {
   }
 }
 
-function guessCausa(desc) {
-  const d = (desc||'').toLowerCase();
-  if (d.includes('4x1000')||d.includes('impto gobierno')||d.includes('gmf')) return 'GMF / 4×1000';
-  if (d.includes('interes')&&(d.includes('ahorro')||d.includes('bancario'))) return 'Intereses bancarios';
-  if (d.includes('comision')||d.includes('cuota manejo')) return 'Comisión bancaria';
-  if (d.includes('bold')||d.includes('nequi')||d.includes('daviplata')||d.includes('pse')) return 'Plataforma digital';
-  if (d.includes('retefuente')||d.includes('retencion')) return 'Retención';
-  return 'Pendiente de registro';
+function renderCatList(cats, all) {
+  let h = '<ul class="cat-list">';
+  let totalNet = 0;
+  for (const c of CATEGORIES) {
+    const cat = cats[c.id];
+    if (!cat || cat.items.length === 0) continue;
+    const net = cat.totalDeb - cat.totalCre;
+    totalNet += cat.totalDeb + cat.totalCre;
+    const valClass = net > 0 ? 'val-green' : net < 0 ? 'val-red' : '';
+    h += `<li class="cat-item"><div class="cat-left"><div class="cat-icon" style="background:${c.bg}">${c.icon}</div><div><div class="cat-name">${c.name}</div><div class="cat-count">${cat.items.length} · Déb $${fmtN(cat.totalDeb)} · Cré $${fmtN(cat.totalCre)}</div></div></div><div class="cat-val ${valClass}">$ ${fmtN(cat.totalDeb + cat.totalCre)}</div></li>`;
+  }
+  h += '</ul>';
+  h += `<div class="cat-total"><span>Total ${all.length} partidas</span><span>$ ${fmtN(totalNet)}</span></div>`;
+  return h;
 }
 
+function br(cls, label, val) {
+  return `<div class="bridge-row ${cls}"><span class="br-label">${label}</span><span class="br-val">${val}</span></div>`;
+}
+
+function fmtS(n) { return (n < 0 ? '−' : '') + '$ ' + fmtN(Math.abs(n)); }
+
 /* ══════════════════════════════════════════
-   9. EXPORT EXCEL
+   10. EXPORT EXCEL (enhanced with analysis)
    ══════════════════════════════════════════ */
 function exportXls() {
   if (!resultados) return;
-  const {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA} = resultados;
+  const {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, catsE} = resultados;
   const wb = XLSX.utils.book_new();
-  const seN = sE.d-sE.c, saN = sA.d-sA.c;
+  const saldoE = sE.d-sE.c, saldoA = sA.d-sA.c;
 
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([
-    ['CONCILIACIÓN BANCARIA'],
-    ['Generado por ExógenaDIAN', new Date().toLocaleDateString('es-CO')],
-    [],['INFORME'],
-    ['Saldo neto extracto', seN],
-    ['(+) En extracto no en libros (Déb)', ssE.d],
-    ['(−) En extracto no en libros (Cré)', ssE.c],
-    ['(+) En libros no en extracto (Déb)', ssA.d],
-    ['(−) En libros no en extracto (Cré)', ssA.c],
-    ['Saldo neto auxiliar', saN],
-    [],['ESTADÍSTICAS'],
-    ['Movimientos extracto', ext.length], ['Movimientos auxiliar', aux.length],
-    ['Conciliadas', matched.length], ['Solo extracto', soloE.length], ['Solo auxiliar', soloA.length],
-    [],['PRIVACIDAD'],['Procesado 100% en navegador. ExógenaDIAN no accedió a los datos.'],
-  ]), 'Resumen');
+  /* Sheet 1: Resumen + Puente + Análisis */
+  const ws0 = [
+    ['CONCILIACIÓN BANCARIA','',''],
+    ['Generado por ExógenaDIAN',new Date().toLocaleDateString('es-CO'),''],
+    [],[],
+    ['PUENTE DE CONCILIACIÓN','','VALOR'],
+    ['Saldo neto según extracto bancario','',saldoE],
+    ['(+) Débitos en extracto no registrados en libros','',ssE.d],
+    ['(−) Créditos en extracto no registrados en libros','',ssE.c],
+    ['(−) Débitos en libros no reflejados en extracto','',ssA.d],
+    ['(+) Créditos en libros no reflejados en extracto','',ssA.c],
+    ['Saldo neto según libro auxiliar','',saldoA],
+    [],[],
+    ['ESTADÍSTICAS','',''],
+    ['Movimientos extracto','',ext.length],
+    ['Movimientos auxiliar','',aux.length],
+    ['Partidas conciliadas','',matched.length],
+    ['Solo en extracto','',soloE.length],
+    ['Solo en auxiliar','',soloA.length],
+    ['% Conciliación','',Math.round(matched.length/Math.max(ext.length,aux.length)*100)+'%'],
+    [],[],
+    ['ANÁLISIS MOVIMIENTOS BANCARIOS','Movimientos','Valor'],
+  ];
+  const bankIds = ['gmf','comision','cuota','retefte','reteiva','reteica','interes'];
+  let totalGastos = 0, totalIngresos = 0;
+  for (const id of bankIds) {
+    const cat = catsE[id];
+    if (!cat || cat.items.length === 0) continue;
+    const val = cat.totalDeb + cat.totalCre;
+    if (id === 'interes') totalIngresos += val;
+    else totalGastos += val;
+    ws0.push([cat.def.name, cat.items.length, val]);
+  }
+  ws0.push([]);
+  ws0.push(['Total gastos bancarios','',totalGastos]);
+  ws0.push(['Total ingresos bancarios','',totalIngresos]);
+  ws0.push([],[],['PRIVACIDAD'],['Procesado 100% en navegador. ExógenaDIAN no accedió a los datos.']);
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(ws0), 'Resumen');
 
   const ws1 = [['#','Fecha Ext','Desc Ext','Tipo','Valor Ext','Fecha Aux','Tercero Aux','Desc Aux','Valor Aux','Confianza','Criterio']];
   matched.forEach((m,i) => {
