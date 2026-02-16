@@ -17,19 +17,15 @@
 .card-info{font-size:.78rem;color:var(--g700);background:var(--g50);padding:8px 12px;border-radius:8px;margin-bottom:12px;border-left:3px solid var(--g400)}
 .upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .drop-zone{border:2px dashed var(--f300);border-radius:var(--r);padding:36px 20px;text-align:center;cursor:pointer;transition:all .25s;position:relative;background:var(--w)}.drop-zone:hover,.drop-zone.dragover{border-color:var(--g400);background:var(--g50)}.drop-zone.loaded{border-color:var(--g500);border-style:solid;background:var(--g50)}.drop-zone .dz-icon{font-size:2.2rem;margin-bottom:8px;display:block}.drop-zone .dz-title{font-size:.9rem;font-weight:700;margin-bottom:4px}.drop-zone .dz-hint{font-size:.76rem;color:var(--f400)}.drop-zone .dz-file{font-size:.8rem;color:var(--g700);font-weight:600;margin-top:8px}.drop-zone .dz-rows{font-size:.72rem;color:var(--f400);margin-top:2px}.drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}.drop-zone .dz-clear{position:absolute;top:8px;right:8px;background:var(--f100);border:none;border-radius:6px;padding:4px 8px;font-size:.7rem;font-weight:600;color:var(--f500);cursor:pointer;display:none;z-index:2}.drop-zone.loaded .dz-clear{display:block}
-/* Raw preview: color-coded rows */
 .raw-preview{overflow-x:auto;border:1px solid var(--f200);border-radius:10px;max-height:260px;overflow-y:auto;margin:10px 0;font-size:.7rem}.raw-preview table{width:100%;border-collapse:collapse}.raw-preview th{background:var(--f100);padding:5px 7px;text-align:left;font-weight:700;color:var(--f500);border-bottom:1px solid var(--f200);white-space:nowrap;position:sticky;top:0;z-index:1}.raw-preview td{padding:4px 7px;border-bottom:1px solid var(--f100);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis}
 .raw-preview tr.rSkip td{background:var(--f50);color:var(--f400);font-style:italic}.raw-preview tr.rHead td{background:#DBEAFE;color:#1E40AF;font-weight:700}.raw-preview tr.rData td{background:var(--w);color:var(--f700)}
 .raw-preview td.rn{background:var(--f100);color:var(--f400);font-weight:700;text-align:center;width:30px;min-width:30px;font-size:.65rem;position:sticky;left:0;z-index:1}
-/* Controls */
 .ctrl-row{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0;align-items:end}.ctrl-item{display:flex;flex-direction:column;gap:2px}.ctrl-item label{font-size:.7rem;font-weight:700;color:var(--f500);text-transform:uppercase;letter-spacing:.3px}
 .ctrl-item select,.ctrl-item input[type=number]{padding:5px 10px;border-radius:8px;border:1px solid var(--f300);font-family:'Outfit',sans-serif;font-size:.82rem;background:var(--w)}.ctrl-item input[type=number]{width:70px}
 .ctrl-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--g500)}
 .col-map{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.col-map .map-item{flex:1;min-width:120px}.col-map label{font-size:.72rem;font-weight:600;color:var(--f600)}.col-map select{padding:5px 8px;border-radius:8px;border:1px solid var(--f300);font-family:'Outfit',sans-serif;font-size:.76rem;margin-top:2px;display:block;width:100%;background:var(--w)}.col-map select.mapped{border-color:var(--g500);background:var(--g50)}
-/* Parsed preview */
 .parsed-preview{overflow-x:auto;border:1px solid var(--g200);border-radius:10px;margin:10px 0;background:var(--g50)}.parsed-preview table{width:100%;border-collapse:collapse;font-size:.72rem}.parsed-preview th{background:var(--g100);padding:6px 8px;text-align:left;font-weight:700;color:var(--g700);border-bottom:1px solid var(--g200)}.parsed-preview td{padding:5px 8px;border-bottom:1px solid var(--g100);color:var(--f700)}.parsed-preview .num{text-align:right;font-variant-numeric:tabular-nums}.parsed-preview .ok{color:var(--g600)}.parsed-preview .warn{color:var(--amber)}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:600;font-size:.9rem;transition:all .2s;cursor:pointer;border:none;text-decoration:none}.btn-primary{background:var(--g600);color:#fff}.btn-primary:hover{background:var(--g700);transform:translateY(-1px);box-shadow:0 4px 14px rgba(5,150,105,.25)}.btn-primary:disabled{background:var(--f300);cursor:not-allowed;transform:none;box-shadow:none}.btn-outline{background:transparent;color:var(--f700);border:1.5px solid var(--f200)}.btn-outline:hover{border-color:var(--g400);color:var(--g700)}.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
-/* Results */
 .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.summary-card{background:var(--w);border-radius:12px;padding:18px 16px;border:1px solid var(--f200);text-align:center}.sc-val{font-size:1.4rem;font-weight:800;line-height:1;margin-bottom:3px}.sc-label{font-size:.72rem;color:var(--f400);font-weight:500}.sc-green .sc-val{color:var(--g600)}.sc-blue .sc-val{color:var(--blue)}.sc-amber .sc-val{color:var(--amber)}.sc-red .sc-val{color:var(--red)}
 .recon-summary{background:var(--w);border:1.5px solid var(--f200);border-radius:var(--r);padding:20px 24px;margin-bottom:20px}.recon-summary h3{font-size:.95rem;font-weight:700;margin-bottom:12px}.rr{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:.85rem;border-bottom:1px dashed var(--f200)}.rr:last-child{border-bottom:none;font-weight:800;padding-top:10px;font-size:.9rem}.rr-l{color:var(--f600)}.rr-v{font-variant-numeric:tabular-nums;font-weight:600}.rr-pos{color:var(--g700)}.rr-neg{color:var(--red)}.rr-bold{font-weight:800;font-size:.95rem}
 .results-tabs{display:flex;gap:0;border-bottom:2px solid var(--f200)}.results-tab{padding:10px 20px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;background:none;color:var(--f400);border-bottom:2px solid transparent;margin-bottom:-2px;font-family:'Outfit',sans-serif}.results-tab.active{color:var(--g700);border-bottom-color:var(--g500)}.tab-count{background:var(--f100);padding:1px 7px;border-radius:6px;font-size:.72rem;margin-left:4px}.results-tab.active .tab-count{background:var(--g100);color:var(--g700)}
@@ -41,7 +37,6 @@
 .pricing-mini{display:flex;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}.pm-opt{background:var(--w);border:1.5px solid var(--f200);border-radius:10px;padding:12px 18px;text-align:center;min-width:120px}.pm-opt.selected{border-color:var(--g400);background:var(--g50)}.pm-rows{font-size:.72rem;color:var(--f400);font-weight:600}.pm-price{font-size:1.1rem;font-weight:800;color:var(--g700)}.pm-unit{font-size:.68rem;color:var(--f400)}
 .steps-indicator{display:flex;align-items:center;gap:0;margin-bottom:28px}.step-ind{display:flex;align-items:center;gap:8px;padding:8px 16px;font-size:.82rem;font-weight:600;color:var(--f400)}.step-ind.active{color:var(--g700)}.step-ind.done{color:var(--g500)}.step-num{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.75rem;font-weight:800;background:var(--f100);color:var(--f400)}.step-ind.active .step-num{background:var(--g500);color:#fff}.step-ind.done .step-num{background:var(--g100);color:var(--g700)}.step-arrow{color:var(--f300);font-size:.7rem;margin:0 4px}
 .disclaimer-footer{margin-top:20px;padding:14px 18px;background:var(--f50);border:1px solid var(--f200);border-radius:10px;text-align:center}.disclaimer-footer p{font-size:.76rem;color:var(--f400);margin:0;line-height:1.5}
-/* Analysis grid */
 .analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
 .analysis-card{background:var(--w);border-radius:var(--r);border:1px solid var(--f200);padding:20px;overflow:hidden}
 .analysis-card h3{font-size:.88rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
@@ -54,7 +49,6 @@
 .cat-val{font-weight:700;font-variant-numeric:tabular-nums;font-size:.85rem}
 .cat-val.val-red{color:var(--red)}.cat-val.val-green{color:var(--g600)}.cat-val.val-amber{color:var(--amber)}
 .cat-total{display:flex;justify-content:space-between;padding:10px 0 0;margin-top:6px;border-top:2px solid var(--f200);font-weight:800;font-size:.88rem}
-/* Bridge reconciliation */
 .bridge{background:var(--w);border-radius:var(--r);border:1.5px solid var(--f200);padding:24px;margin-bottom:20px}
 .bridge h3{font-size:.95rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .bridge-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;font-size:.85rem;border-radius:8px;margin-bottom:4px}
@@ -105,21 +99,17 @@
 <script>
 /* ========================================================================
    CONCILIACIÓN BANCARIA v3 — FINAL BULLETPROOF
-   Filosofía: auto-detectar → mostrar → dejar corregir → procesar
    ======================================================================== */
 const FREE_LIMIT = 500;
 const PRICING = [{max:50,price:0},{max:200,price:3000,label:'$3.000'},{max:500,price:5000,label:'$5.000'},{max:999999,price:10000,label:'$10.000'}];
 
-/* State per file: E = extracto, A = auxiliar */
 const F = {
   E: {raw:null,display:null,headerRow:0,noHeader:false,numFmt:'auto',map:{},name:''},
   A: {raw:null,display:null,headerRow:0,noHeader:false,numFmt:'auto',map:{},name:''}
 };
 let resultados = null;
 
-/* ══════════════════════════════════════════
-   1. FILE READING — handles xlsx, xls, csv
-   ══════════════════════════════════════════ */
+/* ── 1. FILE READING ── */
 ['E','A'].forEach(k => {
   const dz = document.getElementById('dz'+k);
   const inp = document.getElementById('f'+k);
@@ -134,7 +124,6 @@ function readFile(file, k) {
   reader.onload = ev => {
     try {
       const wb = XLSX.read(ev.target.result, {type:'array', cellDates:true});
-      /* Pick sheet with most rows */
       let best = null, bestN = 0;
       for (const sn of wb.SheetNames) {
         const raw = XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:'', raw:true});
@@ -143,8 +132,6 @@ function readFile(file, k) {
         if (n > bestN) { best = {sn, raw, disp}; bestN = n; }
       }
       if (!best || bestN < 2) { alert('El archivo parece vacío o no tiene datos suficientes.'); return; }
-
-      /* Remove completely empty rows but keep row indices consistent */
       const rawClean = [], dispClean = [];
       for (let i = 0; i < best.raw.length; i++) {
         if (best.raw[i].some(c => c !== '' && c != null)) {
@@ -152,20 +139,18 @@ function readFile(file, k) {
           dispClean.push(best.disp[i] || best.raw[i]);
         }
       }
-
       F[k].raw = rawClean;
       F[k].display = dispClean;
       F[k].name = file.name;
       F[k].headerRow = findBestHeaderRow(rawClean);
       F[k].noHeader = false;
       F[k].numFmt = 'auto';
-
       document.getElementById('n'+k).textContent = file.name;
       document.getElementById('r'+k).textContent = rawClean.length + ' filas · hoja: ' + best.sn;
       document.getElementById('dz'+k).classList.add('loaded');
       checkReady();
     } catch(err) {
-      alert('Error al leer el archivo: ' + err.message + '\n\nAsegúrate de que no tenga contraseña y sea un archivo Excel o CSV válido.');
+      alert('Error al leer el archivo: ' + err.message);
     }
   };
   reader.readAsArrayBuffer(file);
@@ -184,11 +169,7 @@ function checkReady() {
   document.getElementById('btnNext').disabled = !(F.E.raw && F.A.raw);
 }
 
-/* ══════════════════════════════════════════
-   2. HEADER ROW DETECTION
-   Scores each row: header-like text vs numbers
-   Handles Bancolombia (row 14), Siigo (row 0), etc.
-   ══════════════════════════════════════════ */
+/* ── 2. HEADER ROW DETECTION ── */
 const HEADER_KEYWORDS = /^(fecha|descripci|detalle|concepto|valor|monto|saldo|d[eé]bito|cr[eé]dito|referencia|documento|comprobante|cuenta|tercero|nombre|sucursal|dcto|c[oó]digo|tipo|abono|cargo|retiro|identificaci|movimiento|secuencia|centro|cheque|nro|desde|hasta)/i;
 
 function findBestHeaderRow(rows) {
@@ -204,11 +185,9 @@ function findBestHeaderRow(rows) {
       const s = String(c).trim();
       if (HEADER_KEYWORDS.test(s)) score += 10;
       else if (typeof c === 'string' && isNaN(Number(s.replace(/[,$.\-\s]/g,'')))) score += 1;
-      else score -= 1; /* numbers penalize */
+      else score -= 1;
     }
-    /* Bonus: more filled cells = more likely a header */
     score += filled * 0.5;
-    /* Bonus: next row has numbers (data follows) */
     if (i + 1 < rows.length) {
       const next = rows[i+1];
       if (next) {
@@ -221,11 +200,7 @@ function findBestHeaderRow(rows) {
   return bestI;
 }
 
-/* ══════════════════════════════════════════
-   3. NUMBER FORMAT DETECTION & PARSING
-   Analyzes a column to determine: colombian (1.234,56)
-   vs US (1,234.56) vs plain (1234.56)
-   ══════════════════════════════════════════ */
+/* ── 3. NUMBER FORMAT DETECTION & PARSING ── */
 function detectNumFormat(rows, colIdx) {
   let patCOL = 0, patUS = 0, patPlain = 0;
   for (let i = 0; i < Math.min(rows.length, 50); i++) {
@@ -233,13 +208,9 @@ function detectNumFormat(rows, colIdx) {
     if (c == null || c === '' || typeof c === 'number') { patPlain++; continue; }
     const s = String(c).trim().replace(/[$\s\-()]/g,'');
     if (!s || !/\d/.test(s)) continue;
-    /* 1.234,56 or 1.234.567,89 → Colombian */
     if (/^\d{1,3}(\.\d{3})+(,\d{1,2})?$/.test(s)) { patCOL++; continue; }
-    /* 1,234.56 or 1,234,567.89 → US */
     if (/^\d{1,3}(,\d{3})+(\.\d{1,2})?$/.test(s)) { patUS++; continue; }
-    /* Has comma as last separator → likely COL decimal */
     if (/,\d{1,2}$/.test(s) && !s.includes('.')) { patCOL++; continue; }
-    /* Has dot as last separator → likely US decimal or plain */
     if (/\.\d{1,2}$/.test(s) && !s.includes(',')) { patUS++; continue; }
     patPlain++;
   }
@@ -252,25 +223,16 @@ function toNum(v, fmt) {
   if (typeof v === 'number') return v;
   if (v == null || v === '') return 0;
   let s = String(v).trim();
-  /* Dashes as zero */
   if (/^[-–—]+$/.test(s)) return 0;
-  /* Remove currency symbols and spaces */
   s = s.replace(/[$COP\s]/gi, '');
-  /* Parentheses = negative */
   let neg = false;
   if (s.startsWith('(') && s.endsWith(')')) { neg = true; s = s.slice(1,-1); }
   if (s.startsWith('-')) { neg = true; s = s.substring(1); }
   s = s.trim();
   if (!s || !/\d/.test(s)) return 0;
-
-  if (fmt === 'col') {
-    /* Colombian: 1.234.567,89 → dots are thousands, comma is decimal */
-    s = s.replace(/\./g, '').replace(',', '.');
-  } else if (fmt === 'us') {
-    /* US: 1,234,567.89 → commas are thousands, dot is decimal */
-    s = s.replace(/,/g, '');
-  } else {
-    /* Auto/plain: heuristic per-value */
+  if (fmt === 'col') { s = s.replace(/\./g, '').replace(',', '.'); }
+  else if (fmt === 'us') { s = s.replace(/,/g, ''); }
+  else {
     if (s.includes('.') && s.includes(',')) {
       const lastDot = s.lastIndexOf('.'), lastComma = s.lastIndexOf(',');
       if (lastComma > lastDot) s = s.replace(/\./g,'').replace(',','.');
@@ -281,44 +243,28 @@ function toNum(v, fmt) {
       else s = s.replace(/,/g,'');
     } else if (s.includes('.')) {
       const parts = s.split('.');
-      if (parts.length > 2) s = s.replace(/\./g,''); /* multiple dots = thousands */
-      /* else single dot: leave as decimal */
+      if (parts.length > 2) s = s.replace(/\./g,'');
     }
   }
-  /* Remove any remaining non-numeric except dot and minus */
   s = s.replace(/[^\d.]/g, '');
   const n = parseFloat(s);
   return isNaN(n) ? 0 : (neg ? -n : n);
 }
 
-/* ══════════════════════════════════════════
-   4. DATE PARSING — handles all Colombian formats
-   ══════════════════════════════════════════ */
+/* ── 4. DATE PARSING ── */
 function guessYearFromTransactions(rows, colIdx, dataStart) {
-  /* ONLY look at actual transaction data rows for years — never metadata */
   const yearCounts = {};
   for (let i = dataStart; i < Math.min(rows.length, dataStart + 100); i++) {
     const c = rows[i] ? rows[i][colIdx] : null;
     if (!c) continue;
-    /* Date objects from Excel */
-    if (c instanceof Date && !isNaN(c)) {
-      const y = c.getFullYear();
-      if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5;
-      continue;
-    }
-    /* Strings like "02-01-2026", "2026/01/02", "2026-01-02" */
+    if (c instanceof Date && !isNaN(c)) { const y = c.getFullYear(); if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5; continue; }
     const s = String(c);
     const matches = s.match(/20[2-3]\d/g);
     if (matches) matches.forEach(y => yearCounts[y] = (yearCounts[y]||0) + 1);
-    /* Excel serial numbers → convert and check */
-    if (typeof c === 'number' && c > 40000 && c < 55000) {
-      const d = new Date((c - 25569) * 86400000);
-      const y = d.getFullYear();
-      if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5;
-    }
+    if (typeof c === 'number' && c > 40000 && c < 55000) { const d = new Date((c - 25569) * 86400000); const y = d.getFullYear(); if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5; }
   }
   const years = Object.keys(yearCounts);
-  if (years.length === 0) return null; /* No year found in transactions */
+  if (years.length === 0) return null;
   years.sort((a,b) => yearCounts[b] - yearCounts[a] || (+b) - (+a));
   return +years[0];
 }
@@ -328,30 +274,18 @@ const MONTHS_ES = {ene:0,feb:1,mar:2,abr:3,may:4,jun:5,jul:6,ago:7,sep:8,oct:9,n
 function parseDate(v, yearHint) {
   if (!v) return null;
   if (v instanceof Date && !isNaN(v)) return v;
-  if (typeof v === 'number') {
-    if (v > 40000 && v < 55000) return new Date((v - 25569) * 86400000); /* Excel serial */
-    return null;
-  }
+  if (typeof v === 'number') { if (v > 40000 && v < 55000) return new Date((v - 25569) * 86400000); return null; }
   let s = String(v).trim();
-  /* Remove time part */
   s = s.replace(/\s+\d{1,2}:\d{2}(:\d{2})?.*$/, '');
   let d, m, y, match;
-  /* dd-mm-yyyy or dd/mm/yyyy */
   match = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
   if (match) { d=+match[1]; m=+match[2]; y=+match[3]; return new Date(y, m-1, d); }
-  /* yyyy-mm-dd or yyyy/mm/dd */
   match = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
   if (match) { y=+match[1]; m=+match[2]; d=+match[3]; return new Date(y, m-1, d); }
-  /* d/mm without year (Bancolombia) */
   match = s.match(/^(\d{1,2})[\/\-](\d{1,2})$/);
   if (match) { d=+match[1]; m=+match[2]; return new Date(yearHint||2026, m-1, d); }
-  /* "2 de enero 2026" or "enero 2, 2026" */
   match = s.toLowerCase().match(/(\d{1,2})\s+de\s+(\w+)(?:\s+(?:de\s+)?(\d{4}))?/);
-  if (match && MONTHS_ES[match[2]] !== undefined) {
-    d=+match[1]; m=MONTHS_ES[match[2]]; y=match[3]?+match[3]:yearHint;
-    return new Date(y, m, d);
-  }
-  /* "Ene 2" or "2 Ene" */
+  if (match && MONTHS_ES[match[2]] !== undefined) { d=+match[1]; m=MONTHS_ES[match[2]]; y=match[3]?+match[3]:yearHint; return new Date(y, m, d); }
   match = s.toLowerCase().match(/(\w{3,})\s+(\d{1,2})/);
   if (match && MONTHS_ES[match[1]] !== undefined) return new Date(yearHint, MONTHS_ES[match[1]], +match[2]);
   match = s.toLowerCase().match(/(\d{1,2})\s+(\w{3,})/);
@@ -359,18 +293,12 @@ function parseDate(v, yearHint) {
   return null;
 }
 
-/* ══════════════════════════════════════════
-   5. COLUMN AUTO-DETECTION
-   Uses header names + data analysis
-   ══════════════════════════════════════════ */
-/* Columns to NEVER map as value columns */
+/* ── 5. COLUMN AUTO-DETECTION ── */
 const BLACKLIST = /saldo|identificaci|nit|codigo|cuenta|secuencia|centro|sucursal|consecutivo|c[oó]digo/i;
 
 function detectColumns(headers, dataRows, isExtracto) {
   const h = headers.map(x => norm(x));
   const map = {fecha:-1, desc:-1, ref:-1, debito:-1, credito:-1, valor:-1, tercero:-1};
-
-  /* Pass 1: keyword matching on headers */
   const rules = [
     ['fecha',   ['fecha','date','fec','fch']],
     ['desc',    ['descripcion','detalle','concepto','observacion','movimiento']],
@@ -382,24 +310,16 @@ function detectColumns(headers, dataRows, isExtracto) {
   ];
   for (const [field, kws] of rules) {
     for (let i = 0; i < h.length; i++) {
-      /* Already mapped to another field? skip */
       if (Object.values(map).includes(i)) continue;
       if (kws.some(k => h[i].includes(k))) {
-        /* Guard: don't map blacklisted columns as values */
         if (['debito','credito','valor'].includes(field) && BLACKLIST.test(headers[i])) continue;
-        /* Guard: don't map 'saldo' as valor */
         if (field === 'valor' && h[i].includes('saldo')) continue;
-        /* Guard: desc shouldn't grab 'tercero' or 'cuenta' */
         if (field === 'desc' && (h[i].includes('tercero') || h[i].includes('cuenta'))) continue;
-        map[field] = i;
-        break;
+        map[field] = i; break;
       }
     }
   }
-
-  /* Pass 2: data analysis for missing fields */
   if (isExtracto && map.valor === -1 && map.debito === -1 && map.credito === -1) {
-    /* Extracto: find column with both positive and negative values */
     for (let i = 0; i < headers.length; i++) {
       if (Object.values(map).includes(i)) continue;
       if (BLACKLIST.test(headers[i]) || h[i].includes('saldo')) continue;
@@ -411,9 +331,7 @@ function detectColumns(headers, dataRows, isExtracto) {
       if (pos >= 3 && neg >= 2) { map.valor = i; break; }
     }
   }
-
   if (!isExtracto && map.debito === -1 && map.credito === -1 && map.valor === -1) {
-    /* Auxiliar: find two numeric columns (not blacklisted) */
     const numCols = [];
     for (let i = 0; i < headers.length; i++) {
       if (Object.values(map).includes(i)) continue;
@@ -429,8 +347,6 @@ function detectColumns(headers, dataRows, isExtracto) {
     if (numCols.length >= 2) { map.debito = numCols[0]; map.credito = numCols[1]; }
     else if (numCols.length === 1) { map.valor = numCols[0]; }
   }
-
-  /* Date fallback: find column with date-like values */
   if (map.fecha === -1) {
     for (let i = 0; i < headers.length; i++) {
       if (Object.values(map).includes(i)) continue;
@@ -444,8 +360,6 @@ function detectColumns(headers, dataRows, isExtracto) {
       if (dc >= 5) { map.fecha = i; break; }
     }
   }
-
-  /* Desc fallback: longest text column */
   if (map.desc === -1) {
     let best = 0, bestI = -1;
     for (let i = 0; i < headers.length; i++) {
@@ -455,35 +369,23 @@ function detectColumns(headers, dataRows, isExtracto) {
     }
     if (bestI >= 0) map.desc = bestI;
   }
-
   return map;
 }
 
 function norm(s) { return (s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
 
-/* ══════════════════════════════════════════
-   6. STEP 2: RENDER FILE CARDS
-   Shows raw preview, controls, column mapping,
-   and parsed preview — all reactive
-   ══════════════════════════════════════════ */
+/* ── 6. STEP 2: RENDER FILE CARDS ── */
 function goStep1() { show('step1'); hide('step2'); hide('step3'); setSI(1); }
 function goStep2() {
-  /* Initialize detection for both files */
   for (const k of ['E','A']) {
     const f = F[k];
     const hdr = f.headerRow;
-    const headers = f.noHeader
-      ? f.raw[0].map((_,i) => 'Col_' + String.fromCharCode(65+i))
-      : (f.raw[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
+    const headers = f.noHeader ? f.raw[0].map((_,i) => 'Col_' + String.fromCharCode(65+i)) : (f.raw[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
     const dataStart = f.noHeader ? 0 : hdr + 1;
     const dataRows = cleanRows(f.raw.slice(dataStart));
     f.map = detectColumns(headers, dataRows, k === 'E');
-    /* Detect numeric format from value columns */
     const valCol = f.map.valor >= 0 ? f.map.valor : (f.map.debito >= 0 ? f.map.debito : -1);
-    if (valCol >= 0 && f.numFmt === 'auto') {
-      const detected = detectNumFormat(f.display.slice(dataStart), valCol);
-      f.numFmt = detected;
-    }
+    if (valCol >= 0 && f.numFmt === 'auto') { f.numFmt = detectNumFormat(f.display.slice(dataStart), valCol); }
   }
   renderFileCard('E'); renderFileCard('A');
   hide('step1'); show('step2'); hide('step3'); setSI(2);
@@ -497,14 +399,9 @@ function renderFileCard(k) {
   const hdr = f.headerRow;
   const noH = f.noHeader;
   const dataStart = noH ? 0 : hdr + 1;
-  const headers = noH
-    ? rows[0].map((_,i) => 'Col_' + String.fromCharCode(65 + (i % 26)))
-    : (rows[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
+  const headers = noH ? rows[0].map((_,i) => 'Col_' + String.fromCharCode(65 + (i % 26))) : (rows[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
   const dataRows = cleanRows(rows.slice(dataStart));
-
   let html = `<div class="card-title">${label} — ${esc(f.name)}</div>`;
-
-  /* Controls: header row, no-header, number format */
   html += `<div class="ctrl-row">
     <div class="ctrl-item"><label>Fila encabezado</label><input type="number" min="1" max="${rows.length}" value="${hdr+1}" onchange="changeHeader('${k}',+this.value-1)" id="hdrIn${k}" ${noH?'disabled':''}></div>
     <div class="ctrl-item" style="flex-direction:row;align-items:center;gap:6px;align-self:end"><input type="checkbox" ${noH?'checked':''} onchange="toggleNoHeader('${k}',this.checked)"><label style="text-transform:none;cursor:pointer">Sin encabezado</label></div>
@@ -515,12 +412,8 @@ function renderFileCard(k) {
       <option value="col" ${f.numFmt==='col'?'selected':''}>Colombiano (1.234,56)</option>
     </select></div>
   </div>`;
-
-  /* Info */
   const valMode = f.map.valor >= 0 ? 'valor único con signo' : (f.map.debito >= 0 ? 'débito/crédito separados' : '⚠ no se detectaron columnas de valor');
   html += `<div class="card-info">${dataRows.length} movimientos · ${valMode} · formato: ${f.numFmt}</div>`;
-
-  /* Raw preview with colored rows */
   const showN = Math.min(rows.length, 25);
   html += `<div class="raw-preview"><table><tr><th style="width:30px">#</th>`;
   const maxCols = Math.max(...rows.slice(0, showN).map(r => r.length));
@@ -539,20 +432,15 @@ function renderFileCard(k) {
   if (rows.length > showN) html += `<tr class="rSkip"><td class="rn">…</td><td colspan="${Math.min(maxCols,12)}">… ${rows.length - showN} filas más</td></tr>`;
   html += '</table></div>';
   html += '<div style="font-size:.68rem;color:var(--f400);margin-bottom:8px">🔵 = encabezado · ⬜ = datos · 🔘 = ignorado</div>';
-
-  /* Column mapping */
   const fields = isE
     ? [{k:'fecha',l:'📅 Fecha'},{k:'desc',l:'📝 Descripción'},{k:'ref',l:'🔢 Ref/Dcto'},{k:'valor',l:'💰 Valor (±signo)'},{k:'debito',l:'➖ Débito'},{k:'credito',l:'➕ Crédito'}]
     : [{k:'fecha',l:'📅 Fecha'},{k:'desc',l:'📝 Descripción'},{k:'ref',l:'🔢 Comprobante'},{k:'tercero',l:'👤 Tercero'},{k:'debito',l:'➖ Débito'},{k:'credito',l:'➕ Crédito'},{k:'valor',l:'💰 Valor único'}];
-
   html += '<div class="col-map">';
   for (const fld of fields) {
     const opts = headers.map((h,i) => `<option value="${i}" ${f.map[fld.k]===i?'selected':''}>${esc(h)}</option>`).join('');
     html += `<div class="map-item"><label>${fld.l}</label><select class="${f.map[fld.k]>=0?'mapped':''}" onchange="changeMap('${k}','${fld.k}',+this.value);this.className=this.value>=0?'mapped':''"><option value="-1">— No aplica —</option>${opts}</select></div>`;
   }
   html += '</div>';
-
-  /* Parsed preview: show how system interprets the first 5 data rows */
   const ownYear = f.map.fecha >= 0 ? guessYearFromTransactions(rows, f.map.fecha, dataStart) : null;
   const otherK = k === 'E' ? 'A' : 'E';
   const otherYear = F[otherK].raw ? getTransactionYear(otherK) : null;
@@ -564,7 +452,6 @@ function renderFileCard(k) {
   if (f.map.valor >= 0) html += '<th>Valor</th>';
   else { html += '<th>Débito</th><th>Crédito</th>'; }
   html += '</tr>';
-
   const previewRows = dataRows.slice(0, 5);
   for (const r of previewRows) {
     const fecha = f.map.fecha >= 0 ? parseDate(r[f.map.fecha], yearHint) : null;
@@ -590,33 +477,20 @@ function renderFileCard(k) {
   }
   html += '</table></div>';
   if (previewRows.length === 0) html += '<div class="card-info" style="border-left-color:var(--amber)">⚠ No se encontraron filas de datos. Verifica la fila del encabezado.</div>';
-
   document.getElementById('card'+k).innerHTML = html;
 }
 
-/* Reactive controls */
-function changeHeader(k, row) {
-  F[k].headerRow = Math.max(0, Math.min(row, F[k].raw.length - 2));
-  refreshDetection(k);
-}
-function toggleNoHeader(k, val) {
-  F[k].noHeader = val;
-  const inp = document.getElementById('hdrIn'+k);
-  if (inp) inp.disabled = val;
-  refreshDetection(k);
-}
+function changeHeader(k, row) { F[k].headerRow = Math.max(0, Math.min(row, F[k].raw.length - 2)); refreshDetection(k); }
+function toggleNoHeader(k, val) { F[k].noHeader = val; const inp = document.getElementById('hdrIn'+k); if (inp) inp.disabled = val; refreshDetection(k); }
 function changeNumFmt(k, fmt) { F[k].numFmt = fmt; renderFileCard(k); }
 function changeMap(k, field, val) { F[k].map[field] = val; renderFileCard(k); }
 function refreshDetection(k) {
   const f = F[k];
   const hdr = f.noHeader ? 0 : f.headerRow;
-  const headers = f.noHeader
-    ? f.raw[0].map((_,i) => 'Col_' + String.fromCharCode(65+i))
-    : (f.raw[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
+  const headers = f.noHeader ? f.raw[0].map((_,i) => 'Col_' + String.fromCharCode(65+i)) : (f.raw[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
   const dataStart = f.noHeader ? 0 : hdr + 1;
   const dataRows = cleanRows(f.raw.slice(dataStart));
   f.map = detectColumns(headers, dataRows, k === 'E');
-  /* Re-detect number format */
   const valCol = f.map.valor >= 0 ? f.map.valor : (f.map.debito >= 0 ? f.map.debito : -1);
   if (valCol >= 0) f.numFmt = detectNumFormat(f.display.slice(dataStart), valCol);
   renderFileCard(k);
@@ -631,51 +505,31 @@ function cleanRows(rows) {
   });
 }
 
-/* ══════════════════════════════════════════
-   7. MATCHING ALGORITHM
-   Sign-aware, multi-pass, tolerance-aware
-   Handles duplicates intelligently
-   ══════════════════════════════════════════ */
+/* ── 7. MATCHING ALGORITHM ── */
 function ejecutar() {
   const tol = +(document.getElementById('optTol').value || 1);
-
-  /* Get year from actual transaction dates in each file */
   const yearE = getTransactionYear('E');
   const yearA = getTransactionYear('A');
-  /* Cross-reference: if one file has no year, use the other's */
   const finalYearE = yearE || yearA || new Date().getFullYear();
   const finalYearA = yearA || yearE || new Date().getFullYear();
-
-  /* Parse records from both files */
   const ext = buildRecords('E', finalYearE);
   const aux = buildRecords('A', finalYearA);
-  if (ext.length === 0) { alert('No se encontraron movimientos en el extracto. Verifica la fila del encabezado y el mapeo de columnas.'); return; }
-  if (aux.length === 0) { alert('No se encontraron movimientos en el auxiliar. Verifica la fila del encabezado y el mapeo de columnas.'); return; }
-
+  if (ext.length === 0) { alert('No se encontraron movimientos en el extracto.'); return; }
+  if (aux.length === 0) { alert('No se encontraron movimientos en el auxiliar.'); return; }
   const matched = [];
   const uE = new Set(), uA = new Set();
-
-  /* Pass 1: exact amount + exact date + same sign */
   doPass(ext, aux, uE, uA, matched, tol, 0, true, 'alta', 'Monto, fecha y tipo exactos');
-  /* Pass 2: exact amount + ±2 days */
   doPass(ext, aux, uE, uA, matched, tol, 2, true, 'alta', 'Monto y tipo, fecha ±2 días');
-  /* Pass 3: ±5 days */
   doPass(ext, aux, uE, uA, matched, tol, 5, true, 'media', 'Monto y tipo, fecha ±5 días');
-  /* Pass 4: reference match */
   doPassRef(ext, aux, uE, uA, matched, tol, 'media', 'Monto y referencia');
-  /* Pass 5: ±15 days */
   doPass(ext, aux, uE, uA, matched, tol, 15, true, 'baja', 'Monto y tipo, ±15 días');
-  /* Pass 6: loose ±31 days, ignore sign */
   doPass(ext, aux, uE, uA, matched, tol, 31, false, 'baja', 'Solo monto (±31 días)');
-
   const soloE = ext.filter((_,i) => !uE.has(i));
   const soloA = aux.filter((_,i) => !uA.has(i));
-
   const sE = {d: sum(ext,'deb'), c: sum(ext,'cre')};
   const sA = {d: sum(aux,'deb'), c: sum(aux,'cre')};
   const ssE = {d: sum(soloE,'deb'), c: sum(soloE,'cre')};
   const ssA = {d: sum(soloA,'deb'), c: sum(soloA,'cre')};
-
   resultados = {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, tol};
   renderResults();
   hide('step2'); show('step3'); setSI(3);
@@ -695,14 +549,12 @@ function buildRecords(k, yearHint) {
   const dataRows = cleanRows(f.raw.slice(dataStart));
   const fmt = f.numFmt;
   const recs = [];
-
   for (const r of dataRows) {
     const fecha = f.map.fecha >= 0 ? parseDate(r[f.map.fecha], yearHint) : null;
     const desc = f.map.desc >= 0 ? String(r[f.map.desc]||'').trim() : '';
     const ref = f.map.ref >= 0 ? String(r[f.map.ref]||'').trim() : '';
     const tercero = f.map.tercero >= 0 ? String(r[f.map.tercero]||'').trim() : '';
     let deb = 0, cre = 0;
-
     if (f.map.valor >= 0 && f.map.debito < 0 && f.map.credito < 0) {
       const v = toNum(r[f.map.valor], fmt);
       if (v > 0) deb = v; else if (v < 0) cre = Math.abs(v);
@@ -743,7 +595,6 @@ function doPassRef(ext, aux, uE, uA, matched, tol, conf, reason) {
 }
 
 function amtMatch(e, a, tol, chkSign) {
-  /* Extracto: deb = entry, cre = exit | Auxiliar: deb = entry, cre = exit (same direction for bank account) */
   if (chkSign) {
     if (e.deb > 0 && a.deb > 0) return Math.abs(e.deb - a.deb) <= tol;
     if (e.cre > 0 && a.cre > 0) return Math.abs(e.cre - a.cre) <= tol;
@@ -766,31 +617,18 @@ function refMatch(e, a) {
 
 function sum(arr, field) { return arr.reduce((s, r) => s + (r[field]||0), 0); }
 
-/* ══════════════════════════════════════════
-   8. CATEGORIZATION ENGINE
-   Classifies unconciled items into accounting categories
-   ══════════════════════════════════════════ */
+/* ── 8. CATEGORIZATION ── */
 const CATEGORIES = [
-  {id:'gmf',      name:'GMF / 4×1000',           icon:'🏛️', color:'#DC2626', bg:'#FEF2F2',
-   test: d => d.includes('4x1000')||d.includes('impto gobierno')||d.includes('gmf')||d.includes('4 x 1000')||d.includes('gravamen')},
-  {id:'interes',  name:'Intereses recibidos',     icon:'📈', color:'#059669', bg:'#ECFDF5',
-   test: d => (d.includes('interes')||d.includes('interés'))&&(d.includes('ahorro')||d.includes('bancario')||d.includes('cdt')||d.includes('rendimiento'))},
-  {id:'comision', name:'Comisiones bancarias',     icon:'🏦', color:'#D97706', bg:'#FFFBEB',
-   test: d => d.includes('comision')||d.includes('comisión')||d.includes('cobro servicio')},
-  {id:'cuota',    name:'Cuota de manejo',          icon:'💳', color:'#9333EA', bg:'#F5F3FF',
-   test: d => d.includes('cuota manejo')||d.includes('cuota de manejo')||d.includes('cobro cuota')},
-  {id:'retefte',  name:'Retención en la fuente',   icon:'📋', color:'#BE185D', bg:'#FDF2F8',
-   test: d => d.includes('retefuente')||d.includes('retefte')||(d.includes('retencion')&&d.includes('fuente'))||(d.includes('retención')&&d.includes('fuente'))},
-  {id:'reteiva',  name:'Retención de IVA',         icon:'📑', color:'#0369A1', bg:'#F0F9FF',
-   test: d => (d.includes('retencion')||d.includes('retención'))&&(d.includes('iva')||d.includes('i.v.a'))},
-  {id:'reteica',  name:'Retención de ICA',         icon:'🏢', color:'#4338CA', bg:'#EEF2FF',
-   test: d => (d.includes('retencion')||d.includes('retención'))&&d.includes('ica')},
-  {id:'plataforma', name:'Plataformas digitales',  icon:'📱', color:'#0891B2', bg:'#ECFEFF',
-   test: d => d.includes('bold')||d.includes('nequi')||d.includes('daviplata')||d.includes('pse')||d.includes('rappipay')||d.includes('wompi')},
-  {id:'cheque',   name:'Cheques',                  icon:'📝', color:'#64748B', bg:'#F8FAFC',
-   test: d => d.includes('cheque')||d.includes('chq')},
-  {id:'otro',     name:'Otros sin clasificar',     icon:'❓', color:'#6B7280', bg:'#F9FAFB',
-   test: () => true},
+  {id:'gmf',name:'GMF / 4×1000',icon:'🏛️',color:'#DC2626',bg:'#FEF2F2',test:d=>d.includes('4x1000')||d.includes('impto gobierno')||d.includes('gmf')||d.includes('4 x 1000')||d.includes('gravamen')},
+  {id:'interes',name:'Intereses recibidos',icon:'📈',color:'#059669',bg:'#ECFDF5',test:d=>(d.includes('interes')||d.includes('interés'))&&(d.includes('ahorro')||d.includes('bancario')||d.includes('cdt')||d.includes('rendimiento'))},
+  {id:'comision',name:'Comisiones bancarias',icon:'🏦',color:'#D97706',bg:'#FFFBEB',test:d=>d.includes('comision')||d.includes('comisión')||d.includes('cobro servicio')},
+  {id:'cuota',name:'Cuota de manejo',icon:'💳',color:'#9333EA',bg:'#F5F3FF',test:d=>d.includes('cuota manejo')||d.includes('cuota de manejo')||d.includes('cobro cuota')},
+  {id:'retefte',name:'Retención en la fuente',icon:'📋',color:'#BE185D',bg:'#FDF2F8',test:d=>d.includes('retefuente')||d.includes('retefte')||(d.includes('retencion')&&d.includes('fuente'))||(d.includes('retención')&&d.includes('fuente'))},
+  {id:'reteiva',name:'Retención de IVA',icon:'📑',color:'#0369A1',bg:'#F0F9FF',test:d=>(d.includes('retencion')||d.includes('retención'))&&(d.includes('iva')||d.includes('i.v.a'))},
+  {id:'reteica',name:'Retención de ICA',icon:'🏢',color:'#4338CA',bg:'#EEF2FF',test:d=>(d.includes('retencion')||d.includes('retención'))&&d.includes('ica')},
+  {id:'plataforma',name:'Plataformas digitales',icon:'📱',color:'#0891B2',bg:'#ECFEFF',test:d=>d.includes('bold')||d.includes('nequi')||d.includes('daviplata')||d.includes('pse')||d.includes('rappipay')||d.includes('wompi')},
+  {id:'cheque',name:'Cheques',icon:'📝',color:'#64748B',bg:'#F8FAFC',test:d=>d.includes('cheque')||d.includes('chq')},
+  {id:'otro',name:'Otros sin clasificar',icon:'❓',color:'#6B7280',bg:'#F9FAFB',test:()=>true},
 ];
 
 function categorize(items) {
@@ -799,12 +637,7 @@ function categorize(items) {
   for (const item of items) {
     const d = (item.desc||'').toLowerCase();
     for (const c of CATEGORIES) {
-      if (c.test(d)) {
-        cats[c.id].items.push(item);
-        cats[c.id].totalDeb += item.deb || 0;
-        cats[c.id].totalCre += item.cre || 0;
-        break;
-      }
+      if (c.test(d)) { cats[c.id].items.push(item); cats[c.id].totalDeb += item.deb || 0; cats[c.id].totalCre += item.cre || 0; break; }
     }
   }
   return cats;
@@ -812,35 +645,24 @@ function categorize(items) {
 
 function guessCausa(desc) {
   const d = (desc||'').toLowerCase();
-  for (const c of CATEGORIES) {
-    if (c.id !== 'otro' && c.test(d)) return c.name;
-  }
+  for (const c of CATEGORIES) { if (c.id !== 'otro' && c.test(d)) return c.name; }
   return 'Pendiente de clasificar';
 }
 
-/* ══════════════════════════════════════════
-   9. RENDER RESULTS
-   Bridge + Analysis + Tabs
-   ══════════════════════════════════════════ */
+/* ── 9. RENDER RESULTS ── */
 function renderResults() {
   const {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, tol} = resultados;
   const total = Math.max(ext.length, aux.length);
   const needsPay = total > FREE_LIMIT;
   const lim = needsPay ? FREE_LIMIT : 999999;
   const pctConc = ext.length > 0 ? Math.round(matched.length / Math.max(ext.length, aux.length) * 100) : 0;
-
-  /* Summary cards */
   document.getElementById('sumCards').innerHTML =
     sc('sc-green', matched.length, 'Conciliadas') +
     sc('sc-blue', soloE.length, 'Solo extracto') +
     sc('sc-amber', soloA.length, 'Solo auxiliar') +
     `<div class="summary-card" style="border-color:${pctConc>=90?'var(--g400)':pctConc>=70?'var(--amber)':'var(--red)'}"><div class="sc-val" style="color:${pctConc>=90?'var(--g600)':pctConc>=70?'var(--amber)':'var(--red)'}">${pctConc}%</div><div class="sc-label">Conciliación</div></div>`;
-
-  /* ── BRIDGE: Saldo Extracto → Partidas conciliatorias → Saldo Libros ── */
   const saldoE = sE.d - sE.c;
   const saldoA = sA.d - sA.c;
-  const diffFinal = saldoE - saldoA;
-
   let bh = '<div class="bridge"><h3>🔗 Puente de Conciliación</h3>';
   bh += br('br-start', 'Saldo neto según extracto bancario', fmtS(saldoE));
   bh += br('br-sep', 'Partidas registradas en extracto, NO en libros', '');
@@ -850,59 +672,33 @@ function renderResults() {
   if (ssA.d > 0) bh += br('br-sub', '(−) Débitos en libros no reflejados en extracto', '− ' + fmtS(ssA.d));
   if (ssA.c > 0) bh += br('br-add', '(+) Créditos en libros no reflejados en extracto', '+ ' + fmtS(ssA.c));
   bh += br('br-end', 'Saldo neto según libro auxiliar', fmtS(saldoA));
-
   const checkVal = saldoE + ssE.d - ssE.c - ssA.d + ssA.c;
   const checkOk = Math.abs(checkVal - saldoA) < 2;
   bh += `<div class="bridge-check ${checkOk ? 'ok' : 'diff'}">${checkOk ? '✓ El puente cuadra correctamente' : '⚠ Diferencia de $ ' + fmtN(Math.abs(checkVal - saldoA)) + ' — revise partidas pendientes'}</div>`;
   bh += '</div>';
   document.getElementById('reconBox').innerHTML = bh;
-
-  /* ── ANALYSIS: Categorized bank charges + unconciled items ── */
   const catsE = categorize(soloE);
   const catsA = categorize(soloA);
-
   let ah = '<div class="analysis-grid">';
-  /* Card: Solo extracto por categoría */
   ah += '<div class="analysis-card"><h3>🏦 Partidas solo en extracto</h3>';
   ah += renderCatList(catsE, soloE);
   ah += '</div>';
-  /* Card: Solo auxiliar por categoría */
   ah += '<div class="analysis-card"><h3>📒 Partidas solo en libros</h3>';
   ah += renderCatList(catsA, soloA);
   ah += '</div>';
   ah += '</div>';
-
-  /* Card: Resumen de gastos bancarios (solo extracto: salidas) */
-  const bankCharges = [
-    {id:'gmf', label:'GMF / 4×1000'},
-    {id:'comision', label:'Comisiones bancarias'},
-    {id:'cuota', label:'Cuota de manejo'},
-    {id:'retefte', label:'Retención en la fuente'},
-    {id:'reteiva', label:'Retención de IVA'},
-    {id:'reteica', label:'Retención de ICA'},
-  ];
+  const bankCharges = [{id:'gmf',label:'GMF / 4×1000'},{id:'comision',label:'Comisiones bancarias'},{id:'cuota',label:'Cuota de manejo'},{id:'retefte',label:'Retención en la fuente'},{id:'reteiva',label:'Retención de IVA'},{id:'reteica',label:'Retención de ICA'}];
   const hasCharges = bankCharges.some(bc => catsE[bc.id] && catsE[bc.id].items.length > 0);
   const interestItems = catsE.interes ? catsE.interes.items : [];
-
   if (hasCharges || interestItems.length > 0) {
     ah += '<div class="analysis-card" style="grid-column:1/-1"><h3>💰 Resumen contable — Movimientos bancarios pendientes de registro</h3>';
     ah += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
-
-    /* Gastos bancarios */
     if (hasCharges) {
       ah += '<div><div style="font-size:.78rem;font-weight:700;color:var(--red);margin-bottom:8px">Gastos bancarios por registrar</div><ul class="cat-list">';
       let totalGastos = 0;
-      for (const bc of bankCharges) {
-        const cat = catsE[bc.id];
-        if (!cat || cat.items.length === 0) continue;
-        const val = cat.totalCre;
-        totalGastos += val;
-        ah += `<li class="cat-item"><div class="cat-left"><div class="cat-icon" style="background:${cat.def.bg}">${cat.def.icon}</div><div><div class="cat-name">${bc.label}</div><div class="cat-count">${cat.items.length} movimiento${cat.items.length>1?'s':''}</div></div></div><div class="cat-val val-red">$ ${fmtN(val)}</div></li>`;
-      }
+      for (const bc of bankCharges) { const cat = catsE[bc.id]; if (!cat || cat.items.length === 0) continue; const val = cat.totalCre; totalGastos += val; ah += `<li class="cat-item"><div class="cat-left"><div class="cat-icon" style="background:${cat.def.bg}">${cat.def.icon}</div><div><div class="cat-name">${bc.label}</div><div class="cat-count">${cat.items.length} movimiento${cat.items.length>1?'s':''}</div></div></div><div class="cat-val val-red">$ ${fmtN(val)}</div></li>`; }
       ah += `</ul><div class="cat-total"><span>Total gastos bancarios</span><span class="cat-val val-red">$ ${fmtN(totalGastos)}</span></div></div>`;
     }
-
-    /* Ingresos bancarios */
     ah += '<div><div style="font-size:.78rem;font-weight:700;color:var(--g600);margin-bottom:8px">Ingresos bancarios por registrar</div><ul class="cat-list">';
     if (interestItems.length > 0) {
       const intTotal = catsE.interes.totalDeb;
@@ -913,25 +709,12 @@ function renderResults() {
     }
     ah += '</div></div></div>';
   }
-
-  /* Save categories for export */
   resultados.catsE = catsE;
   resultados.catsA = catsA;
-
   document.getElementById('analysisBox').innerHTML = ah;
-
-  /* ── TABS ── */
-  const tabs = [
-    {id:'conc', l:'✓ Conciliadas', n:matched.length},
-    {id:'ext', l:'🏦 Solo Extracto', n:soloE.length},
-    {id:'aux', l:'📒 Solo Auxiliar', n:soloA.length},
-  ];
-  document.getElementById('rTabs').innerHTML = tabs.map((t,i) =>
-    `<button class="results-tab ${i===0?'active':''}" onclick="swTab('${t.id}',this)">${t.l}<span class="tab-count">${t.n}</span></button>`
-  ).join('');
-
+  const tabs = [{id:'conc',l:'✓ Conciliadas',n:matched.length},{id:'ext',l:'🏦 Solo Extracto',n:soloE.length},{id:'aux',l:'📒 Solo Auxiliar',n:soloA.length}];
+  document.getElementById('rTabs').innerHTML = tabs.map((t,i) => `<button class="results-tab ${i===0?'active':''}" onclick="swTab('${t.id}',this)">${t.l}<span class="tab-count">${t.n}</span></button>`).join('');
   let p = '';
-  /* Conciliadas */
   p += '<div class="results-panel active" id="panel-conc"><div class="results-scroll"><table class="rtable"><tr><th>#</th><th>Fecha Ext</th><th>Desc Extracto</th><th>Tipo</th><th>Valor Ext</th><th>Fecha Aux</th><th>Tercero/Desc Aux</th><th>Valor Aux</th>';
   if (tol > 0) p += '<th>Dif</th>';
   p += '<th>Conf</th></tr>';
@@ -948,8 +731,6 @@ function renderResults() {
     p += `<td><span class="conf ${cl}" title="${m.reason}">${lb}</span></td></tr>`;
   });
   p += '</table></div></div>';
-
-  /* Solo Extracto */
   p += '<div class="results-panel" id="panel-ext"><div class="results-scroll"><table class="rtable"><tr><th>#</th><th>Fecha</th><th>Descripción</th><th>Tipo</th><th>Valor</th><th>Categoría</th></tr>';
   soloE.slice(0,lim).forEach((e,i) => {
     const tipo = e.deb > 0 ? 'Entrada' : 'Salida';
@@ -958,8 +739,6 @@ function renderResults() {
     p += `<tr><td>${i+1}</td><td>${fD(e.fecha)}</td><td class="desc-cell" title="${esc(e.desc)}">${esc(e.desc)}</td><td class="${tc}">${tipo}</td><td class="num">${fmtN(e.deb||e.cre)}</td><td style="font-size:.7rem;color:var(--f500)">${cat}</td></tr>`;
   });
   p += '</table></div></div>';
-
-  /* Solo Auxiliar */
   p += '<div class="results-panel" id="panel-aux"><div class="results-scroll"><table class="rtable"><tr><th>#</th><th>Fecha</th><th>Tercero</th><th>Descripción</th><th>Ref</th><th>Tipo</th><th>Valor</th></tr>';
   soloA.slice(0,lim).forEach((a,i) => {
     const tipo = a.deb > 0 ? 'Débito' : 'Crédito';
@@ -968,11 +747,8 @@ function renderResults() {
   });
   p += '</table></div></div>';
   document.getElementById('rPanels').innerHTML = p;
-
-  /* Paywall */
   if (needsPay) {
-    document.getElementById('payZone').innerHTML =
-      `<div class="paywall"><h3>🔒 Tu archivo tiene ${total} filas (gratis: ${FREE_LIMIT})</h3><p>Se muestran ${FREE_LIMIT} partidas. Para todo + Excel:</p><div class="pricing-mini">${PRICING.filter(p=>p.price>0).map(pr=>`<div class="pm-opt ${total<=pr.max?'selected':''}"><div class="pm-rows">Hasta ${pr.max}</div><div class="pm-price">${pr.label}</div><div class="pm-unit">COP</div></div>`).join('')}</div><button class="btn btn-primary" onclick="alert('Integración Wompi próximamente.')">Desbloquear</button></div>`;
+    document.getElementById('payZone').innerHTML = `<div class="paywall"><h3>🔒 Tu archivo tiene ${total} filas (gratis: ${FREE_LIMIT})</h3><p>Se muestran ${FREE_LIMIT} partidas. Para todo + Excel:</p><div class="pricing-mini">${PRICING.filter(p=>p.price>0).map(pr=>`<div class="pm-opt ${total<=pr.max?'selected':''}"><div class="pm-rows">Hasta ${pr.max}</div><div class="pm-price">${pr.label}</div><div class="pm-unit">COP</div></div>`).join('')}</div><button class="btn btn-primary" onclick="alert('Integración Wompi próximamente.')">Desbloquear</button></div>`;
     document.getElementById('btnXls').style.display = 'none';
   } else {
     document.getElementById('payZone').innerHTML = '';
@@ -996,16 +772,10 @@ function renderCatList(cats, all) {
   return h;
 }
 
-function br(cls, label, val) {
-  return `<div class="bridge-row ${cls}"><span class="br-label">${label}</span><span class="br-val">${val}</span></div>`;
-}
-
+function br(cls, label, val) { return `<div class="bridge-row ${cls}"><span class="br-label">${label}</span><span class="br-val">${val}</span></div>`; }
 function fmtS(n) { return (n < 0 ? '−' : '') + '$ ' + fmtN(Math.abs(n)); }
 
-/* ══════════════════════════════════════════
-   10. EXPORT EXCEL — Professional format
-   4 sheets matching accounting standards
-   ══════════════════════════════════════════ */
+/* ── 10. EXPORT EXCEL ── */
 function extractMeta(k) {
   const f = F[k];
   if (!f.raw) return {};
@@ -1077,9 +847,9 @@ function exportXls() {
   s1.push(['Generado: ' + new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'}) + ' — ExógenaDIAN']);
   s1.push([]);
   s1.push(['RESUMEN DE SALDOS']);
-  s1.push(['Concepto','Extracto Bancario','Libros Contables','Diferencia']);
-  s1.push(['Total Ingresos / Débitos', sE.d, sA.d, sE.d - sA.d]);
-  s1.push(['Total Egresos / Créditos', sE.c, sA.c, sE.c - sA.c]);
+  s1.push(['Concepto','Extracto Bancario','Libros Contables','Diferencia','','Explicación']);
+  s1.push(['Total Ingresos / Débitos', sE.d, sA.d, sE.d - sA.d, '', '']);
+  s1.push(['Total Egresos / Créditos', sE.c, sA.c, sE.c - sA.c, '', '']);
   s1.push(['Movimiento Neto del Período', saldoE, saldoA, saldoE - saldoA]);
   s1.push([]);
   s1.push(['PARTIDAS CONCILIATORIAS']);
@@ -1115,34 +885,34 @@ function exportXls() {
 
   /* ── SHEET 2: Extracto sin Contabilizar ── */
   const s2 = [
-    ['PARTIDAS EN EXTRACTO BANCARIO NO REGISTRADAS EN LIBROS'],
-    [soloE.length+' movimientos bancarios sin registro contable — Revisar con soportes'],
+    ['PARTIDAS EN EXTRACTO BANCARIO NO REGISTRADAS EN LIBROS CONTABLES'],
+    [soloE.length+' movimientos bancarios sin registro contable — Requieren contabilización'],
     [],
     ['INGRESOS EN EXTRACTO SIN REGISTRO CONTABLE'],
-    ['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida'],
+    ['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida','Notas'],
   ];
-  soloE_in.forEach((e,i) => s2.push([i+1, fD(e.fecha), e.desc, e.deb, tipoProbable(e.desc,true), accionSugerida(e.desc,true)]));
-  s2.push(['SUBTOTAL INGRESOS ('+soloE_in.length+' partidas)','','',totEIn]);
+  soloE_in.forEach((e,i) => s2.push([i+1, fD(e.fecha), e.desc, e.deb, tipoProbable(e.desc,true), accionSugerida(e.desc,true), '']));
+  s2.push(['','','SUBTOTAL INGRESOS ('+soloE_in.length+' partidas)', totEIn]);
   s2.push([]);
   s2.push(['EGRESOS EN EXTRACTO SIN REGISTRO CONTABLE']);
-  s2.push(['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida']);
-  soloE_out.forEach((e,i) => s2.push([i+1, fD(e.fecha), e.desc, -e.cre, tipoProbable(e.desc,false), accionSugerida(e.desc,false)]));
-  s2.push(['SUBTOTAL EGRESOS ('+soloE_out.length+' partidas)','','', -totEOut]);
-  s2.push([],['TOTAL NETO SIN CONTABILIZAR','','', totEIn - totEOut]);
+  s2.push(['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida','Notas']);
+  soloE_out.forEach((e,i) => s2.push([i+1, fD(e.fecha), e.desc, -e.cre, tipoProbable(e.desc,false), accionSugerida(e.desc,false), '']));
+  s2.push(['','','SUBTOTAL EGRESOS ('+soloE_out.length+' partidas)', -totEOut]);
+  s2.push([],['','','TOTAL NETO SIN CONTABILIZAR', totEIn - totEOut]);
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(s2), 'Extracto sin Contabilizar');
 
   /* ── SHEET 3: Libros sin Extracto ── */
   const s3 = [
-    ['PARTIDAS EN LIBROS CONTABLES NO REFLEJADAS EN EXTRACTO'],
+    ['PARTIDAS EN LIBROS CONTABLES NO REFLEJADAS EN EXTRACTO BANCARIO'],
     [soloA.length+' registros contables sin movimiento bancario correspondiente'],
     [],
-    ['#','Fecha','Comprobante','Tercero','Descripción','Débito','Crédito','Posible Causa'],
+    ['#','Fecha','Comprobante','Tercero','Descripción','Débito','Crédito','Posible Causa','Notas'],
   ];
   soloA.forEach((a,i) => {
     const causa = a.deb > 0 ? 'Verificar si tiene movimiento bancario asociado' : 'Verificar si pago fue procesado por el banco';
-    s3.push([i+1, fD(a.fecha), a.ref, a.tercero, a.desc, a.deb||'', a.cre||'', causa]);
+    s3.push([i+1, fD(a.fecha), a.ref, a.tercero, a.desc, a.deb||'', a.cre||'', causa, '']);
   });
-  s3.push(['TOTAL','','','','', totADeb, totACre]);
+  s3.push(['','','','TOTAL','', totADeb, totACre]);
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(s3), 'Libros sin Extracto');
 
   /* ── SHEET 4: Partidas Conciliadas ── */
@@ -1150,21 +920,19 @@ function exportXls() {
     ['PARTIDAS CONCILIADAS (MATCH EXTRACTO ↔ LIBROS)'],
     [matched.length+' movimientos conciliados exitosamente'],
     [],
-    ['Fecha Ext.','Descripción Extracto','Valor Extracto','Fecha Aux.','Comprobante','Tercero','Débito','Crédito','Estado'],
+    ['Fecha Ext.','Descripción Extracto','Valor Extracto','Fecha Aux.','Comprobante','Tercero','Débito','Crédito','Estado','Notas'],
   ];
   matched.forEach(m => {
     const e = ext[m.ei], a = aux[m.ai];
     const vE = e.deb > 0 ? e.deb : -e.cre;
-    s4.push([fD(e.fecha), e.desc, vE, fD(a.fecha), a.ref, a.tercero, a.deb||'', a.cre||'', '✓ OK']);
+    s4.push([fD(e.fecha), e.desc, vE, fD(a.fecha), a.ref, a.tercero, a.deb||'', a.cre||'', '✓ OK', '']);
   });
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(s4), 'Partidas Conciliadas');
 
   XLSX.writeFile(wb, 'Conciliacion_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
 
-/* ══════════════════════════════════════════
-   UTILITIES
-   ══════════════════════════════════════════ */
+/* ── UTILITIES ── */
 function show(id){document.getElementById(id).classList.remove('hidden')}
 function hide(id){document.getElementById(id).classList.add('hidden')}
 function setSI(n){for(let i=1;i<=3;i++){const e=document.getElementById('si'+i);e.classList.remove('active','done');if(i<n)e.classList.add('done');if(i===n)e.classList.add('active')}}
@@ -1173,7 +941,6 @@ function fmtN(n){if(typeof n==='string')return n;if(typeof n!=='number'||isNaN(n
 function fD(d){if(!d)return'—';return d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'})}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function sc(cls,val,lab){return`<div class="summary-card ${cls}"><div class="sc-val">${val}</div><div class="sc-label">${lab}</div></div>`}
-function rr(l,v,c){return`<div class="rr"><span class="rr-l">${l}</span><span class="rr-v ${c}">${v}</span></div>`}
 </script>
 </body>
 </html>
