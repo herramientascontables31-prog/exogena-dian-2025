@@ -65,18 +65,45 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 .map-table input,.map-table select{padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-family:inherit;width:100%}
 .badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.7rem;font-weight:700}
 .badge-pj{background:#E3F2FD;color:#1565C0}.badge-pn{background:#FFF3E0;color:#E65100}.badge-both{background:#F3E5F5;color:#7B1FA2}
-.form350{border:2px solid var(--pri);border-radius:12px;overflow:hidden}
-.form350-header{background:var(--pri);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center}
-.form350-header h2{font-size:1.1rem;font-weight:700}.form350-header .f350-num{font-family:'JetBrains Mono',monospace;font-size:2rem;font-weight:700;opacity:.8}
-.form350-section{padding:16px 20px;border-bottom:1px solid var(--border)}
-.form350-section h3{font-size:.85rem;font-weight:700;color:var(--pri);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
-.f350-row{display:grid;grid-template-columns:280px 1fr 1fr 1fr 1fr;gap:1px;margin-bottom:1px}
-.f350-row.header{background:var(--pri2)}.f350-row.header>div{color:#fff;font-weight:700;font-size:.72rem;padding:8px 10px;text-align:center}
-.f350-row>div{background:#fff;padding:6px 10px;font-size:.8rem;border:1px solid #eee}
-.f350-row>div:first-child{font-weight:600;font-size:.78rem}
-.f350-row>div.val{text-align:right;font-family:'JetBrains Mono',monospace;font-size:.78rem}
-.f350-row>div.val.has{background:#f0f7ff;font-weight:600}.f350-row>div.val.negative{color:var(--red)}
-.f350-row.total{background:var(--pri3);font-weight:700}.f350-row.total>div{font-weight:700;border-top:2px solid var(--pri2)}
+/* === DIAN FORM 350 FAITHFUL LAYOUT === */
+.dian-form{border:2px solid #000;font-family:Arial,Helvetica,sans-serif;font-size:11px;background:#fff;max-width:1100px;margin:0 auto}
+.dian-top{display:grid;grid-template-columns:80px 1fr 120px;border-bottom:2px solid #000}
+.dian-top-left{background:#1a3c6e;color:#fff;display:flex;align-items:center;justify-content:center;padding:8px;font-size:9px;text-align:center;font-weight:700;line-height:1.2;border-right:1px solid #000}
+.dian-top-center{padding:6px 12px}
+.dian-top-center .dian-title{font-size:13px;font-weight:700;text-align:center;margin:2px 0}
+.dian-top-center .dian-subtitle{font-size:9px;color:#555;text-align:center}
+.dian-top-right{background:#1a3c6e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;font-family:'JetBrains Mono',monospace;border-left:1px solid #000}
+.dian-datos{display:grid;grid-template-columns:60px 1fr 60px 60px;border-bottom:2px solid #000;font-size:10px}
+.dian-datos>div{padding:4px 8px;border-right:1px solid #ccc}
+.dian-datos .lbl{font-size:8px;color:#666;display:block}.dian-datos .val{font-weight:700}
+.dian-datos .razon{grid-column:span 2}
+/* Section headers */
+.dian-sec{background:#d4e6f1;padding:5px 10px;font-weight:700;font-size:10px;border-bottom:1px solid #000;text-transform:uppercase;color:#1a3c6e;letter-spacing:.3px}
+/* Grid header for PJ/PN columns */
+.dian-grid-hdr{display:grid;grid-template-columns:200px repeat(4,1fr) 30px;border-bottom:2px solid #000;font-size:9px;font-weight:700;text-align:center}
+.dian-grid-hdr>div{padding:4px 2px;border-right:1px solid #ccc}
+.dian-grid-hdr .pj-hdr{background:#c6dced;grid-column:span 2;border-bottom:1px solid #999}
+.dian-grid-hdr .pn-hdr{background:#d5e8d4;grid-column:span 2;border-bottom:1px solid #999}
+.dian-grid-hdr .sub{font-size:8px;color:#555}
+/* Data rows */
+.dian-row{display:grid;grid-template-columns:200px repeat(4,1fr) 30px;border-bottom:1px solid #ddd;font-size:10px}
+.dian-row:hover{background:#f5f8fc}
+.dian-row>div{padding:3px 6px;border-right:1px solid #eee;min-height:22px;display:flex;align-items:center}
+.dian-row .concepto{font-size:9.5px;font-weight:500}
+.dian-row .cas-num{font-size:8px;color:#888;font-family:'JetBrains Mono',monospace;justify-content:center;background:#f9f9f9}
+.dian-row .cas-val{justify-content:flex-end;font-family:'JetBrains Mono',monospace;font-size:10px;padding-right:8px}
+.dian-row .cas-val.filled{background:#edf4ff;font-weight:700;color:#1a3c6e}
+.dian-row .cas-val.zero{color:#ccc}
+/* Total rows */
+.dian-total{display:grid;grid-template-columns:200px 1fr 120px 30px;border-bottom:2px solid #000;font-size:10px;font-weight:700;background:#f0f4f8}
+.dian-total>div{padding:4px 8px;border-right:1px solid #ccc;display:flex;align-items:center}
+.dian-total .t-val{justify-content:flex-end;font-family:'JetBrains Mono',monospace;font-size:11px}
+.dian-total .t-val.big{font-size:13px;background:#d4e6f1;color:#1a3c6e}
+.dian-total .t-val.green{background:#d5e8d4;color:#2d6a2e}
+.dian-total .t-cas{justify-content:center;font-size:9px;color:#666;background:#f9f9f9}
+/* Footer */
+.dian-footer{padding:8px 12px;font-size:8px;color:#888;text-align:center;border-top:1px solid #ccc;background:#fafafa}
+.dian-footer strong{color:#1a3c6e}
 .btn{padding:10px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
 .btn-primary{background:var(--pri2);color:#fff}.btn-primary:hover{background:var(--pri);transform:translateY(-1px)}
 .btn-success{background:var(--green);color:#fff}.btn-success:hover{opacity:.9}
@@ -616,53 +643,130 @@ function calc350(){
 
 function render350(){
   const c=result350.cas;
-  const S=[
-    {t:'RETENCIONES A TÍTULO DE RENTA',r:[
-      {l:'Honorarios',bJ:29,rJ:42,bN:79,rN:95},{l:'Comisiones',bJ:30,rJ:43,bN:80,rN:96},
-      {l:'Servicios',bJ:31,rJ:44,bN:81,rN:97},{l:'Rendimientos financieros',bJ:32,rJ:45,bN:82,rN:98},
-      {l:'Arrendamientos',bJ:33,rJ:46,bN:83,rN:99},{l:'Regalías',bJ:34,rJ:47,bN:84,rN:100},
-      {l:'Dividendos',bJ:35,rJ:48,bN:85,rN:101},{l:'Compras',bJ:36,rJ:49,bN:86,rN:102},
-      {l:'Tarjetas',bJ:37,rJ:50,bN:87,rN:103},{l:'Construcción',bJ:38,rJ:51,bN:88,rN:104},
-      {l:'Enajenación activos PN',bJ:null,rJ:null,bN:89,rN:105},
-      {l:'Loterías/rifas',bJ:39,rJ:52,bN:90,rN:106},{l:'Hidrocarburos',bJ:40,rJ:53,bN:91,rN:107},
-      {l:'Otros pagos',bJ:41,rJ:54,bN:92,rN:108}
-    ]},
-    {t:'RENTAS DE TRABAJO Y PENSIONES',r:[
-      {l:'Rentas de trabajo',bJ:null,rJ:null,bN:77,rN:93},{l:'Pensiones',bJ:null,rJ:null,bN:78,rN:94}
-    ]},
-    {t:'PAGOS AL EXTERIOR',r:[
-      {l:'Sin convenio',bJ:55,rJ:57,bN:109,rN:111},{l:'Con convenio',bJ:56,rJ:58,bN:110,rN:112}
-    ]},
-    {t:'AUTORRETENCIONES',r:[
-      {l:'Exonerados 114-1',bJ:59,rJ:68,bN:null,rN:null},{l:'Ventas',bJ:60,rJ:69,bN:113,rN:121},
-      {l:'Honorarios',bJ:61,rJ:70,bN:114,rN:122},{l:'Comisiones',bJ:62,rJ:71,bN:115,rN:123},
-      {l:'Servicios',bJ:63,rJ:72,bN:116,rN:124},{l:'Rendimientos',bJ:64,rJ:73,bN:117,rN:125},
-      {l:'Otros',bJ:67,rJ:76,bN:120,rN:128}
-    ]}
-  ];
-  let h=`<div class="form350-header"><div><h2>DECLARACIÓN RETENCIONES EN LA FUENTE</h2>
-    <div style="font-size:.8rem;opacity:.8;margin-top:4px">${document.getElementById('cfgEmpresa').value} — NIT ${document.getElementById('cfgNit').value} — Período ${document.getElementById('cfgMonth').value}/${document.getElementById('cfgYear').value}</div>
-  </div><div class="f350-num">350</div></div>`;
-  S.forEach(sec=>{
-    h+=`<div class="form350-section"><h3>${sec.t}</h3><div class="f350-row header"><div>Concepto</div><div>Base PJ</div><div>Ret. PJ</div><div>Base PN</div><div>Ret. PN</div></div>`;
-    sec.r.forEach(it=>{
-      const vbJ=it.bJ?c[it.bJ]||0:0,vrJ=it.rJ?c[it.rJ]||0:0,vbN=it.bN?c[it.bN]||0:0,vrN=it.rN?c[it.rN]||0:0;
-      h+=`<div class="f350-row"><div>${it.l}</div>
-        <div class="val${vbJ?' has':''}">${it.bJ?'['+it.bJ+'] ':''}${vbJ?fN(vbJ):''}</div>
-        <div class="val${vrJ?' has':''}">${it.rJ?'['+it.rJ+'] ':''}${vrJ?fN(vrJ):''}</div>
-        <div class="val${vbN?' has':''}">${it.bN?'['+it.bN+'] ':''}${vbN?fN(vbN):''}</div>
-        <div class="val${vrN?' has':''}">${it.rN?'['+it.rN+'] ':''}${vrN?fN(vrN):''}</div></div>`;
-    });h+='</div>';
-  });
-  h+=`<div class="form350-section"><h3>TOTALES</h3>
-    <div class="f350-row total"><div>(-) Retenciones en exceso (129)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val negative">${fN(c[129])}</div></div>
-    <div class="f350-row total"><div>Total retenciones renta (130)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val has">${fN(c[130])}</div></div>
-    <div class="f350-row total"><div>Ret IVA (131+132-133=134)</div><div class="val">${fN(c[131])}</div><div class="val">${fN(c[132])}</div><div class="val negative">${fN(c[133])}</div><div class="val has">${fN(c[134])}</div></div>
-    <div class="f350-row total"><div>Timbre (135)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val">${fN(c[135])}</div></div>
-    <div class="f350-row total" style="background:var(--pri3)"><div>TOTAL RETENCIONES (136)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val has" style="font-size:1rem">${fN(c[136])}</div></div>
-    <div class="f350-row total"><div>Sanciones (137)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val">${fN(c[137])}</div></div>
-    <div class="f350-row total" style="background:#E2EFDA"><div>TOTAL A PAGAR (138)</div><div class="val"></div><div class="val"></div><div class="val"></div><div class="val has" style="font-size:1rem;color:var(--green)">${fN(c[138])}</div></div>
+  const emp=document.getElementById('cfgEmpresa').value;
+  const nit=document.getElementById('cfgNit').value;
+  const yr=document.getElementById('cfgYear').value;
+  const mo=document.getElementById('cfgMonth').value;
+  const moName=['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][parseInt(mo)]||mo;
+  function cv(n){return n?(n).toLocaleString('es-CO'):''}
+  function cvc(cas){const v=c[cas]||0;return`<div class="cas-val${v?' filled':'zero'}">${v?cv(v):''}</div><div class="cas-num">${cas}</div>`}
+  function cvb(bCas,rCas){const vb=bCas?c[bCas]||0:0;const vr=rCas?c[rCas]||0:0;
+    return`<div class="cas-val${vb?' filled':''}">${vb?cv(vb):''}</div><div class="cas-num">${bCas||''}</div><div class="cas-val${vr?' filled':''}">${vr?cv(vr):''}</div><div class="cas-num">${rCas||''}</div>`}
+
+  // Row helper: concepto | basePJ casNum | retPJ casNum | basePN casNum | retPN casNum
+  function dRow(label,bJ,rJ,bN,rN){
+    return`<div class="dian-row"><div class="concepto">${label}</div>${cvb(bJ,rJ)}${cvb(bN,rN)}</div>`}
+
+  let h=`<div class="dian-form">
+    <!-- TOP BAR -->
+    <div class="dian-top">
+      <div class="dian-top-left">DIAN<br><span style="font-size:7px;font-weight:400">Dirección de Impuestos<br>y Aduanas Nacionales</span></div>
+      <div class="dian-top-center">
+        <div class="dian-title">Declaración de Retenciones en la Fuente</div>
+        <div class="dian-subtitle">Resolución 000031 de 2024 — Borrador generado automáticamente</div>
+      </div>
+      <div class="dian-top-right">350</div>
+    </div>
+    <!-- DATOS DECLARANTE -->
+    <div class="dian-datos">
+      <div><span class="lbl">1. Año</span><span class="val">${yr}</span></div>
+      <div class="razon"><span class="lbl">11. Razón social</span><span class="val">${emp}</span></div>
+      <div><span class="lbl">3. Período</span><span class="val">${mo} ${moName}</span></div>
+      <div><span class="lbl">5. NIT</span><span class="val">${nit}</span></div>
+    </div>
+    <!-- COLUMN HEADERS (2 levels: PJ / PN, then Base / Retención) -->
+    <div class="dian-sec">A título de impuesto sobre la renta y complementario — Retenciones</div>
+    <div style="display:grid;grid-template-columns:200px repeat(4,1fr) repeat(4,1fr);font-size:8px;font-weight:700;text-align:center;border-bottom:2px solid #000">
+      <div style="grid-row:span 2;display:flex;align-items:center;justify-content:center;border-right:1px solid #999;padding:4px;background:#f5f5f5">Concepto</div>
+      <div style="grid-column:span 4;background:#c6dced;border-right:1px solid #999;border-bottom:1px solid #999;padding:3px">PERSONAS JURÍDICAS Y ASIMILADAS</div>
+      <div style="grid-column:span 4;background:#d5e8d4;border-bottom:1px solid #999;padding:3px">PERSONAS NATURALES Y ASIMILADAS</div>
+      <div style="background:#dce8f4;border-right:1px solid #eee;padding:2px">Pagos/abonos</div>
+      <div style="background:#dce8f4;border-right:1px solid #eee;padding:2px">Cas.</div>
+      <div style="background:#dce8f4;border-right:1px solid #eee;padding:2px">Retención</div>
+      <div style="background:#dce8f4;border-right:1px solid #999;padding:2px">Cas.</div>
+      <div style="background:#e5f0e0;border-right:1px solid #eee;padding:2px">Pagos/abonos</div>
+      <div style="background:#e5f0e0;border-right:1px solid #eee;padding:2px">Cas.</div>
+      <div style="background:#e5f0e0;border-right:1px solid #eee;padding:2px">Retención</div>
+      <div style="background:#e5f0e0;padding:2px">Cas.</div>
+    </div>`;
+
+  // Helper for 8-col rows (PJ base, PJ cas, PJ ret, PJ cas, PN base, PN cas, PN ret, PN cas)
+  function fRow(label,bJ,rJ,bN,rN){
+    const vbJ=bJ?c[bJ]||0:0,vrJ=rJ?c[rJ]||0:0,vbN=bN?c[bN]||0:0,vrN=rN?c[rN]||0:0;
+    return`<div style="display:grid;grid-template-columns:200px repeat(8,1fr);font-size:10px;border-bottom:1px solid #e0e0e0">
+      <div style="padding:3px 8px;border-right:1px solid #ddd;font-size:9.5px">${label}</div>
+      <div style="text-align:right;padding:3px 6px;font-family:'JetBrains Mono',monospace;border-right:1px solid #eee;${vbJ?'background:#edf4ff;font-weight:600':''}">${vbJ?cv(vbJ):''}</div>
+      <div style="text-align:center;padding:3px 2px;font-size:8px;color:#888;background:#fafafa;border-right:1px solid #eee">${bJ||''}</div>
+      <div style="text-align:right;padding:3px 6px;font-family:'JetBrains Mono',monospace;border-right:1px solid #eee;${vrJ?'background:#edf4ff;font-weight:600':''}">${vrJ?cv(vrJ):''}</div>
+      <div style="text-align:center;padding:3px 2px;font-size:8px;color:#888;background:#fafafa;border-right:1px solid #999">${rJ||''}</div>
+      <div style="text-align:right;padding:3px 6px;font-family:'JetBrains Mono',monospace;border-right:1px solid #eee;${vbN?'background:#f0f8ef;font-weight:600':''}">${vbN?cv(vbN):''}</div>
+      <div style="text-align:center;padding:3px 2px;font-size:8px;color:#888;background:#fafafa;border-right:1px solid #eee">${bN||''}</div>
+      <div style="text-align:right;padding:3px 6px;font-family:'JetBrains Mono',monospace;border-right:1px solid #eee;${vrN?'background:#f0f8ef;font-weight:600':''}">${vrN?cv(vrN):''}</div>
+      <div style="text-align:center;padding:3px 2px;font-size:8px;color:#888;background:#fafafa">${rN||''}</div>
+    </div>`}
+
+  // BASE SUJETA A RETENCIÓN + RETENCIONES (side by side)
+  h+=fRow('Rentas de trabajo',null,null,77,93);
+  h+=fRow('Rentas de pensiones',null,null,78,94);
+  h+=fRow('Honorarios',29,42,79,95);
+  h+=fRow('Comisiones',30,43,80,96);
+  h+=fRow('Servicios',31,44,81,97);
+  h+=fRow('Rendimientos financieros',32,45,82,98);
+  h+=fRow('Arrendamientos (muebles e inmuebles)',33,46,83,99);
+  h+=fRow('Regalías y propiedad intelectual',34,47,84,100);
+  h+=fRow('Dividendos y participaciones',35,48,85,101);
+  h+=fRow('Compras',36,49,86,102);
+  h+=fRow('Transacciones tarjetas débito/crédito',37,50,87,103);
+  h+=fRow('Contratos de construcción',38,51,88,104);
+  h+=fRow('Enajenación activos fijos PN',null,null,89,105);
+  h+=fRow('Loterías, rifas, apuestas',39,52,90,106);
+  h+=fRow('Hidrocarburos y prod. mineros',40,53,91,107);
+  h+=fRow('Otros pagos sujetos a retención',41,54,92,108);
+
+  h+=`<div class="dian-sec">Pagos al exterior</div>`;
+  h+=fRow('A países sin convenio',55,57,109,111);
+  h+=fRow('A países con convenio vigente',56,58,110,112);
+
+  h+=`<div class="dian-sec">Autorretenciones a título de renta</div>`;
+  h+=fRow('Contribuyentes exonerados (Art. 114-1 E.T.)',59,68,null,null);
+  h+=fRow('Ventas',60,69,113,121);
+  h+=fRow('Honorarios',61,70,114,122);
+  h+=fRow('Comisiones',62,71,115,123);
+  h+=fRow('Servicios',63,72,116,124);
+  h+=fRow('Rendimientos financieros',64,73,117,125);
+  h+=fRow('Otros conceptos',67,76,120,128);
+
+  // TOTALS section
+  function tRow(label,val,cas,style){
+    const sty=style||'';
+    return`<div style="display:grid;grid-template-columns:1fr 200px 50px;border-bottom:2px solid #999;font-size:11px;font-weight:700;${sty}">
+      <div style="padding:5px 10px">${label}</div>
+      <div style="text-align:right;padding:5px 10px;font-family:'JetBrains Mono',monospace;border-left:1px solid #ccc">${cv(val)}</div>
+      <div style="text-align:center;padding:5px 4px;font-size:9px;color:#666;background:#fafafa;border-left:1px solid #ccc">${cas}</div>
+    </div>`}
+
+  h+=`<div class="dian-sec" style="border-top:2px solid #000">Totales</div>`;
+  h+=tRow('(-) Menos retenciones en exceso o indebidas',c[129]||0,129,'color:#c00');
+  h+=tRow('Total retenciones renta y complementario',c[130]||0,130,'background:#dce8f4');
+  h+=tRow('A responsables del IVA',c[131]||0,131,'');
+  h+=tRow('Practicadas por servicios a no residentes (IVA)',c[132]||0,132,'');
+  h+=tRow('(-) Menos retenciones IVA en exceso',c[133]||0,133,'color:#c00');
+  h+=tRow('Total retenciones IVA',c[134]||0,134,'background:#dce8f4');
+  h+=tRow('Retenciones impuesto de timbre nacional',c[135]||0,135,'');
+  h+=tRow('Total retenciones (130 + 134 + 135)',c[136]||0,136,'background:#c6dced;font-size:13px');
+  h+=tRow('Sanciones',c[137]||0,137,'');
+  h+=tRow('Total retenciones más sanciones',c[138]||0,138,'background:#b6d7a8;font-size:14px;color:#1a5c1a');
+
+  // 980 Pago total
+  h+=`<div style="display:grid;grid-template-columns:1fr 200px 50px;border-top:3px solid #000;font-weight:900;font-size:14px;background:#f0f0f0">
+    <div style="padding:8px 12px">980. Pago total $</div>
+    <div style="text-align:right;padding:8px 12px;font-family:'JetBrains Mono',monospace;border-left:2px solid #000;font-size:16px">${cv(c[138]||0)}</div>
+    <div style="padding:8px 4px;text-align:center;font-size:9px;color:#666;border-left:1px solid #999">138</div>
   </div>`;
+
+  h+=`<div class="dian-footer"><strong>BORRADOR</strong> — Generado automáticamente. Este documento NO es una declaración oficial. Debe ser verificado y presentado a través del portal DIAN.</div>`;
+  h+=`</div>`; // close dian-form
+
   document.getElementById('form350Visual').innerHTML=h;
   document.getElementById('resultStats').innerHTML=`
     <div class="stat-card blue"><div class="val">$${fN(c[130])}</div><div class="lbl">Ret. Renta (130)</div></div>
