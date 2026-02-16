@@ -1192,34 +1192,25 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
                  'rs': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
 
             # ===============================================================
-            # CORRECCIÓN 9: Manejo de empresas internacionales
+            # CORRECCIÓN 9: Manejo correcto de identidad del tercero
+            # El NIT, razón social, tipo doc y DV SIEMPRE vienen del balance
+            # del cliente. NUNCA se reemplazan por datos de Google Sheets.
+            # Google Sheets SOLO completa: dirección, departamento, municipio.
             # ===============================================================
-            # Verificar si es empresa internacional conocida
-            if f['nit'] in EMPRESAS_INTERNACIONALES:
-                emp = EMPRESAS_INTERNACIONALES[f['nit']]
-                d['rs'] = emp[0]  # Razón social
-                d['pais'] = emp[1]  # Código país
-                d['td'] = emp[2]   # Tipo doc
-                td = d['td']
-                d['a1'] = d['a2'] = d['n1'] = d['n2'] = ''
-                d['dir'] = ''
-                d['dp'] = ''
-                d['mp'] = ''
-            elif es_tipo_doc_extranjero(td):
-                # Tercero extranjero: todo va en razón social
+
+            if es_tipo_doc_extranjero(td):
+                # Tercero extranjero: todo va en razón social, sin nombres
                 d['rs'] = r
                 d['a1'] = d['a2'] = d['n1'] = d['n2'] = ''
-                # País no puede ser Colombia para extranjeros
+                # País: detectar por nombre si es posible, no puede ser Colombia
                 pais_detectado = detectar_pais_por_nombre(r)
-                if pais_detectado:
-                    d['pais'] = pais_detectado
-                else:
-                    d['pais'] = '840'  # Default: Estados Unidos si no detecta
-                # Sin dirección/dpto/mpio colombiano
+                d['pais'] = pais_detectado if pais_detectado else '840'
+                # Exterior no lleva dirección/dpto/mpio colombiano
                 d['dir'] = ''
                 d['dp'] = ''
                 d['mp'] = ''
             elif td == "13":
+                # Persona natural: separar apellidos y nombres
                 p = r.split()
                 if len(p) >= 1: d['a1'] = p[0]
                 if len(p) >= 2: d['a2'] = p[1]
@@ -1227,26 +1218,30 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
                 if len(p) >= 4: d['n2'] = ' '.join(p[3:])
             else:
                 d['rs'] = r
-                # Verificar si parece internacional por el nombre
+                # Si parece empresa internacional por el nombre, ajustar solo el PAIS
+                # pero NO cambiar td ni rs (esos son del cliente)
                 pais_nombre = detectar_pais_por_nombre(r)
                 if pais_nombre and pais_nombre != '170':
                     d['pais'] = pais_nombre
-                    d['td'] = '43'
-                    d['a1'] = d['a2'] = d['n1'] = d['n2'] = ''
-                    d['dir'] = ''
-                    d['dp'] = ''
-                    d['mp'] = ''
 
+            # ===============================================================
+            # Google Sheets: SOLO completar dirección, departamento, municipio
+            # NUNCA tocar: td, nit, dv, rs, a1, a2, n1, n2
+            # ===============================================================
             if f['nit'] in dir_central:
                 dc = dir_central[f['nit']]
-                if dc.get('dir'): d['dir'] = dc['dir']
-                if dc.get('depto'): d['dp'] = pad_dpto(dc['depto'])
-                if dc.get('mpio'): d['mp'] = pad_mpio(dc['mpio'])
-                if dc.get('pais'): d['pais'] = dc['pais']
-                if dc.get('td'): d['td'] = dc['td']
-                if dc.get('dv'): d['dv'] = dc['dv']
-                if dc.get('razon') and not d['rs'] and d['td'] != "13": d['rs'] = dc['razon']
+                # Solo dirección si el registro no tiene
+                if not d['dir'] and dc.get('dir'):
+                    d['dir'] = dc['dir']
+                if not d['dp'] and dc.get('depto'):
+                    d['dp'] = pad_dpto(dc['depto'])
+                if not d['mp'] and dc.get('mpio'):
+                    d['mp'] = pad_mpio(dc['mpio'])
+                # País solo si quedó en default 169 y el sheet tiene otro
+                if d['pais'] == '169' and dc.get('pais') and dc['pais'] != '169' and dc['pais'] != '':
+                    d['pais'] = dc['pais']
 
+            # Directorio del cliente (archivo Excel) — este SÍ puede sobreescribir
             if f['nit'] in dir_externo:
                 ext = dir_externo[f['nit']]
                 if ext['dir']: d['dir'] = ext['dir']
@@ -1255,7 +1250,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
                 if ext.get('pais'): d['pais'] = ext['pais']
 
             # Última verificación: si td es extranjero, pais NO puede ser Colombia
-            if es_tipo_doc_extranjero(d['td']) and d['pais'] == '170':
+            if es_tipo_doc_extranjero(d['td']) and d['pais'] in ('169', '170'):
                 pais_por_nombre = detectar_pais_por_nombre(d['rs'])
                 d['pais'] = pais_por_nombre if pais_por_nombre else '840'
 
@@ -2646,3 +2641,4 @@ else:
 
     **Formatos manuales:** F1004, F1011, F1647 requieren datos adicionales no incluidos en el balance.
     """)
+
