@@ -99,6 +99,140 @@ def es_persona_natural(td):
 def es_persona_juridica(td):
     return td in ("31", "44", "50")
 
+def es_tipo_doc_extranjero(td):
+    """Tipos de documento que indican tercero del exterior."""
+    return td in ("42", "43", "44", "50", "41")
+
+def es_nacional(td):
+    """Tipos de documento nacionales colombianos."""
+    return td in ("11", "12", "13", "21", "22", "31", "46", "47", "48")
+
+def sanitizar_registro(reg, fdef, info_declarante):
+    """Sanitiza un registro para que el XML no tenga campos vacíos que la DIAN rechace.
+    Reglas:
+    - td: OBLIGATORIO. Si vacío, auto-detectar del NIT.
+    - nid: OBLIGATORIO. Si vacío, el registro no debería existir.
+    - dv: Obligatorio para td=31. Auto-calcular si falta.
+    - Persona natural (td 13,12,11,etc): a1 y n1 obligatorios, rs vacía.
+    - Persona jurídica (td 31,44,50): rs obligatoria, a1/a2/n1/n2 vacíos.
+    - Exterior (td 42,43): rs obligatoria, a1/a2/n1/n2 vacíos, dir/dp/mp vacíos, pais NO Colombia.
+    - NM (222222222): td=43, rs=CUANTIAS MENORES, sin dir/dp/mp.
+    - Nacional: dir, dp, mp obligatorios. Si faltan, usar datos de empresa.
+    - Campos numéricos: "0" en vez de vacío.
+    """
+    r = dict(reg)  # Copia
+    nid = r.get("nid", "")
+    if not nid:
+        return r  # Sin NIT no hay nada que hacer
+
+    # --- Tipo documento ---
+    td = r.get("td", "")
+    if not td:
+        td = detectar_tipo_doc(nid)
+        r["td"] = td
+
+    # --- DV ---
+    if "dv" in fdef["cols"]:
+        if td == "31" and not r.get("dv", ""):
+            r["dv"] = calc_dv(nid)
+        elif td != "31":
+            # Para no-NIT, DV puede ir vacío pero DIAN a veces lo pide
+            if not r.get("dv", ""):
+                r["dv"] = ""
+
+    # --- Cuantías menores (222222222) ---
+    if nid == NM:
+        r["td"] = "43"
+        r["dv"] = ""
+        for campo in ("a1", "a2", "n1", "n2"):
+            if campo in fdef["cols"]: r[campo] = ""
+        if "rs" in fdef["cols"]: r["rs"] = "CUANTIAS MENORES"
+        if "dir" in fdef["cols"]: r["dir"] = ""
+        if "dp" in fdef["cols"]: r["dp"] = ""
+        if "mp" in fdef["cols"]: r["mp"] = ""
+        if "pais" in fdef["cols"]: r["pais"] = "169"
+        # Campos valor: asegurar "0" no vacío
+        for cv in fdef["campos_valor"]:
+            if not r.get(cv, ""): r[cv] = "0"
+        return r
+
+    # --- Exterior (td 42, 43, 44, 50, 41) ---
+    if es_tipo_doc_extranjero(td):
+        # Todo va en razón social, sin nombres
+        if "rs" in fdef["cols"]:
+            if not r.get("rs", ""):
+                # Intentar armar rs desde nombres si los tiene
+                nombre_completo = " ".join(filter(None, [r.get("a1",""), r.get("a2",""), r.get("n1",""), r.get("n2","")]))
+                r["rs"] = nombre_completo if nombre_completo else nid
+        for campo in ("a1", "a2", "n1", "n2"):
+            if campo in fdef["cols"]: r[campo] = ""
+        # Sin dirección/dpto/mpio para exterior
+        if "dir" in fdef["cols"]: r["dir"] = ""
+        if "dp" in fdef["cols"]: r["dp"] = ""
+        if "mp" in fdef["cols"]: r["mp"] = ""
+        # País no puede ser Colombia
+        if "pais" in fdef["cols"]:
+            pais = r.get("pais", "")
+            if not pais or pais in ("169", "170"):
+                r["pais"] = "840"  # Default USA si no detecta
+        r["dv"] = ""
+    # --- Persona natural ---
+    elif es_persona_natural(td):
+        # a1 y n1 obligatorios
+        if "a1" in fdef["cols"] and not r.get("a1", ""):
+            # Intentar extraer de razón social
+            rs = r.get("rs", "")
+            if rs:
+                p = rs.split()
+                if len(p) >= 1: r["a1"] = p[0]
+                if len(p) >= 2 and not r.get("a2", ""): r["a2"] = p[1]
+                if len(p) >= 3 and not r.get("n1", ""): r["n1"] = p[2]
+                if len(p) >= 4 and not r.get("n2", ""): r["n2"] = " ".join(p[3:])
+            else:
+                r["a1"] = nid  # Último recurso
+        if "n1" in fdef["cols"] and not r.get("n1", ""):
+            r["n1"] = "NN"  # Último recurso para que DIAN no rechace
+        # rs debe ir vacía para persona natural
+        if "rs" in fdef["cols"]:
+            r["rs"] = ""
+    # --- Persona jurídica ---
+    elif es_persona_juridica(td):
+        if "rs" in fdef["cols"] and not r.get("rs", ""):
+            # Intentar armar rs desde nombres si los tiene
+            nombre_completo = " ".join(filter(None, [r.get("a1",""), r.get("a2",""), r.get("n1",""), r.get("n2","")]))
+            r["rs"] = nombre_completo if nombre_completo else nid
+        for campo in ("a1", "a2", "n1", "n2"):
+            if campo in fdef["cols"]: r[campo] = ""
+
+    # --- Dirección para nacionales ---
+    if es_nacional(td) and nid != NM:
+        if "dir" in fdef["cols"] and not r.get("dir", ""):
+            r["dir"] = info_declarante.get("dir", "") or "SIN DIRECCION"
+        if "dp" in fdef["cols"] and not r.get("dp", ""):
+            r["dp"] = info_declarante.get("dp", "") or "11"
+        if "mp" in fdef["cols"] and not r.get("mp", ""):
+            r["mp"] = info_declarante.get("mp", "") or "11001"
+    
+    # --- País por defecto ---
+    if "pais" in fdef["cols"] and not r.get("pais", ""):
+        if es_tipo_doc_extranjero(td):
+            r["pais"] = "840"
+        else:
+            r["pais"] = "169"
+
+    # --- Campos numéricos: "0" en vez de vacío ---
+    for cv in fdef["campos_valor"]:
+        val = r.get(cv, "")
+        if not val:
+            r[cv] = "0"
+        else:
+            try:
+                r[cv] = str(int(float(val)))
+            except:
+                r[cv] = "0"
+
+    return r
+
 FORMATO_DEFS = {
     "F1001 Pagos": {
         "formato": "1001", "version": "10", "concepto_global": "1",
@@ -283,41 +417,71 @@ def validar_formato(nombre, datos):
         if not nid:
             errores.append((fila, "nid", "error", "NIT vacio"))
             continue
+        # --- Tipo documento ---
         if not td:
-            errores.append((fila, "td", "error", "Tipo documento vacio para NIT " + nid))
+            td_auto = detectar_tipo_doc(nid)
+            errores.append((fila, "td", "warn", "Tipo doc vacio para NIT " + nid + " → se asignara '" + td_auto + "' al generar XML"))
+            td = td_auto
         elif td not in TIPOS_DOC_VALIDOS:
             errores.append((fila, "td", "error", "Tipo doc '" + td + "' invalido para NIT " + nid))
+        # --- DV ---
         if td == "31":
             dv_calc = calc_dv(nid)
             if dv and dv_calc and dv != dv_calc:
                 errores.append((fila, "dv", "error", "DV incorrecto NIT " + nid + ": tiene '" + dv + "', debe ser '" + dv_calc + "'"))
             elif not dv:
-                errores.append((fila, "dv", "warn", "DV vacio para NIT " + nid))
+                errores.append((fila, "dv", "warn", "DV vacio para NIT " + nid + " → se calculara al generar XML"))
+        # --- Nombres / Razón social ---
         if nid != NM:
             if es_persona_natural(td):
                 if not reg.get("a1", ""):
-                    errores.append((fila, "a1", "error", "Primer apellido vacio - NIT " + nid))
-                if not reg.get("n1", ""):
-                    errores.append((fila, "n1", "error", "Primer nombre vacio - NIT " + nid))
+                    if reg.get("rs", ""):
+                        errores.append((fila, "a1", "warn", "Primer apellido vacio - NIT " + nid + " → se extraera de razon social"))
+                    else:
+                        errores.append((fila, "a1", "error", "Primer apellido vacio y sin razon social - NIT " + nid))
+                if not reg.get("n1", "") and not reg.get("rs", ""):
+                    errores.append((fila, "n1", "warn", "Primer nombre vacio - NIT " + nid + " → se pondra 'NN' al generar"))
             elif es_persona_juridica(td):
                 if not reg.get("rs", ""):
-                    errores.append((fila, "rs", "error", "Razon social vacia - NIT " + nid))
-        if "dir" in reg and not reg["dir"] and nid != NM:
-            errores.append((fila, "dir", "warn", "Direccion vacia - NIT " + nid))
+                    nombre_partes = " ".join(filter(None, [reg.get("a1",""), reg.get("a2",""), reg.get("n1",""), reg.get("n2","")]))
+                    if nombre_partes:
+                        errores.append((fila, "rs", "warn", "Razon social vacia - NIT " + nid + " → se armara desde nombres"))
+                    else:
+                        errores.append((fila, "rs", "error", "Razon social vacia y sin nombres - NIT " + nid))
+            elif es_tipo_doc_extranjero(td):
+                if not reg.get("rs", "") and not reg.get("a1", ""):
+                    errores.append((fila, "rs", "error", "Razon social vacia para tercero exterior - NIT " + nid))
+        # --- Dirección ---
+        if "dir" in fdef["cols"] and nid != NM:
+            if not es_tipo_doc_extranjero(td):
+                if not reg.get("dir", ""):
+                    errores.append((fila, "dir", "warn", "Direccion vacia - NIT " + nid + " → se usara dir. empresa al generar"))
+            # Para exterior: dir debe ir vacía, no es error
+        # --- Departamento ---
         dp = reg.get("dp", "")
-        if "dp" in fdef["cols"]:
-            if dp and dp not in DPTOS_VALIDOS and nid != NM:
+        if "dp" in fdef["cols"] and nid != NM and not es_tipo_doc_extranjero(td):
+            if dp and dp not in DPTOS_VALIDOS:
                 errores.append((fila, "dp", "warn", "Dpto '" + dp + "' no reconocido - NIT " + nid))
-            elif not dp and nid != NM:
-                errores.append((fila, "dp", "warn", "Departamento vacio - NIT " + nid))
+            elif not dp:
+                errores.append((fila, "dp", "warn", "Departamento vacio - NIT " + nid + " → se usara dpto empresa"))
+        # --- Municipio ---
         mp = reg.get("mp", "")
-        if "mp" in fdef["cols"]:
-            if not mp and nid != NM:
-                errores.append((fila, "mp", "warn", "Municipio vacio - NIT " + nid))
+        if "mp" in fdef["cols"] and nid != NM and not es_tipo_doc_extranjero(td):
+            if not mp:
+                errores.append((fila, "mp", "warn", "Municipio vacio - NIT " + nid + " → se usara mpio empresa"))
+        # --- País ---
+        if "pais" in fdef["cols"]:
+            pais = reg.get("pais", "")
+            if not pais and nid != NM:
+                errores.append((fila, "pais", "warn", "Pais vacio - NIT " + nid + " → se asignara al generar"))
+            elif pais in ("169", "170") and es_tipo_doc_extranjero(td):
+                errores.append((fila, "pais", "warn", "Pais Colombia para tercero exterior - NIT " + nid + " → se corregira"))
+        # --- Concepto ---
         if "concepto" in reg and conceptos_validos:
             conc = reg.get("concepto", "")
             if conc and conc not in conceptos_validos:
                 errores.append((fila, "concepto", "warn", "Concepto '" + conc + "' no esta en lista estandar del F" + fmt_code))
+        # --- Valores numéricos ---
         for campo_v in fdef["campos_valor"]:
             val = reg.get(campo_v, "")
             if val:
@@ -345,19 +509,34 @@ def generar_xml_formato(nombre_hoja, datos, info_declarante, num_envio):
     fdef = datos["def"]
     registros = datos["registros"]
     if not registros: return None
+
+    # --- Sanitizar TODOS los registros antes de generar XML ---
+    registros_limpios = []
+    for reg in registros:
+        r_limpio = sanitizar_registro(reg, fdef, info_declarante)
+        registros_limpios.append(r_limpio)
+
     root = Element("mas")
     root.set("xmlns", "http://www.dian.gov.co/muisca/mas")
+
+    # --- Cabecera: asegurar que no haya campos vacíos ---
     cab = SubElement(root, "Cab")
+    td_decl = info_declarante.get("td", "31")
+    nit_decl = info_declarante.get("nit", "")
+    dv_decl = info_declarante.get("dv", "")
+    if not dv_decl and nit_decl:
+        dv_decl = calc_dv(nit_decl)
+
     campos_cab = [
         ("CodCpt", fdef["concepto_global"]), ("Formato", fdef["formato"]),
         ("Version", fdef["version"]), ("AnoGrav", ANO_GRAVABLE),
         ("NumEnvio", str(num_envio).zfill(5)),
         ("FecEnvio", datetime.now().strftime("%Y-%m-%d")),
         ("FecIni", ANO_GRAVABLE + "-01-01"), ("FecFin", ANO_GRAVABLE + "-12-31"),
-        ("NumReg", str(len(registros))),
-        ("TipoDoc", info_declarante.get("td", "31")),
-        ("NumNit", info_declarante.get("nit", "")),
-        ("DV", info_declarante.get("dv", "")),
+        ("NumReg", str(len(registros_limpios))),
+        ("TipoDoc", td_decl),
+        ("NumNit", nit_decl),
+        ("DV", dv_decl),
         ("Ape1", info_declarante.get("a1", "")),
         ("Ape2", info_declarante.get("a2", "")),
         ("Nom1", info_declarante.get("n1", "")),
@@ -370,23 +549,28 @@ def generar_xml_formato(nombre_hoja, datos, info_declarante, num_envio):
     for tag, val in campos_cab:
         el = SubElement(cab, tag)
         el.text = str(val) if val else ""
+
+    # --- Registros ---
     sec = SubElement(root, fdef["xml_tag"])
     cols = fdef["cols"]
     campos_valor = fdef["campos_valor"]
     TAG_MAP = {"concepto": "co", "td": "tdoc", "nid": "nid", "dv": "dv",
         "a1": "ape1", "a2": "ape2", "n1": "nom1", "n2": "nom2",
         "rs": "raz", "dir": "dir", "dp": "dpto", "mp": "mpio", "pais": "pais"}
-    for reg in registros:
+
+    for reg in registros_limpios:
         row_el = SubElement(sec, fdef["xml_row"])
         for campo in cols:
             if campo.startswith("_"): continue
             tag = TAG_MAP.get(campo, campo)
             val = reg.get(campo, "")
+            # Campos valor ya sanitizados, pero doble-check
             if campo in campos_valor:
                 try: val = str(int(float(val))) if val else "0"
                 except: val = "0"
             el = SubElement(row_el, tag)
             el.text = str(val) if val else ""
+
     xml_str = tostring(root, encoding="unicode")
     try:
         dom = parseString(xml_str)
@@ -578,6 +762,12 @@ def main():
     if not formatos_con_errores:
         st.success("Sin errores criticos! Listo para generar XML.")
     else:
+        if total_criticos == 0 and total_warnings > 0:
+            st.success("Sin errores criticos. Las **" + str(total_warnings) + " advertencias** se corregiran automaticamente al generar el XML.")
+        elif total_criticos > 0:
+            st.error("Hay **" + str(total_criticos) + " errores criticos** que deben corregirse en el Excel antes de generar.")
+            if total_warnings > 0:
+                st.info("Las " + str(total_warnings) + " advertencias se corregiran automaticamente al generar.")
         st.subheader("Detalle de errores")
         for nombre, res in formatos_con_errores.items():
             tipo_icono = "error" if res["criticos"] > 0 else "warn"
@@ -707,3 +897,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
