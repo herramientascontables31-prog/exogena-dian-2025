@@ -39,7 +39,7 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .nav-links{display:flex;gap:28px;align-items:center}
 .nav-links a{text-decoration:none;color:var(--gray-500);font-size:.88rem;font-weight:500;transition:color .2s}
 .nav-links a:hover{color:var(--gray-900)}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:600;font-size:.9rem;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:600;font-size:1rem;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
 .btn-green{background:var(--green-600);color:#fff}
 .btn-green:hover{background:var(--green-700);transform:translateY(-1px);box-shadow:var(--shadow-xl)}
 .btn-ghost{background:transparent;color:var(--gray-700);border:1.5px solid var(--gray-200)}
@@ -49,52 +49,55 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .btn-outline-green:hover{background:var(--green-50)}
 
 /* ===== HERO ===== */
-.hero{min-height:100vh;display:flex;align-items:center;padding:120px 48px 80px;position:relative;background:linear-gradient(170deg,var(--white) 0%,var(--green-50) 40%,var(--mint) 100%);overflow:hidden}
+.hero{min-height:auto;display:flex;align-items:center;padding:110px 48px 60px;position:relative;background:linear-gradient(170deg,var(--white) 0%,var(--green-50) 40%,var(--mint) 100%);overflow:hidden}
 .hero::after{content:'';position:absolute;top:-30%;right:-15%;width:700px;height:700px;background:radial-gradient(circle,rgba(16,185,129,.12) 0%,transparent 70%);border-radius:50%;pointer-events:none}
 .hero::before{content:'';position:absolute;bottom:-20%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(52,211,153,.08) 0%,transparent 70%);border-radius:50%;pointer-events:none}
-.hero-inner{max-width:1200px;width:100%;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;position:relative;z-index:1}
+.hero-inner{max-width:1200px;width:100%;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;position:relative;z-index:1}
 .hero-text{animation:slideUp .7s ease-out}
-.hero-pill{display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--green-300);padding:6px 16px 6px 8px;border-radius:100px;font-size:.76rem;font-weight:600;color:var(--green-700);margin-bottom:24px;box-shadow:var(--shadow-sm)}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--green-300);padding:7px 18px 7px 10px;border-radius:100px;font-size:.85rem;font-weight:600;color:var(--green-700);margin-bottom:20px;box-shadow:var(--shadow-sm)}
 .pill-dot{width:8px;height:8px;background:var(--green-500);border-radius:50%;animation:pulse 2s infinite}
-.hero h1{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(2.4rem,4.5vw,3.4rem);line-height:1.08;color:var(--gray-900);margin-bottom:18px;letter-spacing:-.02em}
+.hero h1{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(2.8rem,5vw,4rem);line-height:1.05;color:var(--gray-900);margin-bottom:18px;letter-spacing:-.02em}
 .hero h1 em{font-style:italic;font-weight:600;color:var(--green-600)}
-.hero-desc{font-size:1.08rem;line-height:1.7;color:var(--gray-500);margin-bottom:30px;max-width:460px}
+.hero-desc{font-size:1.2rem;line-height:1.65;color:var(--gray-500);margin-bottom:28px;max-width:500px}
 .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
-.hero-stats{display:flex;gap:32px;margin-top:36px;padding-top:28px;border-top:1px solid var(--green-200)}
+.hero-stats{display:flex;gap:36px;margin-top:32px;padding-top:24px;border-top:1px solid var(--green-200)}
 .hero-stat{text-align:left}
-.hero-stat strong{font-size:1.6rem;font-weight:800;color:var(--green-700);display:block;line-height:1}
-.hero-stat span{font-size:.75rem;color:var(--gray-400);font-weight:500}
+.hero-stat strong{font-size:1.8rem;font-weight:800;color:var(--green-700);display:block;line-height:1}
+.hero-stat span{font-size:.82rem;color:var(--gray-400);font-weight:500}
 
 .hero-visual{animation:slideUp .7s .15s ease-out both;position:relative}
-.tool-grid-hero{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.tool-mini{background:var(--white);border-radius:14px;padding:18px 16px;border:1px solid rgba(0,0,0,.06);box-shadow:var(--shadow);transition:all .3s;cursor:default}
+.tool-grid-hero{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tool-mini{background:var(--white);border-radius:16px;padding:22px 20px;border:1px solid rgba(0,0,0,.06);box-shadow:var(--shadow);transition:all .3s;cursor:default}
 .tool-mini:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
-.tool-mini-icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:1rem;margin-bottom:10px}
-.tool-mini h4{font-size:.82rem;font-weight:700;margin-bottom:3px}
-.tool-mini p{font-size:.68rem;color:var(--gray-400);line-height:1.4}
+.tool-mini.main-tool{background:linear-gradient(135deg,var(--green-50),var(--white));border:1.5px solid var(--green-300);box-shadow:0 8px 30px rgba(5,150,105,.1)}
+.tool-mini-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:1.1rem;margin-bottom:12px}
+.tool-mini h4{font-size:1.05rem;font-weight:700;margin-bottom:4px}
+.tool-mini p{font-size:.88rem;color:var(--gray-400);line-height:1.4}
+.tool-mini-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.tool-mini-tags span{padding:4px 9px;border-radius:6px;font-size:.72rem;font-weight:700;background:var(--green-100);color:var(--green-700)}
 .tmi-green{background:var(--green-50);border:1px solid var(--green-100)}
 .tmi-blue{background:var(--blue-50);border:1px solid var(--blue-100)}
 .tmi-amber{background:var(--amber-50);border:1px solid var(--amber-100)}
 .tmi-purple{background:var(--purple-50);border:1px solid var(--purple-100)}
 .tmi-rose{background:var(--rose-50);border:1px solid var(--rose-100)}
-.badge-free{display:inline-block;padding:2px 7px;border-radius:6px;font-size:.58rem;font-weight:700;background:var(--green-100);color:var(--green-700);margin-left:4px;vertical-align:middle}
-.badge-premium{display:inline-block;padding:2px 7px;border-radius:6px;font-size:.58rem;font-weight:700;background:var(--amber-100);color:var(--amber-700);margin-left:4px;vertical-align:middle}
-.badge-soon{display:inline-block;padding:2px 7px;border-radius:6px;font-size:.58rem;font-weight:700;background:var(--gray-100);color:var(--gray-500);margin-left:4px;vertical-align:middle}
+.badge-free{display:inline-block;padding:3px 9px;border-radius:6px;font-size:.75rem;font-weight:700;background:var(--green-100);color:var(--green-700);margin-left:4px;vertical-align:middle}
+.badge-premium{display:inline-block;padding:3px 9px;border-radius:6px;font-size:.75rem;font-weight:700;background:var(--amber-100);color:var(--amber-700);margin-left:4px;vertical-align:middle}
+.badge-soon{display:inline-block;padding:3px 9px;border-radius:6px;font-size:.75rem;font-weight:700;background:var(--gray-100);color:var(--gray-500);margin-left:4px;vertical-align:middle}
 
 /* ===== TOOLS ===== */
 .tools{padding:80px 48px;max-width:1200px;margin:0 auto}
-.section-tag{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--green-600);margin-bottom:10px}
-.section-title{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.7rem,3vw,2.4rem);margin-bottom:10px;letter-spacing:-.01em}
-.section-desc{color:var(--gray-500);font-size:.98rem;max-width:520px;line-height:1.6;margin-bottom:44px}
+.section-tag{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--green-600);margin-bottom:10px}
+.section-title{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(2rem,3.5vw,2.8rem);margin-bottom:12px;letter-spacing:-.01em}
+.section-desc{color:var(--gray-500);font-size:1.1rem;max-width:540px;line-height:1.6;margin-bottom:44px}
 .tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .tool-card{background:var(--white);border-radius:20px;padding:32px 26px 26px;border:1.5px solid var(--gray-200);transition:all .35s;position:relative;display:flex;flex-direction:column}
 .tool-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:var(--green-300)}
 .tool-card.featured{border-color:var(--green-400);background:linear-gradient(180deg,var(--green-50) 0%,var(--white) 40%)}
 .tool-card.featured::before{content:'PRINCIPAL';position:absolute;top:-11px;left:24px;background:linear-gradient(135deg,var(--green-500),var(--green-400));color:var(--white);font-size:.62rem;font-weight:800;letter-spacing:1.5px;padding:4px 14px;border-radius:20px;box-shadow:0 4px 12px rgba(16,185,129,.3)}
-.tool-icon{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:1.4rem;margin-bottom:16px}
-.tool-card h3{font-size:1.05rem;font-weight:700;margin-bottom:6px}
-.tool-card .tool-desc{color:var(--gray-500);font-size:.84rem;line-height:1.55;flex:1;margin-bottom:16px}
-.tool-status{display:flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;margin-top:auto}
+.tool-icon{width:56px;height:56px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;margin-bottom:16px}
+.tool-card h3{font-size:1.15rem;font-weight:700;margin-bottom:8px}
+.tool-card .tool-desc{color:var(--gray-500);font-size:.95rem;line-height:1.55;flex:1;margin-bottom:16px}
+.tool-status{display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;margin-top:auto}
 .ts-live{color:var(--green-600)}
 .ts-live::before{content:'';width:7px;height:7px;background:var(--green-500);border-radius:50%;display:inline-block;animation:pulse 2s infinite}
 .ts-soon{color:var(--gray-400)}
@@ -108,12 +111,12 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .exo-features{display:flex;flex-direction:column;gap:16px}
 .exo-feat{display:flex;gap:14px;padding:16px 18px;background:var(--white);border-radius:14px;border:1px solid var(--gray-200);transition:all .25s}
 .exo-feat:hover{border-color:var(--green-300);box-shadow:var(--shadow)}
-.exo-feat-icon{width:40px;height:40px;border-radius:10px;background:var(--green-50);border:1px solid var(--green-100);display:grid;place-items:center;font-size:1.1rem;flex-shrink:0}
-.exo-feat h4{font-size:.9rem;font-weight:700;margin-bottom:3px}
-.exo-feat p{font-size:.8rem;color:var(--gray-500);line-height:1.45}
+.exo-feat-icon{width:44px;height:44px;border-radius:10px;background:var(--green-50);border:1px solid var(--green-100);display:grid;place-items:center;font-size:1.2rem;flex-shrink:0}
+.exo-feat h4{font-size:1rem;font-weight:700;margin-bottom:4px}
+.exo-feat p{font-size:.9rem;color:var(--gray-500);line-height:1.45}
 .fmt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.fmt-pill{background:var(--white);border:1.5px solid var(--gray-200);border-radius:12px;padding:14px 12px;text-align:center;font-weight:700;font-size:.95rem;color:var(--green-700);transition:all .25s;cursor:default}
-.fmt-pill span{display:block;font-size:.65rem;font-weight:500;color:var(--gray-400);margin-top:2px}
+.fmt-pill{background:var(--white);border:1.5px solid var(--gray-200);border-radius:12px;padding:16px 14px;text-align:center;font-weight:700;font-size:1.05rem;color:var(--green-700);transition:all .25s;cursor:default}
+.fmt-pill span{display:block;font-size:.75rem;font-weight:500;color:var(--gray-400);margin-top:3px}
 .fmt-pill:hover{border-color:var(--green-400);background:var(--green-50);transform:translateY(-2px)}
 
 /* ===== HOW IT WORKS ===== */
@@ -122,8 +125,8 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .steps-row::before{content:'';position:absolute;top:30px;left:13%;right:13%;height:2px;background:linear-gradient(90deg,var(--green-300),var(--green-200),var(--green-300));z-index:0}
 .step{text-align:center;position:relative;z-index:1}
 .step-circle{width:48px;height:48px;border-radius:50%;margin:0 auto 12px;background:var(--green-600);color:#fff;font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;display:grid;place-items:center;box-shadow:0 4px 14px rgba(5,150,105,.3)}
-.step h3{font-size:.9rem;font-weight:700;margin-bottom:4px}
-.step p{font-size:.78rem;color:var(--gray-500);line-height:1.45}
+.step h3{font-size:1rem;font-weight:700;margin-bottom:5px}
+.step p{font-size:.88rem;color:var(--gray-500);line-height:1.45}
 
 /* ===== PRICING ===== */
 .pricing{padding:90px 48px;position:relative;overflow:hidden;background:linear-gradient(160deg,var(--green-900) 0%,#065F46 40%,var(--green-700) 100%)}
@@ -137,14 +140,14 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .price-card.pop{background:rgba(16,185,129,.1);border-color:rgba(52,211,153,.3);transform:scale(1.03);box-shadow:0 12px 40px rgba(16,185,129,.12)}
 .price-card.pop:hover{transform:scale(1.03) translateY(-5px)}
 .pop-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--green-400),var(--green-300));color:var(--green-900);font-size:.65rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 18px;border-radius:30px;white-space:nowrap;box-shadow:0 4px 14px rgba(52,211,153,.3)}
-.price-label{color:rgba(255,255,255,.4);font-size:.75rem;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:4px;font-weight:600}
-.price-name{color:#fff;font-size:1.2rem;font-weight:700;margin-bottom:18px}
+.price-label{color:rgba(255,255,255,.4);font-size:.82rem;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:4px;font-weight:600}
+.price-name{color:#fff;font-size:1.35rem;font-weight:700;margin-bottom:18px}
 .price-val{display:flex;align-items:baseline;gap:2px;margin-bottom:4px}
 .price-sign{color:rgba(255,255,255,.4);font-size:1rem;font-weight:700;align-self:flex-start;margin-top:6px}
 .price-num{color:#fff;font-size:2.6rem;font-weight:800;line-height:1;letter-spacing:-2px}
 .price-per{color:rgba(255,255,255,.3);font-size:.78rem;margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid rgba(255,255,255,.07)}
 .price-list{list-style:none;padding:0;margin:0 0 28px;flex:1}
-.price-list li{color:rgba(255,255,255,.6);font-size:.86rem;padding:5px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.price-list li{color:rgba(255,255,255,.6);font-size:.95rem;padding:5px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
 .price-list li::before{content:'✓';color:var(--green-400);font-weight:700;flex-shrink:0}
 .price-list li.hl{color:var(--green-300);font-weight:600}
 .wompi-btn-container{margin-top:auto}
@@ -155,48 +158,33 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .pay-methods{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
 .pay-methods span{color:rgba(255,255,255,.3);font-size:.72rem;padding:4px 10px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.02)}
 
-/* ===== FREE TOOLS PREVIEW ===== */
-.free-tools{padding:80px 48px;background:var(--white)}
-.free-tools-inner{max-width:1200px;margin:0 auto}
-.calc-preview{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:40px}
-.calc-card{background:var(--gray-50);border-radius:20px;padding:32px 28px;border:1.5px solid var(--gray-200);transition:all .3s;position:relative;overflow:hidden}
-.calc-card:hover{border-color:var(--green-300);box-shadow:var(--shadow)}
-.calc-card::after{content:'GRATIS';position:absolute;top:16px;right:16px;background:var(--green-100);color:var(--green-700);font-size:.62rem;font-weight:800;letter-spacing:1px;padding:3px 10px;border-radius:8px}
-.calc-card.coming::after{content:'PRÓXIMAMENTE';background:var(--gray-100);color:var(--gray-500)}
-.calc-icon{font-size:2rem;margin-bottom:14px}
-.calc-card h3{font-size:1.05rem;font-weight:700;margin-bottom:6px}
-.calc-card p{font-size:.84rem;color:var(--gray-500);line-height:1.55;margin-bottom:16px}
-.calc-features{display:flex;flex-wrap:wrap;gap:6px}
-.calc-feat{padding:4px 10px;border-radius:8px;font-size:.7rem;font-weight:600;background:var(--white);color:var(--gray-600);border:1px solid var(--gray-200)}
+
 
 /* ===== NEWS ===== */
 .news{padding:80px 48px;background:var(--gray-50)}
 .news-inner{max-width:1200px;margin:0 auto}
-.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
-.news-card{background:var(--white);border-radius:16px;padding:24px;border:1px solid var(--gray-200);transition:all .3s;display:flex;flex-direction:column}
-.news-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--green-200)}
-.news-source{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.news-source-dot{width:8px;height:8px;border-radius:50%}
-.ns-portafolio{background:#1a73e8}
-.ns-republica{background:#c41230}
-.ns-dian{background:var(--green-600)}
-.ns-bloomberg{background:#472580}
-.ns-minhacienda{background:#ffc107}
-.news-source span{font-size:.7rem;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.08em}
-.news-card h3{font-size:.95rem;font-weight:700;line-height:1.4;margin-bottom:8px;flex:1}
-.news-card h3 a{color:var(--gray-900);text-decoration:none;transition:color .2s}
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.news-card{background:var(--white);border-radius:14px;padding:22px;border:1px solid var(--gray-200);transition:all .25s;display:flex;flex-direction:column}
+.news-card:hover{border-color:var(--green-300);box-shadow:var(--shadow)}
+.news-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.news-card-source{font-size:.7rem;font-weight:600;color:var(--gray-400);display:flex;align-items:center;gap:6px}
+.news-card-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ncd-blue{background:#1a73e8}.ncd-red{background:#c41230}.ncd-green{background:var(--green-600)}.ncd-purple{background:#472580}.ncd-ai{background:#FF6B35}
+.news-card-date{font-size:.68rem;color:var(--gray-400)}
+.news-card h3{font-size:.88rem;font-weight:600;line-height:1.45;color:var(--gray-800);flex:1}
+.news-card h3 a{color:inherit;text-decoration:none;transition:color .2s}
 .news-card h3 a:hover{color:var(--green-600)}
-.news-date{font-size:.72rem;color:var(--gray-400)}
-.news-loading{text-align:center;padding:40px;color:var(--gray-400);font-size:.9rem}
-.news-error{text-align:center;padding:40px;color:var(--gray-400);font-size:.85rem;background:var(--white);border-radius:16px;border:1px dashed var(--gray-200)}
+.news-fuentes{text-align:center;margin-top:24px;font-size:.74rem;color:var(--gray-400)}
+.news-fuentes a{color:var(--gray-500);text-decoration:none;margin:0 4px}
+.news-fuentes a:hover{color:var(--green-600)}
 
 /* ===== CTA ===== */
 .cta{padding:80px 48px;text-align:center;background:var(--white)}
 .cta-card{max-width:800px;margin:0 auto;background:linear-gradient(135deg,var(--green-600),var(--green-500));border-radius:28px;padding:60px 48px;position:relative;overflow:hidden}
 .cta-card::before{content:'';position:absolute;top:-40%;right:-15%;width:50%;height:140%;background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 70%);pointer-events:none}
-.cta-card h2{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.6rem,3vw,2.2rem);color:#fff;margin-bottom:12px;position:relative}
-.cta-card p{color:rgba(255,255,255,.75);font-size:1rem;margin-bottom:28px;position:relative}
-.btn-white{background:#fff;color:var(--green-700);font-size:.98rem;font-weight:700;padding:13px 30px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:'Outfit',sans-serif;transition:all .25s;border:none;cursor:pointer}
+.cta-card h2{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.8rem,3.5vw,2.5rem);color:#fff;margin-bottom:14px;position:relative}
+.cta-card p{color:rgba(255,255,255,.75);font-size:1.1rem;margin-bottom:28px;position:relative}
+.btn-white{background:#fff;color:var(--green-700);font-size:1.05rem;font-weight:700;padding:14px 32px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:'Outfit',sans-serif;transition:all .25s;border:none;cursor:pointer}
 .btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.15)}
 
 /* ===== WHATSAPP ===== */
@@ -208,11 +196,11 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 .footer-inner{max-width:1200px;margin:0 auto}
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px}
 .footer-brand h4{font-family:'Fraunces',serif;color:var(--white);font-size:1.2rem;margin-bottom:8px}
-.footer-brand p{font-size:.82rem;line-height:1.6;color:var(--gray-500)}
-.footer-col h5{color:var(--gray-300);font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
-.footer-col a{display:block;color:var(--gray-500);font-size:.84rem;text-decoration:none;padding:3px 0;transition:color .2s}
+.footer-brand p{font-size:.9rem;line-height:1.6;color:var(--gray-500)}
+.footer-col h5{color:var(--gray-300);font-size:.82rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.footer-col a{display:block;color:var(--gray-500);font-size:.9rem;text-decoration:none;padding:3px 0;transition:color .2s}
 .footer-col a:hover{color:var(--green-400)}
-.footer-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:.76rem;color:var(--gray-600);line-height:1.8}
+.footer-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:.82rem;color:var(--gray-600);line-height:1.8}
 
 /* ===== ANIMATIONS ===== */
 @keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
@@ -225,13 +213,12 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 /* ===== RESPONSIVE ===== */
 @media(max-width:900px){
   nav{padding:12px 20px}.nav-links{display:none}
-  .hero{padding:100px 20px 50px}.hero-inner{grid-template-columns:1fr;gap:32px}.hero-stats{gap:20px}
+  .hero{padding:90px 20px 40px}.hero-inner{grid-template-columns:1fr;gap:28px}.hero-stats{gap:20px}
   .tools{padding:50px 20px}.tools-grid{grid-template-columns:1fr}
   .exogena{padding:50px 20px}.exo-grid{grid-template-columns:1fr;gap:32px}
   .steps{padding:50px 20px}.steps-row{grid-template-columns:1fr 1fr;gap:16px}.steps-row::before{display:none}
   .pricing{padding:50px 20px}.price-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}
   .price-card.pop{transform:scale(1);order:-1}.price-card.pop:hover{transform:translateY(-5px)}
-  .free-tools{padding:50px 20px}.calc-preview{grid-template-columns:1fr}
   .news{padding:50px 20px}.news-grid{grid-template-columns:1fr}
   .cta{padding:50px 20px}.cta-card{padding:40px 22px}
   footer{padding:32px 20px 24px}.footer-grid{grid-template-columns:1fr 1fr;gap:24px}
@@ -249,10 +236,9 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
   <div class="nav-links">
     <a href="#herramientas">Herramientas</a>
     <a href="#exogena">Exógena</a>
-    <a href="#calculadoras">Calculadoras</a>
     <a href="#noticias">Noticias</a>
-    <a href="#precios">Precios</a>
-    <a href="#precios" class="btn btn-green">Contratar →</a>
+    <a href="#planes">Planes</a>
+    <a href="#planes" class="btn btn-green">Contratar →</a>
   </div>
 </nav>
 
@@ -264,47 +250,45 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <h1>Todas tus herramientas <em>contables</em> en un solo lugar</h1>
       <p class="hero-desc">Exógena DIAN, calculadoras tributarias, estados financieros y noticias. Todo lo que un contador colombiano necesita para el cierre fiscal.</p>
       <div class="hero-btns">
-        <a href="#precios" class="btn btn-green">Generar Exógena →</a>
-        <a href="#calculadoras" class="btn btn-ghost">Calculadoras gratis</a>
+        <a href="#planes" class="btn btn-green">Generar Exógena →</a>
+        <a href="#herramientas" class="btn btn-ghost">Herramientas gratis</a>
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><strong>10</strong><span>Formatos exógena</span></div>
-        <div class="hero-stat"><strong>5</strong><span>Calculadoras gratis</span></div>
+        <div class="hero-stat"><strong>3</strong><span>Calculadoras gratis</span></div>
         <div class="hero-stat"><strong>24h</strong><span>Tiempo de entrega</span></div>
       </div>
     </div>
 
     <div class="hero-visual">
       <div class="tool-grid-hero">
-        <div class="tool-mini" style="animation:float 5s ease-in-out infinite">
-          <div class="tool-mini-icon tmi-green">📊</div>
-          <h4>Exógena DIAN <span class="badge-premium">Premium</span></h4>
-          <p>10 formatos + prevalidador XML</p>
+        <div class="tool-mini main-tool" style="grid-column:span 2;animation:float 5s ease-in-out infinite">
+          <div class="tool-mini-icon tmi-green" style="width:44px;height:44px;font-size:1.3rem">📊</div>
+          <h4>Información Exógena DIAN <span class="badge-premium">Premium</span></h4>
+          <p>10 formatos + prevalidador + generador XML para el MUISCA</p>
+          <div class="tool-mini-tags">
+            <span>F1001</span><span>F1003</span><span>F1005</span><span>F1007</span><span>F2276</span><span>+5</span>
+          </div>
         </div>
         <div class="tool-mini" style="animation:float 5s .8s ease-in-out infinite">
           <div class="tool-mini-icon tmi-blue">🧮</div>
-          <h4>Retención Fte <span class="badge-free">Gratis</span></h4>
-          <p>Calculadora F350</p>
+          <h4>Retención en la Fuente <span class="badge-free">Gratis</span></h4>
+          <p>Formulario 350 completo</p>
         </div>
         <div class="tool-mini" style="animation:float 5s 1.6s ease-in-out infinite">
           <div class="tool-mini-icon tmi-amber">📋</div>
-          <h4>IVA F300 <span class="badge-free">Gratis</span></h4>
-          <p>Declaración bimestral</p>
+          <h4>Declaración de IVA <span class="badge-free">Gratis</span></h4>
+          <p>Formulario 300 bimestral</p>
         </div>
         <div class="tool-mini" style="animation:float 5s 2.4s ease-in-out infinite">
           <div class="tool-mini-icon tmi-purple">📑</div>
-          <h4>Renta <span class="badge-free">Gratis</span></h4>
-          <p>Personas jurídicas y naturales</p>
+          <h4>Declaración de Renta <span class="badge-free">Gratis</span></h4>
+          <p>F110 jurídicas · F210 naturales</p>
         </div>
         <div class="tool-mini" style="animation:float 5s 3.2s ease-in-out infinite">
           <div class="tool-mini-icon tmi-rose">📄</div>
           <h4>Estados Financieros <span class="badge-soon">Pronto</span></h4>
           <p>NIIF con notas y políticas</p>
-        </div>
-        <div class="tool-mini" style="animation:float 5s 4s ease-in-out infinite">
-          <div class="tool-mini-icon tmi-green">📰</div>
-          <h4>Noticias</h4>
-          <p>Tributarias en tiempo real</p>
         </div>
       </div>
     </div>
@@ -353,13 +337,6 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <p class="tool-desc">Genera estados de situación financiera, resultados, cambios en patrimonio. Con notas revelatorias y políticas contables.</p>
       <div class="tool-status ts-soon">Próximamente</div>
     </div>
-    <!-- NOTICIAS -->
-    <div class="tool-card">
-      <div class="tool-icon tmi-green">📰</div>
-      <h3>Noticias Tributarias</h3>
-      <p class="tool-desc">Feed automático de noticias tributarias y contables de los principales medios económicos de Colombia.</p>
-      <div class="tool-status ts-live">En vivo</div>
-    </div>
   </div>
 </section>
 
@@ -404,7 +381,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
           <div class="fmt-pill">2276 <span>Rentas de trabajo</span></div>
         </div>
         <div style="margin-top:20px;text-align:center">
-          <a href="#precios" class="btn btn-green">Ver planes →</a>
+          <a href="#planes" class="btn btn-green">Ver planes →</a>
         </div>
       </div>
     </div>
@@ -424,7 +401,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 </section>
 
 <!-- ===== PRECIOS ===== -->
-<section class="pricing fade-in" id="precios">
+<section class="pricing fade-in" id="planes">
   <div class="section-tag">Planes — Exógena</div>
   <h2 class="section-title">Elige el plan ideal para ti</h2>
   <p class="section-desc">Paga en línea y envíanos tu balance por WhatsApp. Recibes tu Excel listo en menos de 24 horas.</p>
@@ -492,87 +469,29 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
   </div>
 </section>
 
-<!-- ===== CALCULADORAS GRATIS ===== -->
-<section class="free-tools fade-in" id="calculadoras">
-  <div class="free-tools-inner">
-    <div class="section-tag">Herramientas Gratuitas</div>
-    <h2 class="section-title">Calculadoras tributarias</h2>
-    <p class="section-desc">Usa nuestras calculadoras sin costo. Sin registro, sin límites.</p>
 
-    <div class="calc-preview">
-      <div class="calc-card">
-        <div class="calc-icon">🧮</div>
-        <h3>Retención en la Fuente — F350</h3>
-        <p>Ingresa las bases gravables por concepto de retención y obtén el formulario 350 calculado con totales, autorretenciones y sanciones.</p>
-        <div class="calc-features">
-          <span class="calc-feat">Honorarios</span>
-          <span class="calc-feat">Servicios</span>
-          <span class="calc-feat">Compras</span>
-          <span class="calc-feat">Arriendos</span>
-          <span class="calc-feat">Salarios</span>
-          <span class="calc-feat">IVA</span>
-          <span class="calc-feat">ICA</span>
-          <span class="calc-feat">Timbre</span>
-        </div>
-      </div>
-      <div class="calc-card">
-        <div class="calc-icon">📋</div>
-        <h3>Declaración de IVA — F300</h3>
-        <p>Calcula tu declaración bimestral o cuatrimestral. IVA generado por operaciones gravadas, IVA descontable en compras y saldo a pagar.</p>
-        <div class="calc-features">
-          <span class="calc-feat">Gravado 19%</span>
-          <span class="calc-feat">Gravado 5%</span>
-          <span class="calc-feat">Excluido</span>
-          <span class="calc-feat">Exento</span>
-          <span class="calc-feat">Descontable</span>
-          <span class="calc-feat">Retenciones IVA</span>
-        </div>
-      </div>
-      <div class="calc-card">
-        <div class="calc-icon">📑</div>
-        <h3>Declaración de Renta — F110 / F210</h3>
-        <p>Personas jurídicas (F110) y naturales (F210). Depuración completa con cédulas, límites de deducciones, descuentos tributarios y anticipo.</p>
-        <div class="calc-features">
-          <span class="calc-feat">Cédula general</span>
-          <span class="calc-feat">Pensiones</span>
-          <span class="calc-feat">Dividendos</span>
-          <span class="calc-feat">Ganancia ocasional</span>
-          <span class="calc-feat">Descuentos</span>
-          <span class="calc-feat">Anticipo</span>
-        </div>
-      </div>
-      <div class="calc-card coming">
-        <div class="calc-icon">📄</div>
-        <h3>Estados Financieros NIIF</h3>
-        <p>Sube tu balance de prueba y genera automáticamente los estados financieros con notas revelatorias y políticas contables personalizadas.</p>
-        <div class="calc-features">
-          <span class="calc-feat">Situación Financiera</span>
-          <span class="calc-feat">Resultados</span>
-          <span class="calc-feat">Cambios Patrimonio</span>
-          <span class="calc-feat">Notas</span>
-          <span class="calc-feat">Políticas</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ===== NOTICIAS ===== -->
+<!-- ===== ACTUALIDAD ===== -->
 <section class="news fade-in" id="noticias">
   <div class="news-inner">
-    <div class="section-tag">Noticias Tributarias</div>
-    <h2 class="section-title">Últimas noticias económicas y tributarias</h2>
-    <p class="section-desc">Información actualizada de los principales medios de noticias económicas de Colombia.</p>
+    <div class="section-tag">Actualidad</div>
+    <h2 class="section-title">Noticias tributarias e inteligencia artificial</h2>
+    <p class="section-desc">Lo último de los principales medios económicos de Colombia y del mundo de la IA.</p>
 
     <div class="news-grid" id="newsGrid">
-      <div class="news-loading" id="newsLoading">
-        <div style="font-size:2rem;margin-bottom:12px">📰</div>
+      <div class="news-card" style="grid-column:span 3;text-align:center;padding:40px;color:var(--gray-400)">
         Cargando noticias...
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:28px">
-      <p style="font-size:.75rem;color:var(--gray-400)">Fuentes: Portafolio · La República · Bloomberg Línea · DIAN · MinHacienda</p>
+    <div class="news-fuentes">
+      Fuentes: <a href="https://www.portafolio.co" target="_blank">Portafolio</a> ·
+      <a href="https://www.larepublica.co" target="_blank">La República</a> ·
+      <a href="https://www.bloomberglinea.com" target="_blank">Bloomberg Línea</a> ·
+      <a href="https://www.eltiempo.com/economia" target="_blank">El Tiempo</a> ·
+      <a href="https://www.semana.com/economia" target="_blank">Semana</a> ·
+      <a href="https://techcrunch.com/category/artificial-intelligence/" target="_blank">TechCrunch AI</a> ·
+      <a href="https://openai.com/blog" target="_blank">OpenAI</a>
     </div>
   </div>
 </section>
@@ -582,7 +501,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
   <div class="cta-card">
     <h2>¿Listo para simplificar tu cierre fiscal?</h2>
     <p>Genera tu exógena en menos de 24 horas y usa nuestras calculadoras tributarias gratis.</p>
-    <a href="#precios" class="btn-white">Contratar Exógena ↗</a>
+    <a href="#planes" class="btn-white">Contratar Exógena ↗</a>
   </div>
 </section>
 
@@ -605,9 +524,9 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       </div>
       <div class="footer-col">
         <h5>Gratis</h5>
-        <a href="#calculadoras">Retención en la Fuente</a>
-        <a href="#calculadoras">Declaración IVA</a>
-        <a href="#calculadoras">Declaración Renta</a>
+        <a href="#herramientas">Retención en la Fuente</a>
+        <a href="#herramientas">Declaración IVA</a>
+        <a href="#herramientas">Declaración Renta</a>
         <a href="#noticias">Noticias Tributarias</a>
       </div>
       <div class="footer-col">
@@ -645,94 +564,86 @@ document.addEventListener('DOMContentLoaded',function(){
 /* === NEWS FEED === */
 async function cargarNoticias(){
   const grid=document.getElementById('newsGrid');
-  const loading=document.getElementById('newsLoading');
-
-  /* RSS feeds via rss2json (free, no key needed for basic) */
-  const feeds=[
-    {url:'https://www.portafolio.co/rss/economia.xml',source:'Portafolio',dot:'ns-portafolio'},
-    {url:'https://www.larepublica.co/rss/finanzas.xml',source:'La República',dot:'ns-republica'},
-    {url:'https://www.portafolio.co/rss/impuestos.xml',source:'Portafolio',dot:'ns-portafolio'},
-    {url:'https://www.bloomberglinea.com/feed/',source:'Bloomberg Línea',dot:'ns-bloomberg'},
-  ];
-
   const API='https://api.rss2json.com/v1/api.json?rss_url=';
-  let allNews=[];
-
+  const feeds=[
+    /* Tributarias / Economía Colombia */
+    {url:'https://www.portafolio.co/rss/economia.xml',src:'Portafolio',dot:'ncd-blue',cat:'trib'},
+    {url:'https://www.larepublica.co/rss/finanzas.xml',src:'La República',dot:'ncd-red',cat:'trib'},
+    {url:'https://www.bloomberglinea.com/feed/',src:'Bloomberg Línea',dot:'ncd-purple',cat:'trib'},
+    {url:'https://www.eltiempo.com/rss/economia.xml',src:'El Tiempo',dot:'ncd-blue',cat:'trib'},
+    {url:'https://www.semana.com/rss/economia.xml',src:'Semana',dot:'ncd-red',cat:'trib'},
+    /* Inteligencia Artificial */
+    {url:'https://feeds.feedburner.com/venturebeat/SZYF',src:'VentureBeat AI',dot:'ncd-ai',cat:'ia'},
+    {url:'https://techcrunch.com/category/artificial-intelligence/feed/',src:'TechCrunch AI',dot:'ncd-ai',cat:'ia'},
+    {url:'https://www.wired.com/feed/tag/ai/latest/rss',src:'Wired AI',dot:'ncd-ai',cat:'ia'},
+    {url:'https://openai.com/blog/rss.xml',src:'OpenAI',dot:'ncd-ai',cat:'ia'},
+  ];
+  let allTrib=[], allIA=[];
   try{
-    const results=await Promise.allSettled(
-      feeds.map(f=>
-        fetch(API+encodeURIComponent(f.url))
-          .then(r=>r.json())
-          .then(data=>{
-            if(data.status==='ok'&&data.items){
-              return data.items.slice(0,4).map(item=>({
-                title:item.title,
-                link:item.link,
-                date:item.pubDate,
-                source:f.source,
-                dot:f.dot
-              }));
-            }
-            return[];
-          })
-          .catch(()=>[])
-      )
+    const res=await Promise.allSettled(
+      feeds.map(f=>fetch(API+encodeURIComponent(f.url)).then(r=>r.json()).then(d=>{
+        if(d.status==='ok'&&d.items)return d.items.slice(0,4).map(i=>({t:i.title,l:i.link,d:i.pubDate,s:f.src,dot:f.dot,cat:f.cat}));
+        return[];
+      }).catch(()=>[]))
     );
+    let all=[];
+    res.forEach(r=>{if(r.status==='fulfilled')all=all.concat(r.value)});
 
-    results.forEach(r=>{if(r.status==='fulfilled')allNews=allNews.concat(r.value)});
+    /* Dedup */
+    const seen=new Set();
+    all=all.filter(n=>{const k=n.t.toLowerCase().substring(0,40);if(seen.has(k))return false;seen.add(k);return true});
 
-    /* Filtrar por keywords tributarios/contables */
-    const keywords=['impuesto','tributar','dian','fiscal','iva','renta','retención','reforma','contab','exógen','uvt','declaraci','hacienda','presupuest','aranceles','factura','nómina','nif','niif'];
-    let filtered=allNews.filter(n=>{
-      const t=n.title.toLowerCase();
-      return keywords.some(k=>t.includes(k));
-    });
+    allTrib=all.filter(n=>n.cat==='trib').sort((a,b)=>new Date(b.d)-new Date(a.d));
+    allIA=all.filter(n=>n.cat==='ia').sort((a,b)=>new Date(b.d)-new Date(a.d));
 
-    /* Si no hay suficientes filtradas, usar todas */
-    if(filtered.length<6) filtered=allNews;
+    /* Max 2 por fuente para diversidad */
+    function diversificar(arr){
+      const porFuente={};
+      return arr.filter(n=>{
+        porFuente[n.s]=(porFuente[n.s]||0)+1;
+        return porFuente[n.s]<=2;
+      });
+    }
+    allTrib=diversificar(allTrib);
+    allIA=diversificar(allIA);
 
-    /* Ordenar por fecha */
-    filtered.sort((a,b)=>new Date(b.date)-new Date(a.date));
+    /* Combinar: 4 tributarias + 2 IA (o ajustar si faltan) */
+    let show=[];
+    const nTrib=Math.min(allTrib.length, allIA.length>=2 ? 4 : 6);
+    const nIA=Math.min(allIA.length, 6-nTrib);
+    show=show.concat(allTrib.slice(0,nTrib));
+    show=show.concat(allIA.slice(0,nIA));
 
-    /* Mostrar las primeras 6 */
-    const show=filtered.slice(0,6);
-
+    /* Si no hay nada, fallback */
     if(show.length===0){
-      grid.innerHTML=renderFallbackNews();
+      grid.innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)">Visita las fuentes en los enlaces de abajo</div>';
       return;
     }
 
     grid.innerHTML=show.map(n=>{
-      const d=new Date(n.date);
-      const fecha=d.toLocaleDateString('es-CO',{day:'numeric',month:'short',year:'numeric'});
-      return `
-        <div class="news-card">
-          <div class="news-source"><div class="news-source-dot ${n.dot}"></div><span>${n.source}</span></div>
-          <h3><a href="${n.link}" target="_blank" rel="noopener">${n.title}</a></h3>
-          <div class="news-date">${fecha}</div>
-        </div>`;
+      const rel=tiempoRelativo(new Date(n.d));
+      return `<div class="news-card">
+        <div class="news-card-top">
+          <div class="news-card-source"><div class="news-card-dot ${n.dot}"></div>${n.s}</div>
+          <div class="news-card-date">${rel}</div>
+        </div>
+        <h3><a href="${n.l}" target="_blank" rel="noopener">${n.t}</a></h3>
+      </div>`;
     }).join('');
-
   }catch(e){
-    grid.innerHTML=renderFallbackNews();
+    grid.innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)">Visita las fuentes en los enlaces de abajo</div>';
   }
 }
 
-function renderFallbackNews(){
-  const noticias=[
-    {title:'DIAN publica calendario de vencimientos para declaraciones tributarias 2025',source:'DIAN',dot:'ns-dian',date:'Ene 2026'},
-    {title:'Topes y plazos para reportar información exógena AG 2025',source:'DIAN',dot:'ns-dian',date:'Ene 2026'},
-    {title:'Gobierno presenta proyecto de reforma tributaria para 2026',source:'Portafolio',dot:'ns-portafolio',date:'Feb 2026'},
-    {title:'UVT 2026 se fija en $49.799 según resolución DIAN',source:'La República',dot:'ns-republica',date:'Ene 2026'},
-    {title:'Nuevos obligados a facturación electrónica desde marzo 2026',source:'Bloomberg Línea',dot:'ns-bloomberg',date:'Feb 2026'},
-    {title:'MinHacienda anuncia medidas para simplificar trámites tributarios',source:'MinHacienda',dot:'ns-minhacienda',date:'Feb 2026'},
-  ];
-  return noticias.map(n=>`
-    <div class="news-card">
-      <div class="news-source"><div class="news-source-dot ${n.dot}"></div><span>${n.source}</span></div>
-      <h3>${n.title}</h3>
-      <div class="news-date">${n.date}</div>
-    </div>`).join('');
+function tiempoRelativo(fecha){
+  const diff=new Date()-fecha;
+  const mins=Math.floor(diff/60000);
+  const hrs=Math.floor(diff/3600000);
+  const dias=Math.floor(diff/86400000);
+  if(mins<60)return 'Hace '+mins+' min';
+  if(hrs<24)return 'Hace '+hrs+'h';
+  if(dias<7)return 'Hace '+dias+'d';
+  return fecha.toLocaleDateString('es-CO',{day:'numeric',month:'short'});
 }
 
 cargarNoticias();
