@@ -1097,10 +1097,16 @@ def concepto_1001(cta, nom_cta=""):
     return None, True
 
 
-def buscar_concepto(cta, params, nom_cta="", tabla_keywords=None):
+def buscar_concepto(cta, params, nom_cta="", tabla_keywords=None, clase_requerida=None):
+    """Busca concepto por rango y opcionalmente por keywords.
+    clase_requerida: si se pasa (ej '4'), los keywords solo aplican si cta empieza con esa clase.
+    Esto evita que keywords genéricos capturen cuentas de otras clases."""
     for c, d, h in params:
         if en_rango(cta, d, h): return c
     if tabla_keywords and nom_cta:
+        # Si se especificó clase requerida, validar antes de keyword matching
+        if clase_requerida and cta and cta[0] != clase_requerida:
+            return ""
         resultado = clasificar_por_nombre(nom_cta, tabla_keywords)
         if resultado:
             return resultado if isinstance(resultado, str) else resultado[0]
@@ -1553,7 +1559,9 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     dic7 = defaultdict(float)
     for f in bal:
         if not f['nit']: continue
-        conc = buscar_concepto(f['cta'], PARAM_1007, f.get('nom_cta', ''), KEYWORDS_1007)
+        # *** VALIDACIÓN CLASE MAYOR: F1007 solo procesa cuentas clase 4 (Ingresos) ***
+        if not f['cta'] or f['cta'][0] != '4': continue
+        conc = buscar_concepto(f['cta'], PARAM_1007, f.get('nom_cta', ''), KEYWORDS_1007, clase_requerida='4')
         if not conc: continue
         valor = abs(f['saldo'])
         if valor > 0:
@@ -1586,6 +1594,8 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     dic8 = defaultdict(float)
     for f in bal:
         if not f['nit']: continue
+        # *** VALIDACIÓN CLASE MAYOR: F1008 solo procesa cuentas clase 1 (Activos - CxC) ***
+        if not f['cta'] or f['cta'][0] != '1': continue
         conc = buscar_concepto(f['cta'], PARAM_1008, f.get('nom_cta', ''))
         if not conc: continue
         s = abs(f['saldo'])
