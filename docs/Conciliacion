@@ -1003,67 +1003,161 @@ function br(cls, label, val) {
 function fmtS(n) { return (n < 0 ? '−' : '') + '$ ' + fmtN(Math.abs(n)); }
 
 /* ══════════════════════════════════════════
-   10. EXPORT EXCEL (enhanced with analysis)
+   10. EXPORT EXCEL — Professional format
+   4 sheets matching accounting standards
    ══════════════════════════════════════════ */
+function extractMeta(k) {
+  const f = F[k];
+  if (!f.raw) return {};
+  const meta = {}, hdr = f.noHeader ? 0 : f.headerRow;
+  for (let i = 0; i < hdr; i++) {
+    const row = f.raw[i]; if (!row) continue;
+    for (let j = 0; j < row.length; j++) {
+      const v = String(row[j]||'').trim(); if (!v) continue;
+      const vl = v.toLowerCase();
+      if (!meta.empresa && v.length > 8 && !/desde|hasta|tipo|cuenta|nro|sucursal|informaci|movimiento|auxiliar/i.test(v) && /[A-Z]/.test(v) && !/^\d/.test(v) && i < 5) meta.empresa = v;
+      const nit = v.match(/(\d{3,}[\.\d]*\s*-\s*\d)/);
+      if (nit && !meta.nit) meta.nit = nit[0].replace(/\./g,'');
+      if (/^\d{8,}$/.test(v) && !meta.cuenta) meta.cuenta = v;
+    }
+  }
+  return meta;
+}
+
+function tipoProbable(desc, isDeb) {
+  const d = (desc||'').toLowerCase();
+  if (d.includes('bold')||d.includes('datafono')) return 'Datáfono/Tarjeta Crédito';
+  if (d.includes('pse')) return isDeb?'Pago PSE recibido':'Pago PSE';
+  if (d.includes('nequi')) return 'Transferencia Nequi';
+  if (d.includes('daviplata')) return 'Transferencia Daviplata';
+  if (d.includes('consignacion')) return 'Consignación';
+  if (d.includes('transferencia')) return isDeb?'Transferencia recibida':'Transferencia salida';
+  if (d.includes('interes')) return 'Intereses bancarios';
+  if (d.includes('4x1000')||d.includes('gmf')||d.includes('impto gobierno')) return 'Impuesto GMF';
+  if (d.includes('comision')) return 'Comisión bancaria';
+  if (d.includes('cuota manejo')) return 'Cuota de manejo';
+  if (d.includes('retencion')||d.includes('retefuente')) return 'Retención';
+  if (d.includes('cheque')) return 'Cheque';
+  return isDeb?'Ingreso por identificar':'Egreso por identificar';
+}
+
+function accionSugerida(desc, isDeb) {
+  const d = (desc||'').toLowerCase();
+  if (d.includes('bold')||d.includes('datafono')||d.includes('interbanc bold')) return isDeb?'Registrar ingreso por ventas TC':'Verificar cobro datáfono';
+  if (d.includes('nequi')||d.includes('daviplata')) return isDeb?'Registrar ingreso por transferencia':'Verificar pago plataforma';
+  if (d.includes('pse')) return isDeb?'Identificar origen y registrar RC':'Identificar proveedor y registrar RP';
+  if (d.includes('consignacion')) return 'Identificar origen y registrar RC';
+  if (d.includes('transferencia')) return isDeb?'Identificar origen y registrar RC':'Identificar beneficiario y registrar RP';
+  if (d.includes('interes')) return 'Registrar ingreso por intereses bancarios';
+  if (d.includes('4x1000')||d.includes('gmf')||d.includes('impto gobierno')) return 'Registrar gasto GMF — Cuenta 5305';
+  if (d.includes('comision')||d.includes('cuota manejo')) return 'Registrar gasto bancario — Cuenta 5305';
+  if (d.includes('retefuente')||d.includes('retencion')) return 'Verificar contrapartida de retención';
+  return isDeb?'Identificar origen y registrar':'Identificar beneficiario y registrar';
+}
+
 function exportXls() {
   if (!resultados) return;
   const {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, catsE} = resultados;
   const wb = XLSX.utils.book_new();
-  const saldoE = sE.d-sE.c, saldoA = sA.d-sA.c;
+  const saldoE = sE.d - sE.c, saldoA = sA.d - sA.c;
+  const metaE = extractMeta('E'), metaA = extractMeta('A');
+  const empresa = metaA.empresa || metaE.empresa || '';
+  const nit = metaA.nit || metaE.nit || '';
+  const cuenta = metaE.cuenta || '';
 
-  /* Sheet 1: Resumen + Puente + Análisis */
-  const ws0 = [
-    ['CONCILIACIÓN BANCARIA','',''],
-    ['Generado por ExógenaDIAN',new Date().toLocaleDateString('es-CO'),''],
-    [],[],
-    ['PUENTE DE CONCILIACIÓN','','VALOR'],
-    ['Saldo neto según extracto bancario','',saldoE],
-    ['(+) Débitos en extracto no registrados en libros','',ssE.d],
-    ['(−) Créditos en extracto no registrados en libros','',ssE.c],
-    ['(−) Débitos en libros no reflejados en extracto','',ssA.d],
-    ['(+) Créditos en libros no reflejados en extracto','',ssA.c],
-    ['Saldo neto según libro auxiliar','',saldoA],
-    [],[],
-    ['ESTADÍSTICAS','',''],
-    ['Movimientos extracto','',ext.length],
-    ['Movimientos auxiliar','',aux.length],
-    ['Partidas conciliadas','',matched.length],
-    ['Solo en extracto','',soloE.length],
-    ['Solo en auxiliar','',soloA.length],
-    ['% Conciliación','',Math.round(matched.length/Math.max(ext.length,aux.length)*100)+'%'],
-    [],[],
-    ['ANÁLISIS MOVIMIENTOS BANCARIOS','Movimientos','Valor'],
+  const soloE_in = soloE.filter(e => e.deb > 0), soloE_out = soloE.filter(e => e.cre > 0);
+  const totEIn = soloE_in.reduce((s,e) => s+e.deb, 0), totEOut = soloE_out.reduce((s,e) => s+e.cre, 0);
+  const soloA_deb = soloA.filter(a => a.deb > 0), soloA_cre = soloA.filter(a => a.cre > 0);
+  const totADeb = soloA_deb.reduce((s,a) => s+a.deb, 0), totACre = soloA_cre.reduce((s,a) => s+a.cre, 0);
+
+  /* ── SHEET 1: Conciliación Bancaria ── */
+  const s1 = [['CONCILIACIÓN BANCARIA']];
+  if (empresa) s1.push([empresa + (nit ? ' — NIT ' + nit : '')]);
+  if (cuenta) s1.push(['Cuenta No. ' + cuenta]);
+  s1.push(['Generado: ' + new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'}) + ' — ExógenaDIAN']);
+  s1.push([]);
+  s1.push(['RESUMEN DE SALDOS']);
+  s1.push(['Concepto','Extracto Bancario','Libros Contables','Diferencia']);
+  s1.push(['Total Ingresos / Débitos', sE.d, sA.d, sE.d - sA.d]);
+  s1.push(['Total Egresos / Créditos', sE.c, sA.c, sE.c - sA.c]);
+  s1.push(['Movimiento Neto del Período', saldoE, saldoA, saldoE - saldoA]);
+  s1.push([]);
+  s1.push(['PARTIDAS CONCILIATORIAS']);
+  s1.push(['PARTIDAS EN EXTRACTO NO REGISTRADAS EN LIBROS']);
+  s1.push(['  (+) Ingresos en extracto sin registro contable', totEIn, soloE_in.length+' partidas']);
+  s1.push(['  (−) Egresos en extracto sin registro contable', -totEOut, soloE_out.length+' partidas']);
+  s1.push(['  Subtotal partidas solo en extracto', totEIn - totEOut]);
+  s1.push([]);
+  s1.push(['PARTIDAS EN LIBROS NO REFLEJADAS EN EXTRACTO']);
+  s1.push(['  (+) Débitos contables sin movimiento bancario', totADeb, soloA_deb.length+' partidas']);
+  s1.push(['  (−) Créditos contables sin movimiento bancario', totACre, soloA_cre.length+' partidas']);
+  s1.push(['  Subtotal partidas solo en libros', totADeb - totACre]);
+  s1.push([]);
+  s1.push(['ANÁLISIS DE GASTOS E INGRESOS BANCARIOS']);
+  s1.push(['Concepto','Movimientos','Valor']);
+  const bkIds = ['gmf','comision','cuota','retefte','reteiva','reteica'];
+  let tG = 0;
+  for (const id of bkIds) { const c = catsE[id]; if(!c||!c.items.length) continue; tG += c.totalCre; s1.push([c.def.name, c.items.length, c.totalCre]); }
+  s1.push(['Total gastos bancarios','',tG]);
+  s1.push([]);
+  const cI = catsE.interes;
+  if (cI && cI.items.length) s1.push(['Intereses recibidos', cI.items.length, cI.totalDeb]);
+  s1.push([]);
+  s1.push(['ESTADÍSTICAS']);
+  s1.push(['Movimientos extracto', ext.length]);
+  s1.push(['Movimientos auxiliar', aux.length]);
+  s1.push(['Partidas conciliadas', matched.length]);
+  s1.push(['Solo en extracto', soloE.length]);
+  s1.push(['Solo en auxiliar', soloA.length]);
+  s1.push(['% Conciliación', Math.round(matched.length/Math.max(ext.length,aux.length)*100)+'%']);
+  s1.push([],['Procesado 100% en navegador. ExógenaDIAN no accedió a los datos.']);
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(s1), 'Conciliación Bancaria');
+
+  /* ── SHEET 2: Extracto sin Contabilizar ── */
+  const s2 = [
+    ['PARTIDAS EN EXTRACTO BANCARIO NO REGISTRADAS EN LIBROS'],
+    [soloE.length+' movimientos bancarios sin registro contable — Revisar con soportes'],
+    [],
+    ['INGRESOS EN EXTRACTO SIN REGISTRO CONTABLE'],
+    ['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida'],
   ];
-  const bankIds = ['gmf','comision','cuota','retefte','reteiva','reteica','interes'];
-  let totalGastos = 0, totalIngresos = 0;
-  for (const id of bankIds) {
-    const cat = catsE[id];
-    if (!cat || cat.items.length === 0) continue;
-    const val = cat.totalDeb + cat.totalCre;
-    if (id === 'interes') totalIngresos += val;
-    else totalGastos += val;
-    ws0.push([cat.def.name, cat.items.length, val]);
-  }
-  ws0.push([]);
-  ws0.push(['Total gastos bancarios','',totalGastos]);
-  ws0.push(['Total ingresos bancarios','',totalIngresos]);
-  ws0.push([],[],['PRIVACIDAD'],['Procesado 100% en navegador. ExógenaDIAN no accedió a los datos.']);
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(ws0), 'Resumen');
+  soloE_in.forEach((e,i) => s2.push([i+1, fD(e.fecha), e.desc, e.deb, tipoProbable(e.desc,true), accionSugerida(e.desc,true)]));
+  s2.push(['SUBTOTAL INGRESOS ('+soloE_in.length+' partidas)','','',totEIn]);
+  s2.push([]);
+  s2.push(['EGRESOS EN EXTRACTO SIN REGISTRO CONTABLE']);
+  s2.push(['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida']);
+  soloE_out.forEach((e,i) => s2.push([i+1, fD(e.fecha), e.desc, -e.cre, tipoProbable(e.desc,false), accionSugerida(e.desc,false)]));
+  s2.push(['SUBTOTAL EGRESOS ('+soloE_out.length+' partidas)','','', -totEOut]);
+  s2.push([],['TOTAL NETO SIN CONTABILIZAR','','', totEIn - totEOut]);
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(s2), 'Extracto sin Contabilizar');
 
-  const ws1 = [['#','Fecha Ext','Desc Ext','Tipo','Valor Ext','Fecha Aux','Tercero Aux','Desc Aux','Valor Aux','Confianza','Criterio']];
-  matched.forEach((m,i) => {
-    const e=ext[m.ei], a=aux[m.ai];
-    ws1.push([i+1, fD(e.fecha), e.desc, e.deb>0?'Entrada':'Salida', e.deb||e.cre, fD(a.fecha), a.tercero, a.desc, a.deb||a.cre, m.conf, m.reason]);
+  /* ── SHEET 3: Libros sin Extracto ── */
+  const s3 = [
+    ['PARTIDAS EN LIBROS CONTABLES NO REFLEJADAS EN EXTRACTO'],
+    [soloA.length+' registros contables sin movimiento bancario correspondiente'],
+    [],
+    ['#','Fecha','Comprobante','Tercero','Descripción','Débito','Crédito','Posible Causa'],
+  ];
+  soloA.forEach((a,i) => {
+    const causa = a.deb > 0 ? 'Verificar si tiene movimiento bancario asociado' : 'Verificar si pago fue procesado por el banco';
+    s3.push([i+1, fD(a.fecha), a.ref, a.tercero, a.desc, a.deb||'', a.cre||'', causa]);
   });
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(ws1), 'Conciliadas');
+  s3.push(['TOTAL','','','','', totADeb, totACre]);
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(s3), 'Libros sin Extracto');
 
-  const ws2 = [['#','Fecha','Descripción','Tipo','Valor','Causa']];
-  soloE.forEach((e,i) => ws2.push([i+1, fD(e.fecha), e.desc, e.deb>0?'Entrada':'Salida', e.deb||e.cre, guessCausa(e.desc)]));
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(ws2), 'Solo Extracto');
-
-  const ws3 = [['#','Fecha','Tercero','Descripción','Ref','Tipo','Valor']];
-  soloA.forEach((a,i) => ws3.push([i+1, fD(a.fecha), a.tercero, a.desc, a.ref, a.deb>0?'Débito':'Crédito', a.deb||a.cre]));
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(ws3), 'Solo Auxiliar');
+  /* ── SHEET 4: Partidas Conciliadas ── */
+  const s4 = [
+    ['PARTIDAS CONCILIADAS (MATCH EXTRACTO ↔ LIBROS)'],
+    [matched.length+' movimientos conciliados exitosamente'],
+    [],
+    ['Fecha Ext.','Descripción Extracto','Valor Extracto','Fecha Aux.','Comprobante','Tercero','Débito','Crédito','Estado'],
+  ];
+  matched.forEach(m => {
+    const e = ext[m.ei], a = aux[m.ai];
+    const vE = e.deb > 0 ? e.deb : -e.cre;
+    s4.push([fD(e.fecha), e.desc, vE, fD(a.fecha), a.ref, a.tercero, a.deb||'', a.cre||'', '✓ OK']);
+  });
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(s4), 'Partidas Conciliadas');
 
   XLSX.writeFile(wb, 'Conciliacion_'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
