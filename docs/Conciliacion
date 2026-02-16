@@ -6,6 +6,7 @@
 <title>Conciliación Bancaria — ExógenaDIAN</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <style>
 :root{--g700:#047857;--g600:#059669;--g500:#10B981;--g400:#34D399;--g200:#A7F3D0;--g100:#D1FAE5;--g50:#ECFDF5;--w:#FFF;--f50:#F9FAFB;--f100:#F3F4F6;--f200:#E5E7EB;--f300:#D1D5DB;--f400:#9CA3AF;--f500:#6B7280;--f600:#4B5563;--f700:#374151;--f800:#1F2937;--f900:#111827;--blue:#3B82F6;--amber:#F59E0B;--red:#EF4444;--r:14px}
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Outfit',sans-serif;background:var(--f50);color:var(--f900);min-height:100vh}
@@ -257,11 +258,11 @@ function guessYearFromTransactions(rows, colIdx, dataStart) {
   for (let i = dataStart; i < Math.min(rows.length, dataStart + 100); i++) {
     const c = rows[i] ? rows[i][colIdx] : null;
     if (!c) continue;
-    if (c instanceof Date && !isNaN(c)) { const y = c.getFullYear(); if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5; continue; }
+    if (c instanceof Date && !isNaN(c)) { const y = c.getFullYear(); if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5; else { const uy = c.getUTCFullYear(); if (uy >= 2020 && uy <= 2035) yearCounts[uy] = (yearCounts[uy]||0) + 5; } continue; }
     const s = String(c);
     const matches = s.match(/20[2-3]\d/g);
     if (matches) matches.forEach(y => yearCounts[y] = (yearCounts[y]||0) + 1);
-    if (typeof c === 'number' && c > 40000 && c < 55000) { const d = new Date((c - 25569) * 86400000); const y = d.getFullYear(); if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5; }
+    if (typeof c === 'number' && c > 40000 && c < 55000) { const utc = new Date((c - 25569) * 86400000); const y = utc.getUTCFullYear(); if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5; }
   }
   const years = Object.keys(yearCounts);
   if (years.length === 0) return null;
@@ -510,8 +511,19 @@ function ejecutar() {
   const tol = +(document.getElementById('optTol').value || 1);
   const yearE = getTransactionYear('E');
   const yearA = getTransactionYear('A');
-  const finalYearE = yearE || yearA || new Date().getFullYear();
-  const finalYearA = yearA || yearE || new Date().getFullYear();
+  // If years differ, prefer auxiliar year (accounting software is more reliable)
+  // Also use current year as better fallback
+  const curYear = new Date().getFullYear();
+  let finalYearE, finalYearA;
+  if (yearE && yearA && yearE !== yearA) {
+    // Years conflict — use the auxiliar year for both (accounting is authoritative)
+    console.log('⚠ Años difieren: extracto=' + yearE + ' auxiliar=' + yearA + '. Usando año del auxiliar.');
+    finalYearA = yearA;
+    finalYearE = yearA; // override extracto year with auxiliar year
+  } else {
+    finalYearE = yearE || yearA || curYear;
+    finalYearA = yearA || yearE || curYear;
+  }
   console.log('DEBUG yearE=', yearE, 'yearA=', yearA, 'finalE=', finalYearE, 'finalA=', finalYearA);
   console.log('DEBUG E map=', JSON.stringify(F.E.map), 'numFmt=', F.E.numFmt, 'hdr=', F.E.headerRow);
   console.log('DEBUG A map=', JSON.stringify(F.A.map), 'numFmt=', F.A.numFmt, 'hdr=', F.A.headerRow);
@@ -549,6 +561,61 @@ function ejecutar() {
   doPass(ext, aux, uE, uA, matched, tol, 15, true, 'baja', 'Monto y tipo, ±15 días');
   doPass(ext, aux, uE, uA, matched, tol, 31, false, 'baja', 'Solo monto (±31 días)');
   console.log('DEBUG TOTAL matches:', matched.length);
+  // === DIAGNÓSTICO VISUAL ===
+  if (matched.length === 0 && ext.length > 0 && aux.length > 0) {
+    let diag = '=== DIAGNÓSTICO (0 conciliadas) ===\n\n';
+    diag += 'Extracto: ' + ext.length + ' registros\n';
+    for (let i = 0; i < Math.min(3, ext.length); i++) {
+      const e = ext[i];
+      diag += `  E[${i}]: fecha=${e.fecha ? e.fecha.toLocaleDateString('es-CO') : 'NULL'} deb=${e.deb} cre=${e.cre} desc=${(e.desc||'').substring(0,35)}\n`;
+    }
+    diag += '\nAuxiliar: ' + aux.length + ' registros\n';
+    for (let i = 0; i < Math.min(3, aux.length); i++) {
+      const a = aux[i];
+      diag += `  A[${i}]: fecha=${a.fecha ? a.fecha.toLocaleDateString('es-CO') : 'NULL'} deb=${a.deb} cre=${a.cre} desc=${(a.desc||'').substring(0,35)} ref=${a.ref}\n`;
+    }
+    // Test manual match
+    diag += '\n--- Test de cruce manual ---\n';
+    let found = false;
+    for (let i = 0; i < Math.min(10, ext.length) && !found; i++) {
+      for (let j = 0; j < Math.min(10, aux.length) && !found; j++) {
+        const e = ext[i], a = aux[j];
+        const sameDeb = e.deb > 0 && a.deb > 0 && Math.abs(e.deb - a.deb) < 2;
+        const sameCre = e.cre > 0 && a.cre > 0 && Math.abs(e.cre - a.cre) < 2;
+        if (sameDeb || sameCre) {
+          diag += `MATCH POSIBLE E[${i}] vs A[${j}]:\n`;
+          diag += `  E: deb=${e.deb} cre=${e.cre} fecha=${e.fecha?.toLocaleDateString('es-CO')}\n`;
+          diag += `  A: deb=${a.deb} cre=${a.cre} fecha=${a.fecha?.toLocaleDateString('es-CO')}\n`;
+          diag += `  amtMatch(tol=${tol},chkSign=true)=${amtMatch(e,a,tol,true)}\n`;
+          diag += `  dateClose(dayTol=0)=${dateClose(e.fecha,a.fecha,0)}\n`;
+          diag += `  dateClose(dayTol=31)=${dateClose(e.fecha,a.fecha,31)}\n`;
+          found = true;
+        }
+      }
+    }
+    if (!found) {
+      diag += 'NO se encontró ningún par con monto similar en primeros 10 registros.\n';
+      diag += 'Posible problema: extracto y auxiliar tienen deb/cre invertidos.\n';
+      // Check cross-match (e.deb vs a.cre)
+      for (let i = 0; i < Math.min(5, ext.length); i++) {
+        for (let j = 0; j < Math.min(5, aux.length); j++) {
+          const e = ext[i], a = aux[j];
+          if (e.deb > 0 && a.cre > 0 && Math.abs(e.deb - a.cre) < 2) {
+            diag += `  CRUCE INVERTIDO E[${i}].deb=${e.deb} == A[${j}].cre=${a.cre}\n`;
+            found = true; break;
+          }
+          if (e.cre > 0 && a.deb > 0 && Math.abs(e.cre - a.deb) < 2) {
+            diag += `  CRUCE INVERTIDO E[${i}].cre=${e.cre} == A[${j}].deb=${a.deb}\n`;
+            found = true; break;
+          }
+        }
+        if (found) break;
+      }
+    }
+    diag += '\nE map=' + JSON.stringify(F.E.map) + '\nA map=' + JSON.stringify(F.A.map);
+    diag += '\nE numFmt=' + F.E.numFmt + ' A numFmt=' + F.A.numFmt;
+    alert(diag);
+  }
   const soloE = ext.filter((_,i) => !uE.has(i));
   const soloA = aux.filter((_,i) => !uA.has(i));
   const sE = {d: sum(ext,'deb'), c: sum(ext,'cre')};
@@ -633,7 +700,15 @@ function dateClose(d1, d2, tol) {
   if (!d1 || !d2) return tol >= 15;
   const t1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
   const t2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
-  return Math.abs(t1 - t2) / 864e5 <= tol;
+  const diffDays = Math.abs(t1 - t2) / 864e5;
+  if (diffDays <= tol) return true;
+  // If years differ (possible parsing error), compare only month+day
+  if (d1.getFullYear() !== d2.getFullYear()) {
+    const sameYear1 = Date.UTC(2000, d1.getMonth(), d1.getDate());
+    const sameYear2 = Date.UTC(2000, d2.getMonth(), d2.getDate());
+    return Math.abs(sameYear1 - sameYear2) / 864e5 <= tol;
+  }
+  return false;
 }
 
 function refMatch(e, a) {
@@ -853,123 +928,215 @@ function accionSugerida(desc, isDeb) {
   return isDeb?'Identificar origen y registrar':'Identificar beneficiario y registrar';
 }
 
-function exportXls() {
+async function exportXls() {
   if (!resultados) return;
   const {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, catsE} = resultados;
-  const wb = XLSX.utils.book_new();
   const saldoE = sE.d - sE.c, saldoA = sA.d - sA.c;
   const metaE = extractMeta('E'), metaA = extractMeta('A');
   const empresa = metaA.empresa || metaE.empresa || '';
   const nit = metaA.nit || metaE.nit || '';
   const cuenta = metaE.cuenta || '';
-
   const soloE_in = soloE.filter(e => e.deb > 0), soloE_out = soloE.filter(e => e.cre > 0);
   const totEIn = soloE_in.reduce((s,e) => s+e.deb, 0), totEOut = soloE_out.reduce((s,e) => s+e.cre, 0);
   const soloA_deb = soloA.filter(a => a.deb > 0), soloA_cre = soloA.filter(a => a.cre > 0);
   const totADeb = soloA_deb.reduce((s,a) => s+a.deb, 0), totACre = soloA_cre.reduce((s,a) => s+a.cre, 0);
 
-  /* ── SHEET 1: Conciliación Bancaria ── */
-  const s1 = [['CONCILIACIÓN BANCARIA']];
-  if (empresa) s1.push([empresa + (nit ? ' — NIT ' + nit : '')]);
-  if (cuenta) s1.push(['Cuenta No. ' + cuenta]);
-  s1.push(['Generado: ' + new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'}) + ' — ExógenaDIAN']);
-  s1.push([]);
-  s1.push(['RESUMEN DE SALDOS']);
-  s1.push(['Concepto','Extracto Bancario','Libros Contables','Diferencia','','Explicación']);
-  s1.push(['Total Ingresos / Débitos', sE.d, sA.d, sE.d - sA.d, '', '']);
-  s1.push(['Total Egresos / Créditos', sE.c, sA.c, sE.c - sA.c, '', '']);
-  s1.push(['Movimiento Neto del Período', saldoE, saldoA, saldoE - saldoA]);
-  s1.push([]);
-  s1.push(['PARTIDAS CONCILIATORIAS']);
-  s1.push(['PARTIDAS EN EXTRACTO NO REGISTRADAS EN LIBROS']);
-  s1.push(['  (+) Ingresos en extracto sin registro contable', totEIn, soloE_in.length+' partidas']);
-  s1.push(['  (−) Egresos en extracto sin registro contable', -totEOut, soloE_out.length+' partidas']);
-  s1.push(['  Subtotal partidas solo en extracto', totEIn - totEOut]);
-  s1.push([]);
-  s1.push(['PARTIDAS EN LIBROS NO REFLEJADAS EN EXTRACTO']);
-  s1.push(['  (+) Débitos contables sin movimiento bancario', totADeb, soloA_deb.length+' partidas']);
-  s1.push(['  (−) Créditos contables sin movimiento bancario', totACre, soloA_cre.length+' partidas']);
-  s1.push(['  Subtotal partidas solo en libros', totADeb - totACre]);
-  s1.push([]);
-  s1.push(['ANÁLISIS DE GASTOS E INGRESOS BANCARIOS']);
-  s1.push(['Concepto','Movimientos','Valor']);
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'ExógenaDIAN';
+
+  // ── Paleta de colores ──
+  const C = {
+    hdrBg: '1B3A5C',    // azul oscuro
+    hdrFg: 'FFFFFF',     // blanco
+    secBg: '2E75B6',    // azul medio
+    secFg: 'FFFFFF',
+    subBg: 'D6E4F0',    // azul claro
+    subFg: '1B3A5C',
+    tblHdr: '2E75B6',   // encabezado tabla
+    tblHdrFg: 'FFFFFF',
+    altRow: 'F2F7FB',   // fila alterna
+    greenBg: 'E2EFDA',  // verde claro para conciliadas
+    greenHdr: '548235',  // verde oscuro
+    warnBg: 'FFF2CC',   // amarillo para alertas
+    redFg: 'CC0000',    // rojo para negativos
+    border: 'B4C6E7',   // borde suave
+    totBg: 'D6E4F0',    // fondo totales
+  };
+
+  const thinBorder = {style:'thin', color:{argb:C.border}};
+  const borders = {top:thinBorder, bottom:thinBorder, left:thinBorder, right:thinBorder};
+  const numFmt = '#,##0.00';
+  const numFmtInt = '#,##0';
+  const fontBase = {name:'Arial', size:10};
+  const fontBold = {name:'Arial', size:10, bold:true};
+  const fontHdr = {name:'Arial', size:10, bold:true, color:{argb:C.hdrFg}};
+  const fontTitle = {name:'Arial', size:14, bold:true, color:{argb:C.hdrFg}};
+  const fontSub = {name:'Arial', size:11, bold:true, color:{argb:C.hdrFg}};
+
+  function fillSolid(argb) { return {type:'pattern', pattern:'solid', fgColor:{argb}}; }
+  function styleRow(ws, row, font, fill, align, numF, bord) {
+    row.eachCell({includeEmpty:true}, (cell) => {
+      if (font) cell.font = font;
+      if (fill) cell.fill = fill;
+      if (align) cell.alignment = align;
+      if (bord) cell.border = bord;
+      if (numF && typeof cell.value === 'number') cell.numFmt = numF;
+    });
+  }
+  function applyNumFmt(ws, rowNum, cols, fmt) {
+    cols.forEach(c => { const cell = ws.getCell(rowNum, c); if (typeof cell.value === 'number') cell.numFmt = fmt; });
+  }
+
+  /* ══════════════════════════════════════════════════════
+     SHEET 1: Conciliación Bancaria
+     ══════════════════════════════════════════════════════ */
+  const ws1 = wb.addWorksheet('Conciliación Bancaria');
+  ws1.columns = [{width:48},{width:22},{width:22},{width:18},{width:3},{width:32}];
+
+  // Header
+  let r = 1;
+  ws1.mergeCells(r,1,r,6);
+  const titleCell = ws1.getCell(r,1); titleCell.value = 'CONCILIACIÓN BANCARIA'; titleCell.font = fontTitle; titleCell.fill = fillSolid(C.hdrBg); titleCell.alignment = {horizontal:'center', vertical:'middle'}; ws1.getRow(r).height = 30;
+  for(let c=2;c<=6;c++){ws1.getCell(r,c).fill=fillSolid(C.hdrBg);}
+  r++;
+  if (empresa) { ws1.mergeCells(r,1,r,6); const c=ws1.getCell(r,1); c.value=empresa+(nit?' — NIT '+nit:''); c.font={...fontBold,size:11,color:{argb:C.hdrFg}}; c.fill=fillSolid(C.hdrBg); c.alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++; }
+  if (cuenta) { ws1.mergeCells(r,1,r,6); const c=ws1.getCell(r,1); c.value='Cuenta No. '+cuenta; c.font={...fontBase,color:{argb:'D6E4F0'}}; c.fill=fillSolid(C.hdrBg); c.alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++; }
+  ws1.mergeCells(r,1,r,6); const genCell=ws1.getCell(r,1); genCell.value='Generado: '+new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'})+' — ExógenaDIAN'; genCell.font={...fontBase,italic:true,color:{argb:'D6E4F0'}}; genCell.fill=fillSolid(C.hdrBg); genCell.alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++;
+  r++; // blank
+
+  // Resumen de saldos
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='RESUMEN DE SALDOS'; ws1.getCell(r,1).font=fontSub; ws1.getCell(r,1).fill=fillSolid(C.secBg); ws1.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.secBg);} r++;
+  const hdrRow1 = ws1.addRow(['Concepto','Extracto Bancario','Libros Contables','Diferencia','','Explicación']); styleRow(ws1, hdrRow1, {...fontBold,color:{argb:C.tblHdrFg}}, fillSolid(C.tblHdr), null, null, borders); r++;
+  let dr;
+  dr = ws1.addRow(['Total Ingresos / Débitos', sE.d, sA.d, sE.d-sA.d, '', '']); styleRow(ws1,dr,fontBase,null,null,numFmt,borders); r++;
+  dr = ws1.addRow(['Total Egresos / Créditos', sE.c, sA.c, sE.c-sA.c, '', '']); styleRow(ws1,dr,fontBase,null,null,numFmt,borders); r++;
+  dr = ws1.addRow(['Movimiento Neto del Período', saldoE, saldoA, saldoE-saldoA, '', '']); styleRow(ws1,dr,fontBold,fillSolid(C.totBg),null,numFmt,borders); r++;
+  // Color negative diffs red
+  for(let rr=r-3;rr<=r-1;rr++){const c=ws1.getCell(rr,4);if(typeof c.value==='number'&&c.value<0)c.font={...fontBase,color:{argb:C.redFg}};}
+  r++; // blank
+
+  // Partidas conciliatorias
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='PARTIDAS CONCILIATORIAS'; ws1.getCell(r,1).font=fontSub; ws1.getCell(r,1).fill=fillSolid(C.secBg); ws1.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.secBg);} r++;
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='PARTIDAS EN EXTRACTO NO REGISTRADAS EN LIBROS'; ws1.getCell(r,1).font={...fontBold,color:{argb:C.subFg}}; ws1.getCell(r,1).fill=fillSolid(C.subBg); for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.subBg);} r++;
+  dr=ws1.addRow(['  (+) Ingresos en extracto sin registro contable', totEIn, soloE_in.length+' partidas','','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,null); r++;
+  dr=ws1.addRow(['  (−) Egresos en extracto sin registro contable', -totEOut, soloE_out.length+' partidas','','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,null); ws1.getCell(r,2).font={...fontBase,color:{argb:C.redFg}}; r++;
+  dr=ws1.addRow(['  Subtotal partidas solo en extracto', totEIn-totEOut,'','','','']); styleRow(ws1,dr,fontBold,fillSolid(C.totBg),null,numFmt,null); r++;
+  r++;
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='PARTIDAS EN LIBROS NO REFLEJADAS EN EXTRACTO'; ws1.getCell(r,1).font={...fontBold,color:{argb:C.subFg}}; ws1.getCell(r,1).fill=fillSolid(C.subBg); for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.subBg);} r++;
+  dr=ws1.addRow(['  (+) Débitos contables sin movimiento bancario', totADeb, soloA_deb.length+' partidas','','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,null); r++;
+  dr=ws1.addRow(['  (−) Créditos contables sin movimiento bancario', totACre, soloA_cre.length+' partidas','','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,null); r++;
+  dr=ws1.addRow(['  Subtotal partidas solo en libros', totADeb-totACre,'','','','']); styleRow(ws1,dr,fontBold,fillSolid(C.totBg),null,numFmt,null); r++;
+  r++;
+
+  // Gastos bancarios
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='ANÁLISIS DE GASTOS E INGRESOS BANCARIOS'; ws1.getCell(r,1).font=fontSub; ws1.getCell(r,1).fill=fillSolid(C.secBg); ws1.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.secBg);} r++;
+  dr=ws1.addRow(['Concepto','Movimientos','Valor','','','']); styleRow(ws1,dr,{...fontBold,color:{argb:C.tblHdrFg}},fillSolid(C.tblHdr),null,null,borders); r++;
   const bkIds = ['gmf','comision','cuota','retefte','reteiva','reteica'];
   let tG = 0;
-  for (const id of bkIds) { const c = catsE[id]; if(!c||!c.items.length) continue; tG += c.totalCre; s1.push([c.def.name, c.items.length, c.totalCre]); }
-  s1.push(['Total gastos bancarios','',tG]);
-  s1.push([]);
+  for (const id of bkIds) { const c = catsE[id]; if(!c||!c.items.length) continue; tG+=c.totalCre; dr=ws1.addRow([c.def.name, c.items.length, c.totalCre,'','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,borders); r++; }
+  dr=ws1.addRow(['Total gastos bancarios','',tG,'','','']); styleRow(ws1,dr,fontBold,fillSolid(C.totBg),null,numFmt,borders); r++;
+  r++;
   const cI = catsE.interes;
-  if (cI && cI.items.length) s1.push(['Intereses recibidos', cI.items.length, cI.totalDeb]);
-  s1.push([]);
-  s1.push(['ESTADÍSTICAS']);
-  s1.push(['Movimientos extracto', ext.length]);
-  s1.push(['Movimientos auxiliar', aux.length]);
-  s1.push(['Partidas conciliadas', matched.length]);
-  s1.push(['Solo en extracto', soloE.length]);
-  s1.push(['Solo en auxiliar', soloA.length]);
-  s1.push(['% Conciliación', Math.round(matched.length/Math.max(ext.length,aux.length)*100)+'%']);
-  s1.push([],['Procesado 100% en navegador. ExógenaDIAN no accedió a los datos.']);
-  // Pad all rows to 6 columns so Explicación column shows
-  const s1w = 6;
-  for (let i = 0; i < s1.length; i++) { while (s1[i].length < s1w) s1[i].push(''); }
-  const ws1 = XLSX.utils.aoa_to_sheet(s1);
-  ws1['!cols'] = [{wch:48},{wch:22},{wch:22},{wch:18},{wch:3},{wch:30}];
-  XLSX.utils.book_append_sheet(wb, ws1, 'Conciliación Bancaria');
+  if (cI && cI.items.length) { dr=ws1.addRow(['Intereses recibidos', cI.items.length, cI.totalDeb,'','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,borders); r++; }
+  r++;
 
-  /* ── SHEET 2: Extracto sin Contabilizar ── */
-  const s2 = [
-    ['PARTIDAS EN EXTRACTO BANCARIO NO REGISTRADAS EN LIBROS CONTABLES','','','','','',''],
-    [soloE.length+' movimientos bancarios sin registro contable — Requieren contabilización','','','','','',''],
-    ['','','','','','',''],
-    ['INGRESOS EN EXTRACTO SIN REGISTRO CONTABLE','','','','','',''],
-    ['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida','Notas'],
-  ];
-  soloE_in.forEach((e,i) => s2.push([i+1, fD(e.fecha), e.desc, e.deb, tipoProbable(e.desc,true), accionSugerida(e.desc,true), '']));
-  s2.push(['','','SUBTOTAL INGRESOS ('+soloE_in.length+' partidas)', totEIn,'','','']);
-  s2.push(['','','','','','','']);
-  s2.push(['EGRESOS EN EXTRACTO SIN REGISTRO CONTABLE','','','','','','']);
-  s2.push(['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida','Notas']);
-  soloE_out.forEach((e,i) => s2.push([i+1, fD(e.fecha), e.desc, -e.cre, tipoProbable(e.desc,false), accionSugerida(e.desc,false), '']));
-  s2.push(['','','SUBTOTAL EGRESOS ('+soloE_out.length+' partidas)', -totEOut,'','','']);
-  s2.push([]);
-  s2.push(['','','TOTAL NETO SIN CONTABILIZAR', totEIn - totEOut,'','','']);
-  const ws2 = XLSX.utils.aoa_to_sheet(s2);
-  ws2['!cols'] = [{wch:5},{wch:12},{wch:42},{wch:16},{wch:26},{wch:38},{wch:22}];
-  XLSX.utils.book_append_sheet(wb, ws2, 'Extracto sin Contabilizar');
+  // Estadísticas
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='ESTADÍSTICAS'; ws1.getCell(r,1).font=fontSub; ws1.getCell(r,1).fill=fillSolid(C.secBg); ws1.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.secBg);} r++;
+  [['Movimientos extracto',ext.length],['Movimientos auxiliar',aux.length],['Partidas conciliadas',matched.length],['Solo en extracto',soloE.length],['Solo en auxiliar',soloA.length],['% Conciliación',Math.round(matched.length/Math.max(ext.length,aux.length)*100)+'%']].forEach(d=>{
+    dr=ws1.addRow([d[0],d[1],'','','','']); styleRow(ws1,dr,fontBase,null,null,null,null); r++;
+  });
+  r++;
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='Procesado 100% en navegador. ExógenaDIAN no accedió a los datos.'; ws1.getCell(r,1).font={...fontBase,italic:true,size:8,color:{argb:'888888'}}; ws1.getCell(r,1).alignment={horizontal:'center'};
 
-  /* ── SHEET 3: Libros sin Extracto ── */
-  const s3 = [
-    ['PARTIDAS EN LIBROS CONTABLES NO REFLEJADAS EN EXTRACTO BANCARIO','','','','','','','',''],
-    [soloA.length+' registros contables sin movimiento bancario correspondiente','','','','','','','',''],
-    ['','','','','','','','',''],
-    ['#','Fecha','Comprobante','Tercero','Descripción','Débito','Crédito','Posible Causa','Notas'],
-  ];
+  /* ══════════════════════════════════════════════════════
+     SHEET 2: Extracto sin Contabilizar
+     ══════════════════════════════════════════════════════ */
+  const ws2 = wb.addWorksheet('Extracto sin Contabilizar');
+  ws2.columns = [{width:6},{width:13},{width:44},{width:18},{width:28},{width:40},{width:24}];
+  r = 1;
+  ws2.mergeCells(r,1,r,7); ws2.getCell(r,1).value='PARTIDAS EN EXTRACTO BANCARIO NO REGISTRADAS EN LIBROS CONTABLES'; ws2.getCell(r,1).font=fontTitle; ws2.getCell(r,1).fill=fillSolid(C.hdrBg); ws2.getCell(r,1).alignment={horizontal:'center',vertical:'middle'}; ws2.getRow(r).height=28; for(let cc=2;cc<=7;cc++){ws2.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++;
+  ws2.mergeCells(r,1,r,7); ws2.getCell(r,1).value=soloE.length+' movimientos bancarios sin registro contable — Revisar con soportes'; ws2.getCell(r,1).font={...fontBase,italic:true,color:{argb:C.hdrFg}}; ws2.getCell(r,1).fill=fillSolid(C.hdrBg); ws2.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=7;cc++){ws2.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++;
+  r++;
+
+  // Ingresos
+  ws2.mergeCells(r,1,r,7); ws2.getCell(r,1).value='INGRESOS EN EXTRACTO SIN REGISTRO CONTABLE'; ws2.getCell(r,1).font={...fontBold,color:{argb:C.subFg}}; ws2.getCell(r,1).fill=fillSolid(C.subBg); for(let cc=2;cc<=7;cc++){ws2.getCell(r,cc).fill=fillSolid(C.subBg);} r++;
+  dr=ws2.addRow(['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida','Notas']); styleRow(ws2,dr,{...fontBold,color:{argb:C.tblHdrFg}},fillSolid(C.tblHdr),null,null,borders); r++;
+  soloE_in.forEach((e,i) => {
+    dr=ws2.addRow([i+1, fD(e.fecha), e.desc, e.deb, tipoProbable(e.desc,true), accionSugerida(e.desc,true), '']);
+    const bg = i%2===0 ? null : fillSolid(C.altRow);
+    styleRow(ws2,dr,fontBase,bg,null,null,borders);
+    ws2.getCell(r,4).numFmt=numFmt;
+    r++;
+  });
+  dr=ws2.addRow(['','','SUBTOTAL INGRESOS ('+soloE_in.length+' partidas)', totEIn,'','','']); styleRow(ws2,dr,fontBold,fillSolid(C.totBg),null,numFmt,borders); r++;
+  r++;
+
+  // Egresos
+  ws2.mergeCells(r,1,r,7); ws2.getCell(r,1).value='EGRESOS EN EXTRACTO SIN REGISTRO CONTABLE'; ws2.getCell(r,1).font={...fontBold,color:{argb:C.subFg}}; ws2.getCell(r,1).fill=fillSolid(C.subBg); for(let cc=2;cc<=7;cc++){ws2.getCell(r,cc).fill=fillSolid(C.subBg);} r++;
+  dr=ws2.addRow(['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida','Notas']); styleRow(ws2,dr,{...fontBold,color:{argb:C.tblHdrFg}},fillSolid(C.tblHdr),null,null,borders); r++;
+  soloE_out.forEach((e,i) => {
+    dr=ws2.addRow([i+1, fD(e.fecha), e.desc, -e.cre, tipoProbable(e.desc,false), accionSugerida(e.desc,false), '']);
+    const bg = i%2===0 ? null : fillSolid(C.altRow);
+    styleRow(ws2,dr,fontBase,bg,null,null,borders);
+    ws2.getCell(r,4).numFmt=numFmt; ws2.getCell(r,4).font={...fontBase,color:{argb:C.redFg}};
+    r++;
+  });
+  dr=ws2.addRow(['','','SUBTOTAL EGRESOS ('+soloE_out.length+' partidas)', -totEOut,'','','']); styleRow(ws2,dr,fontBold,fillSolid(C.totBg),null,numFmt,borders); ws2.getCell(r,4).font={...fontBold,color:{argb:C.redFg}}; r++;
+  r++;
+  dr=ws2.addRow(['','','TOTAL NETO SIN CONTABILIZAR', totEIn-totEOut,'','','']); styleRow(ws2,dr,{...fontBold,size:11},fillSolid(C.subBg),null,numFmt,{top:{style:'double',color:{argb:C.hdrBg}},bottom:{style:'double',color:{argb:C.hdrBg}},left:thinBorder,right:thinBorder});
+
+  /* ══════════════════════════════════════════════════════
+     SHEET 3: Libros sin Extracto
+     ══════════════════════════════════════════════════════ */
+  const ws3 = wb.addWorksheet('Libros sin Extracto');
+  ws3.columns = [{width:6},{width:13},{width:15},{width:40},{width:32},{width:18},{width:18},{width:44},{width:24}];
+  r = 1;
+  ws3.mergeCells(r,1,r,9); ws3.getCell(r,1).value='PARTIDAS EN LIBROS CONTABLES NO REFLEJADAS EN EXTRACTO BANCARIO'; ws3.getCell(r,1).font=fontTitle; ws3.getCell(r,1).fill=fillSolid(C.hdrBg); ws3.getCell(r,1).alignment={horizontal:'center',vertical:'middle'}; ws3.getRow(r).height=28; for(let cc=2;cc<=9;cc++){ws3.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++;
+  ws3.mergeCells(r,1,r,9); ws3.getCell(r,1).value=soloA.length+' registros contables sin movimiento bancario correspondiente'; ws3.getCell(r,1).font={...fontBase,italic:true,color:{argb:C.hdrFg}}; ws3.getCell(r,1).fill=fillSolid(C.hdrBg); ws3.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=9;cc++){ws3.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++;
+  r++;
+  dr=ws3.addRow(['#','Fecha','Comprobante','Tercero','Descripción','Débito','Crédito','Posible Causa','Notas']); styleRow(ws3,dr,{...fontBold,color:{argb:C.tblHdrFg}},fillSolid(C.tblHdr),null,null,borders); r++;
   soloA.forEach((a,i) => {
-    const causa = a.deb > 0 ? 'Verificar si tiene movimiento bancario asociado' : 'Verificar si pago fue procesado por el banco';
-    s3.push([i+1, fD(a.fecha), a.ref, a.tercero, a.desc, a.deb||'', a.cre||'', causa, '']);
+    const causa = a.deb>0 ? 'Verificar si tiene movimiento bancario asociado' : 'Verificar si pago fue procesado por el banco';
+    dr=ws3.addRow([i+1, fD(a.fecha), a.ref, a.tercero, a.desc, a.deb||'', a.cre||'', causa, '']);
+    const bg = i%2===0 ? null : fillSolid(C.altRow);
+    styleRow(ws3,dr,fontBase,bg,null,null,borders);
+    if(a.deb)ws3.getCell(r,6).numFmt=numFmt;
+    if(a.cre)ws3.getCell(r,7).numFmt=numFmt;
+    r++;
   });
-  s3.push(['','','','TOTAL','', totADeb, totACre,'','']);
-  const ws3 = XLSX.utils.aoa_to_sheet(s3);
-  ws3['!cols'] = [{wch:5},{wch:12},{wch:14},{wch:38},{wch:30},{wch:16},{wch:16},{wch:42},{wch:22}];
-  XLSX.utils.book_append_sheet(wb, ws3, 'Libros sin Extracto');
+  dr=ws3.addRow(['','','','TOTAL','', totADeb, totACre,'','']); styleRow(ws3,dr,fontBold,fillSolid(C.totBg),null,numFmt,{top:{style:'medium',color:{argb:C.hdrBg}},bottom:{style:'double',color:{argb:C.hdrBg}},left:thinBorder,right:thinBorder});
 
-  /* ── SHEET 4: Partidas Conciliadas ── */
-  const s4 = [
-    ['PARTIDAS CONCILIADAS (MATCH EXTRACTO ↔ LIBROS)','','','','','','','','',''],
-    [matched.length+' movimientos conciliados exitosamente','','','','','','','','',''],
-    ['','','','','','','','','',''],
-    ['Fecha Ext.','Descripción Extracto','Valor Extracto','Fecha Aux.','Comprobante','Tercero','Débito','Crédito','Estado','Notas'],
-  ];
-  matched.forEach(m => {
+  /* ══════════════════════════════════════════════════════
+     SHEET 4: Partidas Conciliadas
+     ══════════════════════════════════════════════════════ */
+  const ws4 = wb.addWorksheet('Partidas Conciliadas');
+  ws4.columns = [{width:13},{width:40},{width:18},{width:13},{width:15},{width:38},{width:18},{width:18},{width:10},{width:24}];
+  r = 1;
+  ws4.mergeCells(r,1,r,10); ws4.getCell(r,1).value='PARTIDAS CONCILIADAS (MATCH EXTRACTO ↔ LIBROS)'; ws4.getCell(r,1).font={...fontTitle,color:{argb:'FFFFFF'}}; ws4.getCell(r,1).fill=fillSolid(C.greenHdr); ws4.getCell(r,1).alignment={horizontal:'center',vertical:'middle'}; ws4.getRow(r).height=28; for(let cc=2;cc<=10;cc++){ws4.getCell(r,cc).fill=fillSolid(C.greenHdr);} r++;
+  ws4.mergeCells(r,1,r,10); ws4.getCell(r,1).value=matched.length+' movimientos conciliados exitosamente'; ws4.getCell(r,1).font={...fontBase,italic:true,color:{argb:'FFFFFF'}}; ws4.getCell(r,1).fill=fillSolid(C.greenHdr); ws4.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=10;cc++){ws4.getCell(r,cc).fill=fillSolid(C.greenHdr);} r++;
+  r++;
+  dr=ws4.addRow(['Fecha Ext.','Descripción Extracto','Valor Extracto','Fecha Aux.','Comprobante','Tercero','Débito','Crédito','Estado','Notas']); styleRow(ws4,dr,{...fontBold,color:{argb:'FFFFFF'}},fillSolid(C.greenHdr),null,null,borders); r++;
+  matched.forEach((m,i) => {
     const e = ext[m.ei], a = aux[m.ai];
-    const vE = e.deb > 0 ? e.deb : -e.cre;
-    s4.push([fD(e.fecha), e.desc, vE, fD(a.fecha), a.ref, a.tercero, a.deb||'', a.cre||'', '✓ OK', '']);
+    const vE = e.deb>0 ? e.deb : -e.cre;
+    dr=ws4.addRow([fD(e.fecha), e.desc, vE, fD(a.fecha), a.ref, a.tercero, a.deb||'', a.cre||'', '✓ OK', '']);
+    const bg = i%2===0 ? null : fillSolid(C.greenBg);
+    styleRow(ws4,dr,fontBase,bg,null,null,borders);
+    ws4.getCell(r,3).numFmt=numFmt;
+    if(a.deb)ws4.getCell(r,7).numFmt=numFmt;
+    if(a.cre)ws4.getCell(r,8).numFmt=numFmt;
+    if(vE<0){ws4.getCell(r,3).font={...fontBase,color:{argb:C.redFg}};}
+    ws4.getCell(r,9).font={...fontBase,bold:true,color:{argb:C.greenHdr}};
+    r++;
   });
-  const ws4 = XLSX.utils.aoa_to_sheet(s4);
-  ws4['!cols'] = [{wch:12},{wch:38},{wch:16},{wch:12},{wch:14},{wch:36},{wch:16},{wch:16},{wch:10},{wch:22}];
-  XLSX.utils.book_append_sheet(wb, ws4, 'Partidas Conciliadas');
 
-  XLSX.writeFile(wb, 'Conciliacion_'+new Date().toISOString().slice(0,10)+'.xlsx');
+  // ── Download ──
+  const buf = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'Conciliacion_'+new Date().toISOString().slice(0,10)+'.xlsx';
+  a.click(); URL.revokeObjectURL(url);
 }
 
 /* ── UTILITIES ── */
