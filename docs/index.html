@@ -80,6 +80,7 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .tmi-amber{background:var(--amber-50);border:1px solid var(--amber-100)}
 .tmi-purple{background:var(--purple-50);border:1px solid var(--purple-100)}
 .tmi-rose{background:var(--rose-50);border:1px solid var(--rose-100)}
+.tmi-cyan{background:#ECFEFF;border:1px solid #A5F3FC}
 .badge-free{display:inline-block;padding:3px 9px;border-radius:6px;font-size:.75rem;font-weight:700;background:var(--green-100);color:var(--green-700);margin-left:4px;vertical-align:middle}
 .badge-premium{display:inline-block;padding:3px 9px;border-radius:6px;font-size:.75rem;font-weight:700;background:var(--amber-100);color:var(--amber-700);margin-left:4px;vertical-align:middle}
 .badge-soon{display:inline-block;padding:3px 9px;border-radius:6px;font-size:.75rem;font-weight:700;background:var(--gray-100);color:var(--gray-500);margin-left:4px;vertical-align:middle}
@@ -255,7 +256,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><strong>10</strong><span>Formatos exógena</span></div>
-        <div class="hero-stat"><strong>3</strong><span>Calculadoras gratis</span></div>
+        <div class="hero-stat"><strong>4</strong><span>Herramientas gratis</span></div>
         <div class="hero-stat"><strong>24h</strong><span>Tiempo de entrega</span></div>
       </div>
     </div>
@@ -289,6 +290,11 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
           <div class="tool-mini-icon tmi-rose">📄</div>
           <h4>Estados Financieros <span class="badge-soon">Pronto</span></h4>
           <p>NIIF con notas y políticas</p>
+        </div>
+        <div class="tool-mini" style="animation:float 5s 4s ease-in-out infinite">
+          <div class="tool-mini-icon tmi-cyan">🏦</div>
+          <h4>Conciliación Bancaria <span class="badge-free">Gratis</span></h4>
+          <p>Extracto vs libro auxiliar</p>
         </div>
       </div>
     </div>
@@ -336,6 +342,13 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <h3>Estados Financieros NIIF</h3>
       <p class="tool-desc">Genera estados de situación financiera, resultados, cambios en patrimonio. Con notas revelatorias y políticas contables.</p>
       <div class="tool-status ts-soon">Próximamente</div>
+    </div>
+    <!-- CONCILIACION BANCARIA -->
+    <div class="tool-card" onclick="window.location='conciliacion.html'" style="cursor:pointer">
+      <div class="tool-icon tmi-cyan">🏦</div>
+      <h3>Conciliación Bancaria</h3>
+      <p class="tool-desc">Sube el extracto bancario y el libro auxiliar. Cruza automáticamente partidas e identifica diferencias. Gratis hasta 50 filas.</p>
+      <div class="tool-status ts-free">Gratis · Disponible</div>
     </div>
   </div>
 </section>
@@ -490,8 +503,8 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <a href="https://www.bloomberglinea.com" target="_blank">Bloomberg Línea</a> ·
       <a href="https://www.eltiempo.com/economia" target="_blank">El Tiempo</a> ·
       <a href="https://www.semana.com/economia" target="_blank">Semana</a> ·
-      <a href="https://techcrunch.com/category/artificial-intelligence/" target="_blank">TechCrunch AI</a> ·
-      <a href="https://openai.com/blog" target="_blank">OpenAI</a>
+      <a href="https://hipertextual.com/categoria/tecnologia/inteligencia-artificial" target="_blank">Hipertextual IA</a> ·
+      <a href="https://www.xataka.com/tag/inteligencia-artificial" target="_blank">Xataka IA</a>
     </div>
   </div>
 </section>
@@ -527,6 +540,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
         <a href="#herramientas">Retención en la Fuente</a>
         <a href="#herramientas">Declaración IVA</a>
         <a href="#herramientas">Declaración Renta</a>
+        <a href="conciliacion.html">Conciliación Bancaria</a>
         <a href="#noticias">Noticias Tributarias</a>
       </div>
       <div class="footer-col">
@@ -572,11 +586,10 @@ async function cargarNoticias(){
     {url:'https://www.bloomberglinea.com/feed/',src:'Bloomberg Línea',dot:'ncd-purple',cat:'trib'},
     {url:'https://www.eltiempo.com/rss/economia.xml',src:'El Tiempo',dot:'ncd-blue',cat:'trib'},
     {url:'https://www.semana.com/rss/economia.xml',src:'Semana',dot:'ncd-red',cat:'trib'},
-    /* Inteligencia Artificial */
-    {url:'https://feeds.feedburner.com/venturebeat/SZYF',src:'VentureBeat AI',dot:'ncd-ai',cat:'ia'},
-    {url:'https://techcrunch.com/category/artificial-intelligence/feed/',src:'TechCrunch AI',dot:'ncd-ai',cat:'ia'},
-    {url:'https://www.wired.com/feed/tag/ai/latest/rss',src:'Wired AI',dot:'ncd-ai',cat:'ia'},
-    {url:'https://openai.com/blog/rss.xml',src:'OpenAI',dot:'ncd-ai',cat:'ia'},
+    /* Inteligencia Artificial (en español) */
+    {url:'https://hipertextual.com/categoria/tecnologia/inteligencia-artificial/feed',src:'Hipertextual',dot:'ncd-ai',cat:'ia'},
+    {url:'https://wwwhatsnew.com/category/inteligencia-artificial/feed/',src:'WWWhat\'s New',dot:'ncd-ai',cat:'ia'},
+    {url:'https://www.xataka.com/tag/inteligencia-artificial/feed',src:'Xataka',dot:'ncd-ai',cat:'ia'},
   ];
   let allTrib=[], allIA=[];
   try{
@@ -607,10 +620,10 @@ async function cargarNoticias(){
     allTrib=diversificar(allTrib);
     allIA=diversificar(allIA);
 
-    /* Combinar: 4 tributarias + 2 IA (o ajustar si faltan) */
+    /* Combinar: 5 tributarias + 1 IA */
     let show=[];
-    const nTrib=Math.min(allTrib.length, allIA.length>=2 ? 4 : 6);
-    const nIA=Math.min(allIA.length, 6-nTrib);
+    const nTrib=Math.min(allTrib.length, allIA.length>=1 ? 5 : 6);
+    const nIA=Math.min(allIA.length, 1);
     show=show.concat(allTrib.slice(0,nTrib));
     show=show.concat(allIA.slice(0,nIA));
 
