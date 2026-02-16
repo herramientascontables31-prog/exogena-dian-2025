@@ -188,6 +188,258 @@ CUENTAS_IMPUESTOS_DIAN = ["2365", "2367", "2404", "2408", "2412"]
 # Los pagos de seguridad social deben coincidir con la planilla PILA
 CONCEPTOS_SOLO_ENTIDADES = {"5011", "5012", "5013", "5023", "5024", "5025", "5027"}
 
+# =====================================================================
+# CORRECCIÓN 9: Empresas internacionales y códigos de país DIAN
+# =====================================================================
+PAISES_DIAN = {
+    "004": "Afganistán", "008": "Albania", "012": "Argelia", "020": "Andorra",
+    "024": "Angola", "028": "Antigua y Barbuda", "032": "Argentina",
+    "036": "Australia", "040": "Austria", "044": "Bahamas", "048": "Baréin",
+    "050": "Bangladés", "052": "Barbados", "056": "Bélgica", "060": "Bermudas",
+    "064": "Bután", "068": "Bolivia", "070": "Bosnia", "072": "Botsuana",
+    "076": "Brasil", "084": "Belice", "090": "Islas Salomón",
+    "096": "Brunéi", "100": "Bulgaria", "104": "Myanmar",
+    "108": "Burundi", "112": "Bielorrusia", "116": "Camboya",
+    "120": "Camerún", "124": "Canadá", "132": "Cabo Verde",
+    "136": "Islas Caimán", "140": "Rep. Centroafricana",
+    "144": "Sri Lanka", "148": "Chad", "152": "Chile", "156": "China",
+    "158": "Taiwán", "170": "Colombia", "174": "Comoras",
+    "178": "Congo", "180": "R.D. Congo", "188": "Costa Rica",
+    "191": "Croacia", "192": "Cuba", "196": "Chipre",
+    "203": "Rep. Checa", "208": "Dinamarca", "212": "Dominica",
+    "214": "Rep. Dominicana", "218": "Ecuador", "222": "El Salvador",
+    "226": "Guinea Ecuatorial", "231": "Etiopía", "233": "Estonia",
+    "242": "Fiyi", "246": "Finlandia", "250": "Francia",
+    "254": "Guayana Francesa", "258": "Polinesia Francesa",
+    "266": "Gabón", "268": "Georgia", "270": "Gambia",
+    "275": "Palestina", "276": "Alemania", "288": "Ghana",
+    "292": "Gibraltar", "296": "Kiribati", "300": "Grecia",
+    "308": "Granada", "316": "Guam", "320": "Guatemala",
+    "324": "Guinea", "328": "Guyana", "332": "Haití",
+    "336": "Vaticano", "340": "Honduras", "344": "Hong Kong",
+    "348": "Hungría", "352": "Islandia", "356": "India",
+    "360": "Indonesia", "364": "Irán", "368": "Iraq",
+    "372": "Irlanda", "376": "Israel", "380": "Italia",
+    "384": "Costa de Marfil", "388": "Jamaica", "392": "Japón",
+    "398": "Kazajistán", "400": "Jordania", "404": "Kenia",
+    "408": "Corea del Norte", "410": "Corea del Sur",
+    "414": "Kuwait", "417": "Kirguistán", "418": "Laos",
+    "422": "Líbano", "426": "Lesoto", "428": "Letonia",
+    "430": "Liberia", "434": "Libia", "438": "Liechtenstein",
+    "440": "Lituania", "442": "Luxemburgo", "446": "Macao",
+    "450": "Madagascar", "454": "Malaui", "458": "Malasia",
+    "462": "Maldivas", "466": "Malí", "470": "Malta",
+    "478": "Mauritania", "480": "Mauricio", "484": "México",
+    "492": "Mónaco", "496": "Mongolia", "498": "Moldavia",
+    "499": "Montenegro", "504": "Marruecos", "508": "Mozambique",
+    "512": "Omán", "516": "Namibia", "520": "Nauru",
+    "524": "Nepal", "528": "Países Bajos", "531": "Curazao",
+    "533": "Aruba", "540": "Nueva Caledonia", "548": "Vanuatu",
+    "554": "Nueva Zelanda", "558": "Nicaragua", "562": "Níger",
+    "566": "Nigeria", "578": "Noruega", "583": "Micronesia",
+    "585": "Palaos", "586": "Pakistán", "591": "Panamá",
+    "598": "Papúa N. Guinea", "600": "Paraguay", "604": "Perú",
+    "608": "Filipinas", "616": "Polonia", "620": "Portugal",
+    "624": "Guinea-Bisáu", "626": "Timor Oriental",
+    "630": "Puerto Rico", "634": "Catar", "642": "Rumanía",
+    "643": "Rusia", "646": "Ruanda", "659": "San Cristóbal y Nieves",
+    "662": "Santa Lucía", "670": "San Vicente", "674": "San Marino",
+    "678": "Santo Tomé", "682": "Arabia Saudita", "686": "Senegal",
+    "688": "Serbia", "690": "Seychelles", "694": "Sierra Leona",
+    "702": "Singapur", "703": "Eslovaquia", "704": "Vietnam",
+    "705": "Eslovenia", "706": "Somalia", "710": "Sudáfrica",
+    "716": "Zimbabue", "724": "España", "728": "Sudán del Sur",
+    "729": "Sudán", "740": "Surinam", "748": "Suazilandia",
+    "752": "Suecia", "756": "Suiza", "760": "Siria",
+    "762": "Tayikistán", "764": "Tailandia", "768": "Togo",
+    "776": "Tonga", "780": "Trinidad y Tobago", "784": "Emiratos Árabes",
+    "788": "Túnez", "792": "Turquía", "795": "Turkmenistán",
+    "798": "Tuvalu", "800": "Uganda", "804": "Ucrania",
+    "807": "Macedonia del Norte", "818": "Egipto",
+    "826": "Reino Unido", "834": "Tanzania",
+    "840": "Estados Unidos", "854": "Burkina Faso",
+    "858": "Uruguay", "860": "Uzbekistán", "862": "Venezuela",
+    "876": "Wallis y Futuna", "882": "Samoa", "887": "Yemen",
+    "894": "Zambia",
+}
+
+# Empresas internacionales frecuentes en exógena colombiana
+# NIT → (Razón Social, Código País DIAN, Tipo Doc)
+EMPRESAS_INTERNACIONALES = {
+    # === TECNOLOGÍA / INTERNET — Estados Unidos (840) ===
+    "900404161": ("GOOGLE COLOMBIA S.A.S", "170", "31"),      # Google CO tiene NIT local
+    "900408067": ("GOOGLE CLOUD COLOMBIA S.A.S", "170", "31"),
+    "444444001": ("GOOGLE LLC", "840", "43"),
+    "444444002": ("GOOGLE IRELAND LIMITED", "372", "43"),
+    "444444003": ("ALPHABET INC", "840", "43"),
+    "444444004": ("META PLATFORMS INC", "840", "43"),
+    "444444005": ("META PLATFORMS IRELAND LIMITED", "372", "43"),
+    "444444006": ("FACEBOOK INC", "840", "43"),
+    "444444007": ("AMAZON.COM INC", "840", "43"),
+    "444444008": ("AMAZON WEB SERVICES INC", "840", "43"),
+    "444444009": ("MICROSOFT CORPORATION", "840", "43"),
+    "444444010": ("MICROSOFT IRELAND OPERATIONS LTD", "372", "43"),
+    "444444011": ("APPLE INC", "840", "43"),
+    "444444012": ("NETFLIX INC", "840", "43"),
+    "444444013": ("NETFLIX INTERNATIONAL B.V.", "528", "43"),
+    "444444014": ("SPOTIFY AB", "752", "43"),
+    "444444015": ("SPOTIFY TECHNOLOGY S.A.", "442", "43"),
+    "444444016": ("ADOBE INC", "840", "43"),
+    "444444017": ("ADOBE SYSTEMS SOFTWARE IRELAND LTD", "372", "43"),
+    "444444018": ("UBER TECHNOLOGIES INC", "840", "43"),
+    "444444019": ("UBER B.V.", "528", "43"),
+    "444444020": ("SALESFORCE INC", "840", "43"),
+    "444444021": ("ORACLE CORPORATION", "840", "43"),
+    "444444022": ("SAP SE", "276", "43"),
+    "444444023": ("ZOOM VIDEO COMMUNICATIONS INC", "840", "43"),
+    "444444024": ("SLACK TECHNOLOGIES INC", "840", "43"),
+    "444444025": ("DROPBOX INC", "840", "43"),
+    "444444026": ("ATLASSIAN CORPORATION PLC", "840", "43"),
+    "444444027": ("TWILIO INC", "840", "43"),
+    "444444028": ("STRIPE INC", "840", "43"),
+    "444444029": ("OPENAI LP", "840", "43"),
+    "444444030": ("ANTHROPIC PBC", "840", "43"),
+    "444444031": ("TIKTOK LTD", "156", "43"),
+    "444444032": ("BYTEDANCE LTD", "156", "43"),
+    "444444033": ("LINKEDIN CORPORATION", "840", "43"),
+    "444444034": ("GITHUB INC", "840", "43"),
+    "444444035": ("CANVA PTY LTD", "036", "43"),
+    "444444036": ("NOTION LABS INC", "840", "43"),
+    "444444037": ("SHOPIFY INC", "124", "43"),
+    "444444038": ("HUBSPOT INC", "840", "43"),
+    "444444039": ("MAILCHIMP (INTUIT INC)", "840", "43"),
+    "444444040": ("CLOUDFLARE INC", "840", "43"),
+    "444444041": ("GODADDY INC", "840", "43"),
+    "444444042": ("WOOCOMMERCE (AUTOMATTIC INC)", "840", "43"),
+    "444444043": ("PAYPAL HOLDINGS INC", "840", "43"),
+    "444444044": ("EBAY INC", "840", "43"),
+    "444444045": ("X CORP (TWITTER)", "840", "43"),
+    "444444046": ("AIRBNB INC", "840", "43"),
+    "444444047": ("BOOKING HOLDINGS INC", "840", "43"),
+    "444444048": ("EXPEDIA GROUP INC", "840", "43"),
+    # === FINANZAS ===
+    "444444050": ("VISA INC", "840", "43"),
+    "444444051": ("MASTERCARD INTERNATIONAL", "840", "43"),
+    "444444052": ("WESTERN UNION COMPANY", "840", "43"),
+    "444444053": ("MONEYGRAM INTERNATIONAL", "840", "43"),
+    "444444054": ("WISE (TRANSFERWISE LTD)", "826", "43"),
+    # === LOGÍSTICA / ENVÍOS ===
+    "444444060": ("DHL EXPRESS", "276", "43"),
+    "444444061": ("FEDEX CORPORATION", "840", "43"),
+    "444444062": ("UNITED PARCEL SERVICE (UPS)", "840", "43"),
+    "444444063": ("MAERSK LINE", "208", "43"),
+    # === AEROLÍNEAS EXTRANJERAS ===
+    "444444070": ("AMERICAN AIRLINES INC", "840", "43"),
+    "444444071": ("DELTA AIR LINES INC", "840", "43"),
+    "444444072": ("UNITED AIRLINES INC", "840", "43"),
+    "444444073": ("COPA AIRLINES (COMPANIA PANAMENA DE AVIACION)", "591", "43"),
+    "444444074": ("IBERIA LINEAS AEREAS DE ESPANA", "724", "43"),
+    "444444075": ("AIR FRANCE", "250", "43"),
+    "444444076": ("KLM ROYAL DUTCH AIRLINES", "528", "43"),
+    "444444077": ("LUFTHANSA AG", "276", "43"),
+    "444444078": ("TURKISH AIRLINES", "792", "43"),
+    "444444079": ("EMIRATES AIRLINE", "784", "43"),
+    # === ALIMENTOS / CONSUMO ===
+    "444444080": ("COCA-COLA COMPANY", "840", "43"),
+    "444444081": ("PEPSICO INC", "840", "43"),
+    "444444082": ("NESTLE S.A.", "756", "43"),
+    "444444083": ("PROCTER & GAMBLE CO", "840", "43"),
+    "444444084": ("UNILEVER N.V.", "528", "43"),
+    "444444085": ("JOHNSON & JOHNSON", "840", "43"),
+    # === AUTOMOTRIZ ===
+    "444444090": ("TOYOTA MOTOR CORPORATION", "392", "43"),
+    "444444091": ("HYUNDAI MOTOR COMPANY", "410", "43"),
+    "444444092": ("KIA CORPORATION", "410", "43"),
+    "444444093": ("BMW AG", "276", "43"),
+    "444444094": ("MERCEDES-BENZ GROUP AG", "276", "43"),
+    "444444095": ("VOLKSWAGEN AG", "276", "43"),
+    # === ENERGÍA / PETRÓLEO ===
+    "444444100": ("EXXONMOBIL CORPORATION", "840", "43"),
+    "444444101": ("CHEVRON CORPORATION", "840", "43"),
+    "444444102": ("SHELL PLC", "826", "43"),
+    "444444103": ("BP PLC", "826", "43"),
+    "444444104": ("TOTALENERGIES SE", "250", "43"),
+    # === CHINA / ASIA ===
+    "444444110": ("ALIBABA GROUP HOLDING LTD", "156", "43"),
+    "444444111": ("HUAWEI TECHNOLOGIES CO LTD", "156", "43"),
+    "444444112": ("SAMSUNG ELECTRONICS CO LTD", "410", "43"),
+    "444444113": ("LG ELECTRONICS INC", "410", "43"),
+    "444444114": ("XIAOMI CORPORATION", "156", "43"),
+    "444444115": ("TEMU (PDD HOLDINGS INC)", "156", "43"),
+    "444444116": ("SHEIN GROUP LTD", "156", "43"),
+    "444444117": ("ALIEXPRESS (ALIBABA)", "156", "43"),
+}
+
+# Keywords en nombres → código de país (para auto-detección)
+KEYWORDS_PAIS = {
+    # Sufijos corporativos por país
+    "LLC": "840", "INC": "840", "CORP": "840", "CORPORATION": "840",
+    "LP": "840", "PBC": "840",
+    "LTD": "826", "LIMITED": "826", "PLC": "826",
+    "GMBH": "276", "AG": "276",
+    "S.A.": "840",  # genérico, se refina abajo
+    "B.V.": "528", "N.V.": "528",
+    "AB": "752",  # Suecia
+    "S.R.L.": "380",  # Italia
+    "S.P.A.": "380",
+    "PTY LTD": "036",  # Australia
+    "S.E.": "250",  # Francia
+    "A.S.": "208",  # Dinamarca/Noruega
+
+    # Nombres de empresas conocidas (parciales)
+    "GOOGLE": "840", "META PLATFORMS": "840", "FACEBOOK": "840",
+    "AMAZON": "840", "MICROSOFT": "840", "APPLE": "840",
+    "NETFLIX": "840", "SPOTIFY": "752", "ADOBE": "840",
+    "UBER": "840", "SALESFORCE": "840", "ORACLE": "840",
+    "SAP": "276", "ZOOM": "840", "SLACK": "840",
+    "DROPBOX": "840", "STRIPE": "840", "PAYPAL": "840",
+    "TIKTOK": "156", "BYTEDANCE": "156", "ALIBABA": "156",
+    "HUAWEI": "156", "SAMSUNG": "410", "LG ELECTR": "410",
+    "XIAOMI": "156", "TEMU": "156", "SHEIN": "156",
+    "ALIEXPRESS": "156", "DHL": "276", "FEDEX": "840",
+    "UPS": "840", "MAERSK": "208",
+    "VISA": "840", "MASTERCARD": "840", "WESTERN UNION": "840",
+    "AIRBNB": "840", "BOOKING": "840", "EXPEDIA": "840",
+    "TOYOTA": "392", "HYUNDAI": "410", "KIA": "410",
+    "BMW": "276", "MERCEDES": "276", "VOLKSWAGEN": "276",
+    "COCA-COLA": "840", "COCA COLA": "840",
+    "PEPSI": "840", "NESTLE": "756",
+    "PROCTER": "840", "UNILEVER": "528",
+    "EXXON": "840", "CHEVRON": "840", "SHELL": "826",
+    "TWITTER": "840", "LINKEDIN": "840", "GITHUB": "840",
+    "CANVA": "036", "SHOPIFY": "124",
+    "OPENAI": "840", "ANTHROPIC": "840", "CHATGPT": "840",
+    "WHATSAPP": "840", "INSTAGRAM": "840", "YOUTUBE": "840",
+    "NVIDIA": "840", "AMD": "840", "INTEL": "840",
+    "CISCO": "840", "IBM": "840", "HP ": "840",
+    "DELL": "840", "LENOVO": "156",
+    "EMIRATES": "784", "TURKISH": "792",
+    "LUFTHANSA": "276", "AIR FRANCE": "250",
+    "COPA AIRLINES": "591", "AMERICAN AIRLINES": "840",
+    "DELTA AIR": "840", "UNITED AIRLINES": "840",
+    "IBERIA": "724", "KLM": "528",
+}
+
+def es_tipo_doc_extranjero(td):
+    """Tipos de documento que indican tercero del exterior."""
+    return td in ("42", "43", "44", "50", "41")
+
+def detectar_pais_por_nombre(nombre):
+    """Intenta detectar el país de una empresa por su nombre.
+    Retorna código DIAN o None si no detecta."""
+    if not nombre:
+        return None
+    nombre_up = nombre.upper().strip()
+    # Primero buscar keywords específicos (nombres de empresas)
+    for keyword, pais in KEYWORDS_PAIS.items():
+        if keyword in nombre_up:
+            return pais
+    return None
+
+def es_nit_internacional_conocido(nit):
+    """Verifica si un NIT está en la lista de empresas internacionales."""
+    return nit in EMPRESAS_INTERNACIONALES
+
 # === FUNCIONES CORE ===
 def calc_dv(n):
     n = str(n).replace(".", "").replace("-", "").strip()
@@ -938,7 +1190,36 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
             d = {'td': td, 'dv': dv,
                  'a1': '', 'a2': '', 'n1': '', 'n2': '',
                  'rs': '', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
-            if td == "13":
+
+            # ===============================================================
+            # CORRECCIÓN 9: Manejo de empresas internacionales
+            # ===============================================================
+            # Verificar si es empresa internacional conocida
+            if f['nit'] in EMPRESAS_INTERNACIONALES:
+                emp = EMPRESAS_INTERNACIONALES[f['nit']]
+                d['rs'] = emp[0]  # Razón social
+                d['pais'] = emp[1]  # Código país
+                d['td'] = emp[2]   # Tipo doc
+                td = d['td']
+                d['a1'] = d['a2'] = d['n1'] = d['n2'] = ''
+                d['dir'] = ''
+                d['dp'] = ''
+                d['mp'] = ''
+            elif es_tipo_doc_extranjero(td):
+                # Tercero extranjero: todo va en razón social
+                d['rs'] = r
+                d['a1'] = d['a2'] = d['n1'] = d['n2'] = ''
+                # País no puede ser Colombia para extranjeros
+                pais_detectado = detectar_pais_por_nombre(r)
+                if pais_detectado:
+                    d['pais'] = pais_detectado
+                else:
+                    d['pais'] = '840'  # Default: Estados Unidos si no detecta
+                # Sin dirección/dpto/mpio colombiano
+                d['dir'] = ''
+                d['dp'] = ''
+                d['mp'] = ''
+            elif td == "13":
                 p = r.split()
                 if len(p) >= 1: d['a1'] = p[0]
                 if len(p) >= 2: d['a2'] = p[1]
@@ -946,6 +1227,15 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
                 if len(p) >= 4: d['n2'] = ' '.join(p[3:])
             else:
                 d['rs'] = r
+                # Verificar si parece internacional por el nombre
+                pais_nombre = detectar_pais_por_nombre(r)
+                if pais_nombre and pais_nombre != '170':
+                    d['pais'] = pais_nombre
+                    d['td'] = '43'
+                    d['a1'] = d['a2'] = d['n1'] = d['n2'] = ''
+                    d['dir'] = ''
+                    d['dp'] = ''
+                    d['mp'] = ''
 
             if f['nit'] in dir_central:
                 dc = dir_central[f['nit']]
@@ -955,7 +1245,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
                 if dc.get('pais'): d['pais'] = dc['pais']
                 if dc.get('td'): d['td'] = dc['td']
                 if dc.get('dv'): d['dv'] = dc['dv']
-                if dc.get('razon') and not d['rs'] and td != "13": d['rs'] = dc['razon']
+                if dc.get('razon') and not d['rs'] and d['td'] != "13": d['rs'] = dc['razon']
 
             if f['nit'] in dir_externo:
                 ext = dir_externo[f['nit']]
@@ -963,6 +1253,11 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
                 if ext['dp']: d['dp'] = pad_dpto(ext['dp'])
                 if ext['mp']: d['mp'] = pad_mpio(ext['mp'])
                 if ext.get('pais'): d['pais'] = ext['pais']
+
+            # Última verificación: si td es extranjero, pais NO puede ser Colombia
+            if es_tipo_doc_extranjero(d['td']) and d['pais'] == '170':
+                pais_por_nombre = detectar_pais_por_nombre(d['rs'])
+                d['pais'] = pais_por_nombre if pais_por_nombre else '840'
 
             if d['dir'] and f['nit'] not in dir_central and f['nit'] != NM:
                 nits_nuevos[f['nit']] = {
@@ -974,7 +1269,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
             direc[f['nit']] = d
 
     direc[NM] = {'td': TDM, 'dv': '', 'a1': '', 'a2': '', 'n1': '', 'n2': '',
-                 'rs': 'CUANTIAS MENORES', 'dir': '', 'dp': '', 'mp': '', 'pais': '169'}
+                 'rs': 'CUANTIAS MENORES', 'dir': '', 'dp': '', 'mp': '', 'pais': '840'}
 
     def t(nit):
         return direc.get(nit, {'td': detectar_tipo_doc(nit), 'dv': calc_dv(nit),
