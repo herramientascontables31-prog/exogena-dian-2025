@@ -2651,4 +2651,3 @@ else:
 
     **Formatos manuales:** F1004, F1011, F1647 requieren datos adicionales no incluidos en el balance.
     """)
-
