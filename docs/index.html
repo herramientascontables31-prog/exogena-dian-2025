@@ -47,6 +47,12 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .btn-sm{padding:8px 16px;font-size:.82rem;border-radius:10px}
 .btn-outline-green{background:transparent;color:var(--green-700);border:1.5px solid var(--green-300)}
 .btn-outline-green:hover{background:var(--green-50)}
+.hamburger{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:8px;color:var(--gray-700)}
+@media(max-width:900px){
+  .hamburger{display:block}
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:var(--white);padding:16px 20px;flex-direction:column;gap:12px;border-top:1px solid var(--gray-200);box-shadow:0 8px 20px rgba(0,0,0,.08)}
+  .nav-links.open{display:flex}
+}
 
 /* ===== HERO ===== */
 .hero{min-height:auto;display:flex;align-items:center;padding:110px 48px 60px;position:relative;background:linear-gradient(170deg,var(--white) 0%,var(--green-50) 40%,var(--mint) 100%);overflow:hidden}
@@ -153,6 +159,30 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .price-list li.hl{color:var(--green-300);font-weight:600}
 .wompi-btn-container{margin-top:auto}
 .wompi-btn-container form{width:100%}
+.wompi-btn-container form button,
+.wompi-btn-container button,
+.wompi-btn-container .waybox-button,
+.wompi-btn-container [class*="wompi"]{
+  width:100%!important;padding:14px 24px!important;border-radius:12px!important;
+  font-family:'Outfit',sans-serif!important;font-weight:700!important;font-size:1rem!important;
+  background:linear-gradient(135deg,var(--green-400),var(--green-300))!important;
+  color:var(--green-900)!important;border:none!important;cursor:pointer!important;
+  transition:all .25s!important;box-shadow:0 4px 14px rgba(52,211,153,.3)!important;
+  letter-spacing:.02em!important;
+}
+.wompi-btn-container form button:hover,
+.wompi-btn-container button:hover,
+.wompi-btn-container .waybox-button:hover{
+  transform:translateY(-2px)!important;
+  box-shadow:0 8px 24px rgba(52,211,153,.4)!important;
+}
+/* Fallback: si Wompi no carga, mostrar botón alternativo */
+.wompi-fallback{display:none;width:100%;padding:14px 24px;border-radius:12px;
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;
+  background:linear-gradient(135deg,var(--green-400),var(--green-300));
+  color:var(--green-900);border:none;cursor:pointer;text-align:center;
+  transition:all .25s;box-shadow:0 4px 14px rgba(52,211,153,.3);text-decoration:none}
+.wompi-fallback:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(52,211,153,.4)}
 .price-foot{text-align:center;margin-top:36px;position:relative;z-index:1}
 .price-trust{color:rgba(255,255,255,.35);font-size:.82rem;margin-bottom:14px}
 .price-trust span{color:rgba(255,255,255,.55)}
@@ -213,7 +243,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 
 /* ===== RESPONSIVE ===== */
 @media(max-width:900px){
-  nav{padding:12px 20px}.nav-links{display:none}
+  nav{padding:12px 20px}
   .hero{padding:90px 20px 40px}.hero-inner{grid-template-columns:1fr;gap:28px}.hero-stats{gap:20px}
   .tools{padding:50px 20px}.tools-grid{grid-template-columns:1fr}
   .exogena{padding:50px 20px}.exo-grid{grid-template-columns:1fr;gap:32px}
@@ -234,13 +264,14 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
     <div class="logo-mark">E</div>
     <div>ExógenaDIAN<small>Portal Contable</small></div>
   </a>
-  <div class="nav-links">
+  <div class="nav-links" id="navLinks">
     <a href="#herramientas">Herramientas</a>
     <a href="#exogena">Exógena</a>
     <a href="#noticias">Noticias</a>
     <a href="#planes">Planes</a>
-    <a href="#planes" class="btn btn-green">Contratar →</a>
+    <a href="#planes" class="btn btn-green btn-sm">Contratar →</a>
   </div>
+  <button class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
 </nav>
 
 <!-- ===== HERO ===== -->
@@ -256,7 +287,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><strong>10</strong><span>Formatos exógena</span></div>
-        <div class="hero-stat"><strong>4</strong><span>Herramientas gratis</span></div>
+        <div class="hero-stat"><strong>2</strong><span>Herramientas gratis</span></div>
         <div class="hero-stat"><strong>24h</strong><span>Tiempo de entrega</span></div>
       </div>
     </div>
@@ -278,12 +309,12 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
         </div>
         <div class="tool-mini" style="animation:float 5s 1.6s ease-in-out infinite">
           <div class="tool-mini-icon tmi-amber">📋</div>
-          <h4>Declaración de IVA <span class="badge-free">Gratis</span></h4>
+          <h4>Declaración de IVA <span class="badge-soon">Pronto</span></h4>
           <p>Formulario 300 bimestral</p>
         </div>
         <div class="tool-mini" style="animation:float 5s 2.4s ease-in-out infinite">
           <div class="tool-mini-icon tmi-purple">📑</div>
-          <h4>Declaración de Renta <span class="badge-free">Gratis</span></h4>
+          <h4>Declaración de Renta <span class="badge-soon">Pronto</span></h4>
           <p>F110 jurídicas · F210 naturales</p>
         </div>
         <div class="tool-mini" style="animation:float 5s 3.2s ease-in-out infinite">
@@ -309,47 +340,47 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 
   <div class="tools-grid">
     <!-- EXOGENA -->
-    <div class="tool-card featured">
+    <a href="#planes" class="tool-card featured" style="text-decoration:none;color:inherit">
       <div class="tool-icon tmi-green">📊</div>
       <h3>Información Exógena + XML</h3>
       <p class="tool-desc">Genera los 10 formatos de exógena desde tu balance de prueba. Incluye prevalidador y generador XML para el MUISCA.</p>
       <div class="tool-status ts-live">Disponible ahora</div>
-    </div>
+    </a>
     <!-- RETENCION -->
-    <div class="tool-card">
+    <a href="retencion350.html" class="tool-card" style="text-decoration:none;color:inherit">
       <div class="tool-icon tmi-blue">🧮</div>
       <h3>Retención en la Fuente</h3>
       <p class="tool-desc">Calculadora del formulario 350. Ingresa bases por concepto y obtén la declaración lista con totales y sanciones.</p>
       <div class="tool-status ts-free">Gratis · Disponible</div>
-    </div>
+    </a>
     <!-- IVA -->
-    <div class="tool-card">
+    <div class="tool-card" style="opacity:0.7">
       <div class="tool-icon tmi-amber">📋</div>
       <h3>Declaración de IVA</h3>
       <p class="tool-desc">Calculadora del formulario 300. IVA generado, descontable, retenciones que le practicaron y saldo a pagar/favor.</p>
-      <div class="tool-status ts-free">Gratis · Disponible</div>
+      <div class="tool-status ts-soon">Próximamente</div>
     </div>
     <!-- RENTA -->
-    <div class="tool-card">
+    <div class="tool-card" style="opacity:0.7">
       <div class="tool-icon tmi-purple">📑</div>
       <h3>Declaración de Renta</h3>
       <p class="tool-desc">Formulario 110 (jurídicas) y 210 (naturales). Depuración por cédulas, límites, descuentos y anticipo de renta.</p>
-      <div class="tool-status ts-free">Gratis · Disponible</div>
+      <div class="tool-status ts-soon">Próximamente</div>
     </div>
     <!-- ESTADOS FINANCIEROS -->
-    <div class="tool-card">
+    <div class="tool-card" style="opacity:0.7">
       <div class="tool-icon tmi-rose">📄</div>
       <h3>Estados Financieros NIIF</h3>
       <p class="tool-desc">Genera estados de situación financiera, resultados, cambios en patrimonio. Con notas revelatorias y políticas contables.</p>
       <div class="tool-status ts-soon">Próximamente</div>
     </div>
     <!-- CONCILIACION BANCARIA -->
-    <div class="tool-card" onclick="window.location='conciliacion.html'" style="cursor:pointer">
+    <a href="conciliacion.html" class="tool-card" style="text-decoration:none;color:inherit">
       <div class="tool-icon tmi-cyan">🏦</div>
       <h3>Conciliación Bancaria</h3>
       <p class="tool-desc">Sube el extracto bancario y el libro auxiliar. Cruza automáticamente partidas e identifica diferencias. Gratis hasta 50 filas.</p>
       <div class="tool-status ts-free">Gratis · Disponible</div>
-    </div>
+    </a>
   </div>
 </section>
 
@@ -433,6 +464,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       </ul>
       <div class="wompi-btn-container">
         <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_test_ocKLD2EUwi1h0QHmcOCkXJc2p41i5hgN" data-currency="COP" data-amount-in-cents="11000000" data-reference="EXOGENA-IND-001" data-redirect-url="https://exogenadian.com/gracias.html"></script>
+        <a href="https://wa.me/573156178610?text=Hola%2C%20quiero%20contratar%20el%20plan%20Individual%20de%20Ex%C3%B3gena%20DIAN" target="_blank" class="wompi-fallback" id="fallback-ind">Contratar por WhatsApp →</a>
       </div>
     </div>
     <div class="price-card pop" style="position:relative">
@@ -451,6 +483,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       </ul>
       <div class="wompi-btn-container">
         <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_test_ocKLD2EUwi1h0QHmcOCkXJc2p41i5hgN" data-currency="COP" data-amount-in-cents="20500000" data-reference="EXOGENA-CONT-001" data-redirect-url="https://exogenadian.com/gracias.html"></script>
+        <a href="https://wa.me/573156178610?text=Hola%2C%20quiero%20contratar%20el%20plan%20Contador%20(3%20Ex%C3%B3genas)%20de%20Ex%C3%B3gena%20DIAN" target="_blank" class="wompi-fallback" id="fallback-cont">Contratar por WhatsApp →</a>
       </div>
     </div>
     <div class="price-card">
@@ -468,6 +501,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       </ul>
       <div class="wompi-btn-container">
         <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_test_ocKLD2EUwi1h0QHmcOCkXJc2p41i5hgN" data-currency="COP" data-amount-in-cents="55000000" data-reference="EXOGENA-FIRMA-001" data-redirect-url="https://exogenadian.com/gracias.html"></script>
+        <a href="https://wa.me/573156178610?text=Hola%2C%20quiero%20contratar%20el%20plan%20Firma%20Contable%20(10%20Ex%C3%B3genas)%20de%20Ex%C3%B3gena%20DIAN" target="_blank" class="wompi-fallback" id="fallback-firma">Contratar por WhatsApp →</a>
       </div>
     </div>
   </div>
@@ -537,11 +571,15 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       </div>
       <div class="footer-col">
         <h5>Gratis</h5>
-        <a href="#herramientas">Retención en la Fuente</a>
-        <a href="#herramientas">Declaración IVA</a>
-        <a href="#herramientas">Declaración Renta</a>
+        <a href="retencion350.html">Retención en la Fuente</a>
         <a href="conciliacion.html">Conciliación Bancaria</a>
         <a href="#noticias">Noticias Tributarias</a>
+      </div>
+      <div class="footer-col">
+        <h5>Próximamente</h5>
+        <a href="#herramientas" style="opacity:.5">Declaración IVA</a>
+        <a href="#herramientas" style="opacity:.5">Declaración Renta</a>
+        <a href="#herramientas" style="opacity:.5">Estados Financieros</a>
       </div>
       <div class="footer-col">
         <h5>Contacto</h5>
@@ -557,22 +595,35 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
   </div>
 </footer>
 
-<script>
-/* === Nav scroll === */
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* === Nav scroll + mobile menu === */
 const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>20));
+document.querySelectorAll('#navLinks a').forEach(a=>a.addEventListener('click',()=>{
+  document.getElementById('navLinks').classList.remove('open');
+}));
 
 /* === Fade in observer === */
 const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:.1});
 document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
 
-/* === Wompi references === */
+/* === Wompi: referencias únicas + fallback si no carga === */
 document.addEventListener('DOMContentLoaded',function(){
   const t=Date.now(),r=Math.random().toString(36).substring(2,8).toUpperCase();
   document.querySelectorAll('script[data-reference]').forEach((s,i)=>{
     const p=['IND','CONT','FIRMA'][i]||'GEN';
     s.setAttribute('data-reference','EXOG-'+p+'-'+t+'-'+r);
   });
+  // Mostrar fallback si Wompi no renderiza botones después de 5 segundos
+  setTimeout(function(){
+    document.querySelectorAll('.wompi-btn-container').forEach(function(container){
+      const hasWompiBtn = container.querySelector('form, button, [class*="wompi"], [class*="waybox"]');
+      if(!hasWompiBtn){
+        const fallback = container.querySelector('.wompi-fallback');
+        if(fallback) fallback.style.display='block';
+      }
+    });
+  }, 5000);
 });
 
 /* === NEWS FEED === */
@@ -652,14 +703,4 @@ function tiempoRelativo(fecha){
   const diff=new Date()-fecha;
   const mins=Math.floor(diff/60000);
   const hrs=Math.floor(diff/3600000);
-  const dias=Math.floor(diff/86400000);
-  if(mins<60)return 'Hace '+mins+' min';
-  if(hrs<24)return 'Hace '+hrs+'h';
-  if(dias<7)return 'Hace '+dias+'d';
-  return fecha.toLocaleDateString('es-CO',{day:'numeric',month:'short'});
-}
-
-cargarNoticias();
-</script>
-</body>
-</html>
+  const dias=Math.floor(diff/8
