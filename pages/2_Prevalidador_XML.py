@@ -240,8 +240,8 @@ FORMATO_DEFS = {
             "a1": 4, "a2": 5, "n1": 6, "n2": 7, "rs": 8,
             "dir": 9, "dp": 10, "mp": 11, "pais": 12,
             "pago_deducible": 13, "pago_no_deducible": 14,
-            "iva_mayor_valor": 15, "retfte_practicada": 16,
-            "iva_mayor_valor_nd": 17, "retica": 18,
+            "iva_mayor_valor": 15, "iva_mayor_valor_nd": 16,
+            "retfte_practicada": 17, "retica": 18,
             "retiva_practicada": 19, "retiva_asumida": 20},
         "campos_valor": ["pago_deducible", "pago_no_deducible", "iva_mayor_valor",
                          "retfte_practicada", "iva_mayor_valor_nd", "retica",
@@ -338,18 +338,118 @@ FORMATO_DEFS = {
     },
 }
 
+# Mapeo de nombres de columna Excel → campo interno
+# Acepta variaciones comunes para ser robusto ante cambios manuales
+HEADER_ALIASES = {
+    "concepto": "concepto", "concepto dian": "concepto", "cod concepto": "concepto",
+    "tipo doc": "td", "tipo documento": "td", "tdoc": "td", "tipo id": "td",
+    "no id": "nid", "nit": "nid", "identificacion": "nid", "numero id": "nid", "no. id": "nid", "num id": "nid",
+    "dv": "dv", "digito verificacion": "dv", "dig ver": "dv",
+    "apellido1": "a1", "primer apellido": "a1", "ape1": "a1", "1er apellido": "a1",
+    "apellido2": "a2", "segundo apellido": "a2", "ape2": "a2", "2do apellido": "a2",
+    "nombre1": "n1", "primer nombre": "n1", "nom1": "n1", "1er nombre": "n1",
+    "nombre2": "n2", "segundo nombre": "n2", "nom2": "n2", "2do nombre": "n2",
+    "razon social": "rs", "razonsocial": "rs", "razon_social": "rs", "empresa": "rs",
+    "direccion": "dir", "dir": "dir", "direccion empresa": "dir",
+    "dpto": "dp", "departamento": "dp", "cod dpto": "dp", "coddpto": "dp",
+    "mpio": "mp", "municipio": "mp", "cod mpio": "mp", "codmpio": "mp",
+    "pais": "pais", "cod pais": "pais",
+    # F1001
+    "pago deducible": "pago_deducible", "pago ded": "pago_deducible",
+    "pago no deducible": "pago_no_deducible", "pago no ded": "pago_no_deducible",
+    "iva ded": "iva_mayor_valor", "iva deducible": "iva_mayor_valor", "iva mayor valor": "iva_mayor_valor",
+    "iva no ded": "iva_mayor_valor_nd", "iva no deducible": "iva_mayor_valor_nd",
+    "ret fte renta": "retfte_practicada", "retfte practicada": "retfte_practicada", "ret fte": "retfte_practicada",
+    "ret fte asumida": "retica", "retica": "retica", "retfte asumida": "retica",
+    "ret iva r.comun": "retiva_practicada", "ret iva regimen comun": "retiva_practicada", "retiva practicada": "retiva_practicada",
+    "ret iva no dom": "retiva_asumida", "retiva asumida": "retiva_asumida", "ret iva asumida": "retiva_asumida",
+    # F1003
+    "base retencion": "base_retencion", "base ret": "base_retencion",
+    "retencion acumulada": "retencion", "retencion": "retencion", "valor retencion": "retencion",
+    # F1005
+    "iva descontable": "iva_descontable", "iva desc": "iva_descontable",
+    "iva devol ventas": "_iva_devol_ventas",
+    # F1006
+    "iva generado": "iva_generado", "iva gen": "iva_generado",
+    "iva devol compras": "_iva_devol_compras", "imp consumo": "_imp_consumo",
+    # F1007
+    "ingresos brutos": "ingreso_recibido", "ingreso recibido": "ingreso_recibido", "ingresos": "ingreso_recibido",
+    "devoluciones": "devol_rebaja_desc", "devol rebaja desc": "devol_rebaja_desc",
+    # F1008
+    "saldo cxc dic31": "saldo_cxc", "saldo cxc": "saldo_cxc", "cxc dic31": "saldo_cxc",
+    # F1009
+    "saldo cxp dic31": "saldo_cxp", "saldo cxp": "saldo_cxp", "cxp dic31": "saldo_cxp",
+    # F1010
+    "valor patrimonial": "valor_patrimonial", "val patrimonial": "valor_patrimonial",
+    "pct participacion": "pct_participacion", "% participacion": "pct_participacion", "participacion": "pct_participacion",
+    "acciones": "acciones", "num acciones": "acciones",
+    # F1012
+    "saldo dic31": "saldo_dic31",
+    # F2276
+    "salarios": "salarios", "emol ecles": "emol_ecles", "honor 383": "honor_383",
+    "serv 383": "serv_383", "comis 383": "comis_383", "pensiones": "pensiones",
+    "vacaciones": "vacaciones", "cesantias int": "cesantias_int", "cesantias e int": "cesantias_int",
+    "incapacidades": "incapacidades", "otros pag lab": "otros_pag_lab",
+    "total bruto": "total_bruto", "aporte salud": "aporte_salud",
+    "aporte pension": "aporte_pension", "sol pensional": "sol_pensional",
+    "vol empleador": "vol_empleador", "vol trabajador": "vol_trabajador",
+    "afc": "afc", "retfte": "retfte", "total pagos": "total_pagos",
+}
+
+def normalizar_header(h):
+    """Normaliza un header de Excel para buscar en HEADER_ALIASES."""
+    import unicodedata
+    h = str(h).strip().lower()
+    h = unicodedata.normalize('NFKD', h).encode('ascii', 'ignore').decode()
+    h = re.sub(r'[^a-z0-9\s%.]', ' ', h)
+    h = re.sub(r'\s+', ' ', h).strip()
+    return h
+
+def mapear_columnas(headers_excel, campos_formato):
+    """Mapea headers del Excel a los campos internos del formato.
+    Retorna dict {campo_interno: indice_columna} o None si falla."""
+    mapping = {}
+    campos_necesarios = set(campos_formato.keys())
+
+    for col_idx, header_raw in enumerate(headers_excel):
+        h_norm = normalizar_header(header_raw)
+        campo = HEADER_ALIASES.get(h_norm)
+        if campo and campo in campos_necesarios and campo not in mapping:
+            mapping[campo] = col_idx
+
+    # Verificar que se mapearon los campos esenciales (nid es obligatorio)
+    if "nid" not in mapping:
+        return None
+    return mapping
+
 def leer_excel(uploaded_file):
     xls = pd.ExcelFile(uploaded_file)
     formatos = {}
     for nombre_hoja in xls.sheet_names:
         if nombre_hoja not in FORMATO_DEFS: continue
         fdef = FORMATO_DEFS[nombre_hoja]
-        df = pd.read_excel(uploaded_file, sheet_name=nombre_hoja, header=None, skiprows=1)
+
+        # Leer con headers para mapeo inteligente
+        df_head = pd.read_excel(uploaded_file, sheet_name=nombre_hoja, header=0, nrows=0)
+        headers_excel = list(df_head.columns)
+
+        # Intentar mapeo por nombre de columna
+        col_mapping = mapear_columnas(headers_excel, fdef["cols"])
+
+        if col_mapping:
+            # Lectura basada en headers (robusta)
+            df = pd.read_excel(uploaded_file, sheet_name=nombre_hoja, header=0)
+        else:
+            # Fallback: lectura por posicion (compatibilidad)
+            df = pd.read_excel(uploaded_file, sheet_name=nombre_hoja, header=None, skiprows=1)
+            col_mapping = fdef["cols"]
+
         if df.empty: continue
         registros = []
         for idx, row in df.iterrows():
             reg = {}
-            for campo, col_idx in fdef["cols"].items():
+            for campo, col_idx in col_mapping.items():
+                if campo.startswith("_"): continue  # Campos auxiliares ignorados
                 if col_idx < len(row):
                     val = safe_str(row.iloc[col_idx])
                     if val.endswith('.0') and campo not in fdef.get("campos_valor", []):
@@ -363,6 +463,10 @@ def leer_excel(uploaded_file):
                         val = val.split('.')[0] if '.' in val else val
                     reg[campo] = val
                 else:
+                    reg[campo] = ""
+            # Asegurar que todos los campos del formato existan
+            for campo in fdef["cols"]:
+                if campo not in reg:
                     reg[campo] = ""
             reg["_fila"] = idx + 2
             registros.append(reg)
@@ -505,6 +609,17 @@ def resumen_validacion(formatos):
         }
     return resultados
 
+def nombre_xml_dian(concepto, formato, version, ano, num_envio):
+    """Genera el nombre del archivo XML con la convención DIAN:
+    Dmuisca_CCFFFFFVVYYYYNNNNNNNN.xml
+    CC=CodCpt, FFFFF=Formato, VV=Version, YYYY=Año, NNNNNNNN=NumEnvio
+    """
+    cc = str(concepto).zfill(2)
+    fff = str(formato).zfill(5)
+    vv = str(version).zfill(2)
+    nn = str(num_envio).zfill(8)
+    return "Dmuisca_" + cc + fff + vv + ano + nn + ".xml"
+
 def generar_xml_formato(nombre_hoja, datos, info_declarante, num_envio):
     fdef = datos["def"]
     registros = datos["registros"]
@@ -517,9 +632,10 @@ def generar_xml_formato(nombre_hoja, datos, info_declarante, num_envio):
         registros_limpios.append(r_limpio)
 
     root = Element("mas")
-    root.set("xmlns", "http://www.dian.gov.co/muisca/mas")
+    root.set("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
+    root.set("xsi:noNamespaceSchemaLocation", "../xsd/" + fdef["formato"] + ".xsd")
 
-    # --- Cabecera: asegurar que no haya campos vacíos ---
+    # --- Cabecera DIAN estándar ---
     cab = SubElement(root, "Cab")
     td_decl = info_declarante.get("td", "31")
     nit_decl = info_declarante.get("nit", "")
@@ -527,24 +643,25 @@ def generar_xml_formato(nombre_hoja, datos, info_declarante, num_envio):
     if not dv_decl and nit_decl:
         dv_decl = calc_dv(nit_decl)
 
+    # Calcular valor total (suma de primer campo_valor)
+    valor_total = 0
+    if fdef["campos_valor"]:
+        primer_campo_valor = fdef["campos_valor"][0]
+        for reg in registros_limpios:
+            try: valor_total += int(float(reg.get(primer_campo_valor, 0)))
+            except: pass
+
     campos_cab = [
-        ("CodCpt", fdef["concepto_global"]), ("Formato", fdef["formato"]),
-        ("Version", fdef["version"]), ("AnoGrav", ANO_GRAVABLE),
-        ("NumEnvio", str(num_envio).zfill(5)),
-        ("FecEnvio", datetime.now().strftime("%Y-%m-%d")),
-        ("FecIni", ANO_GRAVABLE + "-01-01"), ("FecFin", ANO_GRAVABLE + "-12-31"),
-        ("NumReg", str(len(registros_limpios))),
-        ("TipoDoc", td_decl),
-        ("NumNit", nit_decl),
-        ("DV", dv_decl),
-        ("Ape1", info_declarante.get("a1", "")),
-        ("Ape2", info_declarante.get("a2", "")),
-        ("Nom1", info_declarante.get("n1", "")),
-        ("Nom2", info_declarante.get("n2", "")),
-        ("RazonSocial", info_declarante.get("rs", "")),
-        ("Direccion", info_declarante.get("dir", "")),
-        ("CodDpto", info_declarante.get("dp", "")),
-        ("CodMpio", info_declarante.get("mp", "")),
+        ("Ano", ANO_GRAVABLE),
+        ("CodCpt", fdef["concepto_global"]),
+        ("Formato", fdef["formato"]),
+        ("Version", fdef["version"]),
+        ("NumEnvio", str(num_envio)),
+        ("FecEnvio", datetime.now().strftime("%Y-%m-%dT%H:%M:%S")),
+        ("FecInicial", ANO_GRAVABLE + "-01-01"),
+        ("FecFinal", ANO_GRAVABLE + "-12-31"),
+        ("ValorTotal", str(valor_total)),
+        ("CantReg", str(len(registros_limpios))),
     ]
     for tag, val in campos_cab:
         el = SubElement(cab, tag)
@@ -552,6 +669,18 @@ def generar_xml_formato(nombre_hoja, datos, info_declarante, num_envio):
 
     # --- Registros ---
     sec = SubElement(root, fdef["xml_tag"])
+    # Atributos del declarante en la sección principal
+    sec.set("tdoc", td_decl)
+    sec.set("nid", nit_decl)
+    sec.set("dv", dv_decl)
+    if td_decl == "31":
+        sec.set("nomraz", info_declarante.get("rs", ""))
+    else:
+        sec.set("ape1", info_declarante.get("a1", ""))
+        sec.set("ape2", info_declarante.get("a2", ""))
+        sec.set("nom1", info_declarante.get("n1", ""))
+        sec.set("nom2", info_declarante.get("n2", ""))
+
     cols = fdef["cols"]
     campos_valor = fdef["campos_valor"]
     TAG_MAP = {"concepto": "co", "td": "tdoc", "nid": "nid", "dv": "dv",
@@ -809,22 +938,20 @@ def main():
             for f in formatos_disponibles:
                 fmt_num = FORMATO_DEFS[f]["formato"]
                 consec_data.append({"Formato": f, "Codigo": fmt_num,
-                    "Archivo XML": fmt_num + "_" + ANO_GRAVABLE + "_" + str(n).zfill(5) + ".xml", "Envio #": n})
+                    "Archivo XML": nombre_xml_dian(fdef["concepto_global"], fmt_num, fdef["version"], ANO_GRAVABLE, n), "Envio #": n})
                 n += 1
             st.dataframe(pd.DataFrame(consec_data), use_container_width=True, hide_index=True)
 
     st.divider()
     st.subheader("Generar XML para DIAN")
     puede_generar = (total_criticos == 0 and len(errores_decl) == 0)
-    puede_forzar = (len(errores_decl) == 0 and total_criticos > 0)
     if puede_generar: st.success("Todo listo para generar los XML")
-    elif puede_forzar: st.warning("Hay " + str(total_criticos) + " errores criticos. Puede forzar la generacion.")
     elif errores_decl: st.error("Complete los datos de la empresa primero.")
+    elif total_criticos > 0: st.error("Hay **" + str(total_criticos) + " errores criticos** que deben corregirse en el Excel antes de generar. La DIAN rechazara XML con estos errores.")
 
     formatos_seleccionados = st.multiselect("Formatos a generar", formatos_disponibles, default=formatos_disponibles)
     generar = False
     if puede_generar: generar = st.button("Generar XML", type="primary", use_container_width=True)
-    elif puede_forzar: generar = st.button("Generar con errores", type="secondary", use_container_width=True)
 
     if generar and formatos_seleccionados:
         xmls_generados = {}
@@ -836,7 +963,7 @@ def main():
             fmt_num = fdef["formato"]
             xml_content = generar_xml_formato(nombre_hoja, datos, info_declarante, num_envio)
             if xml_content:
-                filename = fmt_num + "_" + ANO_GRAVABLE + "_" + str(num_envio).zfill(5) + ".xml"
+                filename = nombre_xml_dian(fdef["concepto_global"], fmt_num, fdef["version"], ANO_GRAVABLE, num_envio)
                 xmls_generados[filename] = xml_content
                 num_envio += 1
             progress.progress((i + 1) / len(formatos_seleccionados), text="Generando " + nombre_hoja + "...")
@@ -846,8 +973,7 @@ def main():
             st.success(str(len(xmls_generados)) + " archivos XML generados")
             tabla_xml = []
             for fn, content in xmls_generados.items():
-                tabla_xml.append({"Archivo": fn, "Tamano": "{:,}".format(len(content)) + " bytes",
-                    "Envio #": fn.split("_")[-1].replace(".xml", "")})
+                tabla_xml.append({"Archivo": fn, "Tamano": "{:,}".format(len(content)) + " bytes"})
             st.dataframe(pd.DataFrame(tabla_xml), use_container_width=True, hide_index=True)
 
             st.markdown("**Descargar individual:**")
@@ -897,4 +1023,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
