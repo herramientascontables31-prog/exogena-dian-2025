@@ -584,7 +584,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <div class="footer-col">
         <h5>Contacto</h5>
         <a href="https://wa.me/573156178610" target="_blank">WhatsApp</a>
-        <a href="mailto:info@exogenadian.com">info@exogenadian.com</a>
+        <a href="/cdn-cgi/l/email-protection#ddb4b3bbb29db8a5b2bab8b3bcb9b4bcb3f3beb2b0"><span class="__cf_email__" data-cfemail="a0c9cec6cfe0c5d8cfc7c5cec1c4c9c1ce8ec3cfcd">[email&#160;protected]</span></a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -595,7 +595,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* === Nav scroll + mobile menu === */
 const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>20));
@@ -694,5 +694,23 @@ async function cargarNoticias(){
         <h3><a href="${n.l}" target="_blank" rel="noopener">${n.t}</a></h3>
       </div>`;
     }).join('');
+
   }catch(e){
-    grid.innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;colo
+    grid.innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)">Visita las fuentes en los enlaces de abajo</div>';
+  }
+}
+
+function tiempoRelativo(d){
+  const s=Math.floor((Date.now()-d)/1000);
+  if(s<60)return 'Ahora';
+  if(s<3600)return Math.floor(s/60)+'m';
+  if(s<86400)return Math.floor(s/3600)+'h';
+  if(s<604800)return Math.floor(s/86400)+'d';
+  return d.toLocaleDateString('es-CO',{day:'numeric',month:'short'});
+}
+
+cargarNoticias();
+</script>
+
+</body>
+</html>
