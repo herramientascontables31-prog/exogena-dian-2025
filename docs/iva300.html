@@ -1,0 +1,2861 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario 300 — Generador de Borrador IVA</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#548235;--green2:#E2EFDA;--red:#CC0000;--amber:#D97706;--amber2:#FFF8E1;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);padding:28px 32px;border-radius:16px;margin-bottom:24px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:1.6rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.header h1 span{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:600}
+.header p{opacity:.8;font-size:.85rem;margin-top:4px}
+.header-right{text-align:right;font-size:.8rem;opacity:.7}
+.steps{display:flex;gap:8px;margin-bottom:24px}
+.step-pill{flex:1;padding:12px 16px;background:var(--card);border:2px solid var(--border);border-radius:var(--radius);font-size:.82rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;transition:.3s;cursor:default}
+.step-pill .num{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff}
+.step-pill.active{border-color:var(--pri2);color:var(--pri);background:var(--pri3)}
+.step-pill.active .num{background:var(--pri2)}
+.step-pill.done{border-color:var(--green);color:var(--green)}
+.step-pill.done .num{background:var(--green)}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.drop-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:48px 32px;text-align:center;cursor:pointer;transition:.3s;position:relative}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--pri2);background:var(--pri3)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.dz-icon{font-size:2.5rem;margin-bottom:8px;display:block}.dz-title{font-weight:700;font-size:1.1rem;color:var(--pri)}.dz-hint{color:var(--muted);font-size:.82rem;margin-top:4px}
+.dz-file{margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--green);font-weight:600}
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.config-item{display:flex;flex-direction:column;gap:4px}
+.config-item label{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.config-item input,.config-item select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit}
+.config-item input:focus,.config-item select:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 3px rgba(46,117,182,.15)}
+.col-mapper{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:16px 0}
+.col-map-item{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px;transition:.3s}
+.col-map-item.mapped{border-color:var(--green);background:var(--green2)}
+.col-map-item.required{border-color:var(--amber)}
+.col-map-item .cml{font-size:.75rem;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.col-map-item .cml .req{color:var(--red);font-weight:800}
+.col-map-item select{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;background:#fff}
+.col-map-item .sample{font-size:.72rem;color:var(--muted);margin-top:6px;font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.col-map-item .sample strong{color:var(--pri)}
+.raw-preview{max-height:180px;overflow:auto;border:1px solid var(--border);border-radius:8px;font-size:.72rem;margin:12px 0}
+.raw-preview table{width:100%;border-collapse:collapse;min-width:800px}
+.raw-preview th,.raw-preview td{padding:4px 8px;border:1px solid var(--border);white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.raw-preview th{background:var(--pri3);position:sticky;top:0;font-weight:600;font-size:.7rem;color:var(--pri)}
+.raw-preview tr.hdr-row td{background:#FFF8E1;font-weight:600}
+.raw-preview tr:hover td{background:#f0f4f8}
+.hdr-selector{display:flex;align-items:center;gap:12px;margin:12px 0;padding:10px 14px;background:#f8fafc;border-radius:8px;border:1px solid var(--border)}
+.hdr-selector label{font-size:.82rem;font-weight:600;color:var(--pri)}
+.hdr-selector select{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit}
+.hdr-selector .hdr-preview{font-size:.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-left:8px}
+.map-table{width:100%;border-collapse:separate;border-spacing:0;font-size:.82rem}
+.map-table th{background:var(--pri);color:#fff;padding:10px 12px;text-align:left;font-weight:600;position:sticky;top:0;z-index:1}
+.map-table th:first-child{border-radius:8px 0 0 0}.map-table th:last-child{border-radius:0 8px 0 0}
+.map-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.map-table tr:nth-child(even) td{background:#f8fafc}.map-table tr:hover td{background:var(--pri3)}
+.map-table input,.map-table select{padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-family:inherit;width:100%}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.7rem;font-weight:700}
+.badge-gen{background:#E3F2FD;color:#1565C0}.badge-desc{background:#E8F5E9;color:#2E7D32}.badge-ret{background:#FFF3E0;color:#E65100}
+/* DIAN FORM 300 */
+.dian-form{border:2px solid #000;font-family:Arial,Helvetica,sans-serif;font-size:11px;background:#fff;max-width:1100px;margin:0 auto}
+.dian-top{display:grid;grid-template-columns:80px 1fr 120px;border-bottom:2px solid #000}
+.dian-top-left{background:#1a3c6e;color:#fff;display:flex;align-items:center;justify-content:center;padding:8px;font-size:9px;text-align:center;font-weight:700;line-height:1.2;border-right:1px solid #000}
+.dian-top-center{padding:6px 12px}
+.dian-top-center .dian-title{font-size:13px;font-weight:700;text-align:center;margin:2px 0}
+.dian-top-center .dian-subtitle{font-size:9px;color:#555;text-align:center}
+.dian-top-right{background:#1a3c6e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;font-family:'JetBrains Mono',monospace;border-left:1px solid #000}
+.dian-datos{display:grid;grid-template-columns:60px 1fr 60px 120px;border-bottom:2px solid #000;font-size:10px}
+.dian-datos>div{padding:4px 8px;border-right:1px solid #ccc}
+.dian-datos .lbl{font-size:8px;color:#666;display:block}.dian-datos .val{font-weight:700}
+.dian-datos .razon{grid-column:span 2}
+.dian-sec{background:#d4e6f1;padding:5px 10px;font-weight:700;font-size:10px;border-bottom:1px solid #000;text-transform:uppercase;color:#1a3c6e;letter-spacing:.3px}
+.dian-row{display:grid;grid-template-columns:50px 1fr 180px 50px;border-bottom:1px solid #ddd;font-size:10px}
+.dian-row:hover{background:#f5f8fc}
+.dian-row>div{padding:3px 6px;border-right:1px solid #eee;min-height:22px;display:flex;align-items:center}
+.dian-row .cas-num{font-size:8px;color:#888;font-family:'JetBrains Mono',monospace;justify-content:center;background:#f9f9f9}
+.dian-row .concepto{font-size:9.5px;font-weight:500}
+.dian-row .cas-val{justify-content:flex-end;font-family:'JetBrains Mono',monospace;font-size:10px;padding-right:8px}
+.dian-row .cas-val.filled{background:#edf4ff;font-weight:700;color:#1a3c6e}
+.dian-row .cas-val.zero{color:#ccc}
+.dian-footer{padding:8px 12px;font-size:8px;color:#888;text-align:center;border-top:1px solid #ccc;background:#fafafa}
+.dian-footer strong{color:#1a3c6e}
+.btn{padding:10px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--pri2);color:#fff}.btn-primary:hover{background:var(--pri);transform:translateY(-1px)}
+.btn-success{background:var(--green);color:#fff}.btn-success:hover{opacity:.9}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--pri2);color:var(--pri)}
+.actions{display:flex;gap:12px;justify-content:flex-end;margin-top:20px}
+.alert{padding:14px 18px;border-radius:8px;font-size:.85rem;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.alert-info{background:var(--pri3);color:var(--pri);border:1px solid #B4C6E7}
+.alert-warn{background:var(--amber2);color:#92400E;border:1px solid #FCD34D}
+.alert-success{background:var(--green2);color:var(--green);border:1px solid #A5D6A7}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center}
+.stat-card .val{font-size:1.5rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.stat-card .lbl{font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:4px}
+.stat-card.blue .val{color:var(--pri2)}.stat-card.green .val{color:var(--green)}.stat-card.amber .val{color:var(--amber)}.stat-card.red .val{color:var(--red)}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:16px}
+.tab{padding:10px 20px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s}
+.tab.active{color:var(--pri);border-bottom-color:var(--pri2)}
+.tab-content{display:none}.tab-content.active{display:block}
+.scroll-box{max-height:500px;overflow-y:auto;border:1px solid var(--border);border-radius:8px}
+.hidden{display:none!important}.mono{font-family:'JetBrains Mono',monospace}.text-right{text-align:right}.text-center{text-align:center}.fw600{font-weight:600}.mb12{margin-bottom:12px}.flex{display:flex}.flex-between{display:flex;justify-content:space-between;align-items:center}.gap12{gap:12px}
+@media(max-width:1200px){.step4-grid{grid-template-columns:1fr!important}}
+@media(max-width:768px){.config-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.steps{flex-wrap:wrap}.step-pill{font-size:.72rem;padding:8px 10px}}
+/* F300 + Balance side by side table */
+.f300-table{width:100%;border-collapse:collapse;font-size:10px;font-family:Arial,Helvetica,sans-serif}
+.f300-table td{padding:3px 6px;vertical-align:middle}
+.f300-table .f-cas{width:36px;text-align:center;font-size:8px;color:#888;font-family:'JetBrains Mono',monospace;background:#f9f9f9;border-right:1px solid #e0e0e0}
+.f300-table .f-label{font-size:9.5px;min-width:180px}
+.f300-table .f-val{width:130px;text-align:right;border-left:1px solid #e0e0e0;border-right:1px solid #e0e0e0}
+.f300-table .f-input{border:none;background:transparent;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;width:100%;outline:none;padding:0;color:#ccc}
+.f300-table .f-input.f-filled{font-weight:700;color:#1a3c6e;background:#edf4ff}
+.f300-table .f-sep{width:8px;background:#e8ecf0}
+.f300-table .r-code{font-family:'JetBrains Mono',monospace;font-size:7.5px;color:var(--pri2);font-weight:600;width:64px;white-space:nowrap}
+.f300-table .r-name{font-size:8px;color:#555;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.f300-table .r-num{font-family:'JetBrains Mono',monospace;font-size:8px;text-align:right;color:#888;width:70px}
+.f300-table .r-net{font-weight:700;color:var(--green)}
+.f300-table .r-empty{background:#fafafa}
+.f300-table .f-total td{border-top:2px solid #999;border-bottom:2px solid #999}
+.f300-table .f-sec-td{background:#d4e6f1;padding:5px 10px;font-weight:700;font-size:10px;color:#1a3c6e;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid #000}
+.f300-table tr:hover td{background:rgba(46,117,182,.03)}
+.f300-table .f-total:hover td{background:rgba(46,117,182,.06)}
+/* Balance header in table */
+.f300-table .bal-hdr{font-size:7px;font-weight:700;color:#999;text-transform:uppercase;text-align:center;padding:2px 4px;background:#f0f2f5;border-bottom:1px solid #ddd}
+.regime-tag{display:inline-block;padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;margin-left:6px}
+.regime-bim{background:#E3F2FD;color:#1565C0}.regime-cuat{background:#F3E5F5;color:#7B1FA2}.regime-simple{background:#FFF3E0;color:#E65100}
+.diff-ok{background:#E8F5E9}.diff-warn{background:#FFF8E1}.diff-error{background:#FFEBEE}
+.wompi-btn-container form button,.wompi-btn-container button,.wompi-btn-container .waybox-button,.wompi-btn-container [class*="wompi"]{
+  width:100%!important;padding:12px 20px!important;border-radius:10px!important;font-family:'DM Sans',sans-serif!important;font-weight:700!important;font-size:.9rem!important;
+  background:linear-gradient(135deg,#F59E0B,#D97706)!important;color:#fff!important;border:none!important;cursor:pointer!important;transition:all .25s!important;box-shadow:0 4px 14px rgba(245,158,11,.3)!important}
+.wompi-btn-container form button:hover,.wompi-btn-container button:hover{transform:translateY(-2px)!important;box-shadow:0 8px 24px rgba(245,158,11,.4)!important}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header"><div>
+    <h1><span>300</span> Declaración de IVA</h1>
+    <p>Generador automático de borrador</p>
+  </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
+  <div class="steps">
+    <div class="step-pill active" id="sp1"><span class="num">1</span> Inicio</div>
+    <div class="step-pill" id="sp2"><span class="num">2</span> Columnas</div>
+    <div class="step-pill" id="sp3"><span class="num">3</span> Mapeo → 300</div>
+    <div class="step-pill" id="sp4"><span class="num">4</span> Borrador 300</div>
+    <div class="step-pill" id="sp5"><span class="num">5</span> Cruce DIAN <span style="font-size:.65rem;background:#F59E0B;color:#fff;padding:1px 6px;border-radius:4px;margin-left:4px">PRO</span></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div id="step1">
+    <!-- Selector de modo -->
+    <div class="card">
+      <div class="card-title"><span>🎯</span> ¿Cómo quieres generar el borrador?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+        <div onclick="setModo('balance')" id="modoBalance" class="modo-card modo-active" style="padding:20px;border:2px solid var(--pri2);border-radius:12px;cursor:pointer;text-align:center;transition:.2s;background:var(--pri3)">
+          <div style="font-size:1.8rem;margin-bottom:8px">📊</div>
+          <div style="font-weight:700;font-size:.95rem">Desde Balance</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Sube tu balance de prueba y generamos el F300</div>
+          <div style="margin-top:8px"><span class="badge" style="background:var(--green2);color:var(--green)">Gratis</span></div>
+        </div>
+        <div onclick="setModo('dian')" id="modoDian" class="modo-card" style="padding:20px;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center;transition:.2s">
+          <div style="font-size:1.8rem;margin-bottom:8px">📋</div>
+          <div style="font-weight:700;font-size:.95rem">Desde Listado DIAN</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Sube el reporte de facturación electrónica de la DIAN</div>
+          <div style="margin-top:8px"><span class="badge" style="background:#FFF3E0;color:#D97706">PRO</span></div>
+        </div>
+        <div onclick="setModo('comparar')" id="modoComparar" class="modo-card" style="padding:20px;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center;transition:.2s">
+          <div style="font-size:1.8rem;margin-bottom:8px">🔄</div>
+          <div style="font-weight:700;font-size:.95rem">Comparar Ambos</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Balance + listado DIAN → cruza diferencias por tercero</div>
+          <div style="margin-top:8px"><span class="badge" style="background:#FFF3E0;color:#D97706">PRO</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRO paywall (solo se muestra si elige modo pro sin tener acceso) -->
+    <div class="card hidden" id="proPaywall" style="border:2px solid #F59E0B">
+      <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border-radius:8px">
+        <h3 style="font-size:1.1rem;margin-bottom:8px;color:#92400E">Función PRO</h3>
+        <p style="color:#A16207;font-size:.85rem;max-width:400px;margin:0 auto 16px">Accede al análisis con facturación electrónica DIAN. Paga y se activa automáticamente.</p>
+        <div class="wompi-btn-container" style="max-width:260px;margin:0 auto">
+          <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="2500000" data-reference="IVA-PRO-001" data-redirect-url="https://exogenadian.com/iva300.html?pro=1"></script>
+          <a href="https://wa.me/573156178610?text=Hola%2C%20quiero%20PRO%20para%20IVA%20300%20%2B%20cruce%20DIAN" target="_blank" class="wompi-fallback" id="fallback-pro" style="display:none;padding:12px 24px;border-radius:10px;background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;font-weight:700;text-decoration:none;font-family:inherit;font-size:.9rem;text-align:center">Contratar por WhatsApp →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload balance (modo balance/comparar) -->
+    <div class="card" id="uploadBalance">
+      <div class="card-title"><span>📊</span> Balance de Prueba</div>
+      <div class="drop-zone" id="dz">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileInput">
+        <span class="dz-icon">📊</span>
+        <div class="dz-title">Arrastra tu archivo aquí o haz clic</div>
+        <div class="dz-hint">Excel (.xlsx, .xls) o CSV — Siigo, MidaSoft, World Office, Helisa, Alegra, otros</div>
+        <div class="dz-file" id="fileName"></div>
+      </div>
+      <div style="margin-top:20px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)">
+        <div style="font-weight:700;font-size:.95rem;margin-bottom:12px">📅 Datos del período</div>
+        <div class="config-grid">
+          <div class="config-item"><label>Año gravable</label><input type="number" id="cfgYear" value="2026" min="2020" max="2035"></div>
+          <div class="config-item"><label>Régimen tributario</label><select id="cfgRegimen" onchange="onRegimenChange()">
+            <option value="comun_bim">Régimen Común — Bimestral</option>
+            <option value="comun_cuat">Régimen Común — Cuatrimestral</option>
+            <option value="simple">Régimen Simple — Anual</option>
+          </select></div>
+          <div class="config-item"><label>Período</label><select id="cfgPeriodo"></select></div>
+          <div class="config-item"><label>NIT de la empresa</label><input type="text" id="cfgNit" placeholder="Ej: 901657282-9"></div>
+          <div class="config-item"><label>Razón social</label><input type="text" id="cfgEmpresa" placeholder="Ej: MI EMPRESA S.A.S"></div>
+          <div class="config-item" id="simpleAnticipo" style="display:none"><label>Anticipo bimestral acumulado ($)</label><input type="number" id="cfgAnticipo" value="0" min="0" placeholder="Total anticipos pagados"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload listado DIAN (modo dian/comparar) -->
+    <div class="card hidden" id="uploadDian">
+      <div class="card-title"><span>📋</span> Listado Facturación Electrónica DIAN</div>
+      <div class="alert alert-info"><span>💡</span><div>Descárgalo de: <strong>Portal DIAN → Facturación → Consulta de documentos → Exportar</strong>. Es un archivo .xlsx con todas tus facturas electrónicas.</div></div>
+      <div class="drop-zone" id="dzDian" style="padding:28px 20px">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileDian" onchange="loadDianFile(event)">
+        <span class="dz-icon" style="font-size:2rem">📋</span>
+        <div class="dz-title">Arrastra el listado DIAN aquí o haz clic</div>
+        <div class="dz-hint">Archivo .xlsx de Consulta de documentos electrónicos</div>
+        <div class="dz-file" id="fileNameDian"></div>
+      </div>
+      <div id="dianFilters" class="hidden" style="margin-top:16px">
+        <div class="config-grid" style="margin-bottom:12px">
+          <div class="config-item"><label>Año</label><input type="number" id="dianYear" value="2026" min="2020" max="2035"></div>
+          <div class="config-item"><label>Periodicidad</label><select id="dianPeriodicidad" onchange="onDianPeriodChange()">
+            <option value="bimestral">Bimestral</option>
+            <option value="cuatrimestral">Cuatrimestral</option>
+            <option value="anual">Anual (Régimen Simple)</option>
+          </select></div>
+          <div class="config-item"><label>Período</label><select id="dianPeriodo" onchange="onDianPeriodChange()"></select></div>
+          <div class="config-item" style="justify-content:end"><div id="dianFechaRango" style="font-size:.8rem;color:var(--pri);font-weight:600;padding-top:20px"></div></div>
+        </div>
+        <div id="dianSummary"></div>
+      </div>
+    </div>
+
+    <!-- Botón continuar -->
+    <div class="card" id="btnContinuar" style="text-align:center;padding:16px">
+      <button class="btn btn-primary" onclick="iniciarProceso()" style="font-size:1rem;padding:14px 40px" id="btnIniciar">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="step2" class="hidden">
+    <div class="card">
+      <div class="card-title"><span>🔧</span> Verificar Columnas del Archivo</div>
+      <div class="alert alert-info"><span>💡</span><div>Se detectaron las columnas automáticamente. <strong>Verifica que sean correctas</strong> y ajusta si es necesario.</div></div>
+      <div class="hdr-selector">
+        <label>📌 Fila de encabezados:</label>
+        <select id="hdrRowSelect" onchange="onHeaderRowChange()"></select>
+        <span class="hdr-preview" id="hdrPreviewText"></span>
+      </div>
+      <div class="raw-preview" id="rawPreview"></div>
+      <div style="margin:20px 0 8px;font-weight:700;font-size:.9rem;color:var(--pri)">📋 Asignación de columnas <span style="font-weight:400;color:var(--muted);font-size:.8rem">(<span class="req" style="color:var(--red)">*</span> = obligatoria)</span></div>
+      <div class="col-mapper" id="colMapper"></div>
+      <div class="actions">
+        <button class="btn btn-outline" onclick="goStep(1)">← Cambiar archivo</button>
+        <button class="btn btn-primary" onclick="confirmColumns()">Confirmar y Procesar →</button>
+      </div>
+    </div>
+    <div class="card hidden" id="previewCard">
+      <div class="card-title"><span>🔍</span> Resultado del Procesamiento</div>
+      <div id="fileStats" class="stats"></div>
+      <div class="alert alert-warn hidden" id="alertNoIVA"><span>⚠️</span><div>No se encontraron cuentas relevantes para el F300 (41xx ingresos, 61-62xx compras, 2408 IVA, 1355, 2367). Verifica las columnas o el archivo.</div></div>
+      <div class="alert alert-success hidden" id="alertOk"><span>✅</span><div id="alertOkText"></div></div>
+      <div class="scroll-box" id="previewTable"></div>
+      <div class="actions"><button class="btn btn-primary" onclick="goToStep3()">Continuar al Mapeo →</button></div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="step3" class="hidden">
+    <!-- Análisis inteligente de ingresos -->
+    <div class="card" id="ingresosAnalisis">
+      <div class="card-title"><span>🧠</span> Análisis de ingresos</div>
+      <div id="ingresosDeteccion"></div>
+      <div style="margin-top:16px">
+        <div style="font-weight:600;font-size:.88rem;margin-bottom:10px">¿Tu empresa maneja ingresos excluidos o exentos de IVA?</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:6px;padding:10px 16px;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:.2s;font-size:.88rem" id="lblSoloGravados">
+            <input type="radio" name="tipoIng" value="gravados" onchange="onTipoIngresosChange()" checked> Solo gravados (19% o 5%)
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;padding:10px 16px;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:.2s;font-size:.88rem" id="lblExentos">
+            <input type="radio" name="tipoIng" value="exentos" onchange="onTipoIngresosChange()"> Exentos (0% con derecho a descontar IVA)
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;padding:10px 16px;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:.2s;font-size:.88rem" id="lblExcluidos">
+            <input type="radio" name="tipoIng" value="excluidos" onchange="onTipoIngresosChange()"> Excluidos (sin IVA, requiere prorrateo)
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;padding:10px 16px;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:.2s;font-size:.88rem" id="lblMixto">
+            <input type="radio" name="tipoIng" value="mixto" onchange="onTipoIngresosChange()"> Mixto (gravados + excluidos/exentos)
+          </label>
+        </div>
+        <div id="prorrateoInfo" class="hidden" style="margin-top:12px">
+          <div class="alert alert-warn"><span>⚠️</span><div>
+            <strong>Prorrateo requerido.</strong> Si manejas ingresos excluidos, solo puedes descontar el IVA proporcionalmente a tus ingresos gravados + exentos.
+            <br><br>
+            <strong>Fórmula:</strong> IVA descontable = IVA pagado × (Ingresos gravados + exentos) ÷ Total ingresos
+            <div style="margin-top:8px;display:flex;gap:12px;align-items:center">
+              <label style="font-size:.82rem">% Ingresos gravados+exentos:</label>
+              <input type="number" id="pctProrrateo" value="100" min="0" max="100" step="0.1" style="width:80px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-family:inherit" onchange="onProrrateoChange()">
+              <span style="font-size:.82rem;color:var(--muted)">% (se aplicará al IVA descontable)</span>
+            </div>
+          </div></div>
+        </div>
+        <div id="exentosInfo" class="hidden" style="margin-top:12px">
+          <div class="alert alert-success"><span>✅</span><div>
+            <strong>Ingresos exentos</strong> — Tienes derecho a descontar el 100% del IVA pagado. Los ingresos se clasificarán en casilla 35 (exentos) o 40 (no gravados) según el Art. 481 E.T.
+          </div></div>
+        </div>
+      </div>
+    </div>
+    <!-- Saldo a favor -->
+    <div class="card" id="saldoFavorCard">
+      <div class="card-title"><span>💰</span> Saldo a favor del período anterior</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:end">
+        <div>
+          <div style="font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:4px">¿Qué haces con el saldo a favor?</div>
+          <div style="display:flex;gap:8px">
+            <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.85rem">
+              <input type="radio" name="saldoFavor" value="arrastrar" onchange="onSaldoFavorChange()" checked> Arrastro al siguiente período
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:.85rem">
+              <input type="radio" name="saldoFavor" value="solicitar" onchange="onSaldoFavorChange()"> Solicito devolución cada período
+            </label>
+          </div>
+        </div>
+        <div id="saldoFavorInput">
+          <label style="font-size:.82rem;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">Saldo a favor anterior ($)</label>
+          <input type="number" id="cfgSaldoFavor" value="0" min="0" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit;width:180px" placeholder="0">
+          <div id="saldoFavorDetectado" style="font-size:.75rem;color:var(--muted);margin-top:4px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🔗</span> Mapeo Cuentas → Casillas Formulario 300</div>
+      <div class="flex-between mb12">
+        <div><strong id="mappedCount">0</strong> cuentas · <span class="badge badge-gen">IVA Generado</span> <strong id="genCount">0</strong> · <span class="badge badge-desc">IVA Descontable</span> <strong id="descCount">0</strong> · <span class="badge badge-ret">Retención IVA</span> <strong id="retCount">0</strong></div>
+      </div>
+      <div class="scroll-box"><table class="map-table"><thead><tr>
+        <th style="width:90px">Cuenta</th><th>Nombre</th><th style="width:160px">Concepto F300</th>
+        <th style="width:110px">Débito</th><th style="width:110px">Crédito</th><th style="width:110px">Valor</th><th style="width:60px">Casilla</th>
+      </tr></thead><tbody id="mapBody"></tbody></table></div>
+      <div class="actions">
+        <button class="btn btn-outline" onclick="goStep(2)">← Volver</button>
+        <button class="btn btn-primary" onclick="goStep4()">Generar Borrador 300 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div id="step4" class="hidden">
+    <div class="card">
+      <div class="flex-between mb12">
+        <div class="card-title" style="margin-bottom:0"><span>📋</span> Borrador Formulario 300</div>
+        <div class="flex gap12">
+          <button class="btn btn-outline" onclick="goStep(3)">← Ajustar</button>
+          <button class="btn btn-success" onclick="exportPdf300()">📄 Descargar PDF</button>
+          <button class="btn" onclick="exportXls300Pro()" style="background:#D97706;color:#fff">📥 Excel <span style="font-size:.65rem;background:rgba(255,255,255,.3);padding:1px 6px;border-radius:4px;margin-left:4px">PRO</span></button>
+          <button class="btn" onclick="goStep(5)" style="background:#D97706;color:#fff">🔍 Cruce DIAN <span style="font-size:.65rem;background:rgba(255,255,255,.3);padding:1px 6px;border-radius:4px;margin-left:4px">PRO</span></button>
+        </div>
+      </div>
+      <div id="resultStats" class="stats"></div>
+    </div>
+    <div class="card">
+      <div id="form300Visual"></div>
+    </div>
+    <!-- Cuentas del balance DEBAJO del formulario -->
+    <div class="card" id="balanceCard">
+      <div class="card-title"><span>📊</span> Cuentas del Balance → F300</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-bottom:16px">Cuentas usadas para cada sección. Deb/Cré del balance y neto trasladado al formulario.</div>
+      <div id="balanceSidebar" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px"></div>
+    </div>
+    <!-- NORMATIVIDAD -->
+    <div class="card">
+      <div class="card-title"><span>📜</span> Normatividad aplicable</div>
+      <div style="font-size:.82rem;color:var(--muted);line-height:1.7">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <div style="font-weight:700;color:var(--pri);margin-bottom:6px">Base legal</div>
+            <ul style="padding-left:16px;margin:0">
+              <li><strong>Art. 420 E.T.</strong> — Hecho generador del IVA</li>
+              <li><strong>Art. 437 E.T.</strong> — Responsables del IVA</li>
+              <li><strong>Art. 468 E.T.</strong> — Tarifa general del 19%</li>
+              <li><strong>Art. 468-1 E.T.</strong> — Tarifa del 5%</li>
+              <li><strong>Art. 476 E.T.</strong> — Servicios excluidos del IVA</li>
+              <li><strong>Art. 481 E.T.</strong> — Bienes exentos con derecho a devolución</li>
+              <li><strong>Art. 485 E.T.</strong> — Impuestos descontables</li>
+              <li><strong>Art. 486 E.T.</strong> — Ajuste de impuestos descontables</li>
+              <li><strong>Art. 489 E.T.</strong> — Proporcionalidad (prorrateo)</li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-weight:700;color:var(--pri);margin-bottom:6px">Periodicidad y presentación</div>
+            <ul style="padding-left:16px;margin:0">
+              <li><strong>Art. 600 E.T.</strong> — Período gravable del IVA (bimestral/cuatrimestral)</li>
+              <li><strong>Art. 601 E.T.</strong> — Obligación de declarar</li>
+              <li><strong>Art. 602 E.T.</strong> — Contenido de la declaración</li>
+              <li><strong>Art. 903-915 E.T.</strong> — Régimen Simple de Tributación (SIMPLE)</li>
+              <li><strong>Res. 000031/2024</strong> — Formulario 300 vigente</li>
+              <li><strong>Decreto 1625/2016</strong> — Reglamentario en materia tributaria</li>
+            </ul>
+            <div style="margin-top:12px;font-weight:700;color:var(--pri);margin-bottom:6px">Retención de IVA</div>
+            <ul style="padding-left:16px;margin:0">
+              <li><strong>Art. 437-1 E.T.</strong> — Agentes de retención de IVA</li>
+              <li><strong>Art. 437-2 E.T.</strong> — Agentes de retención especiales</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:12px;background:#FFF8E1;border-radius:8px;border:1px solid #FCD34D;font-size:.8rem;color:#92400E">
+          <strong>⚠️ Disclaimer:</strong> Este borrador es una herramienta de asistencia generada automáticamente a partir del balance de prueba.
+          <strong>NO constituye una declaración oficial</strong> y no reemplaza el criterio profesional del contador público.
+          El contribuyente y su contador son responsables de verificar la información antes de presentarla ante la DIAN a través del portal MUISCA.
+          Los valores deben ser conciliados con los libros oficiales de contabilidad. Esta herramienta no se hace responsable por errores
+          derivados de información incompleta o incorrecta en el balance de prueba fuente.
+        </div>
+      </div>
+    </div>
+    <!-- CONCILIACIÓN -->
+    <div class="card" id="conciliacionCard">
+      <div class="card-title"><span>🔄</span> Conciliación con Balance de Prueba</div>
+      <div id="conciliacionBody"></div>
+    </div>
+  </div>
+
+  <!-- STEP 5: RESULTADOS CRUCE DIAN (solo se muestra si modo=comparar) -->
+  <div id="step5" class="hidden">
+    <div class="card">
+      <div class="flex-between mb12">
+        <div class="card-title" style="margin-bottom:0"><span>🔍</span> Análisis Facturación Electrónica DIAN</div>
+        <button class="btn btn-outline" onclick="goStep(4)">← Volver al Borrador</button>
+      </div>
+      <div id="dianResults">
+        <div id="dianStats" class="stats"></div>
+        <div class="tabs">
+          <div class="tab active" onclick="switchTab(this,'tabDianResumen')">Resumen</div>
+          <div class="tab" onclick="switchTab(this,'tabDianDetalle')">Por Tercero</div>
+          <div class="tab" onclick="switchTab(this,'tabDianDiff')" id="tabDianDiffBtn">Diferencias vs Balance</div>
+        </div>
+        <div class="tab-content active" id="tabDianResumen"><div id="dianResumen"></div></div>
+        <div class="tab-content" id="tabDianDetalle"><div class="scroll-box" id="dianDetalleTable"></div></div>
+        <div class="tab-content" id="tabDianDiff"><div class="scroll-box" id="dianDiffTable"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══ CUENTAS PUC → CASILLAS F300 ═══ */
+const IVA_MAP=[
+  // =============================================
+  // INGRESOS — Casillas 27-43 (F300 real DIAN)
+  // Clase 4 completa: 41 operacionales, 42 no operacionales
+  // =============================================
+  // Devoluciones en ventas (reduce ingresos) — naturaleza débito → Cas. 42
+  {prefix:'4175',name:'Devoluciones en ventas',concepto:'dev_ventas',tipo:'dev_venta',casilla:42},
+  // Ingresos operacionales → Cas. 28 (tarifa general por defecto)
+  {prefix:'41',name:'Ingresos operacionales',concepto:'ing_gravado',tipo:'ingreso',casilla:28},
+  // Ingresos no operacionales (intereses, dividendos, etc.) → Cas. 40
+  {prefix:'4210',name:'Rendimientos financieros',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40},
+  {prefix:'4215',name:'Dividendos y participaciones',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40},
+  {prefix:'4220',name:'Arrendamientos',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40},
+  {prefix:'4230',name:'Honorarios',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40},
+  {prefix:'4235',name:'Servicios',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40},
+  {prefix:'4240',name:'Utilidad en venta de activos',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40},
+  {prefix:'4245',name:'Utilidad en venta de inversiones',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40},
+  {prefix:'4250',name:'Recuperaciones',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40},
+  {prefix:'4255',name:'Indemnizaciones',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40},
+  {prefix:'42',name:'Ingresos no operacionales',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40},
+  // Catch-all clase 4 → Cas. 28
+  {prefix:'4',name:'Otros ingresos',concepto:'ing_gravado',tipo:'ingreso',casilla:28},
+
+  // =============================================
+  // COMPRAS / COSTOS — Casillas 44-57 (F300 real DIAN)
+  // =============================================
+  // Devoluciones en compras (reduce compras) — naturaleza crédito → Cas. 56
+  {prefix:'6225',name:'Devoluciones en compras',concepto:'dev_compras',tipo:'dev_compra',casilla:56},
+  // Costo ventas / compras → Cas. 51 (nacionales tarifa general)
+  {prefix:'61',name:'Costo de ventas',concepto:'compra_gravada',tipo:'compra',casilla:51},
+  {prefix:'62',name:'Compras',concepto:'compra_gravada',tipo:'compra',casilla:51},
+
+  // =============================================
+  // IVA POR PAGAR — Cuenta 2408
+  // PUC: 2408 = Impuesto sobre las ventas por pagar
+  // =============================================
+  // 2408.10xx = IVA DESCONTABLE
+  {prefix:'24081001',name:'IVA descontable compras 19%',concepto:'iva_desc_19',tipo:'descontable',casilla:72},
+  {prefix:'24081003',name:'IVA descontable servicios 19%',concepto:'iva_desc_serv',tipo:'descontable',casilla:75},
+  {prefix:'24081004',name:'IVA descontable servicios 5%',concepto:'iva_desc_serv5',tipo:'descontable',casilla:74},
+  {prefix:'24081005',name:'IVA descontable compras 5%',concepto:'iva_desc_5',tipo:'descontable',casilla:71},
+  {prefix:'240810',name:'IVA descontable (general)',concepto:'iva_desc_19',tipo:'descontable',casilla:72},
+  // 2408.90xx = Pagos de IVA (no entra al formulario)
+  {prefix:'24089',name:'Pago de IVA',concepto:'ignorar',tipo:'pago',casilla:0},
+  // 2408.0x = IVA GENERADO
+  {prefix:'240801',name:'IVA generado tarifa 5%',concepto:'iva_gen_5',tipo:'generado',casilla:58},
+  {prefix:'240802',name:'IVA generado juegos de suerte',concepto:'iva_gen_juegos',tipo:'generado',casilla:61},
+  {prefix:'240803',name:'IVA generado tarifa general 19%',concepto:'iva_gen_19',tipo:'generado',casilla:59},
+  {prefix:'240804',name:'IVA generado venta cerveza',concepto:'iva_gen_cerveza',tipo:'generado',casilla:62},
+  {prefix:'240805',name:'IVA generado venta licores',concepto:'iva_gen_licores',tipo:'generado',casilla:64},
+  {prefix:'240806',name:'IVA generado exportaciones/excluidas',concepto:'iva_gen_export',tipo:'generado',casilla:0},
+  {prefix:'240808',name:'IVA generado tarifa 19%',concepto:'iva_gen_19',tipo:'generado',casilla:59},
+  {prefix:'2408',name:'IVA por pagar (general)',concepto:'iva_gen_19',tipo:'generado',casilla:59},
+
+  // =============================================
+  // NOTA: 2404 = DE RENTA Y COMPLEMENTARIOS (NO es IVA)
+  // NO incluir 2404 — es provisión de impuesto de renta
+  // =============================================
+
+  // IVA en bienes de capital — Cuenta 2405 → Cas. 72 (incluido en descontable bienes general)
+  {prefix:'2405',name:'IVA bienes de capital',concepto:'iva_capital',tipo:'descontable',casilla:72},
+
+  // =============================================
+  // SALDO A FAVOR / ANTICIPOS — Cuenta 1355
+  // =============================================
+  {prefix:'13552003',name:'Saldo a favor IVA',concepto:'saldo_favor_iva',tipo:'saldo_favor',casilla:84},
+  {prefix:'135520',name:'Saldo a favor / anticipo IVA',concepto:'saldo_favor_iva',tipo:'saldo_favor',casilla:84},
+  {prefix:'135505',name:'IVA descontable (vía anticipo)',concepto:'iva_desc_19',tipo:'descontable',casilla:72},
+  {prefix:'135510',name:'IVA descontable servicios (vía anticipo)',concepto:'iva_desc_serv',tipo:'descontable',casilla:75},
+
+  // Retención de IVA que le practicaron (1355.15, .17, .18) → Cas. 85
+  {prefix:'135515',name:'Retención IVA que le practicaron',concepto:'reteiva_pract',tipo:'reteiva_favor',casilla:85},
+  {prefix:'135517',name:'Retención IVA que le practicaron',concepto:'reteiva_pract',tipo:'reteiva_favor',casilla:85},
+  {prefix:'135518',name:'Retención IVA que le practicaron',concepto:'reteiva_pract',tipo:'reteiva_favor',casilla:85},
+  {prefix:'1355',name:'Anticipo impuestos (genérico)',concepto:'reteiva_pract',tipo:'reteiva_favor',casilla:85},
+
+  // =============================================
+  // RETENCIÓN IVA PRACTICADA A TERCEROS — Cuenta 2367 → Cas. 78
+  // =============================================
+  {prefix:'236701',name:'Retención IVA régimen común',concepto:'reteiva_pract_terc',tipo:'reteiva_terc',casilla:78},
+  {prefix:'236705',name:'Retención IVA no domiciliados',concepto:'reteiva_pract_terc',tipo:'reteiva_terc',casilla:78},
+  {prefix:'2367',name:'Retención IVA practicada',concepto:'reteiva_pract_terc',tipo:'reteiva_terc',casilla:78},
+];
+
+/* Keywords para auto-detección por nombre — IMPORTANTE para cuentas 1355 con doble uso */
+const IVA_KEYWORDS={
+  // Ingresos
+  ing_gravado:['ingreso.*gravad','venta.*gravad','operacion.*gravad'],
+  ing_export:['export','zona.*franca'],
+  ing_no_gravado:['no.*gravad','exento','excluido.*ingreso'],
+  ing_excluido:['excluido','no.*sujeto'],
+  // Compras
+  compra_gravada:['compra.*gravad','costo.*venta','mercancia'],
+  compra_no_gravada:['compra.*no.*gravad','compra.*exent'],
+  compra_import:['import'],
+  compra_servicio:['servicio.*gravad'],
+  // IVA generado
+  iva_gen_5:['generado.*5%','tarifa.*5','iva.*5'],
+  iva_gen_19:['generado.*19','tarifa.*19','iva.*general','ventas.*iva','iva.*ventas'],
+  iva_gen_juegos:['juego','suerte','azar'],
+  iva_gen_cerveza:['cerveza','bebida'],
+  iva_gen_licores:['licor','vino','aguardiente'],
+  iva_gen_export:['export.*iva','iva.*export'],
+  // IVA descontable
+  iva_desc_5:['descontable.*5','iva.*pagado.*5'],
+  iva_desc_19:['descontable.*19','iva.*pagado.*19','iva.*descontable'],
+  iva_desc_serv:['servicio.*iva','iva.*servicio','descontable.*servicio'],
+  iva_desc_imp5:['import.*5.*iva','iva.*import.*5'],
+  iva_desc_imp19:['import.*19.*iva','iva.*import.*19'],
+  iva_capital:['capital','activo.*fijo.*iva'],
+  // Retenciones
+  reteiva_pract:['retencion.*iva','rete.*iva','reteiva','iva.*retenido','le.*practicaron'],
+  reteiva_pract_terc:['retencion.*iva.*practicada','iva.*retenido.*tercero','reteiva.*pract'],
+};
+
+/* ═══ GLOBALS ═══ */
+let rawData=[], parsedAccounts=[], mappings=[], result300={};
+let detectedHeaderRow=-1;
+let colMap={code:-1,name:-1,deb:-1,cre:-1,saldoIni:-1,saldoFin:-1};
+
+const COL_FIELDS=[
+  {key:'code', label:'Código Cuenta', required:true, icon:'🔢', hints:['cuenta','codigo','código','code','account']},
+  {key:'name', label:'Nombre Cuenta', required:true, icon:'📝', hints:['descripcion','nombre cuenta','descripcion cuenta','cuenta contable','description','nombre']},
+  {key:'deb', label:'Débitos', required:true, icon:'📤', hints:['debito','débito','debitos','débitos','debit','movimiento debito']},
+  {key:'cre', label:'Créditos', required:true, icon:'📥', hints:['credito','crédito','creditos','créditos','credit','movimiento credito']},
+  {key:'saldoIni', label:'Saldo Inicial', required:false, icon:'📊', hints:['saldo inicial','saldo anterior','inicial']},
+  {key:'saldoFin', label:'Saldo Final', required:false, icon:'📈', hints:['saldo final','saldo total','saldo actual','final']},
+];
+
+function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()}
+function toNum(v){if(typeof v==='number')return v;if(!v)return 0;let s=String(v).replace(/[$\s]/g,'');if(s.includes(',')&&s.includes('.')){if(s.lastIndexOf(',')>s.lastIndexOf('.'))s=s.replace(/\./g,'').replace(',','.');else s=s.replace(/,/g,'')}else if(s.includes(',')&&!s.includes('.')){const p=s.split(',');if(p[p.length-1].length<=2)s=s.replace(',','.');else s=s.replace(/,/g,'')}return parseFloat(s)||0}
+function fN(n){return(n||0).toLocaleString('es-CO',{minimumFractionDigits:0,maximumFractionDigits:0})}
+function r1000(n){return Math.round((n||0)/1000)*1000} // Redondeo a $1.000
+function cellStr(v){const s=String(v??'').trim();return(s==='undefined'||s==='null'||s==='NaN')?'':s}
+
+/* ═══ FILE LOADING ═══ */
+document.getElementById('fileInput').addEventListener('change',e=>{if(e.target.files.length)loadFile(e.target.files[0])});
+const dz=document.getElementById('dz');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files.length)loadFile(e.dataTransfer.files[0])});
+
+function loadFile(file){
+  document.getElementById('fileName').textContent='✓ '+file.name;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});
+    rawData=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+    afterFileLoaded();
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function afterFileLoaded(){
+  extractMeta();
+  detectedHeaderRow=autoDetectHeaderRow();
+  goStep(2);
+  buildColumnMapper();
+}
+
+function extractMeta(){
+  for(let i=0;i<Math.min(10,rawData.length);i++){
+    const row=rawData[i];if(!row)continue;
+    for(let j=0;j<row.length;j++){
+      const cs=String(row[j]||'');
+      const cM=cs.match(/Compa[ñn][ií]a:\s*([^\n\\]+)/i);
+      if(cM)document.getElementById('cfgEmpresa').value=cM[1].trim().split('\\n')[0];
+    }
+    const r0=String(row[0]||'').trim();
+    if(/^\d{9}\s*-\s*\d$/.test(r0))document.getElementById('cfgNit').value=r0;
+    const cv=document.getElementById('cfgEmpresa').value;
+    if(!cv&&/^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s.]{4,}$/.test(r0)&&!/^(MOV|LIB|REP|TOT|ELA)/i.test(r0))document.getElementById('cfgEmpresa').value=r0;
+  }
+}
+
+function hintMatch(cellText,hint){
+  // Solo matchear si la celda es un encabezado razonable (< 50 chars)
+  // Celdas largas (metadata, descripciones) generan falsos positivos
+  if(cellText.length>50)return false;
+  return cellText===hint||cellText.includes(hint);
+}
+
+function autoDetectHeaderRow(){
+  let bestRow=0, bestScore=0;
+  for(let i=0;i<Math.min(20,rawData.length);i++){
+    const row=rawData[i];if(!row)continue;
+    const rn=row.map(c=>norm(cellStr(c)));
+    // Contar cuántos campos distintos de COL_FIELDS matchean en esta fila
+    let fieldsMatched=0;
+    for(const field of COL_FIELDS){
+      let found=false;
+      for(const h of rn){
+        if(!h||found)continue;
+        for(const hint of field.hints){
+          if(hintMatch(h,hint)){found=true;break}
+        }
+      }
+      if(found)fieldsMatched++;
+    }
+    if(fieldsMatched>bestScore){bestScore=fieldsMatched;bestRow=i}
+  }
+  // Si no encontramos al menos 3, intentar con score=2
+  if(bestScore<2){
+    for(let i=0;i<Math.min(15,rawData.length);i++){
+      const row=rawData[i];if(!row)continue;
+      const rn=row.map(c=>norm(cellStr(c)));
+      const allHints=COL_FIELDS.flatMap(f=>f.hints);
+      let score=0;
+      for(const h of rn){if(!h||h.length>50)continue;for(const hint of allHints){if(h.includes(hint)){score++;break}}}
+      if(score>=2)return i;
+    }
+  }
+  return bestRow;
+}
+
+function autoDetectColumns(hdrRow){
+  colMap={code:-1,name:-1,deb:-1,cre:-1,saldoIni:-1,saldoFin:-1};
+  const row=rawData[hdrRow];if(!row)return;
+  const headers=row.map(c=>norm(cellStr(c)));
+
+  // Paso 1: Detectar campos más específicos primero (name antes que code)
+  // porque "Descripcion Cuenta" contiene "cuenta" que matchea code
+  // Orden: saldos primero (más específicos), luego name, deb, cre, code
+  const fieldOrder=['saldoIni','saldoFin','name','deb','cre','code'];
+
+  for(const key of fieldOrder){
+    const field=COL_FIELDS.find(f=>f.key===key);
+    if(!field)continue;
+    for(let j=0;j<headers.length;j++){
+      const h=headers[j];
+      if(!h||h.length>50)continue;
+      if(Object.values(colMap).includes(j))continue;
+      for(const hint of field.hints){
+        if(hintMatch(h,hint)){colMap[key]=j;break}
+      }
+      if(colMap[key]!==-1)break;
+    }
+  }
+
+  // Paso 2: Si code no se asignó, buscar la primera columna numérica o "cuenta" que no sea name
+  if(colMap.code===-1){
+    for(let j=0;j<headers.length;j++){
+      if(Object.values(colMap).includes(j))continue;
+      const h=headers[j];
+      if(h&&(h==='cuenta'||h.includes('codigo')||h.includes('código')||h.includes('code'))){
+        colMap.code=j;break;
+      }
+    }
+  }
+  // Paso 3: Si code sigue sin asignar, asumir columna 0
+  if(colMap.code===-1&&!Object.values(colMap).includes(0)){
+    colMap.code=0;
+  }
+}
+
+/* ═══ COLUMN MAPPER UI ═══ */
+function buildColumnMapper(){
+  autoDetectColumns(detectedHeaderRow);
+  const sel=document.getElementById('hdrRowSelect');
+  sel.innerHTML='';
+  const maxR=Math.min(15,rawData.length);
+  for(let i=0;i<maxR;i++){
+    const row=rawData[i];if(!row)continue;
+    const preview=row.slice(0,4).map(c=>cellStr(c)).filter(Boolean).join(' | ').substring(0,80);
+    const opt=document.createElement('option');
+    opt.value=i;opt.textContent=`Fila ${i}: ${preview}`;
+    if(i===detectedHeaderRow)opt.selected=true;
+    sel.appendChild(opt);
+  }
+  updateHdrPreview();
+  renderRawPreview();
+  renderColMapper();
+}
+
+function onHeaderRowChange(){
+  detectedHeaderRow=parseInt(document.getElementById('hdrRowSelect').value);
+  autoDetectColumns(detectedHeaderRow);
+  renderRawPreview();
+  renderColMapper();
+  updateHdrPreview();
+}
+
+function updateHdrPreview(){
+  const row=rawData[detectedHeaderRow];
+  if(!row)return;
+  const txt=row.map(c=>cellStr(c)).filter(Boolean).join(' · ');
+  document.getElementById('hdrPreviewText').textContent=txt.substring(0,120)+(txt.length>120?'…':'');
+}
+
+function renderRawPreview(){
+  const hdr=detectedHeaderRow;
+  // Mostrar desde la fila de headers + 5 filas de datos (no metadata arriba)
+  const startR=hdr;
+  const endR=Math.min(rawData.length,hdr+8);
+  const maxCols=Math.min((rawData[hdr]||[]).length,12);
+  let h='<table><tr><th style="background:#eee;color:#999">Fila</th>';
+  for(let j=0;j<maxCols;j++){
+    const hdrVal=cellStr((rawData[hdr]||[])[j]);
+    h+=`<th style="background:#eee;color:#999">${hdrVal||'Col '+j}</th>`;
+  }
+  h+='</tr>';
+  for(let i=startR;i<endR;i++){
+    const row=rawData[i];if(!row)continue;
+    const isHdr=i===hdr;
+    const isData=i>hdr;
+    h+=`<tr class="${isHdr?'hdr-row':''}" style="${isHdr?'':''}">
+      <td style="font-weight:700;color:${isHdr?'var(--amber)':'#999'};font-size:.7rem">${isHdr?'📌 Encabezados':''}${isData?i:''}</td>`;
+    for(let j=0;j<maxCols;j++){
+      const raw=cellStr(row[j]);
+      const val=isData&&raw&&!isNaN(toNum(raw))&&toNum(raw)!==0&&/^[\d.,\s$-]+$/.test(raw)?fN(toNum(raw)):raw;
+      h+=`<td title="${raw}">${val.substring(0,35)}${val.length>35?'…':''}</td>`;
+    }
+    h+='</tr>';
+  }
+  h+='</table>';
+  // Si hay metadata arriba, mostrar aviso
+  if(hdr>0){
+    const metaInfo=`<div style="font-size:.75rem;color:var(--muted);margin-bottom:6px;padding:6px 10px;background:#f8fafc;border-radius:6px">
+      ℹ️ Se omitieron ${hdr} fila${hdr>1?'s':''} de metadata (nombre empresa, período, etc.) antes de los encabezados.
+    </div>`;
+    document.getElementById('rawPreview').innerHTML=metaInfo+h;
+  }else{
+    document.getElementById('rawPreview').innerHTML=h;
+  }
+}
+
+function renderColMapper(){
+  const hdr=rawData[detectedHeaderRow]||[];
+  let optsHtml='<option value="-1">— No asignada —</option>';
+  for(let j=0;j<hdr.length;j++){
+    const label=cellStr(hdr[j]);
+    optsHtml+=`<option value="${j}">${label?label.substring(0,30):'Columna '+(j+1)}</option>`;
+  }
+  let html='';
+  COL_FIELDS.forEach(field=>{
+    const cur=colMap[field.key];
+    const isMapped=cur>=0;
+    let sample='';
+    for(let i=detectedHeaderRow+1;i<Math.min(rawData.length,detectedHeaderRow+50);i++){
+      const r=rawData[i];if(!r)continue;
+      if(cur>=0){const v=cellStr(r[cur]);if(v&&v!=='0'){sample=v;break}}
+    }
+    const sampleFmt=sample&&!isNaN(toNum(sample))&&toNum(sample)!==0?fN(toNum(sample)):sample;
+    html+=`<div class="col-map-item ${isMapped?'mapped':''} ${field.required&&!isMapped?'required':''}">
+      <div class="cml">${field.icon} ${field.label} ${field.required?'<span class="req">*</span>':''}</div>
+      <select onchange="onColChange('${field.key}',this.value)" id="sel_${field.key}">
+        ${optsHtml.replace(`value="${cur}"`,`value="${cur}" selected`)}
+      </select>
+      <div class="sample" id="samp_${field.key}">${sampleFmt?`Ej: <strong>${sampleFmt}</strong>`:'<em>sin datos</em>'}</div>
+    </div>`;
+  });
+  document.getElementById('colMapper').innerHTML=html;
+}
+
+function onColChange(key,val){
+  const v=parseInt(val);
+  colMap[key]=v;
+  let sample='';
+  for(let i=detectedHeaderRow+1;i<Math.min(rawData.length,detectedHeaderRow+50);i++){
+    const r=rawData[i];if(!r)continue;
+    if(v>=0){const s=cellStr(r[v]);if(s&&s!=='0'){sample=s;break}}
+  }
+  const sampleFmt=sample&&!isNaN(toNum(sample))&&toNum(sample)!==0?fN(toNum(sample)):sample;
+  const el=document.getElementById('samp_'+key);
+  if(el)el.innerHTML=sampleFmt?`Ej: <strong>${sampleFmt}</strong>`:'<em>sin datos</em>';
+  const card=el?.closest('.col-map-item');
+  if(card){
+    const field=COL_FIELDS.find(f=>f.key===key);
+    card.classList.toggle('mapped',v>=0);
+    card.classList.toggle('required',field?.required&&v<0);
+  }
+}
+
+/* ═══ CONFIRM & PROCESS ═══ */
+function confirmColumns(){
+  // Si tiene saldo final, deb y cre no son obligatorios
+  const hasSaldoFin=colMap.saldoFin>=0;
+  const missing=COL_FIELDS.filter(f=>{
+    if(!f.required)return false;
+    if((f.key==='deb'||f.key==='cre')&&hasSaldoFin)return false;
+    return colMap[f.key]<0;
+  });
+  if(missing.length){alert('Faltan columnas obligatorias:\n'+missing.map(f=>'• '+f.label).join('\n')+
+    (colMap.deb<0&&colMap.cre<0&&!hasSaldoFin?'\n\nTip: Si no tienes Débitos/Créditos, asigna la columna "Saldo Final".':''));return}
+  processData();
+  if(parsedAccounts.length>0){
+    goStep(3);
+    buildMappingTable();
+  }
+}
+
+function isF300Account(code,name){
+  const c=String(code);
+  const n=norm(name||'');
+  // INGRESOS — Toda la clase 4 (41 operacionales, 42 no operacionales, etc.)
+  if(c.startsWith('4'))return true;
+  // COMPRAS / COSTOS — 61xx, 62xx (costo de ventas, compras)
+  if(c.startsWith('61')||c.startsWith('62'))return true;
+  // IVA POR PAGAR — 2408 (NO 2404 que es renta)
+  if(c.startsWith('2408'))return true;
+  // IVA bienes de capital — 2405
+  if(c.startsWith('2405'))return true;
+  // Retención IVA practicada — 2367
+  if(c.startsWith('2367'))return true;
+  // 1355: solo subcuentas relacionadas con IVA
+  if(c.startsWith('1355')){
+    if(c.length<=4)return false;
+    if(n.includes('iva')||n.includes('reteiva'))return true;
+    // 135515/17/18: SOLO si el nombre menciona IVA (no retención en la fuente)
+    if((c.startsWith('135515')||c.startsWith('135517')||c.startsWith('135518'))&&n.includes('iva'))return true;
+    // 13552003: Saldo a favor IVA
+    if(c.startsWith('13552')&&(n.includes('iva')))return true;
+    return false;
+  }
+  return false;
+}
+
+// Saldos de cuentas padre para conciliación
+let saldosContables={};
+
+function processData(){
+  parsedAccounts=[];
+  saldosContables={};
+  // Primero: recopilar todas las cuentas para detectar cuáles son padres (tienen hijas)
+  const allCodes=new Set();
+  for(let i=detectedHeaderRow+1;i<rawData.length;i++){
+    const row=rawData[i];if(!row)continue;
+    const code=cellStr(row[colMap.code]).replace(/\s/g,'');
+    if(code&&/^\d{2,}$/.test(code))allCodes.add(code);
+  }
+  function isParent(code){
+    for(const other of allCodes){
+      if(other!==code&&other.startsWith(code)&&other.length>code.length)return true;
+    }
+    return false;
+  }
+
+  for(let i=detectedHeaderRow+1;i<rawData.length;i++){
+    const row=rawData[i];if(!row)continue;
+    const code=cellStr(row[colMap.code]).replace(/\s/g,'');
+    if(!code||!/^\d{2,}$/.test(code))continue;
+    if(/^(total|procesado|elaborado)/i.test(code))continue;
+    const name=colMap.name>=0?cellStr(row[colMap.name]):'';
+    const saldoFin=colMap.saldoFin>=0?toNum(row[colMap.saldoFin]):0;
+    const saldoIni=colMap.saldoIni>=0?toNum(row[colMap.saldoIni]):0;
+    const deb0=colMap.deb>=0?toNum(row[colMap.deb]):0;
+    const cre0=colMap.cre>=0?toNum(row[colMap.cre]):0;
+
+    // Guardar saldos de cuentas clave para conciliación (padres e hijas)
+    if(code==='2408'||code==='24'||code==='2404'||code==='2405'||
+       code==='2367'||code==='1355'||code.startsWith('1355')){
+      saldosContables[code]={name,saldoFin,saldoIni,deb:deb0,cre:cre0};
+    }
+
+    // Solo procesar cuentas hoja para el formulario
+    if(isParent(code))continue;
+    if(!isF300Account(code,name))continue;
+    let deb=deb0, cre=cre0;
+    if(deb===0&&cre===0&&saldoFin!==0){
+      if(saldoFin>0)deb=saldoFin; else cre=Math.abs(saldoFin);
+    }
+    if(deb===0&&cre===0)continue;
+    parsedAccounts.push({code,name,deb,cre,saldoIni,saldoFin});
+  }
+  showPreview();
+}
+
+function showPreview(){
+  document.getElementById('previewCard').classList.remove('hidden');
+  const byC={};let tCre=0,tDeb=0;
+  parsedAccounts.forEach(a=>{
+    if(!byC[a.code])byC[a.code]={code:a.code,name:a.name,deb:0,cre:0,count:0};
+    byC[a.code].deb+=a.deb;byC[a.code].cre+=a.cre;byC[a.code].count++;
+    tCre+=a.cre;tDeb+=a.deb;
+  });
+  const ctas=Object.values(byC);
+  document.getElementById('alertNoIVA').classList.toggle('hidden',ctas.length>0);
+  const aOk=document.getElementById('alertOk');
+  if(parsedAccounts.length>0){
+    aOk.classList.remove('hidden');
+    document.getElementById('alertOkText').innerHTML=`<strong>${ctas.length} cuentas de IVA</strong> encontradas con <strong>${parsedAccounts.length} movimientos</strong>.`;
+  }else aOk.classList.add('hidden');
+  const gen=ctas.filter(c=>c.code.startsWith('2408'));
+  const desc=ctas.filter(c=>c.code.startsWith('2404')||c.code.startsWith('2405'));
+  const ret=ctas.filter(c=>c.code.startsWith('2367')||c.code.startsWith('1355'));
+  document.getElementById('fileStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${ctas.length}</div><div class="lbl">Cuentas IVA</div></div>
+    <div class="stat-card green"><div class="val">${gen.length}</div><div class="lbl">IVA Generado</div></div>
+    <div class="stat-card amber"><div class="val">${desc.length}</div><div class="lbl">IVA Descontable</div></div>
+    <div class="stat-card red"><div class="val">${ret.length}</div><div class="lbl">Ret. IVA</div></div>`;
+  let h='<table class="map-table"><thead><tr><th>Cuenta</th><th>Nombre</th><th>Mov.</th><th class="text-right">Débitos</th><th class="text-right">Créditos</th><th class="text-right">Saldo</th></tr></thead><tbody>';
+  ctas.sort((a,b)=>a.code.localeCompare(b.code)).forEach(c=>{
+    h+=`<tr><td class="mono fw600">${c.code}</td><td>${c.name}</td><td class="text-center">${c.count}</td><td class="text-right mono">${fN(c.deb)}</td><td class="text-right mono">${fN(c.cre)}</td><td class="text-right mono fw600">${fN(c.cre-c.deb)}</td></tr>`;
+  });
+  h+='</tbody></table>';
+  document.getElementById('previewTable').innerHTML=h;
+  document.getElementById('previewCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ═══ STEP 3: MAPPING ═══ */
+function goToStep3(){if(!parsedAccounts.length){alert('No hay movimientos.');return}goStep(3);buildMappingTable()}
+
+function autoMapIVA(code,name){
+  const c=String(code),n=norm(name);
+
+  // Para cuentas 1355: primero intentar por nombre (keywords) porque tiene doble uso
+  // Si el nombre dice "descontable", "iva pagado", "compras" → es IVA descontable
+  // Si el nombre dice "retencion", "reteiva", "le practicaron" → es retención IVA (casilla 67)
+  if(c.startsWith('1355')){
+    // Primero buscar saldo a favor IVA
+    const favorKws=['saldo.*favor.*iva','(?<!rete)iva.*favor','favor.*iva','sobrante.*iva'];
+    for(const kw of favorKws){
+      if(new RegExp(kw,'i').test(n))return{prefix:c,name:name||'Saldo a favor IVA',concepto:'saldo_favor_iva',tipo:'saldo_favor',casilla:84,tarifa:0};
+    }
+    // Luego buscar keywords de IVA descontable → Cas. 72
+    const descKws=['descontable','iva.*pagado','iva.*compra','iva.*adquisicion','anticipo.*impuesto.*iva(?!.*reten)'];
+    for(const kw of descKws){
+      if(new RegExp(kw,'i').test(n))return{prefix:c,name:name||'IVA descontable (1355)',concepto:'iva_desc_19',tipo:'descontable',casilla:72,tarifa:19};
+    }
+    // Luego buscar keywords de retención IVA → Cas. 85
+    const retKws=['retencion','reteiva','rete.*iva','le.*practicaron','retenido'];
+    for(const kw of retKws){
+      if(new RegExp(kw,'i').test(n))return{prefix:c,name:name||'Retención IVA a favor',concepto:'reteiva_pract',tipo:'reteiva_favor',casilla:85,tarifa:15};
+    }
+    // Si no matchea nada por nombre, usar prefijo específico
+    const sorted1355=[...IVA_MAP].filter(m=>m.prefix.startsWith('1355')&&m.prefix.length>4).sort((a,b)=>b.prefix.length-a.prefix.length);
+    for(const m of sorted1355){if(c.startsWith(m.prefix))return{...m}}
+    // Default 1355: Retención IVA a favor (casilla 85) — lo más común
+    return{prefix:c,name:name||'Retención IVA a favor',concepto:'reteiva_pract',tipo:'reteiva_favor',casilla:85,tarifa:15};
+  }
+
+  // Para el resto: match por prefijo (más específico primero)
+  const sorted=[...IVA_MAP].filter(m=>!m.prefix.startsWith('1355')).sort((a,b)=>b.prefix.length-a.prefix.length);
+  for(const m of sorted){if(c.startsWith(m.prefix))return{...m}}
+
+  // Match por keywords generales
+  for(const m of IVA_MAP){
+    const kws=IVA_KEYWORDS[m.concepto]||[];
+    for(const kw of kws){if(new RegExp(kw,'i').test(n))return{...m,prefix:c}}
+  }
+
+  // Fallback por grupo de cuenta
+  // DEVOLUCIONES EN VENTAS (4175) → Cas. 42
+  if(c.startsWith('4175'))
+    return{prefix:c,name:name||'Devoluciones en ventas',concepto:'dev_ventas',tipo:'dev_venta',casilla:42};
+  // INGRESOS — Toda la clase 4
+  if(c.startsWith('4')){
+    // Exportaciones / zona franca → Cas. 30
+    if(n.includes('export')||n.includes('zona franca'))
+      return{prefix:c,name:name||'Ingresos exportaciones',concepto:'ing_export',tipo:'ingreso',casilla:30};
+    // Excluidos → Cas. 39
+    if(n.includes('excluido')||n.includes('no sujeto'))
+      return{prefix:c,name:name||'Ingresos excluidos',concepto:'ing_excluido',tipo:'ingreso',casilla:39};
+    // No gravados / exentos → Cas. 40
+    if(n.includes('no gravad')||n.includes('exento')||n.includes('indemniz'))
+      return{prefix:c,name:name||'Ingresos no gravados',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40};
+    if(n.includes('dividend')||n.includes('participacion'))
+      return{prefix:c,name:name||'Dividendos',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40};
+    // Utilidad venta activos — generalmente no gravado → Cas. 40
+    if(c.startsWith('4245')||n.includes('utilidad')&&n.includes('venta'))
+      return{prefix:c,name:name||'Utilidad venta activos',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40};
+    // Recuperaciones → Cas. 40
+    if(c.startsWith('4250')||n.includes('recuperacion'))
+      return{prefix:c,name:name||'Recuperaciones',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40};
+    // Rendimientos financieros (4210) — excluidos de IVA (Art. 476 E.T.) → Cas. 40
+    if(c.startsWith('4210')||n.includes('rendimiento')||n.includes('interes')||n.includes('financier'))
+      return{prefix:c,name:name||'Rendimientos financieros',concepto:'ing_no_gravado',tipo:'ingreso',casilla:40};
+    // Default: gravados → Cas. 28
+    return{prefix:c,name:name||'Ingresos gravados',concepto:'ing_gravado',tipo:'ingreso',casilla:28};
+  }
+  // DEVOLUCIONES EN COMPRAS (6225) → Cas. 56
+  if(c.startsWith('6225'))
+    return{prefix:c,name:name||'Devoluciones en compras',concepto:'dev_compras',tipo:'dev_compra',casilla:56};
+  // COMPRAS / COSTOS (61xx, 62xx) — clasificar por nombre
+  if(c.startsWith('61')||c.startsWith('62')){
+    if(n.includes('import'))
+      return{prefix:c,name:name||'Importación bienes gravados',concepto:'compra_import',tipo:'compra',casilla:45};
+    if(n.includes('no gravad')||n.includes('exento'))
+      return{prefix:c,name:name||'Compras no gravadas',concepto:'compra_no_gravada',tipo:'compra',casilla:54};
+    if(n.includes('servicio'))
+      return{prefix:c,name:name||'Servicios gravados',concepto:'compra_servicio',tipo:'compra',casilla:53};
+    return{prefix:c,name:name||'Compras gravadas',concepto:'compra_gravada',tipo:'compra',casilla:51};
+  }
+  // 2408 — IVA por pagar
+  if(c.startsWith('2408')){
+    if(n.includes('descontable')||n.includes('iva pagado'))
+      return{prefix:c,name:name||'IVA descontable',concepto:'iva_desc_19',tipo:'descontable',casilla:72};
+    if(n.includes('pago de iva')||n.includes('abono iva'))
+      return{prefix:c,name:name||'Pago de IVA',concepto:'ignorar',tipo:'pago',casilla:0};
+    return{prefix:c,name:name||'IVA generado 19%',concepto:'iva_gen_19',tipo:'generado',casilla:59};
+  }
+  // 2367 → Cas. 78
+  if(c.startsWith('2367'))return{prefix:c,name:name||'Retención IVA practicada',concepto:'reteiva_pract_terc',tipo:'reteiva_terc',casilla:78};
+  return{prefix:c,name:name||'Otros',concepto:'otros',tipo:'otros',casilla:0};
+}
+
+const CONCEPTO_OPTIONS=[
+  // Ingresos (Casillas 27-43 F300 real DIAN)
+  {value:'ing_gravado_5',label:'Ingresos gravados tarifa 5% (27)',casilla:27},
+  {value:'ing_gravado',label:'Ingresos gravados tarifa general (28)',casilla:28},
+  {value:'ing_gravado_aiu',label:'A.I.U operaciones gravadas (29)',casilla:29},
+  {value:'ing_export',label:'Exportación de bienes (30)',casilla:30},
+  {value:'ing_export_serv',label:'Exportación de servicios (31)',casilla:31},
+  {value:'ing_soc_ci',label:'Ventas a soc. comercialización internacional (32)',casilla:32},
+  {value:'ing_zona_franca',label:'Ventas a zonas francas (33)',casilla:33},
+  {value:'ing_juegos',label:'Juegos de suerte y azar (34)',casilla:34},
+  {value:'ing_exento',label:'Operaciones exentas (35)',casilla:35},
+  {value:'ing_cerveza',label:'Venta cerveza producción nac. o importada (36)',casilla:36},
+  {value:'ing_gaseosas',label:'Venta gaseosas y similares (37)',casilla:37},
+  {value:'ing_licores',label:'Venta licores, aperitivos, vinos (38)',casilla:38},
+  {value:'ing_excluido',label:'Operaciones excluidas (39)',casilla:39},
+  {value:'ing_no_gravado',label:'Operaciones no gravadas (40)',casilla:40},
+  {value:'dev_ventas',label:'(-) Devoluciones en ventas (42)',casilla:42},
+  // Compras importación (44-49)
+  {value:'compra_import_5',label:'Importación bienes gravados 5% (44)',casilla:44},
+  {value:'compra_import',label:'Importación bienes gravados general (45)',casilla:45},
+  {value:'compra_import_zf',label:'Bienes/servicios gravados de Zonas Francas (46)',casilla:46},
+  {value:'compra_import_no_gravada',label:'Importación bienes no gravados (47)',casilla:47},
+  {value:'compra_import_excl_zf',label:'Bienes excluidos/exentos de Zonas Francas (48)',casilla:48},
+  {value:'compra_import_servicio',label:'Importación de servicios (49)',casilla:49},
+  // Compras nacionales (50-54)
+  {value:'compra_gravada_5',label:'Compras bienes gravados 5% (50)',casilla:50},
+  {value:'compra_gravada',label:'Compras bienes gravados general (51)',casilla:51},
+  {value:'compra_servicio_5',label:'Servicios gravados 5% (52)',casilla:52},
+  {value:'compra_servicio',label:'Servicios gravados general (53)',casilla:53},
+  {value:'compra_no_gravada',label:'Bienes/servicios excluidos, exentos, no gravados (54)',casilla:54},
+  {value:'dev_compras',label:'(-) Devoluciones en compras (56)',casilla:56},
+  // IVA generado (58-67)
+  {value:'iva_gen_5',label:'IVA generado tarifa 5% (58)',casilla:58},
+  {value:'iva_gen_19',label:'IVA generado tarifa general 19% (59)',casilla:59},
+  {value:'iva_gen_aiu',label:'IVA sobre A.I.U operaciones gravadas (60)',casilla:60},
+  {value:'iva_gen_juegos',label:'IVA generado juegos suerte (61)',casilla:61},
+  {value:'iva_gen_cerveza',label:'IVA generado cerveza (62)',casilla:62},
+  {value:'iva_gen_gaseosas',label:'IVA generado gaseosas y similares (63)',casilla:63},
+  {value:'iva_gen_licores',label:'IVA generado licores 5% (64)',casilla:64},
+  {value:'iva_gen_retiro',label:'IVA retiro inventario activos fijos/consumo (65)',casilla:65},
+  {value:'iva_gen_recup',label:'IVA recuperado en dev. compras (66)',casilla:66},
+  {value:'iva_gen_export',label:'IVA en operaciones excluidas/export (0)',casilla:0},
+  // IVA descontable (68-81)
+  {value:'iva_desc_imp5',label:'IVA descontable importaciones 5% (68)',casilla:68},
+  {value:'iva_desc_imp19',label:'IVA descontable importaciones general (69)',casilla:69},
+  {value:'iva_desc_zf',label:'IVA bienes/servicios gravados Zonas Francas (70)',casilla:70},
+  {value:'iva_desc_5',label:'IVA descontable compras bienes 5% (71)',casilla:71},
+  {value:'iva_desc_19',label:'IVA descontable compras bienes general (72)',casilla:72},
+  {value:'iva_desc_licores',label:'IVA descontable licores, aperitivos, vinos (73)',casilla:73},
+  {value:'iva_desc_serv5',label:'IVA descontable servicios 5% (74)',casilla:74},
+  {value:'iva_desc_serv',label:'IVA descontable servicios general (75)',casilla:75},
+  {value:'iva_desc_hidro',label:'Descuento IVA exploración hidrocarburos (76)',casilla:76},
+  {value:'iva_capital',label:'IVA bienes de capital (72)',casilla:72},
+  // Retenciones y saldos (78, 84, 85)
+  {value:'reteiva_pract_terc',label:'IVA retenido no domiciliados/no residentes (78)',casilla:78},
+  {value:'saldo_favor_iva',label:'Saldo a favor período fiscal anterior (84)',casilla:84},
+  {value:'reteiva_pract',label:'Retenciones por IVA que le practicaron (85)',casilla:85},
+  {value:'ignorar',label:'— Ignorar —',casilla:0},
+];
+
+/* ═══ ANÁLISIS INTELIGENTE DE INGRESOS ═══ */
+let tipoIngresos='gravados';
+let pctProrrateo=100;
+
+function analizarIngresos(){
+  // Detectar si hay IVA generado en los datos
+  let totalIvaGen=0, totalIngresos=0;
+  parsedAccounts.forEach(a=>{
+    const c=String(a.code);
+    if(c.startsWith('2408')&&!c.startsWith('24081')&&!c.startsWith('24089')){
+      totalIvaGen+=a.cre-a.deb; // IVA generado es crédito
+    }
+    if(c.startsWith('41')){
+      totalIngresos+=a.cre-a.deb;
+    }
+  });
+
+  const det=document.getElementById('ingresosDeteccion');
+  if(totalIngresos>0&&totalIvaGen<=0){
+    // Hay ingresos pero NO hay IVA generado → son exentos o no gravados
+    det.innerHTML=`<div class="alert alert-warn"><span>🔍</span><div>
+      <strong>Se detectaron ingresos por $${fN(totalIngresos)} pero NO se encontró IVA generado.</strong><br>
+      Esto indica que los ingresos son <strong>exentos</strong>, <strong>excluidos</strong> o <strong>no gravados</strong>. Selecciona el tipo correcto abajo para clasificarlos en la casilla correcta del F300.
+    </div></div>`;
+    // Auto-seleccionar exentos
+    document.querySelector('input[name="tipoIng"][value="exentos"]').checked=true;
+    tipoIngresos='exentos';
+    document.getElementById('exentosInfo').classList.remove('hidden');
+  }else if(totalIngresos>0&&totalIvaGen>0){
+    const tasaEfectiva=((totalIvaGen/totalIngresos)*100).toFixed(1);
+    det.innerHTML=`<div class="alert alert-success"><span>✅</span><div>
+      <strong>Ingresos:</strong> $${fN(totalIngresos)} · <strong>IVA generado:</strong> $${fN(totalIvaGen)} · <strong>Tasa efectiva:</strong> ${tasaEfectiva}%
+      <br>Se clasificarán como ingresos gravados (casilla 28). Si tienes ingresos mixtos, selecciona "Mixto" abajo.
+    </div></div>`;
+  }else{
+    det.innerHTML=`<div class="alert alert-info"><span>💡</span><div>
+      No se detectaron ingresos en cuentas 41xx. Si tu balance no incluye el estado de resultados, las casillas de ingresos (27-40) quedarán en cero.
+    </div></div>`;
+  }
+}
+
+function onTipoIngresosChange(){
+  tipoIngresos=document.querySelector('input[name="tipoIng"]:checked').value;
+  document.getElementById('prorrateoInfo').classList.toggle('hidden',tipoIngresos!=='excluidos'&&tipoIngresos!=='mixto');
+  document.getElementById('exentosInfo').classList.toggle('hidden',tipoIngresos!=='exentos');
+
+  // Reclasificar ingresos en el mapeo
+  reclasificarIngresos();
+  // Rebuild table
+  renderMappingRows();
+}
+
+function onProrrateoChange(){
+  pctProrrateo=parseFloat(document.getElementById('pctProrrateo').value)||100;
+}
+
+let modoSaldoFavor='arrastrar';
+function onSaldoFavorChange(){
+  modoSaldoFavor=document.querySelector('input[name="saldoFavor"]:checked').value;
+  const inp=document.getElementById('saldoFavorInput');
+  if(modoSaldoFavor==='solicitar'){
+    document.getElementById('cfgSaldoFavor').value='0';
+    inp.style.opacity='0.5';
+  }else{
+    inp.style.opacity='1';
+  }
+}
+
+function detectarSaldoFavor(){
+  // Buscar saldo a favor IVA en cuentas 1355
+  let saldoDetectado=0;
+  for(const[code,data] of Object.entries(saldosContables)){
+    if(code.startsWith('13552')&&(data.name||'').toLowerCase().includes('iva')){
+      saldoDetectado=Math.abs(data.saldoFin||0);
+    }
+  }
+  const el=document.getElementById('saldoFavorDetectado');
+  if(saldoDetectado>0){
+    el.innerHTML=`Detectado en balance: <strong>$${fN(r1000(saldoDetectado))}</strong> (cta 13552xxx)`;
+    if(modoSaldoFavor==='arrastrar'){
+      document.getElementById('cfgSaldoFavor').value=r1000(saldoDetectado);
+    }
+  }else{
+    el.textContent='No se detectó saldo a favor IVA en el balance';
+  }
+}
+
+function reclasificarIngresos(){
+  mappings.forEach(m=>{
+    if(m.tipo!=='ingreso')return;
+    const c=String(m.code);
+    const esNoOperacional=c.startsWith('42')||c.startsWith('43')||c.startsWith('47');
+    switch(tipoIngresos){
+      case 'gravados':
+        // Operacionales → gravados tarifa general (cas 28), No operacionales → no gravados (cas 40)
+        if(esNoOperacional){m.concepto='ing_no_gravado';m.casilla=40}
+        else{m.concepto='ing_gravado';m.casilla=28}
+        break;
+      case 'exentos':
+        // Operacionales → exentos (cas 35), No operacionales → no gravados (cas 40)
+        if(esNoOperacional){m.concepto='ing_no_gravado';m.casilla=40}
+        else{m.concepto='ing_exento';m.casilla=35}
+        break;
+      case 'excluidos':
+        // Operacionales → excluidos (cas 39), No operacionales �� no gravados (cas 40)
+        if(esNoOperacional){m.concepto='ing_no_gravado';m.casilla=40}
+        else{m.concepto='ing_excluido';m.casilla=39}
+        break;
+      case 'mixto':
+        // Operacionales → gravados general (cas 28), No operacionales → no gravados (cas 40)
+        if(esNoOperacional){m.concepto='ing_no_gravado';m.casilla=40;m.confidence='medium'}
+        else{m.concepto='ing_gravado';m.casilla=28;m.confidence='medium'}
+        break;
+    }
+  });
+}
+
+function renderMappingRows(){
+  const opts=CONCEPTO_OPTIONS.map(o=>`<option value="${o.value}">${o.label}</option>`).join('');
+  const body=document.getElementById('mapBody');body.innerHTML='';
+  let nGen=0,nDesc=0,nRet=0;
+  mappings.forEach((m,idx)=>{
+    const val=m.tipo==='ingreso'?(m.totalCre-m.totalDeb):
+              m.tipo==='dev_venta'?(m.totalDeb-m.totalCre):
+              m.tipo==='compra'?(m.totalDeb-m.totalCre):
+              m.tipo==='dev_compra'?(m.totalCre-m.totalDeb):
+              m.tipo==='generado'?(m.totalCre-m.totalDeb):
+              m.tipo==='descontable'?(m.totalDeb-m.totalCre):
+              m.tipo==='reteiva_favor'?(m.totalDeb):
+              m.tipo==='reteiva_terc'?(m.totalCre):
+              m.tipo==='saldo_favor'?(m.totalDeb-m.totalCre):
+              (m.totalCre-m.totalDeb);
+    if(m.tipo==='ingreso'||m.tipo==='generado')nGen++;
+    else if(m.tipo==='compra'||m.tipo==='descontable')nDesc++;
+    else nRet++;
+    const tipoBadge=m.tipo==='ingreso'?'<span class="badge" style="background:#E8F5E9;color:#2E7D32">Ingreso</span>':
+                m.tipo==='dev_venta'?'<span class="badge" style="background:#FFEBEE;color:#C62828">Dev. Venta</span>':
+                m.tipo==='compra'?'<span class="badge" style="background:#FFF3E0;color:#E65100">Compra</span>':
+                m.tipo==='dev_compra'?'<span class="badge" style="background:#E3F2FD;color:#1565C0">Dev. Compra</span>':
+                m.tipo==='generado'?'<span class="badge badge-gen">IVA Gen.</span>':
+                m.tipo==='descontable'?'<span class="badge badge-desc">IVA Desc.</span>':
+                m.tipo==='saldo_favor'?'<span class="badge" style="background:#E8EAF6;color:#283593">Saldo favor</span>':
+                m.tipo==='pago'?'<span class="badge" style="background:#ECEFF1;color:#546E7A">Pago</span>':
+                m.tipo==='reteiva_favor'?'<span class="badge badge-ret">RteIVA favor</span>':
+                m.tipo==='reteiva_terc'?'<span class="badge badge-ret">RteIVA pract.</span>':
+                '<span class="badge" style="background:#F5F5F5;color:#757575">Otro</span>';
+    const confIcon=m.confidence==='high'?'<span title="Detectado por código PUC" style="font-size:.7rem;color:var(--green);cursor:help">● Auto</span>':
+                    m.confidence==='medium'?'<span title="Detectado por nombre — verificar" style="font-size:.7rem;color:var(--amber);cursor:help">◐ Revisar</span>':
+                    '<span title="Clasificar manualmente" style="font-size:.7rem;color:var(--red);cursor:help">○ Manual</span>';
+    const rowBg=m.confidence==='low'?'background:#FFF8E1':m.confidence==='medium'?'background:#FFFDE7':'';
+    body.innerHTML+=`<tr style="${rowBg}"><td class="mono fw600">${m.code}</td><td>${m.name} ${tipoBadge} ${confIcon}</td>
+      <td><select onchange="updateMapIVA(${idx},this.value)">${opts.replace('value="'+m.concepto+'"','value="'+m.concepto+'" selected')}</select></td>
+      <td class="text-right mono">${fN(m.totalDeb)}</td><td class="text-right mono">${fN(m.totalCre)}</td>
+      <td class="text-right mono fw600" id="v${idx}">$${fN(Math.abs(val))}</td>
+      <td class="text-center mono" id="c${idx}">${m.casilla||'—'}</td></tr>`;
+  });
+  document.getElementById('mappedCount').textContent=mappings.length;
+  document.getElementById('genCount').textContent=nGen;
+  document.getElementById('descCount').textContent=nDesc;
+  document.getElementById('retCount').textContent=nRet;
+}
+
+function buildMappingTable(){
+  const byCode={};
+  parsedAccounts.forEach(a=>{
+    if(!byCode[a.code])byCode[a.code]={code:a.code,name:a.name,totalDeb:0,totalCre:0,count:0};
+    byCode[a.code].totalDeb+=a.deb;byCode[a.code].totalCre+=a.cre;byCode[a.code].count++;
+  });
+  const accs=Object.values(byCode).sort((a,b)=>a.code.localeCompare(b.code));
+  mappings=accs.map(acc=>{
+    const mapped=autoMapIVA(acc.code,acc.name);
+    let confidence='high';
+    const c=String(acc.code);
+    if(mapped.prefix&&mapped.prefix.length>=6&&c.startsWith(mapped.prefix))confidence='high';
+    else if(mapped.prefix&&mapped.prefix.length<=4)confidence='medium';
+    if(mapped.concepto==='otros'||mapped.concepto==='ignorar')confidence='low';
+    if(c.startsWith('1355')&&mapped.prefix&&mapped.prefix.length<8)confidence='medium';
+    return{...acc,...mapped,confidence};
+  });
+  // Analizar ingresos y reclasificar si es necesario
+  analizarIngresos();
+  reclasificarIngresos();
+  detectarSaldoFavor();
+  renderMappingRows();
+}
+
+function updateMapIVA(idx,val){
+  const opt=CONCEPTO_OPTIONS.find(o=>o.value===val);
+  if(opt){mappings[idx].concepto=val;mappings[idx].casilla=opt.casilla}
+  else{mappings[idx].concepto='ignorar';mappings[idx].casilla=0}
+  const el=document.getElementById('c'+idx);
+  if(el)el.textContent=mappings[idx].casilla||'—';
+}
+
+/* ═══ STEP 4: FORM 300 ═══ */
+function goStep4(){
+  goStep(4);
+  try{calc300()}catch(e){console.error('calc300 error:',e);alert('Error en cálculo: '+e.message)}
+  try{render300()}catch(e){console.error('render300 error:',e);alert('Error en render: '+e.message)}
+  try{renderDetail()}catch(e){console.error('renderDetail error:',e)}
+  try{renderConciliacion()}catch(e){console.error('renderConciliacion error:',e)}
+  try{renderBalanceSidebar()}catch(e){console.error('sidebar error:',e)}
+}
+
+function calc300(){
+  const cas={};
+  // Initialize all real F300 casillas: 27-100 + 980
+  for(let i=27;i<=100;i++)cas[i]=0;
+  cas[980]=0;
+
+  mappings.forEach(m=>{
+    if(m.concepto==='ignorar'||!m.casilla)return;
+    let val;
+    // Ingresos: crédito es el valor (cuentas 41xx son de naturaleza crédito)
+    if(m.tipo==='ingreso')val=m.totalCre-m.totalDeb;
+    // Devoluciones ventas: débito (reduce ingresos)
+    else if(m.tipo==='dev_venta')val=m.totalDeb-m.totalCre;
+    // Compras: débito es el valor
+    else if(m.tipo==='compra')val=m.totalDeb-m.totalCre;
+    // Devoluciones compras: crédito (reduce compras)
+    else if(m.tipo==='dev_compra')val=m.totalCre-m.totalDeb;
+    // IVA generado: crédito (la empresa debe)
+    else if(m.tipo==='generado')val=m.totalCre-m.totalDeb;
+    // IVA descontable: débito (la empresa pagó)
+    else if(m.tipo==='descontable')val=m.totalDeb-m.totalCre;
+    // Retención IVA a favor: débito (activo)
+    else if(m.tipo==='reteiva_favor')val=m.totalDeb;
+    // Retención IVA practicada: crédito (pasivo)
+    else if(m.tipo==='reteiva_terc')val=m.totalCre;
+    // Saldo a favor: débito (activo)
+    else if(m.tipo==='saldo_favor')val=m.totalDeb-m.totalCre;
+    else val=Math.abs(m.totalCre-m.totalDeb);
+    cas[m.casilla]=(cas[m.casilla]||0)+Math.abs(val);
+  });
+
+  // === DERIVAR COMPRAS DESDE IVA DESCONTABLE / TARIFA ===
+  // Si no hay compras directas, calcular base desde IVA
+  const tieneComprasDirectas=(cas[50]||0)+(cas[51]||0)+(cas[52]||0)+(cas[53]||0)+(cas[44]||0)+(cas[45]||0)>0;
+  if(!tieneComprasDirectas){
+    // IVA desc compras 5% (cas 71) → base compras nac 5% (cas 50)
+    if(cas[71])cas[50]=(cas[50]||0)+r1000(cas[71]/0.05);
+    // IVA desc compras 19% (cas 72) → base compras nac general (cas 51)
+    if(cas[72])cas[51]=(cas[51]||0)+r1000(cas[72]/0.19);
+    // IVA desc servicios 19% (cas 75) → base servicios general (cas 53)
+    if(cas[75])cas[53]=(cas[53]||0)+r1000(cas[75]/0.19);
+    // IVA desc importaciones 5% (cas 68) → base import 5% (cas 44)
+    if(cas[68])cas[44]=(cas[44]||0)+r1000(cas[68]/0.05);
+    // IVA desc importaciones 19% (cas 69) → base import general (cas 45)
+    if(cas[69])cas[45]=(cas[45]||0)+r1000(cas[69]/0.19);
+    // IVA desc servicios 5% (cas 74) → base servicios 5% (cas 52)
+    if(cas[74])cas[52]=(cas[52]||0)+r1000(cas[74]/0.05);
+  }
+
+  // === DERIVAR INGRESOS DESDE IVA GENERADO / TARIFA ===
+  const tieneIngresosDirectos=(cas[27]||0)+(cas[28]||0)+(cas[30]||0)+(cas[35]||0)+(cas[39]||0)+(cas[40]||0)>0;
+  if(!tieneIngresosDirectos){
+    if(cas[58])cas[27]=(cas[27]||0)+r1000(cas[58]/0.05); // IVA gen 5% → ingresos 5%
+    if(cas[59])cas[28]=(cas[28]||0)+r1000(cas[59]/0.19); // IVA gen 19% → ingresos general
+    if(cas[61])cas[28]=(cas[28]||0)+r1000(cas[61]/0.19); // juegos → ingresos general
+    if(cas[62])cas[28]=(cas[28]||0)+r1000(cas[62]/0.19); // cerveza → ingresos general
+    if(cas[64])cas[28]=(cas[28]||0)+r1000(cas[64]/0.05); // licores 5% → ingresos general
+  }
+
+  // === REDONDEAR TODAS LAS CASILLAS A $1.000 ===
+  for(const k in cas)cas[k]=r1000(cas[k]);
+
+  // === CÁLCULOS DEL FORMULARIO 300 REAL DIAN ===
+  // Ingresos: cas 41 = sum(27..40), cas 43 = 41 - 42
+  cas[41]=(cas[27]||0)+(cas[28]||0)+(cas[29]||0)+(cas[30]||0)+(cas[31]||0)+(cas[32]||0)+(cas[33]||0)+(cas[34]||0)+(cas[35]||0)+(cas[36]||0)+(cas[37]||0)+(cas[38]||0)+(cas[39]||0)+(cas[40]||0);
+  cas[43]=(cas[41]||0)-(cas[42]||0);
+
+  // Compras: cas 55 = sum(44..54), cas 57 = 55 - 56
+  cas[55]=(cas[44]||0)+(cas[45]||0)+(cas[46]||0)+(cas[47]||0)+(cas[48]||0)+(cas[49]||0)+(cas[50]||0)+(cas[51]||0)+(cas[52]||0)+(cas[53]||0)+(cas[54]||0);
+  cas[57]=(cas[55]||0)-(cas[56]||0);
+
+  // IVA Generado: cas 67 = sum(58..66)
+  cas[67]=(cas[58]||0)+(cas[59]||0)+(cas[60]||0)+(cas[61]||0)+(cas[62]||0)+(cas[63]||0)+(cas[64]||0)+(cas[65]||0)+(cas[66]||0);
+
+  // Prorrateo — aplica a IVA descontable (68-76)
+  if((tipoIngresos==='excluidos'||tipoIngresos==='mixto')&&pctProrrateo<100){
+    const factor=pctProrrateo/100;
+    [68,69,70,71,72,73,74,75,76].forEach(k=>{cas[k]=r1000((cas[k]||0)*factor)});
+  }
+
+  // IVA Descontable: cas 77 = sum(68..76), cas 81 = 77 + 78 + 79 - 80
+  cas[77]=(cas[68]||0)+(cas[69]||0)+(cas[70]||0)+(cas[71]||0)+(cas[72]||0)+(cas[73]||0)+(cas[74]||0)+(cas[75]||0)+(cas[76]||0);
+  cas[81]=(cas[77]||0)+(cas[78]||0)+(cas[79]||0)-(cas[80]||0);
+
+  // Liquidación privada
+  cas[82]=Math.max(0,(cas[67]||0)-(cas[81]||0)); // Saldo a pagar por período
+  cas[83]=Math.max(0,(cas[81]||0)-(cas[67]||0)); // Saldo a favor del período
+
+  // Saldo a favor del período anterior (cas 84) — usar input del usuario
+  const sfInput=r1000(toNum(document.getElementById('cfgSaldoFavor')?.value));
+  cas[84]=modoSaldoFavor==='arrastrar'?sfInput:0;
+
+  // Retenciones por IVA que le practicaron (cas 85) — ya acumulado del mapeo
+  // cas[85] ya viene del mapeo
+
+  // Saldo a pagar por impuesto (cas 86)
+  cas[86]=Math.max(0,(cas[82]||0)-(cas[84]||0)-(cas[85]||0));
+
+  // Sanciones (cas 87) — manual input
+  cas[87]=cas[87]||0;
+
+  // Total saldo a pagar (cas 88)
+  cas[88]=(cas[86]||0)+(cas[87]||0);
+
+  // Total saldo a favor (cas 89)
+  cas[89]=cas[82]>0?Math.max(0,(cas[84]||0)+(cas[85]||0)-(cas[82]||0)):((cas[83]||0)+(cas[84]||0)+(cas[85]||0));
+
+  // Régimen Simple: anticipos
+  const regimen=document.getElementById('cfgRegimen').value;
+  cas[100]=regimen==='simple'?r1000(toNum(document.getElementById('cfgAnticipo').value)):0;
+
+  // Total pago
+  cas[980]=cas[88]||0;
+
+  result300={cas,regimen};
+}
+
+function render300(){
+  const c=result300.cas;
+  const regimen=result300.regimen||'comun_bim';
+
+  // Construir mapa: casilla → [{code, name, val}]
+  const casMap={};
+  mappings.forEach(m=>{
+    if(m.concepto==='ignorar'||!m.casilla)return;
+    const val=m.tipo==='ingreso'?(m.totalCre-m.totalDeb):
+              m.tipo==='dev_venta'?(m.totalDeb-m.totalCre):
+              m.tipo==='compra'?(m.totalDeb-m.totalCre):
+              m.tipo==='dev_compra'?(m.totalCre-m.totalDeb):
+              m.tipo==='generado'?(m.totalCre-m.totalDeb):
+              m.tipo==='descontable'?(m.totalDeb-m.totalCre):
+              m.tipo==='reteiva_favor'?m.totalDeb:
+              m.tipo==='reteiva_terc'?m.totalCre:
+              m.tipo==='saldo_favor'?(m.totalDeb-m.totalCre):
+              Math.abs(m.totalCre-m.totalDeb);
+    if(!casMap[m.casilla])casMap[m.casilla]=[];
+    casMap[m.casilla].push({code:m.code,name:m.name,deb:r1000(m.totalDeb),cre:r1000(m.totalCre),val:r1000(Math.abs(val))});
+  });
+
+  const emp=document.getElementById('cfgEmpresa').value;
+  const nit=document.getElementById('cfgNit').value;
+  const yr=document.getElementById('cfgYear').value;
+  const per=document.getElementById('cfgPeriodo').value;
+  const perLabel=document.getElementById('cfgPeriodo').selectedOptions[0]?.text||per;
+
+  function cv(n){return n?(n).toLocaleString('es-CO'):'0'}
+  // fRow: editable row with casilla number on left edge
+  function fRow(label,casilla){
+    const v=c[casilla]||0;
+    return`<tr>
+      <td style="width:32px;text-align:center;font-size:7.5px;color:#888;font-family:'JetBrains Mono',monospace;background:#f9f9f9;border-right:1px solid #e0e0e0;padding:2px 3px">${casilla}</td>
+      <td style="font-size:9px;padding:2px 6px">${label}</td>
+      <td style="width:140px;text-align:right;border-left:1px solid #e0e0e0;padding:2px 4px">
+        <input type="text" value="${v?fN(v):'0'}" data-cas="${casilla}" onchange="onCasEdit(this)" style="border:1px solid ${v?'#b4c6e7':'#e2e8f0'};border-radius:3px;background:${v?'#edf4ff':'#fafbfc'};text-align:right;font-family:'JetBrains Mono',monospace;font-size:9.5px;width:100%;font-weight:${v?'700':'400'};color:${v?'#1a3c6e':'#bbb'};outline:none;padding:2px 4px;cursor:text" onfocus="this.select();this.style.borderColor='#2E75B6';this.style.boxShadow='0 0 0 2px rgba(46,117,182,.15)'" onblur="this.style.borderColor=this.value&&this.value!=='0'?'#b4c6e7':'#e2e8f0';this.style.boxShadow='none'">
+      </td>
+    </tr>`;
+  }
+  // tRow: total row (bold, with background)
+  function tRow(label,casilla,bg,editable){
+    const v=c[casilla]||0;
+    const valHtml=editable!==false?
+      `<input type="text" value="${fN(v)}" data-cas="${casilla}" onchange="onCasEdit(this)" style="border:1px solid #b4c6e7;border-radius:3px;background:transparent;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;width:100%;font-weight:700;outline:none;padding:2px 4px;cursor:text" onfocus="this.select();this.style.borderColor='#2E75B6';this.style.boxShadow='0 0 0 2px rgba(46,117,182,.15)'" onblur="this.style.borderColor='#b4c6e7';this.style.boxShadow='none'">`:
+      `<span style="display:inline-block;border:1px solid ${bg?'transparent':'#e2e8f0'};border-radius:3px;padding:2px 4px;min-width:80px;text-align:right;background:${v?'':'#fafbfc'}">${v?fN(v):'0'}</span>`;
+    return`<tr style="font-weight:700;${bg?'background:'+bg:''}">
+      <td style="width:32px;text-align:center;font-size:8px;color:#666;background:#f0f0f0;border-right:1px solid #ccc;padding:3px">${casilla}</td>
+      <td style="font-size:9.5px;padding:3px 6px">${label}</td>
+      <td style="width:140px;text-align:right;font-family:'JetBrains Mono',monospace;border-left:1px solid #ccc;padding:3px 4px;font-size:10px">${valHtml}</td>
+    </tr>`;
+  }
+  function secRow(label){
+    return`<tr><td colspan="3" style="background:#d4e6f1;padding:4px 8px;font-weight:700;font-size:9px;color:#1a3c6e;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid #1a3c6e">${label}</td></tr>`;
+  }
+
+  let h=`<div style="background:#E3F2FD;border:1px solid #90CAF9;border-radius:8px;padding:10px 16px;margin-bottom:12px;display:flex;align-items:center;gap:10px;font-size:.82rem;color:#1565C0">
+    <span style="font-size:1.2rem">✏️</span>
+    <div><strong>Este borrador es editable.</strong> Haz clic en cualquier casilla con valor para modificarlo. Los totales se recalculan automáticamente.</div>
+  </div>
+  <div class="dian-form" style="border:2px solid #000;background:#fff;max-width:1200px;margin:0 auto">
+    <div class="dian-top">
+      <div class="dian-top-left">DIAN<br><span style="font-size:7px;font-weight:400">Dirección de Impuestos<br>y Aduanas Nacionales</span></div>
+      <div class="dian-top-center">
+        <div class="dian-title">Declaración del Impuesto sobre las Ventas - IVA</div>
+        <div class="dian-subtitle">${emp} · NIT ${nit} · ${perLabel} ${yr}</div>
+      </div>
+      <div class="dian-top-right">300</div>
+    </div>
+`;
+
+  // === TWO-COLUMN LAYOUT like the real DIAN F300 ===
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;font-size:10px;font-family:Arial,Helvetica,sans-serif">`;
+
+  // ===== LEFT COLUMN (Casillas 27-61) =====
+  h+=`<div style="border-right:2px solid #000">
+    <table style="width:100%;border-collapse:collapse">`;
+
+  // INGRESOS (27-43)
+  h+=secRow('Ingresos del periodo');
+  h+=fRow('Por operaciones gravadas al 5%',27);
+  h+=fRow('Por operaciones gravadas a la tarifa general',28);
+  h+=fRow('A.I.U por operaciones gravadas (base gravable especial)',29);
+  h+=fRow('Por exportación de bienes',30);
+  h+=fRow('Por exportación de servicios',31);
+  h+=fRow('Por ventas a sociedades de comercialización internacional',32);
+  h+=fRow('Por ventas a zonas francas',33);
+  h+=fRow('Por juegos de suerte y azar',34);
+  h+=fRow('Por operaciones exentas',35);
+  h+=fRow('Por venta de cerveza de producción nacional o importada',36);
+  h+=fRow('Por venta de gaseosas y similares',37);
+  h+=fRow('Por venta de licores, aperitivos, vinos y similares',38);
+  h+=fRow('Por operaciones excluidas',39);
+  h+=fRow('Por operaciones no gravadas',40);
+  h+=tRow('Total ingresos brutos (sum 27..40)',41,'#dce8f4',false);
+  h+=fRow('(-) Devoluciones en ventas anuladas, rescindidas o resueltas',42);
+  h+=tRow('Total ingresos netos (41 - 42)',43,'#c6dced',false);
+
+  // COMPRAS IMPORTACIÓN (44-49)
+  h+=secRow('Compras e importaciones');
+  h+=fRow('De bienes gravados a la tarifa del 5%',44);
+  h+=fRow('De bienes gravados a la tarifa general',45);
+  h+=fRow('De bienes y servicios gravados provenientes de Zonas Francas',46);
+  h+=fRow('De bienes no gravados',47);
+  h+=fRow('De bienes excluidos, exentos y no gravados de Zonas Francas',48);
+  h+=fRow('De servicios',49);
+
+  // COMPRAS NACIONALES (50-57)
+  h+=secRow('Compras nacionales');
+  h+=fRow('De bienes gravados a la tarifa del 5%',50);
+  h+=fRow('De bienes gravados a la tarifa general',51);
+  h+=fRow('De servicios gravados a la tarifa del 5%',52);
+  h+=fRow('De servicios gravados a la tarifa general',53);
+  h+=fRow('De bienes y servicios excluidos, exentos y no gravados',54);
+  h+=tRow('Total compras e importaciones brutas (sum 44..54)',55,'#d5e8d4',false);
+  h+=fRow('(-) Devoluciones en compras anuladas, rescindidas o resueltas',56);
+  h+=tRow('Total compras netas (55 - 56)',57,'#b6d7a8',false);
+
+  // IVA GENERADO left side (58-61)
+  h+=secRow('Impuesto generado');
+  h+=fRow('A la tarifa del 5%',58);
+  h+=fRow('A la tarifa general',59);
+  h+=fRow('Sobre A.I.U en operaciones gravadas (base gravable especial)',60);
+  h+=fRow('En juegos de suerte y azar',61);
+
+  h+=`</table></div>`;
+
+  // ===== RIGHT COLUMN (Casillas 62-100) =====
+  h+=`<div>
+    <table style="width:100%;border-collapse:collapse">`;
+
+  // IVA GENERADO right side (62-67)
+  h+=secRow('Impuesto generado (cont.)');
+  h+=fRow('En venta cerveza de producción nacional o importada',62);
+  h+=fRow('En venta de gaseosas y similares',63);
+  h+=fRow('En venta de licores, aperitivos, vinos y similares 5%',64);
+  h+=fRow('En retiro de inventario para activos fijos, consumo, muestras o donaciones',65);
+  h+=fRow('IVA recuperado en devoluciones en compras anuladas, rescindidas o resueltas',66);
+  h+=tRow('Total impuesto generado por operaciones gravadas (sum 58..66)',67,'#dce8f4',false);
+
+  // IVA DESCONTABLE (68-81)
+  h+=secRow('Impuestos descontables');
+  h+=fRow('Por importaciones gravadas a tarifa del 5%',68);
+  h+=fRow('Por importaciones gravadas a la tarifa general',69);
+  h+=fRow('De bienes y servicios gravados provenientes de Zonas Francas',70);
+  h+=fRow('Por compras de bienes gravados a la tarifa 5%',71);
+  h+=fRow('Por compras de bienes gravados a tarifa general',72);
+  h+=fRow('Por licores, aperitivos, vinos y similares',73);
+  h+=fRow('Por servicios gravados a la tarifa del 5%',74);
+  h+=fRow('Por servicios gravados a la tarifa general',75);
+  h+=fRow('Descuento IVA exploración hidrocarburos Art. 485-2 ET',76);
+  h+=tRow('Total Impuesto pagado o facturado (sum 68..76)',77,'#d5e8d4',false);
+  h+=fRow('IVA retenido por servicios prestados en Colombia por no domiciliados',78);
+  h+=fRow('IVA resultante por devoluciones en ventas anuladas, rescindidas o resueltas',79);
+  h+=fRow('Ajuste impuestos descontables (pérdidas, hurto o castigo inventarios)',80);
+  h+=tRow('Total impuestos descontables (77 + 78 + 79 - 80)',81,'#b6d7a8',false);
+
+  if((tipoIngresos==='excluidos'||tipoIngresos==='mixto')&&pctProrrateo<100){
+    h+=`<tr><td colspan="3" style="padding:3px 8px;background:#FFF3E0;font-size:8px;color:#E65100">Prorrateo ${pctProrrateo}% aplicado al IVA descontable</td></tr>`;
+  }
+
+  // LIQUIDACIÓN PRIVADA (82-89)
+  h+=secRow('Liquidación privada');
+  h+=tRow('Saldo a pagar por el período fiscal (si 67 > 81)',82,'#FFF3E0',false);
+  h+=tRow('Saldo a favor del período fiscal (si 81 > 67)',83,'#E8F5E9',false);
+  h+=fRow('Saldo a favor del período fiscal anterior',84);
+  h+=fRow('Retenciones por IVA que le practicaron',85);
+  h+=tRow('Saldo a pagar por impuesto (82 - 84 - 85, si > 0)',86,'#FFEBEE',false);
+  h+=fRow('Sanciones',87);
+  h+=tRow('Total saldo a pagar (86 + 87)',88,'#c6dced;font-size:12px;font-weight:900',false);
+  h+=tRow('O total saldo a favor',89,'#b6d7a8;font-size:12px;font-weight:900',false);
+
+  // CONTROL DE SALDOS (90-93)
+  h+=secRow('Control de saldos');
+  h+=fRow('Saldo a favor susceptible de devolución y/o compensación',90);
+  h+=fRow('Saldo a favor susceptible de ser devuelto a imputar período siguiente',91);
+  h+=fRow('Saldo sin derecho a dev. susceptible de imputar período siguiente',92);
+  h+=fRow('Total saldo a favor a imputar al período siguiente',93);
+
+  // ANTICIPOS (100, 980)
+  if(regimen==='simple'&&(c[100]||0)>0){
+    h+=secRow('Anticipos régimen SIMPLE');
+    h+=tRow('Total anticipos IVA Régimen SIMPLE',100,'',true);
+  }
+  h+=secRow('Pago');
+  h+=tRow('Pago total $',980,'#c6dced;font-size:11px',false);
+
+  h+=`</table></div>`;
+  h+=`</div>`; // end two-column grid
+
+  // Régimen tag
+  const regTag=regimen==='simple'?'<span class="regime-tag regime-simple">Régimen Simple — Anual</span>':
+               regimen==='comun_cuat'?'<span class="regime-tag regime-cuat">Cuatrimestral</span>':
+               '<span class="regime-tag regime-bim">Bimestral</span>';
+
+  // Validación: Total clase 4 (Cre-Deb) debe cuadrar con ingresos del formulario
+  let totalCl4Cre=0,totalCl4Deb=0;
+  mappings.forEach(m=>{if(m.tipo==='ingreso'||m.tipo==='dev_venta'){totalCl4Cre+=m.totalCre;totalCl4Deb+=m.totalDeb}});
+  const netoCl4=r1000(totalCl4Cre-totalCl4Deb);
+  const netoF300=c[43]||0;
+  const diffVal=Math.abs(netoCl4-netoF300);
+  const cuadra=diffVal<2000;
+  h+=`<div class="dian-footer"><strong>BORRADOR</strong> ${regTag} — Generado automáticamente. Debe ser verificado antes de presentar a la DIAN.</div>`;
+  h+=`</div>`;
+
+  document.getElementById('form300Visual').innerHTML=h;
+
+  const ivaGen=c[67]||0;
+  const ivaDesc=c[81]||0;
+  const saldoPagar=c[88]||0;
+  const saldoFavor=c[89]||0;
+
+  document.getElementById('resultStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">$${fN(ivaGen)}</div><div class="lbl">IVA Generado (67)</div></div>
+    <div class="stat-card amber"><div class="val">$${fN(ivaDesc)}</div><div class="lbl">IVA Descontable (81)</div></div>
+    <div class="stat-card ${saldoPagar>0?'red':'green'}"><div class="val">$${fN(saldoPagar)}</div><div class="lbl">Saldo a pagar (88)</div></div>
+    <div class="stat-card green"><div class="val">$${fN(saldoFavor)}</div><div class="lbl">Saldo a favor (89)</div></div>`;
+}
+
+function renderDetail(){
+  let h='<table class="map-table"><thead><tr><th>Cuenta</th><th>Nombre</th><th>Tipo</th><th>Concepto</th><th class="text-right">Débito</th><th class="text-right">Crédito</th><th class="text-right">Valor</th><th>Casilla</th></tr></thead><tbody>';
+  mappings.filter(m=>m.concepto!=='ignorar').sort((a,b)=>a.code.localeCompare(b.code)).forEach(m=>{
+    const val=m.tipo==='generado'?(m.totalCre-m.totalDeb):
+              m.tipo==='descontable'?(m.totalDeb-m.totalCre):
+              m.tipo==='reteiva_favor'?m.totalDeb:
+              m.tipo==='reteiva_terc'?m.totalCre:(m.totalCre-m.totalDeb);
+    const badge=m.tipo==='generado'?'<span class="badge badge-gen">Gen</span>':
+                m.tipo==='descontable'?'<span class="badge badge-desc">Desc</span>':
+                '<span class="badge badge-ret">Ret</span>';
+    h+=`<tr><td class="mono fw600">${m.code}</td><td>${m.name}</td><td class="text-center">${badge}</td>
+      <td>${CONCEPTO_OPTIONS.find(o=>o.value===m.concepto)?.label||m.concepto}</td>
+      <td class="text-right mono">${fN(m.totalDeb)}</td><td class="text-right mono">${fN(m.totalCre)}</td>
+      <td class="text-right mono fw600">${fN(Math.abs(val))}</td><td class="text-center mono">${m.casilla||'—'}</td></tr>`;
+  });
+  h+='</tbody></table>';
+  document.getElementById('detailTable').innerHTML=h;
+}
+
+/* ═══ EXCEL EXPORT ═══ */
+function exportPdf300(){
+  const c=result300.cas;
+  const emp=document.getElementById('cfgEmpresa').value||'EMPRESA';
+  const nit=document.getElementById('cfgNit').value||'';
+  const yr=document.getElementById('cfgYear').value||'2026';
+  const perLabel=document.getElementById('cfgPeriodo').selectedOptions[0]?.text||'';
+
+  // Helper
+  function v(cas){const val=c[cas]||0;return val?val.toLocaleString('es-CO'):''}
+  function row(cas,label,bg){
+    const val=c[cas]||0;
+    return`<tr style="${bg||''}"><td class="cn">${cas}</td><td class="cl">${label}</td><td class="cv">${val?val.toLocaleString('es-CO'):''}</td></tr>`;
+  }
+  function sec(label){return`<tr><td colspan="3" class="sc">${label}</td></tr>`}
+  function tot(cas,label,bg){
+    const val=c[cas]||0;
+    return`<tr class="tt" style="${bg||''}"><td class="cn">${cas}</td><td class="cl">${label}</td><td class="cv">${val.toLocaleString('es-CO')}</td></tr>`;
+  }
+
+  const pw=window.open('','_blank');
+  pw.document.write(`<!DOCTYPE html><html><head><title>Borrador F300 — ${emp}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#fff;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.page{max-width:900px;margin:20px auto;border:2px solid #064E3B}
+.hdr{display:flex;border-bottom:2px solid #064E3B}
+.hdr-left{width:80px;background:#064E3B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;text-align:center;padding:8px;line-height:1.2;border-right:1px solid #064E3B}
+.hdr-center{flex:1;padding:8px 16px;text-align:center}
+.hdr-center h1{font-size:13px;margin:2px 0;color:#064E3B}
+.hdr-center p{font-size:8px;color:#555}
+.hdr-right{width:90px;background:#064E3B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;border-left:1px solid #064E3B}
+.info{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;border-bottom:2px solid #064E3B;font-size:9px}
+.info div{padding:4px 8px;border-right:1px solid #A7F3D0}
+.info .lbl{font-size:7px;color:#666;display:block}
+.info .vl{font-weight:700}
+.two-col{display:grid;grid-template-columns:1fr 1fr}
+.two-col .left{border-right:2px solid #064E3B}
+table{width:100%;border-collapse:collapse}
+td{font-size:8px;padding:2px 4px;border-bottom:1px solid #e0e0e0}
+.cn{width:28px;text-align:center;font-size:6.5px;color:#6B7280;background:#ECFDF5;border-right:1px solid #D1FAE5;font-family:'Courier New',monospace}
+.cl{font-size:7.5px}
+.cv{width:90px;text-align:right;font-family:'Courier New',monospace;font-size:8px}
+.sc{background:#D1FAE5;font-weight:700;font-size:7px;text-transform:uppercase;color:#064E3B;letter-spacing:.3px;padding:3px 6px;border-bottom:1px solid #065F46}
+.tt td{border-top:1.5px solid #059669;border-bottom:1.5px solid #059669;font-weight:700;font-size:8.5px}
+.tt .cv{font-size:9px}
+.big td{background:#D1FAE5;font-weight:900;font-size:9.5px}
+.big .cv{font-size:10px;color:#064E3B}
+.ft{padding:8px;font-size:7px;color:#6B7280;text-align:center;border-top:2px solid #064E3B;background:#ECFDF5}
+.promo{margin:20px auto;max-width:900px;padding:20px;border:2px dashed #059669;border-radius:12px;text-align:center;background:#ECFDF5}
+.promo h3{color:#064E3B;margin-bottom:8px}
+.promo p{font-size:12px;color:#065F46;line-height:1.6}
+.promo ul{list-style:none;padding:0;margin:12px 0;font-size:11px;color:#064E3B}
+.promo ul li{padding:3px 0}
+.promo ul li::before{content:'\\2713  ';color:#059669;font-weight:700}
+.promo a{display:inline-block;margin-top:10px;padding:10px 28px;background:#059669;color:#fff;text-decoration:none;border-radius:8px;font-weight:700;font-size:13px}
+@media print{.promo{display:none}body{margin:0}.page{margin:0;border:none}}
+</style></head><body>
+<div class="page">
+  <div class="hdr">
+    <div class="hdr-left">DIAN<br><span style="font-size:6px;font-weight:400">Dirección de Impuestos y Aduanas Nacionales</span></div>
+    <div class="hdr-center"><h1>Declaración del Impuesto sobre las Ventas - IVA</h1><p>Borrador generado automáticamente — No es declaración oficial</p></div>
+    <div class="hdr-right">300</div>
+  </div>
+  <div class="info">
+    <div><span class="lbl">1. Año</span><span class="vl">${yr}</span></div>
+    <div><span class="lbl">5. NIT</span><span class="vl">${nit}</span></div>
+    <div><span class="lbl">3. Período</span><span class="vl">${perLabel}</span></div>
+    <div><span class="lbl">11. Razón social</span><span class="vl">${emp}</span></div>
+  </div>
+  <div class="two-col">
+    <div class="left"><table>
+      ${sec('Ingresos del período')}
+      ${row(27,'Por operaciones gravadas al 5%')}
+      ${row(28,'Por operaciones gravadas tarifa general')}
+      ${row(29,'A.I.U por operaciones gravadas')}
+      ${row(30,'Por exportación de bienes')}
+      ${row(31,'Por exportación de servicios')}
+      ${row(32,'Por ventas a soc. comercialización int.')}
+      ${row(33,'Por ventas a zonas francas')}
+      ${row(34,'Por juegos de suerte y azar')}
+      ${row(35,'Por operaciones exentas')}
+      ${row(36,'Por venta cerveza nac. o importada')}
+      ${row(37,'Por venta gaseosas y similares')}
+      ${row(38,'Por venta licores, aperitivos, vinos')}
+      ${row(39,'Por operaciones excluidas')}
+      ${row(40,'Por operaciones no gravadas')}
+      ${tot(41,'Total ingresos brutos','background:#D1FAE5')}
+      ${row(42,'(-) Devoluciones en ventas')}
+      ${tot(43,'Total ingresos netos','background:#A7F3D0')}
+      ${sec('Compras e importaciones')}
+      ${row(44,'Import. bienes gravados 5%')}
+      ${row(45,'Import. bienes gravados general')}
+      ${row(46,'Bienes/serv. gravados Zonas Francas')}
+      ${row(47,'Import. bienes no gravados')}
+      ${row(48,'Excluidos/exentos de Zonas Francas')}
+      ${row(49,'De servicios')}
+      ${sec('Compras nacionales')}
+      ${row(50,'Bienes gravados 5%')}
+      ${row(51,'Bienes gravados general')}
+      ${row(52,'Servicios gravados 5%')}
+      ${row(53,'Servicios gravados general')}
+      ${row(54,'Excluidos, exentos y no gravados')}
+      ${tot(55,'Total compras brutas','background:#D1FAE5')}
+      ${row(56,'(-) Devoluciones en compras')}
+      ${tot(57,'Total compras netas','background:#A7F3D0')}
+      ${sec('Impuesto generado')}
+      ${row(58,'A la tarifa del 5%')}
+      ${row(59,'A la tarifa general')}
+      ${row(60,'Sobre A.I.U operaciones gravadas')}
+      ${row(61,'En juegos de suerte y azar')}
+    </table></div>
+    <div><table>
+      ${sec('Impuesto generado (cont.)')}
+      ${row(62,'En venta cerveza nac. o importada')}
+      ${row(63,'En venta gaseosas y similares')}
+      ${row(64,'En venta licores, vinos 5%')}
+      ${row(65,'Retiro inventario activos/consumo')}
+      ${row(66,'IVA recup. dev. compras')}
+      ${tot(67,'Total impuesto generado','background:#D1FAE5')}
+      ${sec('Impuestos descontables')}
+      ${row(68,'Import. gravadas 5%')}
+      ${row(69,'Import. gravadas general')}
+      ${row(70,'Bienes/serv. Zonas Francas')}
+      ${row(71,'Compras bienes 5%')}
+      ${row(72,'Compras bienes general')}
+      ${row(73,'Licores, aperitivos, vinos')}
+      ${row(74,'Servicios 5%')}
+      ${row(75,'Servicios general')}
+      ${row(76,'Desc. IVA exploración hidrocarburos')}
+      ${tot(77,'Total IVA pagado o facturado','background:#D1FAE5')}
+      ${row(78,'IVA retenido no domiciliados')}
+      ${row(79,'IVA dev. ventas anuladas')}
+      ${row(80,'Ajuste descontables')}
+      ${tot(81,'Total impuestos descontables','background:#A7F3D0')}
+      ${sec('Liquidación privada')}
+      ${tot(82,'Saldo a pagar por período','background:#FEF3C7')}
+      ${tot(83,'Saldo a favor del período','background:#D1FAE5')}
+      ${row(84,'Saldo a favor período anterior')}
+      ${row(85,'Retenciones IVA que le practicaron')}
+      ${tot(86,'Saldo a pagar por impuesto','background:#FEF3C7')}
+      ${row(87,'Sanciones')}
+      <tr class="big"><td class="cn">88</td><td class="cl">TOTAL SALDO A PAGAR</td><td class="cv">${v(88)}</td></tr>
+      <tr class="big"><td class="cn">89</td><td class="cl">O TOTAL SALDO A FAVOR</td><td class="cv">${v(89)}</td></tr>
+      ${sec('Pago')}
+      <tr><td class="cn">980</td><td class="cl">Pago total $</td><td class="cv">${v(980)}</td></tr>
+    </table></div>
+  </div>
+  <div class="ft"><strong>BORRADOR</strong> — Generado por ExógenaDIAN.com — Verificar antes de presentar a la DIAN a través del MUISCA — Ley 1581/2012</div>
+</div>
+<div class="promo">
+  <h3>Mejora tu declaración con la versión PRO</h3>
+  <p>Obtén funcionalidades avanzadas para tu declaración de IVA:</p>
+  <ul>
+    <li>Descarga en Excel con fórmulas editables</li>
+    <li>Cruce automático contra facturación electrónica DIAN</li>
+    <li>Genera F300 directamente desde el listado de facturas DIAN</li>
+    <li>Detalle por tercero con identificación de diferencias</li>
+    <li>Recomendaciones y pruebas de consistencia</li>
+  </ul>
+  <a href="https://exogenadian.com/iva300.html">Activar PRO →</a>
+</div>
+</body></html>`);
+  pw.document.close();
+  setTimeout(()=>{pw.print()},500);
+}
+
+function exportXls300Pro(){
+  if(!dianUnlocked){
+    if(confirm('La descarga en Excel es una función PRO.\n\n¿Deseas ir al paso 5 para activar PRO?\n(También puedes descargar PDF gratis)')){
+      goStep(5);
+    }
+    return;
+  }
+  exportXls300();
+}
+
+async function exportXls300(){
+  const c=result300.cas;
+
+  // Generar Excel con ExcelJS — layout de dos columnas con fórmulas editables
+  const wb=new ExcelJS.Workbook();
+  const D='1B3A5C',W='FFFFFF',S='2E75B6',LB='D6E4F0',LG='E2EFDA',G='548235',YW='FFF8E1',RD='FFEBEE';
+  const tb={style:'thin',color:{argb:'BFBFBF'}};
+  const brd={top:tb,bottom:tb,left:tb,right:tb};
+  const brd2={top:{style:'medium',color:{argb:D}},bottom:{style:'medium',color:{argb:D}},left:tb,right:tb};
+  function fl(a){return{type:'pattern',pattern:'solid',fgColor:{argb:a}}}
+  function styl(cell,opts){
+    if(opts.font)cell.font=opts.font;
+    if(opts.fill)cell.fill=opts.fill;
+    if(opts.border)cell.border=opts.border;
+    if(opts.alignment)cell.alignment=opts.alignment;
+    if(opts.numFmt)cell.numFmt=opts.numFmt;
+  }
+
+  const emp=document.getElementById('cfgEmpresa').value;
+  const nit=document.getElementById('cfgNit').value;
+  const yr=document.getElementById('cfgYear').value;
+  const perLabel=document.getElementById('cfgPeriodo').selectedOptions[0]?.text||'';
+
+  // === HOJA 1: FORMULARIO 300 — Layout de dos columnas como el real ===
+  const ws=wb.addWorksheet('Formulario 300');
+  // Columnas: A=sec izq, B=cas izq, C=concepto izq, D=valor izq, E=separador, F=sec der, G=cas der, H=concepto der, I=valor der
+  ws.columns=[{width:12},{width:5},{width:38},{width:16},{width:2},{width:12},{width:5},{width:38},{width:16}];
+
+  let rn=0;
+  // ---- ENCABEZADO DIAN ----
+  rn++;let r=ws.getRow(rn);
+  ws.mergeCells(rn,1,rn,2);r.getCell(1).value='DIAN';
+  styl(r.getCell(1),{font:{name:'Arial',size:11,bold:true,color:{argb:W}},fill:fl(D),alignment:{horizontal:'center',vertical:'middle'}});
+  styl(r.getCell(2),{fill:fl(D)});
+  ws.mergeCells(rn,3,rn,7);r.getCell(3).value='Declaración del Impuesto sobre las Ventas - IVA';
+  styl(r.getCell(3),{font:{name:'Arial',size:13,bold:true,color:{argb:D}},alignment:{horizontal:'center',vertical:'middle'}});
+  ws.mergeCells(rn,8,rn,9);r.getCell(8).value='300';
+  styl(r.getCell(8),{font:{name:'Arial',size:22,bold:true,color:{argb:W}},fill:fl(D),alignment:{horizontal:'center',vertical:'middle'}});
+  r.height=32;
+  for(let j=1;j<=9;j++)r.getCell(j).border=brd;
+
+  // Info declarante
+  rn++;r=ws.getRow(rn);
+  ws.mergeCells(rn,1,rn,2);r.getCell(1).value='1. Año';styl(r.getCell(1),{font:{name:'Arial',size:8,color:{argb:'666666'}}});
+  r.getCell(3).value=yr;styl(r.getCell(3),{font:{name:'Arial',size:9,bold:true}});
+  r.getCell(4).value='3. Período';styl(r.getCell(4),{font:{name:'Arial',size:8,color:{argb:'666666'}}});
+  r.getCell(5).value=perLabel;styl(r.getCell(5),{font:{name:'Arial',size:8,bold:true}});
+  ws.mergeCells(rn,6,rn,7);r.getCell(6).value='5. NIT';styl(r.getCell(6),{font:{name:'Arial',size:8,color:{argb:'666666'}}});
+  ws.mergeCells(rn,8,rn,9);r.getCell(8).value=nit;styl(r.getCell(8),{font:{name:'Arial',size:9,bold:true}});
+  for(let j=1;j<=9;j++)r.getCell(j).border=brd;
+
+  rn++;r=ws.getRow(rn);
+  ws.mergeCells(rn,1,rn,2);r.getCell(1).value='11. Razón social';styl(r.getCell(1),{font:{name:'Arial',size:8,color:{argb:'666666'}}});
+  ws.mergeCells(rn,3,rn,9);r.getCell(3).value=emp;styl(r.getCell(3),{font:{name:'Arial',size:10,bold:true}});
+  for(let j=1;j<=9;j++)r.getCell(j).border=brd;
+
+  rn++; // blank separator
+
+  // ---- HELPERS para filas del formulario ----
+  const valCells={}; // casilla -> cell ref para fórmulas
+  // side='L' (cols A-D) o 'R' (cols F-I)
+  function secHeader(label,side){
+    rn++;r=ws.getRow(rn);
+    const startCol=side==='L'?1:6;
+    const endCol=side==='L'?4:9;
+    ws.mergeCells(rn,startCol,rn,endCol);
+    r.getCell(startCol).value=label;
+    styl(r.getCell(startCol),{font:{name:'Arial',size:8,bold:true,color:{argb:D}},fill:fl(LB),border:brd2,alignment:{vertical:'middle'}});
+    for(let j=startCol;j<=endCol;j++)r.getCell(j).border=brd;
+    r.height=16;
+  }
+  function fRowL(sec,cas,label,val,formula){
+    rn++;r=ws.getRow(rn);
+    r.getCell(1).value=sec;styl(r.getCell(1),{font:{name:'Arial',size:7,color:{argb:'999999'},italic:true},alignment:{vertical:'middle',wrapText:true}});
+    r.getCell(2).value=cas;styl(r.getCell(2),{font:{name:'Courier New',size:7,color:{argb:'888888'}},fill:fl('F5F5F5'),alignment:{horizontal:'center',vertical:'middle'}});
+    r.getCell(3).value=label;styl(r.getCell(3),{font:{name:'Arial',size:8},alignment:{vertical:'middle',wrapText:true}});
+    const cellRef='D'+rn;
+    r.getCell(4).value=formula?{formula}:val;
+    styl(r.getCell(4),{font:{name:'Courier New',size:9,bold:!!formula,color:{argb:val||formula?D:'CCCCCC'}},numFmt:'#,##0',alignment:{horizontal:'right',vertical:'middle'}});
+    for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+    valCells[cas]=cellRef;
+    r.height=14;
+    return cellRef;
+  }
+  function fRowR(sec,cas,label,val,formula){
+    // Right-side row — write into cols 6-9 of CURRENT row (same rn as left)
+    r.getCell(6).value=sec;styl(r.getCell(6),{font:{name:'Arial',size:7,color:{argb:'999999'},italic:true},alignment:{vertical:'middle',wrapText:true}});
+    r.getCell(7).value=cas;styl(r.getCell(7),{font:{name:'Courier New',size:7,color:{argb:'888888'}},fill:fl('F5F5F5'),alignment:{horizontal:'center',vertical:'middle'}});
+    r.getCell(8).value=label;styl(r.getCell(8),{font:{name:'Arial',size:8},alignment:{vertical:'middle',wrapText:true}});
+    const cellRef='I'+rn;
+    r.getCell(9).value=formula?{formula}:val;
+    styl(r.getCell(9),{font:{name:'Courier New',size:9,bold:!!formula,color:{argb:val||formula?D:'CCCCCC'}},numFmt:'#,##0',alignment:{horizontal:'right',vertical:'middle'}});
+    for(let j=6;j<=9;j++)r.getCell(j).border=brd;
+    valCells[cas]=cellRef;
+    return cellRef;
+  }
+  function totRowL(sec,cas,label,formula,bg){
+    rn++;r=ws.getRow(rn);
+    r.getCell(1).value=sec;styl(r.getCell(1),{font:{name:'Arial',size:7,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{vertical:'middle'}});
+    r.getCell(2).value=cas;styl(r.getCell(2),{font:{name:'Courier New',size:8,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{horizontal:'center',vertical:'middle'}});
+    r.getCell(3).value=label;styl(r.getCell(3),{font:{name:'Arial',size:8.5,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{vertical:'middle',wrapText:true}});
+    const cellRef='D'+rn;
+    r.getCell(4).value={formula};
+    styl(r.getCell(4),{font:{name:'Courier New',size:10,bold:true,color:{argb:D}},fill:fl(bg||LB),numFmt:'#,##0',alignment:{horizontal:'right',vertical:'middle'}});
+    for(let j=1;j<=4;j++)r.getCell(j).border=brd2;
+    valCells[cas]=cellRef;
+    r.height=16;
+    return cellRef;
+  }
+  function totRowR(sec,cas,label,formula,bg){
+    r.getCell(6).value=sec;styl(r.getCell(6),{font:{name:'Arial',size:7,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{vertical:'middle'}});
+    r.getCell(7).value=cas;styl(r.getCell(7),{font:{name:'Courier New',size:8,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{horizontal:'center',vertical:'middle'}});
+    r.getCell(8).value=label;styl(r.getCell(8),{font:{name:'Arial',size:8.5,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{vertical:'middle',wrapText:true}});
+    const cellRef='I'+rn;
+    r.getCell(9).value={formula};
+    styl(r.getCell(9),{font:{name:'Courier New',size:10,bold:true,color:{argb:D}},fill:fl(bg||LB),numFmt:'#,##0',alignment:{horizontal:'right',vertical:'middle'}});
+    for(let j=6;j<=9;j++)r.getCell(j).border=brd2;
+    valCells[cas]=cellRef;
+    return cellRef;
+  }
+  // Left-only row (no right side pair)
+  function rowL(sec,cas,label,val,formula){return fRowL(sec,cas,label,val,formula)}
+  // Right-only row on a NEW row
+  function rowRnew(sec,cas,label,val,formula){
+    rn++;r=ws.getRow(rn);
+    // left side empty
+    for(let j=1;j<=4;j++){r.getCell(j).border=brd;r.getCell(j).value=''}
+    return fRowR(sec,cas,label,val,formula);
+  }
+
+  // ======= COLUMNA IZQUIERDA + DERECHA EN PARALELO =======
+  // Rows: left has ingresos(27-43)+compras(44-57)+imp gen(58-61) = ~40 rows
+  // Right has imp gen(62-67)+descontable(68-81)+liquidación(82-89)+saldos(90-93)+anticipos = ~38 rows
+  // Strategy: write left rows, then go back and fill right side
+
+  const startRow=rn+1;
+
+  // ---- LEFT: INGRESOS (27-43) ----
+  secHeader('Ingresos del período','L');
+  const Lr={};
+  Lr[27]=rowL('Ingresos',27,'Por operaciones gravadas al 5%',c[27]||0);
+  Lr[28]=rowL('',28,'Por operaciones gravadas a la tarifa general',c[28]||0);
+  Lr[29]=rowL('',29,'A.I.U por operaciones gravadas (base gravable especial)',c[29]||0);
+  Lr[30]=rowL('',30,'Por exportación de bienes',c[30]||0);
+  Lr[31]=rowL('',31,'Por exportación de servicios',c[31]||0);
+  Lr[32]=rowL('',32,'Por ventas a soc. de comercialización internacional',c[32]||0);
+  Lr[33]=rowL('',33,'Por ventas a zonas francas',c[33]||0);
+  Lr[34]=rowL('',34,'Por juegos de suerte y azar',c[34]||0);
+  Lr[35]=rowL('',35,'Por operaciones exentas',c[35]||0);
+  Lr[36]=rowL('',36,'Por venta de cerveza de producción nacional o importada',c[36]||0);
+  Lr[37]=rowL('',37,'Por venta de gaseosas y similares',c[37]||0);
+  Lr[38]=rowL('',38,'Por venta de licores, aperitivos, vinos y similares',c[38]||0);
+  Lr[39]=rowL('',39,'Por operaciones excluidas',c[39]||0);
+  Lr[40]=rowL('',40,'Por operaciones no gravadas',c[40]||0);
+  Lr[41]=totRowL('',41,'Total ingresos brutos',`${Lr[27]}+${Lr[28]}+${Lr[29]}+${Lr[30]}+${Lr[31]}+${Lr[32]}+${Lr[33]}+${Lr[34]}+${Lr[35]}+${Lr[36]}+${Lr[37]}+${Lr[38]}+${Lr[39]}+${Lr[40]}`);
+  Lr[42]=rowL('',42,'(-) Devoluciones en ventas anuladas, rescindidas o resueltas',c[42]||0);
+  Lr[43]=totRowL('',43,'Total ingresos netos recibidos durante el período',`${Lr[41]}-${Lr[42]}`,LG);
+
+  // ---- LEFT: COMPRAS IMPORTACIÓN (44-49) ----
+  secHeader('Compras — Importación','L');
+  Lr[44]=rowL('Importación',44,'De bienes gravados a la tarifa del 5%',c[44]||0);
+  Lr[45]=rowL('',45,'De bienes gravados a la tarifa general',c[45]||0);
+  Lr[46]=rowL('',46,'De bienes y servicios gravados provenientes de Zonas Francas',c[46]||0);
+  Lr[47]=rowL('',47,'De bienes no gravados',c[47]||0);
+  Lr[48]=rowL('',48,'De bienes excluidos, exentos y no gravados de Zonas Francas',c[48]||0);
+  Lr[49]=rowL('',49,'De servicios',c[49]||0);
+
+  // ---- LEFT: COMPRAS NACIONALES (50-57) ----
+  secHeader('Compras — Nacionales','L');
+  Lr[50]=rowL('Nacionales',50,'De bienes gravados a la tarifa del 5%',c[50]||0);
+  Lr[51]=rowL('',51,'De bienes gravados a la tarifa general',c[51]||0);
+  Lr[52]=rowL('',52,'De servicios gravados a la tarifa del 5%',c[52]||0);
+  Lr[53]=rowL('',53,'De servicios gravados a la tarifa general',c[53]||0);
+  Lr[54]=rowL('',54,'De bienes y servicios excluidos, exentos y no gravados',c[54]||0);
+  Lr[55]=totRowL('',55,'Total compras e importaciones brutas',`${Lr[44]}+${Lr[45]}+${Lr[46]}+${Lr[47]}+${Lr[48]}+${Lr[49]}+${Lr[50]}+${Lr[51]}+${Lr[52]}+${Lr[53]}+${Lr[54]}`);
+  Lr[56]=rowL('',56,'(-) Devoluciones en compras anuladas, rescindidas o resueltas',c[56]||0);
+  Lr[57]=totRowL('',57,'Total compras netas realizadas durante el período',`${Lr[55]}-${Lr[56]}`,LG);
+
+  // ---- LEFT: IMPUESTO GENERADO izquierdo (58-61) ----
+  secHeader('Liquidación — Impuesto generado','L');
+  Lr[58]=rowL('Impuesto',58,'A la tarifa del 5%',c[58]||0);
+  Lr[59]=rowL('Generado',59,'A la tarifa general',c[59]||0);
+  Lr[60]=rowL('',60,'Sobre A.I.U en operaciones gravadas (base gravable especial)',c[60]||0);
+  Lr[61]=rowL('',61,'En juegos de suerte y azar',c[61]||0);
+
+  const leftEndRow=rn; // last row written on left side
+
+  // ======= NOW FILL RIGHT COLUMN — go back to startRow =======
+  rn=startRow;
+
+  // ---- RIGHT: IMPUESTO GENERADO derecho (62-67) ----
+  // Right section header on same row as left section header
+  r=ws.getRow(rn);
+  ws.mergeCells(rn,6,rn,9);r.getCell(6).value='Impuesto generado (cont.)';
+  styl(r.getCell(6),{font:{name:'Arial',size:8,bold:true,color:{argb:D}},fill:fl(LB),border:brd2});
+  for(let j=6;j<=9;j++)r.getCell(j).border=brd;
+
+  // Row-by-row: left row N already exists, add right data
+  rn++;r=ws.getRow(rn);fRowR('Impuesto',62,'En venta cerveza de producción nacional o importada',c[62]||0);
+  rn++;r=ws.getRow(rn);fRowR('Generado',63,'En venta de gaseosas y similares',c[63]||0);
+  rn++;r=ws.getRow(rn);fRowR('(cont.)',64,'En venta de licores, aperitivos, vinos y similares 5%',c[64]||0);
+  rn++;r=ws.getRow(rn);fRowR('',65,'En retiro de inventario para activos fijos, consumo, muestras o donaciones',c[65]||0);
+  rn++;r=ws.getRow(rn);fRowR('',66,'IVA recuperado en devoluciones en compras anuladas, rescindidas o resueltas',c[66]||0);
+  rn++;r=ws.getRow(rn);totRowR('',67,'Total impuesto generado por operaciones gravadas',`${Lr[58]}+${Lr[59]}+${Lr[60]}+${Lr[61]}+${valCells[62]}+${valCells[63]}+${valCells[64]}+${valCells[65]}+${valCells[66]}`);
+
+  // ---- RIGHT: IMPUESTOS DESCONTABLES (68-81) ----
+  rn++;r=ws.getRow(rn);
+  ws.mergeCells(rn,6,rn,9);r.getCell(6).value='Impuestos descontables';
+  styl(r.getCell(6),{font:{name:'Arial',size:8,bold:true,color:{argb:D}},fill:fl(LB),border:brd2});
+  for(let j=6;j<=9;j++)r.getCell(j).border=brd;
+  // fill left cells as empty
+  for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('Impuesto',68,'Por importaciones gravadas a tarifa del 5%',c[68]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('descontable',69,'Por importaciones gravadas a la tarifa general',c[69]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',70,'De bienes y servicios gravados provenientes de Zonas Francas',c[70]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',71,'Por compras de bienes gravados a la tarifa 5%',c[71]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',72,'Por compras de bienes gravados a tarifa general',c[72]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',73,'Por licores, aperitivos, vinos y similares',c[73]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',74,'Por servicios gravados a la tarifa del 5%',c[74]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',75,'Por servicios gravados a la tarifa general',c[75]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',76,'Descuento IVA exploración hidrocarburos Art. 485-2 ET',c[76]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  totRowR('',77,'Total Impuesto pagado o facturado',`${valCells[68]}+${valCells[69]}+${valCells[70]}+${valCells[71]}+${valCells[72]}+${valCells[73]}+${valCells[74]}+${valCells[75]}+${valCells[76]}`);
+
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',78,'IVA retenido por servicios prestados en Colombia por no domiciliados',c[78]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',79,'IVA resultante por devoluciones en ventas anuladas, rescindidas o resueltas',c[79]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',80,'(-) Ajuste impuestos descontables (pérdidas, hurto o castigo inventarios)',c[80]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  totRowR('',81,'Total impuestos descontables (77+78+79-80)',`${valCells[77]}+${valCells[78]}+${valCells[79]}-${valCells[80]}`,LG);
+
+  // ---- RIGHT: LIQUIDACIÓN PRIVADA (82-89) ----
+  rn++;r=ws.getRow(rn);
+  for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  ws.mergeCells(rn,6,rn,9);r.getCell(6).value='Liquidación privada';
+  styl(r.getCell(6),{font:{name:'Arial',size:8,bold:true,color:{argb:D}},fill:fl(LB),border:brd2});
+  for(let j=6;j<=9;j++)r.getCell(j).border=brd;
+
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  totRowR('Liquidación',82,'Saldo a pagar por el período fiscal',`MAX(0,${valCells[67]}-${valCells[81]})`,YW);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  totRowR('privada',83,'Saldo a favor del período fiscal',`MAX(0,${valCells[81]}-${valCells[67]})`,LG);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',84,'Saldo a favor del período fiscal anterior',c[84]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',85,'Retenciones por IVA que le practicaron',c[85]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  totRowR('',86,'Saldo a pagar por impuesto',`MAX(0,${valCells[82]}-${valCells[84]}-${valCells[85]})`,YW);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  fRowR('',87,'Sanciones',c[87]||0);
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  totRowR('',88,'Total saldo a pagar (86+87)',`${valCells[86]}+${valCells[87]}`,LB);
+  // Style 88 bigger
+  r.getCell(9).font={name:'Courier New',size:12,bold:true,color:{argb:D}};
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  totRowR('',89,'O Total saldo a favor',`IF(${valCells[82]}>0,MAX(0,${valCells[84]}+${valCells[85]}-${valCells[82]}),${valCells[83]}+${valCells[84]}+${valCells[85]})`,LG);
+  r.getCell(9).font={name:'Courier New',size:12,bold:true,color:{argb:G}};
+
+  // ---- RIGHT: PAGO ----
+  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
+  totRowR('',980,'980. Pago total $',`${valCells[88]}`,LB);
+  r.getCell(9).font={name:'Courier New',size:11,bold:true,color:{argb:D}};
+
+  // Ensure rn is past all rows
+  rn=Math.max(rn,leftEndRow)+2;
+
+  // DISCLAIMER
+  r=ws.getRow(rn);ws.mergeCells(rn,1,rn,9);
+  r.getCell(1).value='BORRADOR — Generado automáticamente por ExógenaDIAN.com. NO es declaración oficial. Verificar antes de presentar a la DIAN vía MUISCA.';
+  r.getCell(1).font={name:'Arial',size:8,italic:true,color:{argb:'999999'}};
+  r.getCell(1).alignment={wrapText:true};
+
+  ws.pageSetup={orientation:'landscape',fitToPage:true,fitToWidth:1};
+
+  // === HOJA 2: CUENTAS DEL BALANCE ===
+  if(mappings.length){
+    const ws2=wb.addWorksheet('Cuentas Balance');
+    ws2.columns=[{width:12},{width:38},{width:12},{width:16},{width:16},{width:16},{width:10}];
+    const fT2={name:'Arial',size:14,bold:true,color:{argb:W}};
+    const fH2={name:'Arial',size:10,bold:true,color:{argb:W}};
+    const fB2={name:'Arial',size:10};
+    const fSec2={name:'Arial',size:9,bold:true,color:{argb:D}};
+    let r2=ws2.addRow(['CUENTAS DEL BALANCE UTILIZADAS','','','','','','']);
+    ws2.mergeCells(r2.number,1,r2.number,7);r2.getCell(1).font=fT2;r2.getCell(1).fill=fl(D);r2.height=26;
+    r2=ws2.addRow([`${emp} — NIT ${nit} — ${perLabel} ${yr}`,'','','','','','']);
+    ws2.mergeCells(r2.number,1,r2.number,7);r2.getCell(1).font={...fB2,color:{argb:W},italic:true};r2.getCell(1).fill=fl(D);
+    ws2.addRow([]);
+    r2=ws2.addRow(['Cuenta','Nombre','Tipo','Débito','Crédito','Neto','Casilla']);
+    r2.eachCell(cl=>{cl.font=fH2;cl.fill=fl(S);cl.border=brd});
+
+    const tipos=['ingreso','dev_venta','compra','dev_compra','generado','descontable','reteiva_favor','reteiva_terc','saldo_favor'];
+    const tipoLabels={ingreso:'INGRESOS',dev_venta:'DEV. VENTAS',compra:'COMPRAS/COSTOS',dev_compra:'DEV. COMPRAS',generado:'IVA GENERADO',descontable:'IVA DESCONTABLE',reteiva_favor:'RETEIVA A FAVOR',reteiva_terc:'RETEIVA PRACTICADA',saldo_favor:'SALDO FAVOR IVA'};
+    tipos.forEach(tipo=>{
+      const items=mappings.filter(m=>m.tipo===tipo&&m.concepto!=='ignorar');
+      if(!items.length)return;
+      r2=ws2.addRow([tipoLabels[tipo]||tipo,'','','','','','']);
+      ws2.mergeCells(r2.number,1,r2.number,7);r2.getCell(1).font=fSec2;r2.getCell(1).fill=fl(LB);
+      items.forEach((m,i)=>{
+        const neto=r1000(m.tipo==='ingreso'||m.tipo==='generado'||m.tipo==='dev_compra'?(m.totalCre-m.totalDeb):
+                         m.tipo==='compra'||m.tipo==='descontable'||m.tipo==='dev_venta'?(m.totalDeb-m.totalCre):
+                         m.tipo==='reteiva_favor'||m.tipo==='saldo_favor'?m.totalDeb:m.totalCre);
+        r2=ws2.addRow([m.code,m.name,m.tipo,r1000(m.totalDeb),r1000(m.totalCre),Math.abs(neto),m.casilla||'']);
+        r2.eachCell(cl=>{cl.font=fB2;cl.border=brd;if(typeof cl.value==='number')cl.numFmt='#,##0'});
+        if(i%2)r2.eachCell(cl=>{cl.fill=fl('F5F8FC')});
+      });
+    });
+  }
+
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download=`Borrador_F300_IVA_${yr}_P${document.getElementById('cfgPeriodo').value}.xlsx`;
+  a.click();URL.revokeObjectURL(url);
+}
+
+/* ═══ CONCILIACIÓN BALANCE vs F300 ═══ */
+function renderConciliacion(){
+  const c=result300.cas;
+  const body=document.getElementById('conciliacionBody');
+  if(!body)return;
+
+  // Calcular saldos del F300 (casillas reales DIAN)
+  const ivaGenF300=c[67]||0;        // Total impuesto generado
+  const ivaDescF300=c[81]||0;       // Total impuestos descontables
+  const reteIvaFavorF300=c[85]||0;  // Retenciones IVA que le practicaron
+  const reteIvaTercF300=c[78]||0;   // IVA retenido no domiciliados
+  const saldoPagarF300=c[86]||0;    // Saldo a pagar por impuesto
+  const saldoFavorF300=c[89]||0;    // Saldo a favor
+  const netIvaF300=ivaGenF300-ivaDescF300; // Posición neta de IVA
+
+  // Buscar saldos del balance
+  const s2408=saldosContables['2408']||null;
+  const s1355=saldosContables['1355']||null;
+  const s2367=saldosContables['2367']||null;
+
+  // Buscar saldo de cuenta 13552003 o similar (saldo a favor IVA)
+  let saldoFavorBalance=0;
+  for(const[code,data] of Object.entries(saldosContables)){
+    if(code.startsWith('13552')&&(data.name||'').toLowerCase().includes('iva')){
+      saldoFavorBalance+=data.saldoFin||0;
+    }
+  }
+
+  const checks=[];
+  let hasSaldos=false;
+
+  // CHECK 1: Cuenta 2408 (IVA por pagar) vs posición neta del F300
+  if(s2408&&s2408.saldoFin!==undefined){
+    hasSaldos=true;
+    const saldo2408=s2408.saldoFin; // Negativo = debe (por pagar), Positivo = saldo deudor
+    // El saldo de la 2408 debe ser aprox igual al IVA neto (gen - desc)
+    // Saldo crédito (negativo en balance) = IVA por pagar
+    const esperado=netIvaF300>0?-netIvaF300:0; // Si genera más de lo que descuenta, saldo crédito
+    const diff=Math.abs(saldo2408-esperado);
+    const pct=Math.abs(esperado)>0?(diff/Math.abs(esperado)*100).toFixed(1):diff>0?100:0;
+    checks.push({
+      titulo:'Cuenta 2408 — IVA por pagar',
+      balance:saldo2408,
+      balanceLabel:'Saldo final balance',
+      f300:netIvaF300,
+      f300Label:'IVA neto F300 (Cas.67 - Cas.81)',
+      diff,pct,
+      estado:diff<1000?'ok':diff<Math.abs(esperado)*0.05?'warn':'error',
+      nota:diff<1000?'El saldo del balance coincide con el borrador F300.':
+           `Diferencia de $${fN(diff)} (${pct}%). Verificar: movimientos fuera del período, ajustes manuales, o pagos de IVA (cta 24089x) incluidos en el saldo.`
+    });
+  }
+
+  // CHECK 2: Saldo a favor IVA (1355) vs casilla 68/72
+  if(saldoFavorBalance!==0){
+    hasSaldos=true;
+    const saldoFavorF=c[84]||0; // Lo que se puso como saldo anterior (cas 84 real)
+    const diff=Math.abs(saldoFavorBalance-saldoFavorF);
+    checks.push({
+      titulo:'Cuenta 1355 — Saldo a favor IVA',
+      balance:saldoFavorBalance,
+      balanceLabel:'Saldo final balance (13552xxx)',
+      f300:saldoFavorF,
+      f300Label:'Saldo favor período anterior (Cas.84)',
+      diff,
+      pct:saldoFavorBalance?((diff/Math.abs(saldoFavorBalance))*100).toFixed(1):0,
+      estado:diff<1000?'ok':diff<Math.abs(saldoFavorBalance)*0.05?'warn':'error',
+      nota:diff<1000?'El saldo a favor coincide.':
+           `Diferencia de $${fN(diff)}. Revisar si el saldo a favor del período anterior fue correctamente aplicado.`
+    });
+  }
+
+  // CHECK 3: Retención IVA (2367) vs casilla 75
+  if(s2367&&(s2367.saldoFin||s2367.cre)){
+    hasSaldos=true;
+    const saldo2367=Math.abs(s2367.saldoFin||0);
+    const diff=Math.abs(saldo2367-reteIvaTercF300);
+    checks.push({
+      titulo:'Cuenta 2367 — Retención IVA practicada',
+      balance:s2367.saldoFin||0,
+      balanceLabel:'Saldo final balance',
+      f300:reteIvaTercF300,
+      f300Label:'IVA retenido no domiciliados (Cas.78)',
+      diff,
+      pct:reteIvaTercF300?((diff/reteIvaTercF300)*100).toFixed(1):saldo2367>0?100:0,
+      estado:diff<1000?'ok':diff<Math.max(saldo2367,reteIvaTercF300)*0.05?'warn':'error',
+      nota:diff<1000?'La retención de IVA coincide.':
+           `Diferencia de $${fN(diff)}. Verificar retenciones del período vs acumulado.`
+    });
+  }
+
+  // CHECK 4: Cruce global — Saldo por pagar/favor neto
+  if(s2408){
+    hasSaldos=true;
+    const saldoNetoBalance=(s2408.saldoFin||0)-saldoFavorBalance; // Negativo = debe pagar
+    const saldoNetoF300=saldoPagarF300>0?-saldoPagarF300:saldoFavorF300;
+    const diff=Math.abs(saldoNetoBalance-saldoNetoF300);
+    checks.push({
+      titulo:'Cruce global — Posición neta de IVA',
+      balance:saldoNetoBalance,
+      balanceLabel:'Cta 2408 - Saldo favor 1355',
+      f300:saldoNetoF300,
+      f300Label:saldoPagarF300>0?'Saldo a pagar F300 (Cas.86)':'Saldo a favor F300 (Cas.89)',
+      diff,
+      pct:Math.max(Math.abs(saldoNetoBalance),Math.abs(saldoNetoF300))>0?
+          (diff/Math.max(Math.abs(saldoNetoBalance),Math.abs(saldoNetoF300))*100).toFixed(1):0,
+      estado:diff<5000?'ok':diff<Math.max(Math.abs(saldoNetoBalance),1)*0.05?'warn':'error',
+      nota:diff<5000?'La posición neta de IVA cuadra con el balance.':
+           `Diferencia de $${fN(diff)}. Posibles causas: pagos de IVA del período, ajustes, saldos de períodos anteriores, o anticipos no considerados.`
+    });
+  }
+
+  // Render
+  if(!hasSaldos){
+    body.innerHTML=`<div class="alert alert-info"><span>💡</span><div>Para ver la conciliación, asegúrate de asignar la columna <strong>"Saldo Final"</strong> en el paso 2. Así podremos comparar el borrador contra tu balance.</div></div>`;
+    return;
+  }
+
+  const okCount=checks.filter(c=>c.estado==='ok').length;
+  const warnCount=checks.filter(c=>c.estado==='warn').length;
+  const errCount=checks.filter(c=>c.estado==='error').length;
+
+  let h=`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+    <div style="text-align:center;padding:12px;border-radius:10px;background:var(--green2);border:1px solid #A5D6A7">
+      <div style="font-size:1.3rem;font-weight:800;color:var(--green)">${okCount}</div>
+      <div style="font-size:.75rem;color:var(--green);font-weight:600">Cuadran</div>
+    </div>
+    <div style="text-align:center;padding:12px;border-radius:10px;background:var(--amber2);border:1px solid #FCD34D">
+      <div style="font-size:1.3rem;font-weight:800;color:var(--amber)">${warnCount}</div>
+      <div style="font-size:.75rem;color:var(--amber);font-weight:600">Revisar</div>
+    </div>
+    <div style="text-align:center;padding:12px;border-radius:10px;background:#FFEBEE;border:1px solid #EF9A9A">
+      <div style="font-size:1.3rem;font-weight:800;color:var(--red)">${errCount}</div>
+      <div style="font-size:.75rem;color:var(--red);font-weight:600">No cuadran</div>
+    </div>
+  </div>`;
+
+  checks.forEach(ck=>{
+    const icon=ck.estado==='ok'?'✅':ck.estado==='warn'?'⚠️':'❌';
+    const bg=ck.estado==='ok'?'var(--green2)':ck.estado==='warn'?'var(--amber2)':'#FFEBEE';
+    const border=ck.estado==='ok'?'#A5D6A7':ck.estado==='warn'?'#FCD34D':'#EF9A9A';
+    h+=`<div style="padding:16px;margin-bottom:12px;border-radius:12px;background:${bg};border:1px solid ${border}">
+      <div style="font-weight:700;margin-bottom:8px;font-size:.95rem">${icon} ${ck.titulo}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;font-size:.88rem">
+        <div>
+          <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:2px">${ck.balanceLabel}</div>
+          <div class="mono fw600" style="font-size:1.1rem">$${fN(ck.balance)}</div>
+        </div>
+        <div>
+          <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:2px">${ck.f300Label}</div>
+          <div class="mono fw600" style="font-size:1.1rem">$${fN(ck.f300)}</div>
+        </div>
+        <div>
+          <div style="font-size:.72rem;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:2px">Diferencia</div>
+          <div class="mono fw600" style="font-size:1.1rem;color:${ck.estado==='ok'?'var(--green)':'var(--red)'}">$${fN(ck.diff)} <span style="font-size:.75rem;font-weight:400">(${ck.pct}%)</span></div>
+        </div>
+      </div>
+      <div style="font-size:.82rem;color:var(--muted);margin-top:8px;line-height:1.5">${ck.nota}</div>
+    </div>`;
+  });
+
+  body.innerHTML=h;
+}
+
+/* ═══ SIDEBAR BALANCE ═══ */
+function renderBalanceSidebar(){
+  const el=document.getElementById('balanceSidebar');
+  if(!el||!mappings.length)return;
+  const c=result300.cas;
+
+  const grupos=[
+    {tipo:'ingreso',titulo:'Ingresos (Clase 4)',casF300:'27-40',casillas:[27,28,29,30,31,32,33,34,35,36,37,38,39,40]},
+    {tipo:'dev_venta',titulo:'Dev. Ventas',casF300:'42',casillas:[42]},
+    {tipo:'compra',titulo:'Compras / Costos (Clase 6)',casF300:'44-54',casillas:[44,45,46,47,48,49,50,51,52,53,54]},
+    {tipo:'dev_compra',titulo:'Dev. Compras',casF300:'56',casillas:[56]},
+    {tipo:'generado',titulo:'IVA Generado',casF300:'58-66',casillas:[58,59,60,61,62,63,64,65,66]},
+    {tipo:'descontable',titulo:'IVA Descontable',casF300:'68-76',casillas:[68,69,70,71,72,73,74,75,76]},
+    {tipo:'reteiva_favor',titulo:'RteIVA a Favor',casF300:'85',casillas:[85]},
+    {tipo:'reteiva_terc',titulo:'IVA Retenido No Domiciliados',casF300:'78',casillas:[78]},
+    {tipo:'saldo_favor',titulo:'Saldo Favor IVA',casF300:'84',casillas:[84]},
+  ];
+
+  let h='';
+  for(const g of grupos){
+    const items=mappings.filter(m=>m.tipo===g.tipo&&m.concepto!=='ignorar');
+    if(!items.length)continue;
+
+    let totalNeto=0;
+    let rows='';
+    items.forEach(m=>{
+      const neto=r1000(m.tipo==='ingreso'||m.tipo==='generado'||m.tipo==='dev_compra'?(m.totalCre-m.totalDeb):
+                       m.tipo==='compra'||m.tipo==='descontable'||m.tipo==='dev_venta'?(m.totalDeb-m.totalCre):
+                       m.tipo==='reteiva_favor'||m.tipo==='saldo_favor'?m.totalDeb:
+                       m.totalCre);
+      totalNeto+=Math.abs(neto);
+      rows+=`<tr>
+        <td style="font-family:'JetBrains Mono',monospace;color:var(--pri2);font-weight:600;white-space:nowrap;padding:2px 4px 2px 0">${m.code}</td>
+        <td style="color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:0;padding:2px 4px" title="${m.name}">${m.name}</td>
+        <td style="text-align:right;font-family:'JetBrains Mono',monospace;color:#999;white-space:nowrap;padding:2px 4px">${fN(r1000(m.totalDeb))}</td>
+        <td style="text-align:right;font-family:'JetBrains Mono',monospace;color:#999;white-space:nowrap;padding:2px 4px">${fN(r1000(m.totalCre))}</td>
+        <td style="text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--green);white-space:nowrap;padding:2px 0 2px 4px">${fN(Math.abs(neto))}</td>
+      </tr>`;
+    });
+
+    const totalF300=g.casillas.reduce((s,k)=>s+(c[k]||0),0);
+    const diff=Math.abs(r1000(totalNeto)-totalF300);
+    const ok=diff<2000;
+
+    h+=`<div style="margin-bottom:16px">
+      <div style="font-size:.78rem;font-weight:700;color:var(--pri);margin-bottom:6px;padding-bottom:4px;border-bottom:2px solid var(--pri2)">${g.titulo} <span style="font-size:.65rem;font-weight:400;color:var(--muted)">→ Cas. ${g.casF300}</span></div>
+      <table style="width:100%;border-collapse:collapse;font-size:.72rem;table-layout:auto">
+        <thead><tr style="border-bottom:1px solid #ddd">
+          <th style="text-align:left;color:#aaa;font-weight:600;padding:2px 4px 2px 0">Cta</th>
+          <th style="text-align:left;color:#aaa;font-weight:600;padding:2px 4px">Nombre</th>
+          <th style="text-align:right;color:#aaa;font-weight:600;padding:2px 4px">Déb</th>
+          <th style="text-align:right;color:#aaa;font-weight:600;padding:2px 4px">Cré</th>
+          <th style="text-align:right;color:#aaa;font-weight:600;padding:2px 0 2px 4px">Neto</th>
+        </tr></thead>
+        <tbody style="font-size:.71rem">${rows}</tbody>
+      </table>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;padding-top:5px;border-top:1px solid #ddd;font-size:.72rem;font-weight:700">
+        <span>Bal: $${fN(r1000(totalNeto))}</span>
+        <span>F300: $${fN(totalF300)}</span>
+        <span style="color:${ok?'var(--green)':'var(--red)'}">${ok?'✓ OK':'⚠ Dif $'+fN(diff)}</span>
+      </div>
+    </div>`;
+  }
+
+  if(!h)h='<div style="text-align:center;color:var(--muted);padding:20px;font-size:.85rem">Carga un balance para ver el cruce</div>';
+  el.innerHTML=h;
+}
+
+/* ═══ EDICIÓN DE CASILLAS ═══ */
+function onCasEdit(el){
+  const cas=parseInt(el.dataset.cas);
+  const val=toNum(el.value);
+  result300.cas[cas]=r1000(val);
+  el.value=fN(r1000(val));
+  // Recalcular totales dependientes (fórmulas reales DIAN F300)
+  const c=result300.cas;
+  // Ingresos
+  c[41]=(c[27]||0)+(c[28]||0)+(c[29]||0)+(c[30]||0)+(c[31]||0)+(c[32]||0)+(c[33]||0)+(c[34]||0)+(c[35]||0)+(c[36]||0)+(c[37]||0)+(c[38]||0)+(c[39]||0)+(c[40]||0);
+  c[43]=(c[41]||0)-(c[42]||0);
+  // Compras
+  c[55]=(c[44]||0)+(c[45]||0)+(c[46]||0)+(c[47]||0)+(c[48]||0)+(c[49]||0)+(c[50]||0)+(c[51]||0)+(c[52]||0)+(c[53]||0)+(c[54]||0);
+  c[57]=(c[55]||0)-(c[56]||0);
+  // IVA Generado
+  c[67]=(c[58]||0)+(c[59]||0)+(c[60]||0)+(c[61]||0)+(c[62]||0)+(c[63]||0)+(c[64]||0)+(c[65]||0)+(c[66]||0);
+  // IVA Descontable
+  c[77]=(c[68]||0)+(c[69]||0)+(c[70]||0)+(c[71]||0)+(c[72]||0)+(c[73]||0)+(c[74]||0)+(c[75]||0)+(c[76]||0);
+  c[81]=(c[77]||0)+(c[78]||0)+(c[79]||0)-(c[80]||0);
+  // Liquidación
+  c[82]=Math.max(0,(c[67]||0)-(c[81]||0));
+  c[83]=Math.max(0,(c[81]||0)-(c[67]||0));
+  c[86]=Math.max(0,(c[82]||0)-(c[84]||0)-(c[85]||0));
+  c[88]=(c[86]||0)+(c[87]||0);
+  c[89]=c[82]>0?Math.max(0,(c[84]||0)+(c[85]||0)-(c[82]||0)):((c[83]||0)+(c[84]||0)+(c[85]||0));
+  c[980]=c[88]||0;
+  // Actualizar todos los inputs con los nuevos valores
+  document.querySelectorAll('[data-cas]').forEach(inp=>{
+    const k=parseInt(inp.dataset.cas);
+    if(k!==cas)inp.value=c[k]?fN(c[k]):'';
+  });
+  // Actualizar KPIs
+  document.getElementById('resultStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">$${fN(c[67]||0)}</div><div class="lbl">IVA Generado (67)</div></div>
+    <div class="stat-card amber"><div class="val">$${fN(c[81]||0)}</div><div class="lbl">IVA Descontable (81)</div></div>
+    <div class="stat-card ${(c[88]||0)>0?'red':'green'}"><div class="val">$${fN(c[88]||0)}</div><div class="lbl">Saldo a pagar (88)</div></div>
+    <div class="stat-card green"><div class="val">$${fN(c[89]||0)}</div><div class="lbl">Saldo a favor (89)</div></div>`;
+}
+
+/* ═══ NAV ═══ */
+function goStep(n){
+  for(let i=1;i<=5;i++){const el=document.getElementById('step'+i);if(el)el.classList.toggle('hidden',i!==n)}
+  document.querySelectorAll('.step-pill').forEach((el,i)=>{el.classList.remove('active','done');if(i+1<n)el.classList.add('done');if(i+1===n)el.classList.add('active')});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function switchTab(el,id){el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');el.closest('.card').querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+/* ═══ RÉGIMEN Y PERIODICIDAD ═══ */
+const PERIODOS={
+  comun_bim:[
+    {value:'1',label:'1 - Ene-Feb'},
+    {value:'2',label:'2 - Mar-Abr'},
+    {value:'3',label:'3 - May-Jun'},
+    {value:'4',label:'4 - Jul-Ago'},
+    {value:'5',label:'5 - Sep-Oct'},
+    {value:'6',label:'6 - Nov-Dic'},
+  ],
+  comun_cuat:[
+    {value:'Q1',label:'1 - Ene-Abr'},
+    {value:'Q2',label:'2 - May-Ago'},
+    {value:'Q3',label:'3 - Sep-Dic'},
+  ],
+  simple:[
+    {value:'ANUAL',label:'Anual — Consolidado del año'},
+  ]
+};
+
+function onRegimenChange(){
+  const reg=document.getElementById('cfgRegimen').value;
+  const sel=document.getElementById('cfgPeriodo');
+  const periodos=PERIODOS[reg]||PERIODOS.comun_bim;
+  sel.innerHTML=periodos.map(p=>`<option value="${p.value}">${p.label}</option>`).join('');
+  // Mostrar/ocultar campo de anticipos para régimen simple
+  document.getElementById('simpleAnticipo').style.display=reg==='simple'?'flex':'none';
+}
+
+// Inicializar períodos al cargar
+document.addEventListener('DOMContentLoaded',function(){
+  onRegimenChange();
+  // Wompi fallback
+  setTimeout(function(){
+    document.querySelectorAll('.wompi-btn-container').forEach(function(container){
+      const hasBtn=container.querySelector('form, button:not(.btn-primary), [class*="wompi"], [class*="waybox"]');
+      if(!hasBtn){const fb=container.querySelector('.wompi-fallback');if(fb)fb.style.display='block'}
+    });
+  },5000);
+  // Check URL for PRO unlock (viene del redirect de Wompi después de pagar)
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('pro')==='1'||params.get('unlocked')==='1'){
+    dianUnlocked=true;
+    // Ocultar paywall si existe
+    const pw=document.getElementById('proPaywall');
+    if(pw)pw.classList.add('hidden');
+  }
+});
+
+/* ═══ CRUCE LISTADO DIAN (PRO) ═══ */
+let dianUnlocked=true; // TODO: cambiar a false antes de producción
+let modoActual='balance'; // 'balance', 'dian', 'comparar'
+
+function setModo(modo){
+  modoActual=modo;
+  // Visual
+  document.querySelectorAll('.modo-card').forEach(el=>{
+    el.style.borderColor='var(--border)';el.style.background='';
+  });
+  const sel=document.getElementById('modo'+modo.charAt(0).toUpperCase()+modo.slice(1));
+  if(sel){sel.style.borderColor='var(--pri2)';sel.style.background='var(--pri3)'}
+
+  // Mostrar/ocultar secciones
+  const needsBalance=modo==='balance'||modo==='comparar';
+  const needsDian=modo==='dian'||modo==='comparar';
+  document.getElementById('uploadBalance').classList.toggle('hidden',!needsBalance);
+  document.getElementById('uploadDian').classList.toggle('hidden',!needsDian);
+
+  // PRO paywall
+  if((modo==='dian'||modo==='comparar')&&!dianUnlocked){
+    document.getElementById('proPaywall').classList.remove('hidden');
+  }else{
+    document.getElementById('proPaywall').classList.add('hidden');
+  }
+}
+
+function iniciarProceso(){
+  if((modoActual==='dian'||modoActual==='comparar')&&!dianUnlocked){
+    alert('Activa PRO para usar el listado DIAN. Paga con el botón de arriba.');
+    return;
+  }
+  if(modoActual==='balance'||modoActual==='comparar'){
+    if(!rawData.length){alert('Carga un balance de prueba primero.');return}
+    goStep(2); // va a columnas
+  }
+  if(modoActual==='dian'){
+    if(!dianRawData){alert('Carga el listado DIAN primero.');return}
+    runDianGenerate(); // genera directo desde DIAN
+  }
+}
+
+function runDianGenerate(){
+  // Generar F300 directamente desde listado DIAN
+  const emitidos=filterDianByDate(dianParsed.emitidos);
+  const recibidos=filterDianByDate(dianParsed.recibidos);
+  let ivaGen=0,ivaDesc=0,ingresos=0,compras=0,reteIva=0;
+  emitidos.forEach(d=>{const f=d.esNota?-1:1;ivaGen+=d.iva*f;ingresos+=d.total*f});
+  recibidos.forEach(d=>{const f=d.esNota?-1:1;ivaDesc+=d.iva*f;compras+=d.total*f;reteIva+=d.reteIva*f});
+
+  // Crear result300 desde DIAN (usando casillas reales F300)
+  const cas={};for(let i=27;i<=100;i++)cas[i]=0;cas[980]=0;
+  cas[28]=r1000(ingresos-ivaGen); // Ingresos gravados general = total - IVA
+  cas[41]=cas[28]; // Total ingresos brutos
+  cas[43]=cas[41]; // Total ingresos netos
+  cas[51]=r1000(compras-ivaDesc); // Compras gravadas nac. general = total - IVA
+  cas[55]=cas[51]; // Total compras brutas
+  cas[57]=cas[55]; // Total compras netas
+  cas[59]=r1000(ivaGen); // IVA generado tarifa general
+  cas[67]=cas[59]; // Total impuesto generado
+  cas[72]=r1000(ivaDesc); // IVA descontable compras general
+  cas[77]=cas[72]; // Total IVA pagado
+  cas[78]=r1000(reteIva); // IVA retenido no domiciliados
+  cas[81]=cas[77]+cas[78]; // Total impuestos descontables
+  cas[82]=Math.max(0,cas[67]-cas[81]); // Saldo a pagar período
+  cas[83]=Math.max(0,cas[81]-cas[67]); // Saldo a favor período
+  cas[86]=cas[82]; // Saldo a pagar impuesto (sin saldo anterior ni retenciones)
+  cas[88]=cas[86]; // Total saldo a pagar
+  cas[89]=cas[83]; // Total saldo a favor
+  cas[980]=cas[88];
+  result300={cas,regimen:document.getElementById('cfgRegimen').value};
+  // Crear mappings vacíos para el sidebar
+  mappings=[];
+  // Ir directo al paso 4
+  goStep(4);
+  try{render300()}catch(e){console.error(e);alert('Error: '+e.message)}
+  try{renderConciliacion()}catch(e){}
+  try{renderBalanceSidebar()}catch(e){}
+}
+let dianRawData=null;
+let dianParsed={emitidos:[],recibidos:[]};
+
+// unlockDian ya no necesario — se desbloquea por URL ?pro=1 desde Wompi
+
+function loadDianFile(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  document.getElementById('fileNameDian').textContent='✓ '+file.name;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});
+    dianRawData=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+    parseDianFile();
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+const PERIODOS_DIAN={
+  bimestral:[
+    {value:'1',label:'1er Bim (Ene-Feb)',desde:'01-01',hasta:'02-28'},
+    {value:'2',label:'2do Bim (Mar-Abr)',desde:'03-01',hasta:'04-30'},
+    {value:'3',label:'3er Bim (May-Jun)',desde:'05-01',hasta:'06-30'},
+    {value:'4',label:'4to Bim (Jul-Ago)',desde:'07-01',hasta:'08-31'},
+    {value:'5',label:'5to Bim (Sep-Oct)',desde:'09-01',hasta:'10-31'},
+    {value:'6',label:'6to Bim (Nov-Dic)',desde:'11-01',hasta:'12-31'},
+  ],
+  cuatrimestral:[
+    {value:'1',label:'1er Cuatr (Ene-Abr)',desde:'01-01',hasta:'04-30'},
+    {value:'2',label:'2do Cuatr (May-Ago)',desde:'05-01',hasta:'08-31'},
+    {value:'3',label:'3er Cuatr (Sep-Dic)',desde:'09-01',hasta:'12-31'},
+  ],
+  anual:[
+    {value:'1',label:'Anual (Ene-Dic)',desde:'01-01',hasta:'12-31'},
+  ]
+};
+
+function onDianPeriodChange(){
+  const periodicidad=document.getElementById('dianPeriodicidad').value;
+  const sel=document.getElementById('dianPeriodo');
+  const periodos=PERIODOS_DIAN[periodicidad];
+  sel.innerHTML=periodos.map(p=>`<option value="${p.value}">${p.label}</option>`).join('');
+  updateDianFechaRango();
+}
+
+function updateDianFechaRango(){
+  const yr=document.getElementById('dianYear').value;
+  const periodicidad=document.getElementById('dianPeriodicidad').value;
+  const periodoVal=document.getElementById('dianPeriodo').value;
+  const periodos=PERIODOS_DIAN[periodicidad];
+  const p=periodos.find(x=>x.value===periodoVal)||periodos[0];
+  // Feb 28 o 29
+  let hasta=p.hasta;
+  if(hasta==='02-28'){const y=parseInt(yr);if((y%4===0&&y%100!==0)||y%400===0)hasta='02-29'}
+  document.getElementById('dianFechaRango').textContent=`${yr}-${p.desde} a ${yr}-${hasta}`;
+}
+
+function getDianDateRange(){
+  const yr=document.getElementById('dianYear').value;
+  const periodicidad=document.getElementById('dianPeriodicidad').value;
+  const periodoVal=document.getElementById('dianPeriodo').value;
+  const periodos=PERIODOS_DIAN[periodicidad];
+  const p=periodos.find(x=>x.value===periodoVal)||periodos[0];
+  let hasta=p.hasta;
+  if(hasta==='02-28'){const y=parseInt(yr);if((y%4===0&&y%100!==0)||y%400===0)hasta='02-29'}
+  return{desde:new Date(`${yr}-${p.desde}T00:00:00`),hasta:new Date(`${yr}-${hasta}T23:59:59`)};
+}
+
+function parseDianFile(){
+  if(!dianRawData||dianRawData.length<2)return;
+  // Detectar headers
+  let hdr=0;
+  for(let i=0;i<Math.min(5,dianRawData.length);i++){
+    const row=dianRawData[i];if(!row)continue;
+    const rn=row.map(c=>norm(cellStr(c)));
+    if(rn.some(h=>h.includes('tipo de documento')||h.includes('cufe')||h.includes('folio'))){hdr=i;break}
+  }
+  const headers=dianRawData[hdr].map(c=>norm(cellStr(c)));
+  // Mapear columnas
+  const col={
+    tipo:headers.findIndex(h=>h.includes('tipo de documento')||h==='tipo'),
+    folio:headers.findIndex(h=>h.includes('folio')),
+    fecha:headers.findIndex(h=>h.includes('fecha emision')||h.includes('fecha')),
+    nitEmisor:headers.findIndex(h=>h.includes('nit emisor')),
+    nombreEmisor:headers.findIndex(h=>h.includes('nombre emisor')),
+    nitReceptor:headers.findIndex(h=>h.includes('nit receptor')),
+    nombreReceptor:headers.findIndex(h=>h.includes('nombre receptor')),
+    iva:headers.findIndex(h=>h==='iva'),
+    reteIva:headers.findIndex(h=>h.includes('rete iva')||h.includes('reteiva')),
+    reteRenta:headers.findIndex(h=>h.includes('rete renta')),
+    total:headers.findIndex(h=>h==='total'),
+    grupo:headers.findIndex(h=>h.includes('grupo')),
+  };
+
+  dianParsed={emitidos:[],recibidos:[]};
+  for(let i=hdr+1;i<dianRawData.length;i++){
+    const row=dianRawData[i];if(!row)continue;
+    const tipo=cellStr(row[col.tipo]);
+    const grupo=norm(cellStr(row[col.grupo]));
+    const fechaRaw=row[col.fecha];
+    let fecha=null;
+    if(fechaRaw instanceof Date)fecha=fechaRaw;
+    else if(typeof fechaRaw==='string'){const d=new Date(fechaRaw);if(!isNaN(d))fecha=d}
+    const doc={
+      tipo,folio:cellStr(row[col.folio]),fecha,
+      nitEmisor:cellStr(row[col.nitEmisor]),nombreEmisor:cellStr(row[col.nombreEmisor]),
+      nitReceptor:cellStr(row[col.nitReceptor]),nombreReceptor:cellStr(row[col.nombreReceptor]),
+      iva:toNum(row[col.iva]),reteIva:toNum(row[col.reteIva]),reteRenta:toNum(row[col.reteRenta]),
+      total:toNum(row[col.total]),grupo,
+      // Notas crédito restan
+      esNota:tipo.toLowerCase().includes('nota')&&tipo.toLowerCase().includes('cr'),
+    };
+    // Solo facturas, doc soporte, notas crédito (no nómina, POS, etc.)
+    const tipoN=norm(tipo);
+    if(tipoN.includes('nomina')||tipoN.includes('peaje'))continue;
+    if(grupo.includes('emitido'))dianParsed.emitidos.push(doc);
+    else if(grupo.includes('recibido'))dianParsed.recibidos.push(doc);
+  }
+
+  // Mostrar resumen y filtros
+  document.getElementById('dianFilters').classList.remove('hidden');
+  // Inicializar períodos y auto-detectar año
+  onDianPeriodChange();
+  const allDates=[...dianParsed.emitidos,...dianParsed.recibidos].filter(d=>d.fecha).map(d=>d.fecha);
+  if(allDates.length){
+    const max=new Date(Math.max(...allDates));
+    document.getElementById('dianYear').value=max.getFullYear();
+    onDianPeriodChange();
+  }
+
+  document.getElementById('dianSummary').innerHTML=`
+    <div class="stats">
+      <div class="stat-card blue"><div class="val">${dianParsed.emitidos.length}</div><div class="lbl">Emitidos</div></div>
+      <div class="stat-card amber"><div class="val">${dianParsed.recibidos.length}</div><div class="lbl">Recibidos</div></div>
+      <div class="stat-card green"><div class="val">$${fN(r1000(dianParsed.emitidos.reduce((s,d)=>s+d.iva,0)))}</div><div class="lbl">IVA Emitido</div></div>
+      <div class="stat-card red"><div class="val">$${fN(r1000(dianParsed.recibidos.reduce((s,d)=>s+d.iva,0)))}</div><div class="lbl">IVA Recibido</div></div>
+    </div>`;
+}
+
+function filterDianByDate(docs){
+  const range=getDianDateRange();
+  return docs.filter(d=>{
+    if(!d.fecha)return true;
+    if(d.fecha<range.desde)return false;
+    if(d.fecha>range.hasta)return false;
+    return true;
+  });
+}
+
+function runDianAnalysis(){
+  const modo=document.querySelector('input[name="modoDian"]:checked').value;
+  const emitidos=filterDianByDate(dianParsed.emitidos);
+  const recibidos=filterDianByDate(dianParsed.recibidos);
+
+  // Calcular IVA desde facturas
+  let ivaGeneradoDian=0,ivaDescontableDian=0,reteIvaDian=0;
+  let ingresosEmitidos=0,comprasRecibidas=0;
+
+  emitidos.forEach(d=>{
+    const factor=d.esNota?-1:1;
+    ivaGeneradoDian+=d.iva*factor;
+    ingresosEmitidos+=d.total*factor;
+  });
+  recibidos.forEach(d=>{
+    const factor=d.esNota?-1:1;
+    ivaDescontableDian+=d.iva*factor;
+    reteIvaDian+=d.reteIva*factor;
+    comprasRecibidas+=d.total*factor;
+  });
+
+  // Agrupar por tercero
+  const porTerceroEm={};
+  emitidos.forEach(d=>{
+    const k=d.nitReceptor||'SIN_NIT';
+    if(!porTerceroEm[k])porTerceroEm[k]={nit:d.nitReceptor,nombre:d.nombreReceptor,iva:0,total:0,docs:0};
+    const f=d.esNota?-1:1;
+    porTerceroEm[k].iva+=d.iva*f;porTerceroEm[k].total+=d.total*f;porTerceroEm[k].docs++;
+  });
+  const porTerceroRec={};
+  recibidos.forEach(d=>{
+    const k=d.nitEmisor||'SIN_NIT';
+    if(!porTerceroRec[k])porTerceroRec[k]={nit:d.nitEmisor,nombre:d.nombreEmisor,iva:0,total:0,docs:0};
+    const f=d.esNota?-1:1;
+    porTerceroRec[k].iva+=d.iva*f;porTerceroRec[k].total+=d.total*f;porTerceroRec[k].docs++;
+  });
+
+  // Stats
+  document.getElementById('dianResults').classList.remove('hidden');
+  document.getElementById('dianStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">$${fN(r1000(ingresosEmitidos))}</div><div class="lbl">Ingresos (emitidos)</div></div>
+    <div class="stat-card green"><div class="val">$${fN(r1000(ivaGeneradoDian))}</div><div class="lbl">IVA Generado</div></div>
+    <div class="stat-card amber"><div class="val">$${fN(r1000(ivaDescontableDian))}</div><div class="lbl">IVA Descontable</div></div>
+    <div class="stat-card red"><div class="val">$${fN(r1000(ivaGeneradoDian-ivaDescontableDian))}</div><div class="lbl">IVA Neto</div></div>`;
+
+  // Resumen
+  let rHtml=`<div style="padding:16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+      <div style="padding:16px;border-radius:10px;background:var(--green2);border:1px solid #A5D6A7">
+        <div style="font-weight:700;margin-bottom:8px">IVA Generado (Facturas emitidas)</div>
+        <div style="font-size:.9rem">Docs: <strong>${emitidos.length}</strong> · Terceros: <strong>${Object.keys(porTerceroEm).length}</strong></div>
+        <div style="font-size:1.2rem;font-weight:800;font-family:'JetBrains Mono',monospace;margin-top:4px">$${fN(r1000(ivaGeneradoDian))}</div>
+      </div>
+      <div style="padding:16px;border-radius:10px;background:var(--amber2);border:1px solid #FCD34D">
+        <div style="font-weight:700;margin-bottom:8px">IVA Descontable (Facturas recibidas)</div>
+        <div style="font-size:.9rem">Docs: <strong>${recibidos.length}</strong> · Terceros: <strong>${Object.keys(porTerceroRec).length}</strong></div>
+        <div style="font-size:1.2rem;font-weight:800;font-family:'JetBrains Mono',monospace;margin-top:4px">$${fN(r1000(ivaDescontableDian))}</div>
+      </div>
+    </div>`;
+
+  // Modo comparar: cruzar vs balance
+  if(modo==='comparar'&&result300&&result300.cas){
+    const c=result300.cas;
+    const cruces=[
+      {label:'IVA Generado',dian:r1000(ivaGeneradoDian),f300:c[67]||0},
+      {label:'IVA Descontable',dian:r1000(ivaDescontableDian),f300:c[81]||0},
+      {label:'Ingresos brutos',dian:r1000(ingresosEmitidos),f300:c[43]||0},
+    ];
+    rHtml+=`<div style="font-weight:700;margin-bottom:8px">Cruce DIAN vs Borrador F300</div>`;
+    cruces.forEach(cr=>{
+      const diff=Math.abs(cr.dian-cr.f300);
+      const ok=diff<Math.max(cr.dian,cr.f300)*0.05;
+      rHtml+=`<div style="padding:12px;margin-bottom:8px;border-radius:8px;background:${ok?'#E8F5E9':'#FFEBEE'};border:1px solid ${ok?'#A5D6A7':'#EF9A9A'};display:flex;justify-content:space-between;align-items:center">
+        <span style="font-weight:700">${cr.label}</span>
+        <span>DIAN: <strong class="mono">$${fN(cr.dian)}</strong></span>
+        <span>F300: <strong class="mono">$${fN(cr.f300)}</strong></span>
+        <span style="font-weight:700;color:${ok?'var(--green)':'var(--red)'}">${ok?'✓':'⚠'} Dif: $${fN(diff)}</span>
+      </div>`;
+    });
+  }
+
+  // Modo generar: mostrar valores listos para F300
+  if(modo==='generar'){
+    rHtml+=`<div class="alert alert-success" style="margin-top:12px"><span>✅</span><div>
+      <strong>Valores para el Formulario 300 (desde facturación electrónica):</strong><br>
+      Ingresos gravados: <strong>$${fN(r1000(ingresosEmitidos-ivaGeneradoDian))}</strong> (total emitido - IVA)<br>
+      IVA generado: <strong>$${fN(r1000(ivaGeneradoDian))}</strong><br>
+      Compras: <strong>$${fN(r1000(comprasRecibidas-ivaDescontableDian))}</strong> (total recibido - IVA)<br>
+      IVA descontable: <strong>$${fN(r1000(ivaDescontableDian))}</strong><br>
+      Saldo a pagar: <strong>$${fN(r1000(Math.max(0,ivaGeneradoDian-ivaDescontableDian)))}</strong>
+    </div></div>`;
+  }
+  rHtml+=`</div>`;
+  document.getElementById('dianResumen').innerHTML=rHtml;
+
+  // Detalle por tercero
+  let tHtml=`<table class="map-table"><thead><tr><th>NIT</th><th>Nombre</th><th>Tipo</th><th class="text-right">Docs</th><th class="text-right">Total</th><th class="text-right">IVA</th></tr></thead><tbody>`;
+  const topEm=Object.values(porTerceroEm).sort((a,b)=>b.iva-a.iva).slice(0,30);
+  const topRec=Object.values(porTerceroRec).sort((a,b)=>b.iva-a.iva).slice(0,30);
+  if(topEm.length){
+    tHtml+=`<tr><td colspan="6" style="background:var(--green2);font-weight:700;padding:8px">Emitidos (IVA Generado) — Top ${topEm.length}</td></tr>`;
+    topEm.forEach(t=>{
+      tHtml+=`<tr><td class="mono">${t.nit}</td><td>${t.nombre}</td><td>Emitido</td><td class="text-right">${t.docs}</td><td class="text-right mono">${fN(r1000(t.total))}</td><td class="text-right mono fw600">${fN(r1000(t.iva))}</td></tr>`;
+    });
+  }
+  if(topRec.length){
+    tHtml+=`<tr><td colspan="6" style="background:var(--amber2);font-weight:700;padding:8px">Recibidos (IVA Descontable) — Top ${topRec.length}</td></tr>`;
+    topRec.forEach(t=>{
+      tHtml+=`<tr><td class="mono">${t.nit}</td><td>${t.nombre}</td><td>Recibido</td><td class="text-right">${t.docs}</td><td class="text-right mono">${fN(r1000(t.total))}</td><td class="text-right mono fw600">${fN(r1000(t.iva))}</td></tr>`;
+    });
+  }
+  tHtml+=`</tbody></table>`;
+  document.getElementById('dianDetalleTable').innerHTML=tHtml;
+
+  // Diferencias vs balance (solo modo comparar)
+  if(modo==='comparar'&&result300&&result300.cas){
+    document.getElementById('tabDianDiffBtn').style.display='';
+    // Por ahora mostrar mensaje
+    document.getElementById('dianDiffTable').innerHTML=`<div style="padding:20px;text-align:center;color:var(--muted)">El detalle de diferencias por tercero estará disponible próximamente.</div>`;
+  }
+}
+
+async function exportDianXls(){
+  alert('Descarga del análisis DIAN en construcción.');
+}
+
+</script>
+</body>
+</html>

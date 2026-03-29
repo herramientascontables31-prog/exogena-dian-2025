@@ -40,8 +40,8 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .nav-links a{text-decoration:none;color:var(--gray-500);font-size:.88rem;font-weight:500;transition:color .2s}
 .nav-links a:hover{color:var(--gray-900)}
 .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:600;font-size:1rem;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
-.btn-green{background:linear-gradient(135deg,var(--green-600),var(--green-500));color:#fff;box-shadow:0 2px 10px rgba(5,150,105,.25)}
-.btn-green:hover{background:linear-gradient(135deg,var(--green-700),var(--green-600));transform:translateY(-1px);box-shadow:0 6px 20px rgba(5,150,105,.35)}
+.btn-green{background:var(--green-600);color:#fff}
+.btn-green:hover{background:var(--green-700);transform:translateY(-1px);box-shadow:var(--shadow-xl)}
 .btn-ghost{background:transparent;color:var(--gray-700);border:1.5px solid var(--gray-200)}
 .btn-ghost:hover{border-color:var(--green-500);color:var(--green-700);background:var(--green-50)}
 .btn-sm{padding:8px 16px;font-size:.82rem;border-radius:10px}
@@ -162,39 +162,27 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .wompi-btn-container form button,
 .wompi-btn-container button,
 .wompi-btn-container .waybox-button,
-.wompi-btn-container [class*="wompi"],
-.wompi-btn-container [class*="waybox"]{
-  width:100%!important;padding:16px 24px!important;border-radius:14px!important;
-  font-family:'Outfit',sans-serif!important;font-weight:700!important;font-size:1.05rem!important;
-  background:#ffffff!important;
+.wompi-btn-container [class*="wompi"]{
+  width:100%!important;padding:14px 24px!important;border-radius:12px!important;
+  font-family:'Outfit',sans-serif!important;font-weight:700!important;font-size:1rem!important;
+  background:linear-gradient(135deg,var(--green-400),var(--green-300))!important;
   color:var(--green-900)!important;border:none!important;cursor:pointer!important;
-  transition:all .3s!important;box-shadow:0 4px 24px rgba(0,0,0,.2), 0 0 0 1px rgba(255,255,255,.1)!important;
-  letter-spacing:.02em!important;text-align:center!important;
-  display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;
+  transition:all .25s!important;box-shadow:0 4px 14px rgba(52,211,153,.3)!important;
+  letter-spacing:.02em!important;
 }
 .wompi-btn-container form button:hover,
 .wompi-btn-container button:hover,
-.wompi-btn-container .waybox-button:hover,
-.wompi-btn-container [class*="waybox"]:hover{
-  transform:translateY(-3px)!important;
-  box-shadow:0 10px 36px rgba(0,0,0,.25), 0 0 0 1px rgba(255,255,255,.2)!important;
-  background:#f0fdf4!important;
-}
-.price-card.pop .wompi-btn-container form button,
-.price-card.pop .wompi-btn-container button,
-.price-card.pop .wompi-btn-container [class*="wompi"],
-.price-card.pop .wompi-btn-container [class*="waybox"]{
-  background:#ffffff!important;
-  border:none!important;
-  box-shadow:0 6px 28px rgba(0,0,0,.22), 0 0 0 2px rgba(52,211,153,.3)!important;
+.wompi-btn-container .waybox-button:hover{
+  transform:translateY(-2px)!important;
+  box-shadow:0 8px 24px rgba(52,211,153,.4)!important;
 }
 /* Fallback: si Wompi no carga, mostrar botón alternativo */
-.wompi-fallback{display:none;width:100%;padding:16px 24px;border-radius:14px;
-  font-family:'Outfit',sans-serif;font-weight:700;font-size:1.05rem;
-  background:#ffffff;
+.wompi-fallback{display:none;width:100%;padding:14px 24px;border-radius:12px;
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;
+  background:linear-gradient(135deg,var(--green-400),var(--green-300));
   color:var(--green-900);border:none;cursor:pointer;text-align:center;
-  transition:all .3s;box-shadow:0 4px 24px rgba(0,0,0,.2);text-decoration:none}
-.wompi-fallback:hover{transform:translateY(-3px);box-shadow:0 10px 36px rgba(0,0,0,.25);background:#f0fdf4}
+  transition:all .25s;box-shadow:0 4px 14px rgba(52,211,153,.3);text-decoration:none}
+.wompi-fallback:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(52,211,153,.4)}
 .price-foot{text-align:center;margin-top:36px;position:relative;z-index:1}
 .price-trust{color:rgba(255,255,255,.35);font-size:.82rem;margin-bottom:14px}
 .price-trust span{color:rgba(255,255,255,.55)}
@@ -299,7 +287,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       </div>
       <div class="hero-stats">
         <div class="hero-stat"><strong>10</strong><span>Formatos exógena</span></div>
-        <div class="hero-stat"><strong>2</strong><span>Herramientas gratis</span></div>
+        <div class="hero-stat"><strong>3</strong><span>Herramientas gratis</span></div>
         <div class="hero-stat"><strong>24h</strong><span>Tiempo de entrega</span></div>
       </div>
     </div>
@@ -321,7 +309,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
         </div>
         <div class="tool-mini" style="animation:float 5s 1.6s ease-in-out infinite">
           <div class="tool-mini-icon tmi-amber">📋</div>
-          <h4>Declaración de IVA <span class="badge-soon">Pronto</span></h4>
+          <h4>Declaración de IVA <span class="badge-free">Gratis</span></h4>
           <p>Formulario 300 bimestral</p>
         </div>
         <div class="tool-mini" style="animation:float 5s 2.4s ease-in-out infinite">
@@ -366,12 +354,12 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <div class="tool-status ts-free">Gratis · Disponible</div>
     </a>
     <!-- IVA -->
-    <div class="tool-card" style="opacity:0.7">
+    <a href="iva300.html" class="tool-card" style="text-decoration:none;color:inherit">
       <div class="tool-icon tmi-amber">📋</div>
       <h3>Declaración de IVA</h3>
       <p class="tool-desc">Calculadora del formulario 300. IVA generado, descontable, retenciones que le practicaron y saldo a pagar/favor.</p>
-      <div class="tool-status ts-soon">Próximamente</div>
-    </div>
+      <div class="tool-status ts-free">Gratis · Disponible</div>
+    </a>
     <!-- RENTA -->
     <div class="tool-card" style="opacity:0.7">
       <div class="tool-icon tmi-purple">📑</div>
@@ -584,19 +572,19 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <div class="footer-col">
         <h5>Gratis</h5>
         <a href="retencion350.html">Retención en la Fuente</a>
+        <a href="iva300.html">Declaración de IVA</a>
         <a href="conciliacion.html">Conciliación Bancaria</a>
         <a href="#noticias">Noticias Tributarias</a>
       </div>
       <div class="footer-col">
         <h5>Próximamente</h5>
-        <a href="#herramientas" style="opacity:.5">Declaración IVA</a>
         <a href="#herramientas" style="opacity:.5">Declaración Renta</a>
         <a href="#herramientas" style="opacity:.5">Estados Financieros</a>
       </div>
       <div class="footer-col">
         <h5>Contacto</h5>
         <a href="https://wa.me/573156178610" target="_blank">WhatsApp</a>
-        <a href="/cdn-cgi/l/email-protection#ddb4b3bbb29db8a5b2bab8b3bcb9b4bcb3f3beb2b0"><span class="__cf_email__" data-cfemail="a0c9cec6cfe0c5d8cfc7c5cec1c4c9c1ce8ec3cfcd">[email&#160;protected]</span></a>
+        <a href="mailto:info@exogenadian.com">info@exogenadian.com</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -607,7 +595,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
   </div>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 /* === Nav scroll + mobile menu === */
 const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>20));

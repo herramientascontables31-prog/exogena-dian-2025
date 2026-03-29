@@ -1,0 +1,2632 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estados Financieros NIIF — Generador desde Balance de Prueba</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#548235;--green2:#E2EFDA;--red:#CC0000;--amber:#D97706;--amber2:#FFF8E1;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);padding:28px 32px;border-radius:16px;margin-bottom:24px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:1.6rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.header h1 span{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:600}
+.header p{opacity:.8;font-size:.85rem;margin-top:4px}
+.header-right{text-align:right;font-size:.8rem;opacity:.7}
+.steps{display:flex;gap:8px;margin-bottom:24px}
+.step-pill{flex:1;padding:12px 16px;background:var(--card);border:2px solid var(--border);border-radius:var(--radius);font-size:.82rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;transition:.3s;cursor:default}
+.step-pill .num{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff}
+.step-pill.active{border-color:var(--pri2);color:var(--pri);background:var(--pri3)}
+.step-pill.active .num{background:var(--pri2)}
+.step-pill.done{border-color:var(--green);color:var(--green)}
+.step-pill.done .num{background:var(--green)}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.drop-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:48px 32px;text-align:center;cursor:pointer;transition:.3s;position:relative}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--pri2);background:var(--pri3)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.dz-icon{font-size:2.5rem;margin-bottom:8px;display:block}.dz-title{font-weight:700;font-size:1.1rem;color:var(--pri)}.dz-hint{color:var(--muted);font-size:.82rem;margin-top:4px}
+.dz-file{margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--green);font-weight:600}
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.config-item{display:flex;flex-direction:column;gap:4px}
+.config-item label{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.config-item input,.config-item select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit}
+.config-item input:focus,.config-item select:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 3px rgba(46,117,182,.15)}
+.col-mapper{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:16px 0}
+.col-map-item{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px;transition:.3s}
+.col-map-item.mapped{border-color:var(--green);background:var(--green2)}
+.col-map-item.required{border-color:var(--amber)}
+.col-map-item .cml{font-size:.75rem;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.col-map-item .cml .req{color:var(--red);font-weight:800}
+.col-map-item select{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;background:#fff}
+.col-map-item .sample{font-size:.72rem;color:var(--muted);margin-top:6px;font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.col-map-item .sample strong{color:var(--pri)}
+.raw-preview{max-height:180px;overflow:auto;border:1px solid var(--border);border-radius:8px;font-size:.72rem;margin:12px 0}
+.raw-preview table{width:100%;border-collapse:collapse;min-width:800px}
+.raw-preview th,.raw-preview td{padding:4px 8px;border:1px solid var(--border);white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.raw-preview th{background:var(--pri3);position:sticky;top:0;font-weight:600;font-size:.7rem;color:var(--pri)}
+.raw-preview tr.hdr-row td{background:#FFF8E1;font-weight:600}
+.raw-preview tr:hover td{background:#f0f4f8}
+.hdr-selector{display:flex;align-items:center;gap:12px;margin:12px 0;padding:10px 14px;background:#f8fafc;border-radius:8px;border:1px solid var(--border)}
+.hdr-selector label{font-size:.82rem;font-weight:600;color:var(--pri)}
+.hdr-selector select{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit}
+.hdr-selector .hdr-preview{font-size:.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-left:8px}
+.map-table{width:100%;border-collapse:separate;border-spacing:0;font-size:.82rem}
+.map-table th{background:var(--pri);color:#fff;padding:10px 12px;text-align:left;font-weight:600;position:sticky;top:0;z-index:1}
+.map-table th:first-child{border-radius:8px 0 0 0}.map-table th:last-child{border-radius:0 8px 0 0}
+.map-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.map-table tr:nth-child(even) td{background:#f8fafc}.map-table tr:hover td{background:var(--pri3)}
+.map-table input,.map-table select{padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-family:inherit;width:100%}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.7rem;font-weight:700}
+.btn{padding:10px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--pri2);color:#fff}.btn-primary:hover{background:var(--pri);transform:translateY(-1px)}
+.btn-success{background:var(--green);color:#fff}.btn-success:hover{opacity:.9}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--pri2);color:var(--pri)}
+.actions{display:flex;gap:12px;justify-content:flex-end;margin-top:20px}
+.alert{padding:14px 18px;border-radius:8px;font-size:.85rem;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.alert-info{background:var(--pri3);color:var(--pri);border:1px solid #B4C6E7}
+.alert-warn{background:var(--amber2);color:#92400E;border:1px solid #FCD34D}
+.alert-success{background:var(--green2);color:var(--green);border:1px solid #A5D6A7}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center}
+.stat-card .val{font-size:1.5rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.stat-card .lbl{font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:4px}
+.stat-card.blue .val{color:var(--pri2)}.stat-card.green .val{color:var(--green)}.stat-card.amber .val{color:var(--amber)}.stat-card.red .val{color:var(--red)}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:16px}
+.tab{padding:10px 20px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s}
+.tab.active{color:var(--pri);border-bottom-color:var(--pri2)}
+.tab-content{display:none}.tab-content.active{display:block}
+.scroll-box{max-height:500px;overflow-y:auto;border:1px solid var(--border);border-radius:8px}
+.hidden{display:none!important}.mono{font-family:'JetBrains Mono',monospace}.text-right{text-align:right}.text-center{text-align:center}.fw600{font-weight:600}.mb12{margin-bottom:12px}.flex{display:flex}.flex-between{display:flex;justify-content:space-between;align-items:center}.gap12{gap:12px}
+.pro-badge{font-size:.65rem;background:#F59E0B;color:#fff;padding:1px 6px;border-radius:4px;margin-left:4px}
+.pro-locked{opacity:.5;pointer-events:none;position:relative}
+.pro-locked::after{content:'PRO';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#F59E0B;color:#fff;padding:8px 24px;border-radius:8px;font-weight:700;font-size:1rem;z-index:10}
+/* EEFF specific */
+.eeff-doc{font-family:Arial,Helvetica,sans-serif;font-size:12px;background:#fff;max-width:900px;margin:0 auto;padding:32px;line-height:1.6}
+.eeff-doc .doc-header{text-align:center;margin-bottom:24px}
+.eeff-doc .doc-header h2{font-size:14px;font-weight:700;margin:4px 0;text-transform:uppercase}
+.eeff-doc .doc-header h3{font-size:13px;font-weight:700;margin:4px 0;text-transform:uppercase;color:#1a3c6e}
+.eeff-doc .doc-header p{font-size:11px;color:#555;margin:2px 0}
+.eeff-row{display:grid;grid-template-columns:40px 1fr 160px;font-size:11px;min-height:26px;align-items:center}
+.eeff-row:hover{background:#f5f8fc}
+.eeff-row .eeff-indent{padding-left:20px}
+.eeff-row .eeff-indent2{padding-left:40px}
+.eeff-row .eeff-val{text-align:right;font-family:'JetBrains Mono',monospace;padding-right:8px}
+.eeff-row .eeff-val input{border:1px solid var(--border);background:transparent;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;width:140px;padding:2px 6px;border-radius:4px;outline:none}
+.eeff-row .eeff-val input:focus{border-color:var(--pri2);background:#edf4ff}
+.eeff-section{background:#d4e6f1;padding:6px 12px;font-weight:700;font-size:11px;color:#1a3c6e;text-transform:uppercase;letter-spacing:.3px;margin:8px 0 4px}
+.eeff-subsection{background:#eef3f8;padding:4px 12px;font-weight:700;font-size:10.5px;color:#2E75B6;margin:6px 0 2px}
+.eeff-total{font-weight:700;border-top:2px solid #333;border-bottom:1px solid #333;background:#f0f2f5;padding:4px 0}
+.eeff-subtotal{font-weight:600;border-top:1px solid #999;background:#f8fafc;padding:2px 0}
+.eeff-negative{color:var(--red)}
+.validation-box{padding:12px 16px;border-radius:8px;font-size:.9rem;font-weight:600;margin-top:16px;display:flex;align-items:center;gap:8px}
+.validation-ok{background:var(--green2);color:var(--green);border:1px solid #A5D6A7}
+.validation-error{background:#FFEBEE;color:var(--red);border:1px solid #FFCDD2}
+/* Policies */
+.policy-section{margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.policy-section .policy-header{background:var(--pri3);padding:12px 16px;font-weight:700;font-size:.95rem;color:var(--pri);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.policy-section .policy-body{padding:16px}
+.policy-section textarea{width:100%;min-height:120px;border:1px solid var(--border);border-radius:8px;padding:12px;font-family:inherit;font-size:.85rem;line-height:1.6;resize:vertical}
+.policy-section textarea:focus{outline:none;border-color:var(--pri2)}
+.wompi-btn-container form button,.wompi-btn-container button,.wompi-btn-container .waybox-button,.wompi-btn-container [class*="wompi"]{
+  width:100%!important;padding:12px 20px!important;border-radius:10px!important;font-family:'DM Sans',sans-serif!important;font-weight:700!important;font-size:.9rem!important;
+  background:linear-gradient(135deg,#F59E0B,#D97706)!important;color:#fff!important;border:none!important;cursor:pointer!important;transition:all .25s!important;box-shadow:0 4px 14px rgba(245,158,11,.3)!important}
+.wompi-btn-container form button:hover,.wompi-btn-container button:hover{transform:translateY(-2px)!important;box-shadow:0 8px 24px rgba(245,158,11,.4)!important}
+@media(max-width:768px){.config-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.steps{flex-wrap:wrap}.step-pill{font-size:.72rem;padding:8px 10px}.eeff-doc{padding:16px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header"><div>
+    <h1><span>EEFF</span> Estados Financieros NIIF</h1>
+    <p>Generador automático desde balance de prueba</p>
+  </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
+  <div class="steps">
+    <div class="step-pill active" id="sp1"><span class="num">1</span> Inicio</div>
+    <div class="step-pill" id="sp2"><span class="num">2</span> Columnas</div>
+    <div class="step-pill" id="sp3"><span class="num">3</span> Clasificación</div>
+    <div class="step-pill" id="sp4"><span class="num">4</span> Revelaciones</div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div id="step1">
+    <div class="card">
+      <div class="card-title"><span>📊</span> Balance de Prueba</div>
+      <div class="drop-zone" id="dz">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileInput">
+        <span class="dz-icon">📊</span>
+        <div class="dz-title">Arrastra tu archivo aquí o haz clic</div>
+        <div class="dz-hint">Excel (.xlsx, .xls) o CSV — Siigo, MidaSoft, World Office, Helisa, Alegra, otros</div>
+        <div class="dz-file" id="fileName"></div>
+      </div>
+      <div style="margin-top:20px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)">
+        <div style="font-weight:700;font-size:.95rem;margin-bottom:12px">Datos de la empresa</div>
+        <div class="config-grid">
+          <div class="config-item"><label>Año de corte</label><input type="number" id="cfgYear" value="2026" min="2020" max="2035"></div>
+          <div class="config-item"><label>Razón social</label><input type="text" id="cfgEmpresa" placeholder="Ej: MI EMPRESA S.A.S"></div>
+          <div class="config-item"><label>NIT</label><input type="text" id="cfgNit" placeholder="Ej: 901657282-9"></div>
+          <div class="config-item"><label>Ciudad</label><input type="text" id="cfgCiudad" placeholder="Ej: Bogotá D.C."></div>
+          <div class="config-item"><label>Período PyG — Desde</label><input type="date" id="cfgFechaDesde" value="2026-01-01"></div>
+          <div class="config-item"><label>Período PyG — Hasta</label><input type="date" id="cfgFechaHasta" value="2026-12-31"></div>
+          <div class="config-item"><label>Tipo de entidad</label><select id="cfgTipoEntidad">
+            <option value="pymes">Grupo 2 — NIIF PYMES</option>
+            <option value="plenas">Grupo 1 — NIIF Plenas</option>
+            <option value="micro">Grupo 3 — Microempresas</option>
+          </select></div>
+          <div class="config-item"><label>Moneda</label><select id="cfgMoneda">
+            <option value="COP">COP — Pesos colombianos</option>
+            <option value="USD">USD — Dólares</option>
+          </select></div>
+        </div>
+      </div>
+      <div style="margin-top:20px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)">
+        <div style="font-weight:700;font-size:.95rem;margin-bottom:12px">Firmantes</div>
+        <div class="config-grid">
+          <div class="config-item"><label>Representante Legal</label><input type="text" id="cfgRepLegal" placeholder="Nombre completo"></div>
+          <div class="config-item"><label>Contador Público</label><input type="text" id="cfgContador" placeholder="Nombre completo"></div>
+          <div class="config-item"><label>T.P. Contador</label><input type="text" id="cfgTPContador" placeholder="Ej: 123456-T"></div>
+          <div class="config-item"><label>Revisor Fiscal (opcional)</label><input type="text" id="cfgRevisor" placeholder="Nombre completo"></div>
+          <div class="config-item"><label>T.P. Revisor Fiscal</label><input type="text" id="cfgTPRevisor" placeholder="Ej: 123456-T"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>📈</span> Año anterior (comparativo) <span class="pro-badge">PRO</span></div>
+      <div class="drop-zone" id="dzComp" style="padding:28px 20px;opacity:.5">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileComp" disabled>
+        <span class="dz-icon" style="font-size:2rem">📈</span>
+        <div class="dz-title">Balance del año anterior para comparativo</div>
+        <div class="dz-hint">Permite generar estados financieros comparativos (PRO)</div>
+        <div class="dz-file" id="fileNameComp"></div>
+      </div>
+    </div>
+
+    <div class="card" style="text-align:center;padding:16px">
+      <button class="btn btn-primary" onclick="iniciarProceso()" style="font-size:1rem;padding:14px 40px">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="step2" class="hidden">
+    <div class="card">
+      <div class="card-title"><span>🔧</span> Verificar Columnas del Archivo</div>
+      <div class="alert alert-info"><span>💡</span><div>Se detectaron las columnas automáticamente. <strong>Verifica que sean correctas</strong> y ajusta si es necesario.</div></div>
+      <div class="hdr-selector">
+        <label>Fila de encabezados:</label>
+        <select id="hdrRowSelect" onchange="onHeaderRowChange()"></select>
+        <span class="hdr-preview" id="hdrPreviewText"></span>
+      </div>
+      <div class="raw-preview" id="rawPreview"></div>
+      <div style="margin:20px 0 8px;font-weight:700;font-size:.9rem;color:var(--pri)">Asignación de columnas <span style="font-weight:400;color:var(--muted);font-size:.8rem">(<span style="color:var(--red)">*</span> = obligatoria)</span></div>
+      <div class="col-mapper" id="colMapper"></div>
+      <div class="actions">
+        <button class="btn btn-outline" onclick="goStep(1)">← Cambiar archivo</button>
+        <button class="btn btn-primary" onclick="confirmColumns()">Confirmar y Procesar →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="step3" class="hidden">
+    <div class="card">
+      <div class="card-title"><span>🏷️</span> Clasificación de Cuentas</div>
+      <div class="alert alert-info"><span>💡</span><div>Las cuentas se clasificaron automáticamente según el PUC. <strong>Revisa y ajusta</strong> si alguna clasificación no es correcta.</div></div>
+      <div id="clasStats" class="stats"></div>
+      <div id="clasValidation"></div>
+      <div class="scroll-box" style="max-height:600px"><table class="map-table"><thead><tr>
+        <th style="width:80px">Cuenta</th><th>Nombre</th><th style="width:100px">Clase PUC</th>
+        <th style="width:160px">Sección EEFF</th><th style="width:120px">Corriente/No Corr.</th><th style="width:120px" class="text-right">Saldo</th>
+      </tr></thead><tbody id="clasBody"></tbody></table></div>
+      <div class="actions">
+        <button class="btn btn-outline" onclick="goStep(2)">← Volver</button>
+        <button class="btn btn-primary" onclick="generateEEFF()">Generar Estados Financieros →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div id="step4" class="hidden">
+    <div class="card">
+      <div class="flex-between mb12">
+        <div class="card-title" style="margin-bottom:0"><span>📋</span> Revelaciones a los Estados Financieros</div>
+        <div class="flex gap12" style="flex-wrap:wrap">
+          <button class="btn btn-outline" onclick="goStep(3)">← Ajustar clasificación</button>
+          <button class="btn btn-success" onclick="exportRevelacionesWord()">📄 Descargar Word (Revelaciones)</button>
+          <button class="btn btn-primary" onclick="exportExcelEEFF()">📥 Excel EEFF</button>
+          <button class="btn" onclick="exportRevelacionesWordPro()" style="background:#D97706;color:#fff">📄 Word + Notas <span style="font-size:.65rem;background:rgba(255,255,255,.3);padding:1px 6px;border-radius:4px;margin-left:4px">PRO</span></button>
+        </div>
+      </div>
+      <div class="alert alert-success"><span>✅</span><div><strong>Revelaciones generadas.</strong> Descarga en Word para revisar y personalizar. Incluye: portada, políticas contables, ESF y Estado de Resultados. La versión PRO agrega notas detalladas por cuenta.</div></div>
+      <div id="resultStats" class="stats"></div>
+    </div>
+
+    <!-- ESF y ERI en la web para vista previa -->
+    <div class="card">
+      <div class="tabs">
+        <div class="tab active" onclick="switchEEFFTab(this,'tabESF')">Estado de Situación Financiera</div>
+        <div class="tab" onclick="switchEEFFTab(this,'tabERI')">Estado de Resultados Integral</div>
+      </div>
+      <div class="tab-content active" id="tabESF"><div id="esfContent"></div></div>
+      <div class="tab-content" id="tabERI"><div id="eriContent"></div></div>
+    </div>
+
+    <!-- PRO paywall -->
+    <div class="card" style="border:2px solid #F59E0B" id="proPaywall">
+      <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border-radius:8px">
+        <h3 style="font-size:1.1rem;margin-bottom:8px;color:#92400E">Versión PRO</h3>
+        <p style="color:#A16207;font-size:.85rem;max-width:500px;margin:0 auto 12px">Desbloquea: <strong>Notas a los Estados Financieros</strong> autogeneradas con detalle por cuenta, estados financieros <strong>comparativos</strong> (año vs año) y descarga Word completa con notas.</p>
+        <div class="wompi-btn-container" style="max-width:260px;margin:0 auto">
+          <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="2500000" data-reference="EEFF-PRO-001" data-redirect-url="https://exogenadian.com/estadosfinancieros.html?pro=1"></script>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="padding:12px;background:#FFF8E1;border-radius:8px;border:1px solid #FCD34D;font-size:.8rem;color:#92400E">
+        <strong>Disclaimer:</strong> Este borrador fue generado automáticamente a partir del balance de prueba.
+        <strong>NO constituye estados financieros oficiales.</strong> Debe ser revisado, ajustado y aprobado por el representante legal y el contador público antes de su presentación.
+        Las notas son parte integral de los estados financieros.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══ GLOBALS ═══ */
+let rawData=[], classifiedAccounts=[], esfData={}, eriData={};
+let detectedHeaderRow=-1;
+let colMap={code:-1,name:-1,saldoFin:-1,deb:-1,cre:-1,saldoIni:-1};
+
+const COL_FIELDS=[
+  {key:'code',label:'Código Cuenta',required:true,icon:'🔢',hints:['cuenta','codigo','código','code','account']},
+  {key:'name',label:'Nombre Cuenta',required:true,icon:'📝',hints:['descripcion','nombre cuenta','descripcion cuenta','cuenta contable','description','nombre']},
+  {key:'saldoFin',label:'Saldo Final',required:true,icon:'📈',hints:['saldo final','saldo total','saldo actual','final','saldo']},
+  {key:'deb',label:'Débitos',required:false,icon:'📤',hints:['debito','débito','debitos','débitos','debit','movimiento debito']},
+  {key:'cre',label:'Créditos',required:false,icon:'📥',hints:['credito','crédito','creditos','créditos','credit','movimiento credito']},
+  {key:'saldoIni',label:'Saldo Inicial',required:false,icon:'📊',hints:['saldo inicial','saldo anterior','inicial']},
+];
+
+/* ═══ UTILITIES ═══ */
+function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()}
+function toNum(v){if(typeof v==='number')return v;if(!v)return 0;let s=String(v).replace(/[$\s]/g,'');if(s.includes(',')&&s.includes('.')){if(s.lastIndexOf(',')>s.lastIndexOf('.'))s=s.replace(/\./g,'').replace(',','.');else s=s.replace(/,/g,'')}else if(s.includes(',')&&!s.includes('.')){const p=s.split(',');if(p[p.length-1].length<=2)s=s.replace(',','.');else s=s.replace(/,/g,'')}return parseFloat(s)||0}
+function fN(n){return Math.round(n||0).toLocaleString('es-CO',{minimumFractionDigits:0,maximumFractionDigits:0})}
+function cellStr(v){const s=String(v??'').trim();return(s==='undefined'||s==='null'||s==='NaN')?'':s}
+
+/* ═══ STEP NAVIGATION ═══ */
+var goStep=function(n){
+  for(let i=1;i<=4;i++){
+    document.getElementById('step'+i).classList.toggle('hidden',i!==n);
+    const sp=document.getElementById('sp'+i);
+    sp.classList.remove('active','done');
+    if(i<n)sp.classList.add('done');
+    if(i===n)sp.classList.add('active');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+function switchEEFFTab(el,tabId){
+  el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  el.closest('.card').querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+}
+
+/* ═══ FILE LOADING ═══ */
+document.getElementById('fileInput').addEventListener('change',e=>{if(e.target.files.length)loadFile(e.target.files[0])});
+const dz=document.getElementById('dz');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files.length)loadFile(e.dataTransfer.files[0])});
+
+function loadFile(file){
+  document.getElementById('fileName').textContent='✓ '+file.name;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});
+    rawData=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+    extractMeta();
+    detectedHeaderRow=autoDetectHeaderRow();
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function extractMeta(){
+  for(let i=0;i<Math.min(10,rawData.length);i++){
+    const row=rawData[i];if(!row)continue;
+    for(let j=0;j<row.length;j++){
+      const cs=String(row[j]||'');
+      const cM=cs.match(/Compa[ñn][ií]a:\s*([^\n\\]+)/i);
+      if(cM)document.getElementById('cfgEmpresa').value=cM[1].trim().split('\\n')[0];
+    }
+    const r0=String(row[0]||'').trim();
+    if(/^\d{9}\s*-\s*\d$/.test(r0))document.getElementById('cfgNit').value=r0;
+    const cv=document.getElementById('cfgEmpresa').value;
+    if(!cv&&/^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s.]{4,}$/.test(r0)&&!/^(MOV|LIB|REP|TOT|ELA)/i.test(r0))document.getElementById('cfgEmpresa').value=r0;
+  }
+}
+
+function iniciarProceso(){
+  if(!rawData.length){alert('Primero carga un archivo de balance de prueba.');return}
+  goStep(2);
+  buildColumnMapper();
+}
+
+/* ═══ HEADER / COLUMN DETECTION ═══ */
+function hintMatch(cellText,hint){if(cellText.length>50)return false;return cellText===hint||cellText.includes(hint)}
+
+function autoDetectHeaderRow(){
+  let bestRow=0,bestScore=0;
+  for(let i=0;i<Math.min(20,rawData.length);i++){
+    const row=rawData[i];if(!row)continue;
+    const rn=row.map(c=>norm(cellStr(c)));
+    let fieldsMatched=0;
+    for(const field of COL_FIELDS){
+      let found=false;
+      for(const h of rn){if(!h||found)continue;for(const hint of field.hints){if(hintMatch(h,hint)){found=true;break}}}
+      if(found)fieldsMatched++;
+    }
+    if(fieldsMatched>bestScore){bestScore=fieldsMatched;bestRow=i}
+  }
+  if(bestScore<2){
+    for(let i=0;i<Math.min(15,rawData.length);i++){
+      const row=rawData[i];if(!row)continue;
+      const rn=row.map(c=>norm(cellStr(c)));
+      const allHints=COL_FIELDS.flatMap(f=>f.hints);
+      let score=0;
+      for(const h of rn){if(!h||h.length>50)continue;for(const hint of allHints){if(h.includes(hint)){score++;break}}}
+      if(score>=2)return i;
+    }
+  }
+  return bestRow;
+}
+
+function autoDetectColumns(hdrRow){
+  colMap={code:-1,name:-1,saldoFin:-1,deb:-1,cre:-1,saldoIni:-1};
+  const row=rawData[hdrRow];if(!row)return;
+  const headers=row.map(c=>norm(cellStr(c)));
+  const fieldOrder=['saldoIni','saldoFin','name','deb','cre','code'];
+  for(const key of fieldOrder){
+    const field=COL_FIELDS.find(f=>f.key===key);if(!field)continue;
+    for(let j=0;j<headers.length;j++){
+      const h=headers[j];if(!h||h.length>50)continue;
+      if(Object.values(colMap).includes(j))continue;
+      for(const hint of field.hints){if(hintMatch(h,hint)){colMap[key]=j;break}}
+      if(colMap[key]!==-1)break;
+    }
+  }
+  if(colMap.code===-1){
+    for(let j=0;j<headers.length;j++){
+      if(Object.values(colMap).includes(j))continue;
+      const h=headers[j];
+      if(h&&(h==='cuenta'||h.includes('codigo')||h.includes('código')||h.includes('code'))){colMap.code=j;break}
+    }
+  }
+  if(colMap.code===-1&&!Object.values(colMap).includes(0))colMap.code=0;
+}
+
+/* ═══ COLUMN MAPPER UI ═══ */
+function buildColumnMapper(){
+  autoDetectColumns(detectedHeaderRow);
+  const sel=document.getElementById('hdrRowSelect');
+  sel.innerHTML='';
+  const maxR=Math.min(15,rawData.length);
+  for(let i=0;i<maxR;i++){
+    const row=rawData[i];if(!row)continue;
+    const preview=row.slice(0,4).map(c=>cellStr(c)).filter(Boolean).join(' | ').substring(0,80);
+    const opt=document.createElement('option');
+    opt.value=i;opt.textContent=`Fila ${i}: ${preview}`;
+    if(i===detectedHeaderRow)opt.selected=true;
+    sel.appendChild(opt);
+  }
+  updateHdrPreview();renderRawPreview();renderColMapper();
+}
+
+function onHeaderRowChange(){
+  detectedHeaderRow=parseInt(document.getElementById('hdrRowSelect').value);
+  autoDetectColumns(detectedHeaderRow);renderRawPreview();renderColMapper();updateHdrPreview();
+}
+
+function updateHdrPreview(){
+  const row=rawData[detectedHeaderRow];if(!row)return;
+  const txt=row.map(c=>cellStr(c)).filter(Boolean).join(' · ');
+  document.getElementById('hdrPreviewText').textContent=txt.substring(0,120)+(txt.length>120?'...':'');
+}
+
+function renderRawPreview(){
+  const hdr=detectedHeaderRow;
+  const startR=hdr,endR=Math.min(rawData.length,hdr+8);
+  const maxCols=Math.min((rawData[hdr]||[]).length,12);
+  let h='<table><tr><th style="background:#eee;color:#999">Fila</th>';
+  for(let j=0;j<maxCols;j++){h+=`<th style="background:#eee;color:#999">${cellStr((rawData[hdr]||[])[j])||'Col '+j}</th>`}
+  h+='</tr>';
+  for(let i=startR;i<endR;i++){
+    const row=rawData[i];if(!row)continue;
+    const isHdr=i===hdr,isData=i>hdr;
+    h+=`<tr class="${isHdr?'hdr-row':''}"><td style="font-weight:700;color:${isHdr?'var(--amber)':'#999'};font-size:.7rem">${isHdr?'📌 Encabezados':''}${isData?i:''}</td>`;
+    for(let j=0;j<maxCols;j++){
+      const raw=cellStr(row[j]);
+      const val=isData&&raw&&!isNaN(toNum(raw))&&toNum(raw)!==0&&/^[\d.,\s$-]+$/.test(raw)?fN(toNum(raw)):raw;
+      h+=`<td title="${raw}">${val.substring(0,35)}${val.length>35?'...':''}</td>`;
+    }
+    h+='</tr>';
+  }
+  h+='</table>';
+  if(hdr>0){
+    document.getElementById('rawPreview').innerHTML=`<div style="font-size:.75rem;color:var(--muted);margin-bottom:6px;padding:6px 10px;background:#f8fafc;border-radius:6px">Se omitieron ${hdr} fila${hdr>1?'s':''} de metadata antes de los encabezados.</div>`+h;
+  }else{document.getElementById('rawPreview').innerHTML=h}
+}
+
+function renderColMapper(){
+  const hdr=rawData[detectedHeaderRow]||[];
+  let optsHtml='<option value="-1">— No asignada —</option>';
+  for(let j=0;j<hdr.length;j++){const label=cellStr(hdr[j]);optsHtml+=`<option value="${j}">${label?label.substring(0,30):'Columna '+(j+1)}</option>`}
+  let html='';
+  COL_FIELDS.forEach(field=>{
+    const cur=colMap[field.key];
+    const isMapped=cur>=0;
+    let sample='';
+    for(let i=detectedHeaderRow+1;i<Math.min(rawData.length,detectedHeaderRow+50);i++){
+      const r=rawData[i];if(!r)continue;if(cur>=0){const v=cellStr(r[cur]);if(v&&v!=='0'){sample=v;break}}
+    }
+    const sampleFmt=sample&&!isNaN(toNum(sample))&&toNum(sample)!==0?fN(toNum(sample)):sample;
+    html+=`<div class="col-map-item ${isMapped?'mapped':''} ${field.required&&!isMapped?'required':''}">
+      <div class="cml">${field.icon} ${field.label} ${field.required?'<span class="req">*</span>':''}</div>
+      <select onchange="onColChange('${field.key}',this.value)" id="sel_${field.key}">
+        ${optsHtml.replace(`value="${cur}"`,`value="${cur}" selected`)}
+      </select>
+      <div class="sample" id="samp_${field.key}">${sampleFmt?`Ej: <strong>${sampleFmt}</strong>`:'<em>sin datos</em>'}</div>
+    </div>`;
+  });
+  document.getElementById('colMapper').innerHTML=html;
+}
+
+function onColChange(key,val){
+  const v=parseInt(val);colMap[key]=v;
+  let sample='';
+  for(let i=detectedHeaderRow+1;i<Math.min(rawData.length,detectedHeaderRow+50);i++){
+    const r=rawData[i];if(!r)continue;if(v>=0){const s=cellStr(r[v]);if(s&&s!=='0'){sample=s;break}}
+  }
+  const sampleFmt=sample&&!isNaN(toNum(sample))&&toNum(sample)!==0?fN(toNum(sample)):sample;
+  const el=document.getElementById('samp_'+key);
+  if(el)el.innerHTML=sampleFmt?`Ej: <strong>${sampleFmt}</strong>`:'<em>sin datos</em>';
+  const card=el?.closest('.col-map-item');
+  if(card){const field=COL_FIELDS.find(f=>f.key===key);card.classList.toggle('mapped',v>=0);card.classList.toggle('required',field?.required&&v<0)}
+}
+
+/* ═══ CONFIRM COLUMNS ═══ */
+function confirmColumns(){
+  const missing=COL_FIELDS.filter(f=>f.required&&colMap[f.key]<0);
+  if(missing.length){alert('Faltan columnas obligatorias:\n'+missing.map(f=>'• '+f.label).join('\n'));return}
+  processData();
+  if(classifiedAccounts.length>0){goStep(3);buildClassificationTable()}
+}
+
+/* ═══ PUC CLASSIFICATION RULES ═══ */
+function classifyAccount(code,name){
+  const c=String(code);
+  const n=norm(name||'');
+  const c2=c.substring(0,2);
+  const c4=c.substring(0,4);
+  let clase='',seccion='',corriente='',grupo='';
+
+  // Class 1: Activos
+  if(c.startsWith('1')){
+    clase='Activo';
+    if(c2==='11'){seccion='Efectivo y equivalentes de efectivo';corriente='Corriente';grupo='efectivo'}
+    else if(c2==='12'){
+      // Check for long-term investments
+      if(n.includes('largo plazo')||n.includes('permanente')||c4==='1205'){seccion='Inversiones a largo plazo';corriente='No corriente';grupo='inv_lp'}
+      else{seccion='Inversiones a corto plazo';corriente='Corriente';grupo='inv_cp'}
+    }
+    else if(c4==='1399'){seccion='(-) Deterioro de cartera';corriente='Corriente';grupo='deterioro_cartera'}
+    else if(c2==='13'){seccion='Deudores comerciales y otras CxC';corriente='Corriente';grupo='cxc'}
+    else if(c2==='14'){seccion='Inventarios';corriente='Corriente';grupo='inventarios'}
+    else if(c4==='1592'){seccion='(-) Depreciación acumulada';corriente='No corriente';grupo='depreciacion'}
+    else if(c2==='15'){seccion='Propiedad, planta y equipo';corriente='No corriente';grupo='ppe'}
+    else if(c4==='1698'){seccion='(-) Amortización acumulada';corriente='No corriente';grupo='amortizacion'}
+    else if(c2==='16'){seccion='Activos intangibles';corriente='No corriente';grupo='intangibles'}
+    else if(c2==='17'){seccion='Diferidos / Otros activos';corriente='Corriente';grupo='diferidos_act'}
+    else if(c2==='18'){seccion='Otros activos no corrientes';corriente='No corriente';grupo='otros_act_nc'}
+    else if(c2==='19'){seccion='Valorizaciones';corriente='No corriente';grupo='valorizaciones'}
+    else{seccion='Otros activos';corriente='Corriente';grupo='otros_act'}
+  }
+  // Class 2: Pasivos
+  else if(c.startsWith('2')){
+    clase='Pasivo';
+    if(c2==='21'){
+      if(n.includes('largo plazo')||n.includes('l.p')||n.includes('lp')){seccion='Obligaciones financieras LP';corriente='No corriente';grupo='oblig_fin_lp'}
+      else{seccion='Obligaciones financieras CP';corriente='Corriente';grupo='oblig_fin_cp'}
+    }
+    else if(c2==='22'){seccion='Proveedores';corriente='Corriente';grupo='proveedores'}
+    else if(c2==='23'){seccion='Cuentas por pagar';corriente='Corriente';grupo='cxp'}
+    else if(c2==='24'){seccion='Impuestos por pagar';corriente='Corriente';grupo='impuestos'}
+    else if(c2==='25'){seccion='Obligaciones laborales';corriente='Corriente';grupo='laborales'}
+    else if(c2==='26'){seccion='Pasivos estimados / Provisiones';corriente='Corriente';grupo='provisiones'}
+    else if(c2==='27'){seccion='Diferidos pasivo';corriente='No corriente';grupo='diferidos_pas'}
+    else if(c2==='28'||c2==='29'){seccion='Otros pasivos';corriente='No corriente';grupo='otros_pas'}
+    else{seccion='Otros pasivos';corriente='Corriente';grupo='otros_pas_c'}
+  }
+  // Class 3: Patrimonio
+  else if(c.startsWith('3')){
+    clase='Patrimonio';
+    corriente='';
+    if(c2==='31'){seccion='Capital social';grupo='capital'}
+    else if(c2==='32'){seccion='Superávit de capital';grupo='superavit_cap'}
+    else if(c2==='33'){seccion='Reservas';grupo='reservas'}
+    else if(c2==='34'){seccion='Revalorización del patrimonio';grupo='revalorizacion'}
+    else if(c2==='36'){seccion='Resultado del ejercicio';grupo='resultado_ej'}
+    else if(c2==='37'){seccion='Resultados de ejercicios anteriores';grupo='resultados_ant'}
+    else if(c2==='38'){seccion='Superávit por valorizaciones';grupo='superavit_val'}
+    else{seccion='Otros componentes patrimonio';grupo='otros_pat'}
+  }
+  // Class 4: Ingresos
+  else if(c.startsWith('4')){
+    clase='Ingreso';corriente='';
+    if(c4==='4175'){seccion='(-) Devoluciones, rebajas y descuentos';grupo='dev_ventas'}
+    else if(c2==='41'){seccion='Ingresos de actividades ordinarias';grupo='ing_operacionales'}
+    else if(c2==='42'){seccion='Otros ingresos';grupo='ing_no_operacionales'}
+    else{seccion='Otros ingresos';grupo='otros_ing'}
+  }
+  // Class 5: Gastos
+  else if(c.startsWith('5')){
+    clase='Gasto';corriente='';
+    if(c2==='51'){seccion='Gastos de administración';grupo='gtos_admin'}
+    else if(c2==='52'){seccion='Gastos de ventas';grupo='gtos_ventas'}
+    else if(c2==='53'){seccion='Otros gastos';grupo='gtos_no_op'}
+    else if(c2==='54'){seccion='Impuesto de renta';grupo='imp_renta'}
+    else if(c2==='59'){seccion='Ganancias y pérdidas';grupo='gyp'}
+    else{seccion='Otros gastos';grupo='otros_gtos'}
+  }
+  // Class 6: Costos
+  else if(c.startsWith('6')){
+    clase='Costo';corriente='';
+    seccion='Costo de ventas';grupo='costo_ventas';
+  }
+  // Class 7: Costos de produccion
+  else if(c.startsWith('7')){
+    clase='Costo producción';corriente='';
+    seccion='Costos de producción (transitorio)';grupo='costo_prod';
+  }
+  else{
+    clase='Otro';seccion='Sin clasificar';corriente='';grupo='otro';
+  }
+  return{clase,seccion,corriente,grupo};
+}
+
+/* ═══ PROCESS DATA ═══ */
+function processData(){
+  classifiedAccounts=[];
+  const allCodes=new Set();
+  for(let i=detectedHeaderRow+1;i<rawData.length;i++){
+    const row=rawData[i];if(!row)continue;
+    const code=cellStr(row[colMap.code]).replace(/\s/g,'');
+    if(code&&/^\d{2,}$/.test(code))allCodes.add(code);
+  }
+  function isParent(code){
+    for(const other of allCodes){if(other!==code&&other.startsWith(code)&&other.length>code.length)return true}
+    return false;
+  }
+
+  for(let i=detectedHeaderRow+1;i<rawData.length;i++){
+    const row=rawData[i];if(!row)continue;
+    const code=cellStr(row[colMap.code]).replace(/\s/g,'');
+    if(!code||!/^\d{2,}$/.test(code))continue;
+    if(/^(total|procesado|elaborado)/i.test(cellStr(row[colMap.name]||'')))continue;
+    if(isParent(code))continue;
+
+    const name=colMap.name>=0?cellStr(row[colMap.name]):'';
+    let saldoFin=colMap.saldoFin>=0?toNum(row[colMap.saldoFin]):0;
+    const deb=colMap.deb>=0?toNum(row[colMap.deb]):0;
+    const cre=colMap.cre>=0?toNum(row[colMap.cre]):0;
+    const saldoIni=colMap.saldoIni>=0?toNum(row[colMap.saldoIni]):0;
+
+    // Solo derivar saldoFin de deb/cre si NO hay columna de saldo final mapeada
+    // Si el usuario mapeó saldo final y es 0, respetar ese 0 (la cuenta realmente tiene saldo 0)
+    if(colMap.saldoFin<0&&saldoFin===0&&(deb!==0||cre!==0)){
+      const firstDigit=code[0];
+      if(['1','5','6','7'].includes(firstDigit)) saldoFin=deb-cre+saldoIni;
+      else saldoFin=cre-deb+saldoIni;
+    }
+
+    if(saldoFin===0)continue;
+
+    const cls=classifyAccount(code,name);
+
+    // Normalize sign: Activos positive=debit, Pasivos/Patrimonio/Ingresos positive=credit
+    let valor=saldoFin;
+    // For display: activos should be positive when debit balance
+    // pasivos/patrimonio/ingresos should be positive when credit balance
+    // gastos/costos should be positive when debit balance
+    // The saldoFin from the balance may already have the correct sign convention
+    // But some systems report all as positive with the column indicating the nature
+    // We'll use the sign as-is from saldoFin — the user can verify in step 3
+
+    classifiedAccounts.push({
+      code,name,saldoFin:valor,deb,cre,saldoIni,
+      clase:cls.clase,seccion:cls.seccion,corriente:cls.corriente,grupo:cls.grupo,
+      idx:classifiedAccounts.length
+    });
+  }
+}
+
+/* ═══ STEP 3: CLASSIFICATION TABLE ═══ */
+function buildClassificationTable(){
+  // Stats
+  let totalActivos=0,totalPasivos=0,totalPatrimonio=0,totalCuentas=classifiedAccounts.length;
+  classifiedAccounts.forEach(a=>{
+    const v=getDisplayValue(a);
+    if(a.clase==='Activo')totalActivos+=v;
+    else if(a.clase==='Pasivo')totalPasivos+=v;
+    else if(a.clase==='Patrimonio')totalPatrimonio+=v;
+  });
+
+  document.getElementById('clasStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${totalCuentas}</div><div class="lbl">Cuentas</div></div>
+    <div class="stat-card green"><div class="val">${fN(totalActivos)}</div><div class="lbl">Total Activos</div></div>
+    <div class="stat-card amber"><div class="val">${fN(totalPasivos)}</div><div class="lbl">Total Pasivos</div></div>
+    <div class="stat-card blue"><div class="val">${fN(totalPatrimonio)}</div><div class="lbl">Patrimonio</div></div>`;
+
+  const diff=Math.round(totalActivos-(totalPasivos+totalPatrimonio));
+  if(Math.abs(diff)<=1){
+    document.getElementById('clasValidation').innerHTML=`<div class="alert alert-success"><span>✓</span><div><strong>Ecuación contable OK:</strong> Activos (${fN(totalActivos)}) = Pasivos (${fN(totalPasivos)}) + Patrimonio (${fN(totalPatrimonio)})</div></div>`;
+  }else{
+    document.getElementById('clasValidation').innerHTML=`<div class="alert alert-warn"><span>⚠️</span><div><strong>Ecuación contable NO cuadra:</strong> Activos (${fN(totalActivos)}) ≠ Pasivos (${fN(totalPasivos)}) + Patrimonio (${fN(totalPatrimonio)}). Diferencia: ${fN(diff)}. Esto puede deberse a que el resultado del ejercicio (cuentas 4xx, 5xx, 6xx) no está cerrado.</div></div>`;
+  }
+
+  // Section options for dropdown
+  const seccionOpts=[
+    'Efectivo y equivalentes de efectivo','Inversiones a corto plazo','Inversiones a largo plazo',
+    'Deudores comerciales y otras CxC','(-) Deterioro de cartera','Inventarios',
+    'Propiedad, planta y equipo','(-) Depreciación acumulada','Activos intangibles','(-) Amortización acumulada',
+    'Diferidos / Otros activos','Otros activos no corrientes','Valorizaciones',
+    'Obligaciones financieras CP','Obligaciones financieras LP','Proveedores','Cuentas por pagar',
+    'Impuestos por pagar','Obligaciones laborales','Pasivos estimados / Provisiones','Diferidos pasivo','Otros pasivos',
+    'Capital social','Superávit de capital','Reservas','Revalorización del patrimonio',
+    'Resultado del ejercicio','Resultados de ejercicios anteriores','Superávit por valorizaciones','Otros componentes patrimonio',
+    'Ingresos de actividades ordinarias','(-) Devoluciones, rebajas y descuentos','Otros ingresos',
+    'Gastos de administración','Gastos de ventas','Otros gastos','Impuesto de renta',
+    'Costo de ventas','Costos de producción (transitorio)','Ganancias y pérdidas'
+  ];
+  const corrOpts=['Corriente','No corriente',''];
+
+  let h='';
+  classifiedAccounts.forEach((a,i)=>{
+    const val=getDisplayValue(a);
+    let secSel=`<select onchange="onSeccionChange(${i},this.value)" style="font-size:.75rem;padding:3px 6px">`;
+    seccionOpts.forEach(s=>{secSel+=`<option value="${s}" ${a.seccion===s?'selected':''}>${s}</option>`});
+    secSel+='</select>';
+    let corrSel=`<select onchange="onCorrienteChange(${i},this.value)" style="font-size:.75rem;padding:3px 6px">`;
+    corrOpts.forEach(c=>{corrSel+=`<option value="${c}" ${a.corriente===c?'selected':''}>${c||'N/A'}</option>`});
+    corrSel+='</select>';
+
+    const clsBadge=a.clase==='Activo'?'background:#E3F2FD;color:#1565C0':
+                   a.clase==='Pasivo'?'background:#FFF3E0;color:#E65100':
+                   a.clase==='Patrimonio'?'background:#E8F5E9;color:#2E7D32':
+                   a.clase==='Ingreso'?'background:#E8F5E9;color:#1B5E20':
+                   a.clase==='Gasto'||a.clase==='Costo'?'background:#FFEBEE;color:#B71C1C':
+                   'background:#F3E5F5;color:#4A148C';
+
+    h+=`<tr>
+      <td class="mono fw600">${a.code}</td>
+      <td style="font-size:.8rem">${a.name}</td>
+      <td><span class="badge" style="${clsBadge}">${a.clase}</span></td>
+      <td>${secSel}</td>
+      <td>${corrSel}</td>
+      <td class="text-right mono fw600 ${val<0?'eeff-negative':''}">${fN(val)}</td>
+    </tr>`;
+  });
+  document.getElementById('clasBody').innerHTML=h;
+}
+
+function getDisplayValue(a){
+  // El balance de prueba usa convención de signo contable:
+  // Débito = positivo, Crédito = negativo
+  // Para MOSTRAR en los EEFF, invertimos el signo de las cuentas de naturaleza crédito
+  // para que se vean como valores positivos.
+  let v=a.saldoFin;
+  const firstDigit=a.code[0];
+  if(['2','3','4'].includes(firstDigit)){
+    // Naturaleza crédito: saldo negativo en el balance = saldo normal
+    // Invertir signo para que se muestre positivo en el EEFF
+    v=-v;
+  }
+  // Clase 1, 5, 6, 7: naturaleza débito → saldo positivo = normal, mantener
+  // Contracuentas (depreciación 1592, deterioro 1399) tendrán saldo crédito (negativo en balance)
+  // → se mantienen negativos y se restan en el EEFF
+  return Math.round(v);
+}
+
+function getRawValue(a){
+  return Math.round(a.saldoFin);
+}
+
+function getPeriodoERI(){
+  const desde=document.getElementById('cfgFechaDesde')?.value;
+  const hasta=document.getElementById('cfgFechaHasta')?.value;
+  if(desde&&hasta){
+    const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    const d=new Date(desde+'T12:00:00');
+    const h=new Date(hasta+'T12:00:00');
+    return`Del ${d.getDate()} de ${meses[d.getMonth()]} al ${h.getDate()} de ${meses[h.getMonth()]} de ${h.getFullYear()}`;
+  }
+  const year=document.getElementById('cfgYear').value;
+  return`Del 1 de enero al 31 de diciembre de ${year}`;
+}
+
+function onSeccionChange(idx,val){
+  classifiedAccounts[idx].seccion=val;
+  // Update grupo based on seccion
+  const grupoMap={
+    'Efectivo y equivalentes de efectivo':'efectivo',
+    'Inversiones a corto plazo':'inv_cp','Inversiones a largo plazo':'inv_lp',
+    'Deudores comerciales y otras CxC':'cxc','(-) Deterioro de cartera':'deterioro_cartera',
+    'Inventarios':'inventarios','Propiedad, planta y equipo':'ppe',
+    '(-) Depreciación acumulada':'depreciacion','Activos intangibles':'intangibles',
+    '(-) Amortización acumulada':'amortizacion','Diferidos / Otros activos':'diferidos_act',
+    'Otros activos no corrientes':'otros_act_nc','Valorizaciones':'valorizaciones',
+    'Obligaciones financieras CP':'oblig_fin_cp','Obligaciones financieras LP':'oblig_fin_lp',
+    'Proveedores':'proveedores','Cuentas por pagar':'cxp','Impuestos por pagar':'impuestos',
+    'Obligaciones laborales':'laborales','Pasivos estimados / Provisiones':'provisiones',
+    'Diferidos pasivo':'diferidos_pas','Otros pasivos':'otros_pas',
+    'Capital social':'capital','Superávit de capital':'superavit_cap','Reservas':'reservas',
+    'Revalorización del patrimonio':'revalorizacion','Resultado del ejercicio':'resultado_ej',
+    'Resultados de ejercicios anteriores':'resultados_ant','Superávit por valorizaciones':'superavit_val',
+    'Otros componentes patrimonio':'otros_pat',
+    'Ingresos de actividades ordinarias':'ing_operacionales',
+    '(-) Devoluciones, rebajas y descuentos':'dev_ventas','Otros ingresos':'ing_no_operacionales',
+    'Gastos de administración':'gtos_admin','Gastos de ventas':'gtos_ventas',
+    'Otros gastos':'gtos_no_op','Impuesto de renta':'imp_renta',
+    'Costo de ventas':'costo_ventas','Costos de producción (transitorio)':'costo_prod',
+    'Ganancias y pérdidas':'gyp'
+  };
+  classifiedAccounts[idx].grupo=grupoMap[val]||'otro';
+}
+
+function onCorrienteChange(idx,val){classifiedAccounts[idx].corriente=val}
+
+/* ═══ GENERATE EEFF ═══ */
+function generateEEFF(){
+  buildESFData();
+  buildERIData();
+  renderESF();
+  renderERI();
+  renderStats();
+  goStep(4);
+}
+
+function sumByGrupo(grupo){
+  let total=0;
+  classifiedAccounts.filter(a=>a.grupo===grupo).forEach(a=>{total+=getDisplayValue(a)});
+  return Math.round(total);
+}
+
+function buildESFData(){
+  esfData={
+    // Activos corrientes
+    efectivo:sumByGrupo('efectivo'),
+    inv_cp:sumByGrupo('inv_cp'),
+    cxc:sumByGrupo('cxc'),
+    deterioro_cartera:sumByGrupo('deterioro_cartera'),
+    inventarios:sumByGrupo('inventarios'),
+    diferidos_act:sumByGrupo('diferidos_act'),
+    otros_act:sumByGrupo('otros_act'),
+    // Activos no corrientes
+    ppe:sumByGrupo('ppe'),
+    depreciacion:sumByGrupo('depreciacion'),
+    intangibles:sumByGrupo('intangibles'),
+    amortizacion:sumByGrupo('amortizacion'),
+    inv_lp:sumByGrupo('inv_lp'),
+    otros_act_nc:sumByGrupo('otros_act_nc'),
+    valorizaciones:sumByGrupo('valorizaciones'),
+    // Pasivos corrientes
+    oblig_fin_cp:sumByGrupo('oblig_fin_cp'),
+    proveedores:sumByGrupo('proveedores'),
+    cxp:sumByGrupo('cxp'),
+    impuestos:sumByGrupo('impuestos'),
+    laborales:sumByGrupo('laborales'),
+    provisiones:sumByGrupo('provisiones'),
+    otros_pas_c:sumByGrupo('otros_pas_c'),
+    // Pasivos no corrientes
+    oblig_fin_lp:sumByGrupo('oblig_fin_lp'),
+    diferidos_pas:sumByGrupo('diferidos_pas'),
+    otros_pas:sumByGrupo('otros_pas'),
+    // Patrimonio
+    capital:sumByGrupo('capital'),
+    superavit_cap:sumByGrupo('superavit_cap'),
+    reservas:sumByGrupo('reservas'),
+    revalorizacion:sumByGrupo('revalorizacion'),
+    resultado_ej:sumByGrupo('resultado_ej'),
+    resultados_ant:sumByGrupo('resultados_ant'),
+    superavit_val:sumByGrupo('superavit_val'),
+    otros_pat:sumByGrupo('otros_pat'),
+  };
+
+  // Si las clases 4 y 5 (y 6) tienen saldo (período no cerrado),
+  // calcular el resultado del período y sumarlo al patrimonio
+  const ingOp=sumByGrupo('ing_operacionales');
+  const devVentas=sumByGrupo('dev_ventas');
+  const ingNoOp=sumByGrupo('ing_no_operacionales');
+  const otrosIng=sumByGrupo('otros_ing');
+  const costoVentas=sumByGrupo('costo_ventas');
+  const costoProd=sumByGrupo('costo_prod');
+  const gtosAdmin=sumByGrupo('gtos_admin');
+  const gtosVentas=sumByGrupo('gtos_ventas');
+  const gtosNoOp=sumByGrupo('gtos_no_op');
+  const impRenta=sumByGrupo('imp_renta');
+  const gyp=sumByGrupo('gyp');
+  const totalIngresos=ingOp-devVentas+ingNoOp+otrosIng;
+  const totalGastos=costoVentas+costoProd+gtosAdmin+gtosVentas+gtosNoOp+impRenta+gyp;
+  const resultadoPyG=Math.round(totalIngresos-totalGastos);
+
+  // Si hay actividad en clases 4/5/6, agregar resultado del período al patrimonio
+  if(totalIngresos!==0||totalGastos!==0){
+    esfData.resultado_periodo=resultadoPyG;
+  } else {
+    esfData.resultado_periodo=0;
+  }
+}
+
+function buildERIData(){
+  eriData={
+    ing_operacionales:sumByGrupo('ing_operacionales'),
+    dev_ventas:sumByGrupo('dev_ventas'),
+    costo_ventas:sumByGrupo('costo_ventas'),
+    costo_prod:sumByGrupo('costo_prod'),
+    gtos_admin:sumByGrupo('gtos_admin'),
+    gtos_ventas:sumByGrupo('gtos_ventas'),
+    ing_no_operacionales:sumByGrupo('ing_no_operacionales'),
+    otros_ing:sumByGrupo('otros_ing'),
+    gtos_no_op:sumByGrupo('gtos_no_op'),
+    imp_renta:sumByGrupo('imp_renta'),
+    gyp:sumByGrupo('gyp'),
+  };
+}
+
+function esfVal(key){return esfData[key]||0}
+
+function buildESFHtml(){
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'000.000.000-0';
+  const moneda=document.getElementById('cfgMoneda').value;
+
+  // Compute totals
+  const totalActCorr=esfVal('efectivo')+esfVal('inv_cp')+esfVal('cxc')+esfVal('deterioro_cartera')+esfVal('inventarios')+esfVal('diferidos_act')+esfVal('otros_act');
+  const totalActNoCorr=esfVal('ppe')+esfVal('depreciacion')+esfVal('intangibles')+esfVal('amortizacion')+esfVal('inv_lp')+esfVal('otros_act_nc')+esfVal('valorizaciones');
+  const totalActivos=totalActCorr+totalActNoCorr;
+  const totalPasCorr=esfVal('oblig_fin_cp')+esfVal('proveedores')+esfVal('cxp')+esfVal('impuestos')+esfVal('laborales')+esfVal('provisiones')+esfVal('otros_pas_c');
+  const totalPasNoCorr=esfVal('oblig_fin_lp')+esfVal('diferidos_pas')+esfVal('otros_pas');
+  const totalPasivos=totalPasCorr+totalPasNoCorr;
+  const totalPatrimonio=esfVal('capital')+esfVal('superavit_cap')+esfVal('reservas')+esfVal('revalorizacion')+esfVal('resultado_ej')+esfVal('resultados_ant')+esfVal('superavit_val')+esfVal('otros_pat')+esfVal('resultado_periodo');
+  const totalPasPatr=totalPasivos+totalPatrimonio;
+  const balanced=Math.abs(totalActivos-totalPasPatr)<=1;
+
+  function row(label,key,indent,isSub){
+    const v=esfData[key]||0;
+    const cls=indent===2?'eeff-indent2':indent===1?'eeff-indent':'';
+    const neg=v<0?'eeff-negative':'';
+    return `<div class="eeff-row ${isSub?'eeff-subtotal':''}">
+      <div></div><div class="${cls}">${label}</div>
+      <div class="eeff-val"><input type="text" value="${fN(v)}" data-key="${key}" onchange="onEsfEdit(this)" class="${neg}"></div>
+    </div>`;
+  }
+  function totalRow(label,val){
+    const neg=val<0?'eeff-negative':'';
+    return `<div class="eeff-row eeff-total"><div></div><div style="font-weight:700">${label}</div><div class="eeff-val ${neg}" style="font-weight:700;font-family:'JetBrains Mono',monospace">${fN(val)}</div></div>`;
+  }
+  function subtotalRow(label,val){
+    const neg=val<0?'eeff-negative':'';
+    return `<div class="eeff-row eeff-subtotal"><div></div><div style="font-weight:600">${label}</div><div class="eeff-val ${neg}" style="font-weight:600;font-family:'JetBrains Mono',monospace">${fN(val)}</div></div>`;
+  }
+
+  let h=`<div class="eeff-doc">
+    <div class="doc-header">
+      <h2>${empresa}</h2>
+      <p>NIT: ${nit}</p>
+      <h3>Estado de Situación Financiera</h3>
+      <p>Al 31 de diciembre de ${year}</p>
+      <p style="font-size:10px;color:#888">(Cifras expresadas en ${moneda==='COP'?'pesos colombianos':'dólares estadounidenses'})</p>
+    </div>`;
+
+  h+=`<div class="eeff-section">ACTIVOS</div>`;
+  h+=`<div class="eeff-subsection">Activos Corrientes</div>`;
+  h+=row('Efectivo y equivalentes de efectivo','efectivo',1);
+  h+=row('Inversiones a corto plazo','inv_cp',1);
+  h+=row('Deudores comerciales y otras CxC','cxc',1);
+  h+=row('(-) Deterioro de cartera','deterioro_cartera',1);
+  h+=row('Inventarios','inventarios',1);
+  h+=row('Diferidos / Otros activos corrientes','diferidos_act',1);
+  h+=row('Otros activos corrientes','otros_act',1);
+  h+=subtotalRow('TOTAL ACTIVOS CORRIENTES',totalActCorr);
+
+  h+=`<div class="eeff-subsection">Activos No Corrientes</div>`;
+  h+=row('Propiedad, planta y equipo','ppe',1);
+  h+=row('(-) Depreciación acumulada','depreciacion',1);
+  h+=row('Activos intangibles','intangibles',1);
+  h+=row('(-) Amortización acumulada','amortizacion',1);
+  h+=row('Inversiones a largo plazo','inv_lp',1);
+  h+=row('Otros activos no corrientes','otros_act_nc',1);
+  h+=row('Valorizaciones','valorizaciones',1);
+  h+=subtotalRow('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr);
+
+  h+=totalRow('TOTAL ACTIVOS',totalActivos);
+
+  h+=`<div class="eeff-section">PASIVOS</div>`;
+  h+=`<div class="eeff-subsection">Pasivos Corrientes</div>`;
+  h+=row('Obligaciones financieras CP','oblig_fin_cp',1);
+  h+=row('Proveedores','proveedores',1);
+  h+=row('Cuentas por pagar','cxp',1);
+  h+=row('Impuestos por pagar','impuestos',1);
+  h+=row('Obligaciones laborales','laborales',1);
+  h+=row('Pasivos estimados / Provisiones','provisiones',1);
+  h+=row('Otros pasivos corrientes','otros_pas_c',1);
+  h+=subtotalRow('TOTAL PASIVOS CORRIENTES',totalPasCorr);
+
+  h+=`<div class="eeff-subsection">Pasivos No Corrientes</div>`;
+  h+=row('Obligaciones financieras LP','oblig_fin_lp',1);
+  h+=row('Diferidos pasivo','diferidos_pas',1);
+  h+=row('Otros pasivos no corrientes','otros_pas',1);
+  h+=subtotalRow('TOTAL PASIVOS NO CORRIENTES',totalPasNoCorr);
+
+  h+=totalRow('TOTAL PASIVOS',totalPasivos);
+
+  h+=`<div class="eeff-section">PATRIMONIO</div>`;
+  h+=row('Capital social','capital',1);
+  h+=row('Superávit de capital','superavit_cap',1);
+  h+=row('Reservas','reservas',1);
+  h+=row('Revalorización del patrimonio','revalorizacion',1);
+  h+=row('Resultado del ejercicio','resultado_ej',1);
+  h+=row('Resultados de ejercicios anteriores','resultados_ant',1);
+  h+=row('Superávit por valorizaciones','superavit_val',1);
+  h+=row('Otros componentes patrimonio','otros_pat',1);
+  if(esfVal('resultado_periodo')!==0){
+    h+=`<div class="eeff-row" style="background:#E3F2FD">
+      <div></div><div class="eeff-indent" style="font-style:italic;color:var(--pri)">Resultado del período (Ingresos - Gastos)</div>
+      <div class="eeff-val" style="font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--pri)">${fN(esfVal('resultado_periodo'))}</div>
+    </div>`;
+  }
+  h+=totalRow('TOTAL PATRIMONIO',totalPatrimonio);
+
+  h+=`<div style="height:8px"></div>`;
+  h+=totalRow('TOTAL PASIVOS + PATRIMONIO',totalPasPatr);
+
+  // Validation
+  if(balanced){
+    h+=`<div class="validation-box validation-ok">✓ Ecuación patrimonial cuadra: Activos (${fN(totalActivos)}) = Pasivos + Patrimonio (${fN(totalPasPatr)})</div>`;
+  }else{
+    h+=`<div class="validation-box validation-error">✗ Ecuación patrimonial NO cuadra: Activos (${fN(totalActivos)}) ≠ Pasivos + Patrimonio (${fN(totalPasPatr)}). Diferencia: ${fN(totalActivos-totalPasPatr)}</div>`;
+  }
+
+  h+=`<div style="text-align:center;font-size:9px;color:#999;margin-top:16px;font-style:italic">Las notas son parte integral de los estados financieros</div>`;
+
+  // Firmantes
+  const repLegalESF=document.getElementById('cfgRepLegal')?.value||'';
+  const contadorESF=document.getElementById('cfgContador')?.value||'';
+  const tpContadorESF=document.getElementById('cfgTPContador')?.value||'';
+  if(repLegalESF||contadorESF){
+    h+=`<div style="display:flex;justify-content:space-between;margin-top:30px;padding:20px;font-size:10px">
+      <div style="text-align:center">
+        <div style="border-top:1px solid #999;padding-top:4px;min-width:180px">${repLegalESF||'________________'}</div>
+        <div style="color:#888">Representante Legal</div>
+      </div>
+      <div style="text-align:center">
+        <div style="border-top:1px solid #999;padding-top:4px;min-width:180px">${contadorESF||'________________'}</div>
+        <div style="color:#888">Contador Público${tpContadorESF?' T.P. '+tpContadorESF:''}</div>
+      </div>
+    </div>`;
+  }
+
+  h+=`</div>`;
+  return h;
+}
+
+function renderESF(){
+  document.getElementById('esfContent').innerHTML=buildESFHtml();
+}
+
+function onEsfEdit(el){
+  const key=el.dataset.key;
+  const val=toNum(el.value);
+  esfData[key]=Math.round(val);
+  el.value=fN(Math.round(val));
+  renderESF();
+  renderStats();
+}
+
+function buildERIHtml(){
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'000.000.000-0';
+  const moneda=document.getElementById('cfgMoneda').value;
+
+  const ingOp=eriData.ing_operacionales||0;
+  const devVtas=eriData.dev_ventas||0;
+  const ingNetos=ingOp-devVtas;
+  const costoVtas=(eriData.costo_ventas||0)+(eriData.costo_prod||0);
+  const utilBruta=ingNetos-costoVtas;
+  const gtosAdmin=eriData.gtos_admin||0;
+  const gtosVentas=eriData.gtos_ventas||0;
+  const utilOp=utilBruta-gtosAdmin-gtosVentas;
+  const otrosIng=(eriData.ing_no_operacionales||0)+(eriData.otros_ing||0);
+  const otrosGtos=eriData.gtos_no_op||0;
+  const utilAntesImp=utilOp+otrosIng-otrosGtos;
+  const impRenta=eriData.imp_renta||0;
+  const utilNeta=utilAntesImp-impRenta;
+
+  function eriRow(label,key,indent,hint){
+    const v=eriData[key]||0;
+    const cls=indent===2?'eeff-indent2':indent===1?'eeff-indent':'';
+    const neg=v<0?'eeff-negative':'';
+    const hintHtml=hint?`<span style="font-size:9px;color:#999;margin-left:8px">(${hint})</span>`:'';
+    return `<div class="eeff-row">
+      <div></div><div class="${cls}">${label}${hintHtml}</div>
+      <div class="eeff-val"><input type="text" value="${fN(v)}" data-erikey="${key}" onchange="onEriEdit(this)" class="${neg}"></div>
+    </div>`;
+  }
+  function calcRow(label,val,bold){
+    const neg=val<0?'eeff-negative':'';
+    const bld=bold?'font-weight:700;':'font-weight:600;';
+    const cls=bold?'eeff-total':'eeff-subtotal';
+    return `<div class="eeff-row ${cls}"><div></div><div style="${bld}">${label}</div><div class="eeff-val ${neg}" style="${bld}font-family:'JetBrains Mono',monospace">${fN(val)}</div></div>`;
+  }
+
+  let h=`<div class="eeff-doc">
+    <div class="doc-header">
+      <h2>${empresa}</h2>
+      <p>NIT: ${nit}</p>
+      <h3>Estado de Resultados Integral</h3>
+      <p>${getPeriodoERI()}</p>
+      <p style="font-size:10px;color:#888">(Cifras expresadas en ${moneda==='COP'?'pesos colombianos':'dólares estadounidenses'})</p>
+    </div>`;
+
+  h+=eriRow('Ingresos de actividades ordinarias','ing_operacionales',0,'41xx');
+  h+=eriRow('(-) Devoluciones, rebajas y descuentos','dev_ventas',0,'4175');
+  h+=calcRow('= INGRESOS NETOS',ingNetos,false);
+  h+=`<div style="height:4px"></div>`;
+  h+=eriRow('(-) Costo de ventas','costo_ventas',0,'61xx+62xx');
+  h+=calcRow('= UTILIDAD BRUTA',utilBruta,false);
+  h+=`<div style="height:4px"></div>`;
+  h+=eriRow('(-) Gastos de administración','gtos_admin',0,'51xx');
+  h+=eriRow('(-) Gastos de ventas','gtos_ventas',0,'52xx');
+  h+=calcRow('= UTILIDAD OPERACIONAL',utilOp,false);
+  h+=`<div style="height:4px"></div>`;
+  h+=eriRow('(+) Otros ingresos','ing_no_operacionales',0,'42xx');
+  h+=eriRow('(-) Otros gastos','gtos_no_op',0,'53xx');
+  h+=calcRow('= UTILIDAD ANTES DE IMPUESTOS',utilAntesImp,false);
+  h+=`<div style="height:4px"></div>`;
+  h+=eriRow('(-) Impuesto de renta','imp_renta',0,'54xx');
+  h+=calcRow('= UTILIDAD NETA DEL EJERCICIO',utilNeta,true);
+
+  h+=`<div style="text-align:center;font-size:9px;color:#999;margin-top:16px;font-style:italic">Las notas son parte integral de los estados financieros</div>`;
+
+  // Firmantes
+  const repLegalERI=document.getElementById('cfgRepLegal')?.value||'';
+  const contadorERI=document.getElementById('cfgContador')?.value||'';
+  const tpContadorERI=document.getElementById('cfgTPContador')?.value||'';
+  if(repLegalERI||contadorERI){
+    h+=`<div style="display:flex;justify-content:space-between;margin-top:30px;padding:20px;font-size:10px">
+      <div style="text-align:center">
+        <div style="border-top:1px solid #999;padding-top:4px;min-width:180px">${repLegalERI||'________________'}</div>
+        <div style="color:#888">Representante Legal</div>
+      </div>
+      <div style="text-align:center">
+        <div style="border-top:1px solid #999;padding-top:4px;min-width:180px">${contadorERI||'________________'}</div>
+        <div style="color:#888">Contador Público${tpContadorERI?' T.P. '+tpContadorERI:''}</div>
+      </div>
+    </div>`;
+  }
+
+  h+=`</div>`;
+  return h;
+}
+
+function renderERI(){
+  document.getElementById('eriContent').innerHTML=buildERIHtml();
+}
+
+function onEriEdit(el){
+  const key=el.dataset.erikey;
+  const val=toNum(el.value);
+  eriData[key]=Math.round(val);
+  el.value=fN(Math.round(val));
+  renderERI();
+  renderStats();
+}
+
+/* ═══ POLICIES ═══ */
+function buildPoliciesHtml(){
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'000.000.000-0';
+  const ciudad=document.getElementById('cfgCiudad').value||'Bogotá D.C.';
+  const tipo=document.getElementById('cfgTipoEntidad').value;
+  const tipoLabel=tipo==='pymes'?'NIIF para PYMES (Grupo 2)':tipo==='plenas'?'NIIF Plenas (Grupo 1)':'Contabilidad simplificada (Grupo 3)';
+  const marco=tipo==='pymes'?'Normas Internacionales de Información Financiera para Pequeñas y Medianas Entidades (NIIF para las PYMES), adoptadas en Colombia mediante el Decreto 3022 de 2013 y sus modificaciones.':
+              tipo==='plenas'?'Normas Internacionales de Información Financiera (NIIF Plenas), adoptadas en Colombia mediante el Decreto 2784 de 2012 y sus modificaciones.':
+              'Marco técnico normativo de contabilidad simplificada para microempresas, adoptado en Colombia mediante el Decreto 2706 de 2012 y sus modificaciones.';
+
+  // Detect which account groups exist
+  const grupos=new Set(classifiedAccounts.map(a=>a.grupo));
+  const hasCuenta17o18=classifiedAccounts.some(a=>a.code.startsWith('17')||a.code.startsWith('18'));
+
+  let h='';
+  let polNum=0;
+
+  // 1. Entidad Reportante
+  h+=policySection('1. Entidad Reportante',
+    `${empresa}, identificada con NIT ${nit}, es una entidad domiciliada en ${ciudad}, Colombia. La entidad aplica el marco técnico normativo de ${tipoLabel}.\n\nLa entidad fue constituida de acuerdo con las leyes colombianas y su objeto social principal comprende las actividades descritas en su documento de constitución.\n\nLos presentes estados financieros corresponden al período comprendido entre el 1 de enero y el 31 de diciembre de ${year}.`);
+
+  // 2. Bases de Presentacion
+  h+=policySection('2. Bases de Presentación',
+    `Los estados financieros han sido preparados de conformidad con las ${tipoLabel}, y las interpretaciones emitidas y aceptadas por el Consejo Técnico de la Contaduría Pública (CTCP).\n\nLos estados financieros se presentan en pesos colombianos (COP), que es la moneda funcional y de presentación de la entidad.\n\nLos estados financieros se preparan sobre la base del costo histórico, excepto por ciertos instrumentos financieros que se miden a valor razonable.\n\nLa preparación de estados financieros de conformidad con las ${tipoLabel} requiere el uso de ciertas estimaciones contables críticas. También requiere que la administración ejerza su juicio en el proceso de aplicar las políticas contables de la entidad.\n\nEstos estados financieros han sido aprobados para su emisión por la administración de la entidad el [FECHA].`);
+
+  // 3. Politicas por elemento
+  polNum=0;
+
+  if(grupos.has('efectivo')){
+    polNum++;
+    h+=policySection(`3.${polNum}. Efectivo y equivalentes de efectivo`,
+      `El efectivo y equivalentes de efectivo incluyen el efectivo en caja, depósitos a la vista en instituciones financieras y otras inversiones a corto plazo de alta liquidez, con vencimiento original de tres meses o menos, que son fácilmente convertibles en montos conocidos de efectivo y que están sujetas a un riesgo insignificante de cambios en su valor.\n\nPara efectos del estado de flujos de efectivo, el efectivo y equivalentes de efectivo incluyen los conceptos antes definidos, netos de sobregiros bancarios pendientes cuando estos forman parte integral de la gestión del efectivo de la entidad.\n\nEl efectivo restringido se presenta por separado en el estado de situación financiera cuando su restricción es superior a doce meses. Se revela la naturaleza y el importe de cualquier restricción significativa sobre saldos de efectivo.`);
+  }
+
+  if(grupos.has('cxc')||grupos.has('deterioro_cartera')){
+    polNum++;
+    h+=policySection(`3.${polNum}. Instrumentos financieros / Cuentas por cobrar`,
+      `Las cuentas por cobrar comerciales son activos financieros que se reconocen inicialmente al precio de la transacción. Posteriormente se miden al costo menos cualquier provisión por deterioro.\n\nLa entidad evalúa al final de cada período sobre el que se informa si existe evidencia objetiva de que las cuentas por cobrar están deterioradas. Una cuenta por cobrar se considera deteriorada cuando existe evidencia objetiva de que la entidad no podrá cobrar todos los importes de acuerdo con las condiciones originales.\n\nCriterios de deterioro:\n- Cartera entre 1 y 90 días: se evalúa individualmente\n- Cartera entre 91 y 180 días: provisión del 30%\n- Cartera entre 181 y 360 días: provisión del 60%\n- Cartera mayor a 360 días: provisión del 100%\n\nEstos porcentajes son referenciales y se ajustan según la evaluación individual de cada caso.\n\nBaja en cuentas: Un activo financiero se da de baja cuando expiran los derechos contractuales sobre los flujos de efectivo del activo, o cuando la entidad transfiere sustancialmente todos los riesgos y ventajas inherentes a la propiedad del activo.`);
+  }
+
+  if(grupos.has('inventarios')){
+    polNum++;
+    h+=policySection(`3.${polNum}. Inventarios`,
+      `Los inventarios se miden al menor valor entre el costo y el precio de venta estimado menos los costos de terminación y venta (valor neto realizable).\n\nMétodo de valuación: [Promedio ponderado / Primeras en Entrar, Primeras en Salir (PEPS)]\n\nEl costo de los inventarios incluye todos los costos de compra, costos de transformación y otros costos incurridos para darles su condición y ubicación actuales.\n\nAl final de cada período, la entidad evalúa si los inventarios están deteriorados comparando el importe en libros de cada partida del inventario con su precio de venta estimado menos los costos de terminación y venta. Cuando el valor neto realizable es inferior al costo, se reconoce una pérdida por deterioro en resultados.\n\nCuando las circunstancias que previamente causaron la rebaja hayan dejado de existir, se reversa el importe de la rebaja.`);
+  }
+
+  if(grupos.has('ppe')||grupos.has('depreciacion')){
+    polNum++;
+    h+=policySection(`3.${polNum}. Propiedad, planta y equipo`,
+      `Los elementos de propiedad, planta y equipo se miden al costo menos la depreciación acumulada y cualquier pérdida por deterioro del valor acumulada.\n\nCostos capitalizables: El costo incluye los costos directamente atribuibles a la adquisición del activo, los costos de preparación del emplazamiento, los costos de instalación y montaje, los honorarios profesionales directamente relacionados y los costos estimados de desmantelamiento y retiro del activo cuando exista obligación. Los costos de mantenimiento y reparaciones menores se reconocen como gasto del período en que se incurren.\n\nComponentización: Cuando un elemento de propiedad, planta y equipo tiene componentes principales con vidas útiles significativamente diferentes, cada componente se contabiliza y deprecia por separado.\n\nLa depreciación se calcula usando el método de línea recta sobre la vida útil estimada de cada componente:\n\n| Elemento | Vida útil estimada | Valor residual |\n|---|---|---|\n| Edificios y construcciones | 20 - 50 años | 10% |\n| Maquinaria y equipo | 10 - 15 años | 5% |\n| Equipo de oficina | 5 - 10 años | 0% |\n| Equipo de cómputo y comunicación | 3 - 5 años | 0% |\n| Vehículos | 5 - 10 años | 10% |\n| Muebles y enseres | 10 años | 0% |\n| Mejoras en propiedades ajenas | Plazo del contrato | 0% |\n\nEl valor residual, la vida útil y el método de depreciación se revisan al final de cada período y se ajustan de manera prospectiva si es necesario.\n\nDeterioro del valor: Al final de cada período, la entidad evalúa si existe algún indicio de que los activos de propiedad, planta y equipo han sufrido deterioro. Si existe tal indicio, se estima el importe recuperable del activo y se reconoce una pérdida por deterioro si el importe en libros excede el importe recuperable.\n\nBaja en cuentas: Un elemento de PPE se da de baja cuando se dispone de él (por venta, donación o abandono) o cuando no se espera obtener beneficios económicos futuros por su uso o disposición. La ganancia o pérdida resultante de la baja se reconoce en el resultado del período.`);
+  }
+
+  if(grupos.has('intangibles')||grupos.has('amortizacion')){
+    polNum++;
+    h+=policySection(`3.${polNum}. Activos intangibles`,
+      `Un activo intangible se reconoce cuando es probable que los beneficios económicos futuros fluyan a la entidad y el costo del activo pueda medirse con fiabilidad.\n\nLos activos intangibles se miden inicialmente al costo. Después del reconocimiento inicial, se miden al costo menos la amortización acumulada y las pérdidas por deterioro acumuladas.\n\nLos activos intangibles con vida útil finita se amortizan en línea recta sobre su vida útil estimada, que generalmente es de 3 a 10 años. La vida útil se revisa en cada fecha de cierre.\n\nLos activos intangibles con vida útil indefinida no se amortizan sino que se evalúan anualmente por deterioro.`);
+  }
+
+  // Activos por impuesto diferido
+  if(grupos.has('otros_act_nc')||grupos.has('diferidos_act')||hasCuenta17o18){
+    polNum++;
+    h+=policySection(`3.${polNum}. Activos por impuesto diferido`,
+      `Los activos por impuesto diferido se reconocen por las diferencias temporarias deducibles, en la medida en que resulte probable que la entidad disponga de ganancias fiscales futuras contra las que pueda utilizar las diferencias temporarias.\n\nEl importe en libros de los activos por impuesto diferido se revisa al final de cada período. Se reduce en la medida en que no sea probable que haya suficientes ganancias fiscales disponibles.\n\nLos activos y pasivos por impuesto diferido se miden a las tasas impositivas que se espera sean de aplicación en el período en que el activo se realice o el pasivo se cancele, basándose en las tasas y leyes fiscales que hayan sido aprobadas o prácticamente aprobadas al final del período sobre el que se informa.\n\nLos activos y pasivos por impuesto diferido se compensan solo cuando existe un derecho legalmente exigible de compensar activos tributarios corrientes contra pasivos tributarios corrientes, y cuando se refieren a impuestos sobre las ganancias correspondientes a la misma autoridad fiscal.`);
+  }
+
+  if(grupos.has('oblig_fin_cp')||grupos.has('oblig_fin_lp')){
+    polNum++;
+    h+=policySection(`3.${polNum}. Obligaciones financieras`,
+      `Las obligaciones financieras se reconocen inicialmente al precio de la transacción, incluyendo los costos de transacción directamente atribuibles. Posteriormente, se miden al costo amortizado utilizando el método del interés efectivo.\n\nLas obligaciones financieras se clasifican como corrientes cuando su vencimiento es inferior a 12 meses y como no corrientes cuando su vencimiento es superior a 12 meses.\n\nLos costos financieros se reconocen como gasto del período en que se incurren, excepto en la medida en que sean directamente atribuibles a la adquisición, construcción o producción de un activo apto, en cuyo caso se capitalizan.`);
+  }
+
+  if(grupos.has('proveedores')||grupos.has('cxp')){
+    polNum++;
+    h+=policySection(`3.${polNum}. Cuentas por pagar comerciales`,
+      `Las cuentas por pagar comerciales son obligaciones de pago por bienes o servicios adquiridos de proveedores en el curso ordinario del negocio.\n\nSe reconocen inicialmente al precio de la transacción y posteriormente se miden al costo amortizado. Dada su naturaleza de corto plazo, generalmente su valor en libros se aproxima a su valor razonable.\n\nLas cuentas por pagar se clasifican como pasivos corrientes si el pago debe realizarse dentro de los 12 meses siguientes al período sobre el que se informa.`);
+  }
+
+  if(grupos.has('laborales')){
+    polNum++;
+    h+=policySection(`3.${polNum}. Beneficios a empleados`,
+      `Beneficios a corto plazo: Los beneficios a empleados a corto plazo incluyen sueldos, salarios, contribuciones a la seguridad social, vacaciones, primas y otros beneficios que se esperan pagar dentro de los 12 meses siguientes al cierre del período.\n\nSe reconocen como gasto cuando el empleado ha prestado el servicio y como pasivo por el importe pendiente de pago.\n\nBeneficios post-empleo: La entidad contribuye a fondos de cesantías y pensiones de contribución definida. Las contribuciones se reconocen como gasto en el período en que el empleado presta el servicio.\n\nCesantías: Se reconoce un pasivo por el valor de las cesantías causadas a favor de los empleados al final de cada período, calculadas con base en el último salario devengado. Las cesantías se consignan en los fondos respectivos antes del 14 de febrero del año siguiente.\n\nIntereses sobre cesantías: Se reconoce un pasivo por los intereses causados sobre las cesantías al 12% anual.`);
+  }
+
+  if(grupos.has('provisiones')){
+    polNum++;
+    h+=policySection(`3.${polNum}. Provisiones y contingencias`,
+      `Se reconoce una provisión cuando la entidad tiene una obligación presente (legal o implícita) como resultado de un suceso pasado, es probable que se requiera una salida de recursos para liquidar la obligación, y el importe se puede estimar de forma fiable.\n\nEl importe reconocido como provisión es la mejor estimación del desembolso necesario para liquidar la obligación presente al final del período sobre el que se informa.\n\nCuando el efecto del valor del dinero en el tiempo es significativo, la provisión se descuenta a su valor presente.\n\nLos pasivos contingentes no se reconocen en los estados financieros sino que se revelan en las notas, a menos que la posibilidad de una salida de recursos sea remota.`);
+  }
+
+  if(grupos.has('ing_operacionales')){
+    polNum++;
+    h+=policySection(`3.${polNum}. Reconocimiento de ingresos`,
+      `Los ingresos de actividades ordinarias se reconocen cuando se transfieren al comprador los riesgos y ventajas significativos inherentes a la propiedad de los bienes, o cuando el servicio ha sido prestado.\n\nVenta de bienes: Los ingresos se reconocen cuando se cumplen todas las siguientes condiciones:\n- Se han transferido al comprador los riesgos y ventajas significativos\n- La entidad no conserva gestión ni control sobre los bienes vendidos\n- El importe de los ingresos puede medirse con fiabilidad\n- Es probable que los beneficios económicos fluyan a la entidad\n- Los costos incurridos pueden medirse con fiabilidad\n\nPrestación de servicios: Los ingresos se reconocen en función del grado de terminación del servicio al final del período.\n\nLos ingresos se miden al valor razonable de la contraprestación recibida o por recibir, teniendo en cuenta descuentos, bonificaciones y rebajas comerciales.`);
+  }
+
+  if(grupos.has('imp_renta')){
+    polNum++;
+    h+=policySection(`3.${polNum}. Impuesto a las ganancias`,
+      `El gasto por impuesto a las ganancias comprende el impuesto corriente y el impuesto diferido.\n\nImpuesto corriente: Se reconoce el impuesto por pagar sobre la renta gravable del período, calculado con base en las tarifas y normatividad tributaria vigente.\n\nImpuesto diferido: Se reconoce sobre las diferencias temporarias entre el importe en libros de los activos y pasivos incluidos en los estados financieros y las bases fiscales correspondientes. El impuesto diferido se mide a las tasas impositivas que se espera se apliquen a las diferencias temporarias cuando se reviertan.\n\nNo se reconoce impuesto diferido por las diferencias temporarias asociadas a inversiones en subsidiarias cuando la entidad controla el momento de la reversión y es probable que no se revierta en un futuro previsible.`);
+  }
+
+  // Moneda extranjera (siempre incluir)
+  polNum++;
+  h+=policySection(`3.${polNum}. Moneda extranjera`,
+    `Las transacciones en moneda extranjera se convierten a la moneda funcional (COP) utilizando los tipos de cambio vigentes en la fecha de la transacción.\n\nLos activos y pasivos monetarios denominados en moneda extranjera se convierten al tipo de cambio de cierre al final del período sobre el que se informa. Las diferencias en cambio resultantes se reconocen en los resultados del período.\n\nLos activos y pasivos no monetarios denominados en moneda extranjera que se miden al costo histórico se convierten al tipo de cambio de la fecha de la transacción. Los activos y pasivos no monetarios que se miden a valor razonable se convierten al tipo de cambio de la fecha en que se determinó el valor razonable.`);
+
+  // Deterioro del valor de los activos (siempre incluir)
+  polNum++;
+  h+=policySection(`3.${polNum}. Deterioro del valor de los activos`,
+    `Al final de cada período, la entidad evalúa si existe algún indicio de deterioro del valor de sus activos. Si existe tal indicio, la entidad estima el importe recuperable del activo.\n\nEl importe recuperable es el mayor entre el valor razonable menos los costos de venta y el valor en uso. Si el importe recuperable es menor que el importe en libros, este se reduce hasta su importe recuperable, reconociéndose una pérdida por deterioro en resultados.\n\nIndicios de deterioro incluyen, entre otros:\n- Disminución significativa del valor de mercado del activo\n- Cambios adversos en el entorno tecnológico, de mercado, económico o legal\n- Evidencia de obsolescencia o daño físico del activo\n- Cambios en la forma en que se usa o se espera usar el activo\n- Rendimiento económico del activo inferior al esperado\n\nSi en un período posterior la pérdida por deterioro disminuye y la disminución puede relacionarse objetivamente con un evento ocurrido después de que se reconoció el deterioro, la pérdida por deterioro se reversa (excepto para el goodwill). La reversión se limita al importe en libros que se habría determinado si no se hubiera reconocido la pérdida por deterioro.`);
+
+  // 4. Estimaciones y juicios
+  h+=policySection('4. Estimaciones y juicios contables',
+    `La preparación de los estados financieros requiere que la administración realice estimaciones y supuestos que afectan los importes reportados de activos, pasivos, ingresos y gastos, y la revelación de activos y pasivos contingentes a la fecha de los estados financieros.\n\nLas principales estimaciones y juicios incluyen:\n\n- Deterioro de cuentas por cobrar: La entidad evalúa periódicamente la recuperabilidad de las cuentas por cobrar con base en la antigüedad y las condiciones de mercado.\n\n- Vida útil y valor residual de PPE: La vida útil y el valor residual se determinan con base en la experiencia previa y las condiciones esperadas de uso.\n\n- Provisiones: Las provisiones requieren estimaciones sobre la probabilidad de ocurrencia y el monto de las obligaciones.\n\n- Valor neto realizable de inventarios: Se estima considerando el precio de venta menos los costos necesarios para la venta.\n\n- Impuesto diferido: Se requiere juicio para determinar la probabilidad de obtención de beneficios fiscales futuros contra los cuales utilizar las diferencias temporarias deducibles.\n\nLas estimaciones se revisan periódicamente. Los cambios se reconocen en el período en que se revisa la estimación si el cambio afecta solo ese período, o en períodos futuros si afecta tanto al período actual como a períodos posteriores.`);
+
+  // 5. Hechos posteriores
+  h+=policySection('5. Hechos posteriores al período sobre el que se informa',
+    `[Incluir aquí cualquier hecho significativo ocurrido entre la fecha de cierre (31 de diciembre de ${year}) y la fecha de aprobación de los estados financieros que pueda afectar la situación financiera o los resultados de la entidad.\n\nSi no existen hechos posteriores significativos, indicar: "Entre la fecha de cierre de los estados financieros y la fecha de su autorización para su publicación, no han ocurrido hechos que requieran ajuste o revelación en los presentes estados financieros."]`);
+
+  return h;
+}
+
+function policySection(title,content){
+  return `<div class="policy-section">
+    <div class="policy-header" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'block'">${title}</div>
+    <div class="policy-body"><textarea>${content}</textarea></div>
+  </div>`;
+}
+
+/* ═══ REVELACIONES UNIFIED DOCUMENT ═══ */
+function buildPortada(empresa,nit,year,ciudad){
+  return `<div style="min-height:500px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:linear-gradient(180deg,#fff 0%,#f8fafc 100%);padding:60px 40px;border-bottom:4px solid #1B3A5C;page-break-after:always">
+    <div style="width:80px;height:4px;background:#2E75B6;margin-bottom:24px"></div>
+    <h1 style="font-size:1.8rem;color:#1B3A5C;margin-bottom:8px;font-weight:700">${empresa}</h1>
+    <p style="font-size:1rem;color:#6b7280;margin-bottom:4px">NIT: ${nit}</p>
+    <div style="width:60px;height:2px;background:#D6E4F0;margin:20px 0"></div>
+    <h2 style="font-size:1.3rem;color:#2E75B6;font-weight:600;margin-bottom:8px">REVELACIONES A LOS<br>ESTADOS FINANCIEROS</h2>
+    <p style="font-size:.95rem;color:#6b7280">Bajo Normas Internacionales de Información Financiera (NIIF)</p>
+    <div style="width:60px;height:2px;background:#D6E4F0;margin:20px 0"></div>
+    <p style="font-size:1rem;color:#1B3A5C;font-weight:600">Al 31 de diciembre de ${year}</p>
+    <p style="font-size:.82rem;color:#999;margin-top:4px">(Cifras expresadas en pesos colombianos)</p>
+    <div style="margin-top:60px;font-size:.85rem;color:#999;line-height:2">
+      <p>Representante Legal: ________________________________</p>
+      <p>Contador Público: ________________________________ T.P. ________</p>
+      <p>Revisor Fiscal: ________________________________ T.P. ________</p>
+    </div>
+  </div>`;
+}
+
+function sectionDivider(title){
+  return `<div style="background:#1B3A5C;color:#fff;padding:14px 24px;font-size:1.05rem;font-weight:700;letter-spacing:.5px;page-break-before:always">${title}</div>`;
+}
+
+function renderRevelaciones(){
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'000.000.000-0';
+  const ciudad=document.getElementById('cfgCiudad').value||'Bogotá D.C.';
+  const isPro=(new URLSearchParams(window.location.search)).get('pro')==='1';
+
+  let h='';
+
+  // 1. PORTADA
+  h+=buildPortada(empresa,nit,year,ciudad);
+
+  // 2. POLÍTICAS CONTABLES
+  h+=sectionDivider('POLÍTICAS CONTABLES');
+  h+=`<div style="padding:24px">`+buildPoliciesHtml()+`</div>`;
+
+  // 3. ESTADO DE SITUACION FINANCIERA
+  h+=sectionDivider('ESTADO DE SITUACIÓN FINANCIERA');
+  h+=`<div style="padding:24px">`+buildESFHtml()+`</div>`;
+
+  // 4. ESTADO DE RESULTADOS INTEGRAL
+  h+=sectionDivider('ESTADO DE RESULTADOS INTEGRAL');
+  h+=`<div style="padding:24px">`+buildERIHtml()+`</div>`;
+
+  // 5. NOTAS A LOS ESTADOS FINANCIEROS (PRO)
+  h+=sectionDivider('NOTAS A LOS ESTADOS FINANCIEROS');
+  if(isPro){
+    h+=`<div style="padding:24px">`+buildNotasHtml()+`</div>`;
+  } else {
+    h+=`<div style="position:relative;min-height:400px">
+      <div style="position:absolute;top:0;left:0;right:0;bottom:0;z-index:10;background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.95) 40%,#fff 60%);display:flex;align-items:center;justify-content:center">
+        <div style="text-align:center;padding:32px;background:#fff;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.12);max-width:420px">
+          <div style="font-size:2rem;margin-bottom:12px">🔒</div>
+          <h3 style="font-size:1.1rem;color:#92400E;margin-bottom:8px">Notas a los Estados Financieros</h3>
+          <p style="font-size:.85rem;color:#A16207;margin-bottom:16px">Las notas se generaron automáticamente con el detalle de cada cuenta. Desbloquea PRO para verlas completas y descargarlas en Word.</p>
+        </div>
+      </div>
+      <div style="filter:blur(3px);pointer-events:none;user-select:none;padding:24px">`+buildNotasHtml()+`</div>
+    </div>`;
+  }
+
+  return h;
+}
+
+function renderStats(){
+  const totalActCorr=esfVal('efectivo')+esfVal('inv_cp')+esfVal('cxc')+esfVal('deterioro_cartera')+esfVal('inventarios')+esfVal('diferidos_act')+esfVal('otros_act');
+  const totalActNoCorr=esfVal('ppe')+esfVal('depreciacion')+esfVal('intangibles')+esfVal('amortizacion')+esfVal('inv_lp')+esfVal('otros_act_nc')+esfVal('valorizaciones');
+  const totalActivos=totalActCorr+totalActNoCorr;
+  const totalPasCorr=esfVal('oblig_fin_cp')+esfVal('proveedores')+esfVal('cxp')+esfVal('impuestos')+esfVal('laborales')+esfVal('provisiones')+esfVal('otros_pas_c');
+  const totalPasNoCorr=esfVal('oblig_fin_lp')+esfVal('diferidos_pas')+esfVal('otros_pas');
+  const totalPasivos=totalPasCorr+totalPasNoCorr;
+  const totalPatrimonio=esfVal('capital')+esfVal('superavit_cap')+esfVal('reservas')+esfVal('revalorizacion')+esfVal('resultado_ej')+esfVal('resultados_ant')+esfVal('superavit_val')+esfVal('otros_pat')+esfVal('resultado_periodo');
+  const el=document.getElementById('resultStats');
+  if(el) el.innerHTML=`
+    <div class="stat-card blue"><div class="val">${classifiedAccounts.length}</div><div class="lbl">Cuentas</div></div>
+    <div class="stat-card green"><div class="val">${fN(totalActivos)}</div><div class="lbl">Total Activos</div></div>
+    <div class="stat-card amber"><div class="val">${fN(totalPasivos)}</div><div class="lbl">Total Pasivos</div></div>
+    <div class="stat-card blue"><div class="val">${fN(totalPatrimonio)}</div><div class="lbl">Patrimonio</div></div>`;
+}
+
+/* ═══ REVELACIONES PDF EXPORT ═══ */
+function exportRevelacionesPdf(){
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'000.000.000-0';
+  const ciudad=document.getElementById('cfgCiudad').value||'Bogotá D.C.';
+  const moneda=document.getElementById('cfgMoneda').value;
+  const monedaLabel=moneda==='COP'?'pesos colombianos':'dólares estadounidenses';
+
+  // Gather policies content from textareas in the rendered document
+  let policiesHtml='';
+  const sections=document.querySelectorAll('#revelacionesDoc .policy-section');
+  sections.forEach(s=>{
+    const title=s.querySelector('.policy-header').textContent;
+    const text=s.querySelector('textarea').value;
+    policiesHtml+=`<h3 style="color:#1a3c6e;margin:16px 0 8px;font-size:13px">${title}</h3>`;
+    policiesHtml+=`<div style="white-space:pre-wrap;font-size:11px;line-height:1.7">${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+  });
+
+  // ESF totals
+  const totalActCorr=esfVal('efectivo')+esfVal('inv_cp')+esfVal('cxc')+esfVal('deterioro_cartera')+esfVal('inventarios')+esfVal('diferidos_act')+esfVal('otros_act');
+  const totalActNoCorr=esfVal('ppe')+esfVal('depreciacion')+esfVal('intangibles')+esfVal('amortizacion')+esfVal('inv_lp')+esfVal('otros_act_nc')+esfVal('valorizaciones');
+  const totalActivos=totalActCorr+totalActNoCorr;
+  const totalPasCorr=esfVal('oblig_fin_cp')+esfVal('proveedores')+esfVal('cxp')+esfVal('impuestos')+esfVal('laborales')+esfVal('provisiones')+esfVal('otros_pas_c');
+  const totalPasNoCorr=esfVal('oblig_fin_lp')+esfVal('diferidos_pas')+esfVal('otros_pas');
+  const totalPasivos=totalPasCorr+totalPasNoCorr;
+  const totalPatrimonio=esfVal('capital')+esfVal('superavit_cap')+esfVal('reservas')+esfVal('revalorizacion')+esfVal('resultado_ej')+esfVal('resultados_ant')+esfVal('superavit_val')+esfVal('otros_pat')+esfVal('resultado_periodo');
+  const totalPasPatr=totalPasivos+totalPatrimonio;
+
+  // ERI
+  const ingOp=eriData.ing_operacionales||0;
+  const devVtas=eriData.dev_ventas||0;
+  const ingNetos=ingOp-devVtas;
+  const costoVtas=(eriData.costo_ventas||0)+(eriData.costo_prod||0);
+  const utilBruta=ingNetos-costoVtas;
+  const gtosAdmin=eriData.gtos_admin||0;
+  const gtosVentas=eriData.gtos_ventas||0;
+  const utilOp=utilBruta-gtosAdmin-gtosVentas;
+  const otrosIng=(eriData.ing_no_operacionales||0)+(eriData.otros_ing||0);
+  const otrosGtos=eriData.gtos_no_op||0;
+  const utilAntesImp=utilOp+otrosIng-otrosGtos;
+  const impRenta=eriData.imp_renta||0;
+  const utilNeta=utilAntesImp-impRenta;
+
+  function pdfRow(label,val,indent,bold,isTotal){
+    const pad=indent?'padding-left:'+(indent*24)+'px':'';
+    const fw=bold?'font-weight:700':'';
+    const bb=isTotal?'border-top:2px solid #000;border-bottom:1px solid #000':'border-bottom:1px solid #eee';
+    const bg=isTotal?'background:#f0f2f5':'';
+    return `<tr style="${bg}"><td style="${pad};${fw};${bb};padding:4px 8px">${label}</td><td style="text-align:right;${fw};${bb};padding:4px 8px;font-family:monospace;width:160px">${fN(val)}</td></tr>`;
+  }
+
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>Revelaciones EEFF - ${empresa}</title>
+  <style>
+    @page{margin:2cm;size:letter}
+    body{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#000;line-height:1.5;margin:0;padding:20px}
+    .page{page-break-after:always}
+    .header{text-align:center;margin-bottom:20px}
+    .header h2{font-size:14px;margin:4px 0;text-transform:uppercase}
+    .header h3{font-size:13px;margin:4px 0;text-transform:uppercase}
+    .header p{font-size:10px;color:#555;margin:2px 0}
+    table{width:100%;border-collapse:collapse;font-size:10.5px}
+    td{padding:3px 8px}
+    .footer{text-align:center;font-size:9px;color:#888;margin-top:24px;font-style:italic;padding-top:12px;border-top:1px solid #ddd}
+    .signatures{display:flex;justify-content:space-between;margin-top:60px;padding-top:20px}
+    .sig{text-align:center;width:200px}
+    .sig-line{border-top:1px solid #000;padding-top:4px;font-size:9px}
+    .section-title{background:#1B3A5C;color:#fff;padding:10px 16px;font-size:13px;font-weight:700;letter-spacing:.5px;margin:24px 0 16px}
+  </style></head><body>
+
+  <!-- PORTADA -->
+  <div class="page" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:600px">
+    <div style="width:60px;height:3px;background:#2E75B6;margin-bottom:20px"></div>
+    <h1 style="font-size:20px;color:#1B3A5C;margin-bottom:6px">${empresa}</h1>
+    <p style="font-size:11px;color:#555;margin-bottom:4px">NIT: ${nit}</p>
+    <div style="width:40px;height:2px;background:#D6E4F0;margin:16px 0"></div>
+    <h2 style="font-size:16px;color:#2E75B6;margin-bottom:6px">REVELACIONES A LOS<br>ESTADOS FINANCIEROS</h2>
+    <p style="font-size:11px;color:#555">Bajo Normas Internacionales de Información Financiera (NIIF)</p>
+    <div style="width:40px;height:2px;background:#D6E4F0;margin:16px 0"></div>
+    <p style="font-size:12px;color:#1B3A5C;font-weight:700">Al 31 de diciembre de ${year}</p>
+    <p style="font-size:10px;color:#888;margin-top:4px">(Cifras expresadas en ${monedaLabel})</p>
+    <div style="margin-top:80px;font-size:10px;color:#888;line-height:2.2">
+      <p>Representante Legal: ________________________________</p>
+      <p>Contador Público: ________________________________ T.P. ________</p>
+      <p>Revisor Fiscal: ________________________________ T.P. ________</p>
+    </div>
+  </div>
+
+  <!-- POLÍTICAS CONTABLES -->
+  <div class="page">
+    <div class="section-title">POLÍTICAS CONTABLES</div>
+    ${policiesHtml}
+  </div>
+
+  <!-- ESF -->
+  <div class="page">
+    <div class="header">
+      <h2>${empresa}</h2>
+      <p>NIT: ${nit}</p>
+      <h3>Estado de Situación Financiera</h3>
+      <p>Al 31 de diciembre de ${year}</p>
+      <p>(Cifras expresadas en ${monedaLabel})</p>
+    </div>
+    <table>
+      <tr><td colspan="2" style="background:#d4e6f1;font-weight:700;text-transform:uppercase;color:#1a3c6e;padding:6px 8px">ACTIVOS</td></tr>
+      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Activos Corrientes</td></tr>
+      ${pdfRow('Efectivo y equivalentes de efectivo',esfVal('efectivo'),1)}
+      ${pdfRow('Inversiones a corto plazo',esfVal('inv_cp'),1)}
+      ${pdfRow('Deudores comerciales y otras CxC',esfVal('cxc'),1)}
+      ${pdfRow('(-) Deterioro de cartera',esfVal('deterioro_cartera'),1)}
+      ${pdfRow('Inventarios',esfVal('inventarios'),1)}
+      ${pdfRow('Diferidos / Otros activos corrientes',esfVal('diferidos_act'),1)}
+      ${pdfRow('Otros activos corrientes',esfVal('otros_act'),1)}
+      ${pdfRow('TOTAL ACTIVOS CORRIENTES',totalActCorr,0,true,true)}
+      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Activos No Corrientes</td></tr>
+      ${pdfRow('Propiedad, planta y equipo',esfVal('ppe'),1)}
+      ${pdfRow('(-) Depreciación acumulada',esfVal('depreciacion'),1)}
+      ${pdfRow('Activos intangibles',esfVal('intangibles'),1)}
+      ${pdfRow('(-) Amortización acumulada',esfVal('amortizacion'),1)}
+      ${pdfRow('Inversiones a largo plazo',esfVal('inv_lp'),1)}
+      ${pdfRow('Otros activos no corrientes',esfVal('otros_act_nc'),1)}
+      ${pdfRow('Valorizaciones',esfVal('valorizaciones'),1)}
+      ${pdfRow('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr,0,true,true)}
+      ${pdfRow('TOTAL ACTIVOS',totalActivos,0,true,true)}
+      <tr><td colspan="2" style="height:8px"></td></tr>
+      <tr><td colspan="2" style="background:#d4e6f1;font-weight:700;text-transform:uppercase;color:#1a3c6e;padding:6px 8px">PASIVOS</td></tr>
+      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Pasivos Corrientes</td></tr>
+      ${pdfRow('Obligaciones financieras CP',esfVal('oblig_fin_cp'),1)}
+      ${pdfRow('Proveedores',esfVal('proveedores'),1)}
+      ${pdfRow('Cuentas por pagar',esfVal('cxp'),1)}
+      ${pdfRow('Impuestos por pagar',esfVal('impuestos'),1)}
+      ${pdfRow('Obligaciones laborales',esfVal('laborales'),1)}
+      ${pdfRow('Pasivos estimados / Provisiones',esfVal('provisiones'),1)}
+      ${pdfRow('Otros pasivos corrientes',esfVal('otros_pas_c'),1)}
+      ${pdfRow('TOTAL PASIVOS CORRIENTES',totalPasCorr,0,true,true)}
+      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Pasivos No Corrientes</td></tr>
+      ${pdfRow('Obligaciones financieras LP',esfVal('oblig_fin_lp'),1)}
+      ${pdfRow('Diferidos pasivo',esfVal('diferidos_pas'),1)}
+      ${pdfRow('Otros pasivos no corrientes',esfVal('otros_pas'),1)}
+      ${pdfRow('TOTAL PASIVOS NO CORRIENTES',totalPasNoCorr,0,true,true)}
+      ${pdfRow('TOTAL PASIVOS',totalPasivos,0,true,true)}
+      <tr><td colspan="2" style="height:8px"></td></tr>
+      <tr><td colspan="2" style="background:#d4e6f1;font-weight:700;text-transform:uppercase;color:#1a3c6e;padding:6px 8px">PATRIMONIO</td></tr>
+      ${pdfRow('Capital social',esfVal('capital'),1)}
+      ${pdfRow('Superávit de capital',esfVal('superavit_cap'),1)}
+      ${pdfRow('Reservas',esfVal('reservas'),1)}
+      ${pdfRow('Revalorización del patrimonio',esfVal('revalorizacion'),1)}
+      ${pdfRow('Resultado del ejercicio',esfVal('resultado_ej'),1)}
+      ${pdfRow('Resultados de ejercicios anteriores',esfVal('resultados_ant'),1)}
+      ${pdfRow('Superávit por valorizaciones',esfVal('superavit_val'),1)}
+      ${pdfRow('Otros componentes patrimonio',esfVal('otros_pat'),1)}
+      ${pdfRow('TOTAL PATRIMONIO',totalPatrimonio,0,true,true)}
+      <tr><td colspan="2" style="height:8px"></td></tr>
+      ${pdfRow('TOTAL PASIVOS + PATRIMONIO',totalPasPatr,0,true,true)}
+    </table>
+    <div class="signatures">
+      <div class="sig"><div class="sig-line">Representante Legal</div></div>
+      <div class="sig"><div class="sig-line">Contador Público<br>T.P. No. ___________</div></div>
+      <div class="sig"><div class="sig-line">Revisor Fiscal<br>T.P. No. ___________</div></div>
+    </div>
+    <div class="footer">Las notas son parte integral de los estados financieros</div>
+  </div>
+
+  <!-- ERI -->
+  <div class="page">
+    <div class="header">
+      <h2>${empresa}</h2>
+      <p>NIT: ${nit}</p>
+      <h3>Estado de Resultados Integral</h3>
+      <p>${getPeriodoERI()}</p>
+      <p>(Cifras expresadas en ${monedaLabel})</p>
+    </div>
+    <table>
+      ${pdfRow('Ingresos de actividades ordinarias',ingOp,0)}
+      ${pdfRow('(-) Devoluciones, rebajas y descuentos',devVtas,0)}
+      ${pdfRow('= INGRESOS NETOS',ingNetos,0,true,true)}
+      <tr><td colspan="2" style="height:6px"></td></tr>
+      ${pdfRow('(-) Costo de ventas',costoVtas,0)}
+      ${pdfRow('= UTILIDAD BRUTA',utilBruta,0,true,true)}
+      <tr><td colspan="2" style="height:6px"></td></tr>
+      ${pdfRow('(-) Gastos de administración',gtosAdmin,0)}
+      ${pdfRow('(-) Gastos de ventas',gtosVentas,0)}
+      ${pdfRow('= UTILIDAD OPERACIONAL',utilOp,0,true,true)}
+      <tr><td colspan="2" style="height:6px"></td></tr>
+      ${pdfRow('(+) Otros ingresos',otrosIng,0)}
+      ${pdfRow('(-) Otros gastos',otrosGtos,0)}
+      ${pdfRow('= UTILIDAD ANTES DE IMPUESTOS',utilAntesImp,0,true,true)}
+      <tr><td colspan="2" style="height:6px"></td></tr>
+      ${pdfRow('(-) Impuesto de renta',impRenta,0)}
+      ${pdfRow('= UTILIDAD NETA DEL EJERCICIO',utilNeta,0,true,true)}
+    </table>
+    <div class="signatures">
+      <div class="sig"><div class="sig-line">Representante Legal</div></div>
+      <div class="sig"><div class="sig-line">Contador Público<br>T.P. No. ___________</div></div>
+      <div class="sig"><div class="sig-line">Revisor Fiscal<br>T.P. No. ___________</div></div>
+    </div>
+    <div class="footer">Las notas son parte integral de los estados financieros</div>
+  </div>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+/* ═══ REVELACIONES WORD EXPORT (PRO) ═══ */
+function buildWordStyles(){
+  return `body{font-family:Arial,sans-serif;font-size:11pt;line-height:1.6;color:#333}
+h1{font-size:16pt;color:#1B3A5C;text-align:center;margin-bottom:4pt}
+h2{font-size:13pt;color:#1B3A5C;border-bottom:2px solid #2E75B6;padding-bottom:4pt;margin-top:24pt}
+h3{font-size:11pt;color:#2E75B6;margin-top:14pt}
+p{margin:6pt 0;text-align:justify}
+.header{text-align:center;margin-bottom:24pt;page-break-after:always}
+.header p{margin:2pt 0;font-size:10pt;color:#666}
+.header h1{font-size:20pt;margin-top:120pt}
+.firmas{margin-top:80pt;font-size:10pt;color:#666;line-height:2.5}
+table{border-collapse:collapse;width:100%;margin:8pt 0}
+th,td{border:1px solid #ccc;padding:4pt 8pt;font-size:10pt}
+th{background:#D6E4F0;font-weight:bold;color:#1B3A5C}
+td.num{text-align:right;font-family:'Courier New',monospace}
+.section{font-size:14pt;color:#1B3A5C;font-weight:bold;margin-top:30pt;margin-bottom:12pt;border-bottom:3px solid #1B3A5C;padding-bottom:6pt;page-break-before:always}
+.total td{font-weight:bold;border-top:2px solid #999;border-bottom:2px solid #999}
+.subtotal td{font-weight:bold;background:#f0f2f5}
+.footer{text-align:center;font-size:8pt;color:#999;margin-top:20pt;font-style:italic}`;
+}
+
+function buildPoliciesWordHtml(){
+  let h='';
+  const policiesHtml=buildPoliciesHtml();
+  // Convert textarea-based policies to plain HTML for Word
+  const temp=document.createElement('div');
+  temp.innerHTML=policiesHtml;
+  const sections=temp.querySelectorAll('.policy-section');
+  sections.forEach(s=>{
+    const title=s.querySelector('.policy-header')?.textContent||'';
+    const textarea=s.querySelector('textarea');
+    const body=textarea?textarea.value:'';
+    h+=`<h3>${title}</h3>`;
+    let inTable=false;
+    body.split('\\n').forEach(line=>{
+      const trimmed=line.trim();
+      if(trimmed.startsWith('|')&&trimmed.endsWith('|')){
+        if(trimmed.includes('---'))return;
+        const cells=trimmed.split('|').filter(c=>c.trim());
+        if(!inTable){h+='<table>';inTable=true;h+='<tr>'+cells.map(c=>'<th>'+c.trim()+'</th>').join('')+'</tr>'}
+        else{h+='<tr>'+cells.map(c=>'<td>'+c.trim()+'</td>').join('')+'</tr>'}
+      } else {
+        if(inTable){h+='</table>';inTable=false}
+        if(trimmed) h+='<p>'+trimmed+'</p>';
+      }
+    });
+    if(inTable){h+='</table>';inTable=false}
+  });
+  return h;
+}
+
+function buildEsfWordHtml(){
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'';
+  const moneda=document.getElementById('cfgMoneda').value;
+
+  const totalActCorr=esfVal('efectivo')+esfVal('inv_cp')+esfVal('cxc')+esfVal('deterioro_cartera')+esfVal('inventarios')+esfVal('diferidos_act')+esfVal('otros_act');
+  const totalActNoCorr=esfVal('ppe')+esfVal('depreciacion')+esfVal('intangibles')+esfVal('amortizacion')+esfVal('inv_lp')+esfVal('otros_act_nc')+esfVal('valorizaciones');
+  const totalActivos=totalActCorr+totalActNoCorr;
+  const totalPasCorr=esfVal('oblig_fin_cp')+esfVal('proveedores')+esfVal('cxp')+esfVal('impuestos')+esfVal('laborales')+esfVal('provisiones')+esfVal('otros_pas_c');
+  const totalPasNoCorr=esfVal('oblig_fin_lp')+esfVal('diferidos_pas')+esfVal('otros_pas');
+  const totalPasivos=totalPasCorr+totalPasNoCorr;
+  const totalPatrimonio=esfVal('capital')+esfVal('superavit_cap')+esfVal('reservas')+esfVal('revalorizacion')+esfVal('resultado_ej')+esfVal('resultados_ant')+esfVal('superavit_val')+esfVal('otros_pat')+esfVal('resultado_periodo');
+
+  function r(label,val,cls){return `<tr${cls?' class="'+cls+'"':''}><td>${label}</td><td class="num">${fN(val)}</td></tr>`}
+  let h=`<p style="text-align:center;font-weight:bold">${empresa}<br>NIT: ${nit}<br>ESTADO DE SITUACIÓN FINANCIERA<br>Al 31 de diciembre de ${year}<br><span style="font-size:9pt;color:#888">(Cifras en ${moneda==='COP'?'pesos colombianos':'dólares'})</span></p>`;
+  h+=`<table><tr><th colspan="2">ACTIVOS</th></tr>`;
+  h+=`<tr><th colspan="2" style="background:#E2EFDA;font-size:9pt">Activos Corrientes</th></tr>`;
+  h+=r('Efectivo y equivalentes de efectivo',esfVal('efectivo'));
+  if(esfVal('inv_cp'))h+=r('Inversiones a corto plazo',esfVal('inv_cp'));
+  h+=r('Deudores comerciales y otras CxC',esfVal('cxc'));
+  if(esfVal('deterioro_cartera'))h+=r('(-) Deterioro de cartera',esfVal('deterioro_cartera'));
+  if(esfVal('inventarios'))h+=r('Inventarios',esfVal('inventarios'));
+  if(esfVal('diferidos_act'))h+=r('Diferidos y otros activos corrientes',esfVal('diferidos_act'));
+  h+=r('TOTAL ACTIVOS CORRIENTES',totalActCorr,'subtotal');
+  h+=`<tr><th colspan="2" style="background:#E2EFDA;font-size:9pt">Activos No Corrientes</th></tr>`;
+  if(esfVal('ppe'))h+=r('Propiedad, planta y equipo',esfVal('ppe'));
+  if(esfVal('depreciacion'))h+=r('(-) Depreciación acumulada',esfVal('depreciacion'));
+  if(esfVal('intangibles'))h+=r('Activos intangibles',esfVal('intangibles'));
+  if(esfVal('inv_lp'))h+=r('Inversiones a largo plazo',esfVal('inv_lp'));
+  if(esfVal('otros_act_nc'))h+=r('Otros activos no corrientes',esfVal('otros_act_nc'));
+  h+=r('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr,'subtotal');
+  h+=r('TOTAL ACTIVOS',totalActivos,'total');
+
+  h+=`<tr><th colspan="2">PASIVOS</th></tr>`;
+  h+=`<tr><th colspan="2" style="background:#E2EFDA;font-size:9pt">Pasivos Corrientes</th></tr>`;
+  if(esfVal('oblig_fin_cp'))h+=r('Obligaciones financieras CP',esfVal('oblig_fin_cp'));
+  if(esfVal('proveedores'))h+=r('Proveedores',esfVal('proveedores'));
+  if(esfVal('cxp'))h+=r('Cuentas por pagar',esfVal('cxp'));
+  if(esfVal('impuestos'))h+=r('Impuestos por pagar',esfVal('impuestos'));
+  if(esfVal('laborales'))h+=r('Obligaciones laborales',esfVal('laborales'));
+  if(esfVal('provisiones'))h+=r('Pasivos estimados y provisiones',esfVal('provisiones'));
+  h+=r('TOTAL PASIVOS CORRIENTES',totalPasCorr,'subtotal');
+  if(totalPasNoCorr){
+    h+=`<tr><th colspan="2" style="background:#E2EFDA;font-size:9pt">Pasivos No Corrientes</th></tr>`;
+    if(esfVal('oblig_fin_lp'))h+=r('Obligaciones financieras LP',esfVal('oblig_fin_lp'));
+    if(esfVal('diferidos_pas'))h+=r('Diferidos pasivo',esfVal('diferidos_pas'));
+    h+=r('TOTAL PASIVOS NO CORRIENTES',totalPasNoCorr,'subtotal');
+  }
+  h+=r('TOTAL PASIVOS',totalPasivos,'total');
+
+  h+=`<tr><th colspan="2">PATRIMONIO</th></tr>`;
+  if(esfVal('capital'))h+=r('Capital social',esfVal('capital'));
+  if(esfVal('reservas'))h+=r('Reservas',esfVal('reservas'));
+  if(esfVal('resultado_ej'))h+=r('Resultado del ejercicio',esfVal('resultado_ej'));
+  if(esfVal('resultados_ant'))h+=r('Resultados de ejercicios anteriores',esfVal('resultados_ant'));
+  if(esfVal('resultado_periodo'))h+=r('Resultado del período (Ingresos - Gastos)',esfVal('resultado_periodo'));
+  h+=r('TOTAL PATRIMONIO',totalPatrimonio,'total');
+  h+=r('TOTAL PASIVOS + PATRIMONIO',totalPasivos+totalPatrimonio,'total');
+  h+=`</table>`;
+  h+=`<p class="footer">Las notas son parte integral de los estados financieros</p>`;
+  return h;
+}
+
+function buildEriWordHtml(){
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'';
+  const moneda=document.getElementById('cfgMoneda').value;
+  const periodo=getPeriodoERI();
+
+  const ingOp=eriData.ing_operacionales||0;
+  const devVtas=eriData.dev_ventas||0;
+  const ingNetos=ingOp-devVtas;
+  const costoVtas=(eriData.costo_ventas||0)+(eriData.costo_prod||0);
+  const utilBruta=ingNetos-costoVtas;
+  const gtosAdmin=eriData.gtos_admin||0;
+  const gtosVentas=eriData.gtos_ventas||0;
+  const utilOp=utilBruta-gtosAdmin-gtosVentas;
+  const otrosIng=(eriData.ing_no_operacionales||0)+(eriData.otros_ing||0);
+  const otrosGtos=eriData.gtos_no_op||0;
+  const utilAntesImp=utilOp+otrosIng-otrosGtos;
+  const impRenta=eriData.imp_renta||0;
+  const utilNeta=utilAntesImp-impRenta;
+
+  function r(label,val,cls){return `<tr${cls?' class="'+cls+'"':''}><td>${label}</td><td class="num">${fN(val)}</td></tr>`}
+  let h=`<p style="text-align:center;font-weight:bold">${empresa}<br>NIT: ${nit}<br>ESTADO DE RESULTADOS INTEGRAL<br>${periodo}<br><span style="font-size:9pt;color:#888">(Cifras en ${moneda==='COP'?'pesos colombianos':'dólares'})</span></p>`;
+  h+=`<table>`;
+  h+=r('Ingresos de actividades ordinarias',ingOp);
+  if(devVtas)h+=r('(-) Devoluciones, rebajas y descuentos',devVtas);
+  h+=r('INGRESOS NETOS',ingNetos,'subtotal');
+  if(costoVtas)h+=r('(-) Costo de ventas',costoVtas);
+  h+=r('UTILIDAD BRUTA',utilBruta,'subtotal');
+  h+=r('(-) Gastos de administración',gtosAdmin);
+  if(gtosVentas)h+=r('(-) Gastos de ventas',gtosVentas);
+  h+=r('UTILIDAD OPERACIONAL',utilOp,'total');
+  if(otrosIng)h+=r('(+) Otros ingresos',otrosIng);
+  if(otrosGtos)h+=r('(-) Otros gastos',otrosGtos);
+  h+=r('UTILIDAD ANTES DE IMPUESTOS',utilAntesImp,'subtotal');
+  if(impRenta)h+=r('(-) Impuesto de renta',impRenta);
+  h+=r('UTILIDAD NETA DEL EJERCICIO',utilNeta,'total');
+  h+=`</table>`;
+  h+=`<p class="footer">Las notas son parte integral de los estados financieros</p>`;
+  return h;
+}
+
+function exportRevelacionesWord(){
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'';
+  const ciudad=document.getElementById('cfgCiudad').value||'Bogotá D.C.';
+  const repLegal=document.getElementById('cfgRepLegal').value||'';
+  const contador=document.getElementById('cfgContador').value||'';
+  const tpContador=document.getElementById('cfgTPContador').value||'';
+  const revisor=document.getElementById('cfgRevisor').value||'';
+  const tpRevisor=document.getElementById('cfgTPRevisor').value||'';
+
+  const firmaBlock=`<div style="margin-top:60pt;display:flex;justify-content:space-between">
+  <div style="text-align:center;width:45%">
+    <p>________________________________</p>
+    <p style="font-weight:bold">${repLegal||'Representante Legal'}</p>
+    <p>Representante Legal</p>
+  </div>
+  <div style="text-align:center;width:45%">
+    <p>________________________________</p>
+    <p style="font-weight:bold">${contador||'Contador Público'}</p>
+    <p>Contador Público${tpContador?' T.P. '+tpContador:''}</p>
+  </div>
+</div>
+${revisor?`<div style="text-align:center;margin-top:30pt;width:45%;margin:30pt auto 0">
+  <p>________________________________</p>
+  <p style="font-weight:bold">${revisor}</p>
+  <p>Revisor Fiscal${tpRevisor?' T.P. '+tpRevisor:''}</p>
+</div>`:''}`;
+
+  let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>${buildWordStyles()}</style></head><body>
+<div class="header">
+  <h1>${empresa}</h1>
+  <p>NIT: ${nit}</p>
+  <p style="font-size:14pt;font-weight:bold;color:#2E75B6;margin-top:20pt">REVELACIONES A LOS<br>ESTADOS FINANCIEROS</p>
+  <p>Bajo Normas Internacionales de Información Financiera (NIIF)</p>
+  <p style="font-size:12pt;margin-top:16pt">Al 31 de diciembre de ${year}</p>
+  <p style="font-size:9pt;color:#999">(Cifras expresadas en pesos colombianos)</p>
+  <div class="firmas">
+    <p>Representante Legal: ${repLegal||'________________________________'}</p>
+    <p>Contador Público: ${contador||'________________________________'} T.P. ${tpContador||'________'}</p>
+    <p>Revisor Fiscal: ${revisor||'________________________________'} T.P. ${tpRevisor||'________'}</p>
+  </div>
+</div>
+<div class="section">POLÍTICAS CONTABLES</div>
+${buildPoliciesWordHtml()}
+<div class="section">ESTADO DE SITUACIÓN FINANCIERA</div>
+${buildEsfWordHtml()}
+${firmaBlock}
+<div class="section">ESTADO DE RESULTADOS INTEGRAL</div>
+${buildEriWordHtml()}
+${firmaBlock}
+<p class="footer">Generado por ExógenaDIAN.com — Verificar antes de presentar oficialmente</p>
+</body></html>`;
+
+  const blob=new Blob(['\ufeff'+html],{type:'application/msword'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`Revelaciones_EEFF_${empresa.replace(/\s+/g,'_')}_${year}.doc`;
+  a.click();URL.revokeObjectURL(url);
+}
+
+function exportRevelacionesWordPro(){
+  const isPro=(new URLSearchParams(window.location.search)).get('pro')==='1';
+  if(!isPro){alert('La versión con Notas detalladas es una función PRO.\\n\\nDesbloquea PRO para descargar las Revelaciones completas con notas por cuenta.');return}
+
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'';
+  const ciudad=document.getElementById('cfgCiudad').value||'Bogotá D.C.';
+  const repLegal=document.getElementById('cfgRepLegal').value||'';
+  const contador=document.getElementById('cfgContador').value||'';
+  const tpContador=document.getElementById('cfgTPContador').value||'';
+  const revisor=document.getElementById('cfgRevisor').value||'';
+  const tpRevisor=document.getElementById('cfgTPRevisor').value||'';
+
+  const firmaBlock=`<div style="margin-top:60pt;display:flex;justify-content:space-between">
+  <div style="text-align:center;width:45%">
+    <p>________________________________</p>
+    <p style="font-weight:bold">${repLegal||'Representante Legal'}</p>
+    <p>Representante Legal</p>
+  </div>
+  <div style="text-align:center;width:45%">
+    <p>________________________________</p>
+    <p style="font-weight:bold">${contador||'Contador Público'}</p>
+    <p>Contador Público${tpContador?' T.P. '+tpContador:''}</p>
+  </div>
+</div>
+${revisor?`<div style="text-align:center;margin-top:30pt;width:45%;margin:30pt auto 0">
+  <p>________________________________</p>
+  <p style="font-weight:bold">${revisor}</p>
+  <p>Revisor Fiscal${tpRevisor?' T.P. '+tpRevisor:''}</p>
+</div>`:''}`;
+
+  let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>${buildWordStyles()}</style></head><body>
+<div class="header">
+  <h1>${empresa}</h1>
+  <p>NIT: ${nit}</p>
+  <p style="font-size:14pt;font-weight:bold;color:#2E75B6;margin-top:20pt">REVELACIONES A LOS<br>ESTADOS FINANCIEROS</p>
+  <p>Bajo Normas Internacionales de Información Financiera (NIIF)</p>
+  <p style="font-size:12pt;margin-top:16pt">Al 31 de diciembre de ${year}</p>
+  <p style="font-size:9pt;color:#999">(Cifras expresadas en pesos colombianos)</p>
+  <div class="firmas">
+    <p>Representante Legal: ${repLegal||'________________________________'}</p>
+    <p>Contador Público: ${contador||'________________________________'} T.P. ${tpContador||'________'}</p>
+    <p>Revisor Fiscal: ${revisor||'________________________________'} T.P. ${tpRevisor||'________'}</p>
+  </div>
+</div>
+<div class="section">POLÍTICAS CONTABLES</div>
+${buildPoliciesWordHtml()}
+<div class="section">ESTADO DE SITUACIÓN FINANCIERA</div>
+${buildEsfWordHtml()}
+${firmaBlock}
+<div class="section">ESTADO DE RESULTADOS INTEGRAL</div>
+${buildEriWordHtml()}
+${firmaBlock}
+<div class="section">NOTAS A LOS ESTADOS FINANCIEROS</div>
+${buildNotasHtml()}
+${firmaBlock}
+<p class="footer">Generado por ExógenaDIAN.com — Verificar antes de presentar oficialmente</p>
+</body></html>`;
+
+  const blob=new Blob(['\ufeff'+html],{type:'application/msword'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`Revelaciones_EEFF_completas_${empresa.replace(/\s+/g,'_')}_${year}.doc`;
+  a.click();URL.revokeObjectURL(url);
+}
+
+/* ═══ PDF EXPORT (legacy) ═══ */
+function exportPdfEEFF(){
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'000.000.000-0';
+  const moneda=document.getElementById('cfgMoneda').value;
+  const monedaLabel=moneda==='COP'?'pesos colombianos':'dólares estadounidenses';
+
+  // Compute totals
+  const totalActCorr=esfVal('efectivo')+esfVal('inv_cp')+esfVal('cxc')+esfVal('deterioro_cartera')+esfVal('inventarios')+esfVal('diferidos_act')+esfVal('otros_act');
+  const totalActNoCorr=esfVal('ppe')+esfVal('depreciacion')+esfVal('intangibles')+esfVal('amortizacion')+esfVal('inv_lp')+esfVal('otros_act_nc')+esfVal('valorizaciones');
+  const totalActivos=totalActCorr+totalActNoCorr;
+  const totalPasCorr=esfVal('oblig_fin_cp')+esfVal('proveedores')+esfVal('cxp')+esfVal('impuestos')+esfVal('laborales')+esfVal('provisiones')+esfVal('otros_pas_c');
+  const totalPasNoCorr=esfVal('oblig_fin_lp')+esfVal('diferidos_pas')+esfVal('otros_pas');
+  const totalPasivos=totalPasCorr+totalPasNoCorr;
+  const totalPatrimonio=esfVal('capital')+esfVal('superavit_cap')+esfVal('reservas')+esfVal('revalorizacion')+esfVal('resultado_ej')+esfVal('resultados_ant')+esfVal('superavit_val')+esfVal('otros_pat')+esfVal('resultado_periodo');
+  const totalPasPatr=totalPasivos+totalPatrimonio;
+
+  // ERI
+  const ingOp=eriData.ing_operacionales||0;
+  const devVtas=eriData.dev_ventas||0;
+  const ingNetos=ingOp-devVtas;
+  const costoVtas=(eriData.costo_ventas||0)+(eriData.costo_prod||0);
+  const utilBruta=ingNetos-costoVtas;
+  const gtosAdmin=eriData.gtos_admin||0;
+  const gtosVentas=eriData.gtos_ventas||0;
+  const utilOp=utilBruta-gtosAdmin-gtosVentas;
+  const otrosIng=(eriData.ing_no_operacionales||0)+(eriData.otros_ing||0);
+  const otrosGtos=eriData.gtos_no_op||0;
+  const utilAntesImp=utilOp+otrosIng-otrosGtos;
+  const impRenta=eriData.imp_renta||0;
+  const utilNeta=utilAntesImp-impRenta;
+
+  function pdfRow(label,val,indent,bold,isTotal){
+    const pad=indent?'padding-left:'+(indent*24)+'px':'';
+    const fw=bold?'font-weight:700':'';
+    const bb=isTotal?'border-top:2px solid #000;border-bottom:1px solid #000':'border-bottom:1px solid #eee';
+    const bg=isTotal?'background:#f0f2f5':'';
+    return `<tr style="${bg}"><td style="${pad};${fw};${bb};padding:4px 8px">${label}</td><td style="text-align:right;${fw};${bb};padding:4px 8px;font-family:monospace;width:160px">${fN(val)}</td></tr>`;
+  }
+
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>EEFF - ${empresa}</title>
+  <style>
+    @page{margin:2cm;size:letter}
+    body{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#000;line-height:1.5;margin:0;padding:20px}
+    .page{page-break-after:always}
+    .header{text-align:center;margin-bottom:20px}
+    .header h2{font-size:14px;margin:4px 0;text-transform:uppercase}
+    .header h3{font-size:13px;margin:4px 0;text-transform:uppercase}
+    .header p{font-size:10px;color:#555;margin:2px 0}
+    table{width:100%;border-collapse:collapse;font-size:10.5px}
+    td{padding:3px 8px}
+    .footer{text-align:center;font-size:9px;color:#888;margin-top:24px;font-style:italic;padding-top:12px;border-top:1px solid #ddd}
+    .signatures{display:flex;justify-content:space-between;margin-top:60px;padding-top:20px}
+    .sig{text-align:center;width:200px}
+    .sig-line{border-top:1px solid #000;padding-top:4px;font-size:9px}
+  </style></head><body>
+  <div class="page">
+    <div class="header">
+      <h2>${empresa}</h2>
+      <p>NIT: ${nit}</p>
+      <h3>Estado de Situación Financiera</h3>
+      <p>Al 31 de diciembre de ${year}</p>
+      <p>(Cifras expresadas en ${monedaLabel})</p>
+    </div>
+    <table>
+      <tr><td colspan="2" style="background:#d4e6f1;font-weight:700;text-transform:uppercase;color:#1a3c6e;padding:6px 8px">ACTIVOS</td></tr>
+      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Activos Corrientes</td></tr>
+      ${pdfRow('Efectivo y equivalentes de efectivo',esfVal('efectivo'),1)}
+      ${pdfRow('Inversiones a corto plazo',esfVal('inv_cp'),1)}
+      ${pdfRow('Deudores comerciales y otras CxC',esfVal('cxc'),1)}
+      ${pdfRow('(-) Deterioro de cartera',esfVal('deterioro_cartera'),1)}
+      ${pdfRow('Inventarios',esfVal('inventarios'),1)}
+      ${pdfRow('Diferidos / Otros activos corrientes',esfVal('diferidos_act'),1)}
+      ${pdfRow('Otros activos corrientes',esfVal('otros_act'),1)}
+      ${pdfRow('TOTAL ACTIVOS CORRIENTES',totalActCorr,0,true,true)}
+      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Activos No Corrientes</td></tr>
+      ${pdfRow('Propiedad, planta y equipo',esfVal('ppe'),1)}
+      ${pdfRow('(-) Depreciación acumulada',esfVal('depreciacion'),1)}
+      ${pdfRow('Activos intangibles',esfVal('intangibles'),1)}
+      ${pdfRow('(-) Amortización acumulada',esfVal('amortizacion'),1)}
+      ${pdfRow('Inversiones a largo plazo',esfVal('inv_lp'),1)}
+      ${pdfRow('Otros activos no corrientes',esfVal('otros_act_nc'),1)}
+      ${pdfRow('Valorizaciones',esfVal('valorizaciones'),1)}
+      ${pdfRow('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr,0,true,true)}
+      ${pdfRow('TOTAL ACTIVOS',totalActivos,0,true,true)}
+      <tr><td colspan="2" style="height:8px"></td></tr>
+      <tr><td colspan="2" style="background:#d4e6f1;font-weight:700;text-transform:uppercase;color:#1a3c6e;padding:6px 8px">PASIVOS</td></tr>
+      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Pasivos Corrientes</td></tr>
+      ${pdfRow('Obligaciones financieras CP',esfVal('oblig_fin_cp'),1)}
+      ${pdfRow('Proveedores',esfVal('proveedores'),1)}
+      ${pdfRow('Cuentas por pagar',esfVal('cxp'),1)}
+      ${pdfRow('Impuestos por pagar',esfVal('impuestos'),1)}
+      ${pdfRow('Obligaciones laborales',esfVal('laborales'),1)}
+      ${pdfRow('Pasivos estimados / Provisiones',esfVal('provisiones'),1)}
+      ${pdfRow('Otros pasivos corrientes',esfVal('otros_pas_c'),1)}
+      ${pdfRow('TOTAL PASIVOS CORRIENTES',totalPasCorr,0,true,true)}
+      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Pasivos No Corrientes</td></tr>
+      ${pdfRow('Obligaciones financieras LP',esfVal('oblig_fin_lp'),1)}
+      ${pdfRow('Diferidos pasivo',esfVal('diferidos_pas'),1)}
+      ${pdfRow('Otros pasivos no corrientes',esfVal('otros_pas'),1)}
+      ${pdfRow('TOTAL PASIVOS NO CORRIENTES',totalPasNoCorr,0,true,true)}
+      ${pdfRow('TOTAL PASIVOS',totalPasivos,0,true,true)}
+      <tr><td colspan="2" style="height:8px"></td></tr>
+      <tr><td colspan="2" style="background:#d4e6f1;font-weight:700;text-transform:uppercase;color:#1a3c6e;padding:6px 8px">PATRIMONIO</td></tr>
+      ${pdfRow('Capital social',esfVal('capital'),1)}
+      ${pdfRow('Superávit de capital',esfVal('superavit_cap'),1)}
+      ${pdfRow('Reservas',esfVal('reservas'),1)}
+      ${pdfRow('Revalorización del patrimonio',esfVal('revalorizacion'),1)}
+      ${pdfRow('Resultado del ejercicio',esfVal('resultado_ej'),1)}
+      ${pdfRow('Resultados de ejercicios anteriores',esfVal('resultados_ant'),1)}
+      ${pdfRow('Superávit por valorizaciones',esfVal('superavit_val'),1)}
+      ${pdfRow('Otros componentes patrimonio',esfVal('otros_pat'),1)}
+      ${pdfRow('TOTAL PATRIMONIO',totalPatrimonio,0,true,true)}
+      <tr><td colspan="2" style="height:8px"></td></tr>
+      ${pdfRow('TOTAL PASIVOS + PATRIMONIO',totalPasPatr,0,true,true)}
+    </table>
+    <div class="signatures">
+      <div class="sig"><div class="sig-line">Representante Legal</div></div>
+      <div class="sig"><div class="sig-line">Contador Público<br>T.P. No. ___________</div></div>
+      <div class="sig"><div class="sig-line">Revisor Fiscal<br>T.P. No. ___________</div></div>
+    </div>
+    <div class="footer">Las notas son parte integral de los estados financieros</div>
+  </div>
+
+  <div class="page">
+    <div class="header">
+      <h2>${empresa}</h2>
+      <p>NIT: ${nit}</p>
+      <h3>Estado de Resultados Integral</h3>
+      <p>${getPeriodoERI()}</p>
+      <p>(Cifras expresadas en ${monedaLabel})</p>
+    </div>
+    <table>
+      ${pdfRow('Ingresos de actividades ordinarias',ingOp,0)}
+      ${pdfRow('(-) Devoluciones, rebajas y descuentos',devVtas,0)}
+      ${pdfRow('= INGRESOS NETOS',ingNetos,0,true,true)}
+      <tr><td colspan="2" style="height:6px"></td></tr>
+      ${pdfRow('(-) Costo de ventas',costoVtas,0)}
+      ${pdfRow('= UTILIDAD BRUTA',utilBruta,0,true,true)}
+      <tr><td colspan="2" style="height:6px"></td></tr>
+      ${pdfRow('(-) Gastos de administración',gtosAdmin,0)}
+      ${pdfRow('(-) Gastos de ventas',gtosVentas,0)}
+      ${pdfRow('= UTILIDAD OPERACIONAL',utilOp,0,true,true)}
+      <tr><td colspan="2" style="height:6px"></td></tr>
+      ${pdfRow('(+) Otros ingresos',otrosIng,0)}
+      ${pdfRow('(-) Otros gastos',otrosGtos,0)}
+      ${pdfRow('= UTILIDAD ANTES DE IMPUESTOS',utilAntesImp,0,true,true)}
+      <tr><td colspan="2" style="height:6px"></td></tr>
+      ${pdfRow('(-) Impuesto de renta',impRenta,0)}
+      ${pdfRow('= UTILIDAD NETA DEL EJERCICIO',utilNeta,0,true,true)}
+    </table>
+    <div class="signatures">
+      <div class="sig"><div class="sig-line">Representante Legal</div></div>
+      <div class="sig"><div class="sig-line">Contador Público<br>T.P. No. ___________</div></div>
+      <div class="sig"><div class="sig-line">Revisor Fiscal<br>T.P. No. ___________</div></div>
+    </div>
+    <div class="footer">Las notas son parte integral de los estados financieros</div>
+  </div>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+/* ═══ EXCEL EXPORT ═══ */
+async function exportExcelEEFF(){
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'000.000.000-0';
+  const moneda=document.getElementById('cfgMoneda').value;
+
+  const wb=new ExcelJS.Workbook();
+  wb.creator='Estados Financieros NIIF - exogenadian.com';
+
+  // ─── Sheet 1: ESF ───
+  const ws1=wb.addWorksheet('Situación Financiera');
+  ws1.columns=[{width:45},{width:22}];
+
+  const hdrFill={type:'fill',fgColor:{argb:'FF1B3A5C'}};
+  const hdrFont={bold:true,color:{argb:'FFFFFFFF'},size:11};
+  const secFill={type:'fill',fgColor:{argb:'FFD4E6F1'}};
+  const secFont={bold:true,color:{argb:'FF1B3A5C'},size:10};
+  const subFill={type:'fill',fgColor:{argb:'FFEEF3F8'}};
+  const totalFill={type:'fill',fgColor:{argb:'FFF0F2F5'}};
+  const numFmt='#,##0';
+  const border={top:{style:'thin'},bottom:{style:'thin'},left:{style:'thin'},right:{style:'thin'}};
+
+  // Header rows
+  ws1.mergeCells('A1:B1');ws1.getCell('A1').value=empresa;ws1.getCell('A1').font={bold:true,size:14};ws1.getCell('A1').alignment={horizontal:'center'};
+  ws1.mergeCells('A2:B2');ws1.getCell('A2').value='NIT: '+nit;ws1.getCell('A2').alignment={horizontal:'center'};
+  ws1.mergeCells('A3:B3');ws1.getCell('A3').value='ESTADO DE SITUACIÓN FINANCIERA';ws1.getCell('A3').font={bold:true,size:12};ws1.getCell('A3').alignment={horizontal:'center'};
+  ws1.mergeCells('A4:B4');ws1.getCell('A4').value=`Al 31 de diciembre de ${year} (Cifras en ${moneda})`;ws1.getCell('A4').alignment={horizontal:'center'};ws1.getCell('A4').font={size:9,color:{argb:'FF666666'}};
+
+  let r=6;
+  function addSec(label){const row=ws1.getRow(r);row.getCell(1).value=label;row.getCell(1).font=secFont;row.getCell(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFD4E6F1'}};row.getCell(2).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFD4E6F1'}};r++}
+  function addSubSec(label){const row=ws1.getRow(r);row.getCell(1).value=label;row.getCell(1).font={bold:true,color:{argb:'FF2E75B6'},size:10};row.getCell(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFEEF3F8'}};row.getCell(2).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFEEF3F8'}};r++}
+  function addRow(label,val,bold){const row=ws1.getRow(r);row.getCell(1).value='    '+label;row.getCell(2).value=val;row.getCell(2).numFmt=numFmt;row.getCell(2).alignment={horizontal:'right'};if(bold){row.getCell(1).font={bold:true};row.getCell(2).font={bold:true}}r++}
+  function addTotal(label,val){const row=ws1.getRow(r);row.getCell(1).value=label;row.getCell(1).font={bold:true,size:10};row.getCell(2).value=val;row.getCell(2).numFmt=numFmt;row.getCell(2).font={bold:true,size:10};row.getCell(2).alignment={horizontal:'right'};row.getCell(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F2F5'}};row.getCell(2).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F2F5'}};r++}
+
+  const totalActCorr=esfVal('efectivo')+esfVal('inv_cp')+esfVal('cxc')+esfVal('deterioro_cartera')+esfVal('inventarios')+esfVal('diferidos_act')+esfVal('otros_act');
+  const totalActNoCorr=esfVal('ppe')+esfVal('depreciacion')+esfVal('intangibles')+esfVal('amortizacion')+esfVal('inv_lp')+esfVal('otros_act_nc')+esfVal('valorizaciones');
+  const totalActivos=totalActCorr+totalActNoCorr;
+  const totalPasCorr=esfVal('oblig_fin_cp')+esfVal('proveedores')+esfVal('cxp')+esfVal('impuestos')+esfVal('laborales')+esfVal('provisiones')+esfVal('otros_pas_c');
+  const totalPasNoCorr=esfVal('oblig_fin_lp')+esfVal('diferidos_pas')+esfVal('otros_pas');
+  const totalPasivos=totalPasCorr+totalPasNoCorr;
+  const totalPatrimonio=esfVal('capital')+esfVal('superavit_cap')+esfVal('reservas')+esfVal('revalorizacion')+esfVal('resultado_ej')+esfVal('resultados_ant')+esfVal('superavit_val')+esfVal('otros_pat');
+
+  addSec('ACTIVOS');addSubSec('Activos Corrientes');
+  addRow('Efectivo y equivalentes de efectivo',esfVal('efectivo'));
+  addRow('Inversiones a corto plazo',esfVal('inv_cp'));
+  addRow('Deudores comerciales y otras CxC',esfVal('cxc'));
+  addRow('(-) Deterioro de cartera',esfVal('deterioro_cartera'));
+  addRow('Inventarios',esfVal('inventarios'));
+  addRow('Diferidos / Otros activos corrientes',esfVal('diferidos_act'));
+  addRow('Otros activos corrientes',esfVal('otros_act'));
+  addTotal('TOTAL ACTIVOS CORRIENTES',totalActCorr);
+  addSubSec('Activos No Corrientes');
+  addRow('Propiedad, planta y equipo',esfVal('ppe'));
+  addRow('(-) Depreciación acumulada',esfVal('depreciacion'));
+  addRow('Activos intangibles',esfVal('intangibles'));
+  addRow('(-) Amortización acumulada',esfVal('amortizacion'));
+  addRow('Inversiones a largo plazo',esfVal('inv_lp'));
+  addRow('Otros activos no corrientes',esfVal('otros_act_nc'));
+  addRow('Valorizaciones',esfVal('valorizaciones'));
+  addTotal('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr);
+  addTotal('TOTAL ACTIVOS',totalActivos);
+  r++;
+  addSec('PASIVOS');addSubSec('Pasivos Corrientes');
+  addRow('Obligaciones financieras CP',esfVal('oblig_fin_cp'));
+  addRow('Proveedores',esfVal('proveedores'));
+  addRow('Cuentas por pagar',esfVal('cxp'));
+  addRow('Impuestos por pagar',esfVal('impuestos'));
+  addRow('Obligaciones laborales',esfVal('laborales'));
+  addRow('Pasivos estimados / Provisiones',esfVal('provisiones'));
+  addRow('Otros pasivos corrientes',esfVal('otros_pas_c'));
+  addTotal('TOTAL PASIVOS CORRIENTES',totalPasCorr);
+  addSubSec('Pasivos No Corrientes');
+  addRow('Obligaciones financieras LP',esfVal('oblig_fin_lp'));
+  addRow('Diferidos pasivo',esfVal('diferidos_pas'));
+  addRow('Otros pasivos no corrientes',esfVal('otros_pas'));
+  addTotal('TOTAL PASIVOS NO CORRIENTES',totalPasNoCorr);
+  addTotal('TOTAL PASIVOS',totalPasivos);
+  r++;
+  addSec('PATRIMONIO');
+  addRow('Capital social',esfVal('capital'));
+  addRow('Superávit de capital',esfVal('superavit_cap'));
+  addRow('Reservas',esfVal('reservas'));
+  addRow('Revalorización del patrimonio',esfVal('revalorizacion'));
+  addRow('Resultado del ejercicio',esfVal('resultado_ej'));
+  addRow('Resultados de ejercicios anteriores',esfVal('resultados_ant'));
+  addRow('Superávit por valorizaciones',esfVal('superavit_val'));
+  addRow('Otros componentes patrimonio',esfVal('otros_pat'));
+  addTotal('TOTAL PATRIMONIO',totalPatrimonio);
+  r++;
+  addTotal('TOTAL PASIVOS + PATRIMONIO',totalPasivos+totalPatrimonio);
+
+  // ─── Sheet 2: ERI ───
+  const ws2=wb.addWorksheet('Resultados Integral');
+  ws2.columns=[{width:45},{width:22}];
+  ws2.mergeCells('A1:B1');ws2.getCell('A1').value=empresa;ws2.getCell('A1').font={bold:true,size:14};ws2.getCell('A1').alignment={horizontal:'center'};
+  ws2.mergeCells('A2:B2');ws2.getCell('A2').value='NIT: '+nit;ws2.getCell('A2').alignment={horizontal:'center'};
+  ws2.mergeCells('A3:B3');ws2.getCell('A3').value='ESTADO DE RESULTADOS INTEGRAL';ws2.getCell('A3').font={bold:true,size:12};ws2.getCell('A3').alignment={horizontal:'center'};
+  ws2.mergeCells('A4:B4');ws2.getCell('A4').value=`Del 1 de enero al 31 de diciembre de ${year} (Cifras en ${moneda})`;ws2.getCell('A4').alignment={horizontal:'center'};ws2.getCell('A4').font={size:9,color:{argb:'FF666666'}};
+
+  const ingOp=eriData.ing_operacionales||0;
+  const devVtas=eriData.dev_ventas||0;
+  const ingNetos=ingOp-devVtas;
+  const costoVtas=(eriData.costo_ventas||0)+(eriData.costo_prod||0);
+  const utilBruta=ingNetos-costoVtas;
+  const gtosAdmin=eriData.gtos_admin||0;
+  const gtosVentas=eriData.gtos_ventas||0;
+  const utilOp=utilBruta-gtosAdmin-gtosVentas;
+  const otrosIng=(eriData.ing_no_operacionales||0)+(eriData.otros_ing||0);
+  const otrosGtos=eriData.gtos_no_op||0;
+  const utilAntesImp=utilOp+otrosIng-otrosGtos;
+  const impRenta=eriData.imp_renta||0;
+  const utilNeta=utilAntesImp-impRenta;
+
+  let r2=6;
+  function addEriRow(label,val,bold){const row=ws2.getRow(r2);row.getCell(1).value=label;row.getCell(2).value=val;row.getCell(2).numFmt=numFmt;row.getCell(2).alignment={horizontal:'right'};if(bold){row.getCell(1).font={bold:true};row.getCell(2).font={bold:true};row.getCell(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F2F5'}};row.getCell(2).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F2F5'}}}r2++}
+
+  addEriRow('Ingresos de actividades ordinarias',ingOp);
+  addEriRow('(-) Devoluciones, rebajas y descuentos',devVtas);
+  addEriRow('= INGRESOS NETOS',ingNetos,true);
+  r2++;
+  addEriRow('(-) Costo de ventas',costoVtas);
+  addEriRow('= UTILIDAD BRUTA',utilBruta,true);
+  r2++;
+  addEriRow('(-) Gastos de administración',gtosAdmin);
+  addEriRow('(-) Gastos de ventas',gtosVentas);
+  addEriRow('= UTILIDAD OPERACIONAL',utilOp,true);
+  r2++;
+  addEriRow('(+) Otros ingresos',otrosIng);
+  addEriRow('(-) Otros gastos',otrosGtos);
+  addEriRow('= UTILIDAD ANTES DE IMPUESTOS',utilAntesImp,true);
+  r2++;
+  addEriRow('(-) Impuesto de renta',impRenta);
+  addEriRow('= UTILIDAD NETA DEL EJERCICIO',utilNeta,true);
+
+  // ─── Sheet 3: Detalle cuentas ───
+  const ws3=wb.addWorksheet('Detalle Cuentas');
+  ws3.columns=[{width:14},{width:40},{width:14},{width:20},{width:16},{width:18}];
+  const hdrRow3=ws3.getRow(1);
+  ['Cuenta','Nombre','Clase','Sección EEFF','Corriente','Saldo'].forEach((h,i)=>{
+    const cell=hdrRow3.getCell(i+1);
+    cell.value=h;cell.font={bold:true,color:{argb:'FFFFFFFF'}};
+    cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1B3A5C'}};
+  });
+  classifiedAccounts.forEach((a,i)=>{
+    const row=ws3.getRow(i+2);
+    row.getCell(1).value=a.code;
+    row.getCell(2).value=a.name;
+    row.getCell(3).value=a.clase;
+    row.getCell(4).value=a.seccion;
+    row.getCell(5).value=a.corriente;
+    row.getCell(6).value=getDisplayValue(a);
+    row.getCell(6).numFmt=numFmt;
+    row.getCell(6).alignment={horizontal:'right'};
+  });
+
+  // Download
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`EEFF_${empresa.replace(/\s+/g,'_')}_${year}.xlsx`;
+  a.click();URL.revokeObjectURL(url);
+}
+
+/* ═══ POLICIES PDF ═══ */
+function exportPoliciesPdf(){
+  const sections=document.querySelectorAll('#revelacionesDoc .policy-section');
+  let content='';
+  sections.forEach(s=>{
+    const title=s.querySelector('.policy-header').textContent;
+    const text=s.querySelector('textarea').value;
+    content+=`<h3 style="color:#1a3c6e;margin:16px 0 8px;font-size:13px">${title}</h3>`;
+    content+=`<div style="white-space:pre-wrap;font-size:11px;line-height:1.7">${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>`;
+  });
+
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'000.000.000-0';
+  const year=document.getElementById('cfgYear').value;
+
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>Políticas Contables - ${empresa}</title>
+  <style>@page{margin:2cm;size:letter}body{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#000;line-height:1.5;margin:0;padding:20px}
+  .header{text-align:center;margin-bottom:24px}
+  .header h2{font-size:14px;margin:4px 0;text-transform:uppercase}
+  .header h3{font-size:13px;margin:4px 0}
+  .header p{font-size:10px;color:#555;margin:2px 0}
+  .footer{text-align:center;font-size:9px;color:#888;margin-top:40px;font-style:italic;padding-top:12px;border-top:1px solid #ddd}
+  </style></head><body>
+  <div class="header">
+    <h2>${empresa}</h2>
+    <p>NIT: ${nit}</p>
+    <h3>POLÍTICAS CONTABLES</h3>
+    <p>Año terminado el 31 de diciembre de ${year}</p>
+  </div>
+  ${content}
+  <div class="footer">Documento generado como borrador. Debe ser revisado y aprobado por la administración de la entidad.</div>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+/* ═══ POLICIES WORD (.doc) ═══ */
+function exportPoliciesWord(){
+  const sections=document.querySelectorAll('#revelacionesDoc .policy-section');
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'000.000.000-0';
+  const year=document.getElementById('cfgYear').value;
+
+  let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body{font-family:Arial,sans-serif;font-size:11pt;line-height:1.6;color:#333}
+h1{font-size:16pt;color:#1B3A5C;text-align:center;margin-bottom:4pt}
+h2{font-size:13pt;color:#1B3A5C;border-bottom:2px solid #2E75B6;padding-bottom:4pt;margin-top:18pt}
+h3{font-size:11pt;color:#2E75B6;margin-top:12pt}
+p{margin:6pt 0;text-align:justify}
+.header{text-align:center;margin-bottom:24pt}
+.header p{margin:2pt 0;font-size:10pt;color:#666}
+table{border-collapse:collapse;width:100%;margin:8pt 0}
+th,td{border:1px solid #ccc;padding:4pt 8pt;font-size:10pt}
+th{background:#D6E4F0;font-weight:bold;color:#1B3A5C}
+</style></head><body>
+<div class="header">
+  <h1>${empresa}</h1>
+  <p>NIT: ${nit}</p>
+  <p><strong>POLÍTICAS CONTABLES</strong></p>
+  <p>Año terminado el 31 de diciembre de ${year}</p>
+</div>`;
+
+  let inTable=false;
+  sections.forEach(s=>{
+    const title=s.querySelector('.policy-header').textContent;
+    const body=s.querySelector('textarea').value;
+    html+=`<h2>${title}</h2>`;
+    inTable=false;
+    body.split('\n').forEach(line=>{
+      const trimmed=line.trim();
+      if(trimmed.startsWith('|')&&trimmed.endsWith('|')){
+        if(trimmed.includes('---')){return}
+        const cells=trimmed.split('|').filter(c=>c.trim());
+        if(!inTable){html+='<table>';inTable=true;
+          html+='<tr>'+cells.map(c=>`<th>${c.trim()}</th>`).join('')+'</tr>';
+        } else {
+          html+='<tr>'+cells.map(c=>`<td>${c.trim()}</td>`).join('')+'</tr>';
+        }
+      } else {
+        if(inTable){html+='</table>';inTable=false}
+        if(trimmed) html+=`<p>${trimmed}</p>\n`;
+      }
+    });
+    if(inTable){html+='</table>';inTable=false}
+  });
+
+  html+=`</body></html>`;
+
+  const blob=new Blob(['\ufeff'+html],{type:'application/msword'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`Políticas_Contables_${empresa.replace(/\s+/g,'_')}_${year}.doc`;
+  a.click();URL.revokeObjectURL(url);
+}
+
+/* ═══ NOTAS A LOS ESTADOS FINANCIEROS ═══ */
+function buildNotasHtml(){
+  const year=document.getElementById('cfgYear').value;
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const nit=document.getElementById('cfgNit').value||'000.000.000-0';
+  const ciudad=document.getElementById('cfgCiudad').value||'Bogotá D.C.';
+  const tipo=document.getElementById('cfgTipoEntidad').value;
+  const tipoLabel=tipo==='pymes'?'NIIF para PYMES (Grupo 2)':tipo==='plenas'?'NIIF Plenas (Grupo 1)':'Contabilidad simplificada (Grupo 3)';
+  const moneda=document.getElementById('cfgMoneda').value;
+  const monedaLabel=moneda==='COP'?'pesos colombianos':'dólares estadounidenses';
+  const grupos=new Set(classifiedAccounts.map(a=>a.grupo));
+
+  function acctsByGrupo(g){return classifiedAccounts.filter(a=>a.grupo===g)}
+  function acctsByGrupos(gs){return classifiedAccounts.filter(a=>gs.includes(a.grupo))}
+  function acctTable(accts){
+    if(!accts.length) return '<p style="color:#999;font-style:italic">No se encontraron cuentas en esta categoría.</p>';
+    let total=0;
+    let h='<table style="width:100%;border-collapse:collapse;font-size:11px;margin:8px 0">';
+    h+='<thead><tr style="background:#D6E4F0"><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;color:#1B3A5C;font-weight:700">Código</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;color:#1B3A5C;font-weight:700">Nombre de la cuenta</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:right;color:#1B3A5C;font-weight:700">Valor ($)</th></tr></thead><tbody>';
+    accts.forEach(a=>{
+      const v=getDisplayValue(a);
+      total+=v;
+      h+=`<tr><td style="border:1px solid #e2e8f0;padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10px">${a.code}</td><td style="border:1px solid #e2e8f0;padding:4px 10px">${a.name}</td><td style="border:1px solid #e2e8f0;padding:4px 10px;text-align:right;font-family:'JetBrains Mono',monospace;${v<0?'color:var(--red)':''}">${fN(v)}</td></tr>`;
+    });
+    h+=`<tr style="background:#f0f2f5;font-weight:700"><td style="border:1px solid #ccc;padding:6px 10px" colspan="2">Total</td><td style="border:1px solid #ccc;padding:6px 10px;text-align:right;font-family:'JetBrains Mono',monospace">${fN(total)}</td></tr>`;
+    h+='</tbody></table>';
+    return h;
+  }
+
+  let noteNum=0;
+  let h=`<div class="eeff-doc">
+    <div class="doc-header">
+      <h2>${empresa}</h2>
+      <p>NIT: ${nit}</p>
+      <h3>Notas a los Estados Financieros</h3>
+      <p>Al 31 de diciembre de ${year}</p>
+      <p style="font-size:10px;color:#888">(Cifras expresadas en ${monedaLabel})</p>
+    </div>`;
+
+  function notaCard(title,bodyHtml){
+    return `<div style="margin-bottom:20px;border:1px solid var(--border);border-radius:8px;overflow:hidden">
+      <div style="background:var(--pri3);padding:10px 16px;font-weight:700;font-size:.95rem;color:var(--pri)">${title}</div>
+      <div style="padding:16px;font-size:.85rem;line-height:1.7">${bodyHtml}</div>
+    </div>`;
+  }
+
+  // Nota 1
+  noteNum++;
+  h+=notaCard(`Nota ${noteNum} - Entidad reportante`,
+    `<p><strong>${empresa}</strong>, identificada con NIT <strong>${nit}</strong>, es una entidad domiciliada en <strong>${ciudad}</strong>, Colombia.</p>
+    <p>La entidad aplica el marco técnico normativo de <strong>${tipoLabel}</strong>.</p>
+    <p>Su objeto social principal comprende: <em>[Describir el objeto social de la entidad]</em>.</p>
+    <p>Los presentes estados financieros corresponden al período comprendido entre el 1 de enero y el 31 de diciembre de ${year}.</p>`);
+
+  // Nota 2
+  noteNum++;
+  h+=notaCard(`Nota ${noteNum} - Bases de presentación`,
+    `<p>Los estados financieros han sido preparados de conformidad con las ${tipoLabel}, adoptadas en Colombia.</p>
+    <p><strong>Moneda funcional y de presentación:</strong> Los estados financieros se presentan en ${monedaLabel} (${moneda}), que es la moneda funcional de la entidad.</p>
+    <p><strong>Hipótesis de negocio en marcha:</strong> La administración ha evaluado la capacidad de la entidad para continuar como negocio en marcha y considera que la entidad tiene los recursos necesarios para continuar operando en un futuro previsible. No se tiene conocimiento de incertidumbres materiales que puedan generar dudas significativas sobre la capacidad de la entidad de continuar como negocio en marcha.</p>
+    <p><strong>Base de medición:</strong> Los estados financieros se preparan sobre la base del costo histórico, excepto por ciertos instrumentos financieros que se miden a valor razonable.</p>`);
+
+  // Nota 3
+  noteNum++;
+  h+=notaCard(`Nota ${noteNum} - Políticas contables significativas`,
+    `<p>Las principales políticas contables aplicadas en la preparación de estos estados financieros se describen en el documento de <strong>Políticas Contables</strong> que hace parte integral de estos estados financieros.</p>
+    <p>Las políticas contables han sido aplicadas de manera uniforme durante el período presentado y son consistentes con las utilizadas en períodos anteriores.</p>`);
+
+  // Nota 4 - Efectivo
+  if(grupos.has('efectivo')){
+    noteNum++;
+    h+=notaCard(`Nota ${noteNum} - Efectivo y equivalentes de efectivo`,
+      `<p>El saldo de efectivo y equivalentes de efectivo al 31 de diciembre de ${year} se compone de:</p>`+acctTable(acctsByGrupo('efectivo')));
+  }
+
+  // Nota 5 - Inversiones
+  if(grupos.has('inv_cp')||grupos.has('inv_lp')){
+    noteNum++;
+    let body='<p>El detalle de las inversiones al 31 de diciembre de '+year+' es el siguiente:</p>';
+    const invCp=acctsByGrupo('inv_cp');
+    const invLp=acctsByGrupo('inv_lp');
+    if(invCp.length){body+='<p><strong>Inversiones a corto plazo:</strong></p>'+acctTable(invCp)}
+    if(invLp.length){body+='<p><strong>Inversiones a largo plazo:</strong></p>'+acctTable(invLp)}
+    h+=notaCard(`Nota ${noteNum} - Inversiones`,body);
+  }
+
+  // Nota 6 - CxC
+  if(grupos.has('cxc')||grupos.has('deterioro_cartera')){
+    noteNum++;
+    let body='<p>El detalle de deudores comerciales y otras cuentas por cobrar al 31 de diciembre de '+year+' es el siguiente:</p>';
+    body+=acctTable(acctsByGrupo('cxc'));
+    const det=acctsByGrupo('deterioro_cartera');
+    if(det.length){body+='<p><strong>Deterioro de cartera:</strong></p>'+acctTable(det)}
+    h+=notaCard(`Nota ${noteNum} - Deudores comerciales y otras cuentas por cobrar`,body);
+  }
+
+  // Nota 7 - Inventarios
+  if(grupos.has('inventarios')){
+    noteNum++;
+    h+=notaCard(`Nota ${noteNum} - Inventarios`,
+      `<p>El detalle de los inventarios al 31 de diciembre de ${year} es el siguiente:</p>`+acctTable(acctsByGrupo('inventarios')));
+  }
+
+  // Nota 8 - PPE
+  if(grupos.has('ppe')||grupos.has('depreciacion')){
+    noteNum++;
+    let body='<p>El detalle de propiedad, planta y equipo al 31 de diciembre de '+year+' es el siguiente:</p>';
+    const ppeAccts=acctsByGrupo('ppe');
+    const depAccts=acctsByGrupo('depreciacion');
+    if(ppeAccts.length||depAccts.length){
+      let totalCosto=0,totalDep=0;
+      let t='<table style="width:100%;border-collapse:collapse;font-size:11px;margin:8px 0">';
+      t+='<thead><tr style="background:#D6E4F0"><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;color:#1B3A5C;font-weight:700">Código</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;color:#1B3A5C;font-weight:700">Concepto</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:right;color:#1B3A5C;font-weight:700">Costo</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:right;color:#1B3A5C;font-weight:700">Depreciación Acum.</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:right;color:#1B3A5C;font-weight:700">Neto</th></tr></thead><tbody>';
+      ppeAccts.forEach(a=>{
+        const v=getDisplayValue(a);
+        totalCosto+=v;
+        t+=`<tr><td style="border:1px solid #e2e8f0;padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10px">${a.code}</td><td style="border:1px solid #e2e8f0;padding:4px 10px">${a.name}</td><td style="border:1px solid #e2e8f0;padding:4px 10px;text-align:right;font-family:'JetBrains Mono',monospace">${fN(v)}</td><td style="border:1px solid #e2e8f0;padding:4px 10px;text-align:right">-</td><td style="border:1px solid #e2e8f0;padding:4px 10px;text-align:right;font-family:'JetBrains Mono',monospace">${fN(v)}</td></tr>`;
+      });
+      depAccts.forEach(a=>{
+        const v=getDisplayValue(a);
+        totalDep+=v;
+        t+=`<tr><td style="border:1px solid #e2e8f0;padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10px">${a.code}</td><td style="border:1px solid #e2e8f0;padding:4px 10px">${a.name}</td><td style="border:1px solid #e2e8f0;padding:4px 10px;text-align:right">-</td><td style="border:1px solid #e2e8f0;padding:4px 10px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--red)">${fN(v)}</td><td style="border:1px solid #e2e8f0;padding:4px 10px;text-align:right;font-family:'JetBrains Mono',monospace;color:var(--red)">${fN(v)}</td></tr>`;
+      });
+      const neto=totalCosto+totalDep;
+      t+=`<tr style="background:#f0f2f5;font-weight:700"><td style="border:1px solid #ccc;padding:6px 10px" colspan="2">Total</td><td style="border:1px solid #ccc;padding:6px 10px;text-align:right;font-family:'JetBrains Mono',monospace">${fN(totalCosto)}</td><td style="border:1px solid #ccc;padding:6px 10px;text-align:right;font-family:'JetBrains Mono',monospace">${fN(totalDep)}</td><td style="border:1px solid #ccc;padding:6px 10px;text-align:right;font-family:'JetBrains Mono',monospace">${fN(neto)}</td></tr>`;
+      t+='</tbody></table>';
+      body+=t;
+    }
+    h+=notaCard(`Nota ${noteNum} - Propiedad, planta y equipo`,body);
+  }
+
+  // Nota 9 - Otros activos
+  const otrosActGrupos=['diferidos_act','intangibles','amortizacion','otros_act_nc','valorizaciones','otros_act'];
+  const otrosActAccts=acctsByGrupos(otrosActGrupos);
+  if(otrosActAccts.length){
+    noteNum++;
+    h+=notaCard(`Nota ${noteNum} - Otros activos`,
+      `<p>El detalle de otros activos al 31 de diciembre de ${year} es el siguiente:</p>`+acctTable(otrosActAccts));
+  }
+
+  // Nota 10 - Obligaciones financieras
+  if(grupos.has('oblig_fin_cp')||grupos.has('oblig_fin_lp')){
+    noteNum++;
+    let body='<p>El detalle de las obligaciones financieras al 31 de diciembre de '+year+' es el siguiente:</p>';
+    const cp=acctsByGrupo('oblig_fin_cp');
+    const lp=acctsByGrupo('oblig_fin_lp');
+    if(cp.length){body+='<p><strong>Corto plazo:</strong></p>'+acctTable(cp)}
+    if(lp.length){body+='<p><strong>Largo plazo:</strong></p>'+acctTable(lp)}
+    h+=notaCard(`Nota ${noteNum} - Obligaciones financieras`,body);
+  }
+
+  // Nota 11 - Proveedores y CxP
+  if(grupos.has('proveedores')||grupos.has('cxp')){
+    noteNum++;
+    let body='<p>El detalle de proveedores y cuentas por pagar al 31 de diciembre de '+year+' es el siguiente:</p>';
+    const prov=acctsByGrupo('proveedores');
+    const cxp=acctsByGrupo('cxp');
+    if(prov.length){body+='<p><strong>Proveedores:</strong></p>'+acctTable(prov)}
+    if(cxp.length){body+='<p><strong>Cuentas por pagar:</strong></p>'+acctTable(cxp)}
+    h+=notaCard(`Nota ${noteNum} - Proveedores y cuentas por pagar`,body);
+  }
+
+  // Nota 12 - Impuestos por pagar
+  if(grupos.has('impuestos')){
+    noteNum++;
+    h+=notaCard(`Nota ${noteNum} - Impuestos, gravamenes y tasas`,
+      `<p>El detalle de impuestos por pagar al 31 de diciembre de ${year} es el siguiente:</p>`+acctTable(acctsByGrupo('impuestos')));
+  }
+
+  // Nota 13 - Obligaciones laborales
+  if(grupos.has('laborales')){
+    noteNum++;
+    h+=notaCard(`Nota ${noteNum} - Obligaciones laborales`,
+      `<p>El detalle de las obligaciones laborales al 31 de diciembre de ${year} es el siguiente:</p>`+acctTable(acctsByGrupo('laborales')));
+  }
+
+  // Nota 14 - Provisiones
+  if(grupos.has('provisiones')){
+    noteNum++;
+    h+=notaCard(`Nota ${noteNum} - Pasivos estimados y provisiones`,
+      `<p>El detalle de los pasivos estimados y provisiones al 31 de diciembre de ${year} es el siguiente:</p>`+acctTable(acctsByGrupo('provisiones')));
+  }
+
+  // Nota 15 - Capital social
+  if(grupos.has('capital')||grupos.has('superavit_cap')){
+    noteNum++;
+    let body='<p>El detalle del capital social al 31 de diciembre de '+year+' es el siguiente:</p>';
+    body+=acctTable(acctsByGrupos(['capital','superavit_cap']));
+    h+=notaCard(`Nota ${noteNum} - Capital social`,body);
+  }
+
+  // Nota 16 - Reservas
+  if(grupos.has('reservas')){
+    noteNum++;
+    h+=notaCard(`Nota ${noteNum} - Reservas`,
+      `<p>El detalle de las reservas al 31 de diciembre de ${year} es el siguiente:</p>`+acctTable(acctsByGrupo('reservas')));
+  }
+
+  // Nota 17 - Resultado del ejercicio
+  {
+    noteNum++;
+    let body='<p>El resultado del ejercicio se compone de la siguiente manera:</p>';
+    const resEj=acctsByGrupo('resultado_ej');
+    if(resEj.length){body+='<p><strong>Resultado del ejercicio:</strong></p>'+acctTable(resEj)}
+    if(esfData.resultado_periodo&&esfData.resultado_periodo!==0){
+      body+=`<p><strong>Resultado del período (calculado de ingresos menos gastos):</strong> $${fN(esfData.resultado_periodo)}</p>`;
+    }
+    const resAnt=acctsByGrupo('resultados_ant');
+    if(resAnt.length){body+='<p><strong>Resultados de ejercicios anteriores:</strong></p>'+acctTable(resAnt)}
+    h+=notaCard(`Nota ${noteNum} - Resultados del ejercicio`,body);
+  }
+
+  // Nota 18 - Resultados anteriores (solo si hay cuentas)
+  if(grupos.has('resultados_ant')){
+    noteNum++;
+    h+=notaCard(`Nota ${noteNum} - Resultados de ejercicios anteriores`,
+      `<p>El detalle de los resultados acumulados de ejercicios anteriores al 31 de diciembre de ${year} es el siguiente:</p>`+acctTable(acctsByGrupo('resultados_ant')));
+  }
+
+  // Nota 19 - Ingresos operacionales
+  if(grupos.has('ing_operacionales')||grupos.has('dev_ventas')){
+    noteNum++;
+    let body='<p>El detalle de los ingresos operacionales del período terminado el 31 de diciembre de '+year+' es el siguiente:</p>';
+    const ing=acctsByGrupo('ing_operacionales');
+    if(ing.length) body+=acctTable(ing);
+    const dev=acctsByGrupo('dev_ventas');
+    if(dev.length){body+='<p><strong>(-) Devoluciones, rebajas y descuentos:</strong></p>'+acctTable(dev)}
+    h+=notaCard(`Nota ${noteNum} - Ingresos de actividades ordinarias`,body);
+  }
+
+  // Nota 20 - Gastos de administración y ventas
+  if(grupos.has('gtos_admin')||grupos.has('gtos_ventas')){
+    noteNum++;
+    let body='<p>El detalle de los gastos de administración y ventas del período terminado el 31 de diciembre de '+year+' es el siguiente:</p>';
+    const admin=acctsByGrupo('gtos_admin');
+    const ventas=acctsByGrupo('gtos_ventas');
+    if(admin.length){body+='<p><strong>Gastos de administración:</strong></p>'+acctTable(admin)}
+    if(ventas.length){body+='<p><strong>Gastos de ventas:</strong></p>'+acctTable(ventas)}
+    h+=notaCard(`Nota ${noteNum} - Gastos de administración y ventas`,body);
+  }
+
+  // Nota 21 - Otros ingresos y gastos
+  if(grupos.has('ing_no_operacionales')||grupos.has('otros_ing')||grupos.has('gtos_no_op')){
+    noteNum++;
+    let body='<p>El detalle de otros ingresos y gastos no operacionales del período terminado el 31 de diciembre de '+year+' es el siguiente:</p>';
+    const oing=acctsByGrupos(['ing_no_operacionales','otros_ing']);
+    const ogto=acctsByGrupo('gtos_no_op');
+    if(oing.length){body+='<p><strong>Otros ingresos:</strong></p>'+acctTable(oing)}
+    if(ogto.length){body+='<p><strong>Otros gastos:</strong></p>'+acctTable(ogto)}
+    h+=notaCard(`Nota ${noteNum} - Otros ingresos y gastos`,body);
+  }
+
+  // Nota 22 - Impuesto de renta
+  if(grupos.has('imp_renta')){
+    noteNum++;
+    h+=notaCard(`Nota ${noteNum} - Impuesto de renta`,
+      `<p>El detalle del gasto por impuesto de renta del período terminado el 31 de diciembre de ${year} es el siguiente:</p>`+acctTable(acctsByGrupo('imp_renta')));
+  }
+
+  // Nota 23 - Costo de ventas
+  if(grupos.has('costo_ventas')||grupos.has('costo_prod')){
+    noteNum++;
+    h+=notaCard(`Nota ${noteNum} - Costo de ventas`,
+      `<p>El detalle del costo de ventas del período terminado el 31 de diciembre de ${year} es el siguiente:</p>`+acctTable(acctsByGrupos(['costo_ventas','costo_prod'])));
+  }
+
+  // Nota - Hechos posteriores
+  noteNum++;
+  h+=notaCard(`Nota ${noteNum} - Hechos posteriores al período sobre el que se informa`,
+    `<p><em>Entre la fecha de cierre de los estados financieros (31 de diciembre de ${year}) y la fecha de su autorizacion para su publicacion, no han ocurrido hechos que requieran ajuste o revelacion en los presentes estados financieros.</em></p>
+    <p style="color:#999;font-size:.8rem">[Edite este texto si existen hechos posteriores significativos que deban revelarse]</p>`);
+
+  // Nota - Contingencias
+  noteNum++;
+  h+=notaCard(`Nota ${noteNum} - Contingencias`,
+    `<p><em>A la fecha de emisión de los presentes estados financieros, la administración no tiene conocimiento de contingencias significativas que puedan afectar la situación financiera de la entidad.</em></p>
+    <p style="color:#999;font-size:.8rem">[Edite este texto si existen contingencias que deban revelarse, incluyendo procesos judiciales, reclamaciones o situaciones que puedan generar obligaciones futuras]</p>`);
+
+  h+=`<div style="text-align:center;font-size:9px;color:#999;margin-top:16px;font-style:italic">Las notas son parte integral de los estados financieros</div>`;
+  h+=`</div>`;
+  return h;
+}
+
+function buildNotas(){
+  document.getElementById('notasBody').innerHTML=buildNotasHtml();
+}
+
+/* ═══ NOTAS PDF ═══ */
+function exportNotasPdf(){
+  const content=document.getElementById('notasContent');
+  if(!content||!content.innerHTML.trim()){alert('Primero genera los estados financieros para ver las notas.');return}
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>Notas EEFF - ${empresa}</title>
+  <style>@page{margin:2cm;size:letter}body{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#000;line-height:1.5;margin:0;padding:20px}
+  table{border-collapse:collapse;width:100%;margin:8px 0}
+  th,td{border:1px solid #ccc;padding:4px 8px;font-size:10px}
+  th{background:#D6E4F0;font-weight:bold;color:#1B3A5C}
+  h2{font-size:14px;margin:4px 0;text-transform:uppercase;text-align:center}
+  h3{font-size:13px;margin:4px 0;text-transform:uppercase;text-align:center;color:#1a3c6e}
+  p{font-size:10.5px;margin:4px 0;line-height:1.6}
+  .footer{text-align:center;font-size:9px;color:#888;margin-top:40px;font-style:italic;padding-top:12px;border-top:1px solid #ddd}
+  </style></head><body>${content.innerHTML}
+  <div class="footer">Las notas son parte integral de los estados financieros</div>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),500);
+}
+
+/* ═══ NOTAS WORD (.doc) ═══ */
+function exportNotasWord(){
+  const content=document.getElementById('notasContent');
+  if(!content||!content.innerHTML.trim()){alert('Primero genera los estados financieros para ver las notas.');return}
+  const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
+  const year=document.getElementById('cfgYear').value;
+
+  let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><style>
+body{font-family:Arial,sans-serif;font-size:11pt;line-height:1.6;color:#333}
+h1{font-size:16pt;color:#1B3A5C;text-align:center;margin-bottom:4pt}
+h2{font-size:14pt;color:#1B3A5C;text-align:center}
+h3{font-size:13pt;color:#1B3A5C;text-align:center}
+p{margin:6pt 0;text-align:justify}
+table{border-collapse:collapse;width:100%;margin:8pt 0}
+th,td{border:1px solid #ccc;padding:4pt 8pt;font-size:10pt}
+th{background:#D6E4F0;font-weight:bold;color:#1B3A5C}
+</style></head><body>`;
+  html+=content.innerHTML;
+  html+=`</body></html>`;
+
+  const blob=new Blob(['\ufeff'+html],{type:'application/msword'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`Notas_EEFF_${empresa.replace(/\s+/g,'_')}_${year}.doc`;
+  a.click();URL.revokeObjectURL(url);
+}
+
+/* ═══ NAVIGATION OVERRIDES ═══ */
+
+/* ═══ CHECK PRO URL PARAM ═══ */
+(function(){
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('pro')==='1'){
+    // Enable comparative upload
+    const dzComp=document.getElementById('dzComp');
+    if(dzComp){dzComp.style.opacity='1';const inp=document.getElementById('fileComp');if(inp)inp.disabled=false}
+    // Hide paywall card when PRO - use attribute selector
+    document.querySelectorAll('[style*="border:2px solid #F59E0B"],[style*="border: 2px solid #F59E0B"]').forEach(c=>{
+      c.style.display='none';
+    });
+  }
+})();
+</script>
+</body>
+</html>
