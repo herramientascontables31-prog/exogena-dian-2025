@@ -1589,6 +1589,18 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         fila += 1
     resultados['F2276 Rentas Trabajo'] = len(dic26)
 
+    # Si no es PRO, reemplazar hoja F2276 con mensaje
+    if not es_pro:
+        wb.remove(wb["F2276 Rentas Trabajo"])
+        ws_pro2 = wb.create_sheet("F2276 Rentas Trabajo (PRO)")
+        ws_pro2.append(["⚠️ El formato F2276 Rentas de Trabajo requiere suscripción PRO"])
+        ws_pro2.append([""])
+        ws_pro2.append(["Suscríbete en: https://exogenadian.com/#planes"])
+        ws_pro2.append(["Precio: $14.500/mes — Acceso a todas las herramientas"])
+        ws_pro2.append([""])
+        ws_pro2.append([f"Se detectaron {len(dic26)} registros para el F2276 que se generarán con PRO."])
+        resultados['F2276 Rentas Trabajo'] = f'🔒 PRO ({len(dic26)} registros)'
+
     # ========== RESUMEN ==========
     n_con_dir = sum(1 for d in direc.values() if d.get('dir', ''))
     n_de_central = sum(1 for nit in direc if nit in dir_central and dir_central.get(nit, {}).get('dir', ''))
