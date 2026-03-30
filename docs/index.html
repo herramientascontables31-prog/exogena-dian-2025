@@ -136,27 +136,27 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .step p{font-size:.88rem;color:var(--gray-500);line-height:1.45}
 
 /* ===== PRICING ===== */
-.pricing{padding:90px 48px;position:relative;overflow:hidden;background:linear-gradient(160deg,var(--green-900) 0%,#065F46 40%,var(--green-700) 100%)}
-.pricing::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");pointer-events:none}
-.pricing .section-tag{color:var(--green-300);text-align:center;position:relative;z-index:1}
-.pricing .section-title{color:#fff;text-align:center;position:relative;z-index:1}
-.pricing .section-desc{color:rgba(255,255,255,.5);text-align:center;max-width:520px;margin:0 auto 48px;position:relative;z-index:1}
+.pricing{padding:90px 48px;position:relative;overflow:hidden;background:#fff}
+.pricing::before{content:none}
+.pricing .section-tag{color:var(--green-600);text-align:center;position:relative;z-index:1}
+.pricing .section-title{color:var(--gray-900);text-align:center;position:relative;z-index:1}
+.pricing .section-desc{color:var(--gray-500);text-align:center;max-width:520px;margin:0 auto 48px;position:relative;z-index:1}
 .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1020px;margin:0 auto;position:relative;z-index:1;align-items:stretch}
-.price-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:22px;padding:36px 26px 28px;display:flex;flex-direction:column;backdrop-filter:blur(10px);transition:all .35s}
-.price-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(0,0,0,.25);border-color:rgba(255,255,255,.15)}
-.price-card.pop{background:rgba(16,185,129,.1);border-color:rgba(52,211,153,.3);transform:scale(1.03);box-shadow:0 12px 40px rgba(16,185,129,.12)}
+.price-card{background:#fff;border:2px solid var(--gray-200);border-radius:22px;padding:36px 26px 28px;display:flex;flex-direction:column;transition:all .35s}
+.price-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(0,0,0,.1);border-color:var(--green-400)}
+.price-card.pop{background:var(--green-50);border-color:var(--green-400);transform:scale(1.03);box-shadow:0 12px 40px rgba(16,185,129,.12)}
 .price-card.pop:hover{transform:scale(1.03) translateY(-5px)}
-.pop-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--green-400),var(--green-300));color:var(--green-900);font-size:.65rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 18px;border-radius:30px;white-space:nowrap;box-shadow:0 4px 14px rgba(52,211,153,.3)}
-.price-label{color:rgba(255,255,255,.4);font-size:.82rem;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:4px;font-weight:600}
-.price-name{color:#fff;font-size:1.35rem;font-weight:700;margin-bottom:18px}
+.pop-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--green-600),var(--green-500));color:#fff;font-size:.65rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 18px;border-radius:30px;white-space:nowrap;box-shadow:0 4px 14px rgba(52,211,153,.3)}
+.price-label{color:var(--gray-400);font-size:.82rem;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:4px;font-weight:600}
+.price-name{color:var(--green-700);font-size:1.35rem;font-weight:700;margin-bottom:18px}
 .price-val{display:flex;align-items:baseline;gap:2px;margin-bottom:4px}
-.price-sign{color:rgba(255,255,255,.4);font-size:1rem;font-weight:700;align-self:flex-start;margin-top:6px}
-.price-num{color:#fff;font-size:2.6rem;font-weight:800;line-height:1;letter-spacing:-2px}
-.price-per{color:rgba(255,255,255,.3);font-size:.78rem;margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid rgba(255,255,255,.07)}
+.price-sign{color:var(--gray-400);font-size:1rem;font-weight:700;align-self:flex-start;margin-top:6px}
+.price-num{color:var(--gray-900);font-size:2.6rem;font-weight:800;line-height:1;letter-spacing:-2px}
+.price-per{color:var(--gray-400);font-size:.78rem;margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--gray-200)}
 .price-list{list-style:none;padding:0;margin:0 0 28px;flex:1}
-.price-list li{color:rgba(255,255,255,.6);font-size:.95rem;padding:5px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
-.price-list li::before{content:'✓';color:var(--green-400);font-weight:700;flex-shrink:0}
-.price-list li.hl{color:var(--green-300);font-weight:600}
+.price-list li{color:var(--gray-600);font-size:.95rem;padding:5px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.price-list li::before{content:'✓';color:var(--green-600);font-weight:700;flex-shrink:0}
+.price-list li.hl{color:var(--green-700);font-weight:600}
 .wompi-btn-container{margin-top:auto}
 .wompi-btn-container form{width:100%}
 .wompi-btn-container form button,
@@ -184,10 +184,10 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
   transition:all .25s;box-shadow:0 4px 14px rgba(52,211,153,.3);text-decoration:none}
 .wompi-fallback:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(52,211,153,.4)}
 .price-foot{text-align:center;margin-top:36px;position:relative;z-index:1}
-.price-trust{color:rgba(255,255,255,.35);font-size:.82rem;margin-bottom:14px}
-.price-trust span{color:rgba(255,255,255,.55)}
+.price-trust{color:var(--gray-400);font-size:.82rem;margin-bottom:14px}
+.price-trust span{color:var(--gray-600)}
 .pay-methods{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
-.pay-methods span{color:rgba(255,255,255,.3);font-size:.72rem;padding:4px 10px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.02)}
+.pay-methods span{color:var(--gray-500);font-size:.72rem;padding:4px 10px;border:1px solid var(--gray-200);border-radius:8px;background:var(--gray-50)}
 
 
 
@@ -265,11 +265,11 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
     <div>ExógenaDIAN<small>Portal Contable</small></div>
   </a>
   <div class="nav-links" id="navLinks">
-    <a href="#herramientas">Herramientas</a>
-    <a href="#exogena">Exógena</a>
-    <a href="#noticias">Noticias</a>
-    <a href="#planes">PRO</a>
-    <a href="#planes" class="btn btn-green btn-sm">Suscribirse →</a>
+    <a href="retencion350.html">Retención 350</a>
+    <a href="iva300.html">IVA 300</a>
+    <a href="estadosfinancieros.html">Estados Financieros</a>
+    <a href="conciliacion.html">Conciliación</a>
+    <a href="#planes" class="btn btn-green btn-sm">Suscribirse PRO →</a>
   </div>
   <button class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
 </nav>
@@ -340,11 +340,11 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 
   <div class="tools-grid">
     <!-- EXOGENA -->
-    <a href="https://wa.me/573156178610?text=Hola%2C%20quiero%20generar%20mi%20Ex%C3%B3gena%20DIAN" target="_blank" class="tool-card featured" style="text-decoration:none;color:inherit">
+    <a href="#exogena" class="tool-card featured" style="text-decoration:none;color:inherit">
       <div class="tool-icon tmi-green">📊</div>
       <h3>Información Exógena</h3>
       <p class="tool-desc">Genera los 10 formatos de exógena desde tu balance de prueba. Excel organizado listo para prevalidar en el MUISCA.</p>
-      <div class="tool-status ts-live">Disponible · Contáctanos</div>
+      <div class="tool-status ts-live">Disponible ahora</div>
     </a>
     <!-- RETENCION -->
     <a href="retencion350.html" class="tool-card" style="text-decoration:none;color:inherit">
