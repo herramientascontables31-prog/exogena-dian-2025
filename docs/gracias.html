@@ -205,54 +205,87 @@
 
 <div class="container">
   <div class="success-icon">✅</div>
-  <h1>¡Gracias por tu compra!</h1>
-  <p class="subtitle">Tu pago fue procesado exitosamente. Ahora envíanos tu balance de prueba por WhatsApp y te entregamos tu Excel listo.</p>
+  <h1>¡Gracias por tu suscripción!</h1>
+  <p class="subtitle">Tu pago fue procesado exitosamente. Estamos generando tu clave PRO...</p>
 
   <div class="ref-box" id="refBox" style="display:none;">
     🧾 Referencia: <strong id="refId"></strong>
   </div>
 
-  <div class="whatsapp-box">
-    <p class="whatsapp-label">Siguiente paso</p>
-    <p class="whatsapp-msg">Haz clic en el botón de abajo para enviarnos tu balance de prueba por tercero. Te responderemos con tu Excel listo en menos de 24 horas.</p>
-    <a id="waBtn" href="#" target="_blank" class="whatsapp-btn">
-      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Enviar balance por WhatsApp
-    </a>
+  <!-- Clave PRO generada -->
+  <div id="proKeyBox" style="display:none;background:#fff;border:3px solid var(--green-400);border-radius:16px;padding:28px;margin-bottom:24px;animation:fadeUp .6s .2s ease-out both">
+    <p style="font-size:.82rem;color:var(--gray-500);margin-bottom:8px;text-transform:uppercase;letter-spacing:2px;font-weight:700">Tu clave PRO</p>
+    <div style="background:var(--green-50);border:2px dashed var(--green-300);border-radius:12px;padding:16px;margin-bottom:16px">
+      <p id="proKeyDisplay" style="font-family:monospace;font-size:1.8rem;font-weight:900;color:var(--green-700);letter-spacing:3px;text-align:center"></p>
+    </div>
+    <button onclick="navigator.clipboard.writeText(document.getElementById('proKeyDisplay').textContent);this.textContent='✅ Copiada!';setTimeout(()=>this.textContent='📋 Copiar clave',2000)" style="background:var(--green-600);color:#fff;border:none;padding:10px 24px;border-radius:10px;font-family:'Outfit',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;width:100%;transition:all .2s">📋 Copiar clave</button>
+    <p style="font-size:.82rem;color:var(--gray-400);margin-top:12px;line-height:1.5">Guarda esta clave. Ingrésala en cualquier herramienta de ExógenaDIAN para activar las funciones PRO.</p>
+  </div>
+
+  <!-- Loading state -->
+  <div id="proLoading" style="background:#fff;border:1.5px solid var(--gray-200);border-radius:16px;padding:28px;margin-bottom:24px">
+    <p style="font-size:1rem;color:var(--gray-500)">⏳ Generando tu clave PRO...</p>
+  </div>
+
+  <!-- Error state -->
+  <div id="proError" style="display:none;background:#FFF1F2;border:1.5px solid #FFE4E6;border-radius:16px;padding:28px;margin-bottom:24px">
+    <p style="font-size:.95rem;color:#BE123C;margin-bottom:12px">No se pudo generar la clave automáticamente.</p>
+    <p style="font-size:.85rem;color:var(--gray-500)">Contáctanos por WhatsApp con tu referencia de pago y te enviamos tu clave manualmente.</p>
   </div>
 
   <div class="steps-box">
-    <p class="steps-title">¿Qué pasa ahora?</p>
-    <div class="step-item"><div class="step-num">1</div> Haz clic en el botón de WhatsApp</div>
-    <div class="step-item"><div class="step-num">2</div> Adjunta tu balance de prueba por tercero (Excel o CSV)</div>
-    <div class="step-item"><div class="step-num">3</div> Nosotros lo procesamos y te devolvemos el Excel listo</div>
-    <div class="step-item"><div class="step-num">4</div> Cargas el archivo en el prevalidador DIAN y listo</div>
+    <p class="steps-title">¿Cómo uso mi clave PRO?</p>
+    <div class="step-item"><div class="step-num">1</div> Copia tu clave PRO de arriba</div>
+    <div class="step-item"><div class="step-num">2</div> Abre cualquier herramienta (IVA 300, Exógena, Estados Financieros)</div>
+    <div class="step-item"><div class="step-num">3</div> Ingresa tu clave en el campo "Clave PRO" y dale Activar</div>
+    <div class="step-item"><div class="step-num">4</div> ¡Listo! PRO se activa en todas las herramientas automáticamente</div>
   </div>
 
-  <div class="format-info">
-    <p><strong>📋 Recuerda:</strong> Tu balance debe tener esta estructura:</p>
-    <p>Columna A: Cuenta (PUC) · Columna B: Nombre · Columna C: Tipo doc · Columna D: NIT · Columna E: Razón social · Columnas F–H: Débito, Crédito, Saldo</p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;animation:fadeUp .6s .5s ease-out both">
+    <a href="https://exogenadian.com/iva300.html" style="padding:12px 24px;background:var(--green-600);color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:.9rem">IVA 300 →</a>
+    <a href="https://exogena-dian-2025-7xizj4qbb3glxpjzndjr4z.streamlit.app/" target="_blank" style="padding:12px 24px;background:var(--green-600);color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:.9rem">Exógena →</a>
+    <a href="https://exogenadian.com/estadosfinancieros.html" style="padding:12px 24px;background:var(--green-600);color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:.9rem">Estados Financieros →</a>
   </div>
 
+  <a href="https://wa.me/573156178610?text=Hola%2C%20acabo%20de%20suscribirme%20a%20PRO%20y%20necesito%20ayuda" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:#25D366;color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:.9rem;margin-bottom:20px">💬 ¿Necesitas ayuda? WhatsApp</a>
+
+  <br>
   <a href="https://exogenadian.com" class="back-link">← Volver al inicio</a>
 </div>
 
 <script>
+  const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwXpPw2_LS_qg6fyOhVPqHd4PFbEhSVDSHXpoegOErLL8mxDH_6jBLs2YIMz_xkg0-KnQ/exec';
+
   const params = new URLSearchParams(window.location.search);
-  const referencia = params.get('reference') || params.get('ref') || '';
-  const transaccionId = params.get('id') || '';
+  const referencia = params.get('reference') || params.get('ref') || params.get('id') || 'WEB-'+Date.now();
 
   if (referencia) {
     document.getElementById('refBox').style.display = 'inline-flex';
     document.getElementById('refId').textContent = referencia;
   }
 
-  let mensaje = 'Hola, acabo de pagar el servicio de Exógena DIAN.';
-  if (referencia) mensaje += ' Mi referencia de pago es: ' + referencia + '.';
-  if (transaccionId) mensaje += ' ID transacción: ' + transaccionId + '.';
-  mensaje += ' Les envío mi balance de prueba.';
-
-  document.getElementById('waBtn').href = 'https://wa.me/573156178610?text=' + encodeURIComponent(mensaje);
+  // Generar clave PRO automáticamente
+  async function generarClavePro(){
+    try{
+      const url=APPS_SCRIPT_URL+'?ref='+encodeURIComponent(referencia)+'&nombre=Suscriptor+Wompi&email=';
+      const resp=await fetch(url);
+      const data=await resp.json();
+      if(data.clave){
+        document.getElementById('proLoading').style.display='none';
+        document.getElementById('proKeyBox').style.display='block';
+        document.getElementById('proKeyDisplay').textContent=data.clave;
+        // Guardar en localStorage para activar PRO automáticamente
+        localStorage.setItem('exogenadian_pro_key',data.clave);
+      }else{
+        throw new Error('No key returned');
+      }
+    }catch(e){
+      console.error('Error generando clave:',e);
+      document.getElementById('proLoading').style.display='none';
+      document.getElementById('proError').style.display='block';
+    }
+  }
+  generarClavePro();
 </script>
 </body>
 </html>
