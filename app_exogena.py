@@ -119,6 +119,12 @@ st.markdown("""
     .privacy-box p { color: #2c3e50; font-size: 0.88rem; line-height: 1.5; margin: 0.3rem 0; }
     .privacy-box .privacy-icon { font-size: 1.3rem; margin-right: 0.3rem; }
     .stDownloadButton > button { background-color: #1F4E79 !important; color: white !important; font-size: 1.1rem !important; padding: 0.5rem 2rem !important; }
+    /* Mejorar el file uploader */
+    [data-testid="stFileUploader"] { border: 2px solid #2E75B6 !important; border-radius: 12px !important; padding: 8px !important; background: #f8fafc !important; }
+    [data-testid="stFileUploader"]:hover { border-color: #1B3A5C !important; background: #EFF6FF !important; }
+    [data-testid="stFileUploader"] button { background: #2E75B6 !important; color: white !important; border-radius: 8px !important; font-weight: 600 !important; }
+    [data-testid="stFileUploader"] small { color: #6B7280 !important; }
+    [data-testid="stFileUploader"] section { padding: 12px !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -2171,12 +2177,24 @@ else:
     st.sidebar.success(f"📚 Directorio centralizado: {len(dir_central)} terceros")
 
 # === CARGA DE ARCHIVOS ===
-st.markdown("### 📁 Paso 1: Cargue su balance de prueba por tercero")
+st.markdown("""
+<div style="background: linear-gradient(135deg, #EFF6FF 0%, #ECFDF5 100%); border-radius: 16px; padding: 32px; margin: 20px 0; border: 2px dashed #2E75B6; text-align: center;">
+    <p style="font-size: 2.5rem; margin-bottom: 8px;">📊</p>
+    <h3 style="color: #1B3A5C; margin-bottom: 8px; font-size: 1.3rem;">Cargue su Balance de Prueba por Tercero</h3>
+    <p style="color: #6B7280; font-size: 0.9rem; margin-bottom: 4px;">Archivo Excel (.xlsx o .xls) con columnas: Cuenta, Nombre, NIT, Razón Social, Débitos, Créditos, Saldo</p>
+    <p style="color: #9CA3AF; font-size: 0.78rem;">El archivo se procesa 100% en la nube y se elimina al finalizar</p>
+</div>
+""", unsafe_allow_html=True)
+
 uploaded_file = st.file_uploader(
-    "Archivo Excel del Balance de Prueba por Tercero",
+    "Seleccione o arrastre su archivo aquí",
     type=["xlsx", "xls"],
-    help="Balance de prueba por tercero con columnas: Cuenta, Nombre, NIT, Razón Social, Débitos, Créditos, Saldo Final"
+    help="Balance de prueba por tercero con columnas: Cuenta, Nombre, NIT, Razón Social, Débitos, Créditos, Saldo Final",
+    label_visibility="collapsed"
 )
+
+if not uploaded_file:
+    st.info("👆 **Haga clic en \"Browse files\" o arrastre su archivo Excel** para comenzar a generar los formatos de exógena.")
 
 with st.expander("📋 Opciones adicionales", expanded=False):
     col_a, col_b = st.columns(2)
