@@ -125,6 +125,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <h1><span>EEFF</span> Estados Financieros NIIF</h1>
     <p>Generador automático desde balance de prueba</p>
   </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
+
+  <!-- PRO activation bar -->
+  <div style="display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span id="proBadge"></span>
+      <span style="font-size:.85rem;color:var(--muted)" id="proStatus">Versión gratuita — Algunas funciones requieren PRO</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center" id="proActivation">
+      <input type="text" id="proKeyInput" placeholder="Clave PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:140px">
+      <button onclick="activarPro()" class="btn btn-primary" style="padding:6px 16px;font-size:.82rem">Activar</button>
+      <a href="https://exogenadian.com/#planes" target="_blank" style="font-size:.78rem;color:var(--pri2);text-decoration:none">Suscribirse →</a>
+    </div>
+  </div>
+
   <div class="steps">
     <div class="step-pill active" id="sp1"><span class="num">1</span> Inicio</div>
     <div class="step-pill" id="sp2"><span class="num">2</span> Columnas</div>
@@ -260,6 +274,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border-radius:8px">
         <h3 style="font-size:1.1rem;margin-bottom:8px;color:#92400E">Versión PRO</h3>
         <p style="color:#A16207;font-size:.85rem;max-width:500px;margin:0 auto 12px">Desbloquea: <strong>Notas a los Estados Financieros</strong> autogeneradas con detalle por cuenta, estados financieros <strong>comparativos</strong> (año vs año) y descarga Word completa con notas.</p>
+        <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:16px">
+          <input type="text" id="proKeyInputPaywall" placeholder="Clave PRO" style="padding:8px 14px;border:1px solid #D97706;border-radius:8px;font-size:.85rem;width:160px">
+          <button onclick="activarProFromPaywall()" class="btn btn-primary" style="padding:8px 18px;font-size:.85rem;background:#D97706;border-color:#D97706">Activar</button>
+        </div>
         <div class="wompi-btn-container" style="max-width:260px;margin:0 auto">
           <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="2500000" data-reference="EEFF-PRO-001" data-redirect-url="https://exogenadian.com/estadosfinancieros.html?pro=1"></script>
         </div>
@@ -277,6 +295,85 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 </div>
 
 <script>
+/* ═══ PRO VALIDATION ═══ */
+const PRO_SHEET_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vQc7cTur8DOZ_Kqkpqf7WmbzFT4im5efh0gYzIix4HE9pYp5B24OSDaOCKWjuU5YVXAMZeMGYkVE1eH/pub?gid=0&single=true&output=csv';
+let proUnlocked=false;
+
+async function validarClavePro(clave){
+  try{
+    const resp=await fetch(PRO_SHEET_URL);
+    const csv=await resp.text();
+    const lines=csv.split('\n').slice(1);
+    for(const line of lines){
+      const cols=line.split(',');
+      const k=cols[0]?.trim();
+      const estado=cols[2]?.trim().toLowerCase();
+      if(k===clave && (estado==='activo'||estado==='si'||estado==='sí')){
+        return true;
+      }
+    }
+  }catch(e){console.error('Error validando PRO:',e)}
+  return false;
+}
+
+async function initPro(){
+  const savedKey=localStorage.getItem('exogenadian_pro_key');
+  if(savedKey){
+    const valid=await validarClavePro(savedKey);
+    if(valid){proUnlocked=true;updateProUI();return}
+    else{localStorage.removeItem('exogenadian_pro_key')}
+  }
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('pro')==='1'){proUnlocked=true;updateProUI()}
+}
+
+function updateProUI(){
+  const badge=document.getElementById('proBadge');
+  if(badge) badge.innerHTML=proUnlocked?'<span style="background:#059669;color:#fff;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700">✅ PRO activo</span>':'';
+  const status=document.getElementById('proStatus');
+  if(status) status.textContent=proUnlocked?'Todas las funciones desbloqueadas':'Versión gratuita — Algunas funciones requieren PRO';
+  const activation=document.getElementById('proActivation');
+  if(activation) activation.style.display=proUnlocked?'none':'flex';
+  const pw=document.getElementById('proPaywall');
+  if(pw&&proUnlocked) pw.style.display='none';
+  // Enable comparative upload if PRO
+  if(proUnlocked){
+    const dzComp=document.getElementById('dzComp');
+    if(dzComp){dzComp.style.opacity='1';const inp=document.getElementById('fileComp');if(inp)inp.disabled=false}
+  }
+}
+
+async function activarPro(){
+  const clave=document.getElementById('proKeyInput')?.value?.trim();
+  if(!clave){alert('Ingresa tu clave PRO');return}
+  const valid=await validarClavePro(clave);
+  if(valid){
+    proUnlocked=true;
+    localStorage.setItem('exogenadian_pro_key',clave);
+    updateProUI();
+    alert('✅ PRO activado correctamente');
+  }else{
+    alert('❌ Clave inválida o inactiva. Verifica tu clave o suscríbete en exogenadian.com');
+  }
+}
+
+async function activarProFromPaywall(){
+  const clave=document.getElementById('proKeyInputPaywall')?.value?.trim();
+  if(!clave){alert('Ingresa tu clave PRO');return}
+  const valid=await validarClavePro(clave);
+  if(valid){
+    proUnlocked=true;
+    localStorage.setItem('exogenadian_pro_key',clave);
+    updateProUI();
+    alert('✅ PRO activado correctamente');
+  }else{
+    alert('❌ Clave inválida o inactiva. Verifica tu clave o suscríbete en exogenadian.com');
+  }
+}
+
+// Init PRO on load
+(function(){if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){initPro()})}else{initPro()}})();
+
 /* ═══ GLOBALS ═══ */
 let rawData=[], classifiedAccounts=[], esfData={}, eriData={};
 let detectedHeaderRow=-1;
@@ -1298,8 +1395,6 @@ function renderRevelaciones(){
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
   const nit=document.getElementById('cfgNit').value||'000.000.000-0';
   const ciudad=document.getElementById('cfgCiudad').value||'Bogotá D.C.';
-  const isPro=(new URLSearchParams(window.location.search)).get('pro')==='1';
-
   let h='';
 
   // 1. PORTADA
@@ -1319,7 +1414,7 @@ function renderRevelaciones(){
 
   // 5. NOTAS A LOS ESTADOS FINANCIEROS (PRO)
   h+=sectionDivider('NOTAS A LOS ESTADOS FINANCIEROS');
-  if(isPro){
+  if(proUnlocked){
     h+=`<div style="padding:24px">`+buildNotasHtml()+`</div>`;
   } else {
     h+=`<div style="position:relative;min-height:400px">
@@ -1778,8 +1873,7 @@ ${firmaBlock}
 }
 
 function exportRevelacionesWordPro(){
-  const isPro=(new URLSearchParams(window.location.search)).get('pro')==='1';
-  if(!isPro){alert('La versión con Notas detalladas es una función PRO.\\n\\nDesbloquea PRO para descargar las Revelaciones completas con notas por cuenta.');return}
+  if(!proUnlocked){alert('La versión con Notas detalladas es una función PRO.\\n\\nDesbloquea PRO para descargar las Revelaciones completas con notas por cuenta.');return}
 
   const year=document.getElementById('cfgYear').value;
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
@@ -2614,19 +2708,7 @@ th{background:#D6E4F0;font-weight:bold;color:#1B3A5C}
 
 /* ═══ NAVIGATION OVERRIDES ═══ */
 
-/* ═══ CHECK PRO URL PARAM ═══ */
-(function(){
-  const params=new URLSearchParams(window.location.search);
-  if(params.get('pro')==='1'){
-    // Enable comparative upload
-    const dzComp=document.getElementById('dzComp');
-    if(dzComp){dzComp.style.opacity='1';const inp=document.getElementById('fileComp');if(inp)inp.disabled=false}
-    // Hide paywall card when PRO - use attribute selector
-    document.querySelectorAll('[style*="border:2px solid #F59E0B"],[style*="border: 2px solid #F59E0B"]').forEach(c=>{
-      c.style.display='none';
-    });
-  }
-})();
+/* ═══ PRO CHECK (handled by initPro on load) ═══ */
 </script>
 </body>
 </html>

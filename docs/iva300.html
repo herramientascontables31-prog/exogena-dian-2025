@@ -143,6 +143,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <h1><span>300</span> Declaración de IVA</h1>
     <p>Generador automático de borrador</p>
   </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
+
+  <!-- PRO activation bar -->
+  <div style="display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span id="proBadge"></span>
+      <span style="font-size:.85rem;color:var(--muted)" id="proStatus">Versión gratuita — Algunas funciones requieren PRO</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center" id="proActivation">
+      <input type="text" id="proKeyInput" placeholder="Clave PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:140px">
+      <button onclick="activarPro()" class="btn btn-primary" style="padding:6px 16px;font-size:.82rem">Activar</button>
+      <a href="https://exogenadian.com/#planes" target="_blank" style="font-size:.78rem;color:var(--pri2);text-decoration:none">Suscribirse →</a>
+    </div>
+  </div>
+
   <div class="steps">
     <div class="step-pill active" id="sp1"><span class="num">1</span> Inicio</div>
     <div class="step-pill" id="sp2"><span class="num">2</span> Columnas</div>
@@ -182,7 +196,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div class="card hidden" id="proPaywall" style="border:2px solid #F59E0B">
       <div style="text-align:center;padding:20px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border-radius:8px">
         <h3 style="font-size:1.1rem;margin-bottom:8px;color:#92400E">Función PRO</h3>
-        <p style="color:#A16207;font-size:.85rem;max-width:400px;margin:0 auto 16px">Accede al análisis con facturación electrónica DIAN. Paga y se activa automáticamente.</p>
+        <p style="color:#A16207;font-size:.85rem;max-width:400px;margin:0 auto 16px">Accede al análisis con facturación electrónica DIAN. Paga y se activa automáticamente, o ingresa tu clave PRO.</p>
+        <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:16px">
+          <input type="text" id="proKeyInputPaywall" placeholder="Clave PRO" style="padding:8px 14px;border:1px solid #D97706;border-radius:8px;font-size:.85rem;width:160px">
+          <button onclick="activarProFromPaywall()" class="btn btn-primary" style="padding:8px 18px;font-size:.85rem;background:#D97706;border-color:#D97706">Activar</button>
+        </div>
         <div class="wompi-btn-container" style="max-width:260px;margin:0 auto">
           <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="2500000" data-reference="IVA-PRO-001" data-redirect-url="https://exogenadian.com/iva300.html?pro=1"></script>
           <a href="https://wa.me/573156178610?text=Hola%2C%20quiero%20PRO%20para%20IVA%20300%20%2B%20cruce%20DIAN" target="_blank" class="wompi-fallback" id="fallback-pro" style="display:none;padding:12px 24px;border-radius:10px;background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;font-weight:700;text-decoration:none;font-family:inherit;font-size:.9rem;text-align:center">Contratar por WhatsApp →</a>
@@ -569,6 +587,77 @@ const IVA_KEYWORDS={
   reteiva_pract:['retencion.*iva','rete.*iva','reteiva','iva.*retenido','le.*practicaron'],
   reteiva_pract_terc:['retencion.*iva.*practicada','iva.*retenido.*tercero','reteiva.*pract'],
 };
+
+/* ═══ PRO VALIDATION ═══ */
+const PRO_SHEET_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vQc7cTur8DOZ_Kqkpqf7WmbzFT4im5efh0gYzIix4HE9pYp5B24OSDaOCKWjuU5YVXAMZeMGYkVE1eH/pub?gid=0&single=true&output=csv';
+let proUnlocked=false;
+
+async function validarClavePro(clave){
+  try{
+    const resp=await fetch(PRO_SHEET_URL);
+    const csv=await resp.text();
+    const lines=csv.split('\n').slice(1);
+    for(const line of lines){
+      const cols=line.split(',');
+      const k=cols[0]?.trim();
+      const estado=cols[2]?.trim().toLowerCase();
+      if(k===clave && (estado==='activo'||estado==='si'||estado==='sí')){
+        return true;
+      }
+    }
+  }catch(e){console.error('Error validando PRO:',e)}
+  return false;
+}
+
+async function initPro(){
+  const savedKey=localStorage.getItem('exogenadian_pro_key');
+  if(savedKey){
+    const valid=await validarClavePro(savedKey);
+    if(valid){proUnlocked=true;updateProUI();return}
+    else{localStorage.removeItem('exogenadian_pro_key')}
+  }
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('pro')==='1'){proUnlocked=true;updateProUI()}
+}
+
+function updateProUI(){
+  const badge=document.getElementById('proBadge');
+  if(badge) badge.innerHTML=proUnlocked?'<span style="background:#059669;color:#fff;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700">✅ PRO activo</span>':'';
+  const status=document.getElementById('proStatus');
+  if(status) status.textContent=proUnlocked?'Todas las funciones desbloqueadas':'Versión gratuita — Algunas funciones requieren PRO';
+  const activation=document.getElementById('proActivation');
+  if(activation) activation.style.display=proUnlocked?'none':'flex';
+  const pw=document.getElementById('proPaywall');
+  if(pw&&proUnlocked) pw.classList.add('hidden');
+}
+
+async function activarPro(){
+  const clave=document.getElementById('proKeyInput')?.value?.trim();
+  if(!clave){alert('Ingresa tu clave PRO');return}
+  const valid=await validarClavePro(clave);
+  if(valid){
+    proUnlocked=true;
+    localStorage.setItem('exogenadian_pro_key',clave);
+    updateProUI();
+    alert('✅ PRO activado correctamente');
+  }else{
+    alert('❌ Clave inválida o inactiva. Verifica tu clave o suscríbete en exogenadian.com');
+  }
+}
+
+async function activarProFromPaywall(){
+  const clave=document.getElementById('proKeyInputPaywall')?.value?.trim();
+  if(!clave){alert('Ingresa tu clave PRO');return}
+  const valid=await validarClavePro(clave);
+  if(valid){
+    proUnlocked=true;
+    localStorage.setItem('exogenadian_pro_key',clave);
+    updateProUI();
+    alert('✅ PRO activado correctamente');
+  }else{
+    alert('❌ Clave inválida o inactiva. Verifica tu clave o suscríbete en exogenadian.com');
+  }
+}
 
 /* ═══ GLOBALS ═══ */
 let rawData=[], parsedAccounts=[], mappings=[], result300={};
@@ -1838,7 +1927,7 @@ td{font-size:8px;padding:2px 4px;border-bottom:1px solid #e0e0e0}
 }
 
 function exportXls300Pro(){
-  if(!dianUnlocked){
+  if(!proUnlocked){
     if(confirm('La descarga en Excel es una función PRO.\n\n¿Deseas ir al paso 5 para activar PRO?\n(También puedes descargar PDF gratis)')){
       goStep(5);
     }
@@ -2492,18 +2581,12 @@ document.addEventListener('DOMContentLoaded',function(){
       if(!hasBtn){const fb=container.querySelector('.wompi-fallback');if(fb)fb.style.display='block'}
     });
   },5000);
-  // Check URL for PRO unlock (viene del redirect de Wompi después de pagar)
-  const params=new URLSearchParams(window.location.search);
-  if(params.get('pro')==='1'||params.get('unlocked')==='1'){
-    dianUnlocked=true;
-    // Ocultar paywall si existe
-    const pw=document.getElementById('proPaywall');
-    if(pw)pw.classList.add('hidden');
-  }
+  // PRO validation on load
+  initPro();
 });
 
 /* ═══ CRUCE LISTADO DIAN (PRO) ═══ */
-let dianUnlocked=true; // TODO: cambiar a false antes de producción
+// proUnlocked is managed by the PRO validation system above
 let modoActual='balance'; // 'balance', 'dian', 'comparar'
 
 function setModo(modo){
@@ -2522,7 +2605,7 @@ function setModo(modo){
   document.getElementById('uploadDian').classList.toggle('hidden',!needsDian);
 
   // PRO paywall
-  if((modo==='dian'||modo==='comparar')&&!dianUnlocked){
+  if((modo==='dian'||modo==='comparar')&&!proUnlocked){
     document.getElementById('proPaywall').classList.remove('hidden');
   }else{
     document.getElementById('proPaywall').classList.add('hidden');
@@ -2530,7 +2613,7 @@ function setModo(modo){
 }
 
 function iniciarProceso(){
-  if((modoActual==='dian'||modoActual==='comparar')&&!dianUnlocked){
+  if((modoActual==='dian'||modoActual==='comparar')&&!proUnlocked){
     alert('Activa PRO para usar el listado DIAN. Paga con el botón de arriba.');
     return;
   }

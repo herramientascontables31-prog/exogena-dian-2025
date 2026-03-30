@@ -50,19 +50,61 @@ def verificar_clave(clave_ingresada):
             return False, "", "🚫 Tu acceso está **desactivado**. Contacta al administrador."
     return False, "", "❌ Contraseña incorrecta. Verifica tu compra en exogenadian.com"
 
-# Sin autenticación — acceso libre. F1001 requiere suscripción PRO.
-# PRO se activa con parámetro ?pro=1 en la URL
-import urllib.parse
-query_params = st.query_params
-es_pro = query_params.get("pro", "0") == "1"
+# === PRO VALIDATION ===
+PRO_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQc7cTur8DOZ_Kqkpqf7WmbzFT4im5efh0gYzIix4HE9pYp5B24OSDaOCKWjuU5YVXAMZeMGYkVE1eH/pub?gid=0&single=true&output=csv"
+
+@st.cache_data(ttl=300)
+def cargar_claves_pro():
+    try:
+        df = pd.read_csv(PRO_SHEET_URL, dtype=str)
+        df.columns = df.columns.str.strip().str.lower()
+        claves = {}
+        for _, row in df.iterrows():
+            clave = str(row.get('clave', '')).strip()
+            estado = str(row.get('estado', '')).strip().lower()
+            nombre = str(row.get('nombre', '')).strip()
+            if clave and clave.lower() != 'nan':
+                claves[clave] = {'activo': estado in ('activo', 'si', 'sí', '1', 'true'), 'nombre': nombre}
+        return claves
+    except:
+        return {}
+
+def verificar_pro(clave):
+    if clave == CLAVE_ADMIN:
+        return True, "Administrador"
+    claves = cargar_claves_pro()
+    if clave in claves and claves[clave]['activo']:
+        return True, claves[clave]['nombre']
+    return False, ""
+
+if "es_pro" not in st.session_state:
+    st.session_state.es_pro = False
+    st.session_state.pro_nombre = ""
+
+es_pro = st.session_state.es_pro
 
 st.sidebar.markdown("### 📊 Exógena DIAN 2025")
 st.sidebar.markdown("---")
 if es_pro:
-    st.sidebar.success("✅ PRO activo — Todos los formatos")
+    st.sidebar.success(f"✅ PRO activo — {st.session_state.pro_nombre}")
+    if st.sidebar.button("Cerrar PRO"):
+        st.session_state.es_pro = False
+        st.session_state.pro_nombre = ""
+        st.rerun()
 else:
-    st.sidebar.info("🆓 Versión gratuita — F1001 requiere PRO")
-    st.sidebar.markdown("[🔑 Suscribirse PRO →](https://exogenadian.com/#planes)")
+    st.sidebar.info("🆓 Versión gratuita")
+    st.sidebar.markdown("F1001 y F2276 requieren PRO")
+    with st.sidebar.expander("🔑 Activar PRO"):
+        clave_pro = st.text_input("Clave PRO", type="password", placeholder="Ej: PRO-XXXXX")
+        if st.button("Activar", use_container_width=True):
+            valida, nombre = verificar_pro(clave_pro)
+            if valida:
+                st.session_state.es_pro = True
+                st.session_state.pro_nombre = nombre
+                st.rerun()
+            else:
+                st.error("❌ Clave inválida o inactiva")
+    st.sidebar.markdown("[💳 Suscribirse PRO →](https://exogenadian.com/#planes)")
 st.sidebar.markdown("[← Volver a ExógenaDIAN](https://exogenadian.com)")
 
 # === ESTILOS ===
