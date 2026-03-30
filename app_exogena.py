@@ -50,45 +50,20 @@ def verificar_clave(clave_ingresada):
             return False, "", "🚫 Tu acceso está **desactivado**. Contacta al administrador."
     return False, "", "❌ Contraseña incorrecta. Verifica tu compra en exogenadian.com"
 
-if "autenticado" not in st.session_state:
-    st.session_state.autenticado = False
-    st.session_state.nombre_cliente = ""
+# Sin autenticación — acceso libre. F1001 requiere suscripción PRO.
+# PRO se activa con parámetro ?pro=1 en la URL
+import urllib.parse
+query_params = st.query_params
+es_pro = query_params.get("pro", "0") == "1"
 
-if not st.session_state.autenticado:
-    st.markdown("""
-    <div style="max-width: 450px; margin: 80px auto; text-align: center;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 0.2rem;">📊</h1>
-        <h2 style="font-family: serif; font-size: 1.8rem; color: #0B1D3A; margin-bottom: 0.5rem;">Exógena DIAN 2025</h2>
-        <p style="color: #64748B; font-size: 0.95rem; margin-bottom: 2rem;">Ingresa tu contraseña de acceso para continuar</p>
-    </div>
-    """, unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        clave = st.text_input("Contraseña", type="password", placeholder="Ingresa tu contraseña aquí")
-        if st.button("Ingresar", use_container_width=True, type="primary"):
-            valida, nombre, msg_error = verificar_clave(clave)
-            if valida:
-                st.session_state.autenticado = True
-                st.session_state.nombre_cliente = nombre
-                st.rerun()
-            else:
-                st.error(msg_error)
-        st.markdown("""
-        <div style="text-align: center; margin-top: 2rem;">
-            <p style="color: #94a3b8; font-size: 0.82rem;">
-                ¿No tienes contraseña? <a href="https://exogenadian.com/#precios" target="_blank" style="color: #1F4E79;">Compra tu acceso aquí</a>
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
-    st.stop()
-
-if st.session_state.get('nombre_cliente'):
-    st.sidebar.markdown(f"### 👤 {st.session_state.nombre_cliente}")
-    st.sidebar.markdown("---")
-    if st.sidebar.button("🚪 Cerrar sesión"):
-        st.session_state.autenticado = False
-        st.session_state.nombre_cliente = ""
-        st.rerun()
+st.sidebar.markdown("### 📊 Exógena DIAN 2025")
+st.sidebar.markdown("---")
+if es_pro:
+    st.sidebar.success("✅ PRO activo — Todos los formatos")
+else:
+    st.sidebar.info("🆓 Versión gratuita — F1001 requiere PRO")
+    st.sidebar.markdown("[🔑 Suscribirse PRO →](https://exogenadian.com/#planes)")
+st.sidebar.markdown("[← Volver a ExógenaDIAN](https://exogenadian.com)")
 
 # === ESTILOS ===
 st.markdown("""
@@ -855,7 +830,7 @@ def buscar_concepto(cta, params, nom_cta="", tabla_keywords=None):
     return ""
 
 # === PROCESAMIENTO PRINCIPAL (CON TODAS LAS CORRECCIONES) ===
-def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impuestos=True, dir_central=None):
+def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impuestos=True, dir_central=None, es_pro=False):
     if col_map is None:
         col_map = detectar_columnas(df_balance)
 
@@ -1137,6 +1112,18 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         zebra(ws, fila)
         fila += 1
     resultados['F1001 Pagos'] = len(final)
+
+    # Si no es PRO, reemplazar hoja F1001 con mensaje
+    if not es_pro:
+        wb.remove(wb["F1001 Pagos"])
+        ws_pro = wb.create_sheet("F1001 Pagos (PRO)", 0)
+        ws_pro.append(["⚠️ El formato F1001 Pagos requiere suscripción PRO"])
+        ws_pro.append([""])
+        ws_pro.append(["Suscríbete en: https://exogenadian.com/#planes"])
+        ws_pro.append(["Precio: $14.500/mes — Acceso a todas las herramientas"])
+        ws_pro.append([""])
+        ws_pro.append([f"Se detectaron {len(final)} registros para el F1001 que se generarán con PRO."])
+        resultados['F1001 Pagos'] = f'🔒 PRO ({len(final)} registros)'
 
     # =====================================================================
     # F1003 — Retenciones que le practicaron
@@ -2200,6 +2187,7 @@ if uploaded_file:
                     col_map=col_map,
                     cierra_impuestos=cierra_impuestos,
                     dir_central=dir_central,
+                    es_pro=es_pro,
                 )
         except Exception as e:
             st.error(f"❌ Error al procesar: {e}")
