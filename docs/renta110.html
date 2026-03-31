@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario 110 — Declaracion de Renta Personas Juridicas | ExogenaDIAN</title>
+<meta name="description" content="Genera GRATIS el borrador del formulario 110 de renta para personas juridicas. Calculos automaticos: renta liquida, presuntiva, impuesto con tarifas progresivas, anticipo, saldo a pagar. Excel con formulas.">
+<meta name="keywords" content="formulario 110 renta 2025, declaracion renta personas juridicas, renta liquida gravable, impuesto renta Colombia, depuracion renta, anticipo renta, calculadora renta juridicas">
+<link rel="canonical" href="https://exogenadian.com/renta110.html">
+<meta property="og:title" content="Formulario 110 Renta Juridicas — Borrador Automatico | ExogenaDIAN">
+<meta property="og:description" content="Genera GRATIS el borrador del F110 de renta. Calculos automaticos con tarifas progresivas 2025.">
+<meta property="og:url" content="https://exogenadian.com/renta110.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#548235;--green2:#E2EFDA;--red:#CC0000;--amber:#D97706;--amber2:#FFF8E1;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);padding:28px 32px;border-radius:16px;margin-bottom:24px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:1.5rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.header h1 span{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:600}
+.header p{opacity:.8;font-size:.85rem;margin-top:4px}
+.header-right{text-align:right;font-size:.8rem;opacity:.7}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.btn{padding:10px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--pri2);color:#fff}.btn-primary:hover{background:var(--pri);transform:translateY(-1px)}
+.btn-success{background:var(--green);color:#fff}.btn-success:hover{opacity:.9}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--pri2);color:var(--pri)}
+.actions{display:flex;gap:12px;justify-content:center;margin-top:20px}
+.alert{padding:14px 18px;border-radius:8px;font-size:.85rem;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.alert-info{background:var(--pri3);color:var(--pri);border:1px solid #B4C6E7}
+
+/* ── DIAN FORM STYLES ── */
+.dian-form{border:2px solid #000;font-family:Arial,Helvetica,sans-serif;font-size:11px;background:#fff;max-width:1100px;margin:0 auto}
+.dian-top{display:grid;grid-template-columns:80px 1fr 120px;border-bottom:2px solid #000}
+.dian-top-left{background:#1a3c6e;color:#fff;display:flex;align-items:center;justify-content:center;padding:8px;font-size:9px;text-align:center;font-weight:700;line-height:1.2;border-right:1px solid #000}
+.dian-top-center{padding:6px 12px}
+.dian-top-center .dian-title{font-size:13px;font-weight:700;text-align:center;margin:2px 0}
+.dian-top-center .dian-subtitle{font-size:9px;color:#555;text-align:center}
+.dian-top-right{background:#1a3c6e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;font-family:'JetBrains Mono',monospace;border-left:1px solid #000}
+.dian-sec{background:#d4e6f1;padding:5px 10px;font-weight:700;font-size:10px;border-bottom:1px solid #000;text-transform:uppercase;color:#1a3c6e;letter-spacing:.3px}
+.f110-grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #000}
+.f110-col{border-right:1px solid #ccc}
+.f110-col:last-child{border-right:none}
+.f110-row{display:grid;grid-template-columns:1fr 40px 140px;border-bottom:1px solid #ddd;font-size:10px;min-height:26px}
+.f110-row:hover{background:#f5f8fc}
+.f110-row .f-label{padding:3px 8px;font-size:9.5px;display:flex;align-items:center}
+.f110-row .f-cas{display:flex;align-items:center;justify-content:center;font-size:8px;color:#888;font-family:'JetBrains Mono',monospace;background:#f9f9f9;border-left:1px solid #eee;border-right:1px solid #eee}
+.f110-row .f-val{padding:2px 6px;display:flex;align-items:center;justify-content:flex-end}
+.f110-row .f-val input{border:none;background:transparent;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;width:100%;outline:none;padding:2px 4px;color:#ccc}
+.f110-row .f-val input.filled{font-weight:700;color:#1a3c6e;background:#edf4ff}
+.f110-row .f-val input.computed{font-weight:700;color:#2E7D32;background:#E8F5E9;cursor:default}
+.f110-row.f-total{background:#f0f2f5;font-weight:700}
+.f110-row.f-total .f-label{font-weight:700;color:#1a3c6e}
+.f110-row.f-result{background:#d4e6f1}
+.f110-row.f-result .f-label{font-weight:700;color:#1a3c6e}
+.f110-row.f-result .f-val input{font-size:11px;font-weight:800}
+.f110-datos{display:grid;grid-template-columns:60px 1fr 60px 1fr;border-bottom:2px solid #000;font-size:10px}
+.f110-datos>div{padding:4px 8px;border-right:1px solid #ccc}
+.f110-datos .lbl{font-size:8px;color:#666;display:block}.f110-datos .val{font-weight:700}
+.dian-footer{padding:8px 12px;font-size:8px;color:#888;text-align:center;border-top:1px solid #ccc;background:#fafafa}
+.dian-footer strong{color:#1a3c6e}
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.config-item{display:flex;flex-direction:column;gap:4px}
+.config-item label{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.config-item input,.config-item select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit}
+.config-item input:focus,.config-item select:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 3px rgba(46,117,182,.15)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center}
+.stat-card .val{font-size:1.3rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.stat-card .lbl{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:4px}
+.stat-card.blue .val{color:var(--pri2)}.stat-card.green .val{color:var(--green)}.stat-card.amber .val{color:var(--amber)}.stat-card.red .val{color:var(--red)}
+@media(max-width:900px){.f110-grid{grid-template-columns:1fr}.config-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:'DM Sans',sans-serif">
+  <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem"><div style="width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900">E</div>ExogenaDIAN</a>
+  <div style="display:flex;gap:16px;align-items:center">
+    <a href="exogena.html" style="font-size:.82rem;color:#059669;text-decoration:none;font-weight:600">Exogena</a>
+    <a href="iva300.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">IVA 300</a>
+    <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">← Inicio</a>
+  </div>
+</div>
+<div class="container">
+  <div class="header"><div>
+    <h1><span>110</span> Declaracion de Renta</h1>
+    <p>Personas Juridicas · AG 2025 · Borrador con calculos automaticos</p>
+  </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
+
+  <div class="alert alert-info"><span>💡</span><div>Llena las casillas en <strong>blanco</strong> y el formulario calcula automaticamente las casillas en <strong style="color:#2E7D32">verde</strong>. Todos los valores en pesos colombianos, redondeados a miles ($1.000).</div></div>
+
+  <!-- Datos del declarante -->
+  <div class="card">
+    <div class="card-title"><span>🏢</span> Datos del Declarante</div>
+    <div class="config-grid">
+      <div class="config-item"><label>5. NIT</label><input type="text" id="cfgNit" placeholder="Ej: 900875335" oninput="recalcular()"></div>
+      <div class="config-item"><label>11. Razon Social</label><input type="text" id="cfgRazon" placeholder="Ej: MI EMPRESA SAS"></div>
+      <div class="config-item"><label>1. Ano Gravable</label><input type="number" id="cfgYear" value="2025"></div>
+      <div class="config-item"><label>24. Actividad Economica</label><input type="text" id="cfgActividad" placeholder="Ej: 6201"></div>
+    </div>
+  </div>
+
+  <!-- FORMULARIO 110 -->
+  <div class="dian-form">
+    <div class="dian-top">
+      <div class="dian-top-left">DIAN<br>Colombia</div>
+      <div class="dian-top-center">
+        <div class="dian-title">Declaracion de Renta y Complementarios</div>
+        <div class="dian-subtitle">Personas Juridicas y Asimiladas · Privada · AG 2025</div>
+      </div>
+      <div class="dian-top-right">110</div>
+    </div>
+
+    <!-- PATRIMONIO + RENTA CONTINUACION (2 columnas) -->
+    <div class="f110-grid">
+      <!-- COLUMNA IZQUIERDA -->
+      <div class="f110-col">
+        <div class="dian-sec">Patrimonio</div>
+        <div class="f110-row"><div class="f-label">Efectivo y equivalentes</div><div class="f-cas">36</div><div class="f-val"><input id="c36" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Inversiones e instrumentos financieros</div><div class="f-cas">37</div><div class="f-val"><input id="c37" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Cuentas, documentos y arrend. financiero x cobrar</div><div class="f-cas">38</div><div class="f-val"><input id="c38" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Inventarios</div><div class="f-cas">39</div><div class="f-val"><input id="c39" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Activos intangibles</div><div class="f-cas">40</div><div class="f-val"><input id="c40" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Activos biologicos</div><div class="f-cas">41</div><div class="f-val"><input id="c41" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Propiedades, planta y equipo, prop. inversion</div><div class="f-cas">42</div><div class="f-val"><input id="c42" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Otros activos</div><div class="f-cas">43</div><div class="f-val"><input id="c43" oninput="recalcular()"></div></div>
+        <div class="f110-row f-total"><div class="f-label">Total patrimonio bruto (36 a 43)</div><div class="f-cas">44</div><div class="f-val"><input id="c44" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Pasivos</div><div class="f-cas">45</div><div class="f-val"><input id="c45" oninput="recalcular()"></div></div>
+        <div class="f110-row f-total"><div class="f-label">Total patrimonio liquido (44 - 45)</div><div class="f-cas">46</div><div class="f-val"><input id="c46" class="computed" readonly></div></div>
+
+        <div class="dian-sec">Ingresos</div>
+        <div class="f110-row"><div class="f-label">Ingresos brutos actividades ordinarias</div><div class="f-cas">47</div><div class="f-val"><input id="c47" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Ingresos financieros</div><div class="f-cas">48</div><div class="f-val"><input id="c48" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Dividendos y/o participaciones (no constit.)</div><div class="f-cas">49</div><div class="f-val"><input id="c49" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Dividendos y/o participaciones (sec 30 ET)</div><div class="f-cas">50</div><div class="f-val"><input id="c50" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Dividendos gravadas recibidas</div><div class="f-cas">51</div><div class="f-val"><input id="c51" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Dividendos gravadas recibidas (ext)</div><div class="f-cas">52</div><div class="f-val"><input id="c52" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Dividendos gravadas al 7.5%</div><div class="f-cas">53</div><div class="f-val"><input id="c53" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Dividendos gravadas a tarifa general</div><div class="f-cas">54</div><div class="f-val"><input id="c54" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Otros ingresos</div><div class="f-cas">57</div><div class="f-val"><input id="c57" oninput="recalcular()"></div></div>
+        <div class="f110-row f-total"><div class="f-label">Total ingresos brutos</div><div class="f-cas">58</div><div class="f-val"><input id="c58" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Devoluciones, rebajas y descuentos</div><div class="f-cas">59</div><div class="f-val"><input id="c59" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Ingresos no constitutivos de renta</div><div class="f-cas">60</div><div class="f-val"><input id="c60" oninput="recalcular()"></div></div>
+        <div class="f110-row f-total"><div class="f-label">Total ingresos netos (58 - 59 - 60)</div><div class="f-cas">61</div><div class="f-val"><input id="c61" class="computed" readonly></div></div>
+
+        <div class="dian-sec">Costos y Deducciones</div>
+        <div class="f110-row"><div class="f-label">Costos</div><div class="f-cas">62</div><div class="f-val"><input id="c62" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Gastos de administracion</div><div class="f-cas">63</div><div class="f-val"><input id="c63" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Gastos de distribucion y ventas</div><div class="f-cas">64</div><div class="f-val"><input id="c64" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Gastos financieros</div><div class="f-cas">65</div><div class="f-val"><input id="c65" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Otros gastos y deducciones</div><div class="f-cas">66</div><div class="f-val"><input id="c66" oninput="recalcular()"></div></div>
+        <div class="f110-row f-total"><div class="f-label">Total costos y gastos deducibles</div><div class="f-cas">67</div><div class="f-val"><input id="c67" class="computed" readonly></div></div>
+
+        <div class="dian-sec">Renta</div>
+        <div class="f110-row"><div class="f-label">Renta por recuperacion de deducciones</div><div class="f-cas">70</div><div class="f-val"><input id="c70" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Renta Pasiva - ECE</div><div class="f-cas">71</div><div class="f-val"><input id="c71" oninput="recalcular()"></div></div>
+        <div class="f110-row f-total"><div class="f-label">Renta liquida ordinaria del ejercicio</div><div class="f-cas">72</div><div class="f-val"><input id="c72" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Perdida liquida del ejercicio</div><div class="f-cas">73</div><div class="f-val"><input id="c73" class="computed" readonly></div></div>
+      </div>
+
+      <!-- COLUMNA DERECHA -->
+      <div class="f110-col">
+        <div class="dian-sec">Continuacion Renta</div>
+        <div class="f110-row"><div class="f-label">Compensaciones</div><div class="f-cas">74</div><div class="f-val"><input id="c74" oninput="recalcular()"></div></div>
+        <div class="f110-row f-total"><div class="f-label">Renta liquida (72 - 74)</div><div class="f-cas">75</div><div class="f-val"><input id="c75" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Renta presuntiva</div><div class="f-cas">76</div><div class="f-val"><input id="c76" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Renta exenta</div><div class="f-cas">77</div><div class="f-val"><input id="c77" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Rentas gravables</div><div class="f-cas">78</div><div class="f-val"><input id="c78" oninput="recalcular()"></div></div>
+        <div class="f110-row f-result"><div class="f-label">Renta liquida gravable</div><div class="f-cas">79</div><div class="f-val"><input id="c79" class="computed" readonly></div></div>
+
+        <div class="dian-sec">Ganancias Ocasionales</div>
+        <div class="f110-row"><div class="f-label">Ingresos por ganancias ocasionales</div><div class="f-cas">80</div><div class="f-val"><input id="c80" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Costos por ganancias ocasionales</div><div class="f-cas">81</div><div class="f-val"><input id="c81" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Ganancias ocasionales no gravadas y exentas</div><div class="f-cas">82</div><div class="f-val"><input id="c82" oninput="recalcular()"></div></div>
+        <div class="f110-row f-total"><div class="f-label">Ganancias ocasionales gravables</div><div class="f-cas">83</div><div class="f-val"><input id="c83" class="computed" readonly></div></div>
+
+        <div class="dian-sec">Liquidacion Privada</div>
+        <div class="f110-row"><div class="f-label">Impuesto sobre rentas liquidas gravables</div><div class="f-cas">84</div><div class="f-val"><input id="c84" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Impuesto dividendos 7.5%</div><div class="f-cas">85</div><div class="f-val"><input id="c85" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Impuesto dividendos tarifa general</div><div class="f-cas">86</div><div class="f-val"><input id="c86" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Impuesto dividendos exterior</div><div class="f-cas">87</div><div class="f-val"><input id="c87" oninput="recalcular()"></div></div>
+        <div class="f110-row f-total"><div class="f-label">Total impuesto sobre rentas</div><div class="f-cas">91</div><div class="f-val"><input id="c91" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Descuentos tributarios</div><div class="f-cas">92</div><div class="f-val"><input id="c92" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Impuesto neto de renta (91 - 92)</div><div class="f-cas">93</div><div class="f-val"><input id="c93" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Impuesto de ganancias ocasionales</div><div class="f-cas">94</div><div class="f-val"><input id="c94" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Descuento impuestos pagados exterior</div><div class="f-cas">95</div><div class="f-val"><input id="c95" oninput="recalcular()"></div></div>
+        <div class="f110-row f-total"><div class="f-label">Total impuesto a cargo</div><div class="f-cas">96</div><div class="f-val"><input id="c96" class="computed" readonly></div></div>
+
+        <div class="dian-sec">Pagos</div>
+        <div class="f110-row"><div class="f-label">Anticipo renta ano anterior</div><div class="f-cas">99</div><div class="f-val"><input id="c99" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Saldo a favor ano anterior</div><div class="f-cas">100</div><div class="f-val"><input id="c100" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Autorretenciones</div><div class="f-cas">101</div><div class="f-val"><input id="c101" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Otras retenciones</div><div class="f-cas">102</div><div class="f-val"><input id="c102" oninput="recalcular()"></div></div>
+        <div class="f110-row f-total"><div class="f-label">Total retenciones ano gravable</div><div class="f-cas">103</div><div class="f-val"><input id="c103" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Anticipo renta para el ano siguiente</div><div class="f-cas">104</div><div class="f-val"><input id="c104" class="computed" readonly></div></div>
+
+        <div class="dian-sec">Saldo</div>
+        <div class="f110-row f-result"><div class="f-label">Saldo a pagar</div><div class="f-cas">110</div><div class="f-val"><input id="c110" class="computed" readonly></div></div>
+        <div class="f110-row f-result"><div class="f-label">Saldo a favor</div><div class="f-cas">111</div><div class="f-val"><input id="c111" class="computed" readonly></div></div>
+      </div>
+    </div>
+
+    <div class="dian-footer">
+      <strong>ExogenaDIAN</strong> · Borrador automatico · Art. 240 E.T. · AG 2025 · El contador debe validar antes de presentar
+    </div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="stats" id="resumen" style="margin-top:20px"></div>
+
+  <div class="actions">
+    <button onclick="exportExcel()" class="btn btn-success" style="padding:14px 32px;font-size:1rem">📊 Descargar Excel con Formulas</button>
+  </div>
+
+  <div style="margin-top:16px;padding:12px;background:var(--pri3);border-radius:8px;font-size:.8rem;color:var(--pri);text-align:center">
+    <strong>Normatividad:</strong> Art. 240 E.T. · Tarifa general 35% · AG 2025<br>
+    Este borrador es un punto de partida profesional. El contador debe validar antes de presentar a la DIAN.
+  </div>
+</div>
+
+<div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
+  <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExogenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>
+  🔒 Informacion tratada con total confidencialidad · 100% procesado en tu navegador
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   FORMULARIO 110 — DECLARACION DE RENTA PERSONAS JURIDICAS
+   Calculos automaticos con tarifas progresivas AG 2025
+   ═══════════════════════════════════════════════════════════ */
+
+function v(id){const el=document.getElementById(id);if(!el)return 0;const s=el.value.replace(/[,.\s$]/g,'');return parseInt(s)||0}
+function set(id,val){
+  const el=document.getElementById(id);if(!el)return;
+  const n=Math.round(val/1000)*1000; // Redondear a miles
+  el.value=n!==0?n.toLocaleString('es-CO'):'';
+  el.classList.toggle('filled',n!==0);
+}
+function fN(n){return Math.round(n).toLocaleString('es-CO')}
+
+// Tarifa general Art. 240 E.T. AG 2025 = 35%
+const TARIFA_RENTA=0.35;
+// Ganancias ocasionales = 15%
+const TARIFA_GO=0.15;
+// Anticipo = 75% del impuesto neto
+const PCT_ANTICIPO=0.75;
+
+function recalcular(){
+  // PATRIMONIO
+  const c44=v('c36')+v('c37')+v('c38')+v('c39')+v('c40')+v('c41')+v('c42')+v('c43');
+  set('c44',c44);
+  const c46=c44-v('c45');
+  set('c46',c46);
+
+  // INGRESOS
+  const c58=v('c47')+v('c48')+v('c49')+v('c50')+v('c51')+v('c52')+v('c53')+v('c54')+v('c57');
+  set('c58',c58);
+  const c61=c58-v('c59')-v('c60');
+  set('c61',c61);
+
+  // COSTOS Y DEDUCCIONES
+  const c67=v('c62')+v('c63')+v('c64')+v('c65')+v('c66');
+  set('c67',c67);
+
+  // RENTA
+  const rentaOrdinaria=c61-c67+v('c70')+v('c71');
+  if(rentaOrdinaria>=0){set('c72',rentaOrdinaria);set('c73',0)}
+  else{set('c72',0);set('c73',Math.abs(rentaOrdinaria))}
+
+  // CONTINUACION RENTA
+  const c75=Math.max(v('c72')-v('c74'),0);
+  set('c75',c75);
+
+  // Renta liquida gravable = MAX(renta liquida, renta presuntiva) - exenta + gravables
+  const rlg=Math.max(Math.max(c75,v('c76'))-v('c77')+v('c78'),0);
+  set('c79',rlg);
+
+  // GANANCIAS OCASIONALES
+  const c83=Math.max(v('c80')-v('c81')-v('c82'),0);
+  set('c83',c83);
+
+  // LIQUIDACION
+  // Impuesto sobre renta liquida gravable (tarifa general 35%)
+  const impRenta=Math.round(rlg*TARIFA_RENTA/1000)*1000;
+  set('c84',impRenta);
+
+  // Impuesto dividendos
+  const impDiv75=Math.round(v('c53')*0.075/1000)*1000;
+  set('c85',impDiv75);
+  const impDivGen=Math.round(v('c54')*TARIFA_RENTA/1000)*1000;
+  set('c86',impDivGen);
+
+  // Total impuesto
+  const c91=impRenta+impDiv75+impDivGen+v('c87');
+  set('c91',c91);
+
+  // Impuesto neto
+  const c93=Math.max(c91-v('c92'),0);
+  set('c93',c93);
+
+  // Ganancias ocasionales impuesto
+  const c94=Math.round(c83*TARIFA_GO/1000)*1000;
+  set('c94',c94);
+
+  // Total impuesto a cargo
+  const c96=Math.max(c93+c94-v('c95'),0);
+  set('c96',c96);
+
+  // Retenciones
+  const c103=v('c101')+v('c102');
+  set('c103',c103);
+
+  // Anticipo renta siguiente ano = 75% del impuesto neto
+  const c104=Math.round(c93*PCT_ANTICIPO/1000)*1000;
+  set('c104',c104);
+
+  // SALDO
+  const totalPagos=v('c99')+v('c100')+c103;
+  const totalCargo=c96+c104;
+  if(totalCargo>totalPagos){
+    set('c110',totalCargo-totalPagos);set('c111',0);
+  }else{
+    set('c110',0);set('c111',totalPagos-totalCargo);
+  }
+
+  // Resumen cards
+  document.getElementById('resumen').innerHTML=`
+    <div class="stat-card blue"><div class="val">${fN(rlg)}</div><div class="lbl">Renta Liquida Gravable</div></div>
+    <div class="stat-card amber"><div class="val">${fN(c96)}</div><div class="lbl">Total Impuesto a Cargo</div></div>
+    <div class="stat-card ${v('c110')>0?'red':'green'}"><div class="val">${fN(v('c110'))}</div><div class="lbl">Saldo a Pagar</div></div>
+    <div class="stat-card green"><div class="val">${fN(v('c111'))}</div><div class="lbl">Saldo a Favor</div></div>`;
+}
+
+// Excel export con formulas
+async function exportExcel(){
+  const wb=new ExcelJS.Workbook();
+  const ws=wb.addWorksheet('F110');
+  const hdrFill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1F4E79'}};
+  const hdrFont={bold:true,color:{argb:'FFFFFFFF'},size:10,name:'Arial'};
+  const secFill={type:'pattern',pattern:'solid',fgColor:{argb:'FFD4E6F1'}};
+  const totalFill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F2F5'}};
+  const resultFill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8F5E9'}};
+  const thin={style:'thin',color:{argb:'FF808080'}};
+  const border={top:thin,bottom:thin,left:thin,right:thin};
+
+  // Headers
+  ws.addRow(['Formulario 110 - Declaracion de Renta AG 2025']).font={bold:true,size:14,color:{argb:'FF1F4E79'}};
+  ws.addRow([document.getElementById('cfgRazon').value||'','NIT:',document.getElementById('cfgNit').value||'']);
+  ws.addRow([]);
+
+  // Column widths
+  ws.getColumn(1).width=45;ws.getColumn(2).width=8;ws.getColumn(3).width=20;ws.getColumn(4).width=25;
+
+  const casillas=[
+    {s:'PATRIMONIO'},
+    {c:36,d:'Efectivo y equivalentes'},{c:37,d:'Inversiones e instrumentos financieros'},
+    {c:38,d:'Cuentas, documentos y arrend. financiero'},{c:39,d:'Inventarios'},
+    {c:40,d:'Activos intangibles'},{c:41,d:'Activos biologicos'},
+    {c:42,d:'Propiedades, planta y equipo'},{c:43,d:'Otros activos'},
+    {c:44,d:'Total patrimonio bruto',f:'SUM(C{r36}:C{r43})'},
+    {c:45,d:'Pasivos'},
+    {c:46,d:'Total patrimonio liquido',f:'C{r44}-C{r45}'},
+    {s:'INGRESOS'},
+    {c:47,d:'Ingresos brutos actividades ordinarias'},{c:48,d:'Ingresos financieros'},
+    {c:49,d:'Dividendos no constitutivos'},{c:50,d:'Dividendos sec 30 ET'},
+    {c:51,d:'Dividendos gravadas recibidas'},{c:52,d:'Dividendos gravadas exterior'},
+    {c:53,d:'Dividendos gravadas 7.5%'},{c:54,d:'Dividendos tarifa general'},
+    {c:57,d:'Otros ingresos'},
+    {c:58,d:'Total ingresos brutos',f:'SUM(C{r47}:C{r54})+C{r57}'},
+    {c:59,d:'Devoluciones, rebajas y descuentos'},{c:60,d:'Ingresos no constitutivos de renta'},
+    {c:61,d:'Total ingresos netos',f:'C{r58}-C{r59}-C{r60}'},
+    {s:'COSTOS Y DEDUCCIONES'},
+    {c:62,d:'Costos'},{c:63,d:'Gastos de administracion'},{c:64,d:'Gastos de distribucion y ventas'},
+    {c:65,d:'Gastos financieros'},{c:66,d:'Otros gastos y deducciones'},
+    {c:67,d:'Total costos y gastos deducibles',f:'SUM(C{r62}:C{r66})'},
+    {s:'RENTA'},
+    {c:70,d:'Recuperacion de deducciones'},{c:71,d:'Renta Pasiva ECE'},
+    {c:72,d:'Renta liquida ordinaria',f:'MAX(C{r61}-C{r67}+C{r70}+C{r71},0)'},
+    {c:73,d:'Perdida liquida',f:'MAX(-(C{r61}-C{r67}+C{r70}+C{r71}),0)'},
+    {c:74,d:'Compensaciones'},
+    {c:75,d:'Renta liquida',f:'MAX(C{r72}-C{r74},0)'},
+    {c:76,d:'Renta presuntiva'},{c:77,d:'Renta exenta'},{c:78,d:'Rentas gravables'},
+    {c:79,d:'RENTA LIQUIDA GRAVABLE',f:'MAX(MAX(C{r75},C{r76})-C{r77}+C{r78},0)'},
+    {s:'GANANCIAS OCASIONALES'},
+    {c:80,d:'Ingresos ganancias ocasionales'},{c:81,d:'Costos ganancias ocasionales'},
+    {c:82,d:'Ganancias no gravadas y exentas'},
+    {c:83,d:'Ganancias ocasionales gravables',f:'MAX(C{r80}-C{r81}-C{r82},0)'},
+    {s:'LIQUIDACION PRIVADA'},
+    {c:84,d:'Impuesto sobre rentas liquidas gravables',f:'ROUND(C{r79}*0.35,-3)'},
+    {c:85,d:'Impuesto dividendos 7.5%',f:'ROUND(C{r53}*0.075,-3)'},
+    {c:86,d:'Impuesto dividendos tarifa general',f:'ROUND(C{r54}*0.35,-3)'},
+    {c:87,d:'Impuesto dividendos exterior'},
+    {c:91,d:'Total impuesto sobre rentas',f:'C{r84}+C{r85}+C{r86}+C{r87}'},
+    {c:92,d:'Descuentos tributarios'},
+    {c:93,d:'Impuesto neto de renta',f:'MAX(C{r91}-C{r92},0)'},
+    {c:94,d:'Impuesto ganancias ocasionales',f:'ROUND(C{r83}*0.15,-3)'},
+    {c:95,d:'Descuento impuestos pagados exterior'},
+    {c:96,d:'Total impuesto a cargo',f:'MAX(C{r93}+C{r94}-C{r95},0)'},
+    {s:'PAGOS'},
+    {c:99,d:'Anticipo renta ano anterior'},{c:100,d:'Saldo a favor ano anterior'},
+    {c:101,d:'Autorretenciones'},{c:102,d:'Otras retenciones'},
+    {c:103,d:'Total retenciones',f:'C{r101}+C{r102}'},
+    {c:104,d:'Anticipo renta siguiente',f:'ROUND(C{r93}*0.75,-3)'},
+    {s:'SALDO'},
+    {c:110,d:'SALDO A PAGAR',f:'MAX(C{r96}+C{r104}-C{r99}-C{r100}-C{r103},0)'},
+    {c:111,d:'SALDO A FAVOR',f:'MAX(C{r99}+C{r100}+C{r103}-C{r96}-C{r104},0)'},
+  ];
+
+  const rowMap={};
+  let r=4;
+  for(const item of casillas){
+    if(item.s){
+      const row=ws.addRow([item.s]);
+      row.getCell(1).fill=secFill;row.getCell(1).font={bold:true,size:10,color:{argb:'FF1A3C6E'}};
+      row.eachCell(c=>{c.border=border});
+      r++;continue;
+    }
+    rowMap[item.c]=r+1;
+    const val=v('c'+item.c);
+    const row=ws.addRow([item.d,item.c,val||'']);
+    row.getCell(2).alignment={horizontal:'center'};
+    row.getCell(3).numFmt='#,##0';
+    row.eachCell(c=>{c.font={size:10,name:'Arial'};c.border=border});
+    if(item.f){
+      row.getCell(1).fill=totalFill;row.getCell(1).font={bold:true,size:10,name:'Arial'};
+    }
+    r++;
+  }
+
+  // Apply formulas (replace row references)
+  r=4;
+  for(const item of casillas){
+    if(item.s){r++;continue}
+    if(item.f){
+      let formula=item.f;
+      for(const[cas,row] of Object.entries(rowMap)){
+        formula=formula.replace(new RegExp('\\{r'+cas+'\\}','g'),row);
+      }
+      ws.getCell('C'+(rowMap[item.c])).value={formula};
+    }
+    r++;
+  }
+
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`F110_Renta_AG${document.getElementById('cfgYear').value||'2025'}_${document.getElementById('cfgNit').value||'SIN_NIT'}.xlsx`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// Init
+recalcular();
+
+// Format inputs on blur
+document.querySelectorAll('.f110-row .f-val input:not([readonly])').forEach(inp=>{
+  inp.addEventListener('focus',function(){
+    this.value=this.value.replace(/[,.\s]/g,'');
+    this.select();
+  });
+  inp.addEventListener('blur',function(){
+    const n=parseInt(this.value.replace(/[,.\s]/g,''))||0;
+    if(n)this.value=n.toLocaleString('es-CO');
+    this.classList.toggle('filled',n!==0);
+  });
+});
+</script>
+</body>
+</html>
