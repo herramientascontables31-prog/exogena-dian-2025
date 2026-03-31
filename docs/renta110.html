@@ -131,6 +131,26 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
   </div>
 
+  <!-- DATOS AÑO ANTERIOR -->
+  <div class="card" style="padding:12px">
+    <div class="card-title" style="margin-bottom:8px"><span>📋</span> Declaracion Ano Anterior (AG 2024)</div>
+    <p style="font-size:.75rem;color:var(--muted);margin-bottom:10px">Para calcular anticipo y aplicar saldos. Si es primera declaracion, deja en blanco.</p>
+    <div class="config-grid">
+      <div class="config-item"><label>Impuesto neto de renta AG anterior</label><input type="text" id="antImpNeto" placeholder="0" oninput="recalcular()"></div>
+      <div class="config-item"><label>Anticipo liquidado ano anterior (cas. 104 del F110 anterior)</label><input type="text" id="antAnticipo" placeholder="0" oninput="recalcular()"></div>
+      <div class="config-item"><label>Saldo a favor ano anterior</label><input type="text" id="antSaldoFavor" placeholder="0" oninput="recalcular()"></div>
+      <div class="config-item">
+        <label>Metodo anticipo ano siguiente</label>
+        <select id="antMetodo" onchange="recalcular()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit">
+          <option value="75">75% del impuesto neto (3er ano en adelante)</option>
+          <option value="promedio">Promedio (2do ano declarando)</option>
+          <option value="25">25% del impuesto neto (1er ano declarando)</option>
+          <option value="0">No aplica anticipo</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
   <!-- FORMULARIO 110 -->
   <div class="dian-form">
     <div class="dian-top">
@@ -218,8 +238,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="f110-row f-total"><div class="f-label">Total impuesto a cargo</div><div class="f-cas">96</div><div class="f-val"><input id="c96" class="computed" readonly></div></div>
 
         <div class="dian-sec">Pagos</div>
-        <div class="f110-row"><div class="f-label">Anticipo renta ano anterior</div><div class="f-cas">99</div><div class="f-val"><input id="c99" oninput="recalcular()"></div></div>
-        <div class="f110-row"><div class="f-label">Saldo a favor ano anterior</div><div class="f-cas">100</div><div class="f-val"><input id="c100" oninput="recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Anticipo renta ano anterior</div><div class="f-cas">99</div><div class="f-val"><input id="c99" oninput="this._manual=true;recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Saldo a favor ano anterior</div><div class="f-cas">100</div><div class="f-val"><input id="c100" oninput="this._manual=true;recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Autorretenciones</div><div class="f-cas">101</div><div class="f-val"><input id="c101" oninput="recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Otras retenciones</div><div class="f-cas">102</div><div class="f-val"><input id="c102" oninput="recalcular()"></div></div>
         <div class="f110-row f-total"><div class="f-label">Total retenciones ano gravable</div><div class="f-cas">103</div><div class="f-val"><input id="c103" class="computed" readonly></div></div>
@@ -990,12 +1010,32 @@ function recalcular(){
   const c96=Math.max(c93+c94-v('c95'),0);
   set('c96',c96);
 
+  // ── DATOS AÑO ANTERIOR → casillas 99, 100 ──
+  const antAnticipo=vTTD('antAnticipo');   // anticipo liquidado año anterior
+  const antSaldoFavor=vTTD('antSaldoFavor'); // saldo a favor año anterior
+  // Auto-fill casillas 99 y 100 si el usuario no las ha editado manualmente
+  if(antAnticipo&&!document.getElementById('c99')._manual){set('c99',antAnticipo)}
+  if(antSaldoFavor&&!document.getElementById('c100')._manual){set('c100',antSaldoFavor)}
+
   // Retenciones
   const c103=v('c101')+v('c102');
   set('c103',c103);
 
-  // Anticipo renta siguiente ano = 75% del impuesto neto
-  const c104=Math.round(c93*PCT_ANTICIPO/1000)*1000;
+  // ── ANTICIPO AÑO SIGUIENTE (Art. 807-809 ET) ──
+  const metodo=document.getElementById('antMetodo').value;
+  const antImpNeto=vTTD('antImpNeto'); // impuesto neto año anterior
+  let c104=0;
+  if(metodo==='75'){
+    // 75% del impuesto neto del año actual
+    c104=Math.round(c93*0.75/1000)*1000;
+  }else if(metodo==='promedio'){
+    // Promedio: (impNeto anterior * 75% + impNeto actual * 75%) / 2
+    const base=Math.round(((antImpNeto*0.75)+(c93*0.75))/2/1000)*1000;
+    c104=base;
+  }else if(metodo==='25'){
+    // 25% del impuesto neto del año actual
+    c104=Math.round(c93*0.25/1000)*1000;
+  }
   set('c104',c104);
 
   // SALDO
@@ -1161,7 +1201,7 @@ async function exportExcel(){
     {c:101,d:'Autorretenciones'},
     {c:102,d:'Otras retenciones'},
     {c:103,d:'Total retenciones ano gravable',f:'L{r101}+L{r102}',t:1},
-    {c:104,d:'Anticipo renta para el ano gravable siguiente',f:'ROUND(L{r93}*0.75,-3)'},
+    {c:104,d:'Anticipo renta para el ano gravable siguiente'},
     {s:'Saldo'},
     {c:110,d:'SALDO A PAGAR',f:'MAX(L{r96}+L{r104}-L{r99}-L{r100}-L{r103},0)',t:2},
     {c:111,d:'SALDO A FAVOR',f:'MAX(L{r99}+L{r100}+L{r103}-L{r96}-L{r104},0)',t:2},
