@@ -163,9 +163,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="dz-hint">Excel (.xlsx, .xls) o CSV — Siigo, MidaSoft, World Office, Helisa, Alegra, otros</div>
         <div class="dz-file" id="fileName"></div>
       </div>
-      <div style="margin-top:12px;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
-        <span style="font-size:1rem">🔒</span>
-        <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningún dato sale de tu equipo</strong> ni se almacena en ningún servidor.</span>
+      <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
+          <span style="font-size:1rem">🔒</span>
+          <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningún dato sale de tu equipo</strong> ni se almacena en ningún servidor.</span>
+        </div>
+        <button onclick="descargarEjemplo350()" style="padding:8px 16px;background:#f0f2f5;border:1px solid #e2e8f0;border-radius:8px;font-size:.78rem;font-weight:600;color:#1B3A5C;cursor:pointer;white-space:nowrap;font-family:inherit">📥 Descargar ejemplo</button>
       </div>
     </div>
   </div>
@@ -853,6 +856,25 @@ function goStep(n){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function switchTab(el,id){el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');el.closest('.card').querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+function descargarEjemplo350(){
+  const data=[
+    ['Código','Nombre Cuenta','Tercero NIT','Tercero Nombre','Débito','Crédito'],
+    ['236515','Retención honorarios','900123456','CONSULTOR ABC S.A.S',0,550000],
+    ['236515','Retención honorarios','1098765432','JUAN PÉREZ LÓPEZ',0,110000],
+    ['236525','Retención servicios','800555444','SERVICIOS XYZ LTDA',0,200000],
+    ['236525','Retención servicios','900888777','EMPRESA TECNOLOGÍA S.A',0,80000],
+    ['236540','Retención compras','811222333','DISTRIBUIDORA NACIONAL',0,125000],
+    ['236535','Retención rendimientos','890100000','BANCOLOMBIA S.A',0,48000],
+    ['236530','Retención arrendamientos','70123456','MARÍA GÓMEZ DÍAZ',0,105000],
+    ['236570','Autorretención especial','901234567','MI EMPRESA S.A.S',0,320000],
+  ];
+  const ws=XLSX.utils.aoa_to_sheet(data);
+  ws['!cols']=[{wch:10},{wch:28},{wch:14},{wch:28},{wch:14},{wch:14}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Balance Ejemplo');
+  XLSX.writeFile(wb,'Ejemplo_Retencion350_ExogenaDIAN.xlsx');
+}
 </script>
 <div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
   <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExógenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>

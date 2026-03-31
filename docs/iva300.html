@@ -230,9 +230,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="dz-hint">Excel (.xlsx, .xls) o CSV — Siigo, MidaSoft, World Office, Helisa, Alegra, otros</div>
         <div class="dz-file" id="fileName"></div>
       </div>
-      <div style="margin-top:12px;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
-        <span style="font-size:1rem">🔒</span>
-        <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningún dato sale de tu equipo</strong> ni se almacena en ningún servidor.</span>
+      <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
+          <span style="font-size:1rem">🔒</span>
+          <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningún dato sale de tu equipo</strong> ni se almacena en ningún servidor.</span>
+        </div>
+        <button onclick="descargarEjemplo300()" style="padding:8px 16px;background:#f0f2f5;border:1px solid #e2e8f0;border-radius:8px;font-size:.78rem;font-weight:600;color:#1B3A5C;cursor:pointer;white-space:nowrap;font-family:inherit">📥 Descargar ejemplo</button>
       </div>
       <div style="margin-top:20px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)">
         <div style="font-weight:700;font-size:.95rem;margin-bottom:12px">📅 Datos del período</div>
@@ -304,7 +307,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div class="card hidden" id="previewCard">
       <div class="card-title"><span>🔍</span> Resultado del Procesamiento</div>
       <div id="fileStats" class="stats"></div>
-      <div class="alert alert-warn hidden" id="alertNoIVA"><span>⚠️</span><div>No se encontraron cuentas relevantes para el F300 (41xx ingresos, 61-62xx compras, 2408 IVA, 1355, 2367). Verifica las columnas o el archivo.</div></div>
+      <div class="alert alert-warn hidden" id="alertNoIVA"><span>⚠️</span><div>
+        <strong>No se encontraron cuentas relevantes para el F300 en el archivo.</strong><br><br>
+        La herramienta busca estas cuentas PUC:<br>
+        <strong>Ingresos:</strong> 41xx (operacionales), 42xx (no operacionales)<br>
+        <strong>Compras/Costos:</strong> 61xx, 62xx<br>
+        <strong>IVA:</strong> 2408 (generado/descontable), 1355 (anticipo/saldo a favor), 2367 (reteIVA)<br><br>
+        Esto puede ocurrir porque:<br>
+        <strong>1.</strong> El archivo no es un balance de prueba completo — necesita cuentas de clase 4, 6 y 24.<br>
+        <strong>2.</strong> La columna de código de cuenta no fue detectada correctamente. Vuelve al paso anterior y verifica la asignación.<br>
+        <strong>3.</strong> El balance es de un período sin actividad de IVA (sin ventas ni compras).<br><br>
+        <strong>Formatos compatibles:</strong> Siigo, World Office, Helisa, Alegra, MidaSoft, ZEUS y cualquier Excel con columna de código PUC + débitos y créditos.
+      </div></div>
       <div class="alert alert-success hidden" id="alertOk"><span>✅</span><div id="alertOkText"></div></div>
       <div class="scroll-box" id="previewTable"></div>
       <div class="actions"><button class="btn btn-primary" onclick="goToStep3()">Continuar al Mapeo →</button></div>
@@ -2953,6 +2967,26 @@ function runDianAnalysis(){
 
 async function exportDianXls(){
   alert('Descarga del análisis DIAN en construcción.');
+}
+
+function descargarEjemplo300(){
+  const data=[
+    ['Código','Nombre Cuenta','Débito','Crédito'],
+    ['4135','Comercio al por mayor y menor',0,85000000],
+    ['4175','Devoluciones en ventas',2500000,0],
+    ['4210','Rendimientos financieros',0,1200000],
+    ['6135','Comercio al por mayor y menor',48000000,0],
+    ['6225','Devoluciones en compras',0,800000],
+    ['240805','IVA generado 19%',0,16150000],
+    ['240810','IVA descontable 19%',9120000,0],
+    ['135515','Retención de IVA (saldo a favor)',580000,0],
+    ['236705','Retención de IVA practicada',0,720000],
+  ];
+  const ws=XLSX.utils.aoa_to_sheet(data);
+  ws['!cols']=[{wch:10},{wch:35},{wch:16},{wch:16}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Balance Ejemplo');
+  XLSX.writeFile(wb,'Ejemplo_IVA300_ExogenaDIAN.xlsx');
 }
 
 </script>

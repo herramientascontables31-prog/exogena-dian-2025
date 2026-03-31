@@ -169,9 +169,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="dz-hint">Excel (.xlsx, .xls) o CSV — Siigo, MidaSoft, World Office, Helisa, Alegra, otros</div>
         <div class="dz-file" id="fileName"></div>
       </div>
-      <div style="margin-top:12px;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
-        <span style="font-size:1rem">🔒</span>
-        <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningún dato sale de tu equipo</strong> ni se almacena en ningún servidor.</span>
+      <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
+          <span style="font-size:1rem">🔒</span>
+          <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningún dato sale de tu equipo</strong> ni se almacena en ningún servidor.</span>
+        </div>
+        <button onclick="descargarEjemploEEFF()" style="padding:8px 16px;background:#f0f2f5;border:1px solid #e2e8f0;border-radius:8px;font-size:.78rem;font-weight:600;color:#1B3A5C;cursor:pointer;white-space:nowrap;font-family:inherit">📥 Descargar ejemplo</button>
       </div>
       <div style="margin-top:20px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)">
         <div style="font-weight:700;font-size:.95rem;margin-bottom:12px">Datos de la empresa</div>
@@ -2789,6 +2792,40 @@ th{background:#D6E4F0;font-weight:bold;color:#1B3A5C}
 /* ═══ NAVIGATION OVERRIDES ═══ */
 
 /* ═══ PRO CHECK (handled by initPro on load) ═══ */
+
+function descargarEjemploEEFF(){
+  const data=[
+    ['Código','Nombre Cuenta','Débito','Crédito'],
+    ['1105','Caja',2500000,0],
+    ['1110','Bancos',45000000,0],
+    ['1305','Clientes',18000000,0],
+    ['1355','Anticipo de impuestos',3200000,0],
+    ['1524','Equipo de oficina',12000000,0],
+    ['1528','Equipo de computación',8500000,0],
+    ['1592','Depreciación acumulada',0,6800000],
+    ['2105','Obligaciones financieras',0,15000000],
+    ['2205','Proveedores nacionales',0,12000000],
+    ['2365','Retención en la fuente',0,1800000],
+    ['2408','IVA por pagar',0,3500000],
+    ['2505','Salarios por pagar',0,4200000],
+    ['3105','Capital suscrito y pagado',0,10000000],
+    ['3605','Utilidad del ejercicio',0,8000000],
+    ['3705','Utilidades acumuladas',0,15000000],
+    ['4135','Comercio al por mayor',0,95000000],
+    ['4210','Rendimientos financieros',0,2400000],
+    ['5105','Gastos de personal',32000000,0],
+    ['5120','Arrendamientos',8400000,0],
+    ['5135','Servicios',6200000,0],
+    ['5160','Depreciaciones',3400000,0],
+    ['5305','Gastos financieros',4500000,0],
+    ['6135','Comercio al por mayor',48000000,0],
+  ];
+  const ws=XLSX.utils.aoa_to_sheet(data);
+  ws['!cols']=[{wch:10},{wch:30},{wch:16},{wch:16}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Balance Ejemplo');
+  XLSX.writeFile(wb,'Ejemplo_EEFF_ExogenaDIAN.xlsx');
+}
 </script>
 <div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
   <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExógenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>

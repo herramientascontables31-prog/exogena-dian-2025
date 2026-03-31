@@ -86,7 +86,10 @@
 <div class="drop-zone" id="dzE"><input type="file" accept=".xlsx,.xls,.csv,.tsv,.txt" id="fE"><button class="dz-clear" onclick="clearFile('E');event.stopPropagation()">✕</button><span class="dz-icon">🏦</span><div class="dz-title">Extracto Bancario</div><div class="dz-hint">Excel o CSV · Bancolombia, Davivienda, Bogotá, otros</div><div class="dz-file" id="nE"></div><div class="dz-rows" id="rE"></div></div>
 <div class="drop-zone" id="dzA"><input type="file" accept=".xlsx,.xls,.csv,.tsv,.txt" id="fA"><button class="dz-clear" onclick="clearFile('A');event.stopPropagation()">✕</button><span class="dz-icon">📒</span><div class="dz-title">Libro Auxiliar Contable</div><div class="dz-hint">Excel o CSV · Siigo, World Office, Helisa, otros</div><div class="dz-file" id="nA"></div><div class="dz-rows" id="rA"></div></div>
 </div>
-<div class="actions"><button class="btn btn-primary" id="btnNext" disabled onclick="goStep2()">Continuar → Verificar columnas</button></div>
+<div class="actions">
+  <button onclick="descargarEjemploConciliacion()" class="btn btn-outline" style="font-size:.82rem">📥 Descargar archivos de ejemplo</button>
+  <button class="btn btn-primary" id="btnNext" disabled onclick="goStep2()">Continuar → Verificar columnas</button>
+</div>
 </div>
 
 <div id="step2" class="hidden">
@@ -1156,6 +1159,39 @@ function fmtN(n){if(typeof n==='string')return n;if(typeof n!=='number'||isNaN(n
 function fD(d){if(!d)return'—';return d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'})}
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function sc(cls,val,lab){return`<div class="summary-card ${cls}"><div class="sc-val">${val}</div><div class="sc-label">${lab}</div></div>`}
+
+function descargarEjemploConciliacion(){
+  const extracto=[
+    ['Fecha','Descripción','Débito','Crédito','Saldo'],
+    ['2026-01-05','Consignación cliente ABC',5000000,0,45000000],
+    ['2026-01-08','Pago nómina enero',0,12000000,33000000],
+    ['2026-01-10','Transferencia proveedor XYZ',0,3500000,29500000],
+    ['2026-01-15','Consignación cliente DEF',8200000,0,37700000],
+    ['2026-01-18','Pago arriendo oficina',0,2800000,34900000],
+    ['2026-01-22','Intereses bancarios',0,45000,34855000],
+    ['2026-01-25','Consignación cliente GHI',3100000,0,37955000],
+    ['2026-01-28','Pago servicios públicos',0,650000,37305000],
+    ['2026-01-30','GMF (4x1000)',0,32000,37273000],
+  ];
+  const auxiliar=[
+    ['Fecha','Documento','Descripción','Débito','Crédito'],
+    ['2026-01-05','RC-001','Recibo caja cliente ABC',5000000,0],
+    ['2026-01-08','CE-015','Comprobante egreso nómina',0,12000000],
+    ['2026-01-10','CE-016','Pago proveedor XYZ',0,3500000],
+    ['2026-01-15','RC-002','Recibo caja cliente DEF',8200000,0],
+    ['2026-01-18','CE-017','Pago arriendo oficina',0,2800000],
+    ['2026-01-25','RC-003','Recibo caja cliente GHI',3100000,0],
+    ['2026-01-28','CE-018','Pago servicios públicos',0,650000],
+  ];
+  const wb=XLSX.utils.book_new();
+  const ws1=XLSX.utils.aoa_to_sheet(extracto);
+  ws1['!cols']=[{wch:12},{wch:30},{wch:14},{wch:14},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,ws1,'Extracto Bancario');
+  const ws2=XLSX.utils.aoa_to_sheet(auxiliar);
+  ws2['!cols']=[{wch:12},{wch:10},{wch:30},{wch:14},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Auxiliar Contable');
+  XLSX.writeFile(wb,'Ejemplo_Conciliacion_ExogenaDIAN.xlsx');
+}
 </script>
 </body>
 </html>
