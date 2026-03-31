@@ -25,7 +25,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 .header h1 span{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:600}
 .header p{opacity:.8;font-size:.85rem;margin-top:4px}
 .header-right{text-align:right;font-size:.8rem;opacity:.7}
-.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:12px;margin-bottom:10px;box-shadow:var(--shadow)}
 .card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .btn{padding:10px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
 .btn-primary{background:var(--pri2);color:#fff}.btn-primary:hover{background:var(--pri);transform:translateY(-1px)}
@@ -43,16 +43,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 .dian-top-center .dian-title{font-size:13px;font-weight:700;text-align:center;margin:2px 0}
 .dian-top-center .dian-subtitle{font-size:9px;color:#555;text-align:center}
 .dian-top-right{background:#1a3c6e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;font-family:'JetBrains Mono',monospace;border-left:1px solid #000}
-.dian-sec{background:#d4e6f1;padding:5px 10px;font-weight:700;font-size:10px;border-bottom:1px solid #000;text-transform:uppercase;color:#1a3c6e;letter-spacing:.3px}
+.dian-sec{background:#d4e6f1;padding:3px 8px;font-weight:700;font-size:9px;border-bottom:1px solid #000;text-transform:uppercase;color:#1a3c6e;letter-spacing:.3px}
 .f110-grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #000}
 .f110-col{border-right:1px solid #ccc}
 .f110-col:last-child{border-right:none}
-.f110-row{display:grid;grid-template-columns:1fr 40px 140px;border-bottom:1px solid #ddd;font-size:10px;min-height:26px}
+.f110-row{display:grid;grid-template-columns:1fr 32px 130px;border-bottom:1px solid #ddd;font-size:10px;min-height:22px}
 .f110-row:hover{background:#f5f8fc}
-.f110-row .f-label{padding:3px 8px;font-size:9.5px;display:flex;align-items:center}
-.f110-row .f-cas{display:flex;align-items:center;justify-content:center;font-size:8px;color:#888;font-family:'JetBrains Mono',monospace;background:#f9f9f9;border-left:1px solid #eee;border-right:1px solid #eee}
-.f110-row .f-val{padding:2px 6px;display:flex;align-items:center;justify-content:flex-end}
-.f110-row .f-val input{border:none;background:transparent;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;width:100%;outline:none;padding:2px 4px;color:#ccc}
+.f110-row .f-label{padding:2px 6px;font-size:9px;display:flex;align-items:center;line-height:1.2}
+.f110-row .f-cas{display:flex;align-items:center;justify-content:center;font-size:7.5px;color:#888;font-family:'JetBrains Mono',monospace;background:#f9f9f9;border-left:1px solid #eee;border-right:1px solid #eee}
+.f110-row .f-val{padding:1px 4px;display:flex;align-items:center;justify-content:flex-end}
+.f110-row .f-val input{border:none;background:transparent;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;width:100%;outline:none;padding:1px 3px;color:#ccc}
 .f110-row .f-val input.filled{font-weight:700;color:#1a3c6e;background:#edf4ff}
 .f110-row .f-val input.computed{font-weight:700;color:#2E7D32;background:#E8F5E9;cursor:default}
 .f110-row.f-total{background:#f0f2f5;font-weight:700}
@@ -75,6 +75,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 .stat-card .val{font-size:1.3rem;font-weight:700;font-family:'JetBrains Mono',monospace}
 .stat-card .lbl{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:4px}
 .stat-card.blue .val{color:var(--pri2)}.stat-card.green .val{color:var(--green)}.stat-card.amber .val{color:var(--amber)}.stat-card.red .val{color:var(--red)}
+.hidden{display:none!important}
 @media(max-width:900px){.f110-grid{grid-template-columns:1fr}.config-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -100,14 +101,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <span style="font-size:.75rem;color:var(--muted)">🔒 100% en tu navegador</span>
     </div>
     <div style="margin-bottom:10px">
-      <label style="font-size:.82rem;font-weight:600;color:var(--pri);display:flex;align-items:center;gap:8px;margin-bottom:8px">¿Tu balance tiene las cuentas de resultado abiertas (clases 4, 5 y 6 con saldo)?</label>
-      <div style="display:flex;gap:8px">
-        <button onclick="document.getElementById('balanceZone').classList.remove('hidden');this.style.background='var(--pri3)';this.nextElementSibling.style.background=''" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;background:var(--pri3)">Si, esta sin cerrar</button>
-        <button onclick="document.getElementById('balanceZone').classList.add('hidden');document.getElementById('balanceCerrado').classList.remove('hidden');this.style.background='var(--pri3)';this.previousElementSibling.style.background=''" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit">No, ya esta cerrado</button>
+      <label style="font-size:.82rem;font-weight:600;color:var(--pri);display:flex;align-items:center;gap:8px;margin-bottom:8px">¿Como leer las cuentas de resultado (clases 4, 5 y 6)?</label>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="btnDebCre" onclick="setModoLectura('debcre')" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;transition:.2s">Debitos y Creditos <span style="font-size:.7rem;color:var(--muted)">(balance sin cerrar)</span></button>
+        <button id="btnSaldoFinal" onclick="setModoLectura('saldo')" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;transition:.2s">Saldo Final <span style="font-size:.7rem;color:var(--muted)">(balance cerrado)</span></button>
       </div>
     </div>
-    <div id="balanceCerrado" class="hidden" style="padding:10px;background:#FFF8E1;border:1px solid #FCD34D;border-radius:8px;font-size:.82rem;color:#92400E">Solo se pre-llenara el <strong>patrimonio</strong> (activos y pasivos). Los ingresos, costos y gastos debes ingresarlos manualmente en el formulario de abajo.</div>
-    <div id="balanceZone">
+    <div id="balanceCerrado" class="hidden" style="padding:10px;background:#FFF8E1;border:1px solid #FCD34D;border-radius:8px;font-size:.82rem;color:#92400E">Se usara el <strong>saldo final</strong> para todas las cuentas. Si las clases 4, 5 y 6 estan en cero (cierre contable), solo se pre-llenara patrimonio.</div>
+    <div id="balanceZone" class="hidden">
       <div style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;cursor:pointer;position:relative" id="dzRenta" onclick="document.getElementById('fileInputRenta').click()">
         <input type="file" accept=".xlsx,.xls,.csv" id="fileInputRenta" style="position:absolute;inset:0;opacity:0;cursor:pointer">
         <span style="font-size:1.5rem">📊</span>
@@ -278,6 +279,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
    Calculos automaticos con tarifas progresivas AG 2025
    ═══════════════════════════════════════════════════════════ */
 
+/* ── MODO DE LECTURA (debcre / saldo) ── */
+let modoLectura='debcre'; // 'debcre' o 'saldo'
+function setModoLectura(modo){
+  modoLectura=modo;
+  const btnD=document.getElementById('btnDebCre');
+  const btnS=document.getElementById('btnSaldoFinal');
+  const zone=document.getElementById('balanceZone');
+  const cerr=document.getElementById('balanceCerrado');
+  if(modo==='debcre'){
+    btnD.style.background='var(--pri3)';btnD.style.borderColor='var(--pri2)';btnD.style.fontWeight='700';
+    btnS.style.background='';btnS.style.borderColor='var(--border)';btnS.style.fontWeight='';
+    zone.classList.remove('hidden');cerr.classList.add('hidden');
+  }else{
+    btnS.style.background='var(--pri3)';btnS.style.borderColor='var(--pri2)';btnS.style.fontWeight='700';
+    btnD.style.background='';btnD.style.borderColor='var(--border)';btnD.style.fontWeight='';
+    zone.classList.remove('hidden');cerr.classList.remove('hidden');
+  }
+}
+
 /* ── CARGA DE BALANCE ── */
 document.getElementById('fileInputRenta').addEventListener('change',e=>{if(e.target.files[0])procesarBalance(e.target.files[0])});
 const dzR=document.getElementById('dzRenta');
@@ -377,6 +397,136 @@ const PUC_F110=[
   {cas:66,prefijos:['53'],desc:'Otros gastos',excluir:['530505','5305']},
 ];
 
+/* ═══════════════════════════════════════════════════════════════
+   63 REGLAS DE GASTOS NO DEDUCIBLES — Estatuto Tributario Colombia
+   Cada regla: {id, nombre, articulo, tipo ('no_ded'|'gmf'|'parcial'),
+                test(cta,nom) → true si aplica, pct: fraccion deducible}
+   ═══════════════════════════════════════════════════════════════ */
+let deducibilidadDetalle=[]; // [{code,name,val,regla,tipo}]
+
+function normNom(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
+
+const REGLAS_NO_DED=[
+  // ── MULTAS, SANCIONES, INTERESES MORATORIOS (Art. 107, 107-1) ──
+  {id:1,nom:'Multas',art:'107-1',tipo:'no_ded',test:(c,n)=>/multa/.test(n)},
+  {id:2,nom:'Sanciones',art:'107-1',tipo:'no_ded',test:(c,n)=>/sancion/.test(n)},
+  {id:3,nom:'Intereses de mora',art:'107-1',tipo:'no_ded',test:(c,n)=>/interes.*(mora|moratorio)|mora.*interes/.test(n)},
+  {id:4,nom:'Intereses moratorios DIAN',art:'107-1',tipo:'no_ded',test:(c,n)=>c.startsWith('53050504')},
+  {id:5,nom:'Sanciones DIAN',art:'107-1',tipo:'no_ded',test:(c,n)=>c.startsWith('53950520')},
+  {id:6,nom:'Litigios y demandas',art:'107-1',tipo:'no_ded',test:(c,n)=>/litigio|demanda|proceso judicial/.test(n)},
+  {id:7,nom:'Penalidades contractuales',art:'107-1',tipo:'no_ded',test:(c,n)=>/penalidad|clausula penal|indemnizacion por incumpl/.test(n)},
+
+  // ── GMF / 4x1000 (Art. 115) — 50% deducible ──
+  {id:8,nom:'GMF / 4x1000',art:'115',tipo:'gmf',pct:0.5,test:(c,n)=>/gmf|4.?x.?1000|gravamen.*movimiento|4 por mil/.test(n)},
+  {id:9,nom:'GMF por cuenta PUC',art:'115',tipo:'gmf',pct:0.5,test:(c,n)=>c.startsWith('5115')&&/gravamen|gmf|movimiento/.test(n)},
+
+  // ── DONACIONES (Art. 257, 125) ──
+  {id:10,nom:'Donaciones',art:'257',tipo:'no_ded',test:(c,n)=>/donacion/.test(n)&&!/descuento tributario/.test(n)},
+  {id:11,nom:'Donaciones PUC 5395',art:'257',tipo:'no_ded',test:(c,n)=>c.startsWith('539525')},
+
+  // ── GASTOS NO DEDUCIBLES EXPLICITOS EN NOMBRE ──
+  {id:12,nom:'Gasto marcado no deducible',art:'107',tipo:'no_ded',test:(c,n)=>/no deducible|no deduci/.test(n)},
+
+  // ── IMPUESTOS NO DEDUCIBLES (Art. 115) ──
+  {id:13,nom:'Impuesto de renta',art:'115',tipo:'no_ded',test:(c,n)=>/impuesto.*renta|provision.*renta|gasto.*impuesto.*renta/.test(n)},
+  {id:14,nom:'Impuesto al patrimonio',art:'115',tipo:'no_ded',test:(c,n)=>/impuesto.*patrimonio/.test(n)},
+  {id:15,nom:'Impuesto de normalizacion',art:'115',tipo:'no_ded',test:(c,n)=>/normalizacion tributaria/.test(n)},
+  {id:16,nom:'Impuesto diferido gasto',art:'115',tipo:'no_ded',test:(c,n)=>/impuesto diferido/.test(n)},
+  {id:17,nom:'IVA descontable no procedente',art:'115',tipo:'no_ded',test:(c,n)=>/iva.*no.*deducible|iva.*no.*descontable|iva.*mayor.*valor/.test(n)},
+
+  // ── PROVISIONES Y DETERIOROS (Art. 105, 145) ──
+  {id:18,nom:'Provision de cartera',art:'145',tipo:'no_ded',test:(c,n)=>/provision.*cartera|deterioro.*cartera/.test(n)&&!/fiscal/.test(n)},
+  {id:19,nom:'Provision de inventarios',art:'105',tipo:'no_ded',test:(c,n)=>/provision.*inventario|deterioro.*inventario|obsolescencia/.test(n)},
+  {id:20,nom:'Provision de inversiones',art:'105',tipo:'no_ded',test:(c,n)=>/provision.*inversion|deterioro.*inversion/.test(n)},
+  {id:21,nom:'Provision de activos biologicos',art:'105',tipo:'no_ded',test:(c,n)=>/provision.*biolog|deterioro.*biolog/.test(n)},
+  {id:22,nom:'Provision de intangibles',art:'105',tipo:'no_ded',test:(c,n)=>/provision.*intangible|deterioro.*intangible|amortizacion.*intangible.*contable/.test(n)},
+  {id:23,nom:'Provision de PPE',art:'105',tipo:'no_ded',test:(c,n)=>/provision.*propiedad|deterioro.*propiedad|deterioro.*planta|deterioro.*equipo/.test(n)},
+  {id:24,nom:'Provision general',art:'105',tipo:'no_ded',test:(c,n)=>/^provision|gasto.*provision/.test(n)&&!/fiscal|deducible/.test(n)},
+  {id:25,nom:'Deterioro cuentas por cobrar (contable)',art:'145',tipo:'no_ded',test:(c,n)=>/deterioro.*cuenta.*cobrar|deterioro.*deudor/.test(n)&&!/fiscal/.test(n)},
+
+  // ── DEPRECIACIONES NO DEDUCIBLES (Art. 128-140) ──
+  {id:26,nom:'Depreciacion exceso vida util fiscal',art:'137',tipo:'no_ded',test:(c,n)=>/depreciacion.*exceso|depreciacion.*no deducible|depreciacion.*contable.*mayor/.test(n)},
+  {id:27,nom:'Depreciacion activos revaluados',art:'128',tipo:'no_ded',test:(c,n)=>/depreciacion.*revalua/.test(n)},
+
+  // ── AMORTIZACIONES NO DEDUCIBLES (Art. 142-143) ──
+  {id:28,nom:'Amortizacion crédito mercantil',art:'143',tipo:'no_ded',test:(c,n)=>/amortizacion.*credito.*mercantil|amortizacion.*goodwill|amortizacion.*plusvalia/.test(n)},
+  {id:29,nom:'Amortizacion gastos preoperativos exceso',art:'142',tipo:'no_ded',test:(c,n)=>/amortizacion.*preoperativ.*no deducible/.test(n)},
+
+  // ── GASTOS DE PERIODOS ANTERIORES (Art. 107) ──
+  {id:30,nom:'Gastos de vigencias anteriores',art:'107',tipo:'no_ded',test:(c,n)=>/vigencia.*anterior|periodo.*anterior|ejercicio.*anterior|ano.*anterior/.test(n)},
+
+  // ── GASTOS SIN RELACION DE CAUSALIDAD (Art. 107) ──
+  {id:31,nom:'Gastos personales socios',art:'107',tipo:'no_ded',test:(c,n)=>/gasto.*personal.*socio|gasto.*socio.*personal/.test(n)},
+  {id:32,nom:'Gastos suntuarios',art:'107',tipo:'no_ded',test:(c,n)=>/suntuario|lujo.*no.*necesario/.test(n)},
+  {id:33,nom:'Gastos de representacion exceso',art:'107-1',tipo:'no_ded',test:(c,n)=>/representacion.*exceso|representacion.*no deducible/.test(n)},
+  {id:34,nom:'Gastos recreacion no soportados',art:'107',tipo:'no_ded',test:(c,n)=>/recreacion.*no deducible|bienestar.*no deducible/.test(n)},
+
+  // ── EXCESO PAGOS LABORALES (Art. 108, 109, 110) ──
+  {id:35,nom:'Bonificaciones no salariales exceso',art:'108',tipo:'no_ded',test:(c,n)=>/bonificacion.*no.*salarial.*exceso|bonificacion.*no deducible/.test(n)},
+  {id:36,nom:'Indemnizaciones laborales no deducibles',art:'108',tipo:'no_ded',test:(c,n)=>/indemnizacion.*laboral.*no deducible/.test(n)},
+
+  // ── COSTOS Y GASTOS SIN FACTURA ELECTRONICA (Art. 771-2, 616-1) ──
+  {id:37,nom:'Gastos sin soporte (factura electronica)',art:'771-2',tipo:'no_ded',test:(c,n)=>/sin.*factura|sin.*soporte|no.*facturado|gasto.*no.*soportado/.test(n)},
+
+  // ── REGALIAS E INTANGIBLES (Art. 120, 124) ──
+  {id:38,nom:'Regalias a vinculados exterior exceso',art:'124',tipo:'no_ded',test:(c,n)=>/regalia.*vinculado.*exceso|regalia.*no deducible/.test(n)},
+  {id:39,nom:'Pagos a paraisos fiscales',art:'124-2',tipo:'no_ded',test:(c,n)=>/paraiso fiscal|jurisdiccion.*no cooperante|pago.*exterior.*no deducible/.test(n)},
+
+  // ── INTERESES Y GASTOS FINANCIEROS (Art. 117, 118-1) ──
+  {id:40,nom:'Intereses subcapitalizacion',art:'118-1',tipo:'no_ded',test:(c,n)=>/subcapitalizacion|interes.*exceso.*endeudamiento|interes.*vinculado.*exceso/.test(n)},
+  {id:41,nom:'Intereses prestamos socios no bancarizados',art:'117',tipo:'no_ded',test:(c,n)=>/interes.*socio.*no deducible|interes.*prestamo.*socio/.test(n)&&/no deducible/.test(n)},
+  {id:42,nom:'Intereses usura',art:'884 C.Co',tipo:'no_ded',test:(c,n)=>/interes.*usura|interes.*exceso.*legal/.test(n)},
+  {id:43,nom:'Gastos financieros diferencia en cambio no realizada',art:'288',tipo:'no_ded',test:(c,n)=>/diferencia.*cambio.*no realizada|diferencia.*cambio.*contable/.test(n)},
+
+  // ── GASTOS CON VINCULADOS ECONOMICOS (Art. 260-1 a 260-11, precios de transferencia) ──
+  {id:44,nom:'Gastos precios de transferencia exceso',art:'260-2',tipo:'no_ded',test:(c,n)=>/precio.*transferencia.*exceso|vinculado.*exceso.*arm/.test(n)},
+
+  // ── COSTOS Y GASTOS ESTIMADOS (Art. 105) ──
+  {id:45,nom:'Costos estimados o provisionados',art:'105',tipo:'no_ded',test:(c,n)=>/costo.*estimado|costo.*provisionado|provision.*costo/.test(n)&&!/fiscal/.test(n)},
+  {id:46,nom:'Pasivos estimados y provisiones',art:'105',tipo:'no_ded',test:(c,n)=>c.startsWith('5160')||c.startsWith('526')},
+  {id:47,nom:'Provisiones diversas',art:'105',tipo:'no_ded',test:(c,n)=>c.startsWith('5299')&&!/fiscal|deducible/.test(n)},
+
+  // ── IMPUESTOS ASUMIDOS (Art. 115) ──
+  {id:48,nom:'IVA asumido no descontable',art:'115',tipo:'no_ded',test:(c,n)=>/iva.*asumido|iva.*no.*descontable/.test(n)},
+  {id:49,nom:'Retencion asumida',art:'115',tipo:'no_ded',test:(c,n)=>/retencion.*asumida.*no deducible/.test(n)},
+  {id:50,nom:'ICA no deducible',art:'115',tipo:'no_ded',test:(c,n)=>/ica.*no deducible|industria.*comercio.*no deducible/.test(n)},
+
+  // ── GASTOS EN EL EXTERIOR (Art. 121, 122, 123, 124) ──
+  {id:51,nom:'Gastos exterior sin retención',art:'121-123',tipo:'no_ded',test:(c,n)=>/gasto.*exterior.*sin.*retencion|exterior.*no deducible/.test(n)},
+  {id:52,nom:'Gastos exterior exceso 15%',art:'122',tipo:'no_ded',test:(c,n)=>/exterior.*exceso.*15|gasto.*exterior.*limite/.test(n)},
+
+  // ── PERDIDAS EN ACTIVOS (Art. 148, 149) ──
+  {id:53,nom:'Perdida en venta de activos a vinculados',art:'151',tipo:'no_ded',test:(c,n)=>/perdida.*venta.*activo.*vinculado|perdida.*enajenacion.*vinculado/.test(n)},
+  {id:54,nom:'Perdida en activos no productivos',art:'148',tipo:'no_ded',test:(c,n)=>/perdida.*activo.*no productivo|perdida.*activo.*personal/.test(n)},
+
+  // ── BENEFICIOS A EMPLEADOS NIIF (Art. 105) ──
+  {id:55,nom:'Beneficios a empleados largo plazo (NIIF)',art:'105',tipo:'no_ded',test:(c,n)=>/beneficio.*empleado.*largo plazo|beneficio.*post.*empleo|pension.*actuarial/.test(n)},
+  {id:56,nom:'Pagos basados en acciones (NIIF)',art:'105',tipo:'no_ded',test:(c,n)=>/pago.*basado.*accion|stock.*option|compensacion.*accion/.test(n)},
+
+  // ── VALOR RAZONABLE (Art. 105, 28) ──
+  {id:57,nom:'Ajuste valor razonable (no realizado)',art:'105',tipo:'no_ded',test:(c,n)=>/valor razonable.*no realizado|ajuste.*valor razonable|medicion.*valor razonable.*gasto/.test(n)},
+  {id:58,nom:'Perdida no realizada inversiones',art:'105',tipo:'no_ded',test:(c,n)=>/perdida.*no realizada|perdida.*valoracion/.test(n)},
+
+  // ── CUENTAS PUC ESPECIFICAS NO DEDUCIBLES ──
+  {id:59,nom:'Gastos diversos no deducibles (PUC 5395)',art:'107',tipo:'no_ded',test:(c,n)=>c.startsWith('539520')},
+  {id:60,nom:'Gastos extraordinarios (PUC 5310)',art:'107',tipo:'no_ded',test:(c,n)=>c.startsWith('5310')&&/extraordinario|no.*recurrente/.test(n)},
+
+  // ── APORTES PARAFISCALES (Art. 114-1) ──
+  {id:61,nom:'Aportes parafiscales no pagados',art:'114-1',tipo:'no_ded',test:(c,n)=>/parafiscal.*no.*pagado|parafiscal.*no deducible|aportes.*no.*pagado/.test(n)},
+
+  // ── OTROS ──
+  {id:62,nom:'Gastos de ejercicios futuros',art:'105',tipo:'no_ded',test:(c,n)=>/gasto.*futuro|gasto.*anticip.*no deducible|diferido.*gasto/.test(n)&&/no deducible/.test(n)},
+  {id:63,nom:'Ajustes por convergencia NIIF',art:'105',tipo:'no_ded',test:(c,n)=>/convergencia.*niif|ajuste.*niif.*no deducible|efecto.*niif/.test(n)},
+];
+
+function clasificarDeducibilidad(code,name){
+  const n=normNom(name);
+  for(const r of REGLAS_NO_DED){
+    if(r.test(code,n))return r;
+  }
+  return null; // deducible
+}
+
 function clasificarPUCaF110_OLD(data,hdrRow,colMap){
   const result_old={};
   const detail=[];
@@ -458,8 +608,19 @@ function clasificarPUCaF110(data,hdrRow,colMap){
     const name=nameCol!=null?String(row[nameCol]||'').trim():'';
     const nivel=nivelCol>=0?String(row[nivelCol]||'').trim():'';
 
+    const esResultado=/^[456]/.test(code); // clases 4,5,6
+
     let saldo=0;
-    if('saldoCargo' in colMap&&'saldoAbono' in colMap){
+    if(esResultado&&modoLectura==='debcre'&&'deb' in colMap&&'cre' in colMap){
+      // Para cuentas de resultado en modo deb/cre: usar movimientos
+      const deb=parseFloat(row[colMap.deb])||0;
+      const cre=parseFloat(row[colMap.cre])||0;
+      // Clase 4 (ingresos): naturaleza credito → cre - deb
+      // Clase 5 (gastos): naturaleza debito → deb - cre
+      // Clase 6 (costos): naturaleza debito → deb - cre
+      if(code.startsWith('4')) saldo=cre-deb;
+      else saldo=deb-cre;
+    }else if('saldoCargo' in colMap&&'saldoAbono' in colMap){
       const cargo=parseFloat(row[colMap.saldoCargo])||0;
       const abono=parseFloat(row[colMap.saldoAbono])||0;
       saldo=(cargo||abono)?(cargo-abono):0;
@@ -470,8 +631,11 @@ function clasificarPUCaF110(data,hdrRow,colMap){
     filas.push({code,name,nivel,saldo});
   }
 
-  // Clasificar por casilla
+  // Clasificar por casilla + deducibilidad
   const porCasilla={};
+  deducibilidadDetalle=[];
+  let totalNoDed=0,totalGmf=0;
+
   for(const f of filas){
     if(f.saldo===0)continue;
     let casilla=null;
@@ -480,8 +644,21 @@ function clasificarPUCaF110(data,hdrRow,colMap){
       if(m.prefijos.some(p=>f.code.startsWith(p))){casilla=m.cas;break}
     }
     if(!casilla)continue;
+
+    // Aplicar reglas de deducibilidad a gastos (casillas 63-66) y costos (62)
+    const esGasto=[62,63,64,65,66].includes(casilla);
+    let regla=null;
+    if(esGasto) regla=clasificarDeducibilidad(f.code,f.name);
+
     if(!porCasilla[casilla])porCasilla[casilla]=[];
-    porCasilla[casilla].push({code:f.code,name:f.name,val:Math.abs(f.saldo),len:f.code.length});
+    const val=Math.abs(f.saldo);
+    porCasilla[casilla].push({code:f.code,name:f.name,val,len:f.code.length,regla});
+
+    if(regla){
+      deducibilidadDetalle.push({code:f.code,name:f.name,val,regla:regla.nom,art:regla.art,tipo:regla.tipo,pct:regla.pct||0,id:regla.id});
+      if(regla.tipo==='gmf')totalGmf+=val;
+      else totalNoDed+=val;
+    }
   }
 
   // Para cada casilla: tomar cuenta resumen (codigo mas corto) si existe
@@ -497,6 +674,13 @@ function clasificarPUCaF110(data,hdrRow,colMap){
     }
   }
 
+  // Calcular monto no deducible para restar de las casillas de gastos
+  // GMF: 50% no deducible, no_ded: 100% no deducible
+  cas._noDed=Math.round(totalNoDed);
+  cas._gmf=Math.round(totalGmf);
+  cas._gmfNoDed=Math.round(totalGmf*0.5);
+  cas._totalNoDedFiscal=Math.round(totalNoDed+totalGmf*0.5);
+
   // Devoluciones en ventas: separar de ingresos
   const dev=filas.find(f=>/devolucion.*venta/i.test(f.name)&&f.saldo<0);
   if(dev&&cas[47]){
@@ -504,9 +688,6 @@ function clasificarPUCaF110(data,hdrRow,colMap){
     cas[47]+=devVal;
     cas[59]=devVal;
   }
-
-  // Gastos por impuestos (clase 54) no van en el F110 como deducibles
-  // No excluir: ya no estan en PUC_F110
 
   return cas;
 }
@@ -519,9 +700,16 @@ function mostrarClasificacion(){
   const tieneGastos=(cas[62]||0)+(cas[63]||0)+(cas[64]||0)+(cas[65]||0)+(cas[66]||0)>0;
   const tieneCostos=(cas[62]||0)>0;
 
-  if(!tieneIngresos&&!tieneGastos&&!tieneCostos){
+  // Verificar coherencia con la pregunta del usuario
+  if(modoLectura==='debcre'&&!tieneIngresos&&!tieneGastos&&!tieneCostos){
     document.getElementById('errorBalance').classList.remove('hidden');
-    document.getElementById('errorBalance').innerHTML='<strong>El balance parece estar cerrado.</strong> Las clases 4 (ingresos), 5 (gastos) y 6 (costos) estan en cero.<br><br>Para generar el F110 necesitas el balance <strong>ANTES del cierre contable</strong>. En tu software contable, exporta el balance de prueba del periodo sin incluir el asiento de cierre.<br><br><strong>Solo se pre-llenaran las casillas de patrimonio</strong> (activos y pasivos). Los ingresos, costos y gastos debes ingresarlos manualmente.';
+    document.getElementById('errorBalance').innerHTML='<strong>⚠ Dijiste que el balance esta sin cerrar, pero no se encontraron ingresos, costos ni gastos.</strong><br>Revisa que el archivo tenga las clases 4, 5 y 6 con saldo. Si ya esta cerrado, cambia la opcion arriba a "No, ya esta cerrado".<br><br><strong>Solo se pre-llenaran las casillas de patrimonio.</strong>';
+  }else if(modoLectura==='saldo'){
+    document.getElementById('errorBalance').classList.remove('hidden');
+    document.getElementById('errorBalance').innerHTML='Balance cerrado — solo se pre-llenara el <strong>patrimonio</strong> (activos y pasivos). Ingresa ingresos, costos y gastos manualmente.';
+  }else if(!tieneIngresos&&!tieneGastos){
+    document.getElementById('errorBalance').classList.remove('hidden');
+    document.getElementById('errorBalance').innerHTML='<strong>El balance parece estar cerrado.</strong> Las clases 4, 5 y 6 estan en cero. Solo se pre-llenara patrimonio.';
   }else{
     document.getElementById('errorBalance').classList.add('hidden');
   }
@@ -529,36 +717,102 @@ function mostrarClasificacion(){
   document.getElementById('clasifResult').classList.remove('hidden');
   const totalActivos=(cas[36]||0)+(cas[37]||0)+(cas[38]||0)+(cas[39]||0)+(cas[40]||0)+(cas[41]||0)+(cas[42]||0)+(cas[43]||0);
   const totalIngresos=(cas[47]||0)+(cas[48]||0)+(cas[57]||0);
+  const totalGastosCostos=(cas[62]||0)+(cas[63]||0)+(cas[64]||0)+(cas[65]||0)+(cas[66]||0);
 
-  document.getElementById('clasifStats').innerHTML=`
+  // Stats incluyendo deducibilidad
+  let statsHtml=`
     <div class="stat-card blue"><div class="val">${Math.round(totalActivos).toLocaleString('es-CO')}</div><div class="lbl">Total Activos</div></div>
     <div class="stat-card amber"><div class="val">${Math.round(cas[45]||0).toLocaleString('es-CO')}</div><div class="lbl">Pasivos</div></div>
     <div class="stat-card green"><div class="val">${Math.round(totalIngresos).toLocaleString('es-CO')}</div><div class="lbl">Ingresos</div></div>
-    <div class="stat-card red"><div class="val">${Math.round((cas[62]||0)+(cas[63]||0)+(cas[64]||0)+(cas[65]||0)+(cas[66]||0)).toLocaleString('es-CO')}</div><div class="lbl">Costos + Gastos</div></div>`;
+    <div class="stat-card red"><div class="val">${Math.round(totalGastosCostos).toLocaleString('es-CO')}</div><div class="lbl">Costos + Gastos</div></div>`;
+  document.getElementById('clasifStats').innerHTML=statsHtml;
 
   const fmtN=n=>Math.round(n||0).toLocaleString('es-CO');
-  let h='<table style="width:100%;border-collapse:collapse;font-size:.8rem"><thead><tr style="background:var(--pri3)"><th style="padding:6px 8px;text-align:left">Casilla</th><th style="padding:6px 8px;text-align:left">Concepto</th><th style="padding:6px 8px;text-align:right">Valor</th></tr></thead><tbody>';
+
+  // Tabla de clasificacion por casilla
+  let h='<table style="width:100%;border-collapse:collapse;font-size:.8rem"><thead><tr style="background:var(--pri3)"><th style="padding:6px 8px;text-align:left">Cas.</th><th style="padding:6px 8px;text-align:left">Concepto</th><th style="padding:6px 8px;text-align:right">Valor</th></tr></thead><tbody>';
   for(const m of PUC_F110){
     const val=cas[m.cas]||0;
     if(val===0)continue;
     h+=`<tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px;font-family:JetBrains Mono;font-weight:700">${m.cas}</td><td style="padding:4px 8px">${m.desc}</td><td style="padding:4px 8px;text-align:right;font-family:JetBrains Mono">${fmtN(val)}</td></tr>`;
   }
   h+='</tbody></table>';
+
+  // Seccion de deducibilidad (si hay gastos no deducibles detectados)
+  if(deducibilidadDetalle.length>0){
+    const noDedTotal=cas._noDed||0;
+    const gmfTotal=cas._gmf||0;
+    const gmfNoDed=cas._gmfNoDed||0;
+    const totalFiscalNoDed=cas._totalNoDedFiscal||0;
+
+    h+=`<div style="margin-top:12px;padding:12px;background:#FFF8E1;border:1px solid #FCD34D;border-radius:8px">
+      <div style="font-weight:700;font-size:.85rem;color:#92400E;margin-bottom:8px">⚠ Gastos No Deducibles Detectados</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;text-align:center">
+        <div style="background:#fff;padding:8px;border-radius:6px;border:1px solid #FCD34D">
+          <div style="font-size:.7rem;color:#92400E;text-transform:uppercase">100% No Deducible</div>
+          <div style="font-size:1rem;font-weight:700;font-family:JetBrains Mono;color:#C62828">${fmtN(noDedTotal)}</div>
+        </div>
+        <div style="background:#fff;padding:8px;border-radius:6px;border:1px solid #FCD34D">
+          <div style="font-size:.7rem;color:#92400E;text-transform:uppercase">GMF (50% no ded.)</div>
+          <div style="font-size:1rem;font-weight:700;font-family:JetBrains Mono;color:#D97706">${fmtN(gmfTotal)}</div>
+        </div>
+        <div style="background:#fff;padding:8px;border-radius:6px;border:1px solid #FCD34D">
+          <div style="font-size:.7rem;color:#92400E;text-transform:uppercase">Total a restar fiscal</div>
+          <div style="font-size:1rem;font-weight:700;font-family:JetBrains Mono;color:#C62828">${fmtN(totalFiscalNoDed)}</div>
+        </div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:.75rem"><thead><tr style="background:#FEF3C7"><th style="padding:4px 6px;text-align:left">Cuenta</th><th style="padding:4px 6px;text-align:left">Nombre</th><th style="padding:4px 6px;text-align:right">Valor</th><th style="padding:4px 6px;text-align:left">Regla</th><th style="padding:4px 6px;text-align:center">Art.</th></tr></thead><tbody>`;
+    for(const d of deducibilidadDetalle.sort((a,b)=>b.val-a.val)){
+      const color=d.tipo==='gmf'?'#D97706':'#C62828';
+      const badge=d.tipo==='gmf'?'<span style="background:#FEF3C7;color:#92400E;padding:1px 5px;border-radius:4px;font-size:.65rem">50%</span>':'<span style="background:#FFEBEE;color:#C62828;padding:1px 5px;border-radius:4px;font-size:.65rem">NO DED</span>';
+      h+=`<tr style="border-bottom:1px solid #FDE68A"><td style="padding:3px 6px;font-family:JetBrains Mono;font-size:.7rem">${d.code}</td><td style="padding:3px 6px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.name.substring(0,45)}</td><td style="padding:3px 6px;text-align:right;font-family:JetBrains Mono;color:${color};font-weight:600">${fmtN(d.val)}</td><td style="padding:3px 6px">${badge} ${d.regla}</td><td style="padding:3px 6px;text-align:center;font-size:.7rem;color:#6b7280">Art.${d.art}</td></tr>`;
+    }
+    h+=`</tbody></table>
+      <div style="margin-top:8px;font-size:.75rem;color:#92400E">Al aplicar, se restara <strong>$${fmtN(totalFiscalNoDed)}</strong> de los gastos deducibles en el formulario.</div>
+    </div>`;
+  }
+
   document.getElementById('clasifDetail').innerHTML=h;
 }
 
 function aplicarAlFormulario(){
   const cas=clasificacionRenta;
+  const soloPatrimonio=modoLectura==='saldo';
+
+  // Distribuir monto no deducible proporcionalmente entre casillas 63-66
+  const totalNoDedFiscal=cas._totalNoDedFiscal||0;
+  let noDedPorCasilla={63:0,64:0,65:0,66:0};
+  if(totalNoDedFiscal>0&&deducibilidadDetalle.length>0){
+    // Agrupar no deducibles por casilla de gasto
+    for(const d of deducibilidadDetalle){
+      let destCas=null;
+      for(const m of PUC_F110){
+        if(m.excluir&&m.excluir.some(e=>d.code.startsWith(e)))continue;
+        if(m.prefijos.some(p=>d.code.startsWith(p))){destCas=m.cas;break}
+      }
+      if(destCas&&[63,64,65,66].includes(destCas)){
+        const resta=d.tipo==='gmf'?d.val*0.5:d.val;
+        noDedPorCasilla[destCas]+=resta;
+      }
+    }
+  }
+
   for(const[c,val] of Object.entries(cas)){
+    if(c.startsWith('_'))continue; // skip metadata
+    if(soloPatrimonio&&![36,37,38,39,40,41,42,43,45].includes(Number(c)))continue;
     const el=document.getElementById('c'+c);
     if(el&&!el.readOnly){
-      const rounded=Math.round(val/1000)*1000;
+      let adjusted=val;
+      // Restar no deducibles de la casilla correspondiente
+      if(noDedPorCasilla[Number(c)]){
+        adjusted=Math.max(val-noDedPorCasilla[Number(c)],0);
+      }
+      const rounded=Math.round(adjusted/1000)*1000;
       el.value=rounded?rounded.toLocaleString('es-CO'):'';
       el.classList.toggle('filled',rounded!==0);
     }
   }
   recalcular();
-  // Scroll to form
   document.querySelector('.dian-form').scrollIntoView({behavior:'smooth'});
 }
 
@@ -698,121 +952,345 @@ function recalcular(){
     <div class="stat-card green"><div class="val">${fN(v('c111'))}</div><div class="lbl">Saldo a Favor</div></div>`;
 }
 
-// Excel export con formulas
+// Excel export — Formato DIAN real con 2 hojas
 async function exportExcel(){
   const wb=new ExcelJS.Workbook();
-  const ws=wb.addWorksheet('F110');
-  const hdrFill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1F4E79'}};
-  const hdrFont={bold:true,color:{argb:'FFFFFFFF'},size:10,name:'Arial'};
-  const secFill={type:'pattern',pattern:'solid',fgColor:{argb:'FFD4E6F1'}};
-  const totalFill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F2F5'}};
-  const resultFill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8F5E9'}};
+
+  // ═══ HOJA 1: FORMULARIO 110 ═══
+  const ws=wb.addWorksheet('110');
+
+  // Estilos
+  const DIAN_BLUE='FF1A3C6E';
+  const LIGHT_BLUE='FFE1F0F7';
+  const SEC_BLUE='FFD4E6F1';
+  const TOTAL_GRAY='FFF0F2F5';
+  const RESULT_GREEN='FFE8F5E9';
+  const WHITE='FFFFFFFF';
   const thin={style:'thin',color:{argb:'FF808080'}};
   const border={top:thin,bottom:thin,left:thin,right:thin};
+  const thickBorder={top:{style:'medium'},bottom:{style:'medium'},left:{style:'medium'},right:{style:'medium'}};
+  const fArial={name:'Arial',size:10};
+  const fBold={...fArial,bold:true};
+  const fWhite={...fBold,color:{argb:WHITE}};
+  const fSec={...fBold,color:{argb:DIAN_BLUE},size:9};
+  const fillDian={type:'pattern',pattern:'solid',fgColor:{argb:DIAN_BLUE}};
+  const fillLight={type:'pattern',pattern:'solid',fgColor:{argb:LIGHT_BLUE}};
+  const fillSec={type:'pattern',pattern:'solid',fgColor:{argb:SEC_BLUE}};
+  const fillTotal={type:'pattern',pattern:'solid',fgColor:{argb:TOTAL_GRAY}};
+  const fillResult={type:'pattern',pattern:'solid',fgColor:{argb:RESULT_GREEN}};
+  const numFmt='#,##0';
 
-  // Headers
-  ws.addRow(['Formulario 110 - Declaracion de Renta AG 2025']).font={bold:true,size:14,color:{argb:'FF1F4E79'}};
-  ws.addRow([document.getElementById('cfgRazon').value||'','NIT:',document.getElementById('cfgNit').value||'']);
-  ws.addRow([]);
+  // Columnas: A=seccion(5), B-J=concepto(merge), K=casilla(5), L=valor(15)
+  ws.getColumn(1).width=6;
+  for(let c=2;c<=10;c++)ws.getColumn(c).width=10;
+  ws.getColumn(11).width=5;ws.getColumn(12).width=18;
 
-  // Column widths
-  ws.getColumn(1).width=45;ws.getColumn(2).width=8;ws.getColumn(3).width=20;ws.getColumn(4).width=25;
+  const nit=document.getElementById('cfgNit').value||'';
+  const razon=document.getElementById('cfgRazon').value||'';
+  const year=document.getElementById('cfgYear').value||'2025';
+  const actividad=document.getElementById('cfgActividad').value||'';
 
+  // ── Encabezado DIAN ──
+  let r=1;
+  // Fila 1: DIAN | Titulo | 110
+  ws.mergeCells(`A${r}:A${r+3}`);
+  const dianCell=ws.getCell(`A${r}`);
+  dianCell.value='DIAN';dianCell.font={...fWhite,size:12};dianCell.fill=fillDian;
+  dianCell.alignment={vertical:'middle',horizontal:'center',wrapText:true};
+  dianCell.border=thickBorder;
+
+  ws.mergeCells(`B${r}:J${r+1}`);
+  const tituloCell=ws.getCell(`B${r}`);
+  tituloCell.value='Declaracion de Renta y Complementarios\nPersonas Juridicas y Asimiladas';
+  tituloCell.font={...fBold,size:11};tituloCell.alignment={vertical:'middle',horizontal:'center',wrapText:true};
+  tituloCell.border=thickBorder;
+
+  ws.mergeCells(`K${r}:L${r+1}`);
+  const f110Cell=ws.getCell(`K${r}`);
+  f110Cell.value='110';f110Cell.font={name:'Arial',size:28,bold:true,color:{argb:WHITE}};
+  f110Cell.fill=fillDian;f110Cell.alignment={vertical:'middle',horizontal:'center'};
+  f110Cell.border=thickBorder;
+
+  r=3;
+  ws.mergeCells(`B${r}:J${r}`);
+  ws.getCell(`B${r}`).value='Privada · AG '+year;ws.getCell(`B${r}`).font={...fArial,size:9,italic:true};
+  ws.getCell(`B${r}`).alignment={horizontal:'center'};
+
+  // Fila datos generales
+  r=5;
+  ws.mergeCells(`A${r}:A${r+1}`);
+  const dgCell=ws.getCell(`A${r}`);
+  dgCell.value='Datos\nGenerales';dgCell.font=fSec;dgCell.fill=fillSec;
+  dgCell.alignment={vertical:'middle',horizontal:'center',wrapText:true};dgCell.border=border;
+
+  ws.mergeCells(`B${r}:E${r}`);ws.getCell(`B${r}`).value='5. NIT: '+nit;ws.getCell(`B${r}`).font=fBold;ws.getCell(`B${r}`).border=border;
+  ws.mergeCells(`F${r}:J${r}`);ws.getCell(`F${r}`).value='24. Actividad: '+actividad;ws.getCell(`F${r}`).font=fArial;ws.getCell(`F${r}`).border=border;
+  ws.mergeCells(`K${r}:L${r}`);ws.getCell(`K${r}`).value='1. Ano: '+year;ws.getCell(`K${r}`).font=fBold;ws.getCell(`K${r}`).border=border;
+
+  r=6;
+  ws.mergeCells(`B${r}:L${r}`);ws.getCell(`B${r}`).value='11. Razon social: '+razon;ws.getCell(`B${r}`).font=fBold;ws.getCell(`B${r}`).border=border;
+
+  // ── Casillas del formulario ──
   const casillas=[
-    {s:'PATRIMONIO'},
-    {c:36,d:'Efectivo y equivalentes'},{c:37,d:'Inversiones e instrumentos financieros'},
-    {c:38,d:'Cuentas, documentos y arrend. financiero'},{c:39,d:'Inventarios'},
-    {c:40,d:'Activos intangibles'},{c:41,d:'Activos biologicos'},
-    {c:42,d:'Propiedades, planta y equipo'},{c:43,d:'Otros activos'},
-    {c:44,d:'Total patrimonio bruto',f:'SUM(C{r36}:C{r43})'},
+    {s:'Patrimonio'},
+    {c:36,d:'Efectivo y equivalentes al efectivo'},
+    {c:37,d:'Inversiones e instrumentos financieros derivados'},
+    {c:38,d:'Cuentas, documentos y arrendamientos financieros por cobrar'},
+    {c:39,d:'Inventarios'},
+    {c:40,d:'Activos intangibles'},
+    {c:41,d:'Activos biologicos'},
+    {c:42,d:'Propiedades, planta y equipo, propiedades de inversion y ANCMV'},
+    {c:43,d:'Otros activos'},
+    {c:44,d:'Total patrimonio bruto (36 a 43)',f:'SUM(L{r36}:L{r43})',t:1},
     {c:45,d:'Pasivos'},
-    {c:46,d:'Total patrimonio liquido',f:'C{r44}-C{r45}'},
-    {s:'INGRESOS'},
-    {c:47,d:'Ingresos brutos actividades ordinarias'},{c:48,d:'Ingresos financieros'},
-    {c:49,d:'Dividendos no constitutivos'},{c:50,d:'Dividendos sec 30 ET'},
-    {c:51,d:'Dividendos gravadas recibidas'},{c:52,d:'Dividendos gravadas exterior'},
-    {c:53,d:'Dividendos gravadas 7.5%'},{c:54,d:'Dividendos tarifa general'},
+    {c:46,d:'Total patrimonio liquido (44 - 45)',f:'L{r44}-L{r45}',t:1},
+    {s:'Ingresos'},
+    {c:47,d:'Ingresos brutos de actividades ordinarias'},
+    {c:48,d:'Ingresos financieros'},
+    {c:49,d:'Dividendos y/o participaciones no constitutivos de renta ni ganancia ocasional'},
+    {c:50,d:'Dividendos y/o participaciones recibidas por CHC exentos'},
+    {c:51,d:'Dividendos y/o participaciones gravadas recibidas'},
+    {c:52,d:'Dividendos y/o participaciones gravadas recibidas (ext)'},
+    {c:53,d:'Dividendos y/o participaciones gravadas al 7,5%'},
+    {c:54,d:'Dividendos y/o participaciones gravadas a tarifa general'},
     {c:57,d:'Otros ingresos'},
-    {c:58,d:'Total ingresos brutos',f:'SUM(C{r47}:C{r54})+C{r57}'},
-    {c:59,d:'Devoluciones, rebajas y descuentos'},{c:60,d:'Ingresos no constitutivos de renta'},
-    {c:61,d:'Total ingresos netos',f:'C{r58}-C{r59}-C{r60}'},
-    {s:'COSTOS Y DEDUCCIONES'},
-    {c:62,d:'Costos'},{c:63,d:'Gastos de administracion'},{c:64,d:'Gastos de distribucion y ventas'},
-    {c:65,d:'Gastos financieros'},{c:66,d:'Otros gastos y deducciones'},
-    {c:67,d:'Total costos y gastos deducibles',f:'SUM(C{r62}:C{r66})'},
-    {s:'RENTA'},
-    {c:70,d:'Recuperacion de deducciones'},{c:71,d:'Renta Pasiva ECE'},
-    {c:72,d:'Renta liquida ordinaria',f:'MAX(C{r61}-C{r67}+C{r70}+C{r71},0)'},
-    {c:73,d:'Perdida liquida',f:'MAX(-(C{r61}-C{r67}+C{r70}+C{r71}),0)'},
+    {c:58,d:'Total ingresos brutos (47 a 54 + 57)',f:'SUM(L{r47}:L{r54})+L{r57}',t:1},
+    {c:59,d:'Devoluciones, rebajas y descuentos en ventas'},
+    {c:60,d:'Ingresos no constitutivos de renta ni ganancia ocasional'},
+    {c:61,d:'Total ingresos netos (58 - 59 - 60)',f:'L{r58}-L{r59}-L{r60}',t:1},
+    {s:'Costos y Deducciones'},
+    {c:62,d:'Costos'},
+    {c:63,d:'Gastos de administracion'},
+    {c:64,d:'Gastos de distribucion y ventas'},
+    {c:65,d:'Gastos financieros'},
+    {c:66,d:'Otros gastos y deducciones'},
+    {c:67,d:'Total costos y gastos deducibles (62 a 66)',f:'SUM(L{r62}:L{r66})',t:1},
+    {s:'Renta'},
+    {c:70,d:'Renta por recuperacion de deducciones'},
+    {c:71,d:'Renta Pasiva - ECE sin residencia fiscal en Colombia'},
+    {c:72,d:'Renta liquida ordinaria del ejercicio',f:'MAX(L{r61}-L{r67}+L{r70}+L{r71},0)',t:1},
+    {c:73,d:'Perdida liquida del ejercicio',f:'MAX(-(L{r61}-L{r67}+L{r70}+L{r71}),0)',t:1},
     {c:74,d:'Compensaciones'},
-    {c:75,d:'Renta liquida',f:'MAX(C{r72}-C{r74},0)'},
-    {c:76,d:'Renta presuntiva'},{c:77,d:'Renta exenta'},{c:78,d:'Rentas gravables'},
-    {c:79,d:'RENTA LIQUIDA GRAVABLE',f:'MAX(MAX(C{r75},C{r76})-C{r77}+C{r78},0)'},
-    {s:'GANANCIAS OCASIONALES'},
-    {c:80,d:'Ingresos ganancias ocasionales'},{c:81,d:'Costos ganancias ocasionales'},
-    {c:82,d:'Ganancias no gravadas y exentas'},
-    {c:83,d:'Ganancias ocasionales gravables',f:'MAX(C{r80}-C{r81}-C{r82},0)'},
-    {s:'LIQUIDACION PRIVADA'},
-    {c:84,d:'Impuesto sobre rentas liquidas gravables',f:'ROUND(C{r79}*0.35,-3)'},
-    {c:85,d:'Impuesto dividendos 7.5%',f:'ROUND(C{r53}*0.075,-3)'},
-    {c:86,d:'Impuesto dividendos tarifa general',f:'ROUND(C{r54}*0.35,-3)'},
+    {c:75,d:'Renta liquida (72 - 74)',f:'MAX(L{r72}-L{r74},0)',t:1},
+    {c:76,d:'Renta presuntiva'},
+    {c:77,d:'Renta exenta'},
+    {c:78,d:'Rentas gravables'},
+    {c:79,d:'Renta liquida gravable',f:'MAX(MAX(L{r75},L{r76})-L{r77}+L{r78},0)',t:2},
+    {s:'Ganancias Ocasionales'},
+    {c:80,d:'Ingresos por ganancias ocasionales'},
+    {c:81,d:'Costos por ganancias ocasionales'},
+    {c:82,d:'Ganancias ocasionales no gravadas y exentas'},
+    {c:83,d:'Ganancias ocasionales gravables',f:'MAX(L{r80}-L{r81}-L{r82},0)',t:1},
+    {s:'Liquidacion Privada'},
+    {c:84,d:'Impuesto sobre rentas liquidas gravables',f:'ROUND(L{r79}*0.35,-3)',t:1},
+    {c:85,d:'Impuesto dividendos 7,5%',f:'ROUND(L{r53}*0.075,-3)'},
+    {c:86,d:'Impuesto dividendos tarifa general',f:'ROUND(L{r54}*0.35,-3)'},
     {c:87,d:'Impuesto dividendos exterior'},
-    {c:91,d:'Total impuesto sobre rentas',f:'C{r84}+C{r85}+C{r86}+C{r87}'},
+    {c:91,d:'Total impuesto sobre rentas',f:'L{r84}+L{r85}+L{r86}+L{r87}',t:1},
     {c:92,d:'Descuentos tributarios'},
-    {c:93,d:'Impuesto neto de renta',f:'MAX(C{r91}-C{r92},0)'},
-    {c:94,d:'Impuesto ganancias ocasionales',f:'ROUND(C{r83}*0.15,-3)'},
-    {c:95,d:'Descuento impuestos pagados exterior'},
-    {c:96,d:'Total impuesto a cargo',f:'MAX(C{r93}+C{r94}-C{r95},0)'},
-    {s:'PAGOS'},
-    {c:99,d:'Anticipo renta ano anterior'},{c:100,d:'Saldo a favor ano anterior'},
-    {c:101,d:'Autorretenciones'},{c:102,d:'Otras retenciones'},
-    {c:103,d:'Total retenciones',f:'C{r101}+C{r102}'},
-    {c:104,d:'Anticipo renta siguiente',f:'ROUND(C{r93}*0.75,-3)'},
-    {s:'SALDO'},
-    {c:110,d:'SALDO A PAGAR',f:'MAX(C{r96}+C{r104}-C{r99}-C{r100}-C{r103},0)'},
-    {c:111,d:'SALDO A FAVOR',f:'MAX(C{r99}+C{r100}+C{r103}-C{r96}-C{r104},0)'},
+    {c:93,d:'Impuesto neto de renta (91 - 92)',f:'MAX(L{r91}-L{r92},0)',t:1},
+    {c:94,d:'Impuesto de ganancias ocasionales',f:'ROUND(L{r83}*0.15,-3)'},
+    {c:95,d:'Descuento impuestos pagados en el exterior'},
+    {c:96,d:'Total impuesto a cargo',f:'MAX(L{r93}+L{r94}-L{r95},0)',t:1},
+    {s:'Pagos'},
+    {c:99,d:'Anticipo renta ano gravable anterior'},
+    {c:100,d:'Saldo a favor ano gravable anterior sin solicitud de devolucion'},
+    {c:101,d:'Autorretenciones'},
+    {c:102,d:'Otras retenciones'},
+    {c:103,d:'Total retenciones ano gravable',f:'L{r101}+L{r102}',t:1},
+    {c:104,d:'Anticipo renta para el ano gravable siguiente',f:'ROUND(L{r93}*0.75,-3)'},
+    {s:'Saldo'},
+    {c:110,d:'SALDO A PAGAR',f:'MAX(L{r96}+L{r104}-L{r99}-L{r100}-L{r103},0)',t:2},
+    {c:111,d:'SALDO A FAVOR',f:'MAX(L{r99}+L{r100}+L{r103}-L{r96}-L{r104},0)',t:2},
   ];
 
+  r=8;
   const rowMap={};
-  let r=4;
+  let secStart=r;
+
   for(const item of casillas){
     if(item.s){
-      const row=ws.addRow([item.s]);
-      row.getCell(1).fill=secFill;row.getCell(1).font={bold:true,size:10,color:{argb:'FF1A3C6E'}};
-      row.eachCell(c=>{c.border=border});
+      // Seccion
+      ws.mergeCells(`A${r}:L${r}`);
+      const sc=ws.getCell(`A${r}`);
+      sc.value=item.s.toUpperCase();sc.font=fSec;sc.fill=fillSec;
+      sc.alignment={horizontal:'left'};sc.border=border;
       r++;continue;
     }
-    rowMap[item.c]=r+1;
+    rowMap[item.c]=r;
+
+    // Col A: vacio (seccion ya puesta arriba)
+    // Col B-J: concepto (merge)
+    ws.mergeCells(`B${r}:J${r}`);
+    const conceptCell=ws.getCell(`B${r}`);
+    conceptCell.value=item.d;
+    conceptCell.font=item.t===2?fBold:fArial;
+    conceptCell.alignment={vertical:'middle',wrapText:true};
+
+    // Col K: casilla
+    const casCell=ws.getCell(`K${r}`);
+    casCell.value=item.c;casCell.font={...fArial,size:8,color:{argb:'FF888888'}};
+    casCell.alignment={horizontal:'center',vertical:'middle'};
+
+    // Col L: valor
+    const valCell=ws.getCell(`L${r}`);
     const val=v('c'+item.c);
-    const row=ws.addRow([item.d,item.c,val||'']);
-    row.getCell(2).alignment={horizontal:'center'};
-    row.getCell(3).numFmt='#,##0';
-    row.eachCell(c=>{c.font={size:10,name:'Arial'};c.border=border});
-    if(item.f){
-      row.getCell(1).fill=totalFill;row.getCell(1).font={bold:true,size:10,name:'Arial'};
+    valCell.value=val||0;
+    valCell.numFmt=numFmt;
+    valCell.font=item.t===2?{...fBold,size:11}:item.t===1?fBold:fArial;
+
+    // Fills
+    const rowFill=item.t===2?fillResult:item.t===1?fillTotal:fillLight;
+    for(let c=1;c<=12;c++){
+      const cell=ws.getCell(r,c);
+      cell.fill=rowFill;cell.border=border;
     }
+    ws.getRow(r).height=item.d.length>60?28:20;
     r++;
   }
 
-  // Apply formulas (replace row references)
-  r=4;
+  // Aplicar formulas
   for(const item of casillas){
-    if(item.s){r++;continue}
-    if(item.f){
-      let formula=item.f;
-      for(const[cas,row] of Object.entries(rowMap)){
-        formula=formula.replace(new RegExp('\\{r'+cas+'\\}','g'),row);
-      }
-      ws.getCell('C'+(rowMap[item.c])).value={formula};
+    if(item.s||!item.f)continue;
+    let formula=item.f;
+    for(const[cas,row] of Object.entries(rowMap)){
+      formula=formula.replace(new RegExp('\\{r'+cas+'\\}','g'),row);
     }
-    r++;
+    ws.getCell(`L${rowMap[item.c]}`).value={formula};
   }
 
+  // Firma
+  r+=2;
+  ws.mergeCells(`A${r}:L${r}`);
+  ws.getCell(`A${r}`).value='El contador debe validar antes de presentar — Borrador generado por ExogenaDIAN';
+  ws.getCell(`A${r}`).font={...fArial,size:8,italic:true,color:{argb:'FF999999'}};
+
+  // ═══ HOJA 2: IMPUESTO MINIMO (TTD) ═══
+  const ws2=wb.addWorksheet('Impuesto minimo');
+  ws2.getColumn(1).width=5;ws2.getColumn(2).width=35;ws2.getColumn(3).width=18;ws2.getColumn(4).width=20;ws2.getColumn(5).width=55;
+
+  let r2=1;
+  ws2.mergeCells(`B${r2}:E${r2}`);
+  ws2.getCell(`B${r2}`).value='TASA MINIMA DE TRIBUTACION EN RENTA (Paragrafo 6 art. 240 ET)';
+  ws2.getCell(`B${r2}`).font={...fBold,size:12,color:{argb:DIAN_BLUE}};
+  r2+=2;
+
+  ws2.getCell(`B${r2}`).value='TTD = ID / UD';ws2.getCell(`B${r2}`).font={...fBold,size:11};
+  ws2.getCell(`D${r2}`).value='Si TTD < 15%, se genera Impuesto Adicional (IA)';ws2.getCell(`D${r2}`).font={...fArial,italic:true};
+  r2+=2;
+
+  // Referencia a hoja 110
+  const refImpNeto=`'110'!L${rowMap[93]}`;
+  const refDescTrib=`'110'!L${rowMap[92]}`;
+
+  const ttdItems=[
+    {d:'INR: Impuesto neto de renta',ref:refImpNeto,id:'ttd_inr',desc:'Despues de descuentos tributarios (casilla 93)'},
+    {d:'DTC: Descuentos tributarios',ref:refDescTrib,id:'ttd_dtc',desc:'Creditos tributarios y Art. 254 ET (casilla 92)'},
+    {d:'IRP: Impuesto renta pasiva ECE',val:0,id:'ttd_irp',desc:'Renta liquida pasiva x tarifa general (si aplica)'},
+    {d:'',sep:true},
+    {d:'UC: Utilidad contable antes de impuestos',val:vTTD('ttdUtilidad'),id:'ttd_uc',desc:'Utilidad contable o financiera antes de impuestos'},
+    {d:'DPARL: Diferencias permanentes (+renta)',val:vTTD('ttdDifPerm'),id:'ttd_dparl',desc:'Diferencias permanentes que aumentan la renta liquida'},
+    {d:'INCRNGO',val:vTTD('ttdINCRNGO'),id:'ttd_incrngo',desc:'Ingresos no constitutivos de renta ni ganancia ocasional'},
+    {d:'VIMPP: Valor metodo participacion',val:0,id:'ttd_vimpp',desc:'Ingreso metodo de participacion patrimonial'},
+    {d:'VNGO: Valor neto ganancia ocasional',val:0,id:'ttd_vngo',desc:'Valor neto de ingresos por ganancia ocasional'},
+    {d:'RE: Rentas exentas (tratados, CHC, 235-2)',val:vTTD('ttdExentas'),id:'ttd_re',desc:'Rentas exentas por tratados, CHC, Art. 235-2 lit a) y b)'},
+    {d:'C: Compensaciones no contables',val:0,id:'ttd_c',desc:'Compensacion de perdidas fiscales no en utilidad contable'},
+  ];
+
+  ws2.getCell(`B${r2}`).value='Componente';ws2.getCell(`B${r2}`).font=fBold;ws2.getCell(`B${r2}`).fill=fillSec;ws2.getCell(`B${r2}`).border=border;
+  ws2.getCell(`C${r2}`).value='Valor';ws2.getCell(`C${r2}`).font=fBold;ws2.getCell(`C${r2}`).fill=fillSec;ws2.getCell(`C${r2}`).border=border;
+  ws2.getCell(`D${r2}`).value='Referencia';ws2.getCell(`D${r2}`).font=fBold;ws2.getCell(`D${r2}`).fill=fillSec;ws2.getCell(`D${r2}`).border=border;
+  ws2.getCell(`E${r2}`).value='Descripcion';ws2.getCell(`E${r2}`).font=fBold;ws2.getCell(`E${r2}`).fill=fillSec;ws2.getCell(`E${r2}`).border=border;
+  r2++;
+
+  const ttdRowMap={};
+  for(const item of ttdItems){
+    if(item.sep){r2++;continue}
+    ttdRowMap[item.id]=r2;
+    ws2.getCell(`B${r2}`).value=item.d;ws2.getCell(`B${r2}`).font=fArial;ws2.getCell(`B${r2}`).border=border;
+    if(item.ref){
+      ws2.getCell(`C${r2}`).value={formula:item.ref};
+    }else{
+      ws2.getCell(`C${r2}`).value=item.val||0;
+    }
+    ws2.getCell(`C${r2}`).numFmt=numFmt;ws2.getCell(`C${r2}`).font=fBold;ws2.getCell(`C${r2}`).border=border;
+    ws2.getCell(`C${r2}`).fill=fillLight;
+    ws2.getCell(`D${r2}`).value=item.ref?'← Hoja 110':'Digitar';ws2.getCell(`D${r2}`).font={...fArial,size:8,color:{argb:'FF999999'}};ws2.getCell(`D${r2}`).border=border;
+    ws2.getCell(`E${r2}`).value=item.desc;ws2.getCell(`E${r2}`).font={...fArial,size:9};ws2.getCell(`E${r2}`).border=border;
+    r2++;
+  }
+
+  // Formulas de resultado
+  r2+=2;
+  const rINR=ttdRowMap['ttd_inr'],rDTC=ttdRowMap['ttd_dtc'],rIRP=ttdRowMap['ttd_irp'];
+  const rUC=ttdRowMap['ttd_uc'],rDPARL=ttdRowMap['ttd_dparl'],rINCRNGO=ttdRowMap['ttd_incrngo'];
+  const rVIMPP=ttdRowMap['ttd_vimpp'],rVNGO=ttdRowMap['ttd_vngo'],rRE=ttdRowMap['ttd_re'],rC=ttdRowMap['ttd_c'];
+
+  ws2.getCell(`B${r2}`).value='Impuesto Depurado (ID)';ws2.getCell(`B${r2}`).font=fBold;ws2.getCell(`B${r2}`).fill=fillTotal;ws2.getCell(`B${r2}`).border=border;
+  ws2.getCell(`C${r2}`).value={formula:`C${rINR}+C${rDTC}-C${rIRP}`};
+  ws2.getCell(`C${r2}`).numFmt=numFmt;ws2.getCell(`C${r2}`).font=fBold;ws2.getCell(`C${r2}`).fill=fillTotal;ws2.getCell(`C${r2}`).border=border;
+  const rID=r2;r2++;
+
+  ws2.getCell(`B${r2}`).value='Utilidad Depurada (UD)';ws2.getCell(`B${r2}`).font=fBold;ws2.getCell(`B${r2}`).fill=fillTotal;ws2.getCell(`B${r2}`).border=border;
+  ws2.getCell(`C${r2}`).value={formula:`C${rUC}+C${rDPARL}-C${rINCRNGO}-C${rVIMPP}-C${rVNGO}-C${rRE}-C${rC}`};
+  ws2.getCell(`C${r2}`).numFmt=numFmt;ws2.getCell(`C${r2}`).font=fBold;ws2.getCell(`C${r2}`).fill=fillTotal;ws2.getCell(`C${r2}`).border=border;
+  const rUD=r2;r2+=2;
+
+  ws2.getCell(`B${r2}`).value='TTD (Tasa de Tributacion Depurada)';ws2.getCell(`B${r2}`).font={...fBold,size:12};ws2.getCell(`B${r2}`).fill=fillResult;ws2.getCell(`B${r2}`).border=border;
+  ws2.getCell(`C${r2}`).value={formula:`IF(C${rUD}>0,C${rID}/C${rUD},0)`};
+  ws2.getCell(`C${r2}`).numFmt='0.00%';ws2.getCell(`C${r2}`).font={...fBold,size:14};ws2.getCell(`C${r2}`).fill=fillResult;ws2.getCell(`C${r2}`).border=border;
+  const rTTD=r2;r2+=2;
+
+  ws2.getCell(`B${r2}`).value='Impuesto Adicional (IA)';ws2.getCell(`B${r2}`).font={...fBold,size:12,color:{argb:'FFC62828'}};ws2.getCell(`B${r2}`).border=border;
+  ws2.getCell(`C${r2}`).value={formula:`IF(AND(C${rTTD}<0.15,C${rUD}>0),ROUND(C${rUD}*0.15-C${rID},-3),0)`};
+  ws2.getCell(`C${r2}`).numFmt=numFmt;ws2.getCell(`C${r2}`).font={...fBold,size:14,color:{argb:'FFC62828'}};ws2.getCell(`C${r2}`).border=border;
+  r2+=2;
+
+  ws2.getCell(`B${r2}`).value='Si IA > 0, se suma al impuesto neto de renta.';ws2.getCell(`B${r2}`).font={...fArial,size:9,italic:true};
+
+  // ═══ HOJA 3: DEDUCIBILIDAD (si hay datos) ═══
+  if(deducibilidadDetalle.length>0){
+    const ws3=wb.addWorksheet('Gastos No Deducibles');
+    ws3.getColumn(1).width=12;ws3.getColumn(2).width=45;ws3.getColumn(3).width=18;
+    ws3.getColumn(4).width=8;ws3.getColumn(5).width=30;ws3.getColumn(6).width=10;
+
+    let r3=1;
+    ws3.getCell(`A${r3}`).value='GASTOS NO DEDUCIBLES DETECTADOS';ws3.getCell(`A${r3}`).font={...fBold,size:12,color:{argb:DIAN_BLUE}};
+    r3+=2;
+
+    const headers=['Cuenta','Nombre','Valor','Tipo','Regla','Articulo'];
+    headers.forEach((h,i)=>{
+      const cell=ws3.getCell(r3,i+1);
+      cell.value=h;cell.font=fBold;cell.fill=fillSec;cell.border=border;
+    });
+    r3++;
+
+    for(const d of deducibilidadDetalle.sort((a,b)=>b.val-a.val)){
+      ws3.getCell(r3,1).value=d.code;ws3.getCell(r3,1).font=fArial;ws3.getCell(r3,1).border=border;
+      ws3.getCell(r3,2).value=d.name;ws3.getCell(r3,2).font=fArial;ws3.getCell(r3,2).border=border;
+      ws3.getCell(r3,3).value=d.val;ws3.getCell(r3,3).numFmt=numFmt;ws3.getCell(r3,3).font=fBold;ws3.getCell(r3,3).border=border;
+      ws3.getCell(r3,4).value=d.tipo==='gmf'?'50% DED':'NO DED';ws3.getCell(r3,4).font={...fArial,color:{argb:d.tipo==='gmf'?'FFD97706':'FFC62828'}};ws3.getCell(r3,4).border=border;
+      ws3.getCell(r3,5).value=d.regla;ws3.getCell(r3,5).font=fArial;ws3.getCell(r3,5).border=border;
+      ws3.getCell(r3,6).value='Art. '+d.art;ws3.getCell(r3,6).font={...fArial,size:9};ws3.getCell(r3,6).border=border;
+      r3++;
+    }
+
+    r3+=2;
+    ws3.getCell(`A${r3}`).value='RESUMEN';ws3.getCell(`A${r3}`).font=fBold;
+    r3++;
+    ws3.getCell(`A${r3}`).value='100% No deducible:';ws3.getCell(`B${r3}`).value=clasificacionRenta._noDed||0;ws3.getCell(`B${r3}`).numFmt=numFmt;
+    r3++;
+    ws3.getCell(`A${r3}`).value='GMF (50% no ded):';ws3.getCell(`B${r3}`).value=clasificacionRenta._gmfNoDed||0;ws3.getCell(`B${r3}`).numFmt=numFmt;
+    r3++;
+    ws3.getCell(`A${r3}`).value='TOTAL fiscal no ded:';ws3.getCell(`A${r3}`).font=fBold;ws3.getCell(`B${r3}`).value=clasificacionRenta._totalNoDedFiscal||0;ws3.getCell(`B${r3}`).numFmt=numFmt;ws3.getCell(`B${r3}`).font={...fBold,color:{argb:'FFC62828'}};
+  }
+
+  // ── Descargar ──
   const buf=await wb.xlsx.writeBuffer();
   const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url;a.download=`F110_Renta_AG${document.getElementById('cfgYear').value||'2025'}_${document.getElementById('cfgNit').value||'SIN_NIT'}.xlsx`;
+  a.href=url;a.download=`F110_Renta_AG${year}_${nit||'SIN_NIT'}.xlsx`;
   document.body.appendChild(a);a.click();document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
