@@ -760,76 +760,97 @@ function mostrarClasificacion(){
     <div class="stat-card ${totalDif>0?'red':'blue'}"><div class="val">${fN(totalGastosFis)}</div><div class="lbl">Gastos Fiscales${totalDif>0?' (−'+fN(totalDif)+' no ded)':''}</div></div>`;
 
   const fmtN=n=>Math.round(n||0).toLocaleString('es-CO');
-  const secciones=[
-    {titulo:'Patrimonio',casillas:[36,37,38,39,40,41,42,43,45]},
-    {titulo:'Ingresos',casillas:[47,48,57,59,60]},
-    {titulo:'Costos y Gastos',casillas:[62,63,64,65,66]},
-  ];
+
+  // Tabla plana: todas las cuentas ordenadas por codigo
+  const todas=cuentasBalance.slice().sort((a,b)=>a.code.localeCompare(b.code));
 
   let h='<table style="width:100%;border-collapse:collapse;font-size:.75rem">';
-  h+='<thead><tr style="background:var(--pri);color:#fff">'
+  h+='<thead><tr style="background:var(--pri);color:#fff;position:sticky;top:0;z-index:1">'
     +'<th style="padding:4px 5px;text-align:left">Cuenta</th>'
     +'<th style="padding:4px 5px;text-align:left">Nombre</th>'
     +'<th style="padding:4px 5px;text-align:right">Contable</th>'
     +'<th style="padding:4px 5px;text-align:right">Fiscal</th>'
     +'<th style="padding:4px 5px;text-align:right">Diferencia</th>'
-    +'<th style="padding:4px 5px;text-align:center">Renglon</th>'
+    +'<th style="padding:4px 5px;text-align:center">Renglon F110</th>'
     +'<th style="padding:4px 5px;text-align:center">Ded.</th>'
     +'</tr></thead><tbody>';
 
-  for(const sec of secciones){
-    const cuentasSec=cuentasBalance.filter(c=>sec.casillas.includes(c.casilla)).sort((a,b)=>a.code.localeCompare(b.code));
-    if(!cuentasSec.length)continue;
+  // Separadores por clase
+  let lastClass='';
+  const claseNombres={'1':'Activos','2':'Pasivos','3':'Patrimonio','4':'Ingresos','5':'Gastos','6':'Costos'};
 
-    h+=`<tr style="background:var(--pri3)"><td colspan="7" style="padding:4px 8px;font-weight:700;color:var(--pri);font-size:.78rem">${sec.titulo}</td></tr>`;
+  for(const c of todas){
+    const idx=cuentasBalance.indexOf(c);
+    const cls=c.code[0];
 
-    for(const c of cuentasSec){
-      const idx=cuentasBalance.indexOf(c);
-      const esGasto=[62,63,64,65,66].includes(c.casilla);
-      const diff=c.val-c.valFiscal;
-
-      // Dropdown casilla
-      let selHtml=`<select onchange="cuentasBalance[${idx}].casilla=+this.value;mostrarClasificacion()" style="font-size:.68rem;padding:1px 3px;border:1px solid var(--border);border-radius:4px;font-family:inherit;max-width:110px">`;
-      for(const o of CASILLA_OPTS){
-        selHtml+=`<option value="${o.v}"${o.v===c.casilla?' selected':''}>${o.t}</option>`;
-      }
-      selHtml+='</select>';
-
-      // Deducibilidad toggle
-      let dedHtml='<span style="color:#999">—</span>';
-      if(esGasto){
-        const dedColor=c.ded==='no_ded'?'#C62828':c.ded==='gmf'?'#D97706':'#2E7D32';
-        const dedBg=c.ded==='no_ded'?'#FFEBEE':c.ded==='gmf'?'#FFF8E1':'#E8F5E9';
-        const dedLabel=c.ded==='no_ded'?'NO DED':c.ded==='gmf'?'50%':'DED';
-        dedHtml=`<button onclick="cambiarDed(${idx})" style="font-size:.62rem;padding:1px 6px;border:1px solid ${dedColor};border-radius:3px;background:${dedBg};color:${dedColor};cursor:pointer;font-weight:700;font-family:inherit;min-width:42px" title="${c.regla?'R'+c.regla.id+': '+c.regla.nom+' (Art.'+c.regla.art+')':'Clic para cambiar'}">${dedLabel}</button>`;
-      }
-
-      // Color de fila
-      const rowBg=c.ded==='no_ded'?'#FFF5F5':c.ded==='gmf'?'#FFFDF0':'';
-      const diffColor=diff>0?'#C62828':diff<0?'#2E7D32':'#999';
-
-      h+=`<tr style="border-bottom:1px solid #eee;background:${rowBg}">
-        <td style="padding:2px 5px;font-family:JetBrains Mono;font-size:.68rem">${c.code}</td>
-        <td style="padding:2px 5px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.name}">${c.name}</td>
-        <td style="padding:2px 5px;text-align:right;font-family:JetBrains Mono;color:#555">${fmtN(c.val)}</td>
-        <td style="padding:2px 3px;text-align:right"><input value="${c.valFiscal?fmtN(c.valFiscal):''}" onfocus="this.value=this.value.replace(/[,.\\s]/g,'')" onblur="editarFiscal(${idx},this.value);this.value=cuentasBalance[${idx}].valFiscal?fN(cuentasBalance[${idx}].valFiscal):''" style="width:90px;text-align:right;font-family:JetBrains Mono;font-size:.72rem;font-weight:600;border:1px solid #ddd;border-radius:3px;padding:2px 4px;color:var(--pri);background:${c.valFiscal!==c.val?'#EDF4FF':'#fff'}"></td>
-        <td id="diff_${idx}" style="padding:2px 5px;text-align:right;font-family:JetBrains Mono;font-size:.68rem;color:${diffColor}">${diff?fmtN(diff):''}</td>
-        <td style="padding:2px 4px;text-align:center">${selHtml}</td>
-        <td style="padding:2px 4px;text-align:center">${dedHtml}</td>
-      </tr>`;
+    // Separador de clase
+    if(cls!==lastClass){
+      lastClass=cls;
+      h+=`<tr style="background:var(--pri3)"><td colspan="7" style="padding:4px 8px;font-weight:700;color:var(--pri);font-size:.78rem">${claseNombres[cls]||'Clase '+cls}</td></tr>`;
     }
+
+    const esGasto=[62,63,64,65,66].includes(c.casilla);
+    const diff=c.val-c.valFiscal;
+
+    // Dropdown casilla
+    let selHtml=`<select onchange="cuentasBalance[${idx}].casilla=+this.value;mostrarClasificacion()" style="font-size:.68rem;padding:1px 3px;border:1px solid var(--border);border-radius:4px;font-family:inherit;max-width:110px">`;
+    for(const o of CASILLA_OPTS){
+      selHtml+=`<option value="${o.v}"${o.v===c.casilla?' selected':''}>${o.t}</option>`;
+    }
+    selHtml+='</select>';
+
+    // Deducibilidad toggle (solo gastos/costos)
+    let dedHtml='<span style="color:#999">—</span>';
+    if(esGasto){
+      const dedColor=c.ded==='no_ded'?'#C62828':c.ded==='gmf'?'#D97706':'#2E7D32';
+      const dedBg=c.ded==='no_ded'?'#FFEBEE':c.ded==='gmf'?'#FFF8E1':'#E8F5E9';
+      const dedLabel=c.ded==='no_ded'?'NO DED':c.ded==='gmf'?'50%':'DED';
+      dedHtml=`<button onclick="cambiarDed(${idx})" style="font-size:.62rem;padding:1px 6px;border:1px solid ${dedColor};border-radius:3px;background:${dedBg};color:${dedColor};cursor:pointer;font-weight:700;font-family:inherit;min-width:42px" title="${c.regla?'R'+c.regla.id+': '+c.regla.nom+' (Art.'+c.regla.art+')':'Clic para cambiar'}">${dedLabel}</button>`;
+    }
+
+    const rowBg=c.ded==='no_ded'?'#FFF5F5':c.ded==='gmf'?'#FFFDF0':'';
+    const diffColor=diff>0?'#C62828':diff<0?'#2E7D32':'#999';
+
+    h+=`<tr style="border-bottom:1px solid #eee;background:${rowBg}">
+      <td style="padding:2px 5px;font-family:JetBrains Mono;font-size:.68rem">${c.code}</td>
+      <td style="padding:2px 5px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.name}">${c.name}</td>
+      <td style="padding:2px 5px;text-align:right;font-family:JetBrains Mono;color:#555">${fmtN(c.val)}</td>
+      <td style="padding:2px 3px;text-align:right"><input value="${c.valFiscal?fmtN(c.valFiscal):''}" onfocus="this.value=this.value.replace(/[,.\\s]/g,'')" onblur="editarFiscal(${idx},this.value);this.value=cuentasBalance[${idx}].valFiscal?fN(cuentasBalance[${idx}].valFiscal):''" style="width:90px;text-align:right;font-family:JetBrains Mono;font-size:.72rem;font-weight:600;border:1px solid #ddd;border-radius:3px;padding:2px 4px;color:var(--pri);background:${c.valFiscal!==c.val?'#EDF4FF':'#fff'}"></td>
+      <td id="diff_${idx}" style="padding:2px 5px;text-align:right;font-family:JetBrains Mono;font-size:.68rem;color:${diffColor}">${diff?fmtN(diff):''}</td>
+      <td style="padding:2px 4px;text-align:center">${selHtml}</td>
+      <td style="padding:2px 4px;text-align:center">${dedHtml}</td>
+    </tr>`;
   }
 
-  // Resumen totales
-  const totalCtb=cuentasBalance.reduce((s,c)=>s+(c.casilla?c.val:0),0);
-  const totalFis=cuentasBalance.reduce((s,c)=>s+(c.casilla?c.valFiscal:0),0);
-  const totalDifAll=totalCtb-totalFis;
-  if(totalDifAll){
+  // Totales por clase
+  const clases=[
+    {n:'Activos',cas:[36,37,38,39,40,41,42,43]},
+    {n:'Pasivos',cas:[45]},
+    {n:'Ingresos',cas:[47,48,57]},
+    {n:'Costos+Gastos',cas:[62,63,64,65,66]},
+  ];
+  h+=`<tr style="background:var(--pri);color:#fff"><td colspan="2" style="padding:5px 8px;font-weight:700">TOTALES</td><td style="padding:5px;text-align:right;font-weight:700">Contable</td><td style="padding:5px;text-align:right;font-weight:700">Fiscal</td><td style="padding:5px;text-align:right;font-weight:700">Diferencia</td><td colspan="2"></td></tr>`;
+  let grandCtb=0,grandFis=0;
+  for(const cl of clases){
+    const ctb=cuentasBalance.filter(c=>cl.cas.includes(c.casilla)).reduce((s,c)=>s+c.val,0);
+    const fis=cuentasBalance.filter(c=>cl.cas.includes(c.casilla)).reduce((s,c)=>s+c.valFiscal,0);
+    const dif=ctb-fis;
+    grandCtb+=ctb;grandFis+=fis;
+    h+=`<tr style="background:#f8fafc;border-bottom:1px solid var(--border)">
+      <td colspan="2" style="padding:4px 8px;font-weight:600;font-size:.76rem">${cl.n}</td>
+      <td style="padding:4px 5px;text-align:right;font-family:JetBrains Mono;font-weight:600">${fmtN(ctb)}</td>
+      <td style="padding:4px 5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:var(--pri)">${fmtN(fis)}</td>
+      <td style="padding:4px 5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:${dif?'#C62828':'#999'}">${dif?fmtN(dif):''}</td>
+      <td colspan="2"></td>
+    </tr>`;
+  }
+  const grandDif=grandCtb-grandFis;
+  if(grandDif){
     h+=`<tr style="background:#FFF8E1;border-top:2px solid #FCD34D">
-      <td colspan="2" style="padding:5px 8px;font-weight:700;color:#92400E;font-size:.78rem">Total diferencias contable vs fiscal</td>
-      <td style="padding:5px 5px;text-align:right;font-family:JetBrains Mono;font-weight:600">${fmtN(totalCtb)}</td>
-      <td style="padding:5px 5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:var(--pri)">${fmtN(totalFis)}</td>
-      <td style="padding:5px 5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:#C62828">${fmtN(totalDifAll)}</td>
+      <td colspan="2" style="padding:5px 8px;font-weight:700;color:#92400E">Total diferencias</td>
+      <td style="padding:5px;text-align:right;font-family:JetBrains Mono;font-weight:600">${fmtN(grandCtb)}</td>
+      <td style="padding:5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:var(--pri)">${fmtN(grandFis)}</td>
+      <td style="padding:5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:#C62828">${fmtN(grandDif)}</td>
       <td colspan="2"></td>
     </tr>`;
   }
