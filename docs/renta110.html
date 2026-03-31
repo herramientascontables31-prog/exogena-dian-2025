@@ -120,7 +120,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div id="errorBalance" class="hidden" style="margin-top:8px;padding:10px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;font-size:.82rem;color:#C62828"></div>
     <div id="clasifResult" class="hidden" style="margin-top:10px">
       <div id="clasifStats" class="stats" style="margin-bottom:8px"></div>
-      <div id="clasifDetail" style="max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;font-size:.75rem"></div>
+      <div id="clasifDetail" style="max-height:500px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;font-size:.75rem"></div>
       <div style="margin-top:8px;text-align:right">
         <button onclick="aplicarAlFormulario()" class="btn btn-primary" style="padding:8px 20px;font-size:.85rem">Aplicar al Formulario →</button>
       </div>
@@ -280,7 +280,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
    ═══════════════════════════════════════════════════════════ */
 
 /* ── MODO DE LECTURA (debcre / saldo) ── */
-let modoLectura='debcre'; // 'debcre' o 'saldo'
+let modoLectura='saldo'; // 'debcre' o 'saldo'
 function setModoLectura(modo){
   modoLectura=modo;
   const btnD=document.getElementById('btnDebCre');
@@ -306,6 +306,7 @@ const dzR=document.getElementById('dzRenta');
 dzR.addEventListener('drop',e=>{if(e.dataTransfer.files[0])procesarBalance(e.dataTransfer.files[0])});
 
 let clasificacionRenta=[];
+let cuentasBalance=[];  // array de {code,name,val,casilla,ded,regla}
 
 function procesarBalance(file){
   const reader=new FileReader();
@@ -328,7 +329,7 @@ function procesarBalance(file){
       const colMap=detectColumns(data,hdrRow);
 
       // Parse and classify
-      clasificacionRenta=clasificarPUCaF110(data,hdrRow,colMap);
+      clasificarPUCaF110(data,hdrRow,colMap);
       mostrarClasificacion();
     }catch(err){alert('Error: '+err.message)}
   };
@@ -618,215 +619,217 @@ function clasificarPUCaF110(data,hdrRow,colMap){
     let code=String(row[colMap.code]||'').replace(/[.\-\s]/g,'').trim();
     if(!code||!/^\d+/.test(code))continue;
     const name=nameCol!=null?String(row[nameCol]||'').trim():'';
-    const nivel=nivelCol>=0?String(row[nivelCol]||'').trim():'';
+    const nivel=nivelCol>=0?parseInt(row[nivelCol])||0:-1;
 
-    const esResultado=/^[456]/.test(code); // clases 4,5,6
+    const esResultado=/^[456]/.test(code);
     const hasSaldoFinal='saldoCargo' in colMap&&'saldoAbono' in colMap;
     const hasDebCre='deb' in colMap&&'cre' in colMap;
 
     let saldo=0;
     if(esResultado&&hasDebCre&&modoLectura==='debcre'){
-      // Cuentas de resultado: SIEMPRE usar movimientos (debito/credito)
-      // Alegra: el saldo final es acumulado historico, no del periodo
       const deb=parseFloat(row[colMap.deb])||0;
       const cre=parseFloat(row[colMap.cre])||0;
-      // Clase 4 (ingresos): naturaleza credito → cre - deb
-      // Clase 5,6 (gastos/costos): naturaleza debito → deb - cre
       saldo=code.startsWith('4')?(cre-deb):(deb-cre);
     }else if(hasSaldoFinal){
-      // Patrimonio (clases 1,2,3) o modo saldo: usar saldo final
       const cargo=parseFloat(row[colMap.saldoCargo])||0;
       const abono=parseFloat(row[colMap.saldoAbono])||0;
       saldo=cargo-abono;
     }else if(hasDebCre){
-      // Solo tiene debito/credito (sin saldo final)
       saldo=(parseFloat(row[colMap.deb])||0)-(parseFloat(row[colMap.cre])||0);
     }
 
     filas.push({code,name,nivel,saldo});
   }
 
-  // Clasificar por casilla + deducibilidad
-  const porCasilla={};
-  deducibilidadDetalle=[];
-  let totalNoDed=0,totalGmf=0;
-
+  // Clasificar cada cuenta individualmente
+  cuentasBalance=[];  // global: tabla editable
   for(const f of filas){
     if(f.saldo===0)continue;
-    let casilla=null;
+
+    // Buscar casilla
+    let casilla=0;
     for(const m of PUC_F110){
       if(m.excluir&&m.excluir.some(e=>f.code.startsWith(e)))continue;
       if(m.prefijos.some(p=>f.code.startsWith(p))){casilla=m.cas;break}
     }
     if(!casilla)continue;
 
-    // Aplicar reglas de deducibilidad a gastos (casillas 63-66) y costos (62)
+    // Deducibilidad (solo gastos/costos)
     const esGasto=[62,63,64,65,66].includes(casilla);
-    let regla=null;
-    if(esGasto) regla=clasificarDeducibilidad(f.code,f.name);
-
-    if(!porCasilla[casilla])porCasilla[casilla]=[];
-    const val=Math.abs(f.saldo);
-    porCasilla[casilla].push({code:f.code,name:f.name,val,len:f.code.length,regla});
-
-    if(regla){
-      deducibilidadDetalle.push({code:f.code,name:f.name,val,regla:regla.nom,art:regla.art,tipo:regla.tipo,pct:regla.pct||0,id:regla.id});
-      if(regla.tipo==='gmf')totalGmf+=val;
-      else totalNoDed+=val;
+    let ded='ded',regla=null;
+    if(esGasto){
+      regla=clasificarDeducibilidad(f.code,f.name);
+      if(regla)ded=regla.tipo; // 'no_ded' o 'gmf'
     }
+
+    cuentasBalance.push({
+      code:f.code,
+      name:f.name,
+      val:Math.round(Math.abs(f.saldo)),
+      casilla,
+      ded,        // 'ded', 'no_ded', 'gmf'
+      regla,      // objeto regla o null
+      nivel:f.nivel,
+      len:f.code.length
+    });
   }
 
-  // Para cada casilla: tomar cuenta resumen (codigo mas corto) si existe
-  const cas={};
-  for(const[c,cuentas] of Object.entries(porCasilla)){
+  // Deduplicar: si existe cuenta padre (ej: "11") Y sus hijas ("1105","1110"), usar solo el padre
+  const casillaGroups={};
+  for(const c of cuentasBalance){
+    if(!casillaGroups[c.casilla])casillaGroups[c.casilla]=[];
+    casillaGroups[c.casilla].push(c);
+  }
+  const filtrada=[];
+  for(const[cas,cuentas] of Object.entries(casillaGroups)){
     cuentas.sort((a,b)=>a.len-b.len);
+    const minLen=cuentas[0].len;
+    // Si hay cuenta resumen (<=4 digitos) y detalle, usar solo resumen
     const resumen=cuentas.find(x=>x.len<=4&&x.val>0);
-    if(resumen){
-      cas[c]=Math.round(resumen.val);
+    if(resumen&&cuentas.length>1&&cuentas.some(x=>x.len>resumen.len)){
+      filtrada.push(resumen);
     }else{
-      const minLen=cuentas[0].len;
-      cas[c]=Math.round(cuentas.filter(x=>x.len===minLen).reduce((s,x)=>s+x.val,0));
+      // Tomar cuentas del nivel mas bajo disponible
+      filtrada.push(...cuentas.filter(x=>x.len===minLen));
     }
   }
+  cuentasBalance=filtrada;
 
-  // Calcular monto no deducible para restar de las casillas de gastos
-  // GMF: 50% no deducible, no_ded: 100% no deducible
-  cas._noDed=Math.round(totalNoDed);
-  cas._gmf=Math.round(totalGmf);
-  cas._gmfNoDed=Math.round(totalGmf*0.5);
-  cas._totalNoDedFiscal=Math.round(totalNoDed+totalGmf*0.5);
-
-  // Devoluciones en ventas: separar de ingresos
-  const dev=filas.find(f=>/devolucion.*venta/i.test(f.name)&&f.saldo<0);
-  if(dev&&cas[47]){
-    const devVal=Math.abs(dev.saldo);
-    cas[47]+=devVal;
-    cas[59]=devVal;
-  }
-
-  return cas;
+  return cuentasBalance;
 }
 
+// Opciones de casilla para dropdowns
+const CASILLA_OPTS=[
+  {v:0,t:'— No aplicar'},
+  {v:36,t:'36 Efectivo'},{v:37,t:'37 Inversiones'},{v:38,t:'38 CxC'},{v:39,t:'39 Inventarios'},
+  {v:40,t:'40 Intangibles'},{v:41,t:'41 Biologicos'},{v:42,t:'42 PPE'},{v:43,t:'43 Otros activos'},
+  {v:45,t:'45 Pasivos'},
+  {v:47,t:'47 Ingr. ordinarios'},{v:48,t:'48 Ingr. financieros'},{v:57,t:'57 Otros ingresos'},
+  {v:59,t:'59 Devoluciones'},{v:60,t:'60 INCRNGO'},
+  {v:62,t:'62 Costos'},{v:63,t:'63 Gtos admin'},{v:64,t:'64 Gtos ventas'},
+  {v:65,t:'65 Gtos financieros'},{v:66,t:'66 Otros gastos'},
+];
+
 function mostrarClasificacion(){
-  const cas=clasificacionRenta;
-
-  // Detectar si el balance esta cerrado (sin ingresos ni gastos)
-  const tieneIngresos=(cas[47]||0)+(cas[48]||0)+(cas[57]||0)>0;
-  const tieneGastos=(cas[62]||0)+(cas[63]||0)+(cas[64]||0)+(cas[65]||0)+(cas[66]||0)>0;
-  const tieneCostos=(cas[62]||0)>0;
-
-  // Verificar coherencia con la pregunta del usuario
-  if(modoLectura==='debcre'&&!tieneIngresos&&!tieneGastos&&!tieneCostos){
+  if(!cuentasBalance.length){
     document.getElementById('errorBalance').classList.remove('hidden');
-    document.getElementById('errorBalance').innerHTML='<strong>⚠ Dijiste que el balance esta sin cerrar, pero no se encontraron ingresos, costos ni gastos.</strong><br>Revisa que el archivo tenga las clases 4, 5 y 6 con saldo. Si ya esta cerrado, cambia la opcion arriba a "No, ya esta cerrado".<br><br><strong>Solo se pre-llenaran las casillas de patrimonio.</strong>';
-  }else if(modoLectura==='saldo'){
-    document.getElementById('errorBalance').classList.remove('hidden');
-    document.getElementById('errorBalance').innerHTML='Balance cerrado — solo se pre-llenara el <strong>patrimonio</strong> (activos y pasivos). Ingresa ingresos, costos y gastos manualmente.';
-  }else if(!tieneIngresos&&!tieneGastos){
-    document.getElementById('errorBalance').classList.remove('hidden');
-    document.getElementById('errorBalance').innerHTML='<strong>El balance parece estar cerrado.</strong> Las clases 4, 5 y 6 estan en cero. Solo se pre-llenara patrimonio.';
-  }else{
-    document.getElementById('errorBalance').classList.add('hidden');
+    document.getElementById('errorBalance').innerHTML='No se encontraron cuentas con saldo en el balance.';
+    return;
   }
 
+  document.getElementById('errorBalance').classList.add('hidden');
   document.getElementById('clasifResult').classList.remove('hidden');
-  const totalActivos=(cas[36]||0)+(cas[37]||0)+(cas[38]||0)+(cas[39]||0)+(cas[40]||0)+(cas[41]||0)+(cas[42]||0)+(cas[43]||0);
-  const totalIngresos=(cas[47]||0)+(cas[48]||0)+(cas[57]||0);
-  const totalGastosCostos=(cas[62]||0)+(cas[63]||0)+(cas[64]||0)+(cas[65]||0)+(cas[66]||0);
 
-  // Stats incluyendo deducibilidad
-  let statsHtml=`
-    <div class="stat-card blue"><div class="val">${Math.round(totalActivos).toLocaleString('es-CO')}</div><div class="lbl">Total Activos</div></div>
-    <div class="stat-card amber"><div class="val">${Math.round(cas[45]||0).toLocaleString('es-CO')}</div><div class="lbl">Pasivos</div></div>
-    <div class="stat-card green"><div class="val">${Math.round(totalIngresos).toLocaleString('es-CO')}</div><div class="lbl">Ingresos</div></div>
-    <div class="stat-card red"><div class="val">${Math.round(totalGastosCostos).toLocaleString('es-CO')}</div><div class="lbl">Costos + Gastos</div></div>`;
-  document.getElementById('clasifStats').innerHTML=statsHtml;
+  // Stats
+  const sum=cas=>cuentasBalance.filter(c=>c.casilla===cas).reduce((s,c)=>s+c.val,0);
+  const totalActivos=[36,37,38,39,40,41,42,43].reduce((s,c)=>s+sum(c),0);
+  const totalPasivos=sum(45);
+  const totalIngresos=[47,48,57].reduce((s,c)=>s+sum(c),0);
+  const totalGastos=[62,63,64,65,66].reduce((s,c)=>s+sum(c),0);
+  const totalNoDed=cuentasBalance.filter(c=>c.ded==='no_ded').reduce((s,c)=>s+c.val,0);
+  const totalGmf=cuentasBalance.filter(c=>c.ded==='gmf').reduce((s,c)=>s+c.val,0);
 
+  document.getElementById('clasifStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${fN(totalActivos)}</div><div class="lbl">Activos</div></div>
+    <div class="stat-card amber"><div class="val">${fN(totalPasivos)}</div><div class="lbl">Pasivos</div></div>
+    <div class="stat-card green"><div class="val">${fN(totalIngresos)}</div><div class="lbl">Ingresos</div></div>
+    <div class="stat-card red"><div class="val">${fN(totalGastos)}</div><div class="lbl">Costos+Gastos</div></div>`;
+
+  // Tabla editable por cuenta
   const fmtN=n=>Math.round(n||0).toLocaleString('es-CO');
+  const secciones=[
+    {titulo:'Patrimonio',casillas:[36,37,38,39,40,41,42,43,45]},
+    {titulo:'Ingresos',casillas:[47,48,57,59,60]},
+    {titulo:'Costos y Gastos',casillas:[62,63,64,65,66]},
+  ];
 
-  // Tabla de clasificacion por casilla
-  let h='<table style="width:100%;border-collapse:collapse;font-size:.8rem"><thead><tr style="background:var(--pri3)"><th style="padding:6px 8px;text-align:left">Cas.</th><th style="padding:6px 8px;text-align:left">Concepto</th><th style="padding:6px 8px;text-align:right">Valor</th></tr></thead><tbody>';
-  for(const m of PUC_F110){
-    const val=cas[m.cas]||0;
-    if(val===0)continue;
-    h+=`<tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px;font-family:JetBrains Mono;font-weight:700">${m.cas}</td><td style="padding:4px 8px">${m.desc}</td><td style="padding:4px 8px;text-align:right;font-family:JetBrains Mono">${fmtN(val)}</td></tr>`;
-  }
-  h+='</tbody></table>';
+  let h='<table style="width:100%;border-collapse:collapse;font-size:.78rem">';
+  h+='<thead><tr style="background:var(--pri);color:#fff"><th style="padding:5px 6px;text-align:left">Cuenta</th><th style="padding:5px 6px;text-align:left">Nombre</th><th style="padding:5px 6px;text-align:right">Valor</th><th style="padding:5px 6px;text-align:center">Renglon</th><th style="padding:5px 6px;text-align:center">Deducibilidad</th></tr></thead><tbody>';
 
-  // Seccion de deducibilidad (si hay gastos no deducibles detectados)
-  if(deducibilidadDetalle.length>0){
-    const noDedTotal=cas._noDed||0;
-    const gmfTotal=cas._gmf||0;
-    const gmfNoDed=cas._gmfNoDed||0;
-    const totalFiscalNoDed=cas._totalNoDedFiscal||0;
+  for(const sec of secciones){
+    const cuentasSec=cuentasBalance.filter(c=>sec.casillas.includes(c.casilla)).sort((a,b)=>a.code.localeCompare(b.code));
+    if(!cuentasSec.length)continue;
 
-    h+=`<div style="margin-top:12px;padding:12px;background:#FFF8E1;border:1px solid #FCD34D;border-radius:8px">
-      <div style="font-weight:700;font-size:.85rem;color:#92400E;margin-bottom:8px">⚠ Gastos No Deducibles Detectados</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;text-align:center">
-        <div style="background:#fff;padding:8px;border-radius:6px;border:1px solid #FCD34D">
-          <div style="font-size:.7rem;color:#92400E;text-transform:uppercase">100% No Deducible</div>
-          <div style="font-size:1rem;font-weight:700;font-family:JetBrains Mono;color:#C62828">${fmtN(noDedTotal)}</div>
-        </div>
-        <div style="background:#fff;padding:8px;border-radius:6px;border:1px solid #FCD34D">
-          <div style="font-size:.7rem;color:#92400E;text-transform:uppercase">GMF (50% no ded.)</div>
-          <div style="font-size:1rem;font-weight:700;font-family:JetBrains Mono;color:#D97706">${fmtN(gmfTotal)}</div>
-        </div>
-        <div style="background:#fff;padding:8px;border-radius:6px;border:1px solid #FCD34D">
-          <div style="font-size:.7rem;color:#92400E;text-transform:uppercase">Total a restar fiscal</div>
-          <div style="font-size:1rem;font-weight:700;font-family:JetBrains Mono;color:#C62828">${fmtN(totalFiscalNoDed)}</div>
-        </div>
-      </div>
-      <table style="width:100%;border-collapse:collapse;font-size:.75rem"><thead><tr style="background:#FEF3C7"><th style="padding:4px 6px;text-align:left">Cuenta</th><th style="padding:4px 6px;text-align:left">Nombre</th><th style="padding:4px 6px;text-align:right">Valor</th><th style="padding:4px 6px;text-align:left">Regla</th><th style="padding:4px 6px;text-align:center">Art.</th></tr></thead><tbody>`;
-    for(const d of deducibilidadDetalle.sort((a,b)=>b.val-a.val)){
-      const color=d.tipo==='gmf'?'#D97706':'#C62828';
-      const badge=d.tipo==='gmf'?'<span style="background:#FEF3C7;color:#92400E;padding:1px 5px;border-radius:4px;font-size:.65rem">50%</span>':'<span style="background:#FFEBEE;color:#C62828;padding:1px 5px;border-radius:4px;font-size:.65rem">NO DED</span>';
-      h+=`<tr style="border-bottom:1px solid #FDE68A"><td style="padding:3px 6px;font-family:JetBrains Mono;font-size:.7rem">${d.code}</td><td style="padding:3px 6px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${d.name.substring(0,45)}</td><td style="padding:3px 6px;text-align:right;font-family:JetBrains Mono;color:${color};font-weight:600">${fmtN(d.val)}</td><td style="padding:3px 6px">${badge} ${d.regla}</td><td style="padding:3px 6px;text-align:center;font-size:.7rem;color:#6b7280">Art.${d.art}</td></tr>`;
+    h+=`<tr style="background:var(--pri3)"><td colspan="5" style="padding:5px 8px;font-weight:700;color:var(--pri);font-size:.8rem">${sec.titulo}</td></tr>`;
+
+    for(let i=0;i<cuentasSec.length;i++){
+      const c=cuentasSec[i];
+      const idx=cuentasBalance.indexOf(c);
+      const esGasto=[62,63,64,65,66].includes(c.casilla);
+
+      // Dropdown casilla
+      let selHtml=`<select onchange="cuentasBalance[${idx}].casilla=+this.value;mostrarClasificacion()" style="font-size:.72rem;padding:2px 4px;border:1px solid var(--border);border-radius:4px;font-family:inherit;max-width:120px">`;
+      for(const o of CASILLA_OPTS){
+        selHtml+=`<option value="${o.v}"${o.v===c.casilla?' selected':''}>${o.t}</option>`;
+      }
+      selHtml+='</select>';
+
+      // Deducibilidad (solo para gastos/costos)
+      let dedHtml='';
+      if(esGasto){
+        const dedColor=c.ded==='no_ded'?'#C62828':c.ded==='gmf'?'#D97706':'#2E7D32';
+        const dedBg=c.ded==='no_ded'?'#FFEBEE':c.ded==='gmf'?'#FFF8E1':'#E8F5E9';
+        const dedLabel=c.ded==='no_ded'?'NO DED':c.ded==='gmf'?'GMF 50%':'DED';
+        const nextDed=c.ded==='ded'?'no_ded':c.ded==='no_ded'?'gmf':'ded';
+        dedHtml=`<button onclick="cuentasBalance[${idx}].ded='${nextDed}';mostrarClasificacion()" style="font-size:.65rem;padding:2px 8px;border:1px solid ${dedColor};border-radius:4px;background:${dedBg};color:${dedColor};cursor:pointer;font-weight:700;font-family:inherit">${dedLabel}</button>`;
+        if(c.regla){
+          dedHtml+=`<div style="font-size:.6rem;color:#888;margin-top:1px">R${c.regla.id}: Art.${c.regla.art}</div>`;
+        }
+      }else{
+        dedHtml='<span style="font-size:.65rem;color:#999">—</span>';
+      }
+
+      const rowBg=c.ded==='no_ded'?'#FFF5F5':c.ded==='gmf'?'#FFFDF0':'';
+      h+=`<tr style="border-bottom:1px solid var(--border);background:${rowBg}">
+        <td style="padding:3px 6px;font-family:JetBrains Mono;font-size:.7rem;white-space:nowrap">${c.code}</td>
+        <td style="padding:3px 6px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.name}">${c.name}</td>
+        <td style="padding:3px 6px;text-align:right;font-family:JetBrains Mono;font-weight:600">${fmtN(c.val)}</td>
+        <td style="padding:3px 6px;text-align:center">${selHtml}</td>
+        <td style="padding:3px 6px;text-align:center">${dedHtml}</td>
+      </tr>`;
     }
-    h+=`</tbody></table>
-      <div style="margin-top:8px;font-size:.75rem;color:#92400E">Al aplicar, se restara <strong>$${fmtN(totalFiscalNoDed)}</strong> de los gastos deducibles en el formulario.</div>
-    </div>`;
   }
 
+  // Resumen no deducibles
+  if(totalNoDed>0||totalGmf>0){
+    const totalFiscalNoDed=totalNoDed+Math.round(totalGmf*0.5);
+    h+=`<tr style="background:#FFF8E1;border-top:2px solid #FCD34D"><td colspan="2" style="padding:6px 8px;font-weight:700;color:#92400E">Total no deducible fiscal</td><td style="padding:6px 8px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:#C62828">${fmtN(totalFiscalNoDed)}</td><td colspan="2" style="padding:6px 8px;font-size:.7rem;color:#92400E">NO DED: ${fmtN(totalNoDed)} · GMF 50%: ${fmtN(Math.round(totalGmf*0.5))}</td></tr>`;
+  }
+
+  h+='</tbody></table>';
   document.getElementById('clasifDetail').innerHTML=h;
 }
 
 function aplicarAlFormulario(){
-  const cas=clasificacionRenta;
-  const soloPatrimonio=modoLectura==='saldo';
-
-  // Distribuir monto no deducible proporcionalmente entre casillas 63-66
-  const totalNoDedFiscal=cas._totalNoDedFiscal||0;
-  let noDedPorCasilla={63:0,64:0,65:0,66:0};
-  if(totalNoDedFiscal>0&&deducibilidadDetalle.length>0){
-    // Agrupar no deducibles por casilla de gasto
-    for(const d of deducibilidadDetalle){
-      let destCas=null;
-      for(const m of PUC_F110){
-        if(m.excluir&&m.excluir.some(e=>d.code.startsWith(e)))continue;
-        if(m.prefijos.some(p=>d.code.startsWith(p))){destCas=m.cas;break}
-      }
-      if(destCas&&[63,64,65,66].includes(destCas)){
-        const resta=d.tipo==='gmf'?d.val*0.5:d.val;
-        noDedPorCasilla[destCas]+=resta;
-      }
+  // Totalizar por casilla desde cuentasBalance, restando no deducibles
+  const totales={};
+  for(const c of cuentasBalance){
+    if(!c.casilla)continue; // casilla 0 = no aplicar
+    const esGasto=[62,63,64,65,66].includes(c.casilla);
+    let valFiscal=c.val;
+    if(esGasto){
+      if(c.ded==='no_ded')valFiscal=0;          // 100% no deducible
+      else if(c.ded==='gmf')valFiscal=Math.round(c.val*0.5); // 50% deducible
     }
+    totales[c.casilla]=(totales[c.casilla]||0)+valFiscal;
   }
 
-  for(const[c,val] of Object.entries(cas)){
-    if(c.startsWith('_'))continue; // skip metadata
-    if(soloPatrimonio&&![36,37,38,39,40,41,42,43,45].includes(Number(c)))continue;
-    const el=document.getElementById('c'+c);
+  // Aplicar al formulario
+  // Primero limpiar casillas editables
+  for(const m of PUC_F110){
+    const el=document.getElementById('c'+m.cas);
+    if(el&&!el.readOnly){el.value='';el.classList.remove('filled')}
+  }
+
+  for(const[cas,val] of Object.entries(totales)){
+    const el=document.getElementById('c'+cas);
     if(el&&!el.readOnly){
-      let adjusted=val;
-      // Restar no deducibles de la casilla correspondiente
-      if(noDedPorCasilla[Number(c)]){
-        adjusted=Math.max(val-noDedPorCasilla[Number(c)],0);
-      }
-      const rounded=Math.round(adjusted/1000)*1000;
+      const rounded=Math.round(val/1000)*1000;
       el.value=rounded?rounded.toLocaleString('es-CO'):'';
       el.classList.toggle('filled',rounded!==0);
     }
   }
+
   recalcular();
   document.querySelector('.dian-form').scrollIntoView({behavior:'smooth'});
 }
@@ -1264,13 +1267,14 @@ async function exportExcel(){
   ws2.getCell(`B${r2}`).value='Si IA > 0, se suma al impuesto neto de renta.';ws2.getCell(`B${r2}`).font={...fArial,size:9,italic:true};
 
   // ═══ HOJA 3: DEDUCIBILIDAD (si hay datos) ═══
-  if(deducibilidadDetalle.length>0){
+  const noDedCuentas=cuentasBalance.filter(c=>c.ded==='no_ded'||c.ded==='gmf');
+  if(noDedCuentas.length>0){
     const ws3=wb.addWorksheet('Gastos No Deducibles');
     ws3.getColumn(1).width=12;ws3.getColumn(2).width=45;ws3.getColumn(3).width=18;
     ws3.getColumn(4).width=8;ws3.getColumn(5).width=30;ws3.getColumn(6).width=10;
 
     let r3=1;
-    ws3.getCell(`A${r3}`).value='GASTOS NO DEDUCIBLES DETECTADOS';ws3.getCell(`A${r3}`).font={...fBold,size:12,color:{argb:DIAN_BLUE}};
+    ws3.getCell(`A${r3}`).value='GASTOS NO DEDUCIBLES';ws3.getCell(`A${r3}`).font={...fBold,size:12,color:{argb:DIAN_BLUE}};
     r3+=2;
 
     const headers=['Cuenta','Nombre','Valor','Tipo','Regla','Articulo'];
@@ -1280,24 +1284,24 @@ async function exportExcel(){
     });
     r3++;
 
-    for(const d of deducibilidadDetalle.sort((a,b)=>b.val-a.val)){
+    for(const d of noDedCuentas.sort((a,b)=>b.val-a.val)){
       ws3.getCell(r3,1).value=d.code;ws3.getCell(r3,1).font=fArial;ws3.getCell(r3,1).border=border;
       ws3.getCell(r3,2).value=d.name;ws3.getCell(r3,2).font=fArial;ws3.getCell(r3,2).border=border;
       ws3.getCell(r3,3).value=d.val;ws3.getCell(r3,3).numFmt=numFmt;ws3.getCell(r3,3).font=fBold;ws3.getCell(r3,3).border=border;
-      ws3.getCell(r3,4).value=d.tipo==='gmf'?'50% DED':'NO DED';ws3.getCell(r3,4).font={...fArial,color:{argb:d.tipo==='gmf'?'FFD97706':'FFC62828'}};ws3.getCell(r3,4).border=border;
-      ws3.getCell(r3,5).value=d.regla;ws3.getCell(r3,5).font=fArial;ws3.getCell(r3,5).border=border;
-      ws3.getCell(r3,6).value='Art. '+d.art;ws3.getCell(r3,6).font={...fArial,size:9};ws3.getCell(r3,6).border=border;
+      ws3.getCell(r3,4).value=d.ded==='gmf'?'50% DED':'NO DED';ws3.getCell(r3,4).font={...fArial,color:{argb:d.ded==='gmf'?'FFD97706':'FFC62828'}};ws3.getCell(r3,4).border=border;
+      ws3.getCell(r3,5).value=d.regla?d.regla.nom:'Manual';ws3.getCell(r3,5).font=fArial;ws3.getCell(r3,5).border=border;
+      ws3.getCell(r3,6).value=d.regla?'Art. '+d.regla.art:'';ws3.getCell(r3,6).font={...fArial,size:9};ws3.getCell(r3,6).border=border;
       r3++;
     }
 
     r3+=2;
-    ws3.getCell(`A${r3}`).value='RESUMEN';ws3.getCell(`A${r3}`).font=fBold;
+    const totalNoDed=noDedCuentas.filter(c=>c.ded==='no_ded').reduce((s,c)=>s+c.val,0);
+    const totalGmfNoDed=Math.round(noDedCuentas.filter(c=>c.ded==='gmf').reduce((s,c)=>s+c.val,0)*0.5);
+    ws3.getCell(`A${r3}`).value='100% No deducible:';ws3.getCell(`B${r3}`).value=totalNoDed;ws3.getCell(`B${r3}`).numFmt=numFmt;
     r3++;
-    ws3.getCell(`A${r3}`).value='100% No deducible:';ws3.getCell(`B${r3}`).value=clasificacionRenta._noDed||0;ws3.getCell(`B${r3}`).numFmt=numFmt;
+    ws3.getCell(`A${r3}`).value='GMF (50% no ded):';ws3.getCell(`B${r3}`).value=totalGmfNoDed;ws3.getCell(`B${r3}`).numFmt=numFmt;
     r3++;
-    ws3.getCell(`A${r3}`).value='GMF (50% no ded):';ws3.getCell(`B${r3}`).value=clasificacionRenta._gmfNoDed||0;ws3.getCell(`B${r3}`).numFmt=numFmt;
-    r3++;
-    ws3.getCell(`A${r3}`).value='TOTAL fiscal no ded:';ws3.getCell(`A${r3}`).font=fBold;ws3.getCell(`B${r3}`).value=clasificacionRenta._totalNoDedFiscal||0;ws3.getCell(`B${r3}`).numFmt=numFmt;ws3.getCell(`B${r3}`).font={...fBold,color:{argb:'FFC62828'}};
+    ws3.getCell(`A${r3}`).value='TOTAL fiscal no ded:';ws3.getCell(`A${r3}`).font=fBold;ws3.getCell(`B${r3}`).value=totalNoDed+totalGmfNoDed;ws3.getCell(`B${r3}`).numFmt=numFmt;ws3.getCell(`B${r3}`).font={...fBold,color:{argb:'FFC62828'}};
   }
 
   // ── Descargar ──
@@ -1311,7 +1315,7 @@ async function exportExcel(){
 }
 
 // Init
-setModoLectura('debcre');
+setModoLectura('saldo');
 recalcular();
 recalcularTTD();
 
