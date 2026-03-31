@@ -104,7 +104,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <body>
 <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:'DM Sans',sans-serif">
   <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem"><div style="width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900">E</div>ExogenaDIAN</a>
-  <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">← Volver al inicio</a>
+  <div style="display:flex;gap:16px;align-items:center">
+    <a href="iva300.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">IVA 300</a>
+    <a href="retencion350.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Ret 350</a>
+    <a href="estadosfinancieros.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">EEFF</a>
+    <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">← Inicio</a>
+  </div>
 </div>
 <div class="container">
   <div class="header"><div>
@@ -222,7 +227,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div id="formatSummary"></div>
     </div>
     <div class="card">
-      <div class="card-title"><span>🔍</span> Detalle de Clasificacion <span style="font-size:.8rem;font-weight:400;color:var(--muted);margin-left:8px">(primeros 100 registros)</span></div>
+      <div class="card-title"><span>🔍</span> Detalle de Clasificacion</div>
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+        <select id="clasifFilter" onchange="filtrarClasificacion()" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;font-family:inherit">
+          <option value="">Todos los formatos</option>
+          <option value="F1001">F1001 Pagos</option>
+          <option value="F1003">F1003 Retenciones</option>
+          <option value="F1005">F1005 IVA Desc.</option>
+          <option value="F1006">F1006 IVA Gen.</option>
+          <option value="F1007">F1007 Ingresos</option>
+          <option value="F1008">F1008 CxC</option>
+          <option value="F1009">F1009 CxP</option>
+          <option value="F1010">F1010 Socios</option>
+          <option value="F1012">F1012 Inversiones</option>
+          <option value="F2276">F2276 Nomina</option>
+          <option value="—">Sin clasificar</option>
+        </select>
+        <span id="clasifCount" style="font-size:.78rem;color:var(--muted)"></span>
+      </div>
       <div class="scroll-box" id="clasifTable"></div>
     </div>
     <div class="actions">
@@ -236,6 +258,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div class="card">
       <div class="card-title"><span>📑</span> Formatos Generados</div>
       <div id="fmtStats" class="stats"></div>
+    </div>
+    <div class="card hidden" id="fmtWarnings">
+      <div class="card-title"><span>⚠️</span> Validaciones</div>
+      <div id="fmtWarningsList"></div>
     </div>
     <div class="card" style="padding:0;overflow:hidden">
       <div class="tabs" id="fmtTabs"></div>
@@ -1090,6 +1116,22 @@ function renderClasificacion(sinClasificar){
   document.getElementById('clasifTable').innerHTML=h;
 }
 
+function filtrarClasificacion(){
+  const filtro=document.getElementById('clasifFilter').value;
+  const datos=filtro?clasificacion.filter(r=>r.formato===filtro):clasificacion;
+  document.getElementById('clasifCount').textContent=datos.length+' registros';
+  const show=datos.slice(0,200);
+  let h='<table class="map-table"><thead><tr><th>#</th><th>Formato</th><th>Concepto</th><th>Cuenta</th><th>Nombre</th><th>NIT</th><th>Debito</th><th>Credito</th></tr></thead><tbody>';
+  for(let i=0;i<show.length;i++){
+    const r=show[i];
+    const badge=r.formato!=='—'?`<span class="fmt-badge fmt-${r.formato.substring(1)}">${r.formato}</span>`:'<span style="color:var(--muted)">—</span>';
+    h+=`<tr><td>${i+1}</td><td>${badge}</td><td class="mono">${r.concepto}</td><td class="mono">${r.code}</td><td>${r.name.substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
+  }
+  if(datos.length>200)h+=`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">... y ${datos.length-200} registros mas</td></tr>`;
+  h+='</tbody></table>';
+  document.getElementById('clasifTable').innerHTML=h;
+}
+
 /* ── Conectar Step 2 → Step 3 ── */
 function irAClasificacion(){
   clasificarCuentas();
@@ -1359,6 +1401,34 @@ function renderFormatos(){
   }
   document.getElementById('fmtTabs').innerHTML=tabs;
   document.getElementById('fmtPanels').innerHTML=panels;
+
+  // Validaciones
+  const warnings=[];
+  const fmtOrder2=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  for(const f of fmtOrder2){
+    const rows=formatos[f];if(!rows||rows.length===0)continue;
+    let sinRazon=0,sinDv=0,nitNM=0;
+    for(const row of rows){
+      const tdIdx=row.indexOf('31')!==-1||row.indexOf('13')!==-1?0:-1;
+      // Buscar NIT y razon social en la fila
+      for(let i=0;i<row.length;i++){
+        if(String(row[i])===NM)nitNM++;
+      }
+      // Razon social vacia (buscar string vacio en posiciones tipicas)
+      const rsIdx=f==='F1001'||f==='F1003'||f==='F1007'||f==='F1008'||f==='F1009'?4:3;
+      if(rsIdx<row.length&&(!row[rsIdx]||row[rsIdx]===''))sinRazon++;
+      // DV vacio
+      const dvIdx=f==='F1001'||f==='F1003'||f==='F1007'||f==='F1008'||f==='F1009'?3:2;
+      if(dvIdx<row.length&&(!row[dvIdx]||row[dvIdx]===''))sinDv++;
+    }
+    if(sinRazon>0)warnings.push(`<strong>${f}:</strong> ${sinRazon} registros sin razon social — revise el balance o complete manualmente`);
+    if(sinDv>0)warnings.push(`<strong>${f}:</strong> ${sinDv} registros sin digito de verificacion`);
+    if(nitNM>0)warnings.push(`<strong>${f}:</strong> ${nitNM} registros agrupados en cuantias menores (NIT ${NM})`);
+  }
+  if(warnings.length>0){
+    document.getElementById('fmtWarnings').classList.remove('hidden');
+    document.getElementById('fmtWarningsList').innerHTML=warnings.map(w=>`<div class="alert alert-warn" style="margin-bottom:8px"><span>⚠️</span><div>${w}</div></div>`).join('');
+  }
 }
 
 function switchFmtTab(el,panelId){
