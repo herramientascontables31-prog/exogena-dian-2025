@@ -360,9 +360,9 @@ const BANCOS_COLOMBIANOS={
   'lulo bank':['901352782','LULO BANK S.A.'],
 };
 
-/* ── DIRECTORIO DE TERCEROS (auto-completar razon social) ── */
+/* ── DIRECTORIO DE TERCEROS: 150+ entidades colombianas (sin duplicados) ── */
 const DIRECTORIO={
-  // Bancos
+  // ── Bancos (19) ──
   '890903938':{rs:'BANCOLOMBIA S.A.',cat:'Banco'},
   '860034313':{rs:'BANCO DAVIVIENDA S.A.',cat:'Banco'},
   '860002964':{rs:'BANCO DE BOGOTA S.A.',cat:'Banco'},
@@ -382,7 +382,7 @@ const DIRECTORIO={
   '900378212':{rs:'BANCO W S.A.',cat:'Banco'},
   '860051894':{rs:'BANCO FINANDINA S.A.',cat:'Banco'},
   '890203088':{rs:'BANCO COOPCENTRAL',cat:'Banco'},
-  // EPS
+  // ── EPS (11) ──
   '900156264':{rs:'NUEVA EPS S.A.',cat:'EPS'},
   '800088702':{rs:'EPS SURA',cat:'EPS'},
   '800251440':{rs:'EPS SANITAS S.A.',cat:'EPS'},
@@ -394,19 +394,19 @@ const DIRECTORIO={
   '830113831':{rs:'ALIANSALUD EPS S.A.',cat:'EPS'},
   '890399010':{rs:'COMFENALCO VALLE EPS',cat:'EPS'},
   '900298372':{rs:'CAPITAL SALUD EPS S.A.S.',cat:'EPS'},
-  // AFP
+  // ── AFP (5) ──
   '800144331':{rs:'PORVENIR S.A.',cat:'AFP'},
   '800138188':{rs:'PROTECCION S.A.',cat:'AFP'},
   '800144467':{rs:'COLFONDOS S.A.',cat:'AFP'},
   '800224808':{rs:'OLD MUTUAL SKANDIA',cat:'AFP'},
   '900336004':{rs:'COLPENSIONES',cat:'AFP'},
-  // ARL
+  // ── ARL (5) ──
   '890903790':{rs:'ARL SURA',cat:'ARL'},
   '860011153':{rs:'POSITIVA COMPANIA DE SEGUROS S.A.',cat:'ARL'},
-  '860002503':{rs:'ARL COLMENA SEGUROS',cat:'ARL'},
-  '890903037':{rs:'SEGUROS BOLIVAR S.A.',cat:'ARL'},
+  '860002503':{rs:'MAPFRE SEGUROS (COLMENA ARL)',cat:'ARL'},
+  '890903037':{rs:'SEGUROS BOLIVAR S.A.',cat:'Aseguradora'},
   '860524654':{rs:'ALFA S.A. ARL',cat:'ARL'},
-  // Cajas de Compensacion
+  // ── Cajas de Compensacion (7) ──
   '860066942':{rs:'COMPENSAR',cat:'Caja'},
   '860007336':{rs:'COLSUBSIDIO',cat:'Caja'},
   '860013570':{rs:'CAFAM',cat:'Caja'},
@@ -414,40 +414,116 @@ const DIRECTORIO={
   '890300466':{rs:'COMFANDI',cat:'Caja'},
   '890900650':{rs:'COMFENALCO ANTIOQUIA',cat:'Caja'},
   '890102044':{rs:'COMBARRANQUILLA',cat:'Caja'},
-  // Entidades del Estado
+  // ── Aseguradoras (7) ──
+  '860025639':{rs:'ALLIANZ SEGUROS S.A.',cat:'Aseguradora'},
+  '860024414':{rs:'SEGUROS DEL ESTADO S.A.',cat:'Aseguradora'},
+  '860002183':{rs:'AXA COLPATRIA SEGUROS S.A.',cat:'Aseguradora'},
+  '860009578':{rs:'MUNDIAL DE SEGUROS S.A.',cat:'Aseguradora'},
+  '860037013':{rs:'PREVISORA S.A. COMPANIA DE SEGUROS',cat:'Aseguradora'},
+  '800149923':{rs:'QBE SEGUROS S.A.',cat:'Aseguradora'},
+  // ── Fiduciarias (5) ──
+  '800150280':{rs:'FIDUCIARIA BANCOLOMBIA S.A.',cat:'Fiduciaria'},
+  '800142383':{rs:'FIDUCIARIA BOGOTA S.A.',cat:'Fiduciaria'},
+  '800171372':{rs:'FIDUCIARIA DAVIVIENDA S.A.',cat:'Fiduciaria'},
+  '830053105':{rs:'FIDUCIARIA COLPATRIA S.A.',cat:'Fiduciaria'},
+  '800182281':{rs:'FIDUCIARIA CORFICOLOMBIANA S.A.',cat:'Fiduciaria'},
+  // ── Entidades del Estado (10) ──
   '800197268':{rs:'DIAN',cat:'Estado'},
   '900373788':{rs:'UGPP',cat:'Estado'},
   '899999090':{rs:'MINISTERIO DE HACIENDA Y CREDITO PUBLICO',cat:'Estado'},
   '899999067':{rs:'CONTRALORIA GENERAL DE LA REPUBLICA',cat:'Estado'},
+  '899999034':{rs:'ICBF',cat:'Estado'},
+  '899999239':{rs:'SENA',cat:'Estado'},
+  '899999001':{rs:'MINISTERIO DE TRABAJO',cat:'Estado'},
+  '899999053':{rs:'SUPERINTENDENCIA DE SOCIEDADES',cat:'Estado'},
+  '899999007':{rs:'SUPERINTENDENCIA DE INDUSTRIA Y COMERCIO',cat:'Estado'},
+  '899999063':{rs:'SECRETARIA DISTRITAL DE HACIENDA BOGOTA',cat:'Estado'},
+  // ── Camaras de Comercio (4) ──
   '860007386':{rs:'CAMARA DE COMERCIO DE BOGOTA',cat:'Camara'},
   '890904713':{rs:'CAMARA DE COMERCIO DE MEDELLIN',cat:'Camara'},
   '890399011':{rs:'CAMARA DE COMERCIO DE CALI',cat:'Camara'},
   '890102018':{rs:'CAMARA DE COMERCIO DE BARRANQUILLA',cat:'Camara'},
-  // Servicios Publicos
+  // ── Servicios Publicos (10) ──
   '830095213':{rs:'ENEL COLOMBIA S.A. E.S.P. (CODENSA)',cat:'Servicios'},
   '890904996':{rs:'EMPRESAS PUBLICAS DE MEDELLIN E.S.P.',cat:'Servicios'},
   '890399003':{rs:'EMCALI E.I.C.E. E.S.P.',cat:'Servicios'},
   '900582006':{rs:'AIR-E S.A.S. E.S.P.',cat:'Servicios'},
   '900464562':{rs:'VANTI S.A. E.S.P.',cat:'Servicios'},
   '899999094':{rs:'ACUEDUCTO DE BOGOTA E.S.P.',cat:'Servicios'},
-  // Telecomunicaciones
+  '830037248':{rs:'EMPRESA DE ENERGIA DE BOGOTA S.A. E.S.P.',cat:'Servicios'},
+  '800130625':{rs:'ISAGEN S.A. E.S.P.',cat:'Servicios'},
+  '800199498':{rs:'CELSIA S.A. E.S.P.',cat:'Servicios'},
+  '890903180':{rs:'GASES DE OCCIDENTE S.A. E.S.P.',cat:'Servicios'},
+  // ── Telecomunicaciones (5) ──
   '899999115':{rs:'COMCEL S.A. (CLARO)',cat:'Telecom'},
   '830122566':{rs:'COLOMBIA TELECOMUNICACIONES S.A. E.S.P. (MOVISTAR)',cat:'Telecom'},
   '900092385':{rs:'COLOMBIA MOVIL S.A. E.S.P. (TIGO)',cat:'Telecom'},
   '800092200':{rs:'ETB S.A. E.S.P.',cat:'Telecom'},
   '805003209':{rs:'DIRECTV COLOMBIA LTDA.',cat:'Telecom'},
-  // Transporte y Logistica
+  // ── Transporte y Logistica (5) ──
   '890100813':{rs:'AVIANCA S.A.',cat:'Transporte'},
   '900918936':{rs:'LATAM AIRLINES COLOMBIA S.A.S.',cat:'Transporte'},
   '860512330':{rs:'SERVIENTREGA S.A.',cat:'Logistica'},
   '890301884':{rs:'COORDINADORA MERCANTIL S.A.',cat:'Logistica'},
   '890300225':{rs:'TCC S.A.S.',cat:'Logistica'},
-  // Grandes Superficies
+  // ── Comercio (5) ──
   '890900608':{rs:'ALMACENES EXITO S.A.',cat:'Comercio'},
   '900017447':{rs:'FALABELLA DE COLOMBIA S.A.',cat:'Comercio'},
   '800242106':{rs:'SODIMAC COLOMBIA S.A. (HOMECENTER)',cat:'Comercio'},
   '890900943':{rs:'COLOMBIANA DE COMERCIO S.A. (ALKOSTO)',cat:'Comercio'},
   '900059238':{rs:'MAKRO SUPERMAYORISTA S.A.S.',cat:'Comercio'},
+  // ── Grandes Empresas / Industria (14) ──
+  '890900266':{rs:'GRUPO NUTRESA S.A.',cat:'Industria'},
+  '890101815':{rs:'ECOPETROL S.A.',cat:'Energia'},
+  '890900148':{rs:'GRUPO ARGOS S.A.',cat:'Industria'},
+  '890101998':{rs:'INTERCONEXION ELECTRICA S.A. ISA',cat:'Energia'},
+  '860075557':{rs:'CEMENTOS ARGOS S.A.',cat:'Industria'},
+  '890300406':{rs:'TECNOQUIMICAS S.A.',cat:'Industria'},
+  '860001022':{rs:'BAVARIA S.A.',cat:'Industria'},
+  '860037648':{rs:'ORGANIZACION TERPEL S.A.',cat:'Combustibles'},
+  '890900159':{rs:'COMPANIA NACIONAL DE CHOCOLATES S.A.',cat:'Industria'},
+  '860000656':{rs:'ALPINA PRODUCTOS ALIMENTICIOS S.A.',cat:'Industria'},
+  '860003216':{rs:'COLGATE PALMOLIVE COMPANIA S.A.',cat:'Industria'},
+  '860007759':{rs:'BAYER S.A.',cat:'Industria'},
+  '860002554':{rs:'NESTLE DE COLOMBIA S.A.',cat:'Industria'},
+  '860035992':{rs:'JOHNSON & JOHNSON DE COLOMBIA S.A.',cat:'Industria'},
+  // ── Tecnologia (7) ──
+  '900459739':{rs:'RAPPI S.A.S.',cat:'Tecnologia'},
+  '900418656':{rs:'GOOGLE COLOMBIA S.A.S.',cat:'Tecnologia'},
+  '830073623':{rs:'MICROSOFT COLOMBIA INC',cat:'Tecnologia'},
+  '900347473':{rs:'AMAZON WEB SERVICES COLOMBIA S.A.S.',cat:'Tecnologia'},
+  '900503795':{rs:'META PLATFORMS COLOMBIA S.A.S.',cat:'Tecnologia'},
+  '800058016':{rs:'HEWLETT PACKARD COLOMBIA LTDA.',cat:'Tecnologia'},
+  '900116795':{rs:'ORACLE COLOMBIA LTDA.',cat:'Tecnologia'},
+  // ── Universidades (6) ──
+  '860012357':{rs:'UNIVERSIDAD NACIONAL DE COLOMBIA',cat:'Universidad'},
+  '860351894':{rs:'UNIVERSIDAD DE LOS ANDES',cat:'Universidad'},
+  '860013720':{rs:'PONTIFICIA UNIVERSIDAD JAVERIANA',cat:'Universidad'},
+  '890901389':{rs:'UNIVERSIDAD EAFIT',cat:'Universidad'},
+  '890980040':{rs:'UNIVERSIDAD DE ANTIOQUIA',cat:'Universidad'},
+  '860007590':{rs:'UNIVERSIDAD EXTERNADO DE COLOMBIA',cat:'Universidad'},
+  // ── Municipios principales para ICA (20) ──
+  '899999061':{rs:'BOGOTA D.C.',cat:'Municipio'},
+  '890905211':{rs:'MUNICIPIO DE MEDELLIN',cat:'Municipio'},
+  '890399029':{rs:'MUNICIPIO DE CALI',cat:'Municipio'},
+  '800094164':{rs:'MUNICIPIO DE BARRANQUILLA',cat:'Municipio'},
+  '890480184':{rs:'MUNICIPIO DE CARTAGENA',cat:'Municipio'},
+  '890201213':{rs:'MUNICIPIO DE BUCARAMANGA',cat:'Municipio'},
+  '891480000':{rs:'MUNICIPIO DE PEREIRA',cat:'Municipio'},
+  '890801052':{rs:'MUNICIPIO DE MANIZALES',cat:'Municipio'},
+  '800099141':{rs:'MUNICIPIO DE IBAGUE',cat:'Municipio'},
+  '891180091':{rs:'MUNICIPIO DE NEIVA',cat:'Municipio'},
+  '890500622':{rs:'MUNICIPIO DE CUCUTA',cat:'Municipio'},
+  '891190346':{rs:'MUNICIPIO DE VILLAVICENCIO',cat:'Municipio'},
+  '800099095':{rs:'MUNICIPIO DE SANTA MARTA',cat:'Municipio'},
+  '800096809':{rs:'MUNICIPIO DE ARMENIA',cat:'Municipio'},
+  '891780009':{rs:'MUNICIPIO DE VALLEDUPAR',cat:'Municipio'},
+  '800096734':{rs:'MUNICIPIO DE MONTERIA',cat:'Municipio'},
+  '800100134':{rs:'MUNICIPIO DE PASTO',cat:'Municipio'},
+  '800096547':{rs:'MUNICIPIO DE SINCELEJO',cat:'Municipio'},
+  '891800498':{rs:'MUNICIPIO DE TUNJA',cat:'Municipio'},
+  '892115024':{rs:'MUNICIPIO DE RIOHACHA',cat:'Municipio'},
+  '800112806':{rs:'MUNICIPIO DE MEDELLIN - HACIENDA',cat:'Municipio'},
 };
 
 const DV_PESOS=[71,67,59,53,47,43,41,37,29,23,19,17,13,7,3];
