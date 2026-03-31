@@ -351,48 +351,30 @@ function detectColumns(data,hdrRow){
   const hdrs=data[hdrRow]||[];
   const map={};
 
-  // Detectar fila superior para contexto (ej: "Saldo anterior | | Movimientos | | Saldo final")
-  const prevRow=hdrRow>0?(data[hdrRow-1]||[]):[];
-  // Propagar labels de la fila superior hacia la derecha
-  const context=[];
-  let lastLabel='';
-  for(let i=0;i<Math.max(hdrs.length,prevRow.length);i++){
-    const pv=String(prevRow[i]||'').trim();
-    if(pv)lastLabel=pv.toLowerCase();
-    context[i]=lastLabel;
+  // 1. Detectar code y name
+  for(let ci=0;ci<hdrs.length;ci++){
+    const cell=String(hdrs[ci]||'').trim();
+    if(!cell)continue;
+    if(!('code' in map)&&/n[uú]mero.*cuenta|cuenta.*n[uú]m|c[oó]d/i.test(cell))map.code=ci;
+    else if(!('code' in map)&&/^cuenta$/i.test(cell))map.code=ci;
+    if(!('name' in map)&&/cuenta.*contable|nombre|descripci/i.test(cell))map.name=ci;
   }
 
-  const hints={
-    code:[/n[uú]mero.*cuenta|cuenta.*n[uú]m|c[oó]d/i,/^cuenta$/i,/^n[uú]mero$/i],
-    name:[/cuenta.*contable|nombre|descripci/i],
-    deb:[/d[eé]bito|debe/i],
-    cre:[/cr[eé]dito|haber/i],
-  };
-
-  // Primero detectar code, name, deb, cre
-  for(const[key,rxList] of Object.entries(hints)){
-    for(let ci=0;ci<hdrs.length;ci++){
-      if(Object.values(map).includes(ci))continue;
-      const cell=String(hdrs[ci]||'').trim();
-      if(!cell)continue;
-      for(const rx of rxList){
-        if(rx.test(cell)){
-          // Para deb/cre: preferir los que estan bajo "Movimientos"
-          if((key==='deb'||key==='cre')&&/saldo/i.test(context[ci]))continue;
-          map[key]=ci;break;
-        }
-      }
-      if(key in map)break;
-    }
+  // 2. Detectar Debito/Credito (movimientos) — siempre las primeras que digan debito/credito
+  for(let ci=0;ci<hdrs.length;ci++){
+    const cell=String(hdrs[ci]||'').trim();
+    if(!('deb' in map)&&/d[eé]bito|^debe$/i.test(cell))map.deb=ci;
+    if(!('cre' in map)&&/cr[eé]dito|^haber$/i.test(cell))map.cre=ci;
   }
 
-  // Detectar Cargo/Abono de Saldo Final: buscar las ULTIMAS columnas cargo/abono
-  // (las primeras suelen ser saldo anterior, las ultimas saldo final)
+  // 3. Detectar Saldo Final (Cargo/Abono) — las ULTIMAS columnas cargo/abono
+  //    Alegra: Saldo anterior(Cargo|Abono) | Movimientos(Debito|Credito) | Saldo final(Cargo|Abono)
+  //    Otros: puede ser solo Saldo(Debito|Credito) o Saldo(Cargo|Abono)
   let lastCargo=-1,lastAbono=-1;
   for(let ci=0;ci<hdrs.length;ci++){
-    const cell=String(hdrs[ci]||'').trim().toLowerCase();
-    if(/^cargo$/i.test(cell)||/saldo.*cargo/i.test(cell))lastCargo=ci;
-    if(/^abono$/i.test(cell)||/saldo.*abono/i.test(cell))lastAbono=ci;
+    const cell=String(hdrs[ci]||'').trim();
+    if(/^cargo$|saldo.*cargo/i.test(cell))lastCargo=ci;
+    if(/^abono$|saldo.*abono/i.test(cell))lastAbono=ci;
   }
   if(lastCargo>=0&&lastAbono>=0){
     map.saldoCargo=lastCargo;
@@ -639,30 +621,25 @@ function clasificarPUCaF110(data,hdrRow,colMap){
     const nivel=nivelCol>=0?String(row[nivelCol]||'').trim():'';
 
     const esResultado=/^[456]/.test(code); // clases 4,5,6
-
-    let saldo=0;
     const hasSaldoFinal='saldoCargo' in colMap&&'saldoAbono' in colMap;
     const hasDebCre='deb' in colMap&&'cre' in colMap;
 
-    if(esResultado&&modoLectura==='debcre'&&hasDebCre){
-      // Para cuentas de resultado en modo deb/cre: usar movimientos
+    let saldo=0;
+    if(esResultado&&hasDebCre&&modoLectura==='debcre'){
+      // Cuentas de resultado: SIEMPRE usar movimientos (debito/credito)
+      // Alegra: el saldo final es acumulado historico, no del periodo
       const deb=parseFloat(row[colMap.deb])||0;
       const cre=parseFloat(row[colMap.cre])||0;
-      if(deb||cre){
-        // Clase 4 (ingresos): naturaleza credito → cre - deb
-        // Clase 5,6 (gastos/costos): naturaleza debito → deb - cre
-        saldo=code.startsWith('4')?(cre-deb):(deb-cre);
-      }else if(hasSaldoFinal){
-        // Fallback: si deb/cre son 0, usar saldo final
-        const cargo=parseFloat(row[colMap.saldoCargo])||0;
-        const abono=parseFloat(row[colMap.saldoAbono])||0;
-        saldo=cargo-abono;
-      }
+      // Clase 4 (ingresos): naturaleza credito → cre - deb
+      // Clase 5,6 (gastos/costos): naturaleza debito → deb - cre
+      saldo=code.startsWith('4')?(cre-deb):(deb-cre);
     }else if(hasSaldoFinal){
+      // Patrimonio (clases 1,2,3) o modo saldo: usar saldo final
       const cargo=parseFloat(row[colMap.saldoCargo])||0;
       const abono=parseFloat(row[colMap.saldoAbono])||0;
-      saldo=(cargo||abono)?(cargo-abono):0;
+      saldo=cargo-abono;
     }else if(hasDebCre){
+      // Solo tiene debito/credito (sin saldo final)
       saldo=(parseFloat(row[colMap.deb])||0)-(parseFloat(row[colMap.cre])||0);
     }
 
