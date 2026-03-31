@@ -92,7 +92,49 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <p>Personas Juridicas · AG 2025 · Borrador con calculos automaticos</p>
   </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
 
-  <div class="alert alert-info"><span>💡</span><div>Llena las casillas en <strong>blanco</strong> y el formulario calcula automaticamente las casillas en <strong style="color:#2E7D32">verde</strong>. Todos los valores en pesos colombianos, redondeados a miles ($1.000).</div></div>
+  <!-- MODO: Balance o Manual -->
+  <div class="card">
+    <div class="card-title"><span>📊</span> ¿Como quieres generar el borrador?</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div onclick="setModo('balance')" id="modoBalance" class="modo-card" style="padding:20px;border:2px solid var(--pri2);border-radius:12px;cursor:pointer;text-align:center;background:var(--pri3)">
+        <div style="font-size:1.8rem;margin-bottom:8px">📊</div>
+        <div style="font-weight:700">Desde Balance de Prueba</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Sube tu balance y se clasifican las cuentas automaticamente</div>
+      </div>
+      <div onclick="setModo('manual')" id="modoManual" class="modo-card" style="padding:20px;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center">
+        <div style="font-size:1.8rem;margin-bottom:8px">✏️</div>
+        <div style="font-weight:700">Llenar Manualmente</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Ingresa los valores directamente en las casillas del formulario</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPLOAD BALANCE -->
+  <div id="uploadSection" class="card">
+    <div class="card-title"><span>📄</span> Cargar Balance de Prueba</div>
+    <div class="alert alert-info"><span>💡</span><div>Sube el <strong>balance de prueba general</strong> con todas las clases (1-6). Compatible con <strong>Alegra, Siigo, World Office, Helisa, MidaSoft</strong> y cualquier software que exporte Excel.</div></div>
+    <div style="border:2px dashed var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;cursor:pointer;position:relative;transition:.3s" id="dzRenta">
+      <input type="file" accept=".xlsx,.xls,.csv" id="fileInputRenta" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+      <span style="font-size:2.5rem;display:block;margin-bottom:8px">📊</span>
+      <div style="font-weight:700;font-size:1.1rem;color:var(--pri)">Arrastra tu archivo aqui o haz clic</div>
+      <div style="color:var(--muted);font-size:.82rem;margin-top:4px">Excel (.xlsx, .xls) o CSV</div>
+      <div id="fileNameRenta" style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--green);font-weight:600"></div>
+    </div>
+    <div style="margin-top:12px;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
+      <span style="font-size:1rem">🔒</span>
+      <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningun dato sale de tu equipo.</strong></span>
+    </div>
+    <!-- Resultado clasificacion -->
+    <div id="clasifResult" class="hidden" style="margin-top:16px">
+      <div id="clasifStats" class="stats"></div>
+      <div id="clasifDetail" style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;font-size:.78rem"></div>
+      <div class="actions" style="margin-top:12px">
+        <button onclick="aplicarAlFormulario()" class="btn btn-primary">Aplicar al Formulario 110 →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-info"><span>💡</span><div>Casillas en <strong>blanco</strong> son editables. Las casillas en <strong style="color:#2E7D32">verde</strong> se calculan automaticamente. Valores en pesos, redondeados a miles ($1.000).</div></div>
 
   <!-- Datos del declarante -->
   <div class="card">
@@ -210,6 +252,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
   </div>
 
+  <!-- IMPUESTO MINIMO (TTD) -->
+  <div class="card" style="margin-top:20px">
+    <div class="card-title"><span>📐</span> Tasa Minima de Tributacion (Art. 240 Par. 6 E.T.)</div>
+    <div class="alert alert-info"><span>💡</span><div>Si la Tasa de Tributacion Depurada (TTD) es menor al <strong>15%</strong>, se genera un <strong>Impuesto Adicional (IA)</strong> que se suma al impuesto a cargo.</div></div>
+    <div class="config-grid">
+      <div class="config-item"><label>Utilidad contable antes de impuestos</label><input type="text" id="ttdUtilidad" oninput="recalcularTTD()" placeholder="Ej: 1.500.000.000"></div>
+      <div class="config-item"><label>Diferencias permanentes que aumentan renta</label><input type="text" id="ttdDifPerm" oninput="recalcularTTD()" placeholder="Ej: 120.000.000"></div>
+    </div>
+    <div class="config-grid" style="margin-top:12px">
+      <div class="config-item"><label>INCRNGO (Ingresos no constitutivos)</label><input type="text" id="ttdINCRNGO" oninput="recalcularTTD()" placeholder="0"></div>
+      <div class="config-item"><label>Rentas exentas + compensaciones</label><input type="text" id="ttdExentas" oninput="recalcularTTD()" placeholder="0"></div>
+    </div>
+    <div id="ttdResultado" style="margin-top:16px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)"></div>
+  </div>
+
   <!-- RESUMEN -->
   <div class="stats" id="resumen" style="margin-top:20px"></div>
 
@@ -233,6 +290,257 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
    FORMULARIO 110 — DECLARACION DE RENTA PERSONAS JURIDICAS
    Calculos automaticos con tarifas progresivas AG 2025
    ═══════════════════════════════════════════════════════════ */
+
+/* ── MODO BALANCE / MANUAL ── */
+let modo='balance';
+function setModo(m){
+  modo=m;
+  document.getElementById('modoBalance').style.borderColor=m==='balance'?'var(--pri2)':'var(--border)';
+  document.getElementById('modoBalance').style.background=m==='balance'?'var(--pri3)':'var(--card)';
+  document.getElementById('modoManual').style.borderColor=m==='manual'?'var(--pri2)':'var(--border)';
+  document.getElementById('modoManual').style.background=m==='manual'?'var(--pri3)':'var(--card)';
+  document.getElementById('uploadSection').style.display=m==='balance'?'block':'none';
+}
+
+/* ── CARGA DE BALANCE ── */
+const XLSX_CDN='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+let xlsxLoaded=false;
+function loadXLSX(cb){
+  if(xlsxLoaded)return cb();
+  const s=document.createElement('script');s.src=XLSX_CDN;s.onload=()=>{xlsxLoaded=true;cb()};document.head.appendChild(s);
+}
+
+document.getElementById('fileInputRenta').addEventListener('change',e=>{if(e.target.files[0])loadXLSX(()=>procesarBalance(e.target.files[0]))});
+const dzR=document.getElementById('dzRenta');
+['dragover','dragenter'].forEach(ev=>dzR.addEventListener(ev,e=>{e.preventDefault();dzR.style.borderColor='var(--pri2)'}));
+['dragleave','drop'].forEach(ev=>dzR.addEventListener(ev,e=>{e.preventDefault();dzR.style.borderColor='var(--border)'}));
+dzR.addEventListener('drop',e=>{if(e.dataTransfer.files[0])loadXLSX(()=>procesarBalance(e.dataTransfer.files[0]))});
+
+let clasificacionRenta=[];
+
+function procesarBalance(file){
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'array'});
+      let best=null,bestN=0;
+      for(const sn of wb.SheetNames){
+        const raw=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:true});
+        const n=raw.filter(r=>r.some(c=>c!==''&&c!=null)).length;
+        if(n>bestN){best={sn,raw};bestN=n}
+      }
+      if(!best||bestN<5){alert('Archivo vacio o sin datos suficientes');return}
+
+      document.getElementById('fileNameRenta').textContent=file.name+' · '+bestN+' filas · hoja: '+best.sn;
+
+      // Auto-detect columns
+      const data=best.raw.filter(r=>r.some(c=>c!==''&&c!=null));
+      const hdrRow=detectHeaderRow(data);
+      const colMap=detectColumns(data,hdrRow);
+
+      // Parse and classify
+      clasificacionRenta=clasificarPUCaF110(data,hdrRow,colMap);
+      mostrarClasificacion();
+    }catch(err){alert('Error: '+err.message)}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function detectHeaderRow(data){
+  const KW=/^(nivel|n[uú]mero|cuenta|c[oó]d|nombre|descripci|saldo|d[eé]bito|cr[eé]dito|cargo|abono|debe|haber)/i;
+  let bestI=0,bestScore=-Infinity;
+  for(let i=0;i<Math.min(data.length,15);i++){
+    const r=data[i];if(!r||r.length<3)continue;
+    let score=0;
+    for(const c of r){if(c==null||c==='')continue;if(KW.test(String(c).trim()))score+=10;else score-=1}
+    if(score>bestScore){bestScore=score;bestI=i}
+  }
+  return bestI;
+}
+
+function detectColumns(data,hdrRow){
+  const hdrs=data[hdrRow]||[];
+  const map={};
+  const hints={
+    code:[/c[oó]d|n[uú]mero.*cuenta|cuenta.*n[uú]m/i,/^cuenta$/i],
+    name:[/cuenta.*contable|nombre|descripci/i],
+    saldoCargo:[/saldo.*final.*cargo|saldo.*cargo|cargo$/i],
+    saldoAbono:[/saldo.*final.*abono|saldo.*abono|abono$/i],
+    deb:[/d[eé]bito|debe|mov.*d[eé]b/i],
+    cre:[/cr[eé]dito|haber|mov.*cr[eé]/i],
+  };
+  for(const[key,rxList] of Object.entries(hints)){
+    for(let ci=0;ci<hdrs.length;ci++){
+      if(Object.values(map).includes(ci))continue;
+      const cell=String(hdrs[ci]||'').trim();
+      if(!cell)continue;
+      for(const rx of rxList){
+        if(rx.test(cell)){map[key]=ci;break}
+      }
+      if(key in map)break;
+    }
+  }
+  return map;
+}
+
+/* ── MAPEO PUC → CASILLAS F110 ── */
+const PUC_F110=[
+  // Patrimonio
+  {cas:36,prefijos:['11'],desc:'Efectivo y equivalentes'},
+  {cas:37,prefijos:['12'],desc:'Inversiones'},
+  {cas:38,prefijos:['13'],desc:'Cuentas por cobrar'},
+  {cas:39,prefijos:['14'],desc:'Inventarios'},
+  {cas:40,prefijos:['16','1710'],desc:'Activos intangibles'},
+  {cas:41,prefijos:['1705','171'],desc:'Activos biologicos'},
+  {cas:42,prefijos:['15'],desc:'PPE y propiedades de inversion'},
+  {cas:43,prefijos:['17','18','19'],desc:'Otros activos',excluir:['1705','1710','171']},
+  {cas:45,prefijos:['2'],desc:'Pasivos'},
+  // Ingresos
+  {cas:47,prefijos:['4135','4115','4120','4125','4130','4140','4145','4150','4155','4160','4165','4170','4175','41'],desc:'Ingresos ordinarios'},
+  {cas:48,prefijos:['420505','4210'],desc:'Ingresos financieros'},
+  {cas:57,prefijos:['42'],desc:'Otros ingresos',excluir:['420505','4210']},
+  // Costos
+  {cas:62,prefijos:['6'],desc:'Costos'},
+  // Gastos
+  {cas:63,prefijos:['51'],desc:'Gastos de administracion'},
+  {cas:64,prefijos:['52'],desc:'Gastos de distribucion y ventas'},
+  {cas:65,prefijos:['530505','5305'],desc:'Gastos financieros'},
+  {cas:66,prefijos:['53'],desc:'Otros gastos',excluir:['530505','5305']},
+];
+
+function clasificarPUCaF110(data,hdrRow,colMap){
+  const result={};
+  const detail=[];
+  const rows=data.slice(hdrRow+1);
+
+  for(const row of rows){
+    let code=String(row[colMap.code]||'').replace(/[.\-\s]/g,'').trim();
+    if(!code||!/^\d{2,}/.test(code))continue;
+    const name=String(row[colMap.name||colMap.code+1]||'').trim();
+
+    // Determinar saldo: cargo-abono o debito-credito
+    let saldo=0;
+    if('saldoCargo' in colMap&&'saldoAbono' in colMap){
+      const cargo=parseFloat(row[colMap.saldoCargo])||0;
+      const abono=parseFloat(row[colMap.saldoAbono])||0;
+      saldo=cargo-abono; // positivo=deudor, negativo=acreedor
+    }else if('deb' in colMap&&'cre' in colMap){
+      saldo=(parseFloat(row[colMap.deb])||0)-(parseFloat(row[colMap.cre])||0);
+    }
+
+    if(saldo===0)continue;
+
+    // Solo tomar cuentas de nivel detalle (4+ digitos) o de nivel 2 si no hay detalle
+    // Excluir cuentas padre (clase 1 digito)
+    if(code.length<2)continue;
+
+    // Buscar casilla
+    let casilla=null,desc='';
+    for(const m of PUC_F110){
+      // Verificar exclusiones
+      if(m.excluir&&m.excluir.some(e=>code.startsWith(e)))continue;
+      if(m.prefijos.some(p=>code.startsWith(p))){
+        casilla=m.cas;desc=m.desc;break;
+      }
+    }
+
+    if(casilla){
+      const val=Math.abs(saldo);
+      if(!result[casilla])result[casilla]={val:0,cuentas:[]};
+      result[casilla].val+=val;
+      result[casilla].cuentas.push({code,name:name.substring(0,40),val});
+      detail.push({code,name,casilla,desc,val});
+    }
+  }
+
+  // Deduplicar: tomar solo el nivel más alto de cada grupo
+  // (si existe 11 con total, no sumar 1110, 1105 etc.)
+  const casillasFinales={};
+  for(const[cas,data] of Object.entries(result)){
+    // Buscar si hay una cuenta resumen (nivel 2, ej: "11") y cuentas detalle (ej: "1105","1110")
+    const cuentas=data.cuentas.sort((a,b)=>a.code.length-b.code.length);
+    // Si la primera cuenta tiene 2 digitos y hay más, usar solo la de 2 digitos (es el total)
+    if(cuentas.length>1&&cuentas[0].code.length<=3){
+      casillasFinales[cas]=Math.round(cuentas[0].val);
+    }else{
+      casillasFinales[cas]=Math.round(data.val);
+    }
+  }
+
+  return casillasFinales;
+}
+
+function mostrarClasificacion(){
+  document.getElementById('clasifResult').classList.remove('hidden');
+  const cas=clasificacionRenta;
+  const totalActivos=(cas[36]||0)+(cas[37]||0)+(cas[38]||0)+(cas[39]||0)+(cas[40]||0)+(cas[41]||0)+(cas[42]||0)+(cas[43]||0);
+  const totalIngresos=(cas[47]||0)+(cas[48]||0)+(cas[57]||0);
+
+  document.getElementById('clasifStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${Math.round(totalActivos).toLocaleString('es-CO')}</div><div class="lbl">Total Activos</div></div>
+    <div class="stat-card amber"><div class="val">${Math.round(cas[45]||0).toLocaleString('es-CO')}</div><div class="lbl">Pasivos</div></div>
+    <div class="stat-card green"><div class="val">${Math.round(totalIngresos).toLocaleString('es-CO')}</div><div class="lbl">Ingresos</div></div>
+    <div class="stat-card red"><div class="val">${Math.round((cas[62]||0)+(cas[63]||0)+(cas[64]||0)+(cas[65]||0)+(cas[66]||0)).toLocaleString('es-CO')}</div><div class="lbl">Costos + Gastos</div></div>`;
+
+  const fmtN=n=>Math.round(n||0).toLocaleString('es-CO');
+  let h='<table style="width:100%;border-collapse:collapse;font-size:.8rem"><thead><tr style="background:var(--pri3)"><th style="padding:6px 8px;text-align:left">Casilla</th><th style="padding:6px 8px;text-align:left">Concepto</th><th style="padding:6px 8px;text-align:right">Valor</th></tr></thead><tbody>';
+  for(const m of PUC_F110){
+    const val=cas[m.cas]||0;
+    if(val===0)continue;
+    h+=`<tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px;font-family:JetBrains Mono;font-weight:700">${m.cas}</td><td style="padding:4px 8px">${m.desc}</td><td style="padding:4px 8px;text-align:right;font-family:JetBrains Mono">${fmtN(val)}</td></tr>`;
+  }
+  h+='</tbody></table>';
+  document.getElementById('clasifDetail').innerHTML=h;
+}
+
+function aplicarAlFormulario(){
+  const cas=clasificacionRenta;
+  for(const[c,val] of Object.entries(cas)){
+    const el=document.getElementById('c'+c);
+    if(el&&!el.readOnly){
+      const rounded=Math.round(val/1000)*1000;
+      el.value=rounded?rounded.toLocaleString('es-CO'):'';
+      el.classList.toggle('filled',rounded!==0);
+    }
+  }
+  recalcular();
+  // Scroll to form
+  document.querySelector('.dian-form').scrollIntoView({behavior:'smooth'});
+}
+
+/* ── TTD (TASA MINIMA DE TRIBUTACION) ── */
+function vTTD(id){const el=document.getElementById(id);if(!el)return 0;return parseInt(el.value.replace(/[,.\s$]/g,''))||0}
+
+function recalcularTTD(){
+  const utilidad=vTTD('ttdUtilidad');
+  const difPerm=vTTD('ttdDifPerm');
+  const incrngo=vTTD('ttdINCRNGO');
+  const exentas=vTTD('ttdExentas');
+
+  // Utilidad Depurada = UC + DPARL - INCRNGO - RE
+  const UD=utilidad+difPerm-incrngo-exentas;
+
+  // Impuesto Depurado = Impuesto neto + Descuentos
+  const impNeto=v('c93');
+  const descuentos=v('c92');
+  const ID=impNeto+descuentos;
+
+  // TTD
+  const TTD=UD>0?(ID/UD*100):0;
+
+  // Impuesto Adicional
+  const IA=TTD<15&&UD>0?Math.round((UD*0.15-ID)/1000)*1000:0;
+
+  const color=TTD>=15?'var(--green)':'var(--red)';
+  document.getElementById('ttdResultado').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;text-align:center">
+      <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase">Utilidad Depurada</div><div style="font-size:1.1rem;font-weight:700;font-family:JetBrains Mono">${Math.round(UD).toLocaleString('es-CO')}</div></div>
+      <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase">Impuesto Depurado</div><div style="font-size:1.1rem;font-weight:700;font-family:JetBrains Mono">${Math.round(ID).toLocaleString('es-CO')}</div></div>
+      <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase">TTD</div><div style="font-size:1.3rem;font-weight:800;color:${color}">${TTD.toFixed(2)}%</div></div>
+      <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase">Impuesto Adicional (IA)</div><div style="font-size:1.1rem;font-weight:700;font-family:JetBrains Mono;color:${IA>0?'var(--red)':'var(--green)'}">${IA>0?IA.toLocaleString('es-CO'):'No aplica'}</div></div>
+    </div>
+    ${TTD<15&&UD>0?'<div style="margin-top:12px;padding:10px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;font-size:.82rem;color:#C62828"><strong>Atencion:</strong> La TTD ('+TTD.toFixed(2)+'%) es menor al 15%. Se genera un Impuesto Adicional de <strong>$'+IA.toLocaleString('es-CO')+'</strong> que se suma a la casilla 95 del formulario.</div>':'<div style="margin-top:12px;padding:10px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:8px;font-size:.82rem;color:#2E7D32"><strong>OK:</strong> La TTD ('+TTD.toFixed(2)+'%) es igual o mayor al 15%. No se genera impuesto adicional.</div>'}`;
+}
 
 function v(id){const el=document.getElementById(id);if(!el)return 0;const s=el.value.replace(/[,.\s$]/g,'');return parseInt(s)||0}
 function set(id,val){
@@ -456,7 +764,9 @@ async function exportExcel(){
 }
 
 // Init
+setModo('balance');
 recalcular();
+recalcularTTD();
 
 // Format inputs on blur
 document.querySelectorAll('.f110-row .f-val input:not([readonly])').forEach(inp=>{
