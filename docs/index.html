@@ -222,13 +222,6 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
   transform:translateY(-2px)!important;
   box-shadow:0 8px 24px rgba(52,211,153,.4)!important;
 }
-/* Fallback: si Wompi no carga, mostrar botón alternativo */
-.wompi-fallback{display:none;width:100%;padding:14px 24px;border-radius:12px;
-  font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;
-  background:linear-gradient(135deg,var(--green-400),var(--green-300));
-  color:var(--green-900);border:none;cursor:pointer;text-align:center;
-  transition:all .25s;box-shadow:0 4px 14px rgba(52,211,153,.3);text-decoration:none}
-.wompi-fallback:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(52,211,153,.4)}
 .price-foot{text-align:center;margin-top:36px;position:relative;z-index:1}
 .price-trust{color:var(--gray-400);font-size:.82rem;margin-bottom:14px}
 .price-trust span{color:var(--gray-600)}
@@ -264,14 +257,10 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .btn-white{background:#fff;color:var(--green-700);font-size:1.05rem;font-weight:700;padding:14px 32px;border-radius:12px;display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:'Outfit',sans-serif;transition:all .25s;border:none;cursor:pointer}
 .btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.15)}
 
-/* ===== WHATSAPP ===== */
-.wa-float{position:fixed;bottom:24px;right:24px;z-index:99;width:56px;height:56px;background:#25D366;border-radius:50%;display:grid;place-items:center;box-shadow:0 6px 24px rgba(37,211,102,.4);transition:all .3s;text-decoration:none;font-size:1.6rem}
-.wa-float:hover{transform:scale(1.08);box-shadow:0 8px 30px rgba(37,211,102,.5)}
-
 /* ===== FOOTER ===== */
 footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 .footer-inner{max-width:1200px;margin:0 auto}
-.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:36px}
 .footer-brand h4{font-family:'Fraunces',serif;color:var(--white);font-size:1.2rem;margin-bottom:8px}
 .footer-brand p{font-size:.9rem;line-height:1.6;color:var(--gray-500)}
 .footer-col h5{color:var(--gray-300);font-size:.82rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
@@ -283,6 +272,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 @keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+@keyframes spin{to{transform:rotate(360deg)}}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .fade-in{opacity:0;transform:translateY(20px);transition:all .5s ease-out}
 .fade-in.visible{opacity:1;transform:translateY(0)}
@@ -334,7 +324,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <div class="hero-stats">
         <div class="hero-stat"><strong>10</strong><span>Formatos exógena</span></div>
         <div class="hero-stat"><strong>3</strong><span>Herramientas gratis</span></div>
-        <div class="hero-stat"><strong>24h</strong><span>Tiempo de entrega</span></div>
+        <div class="hero-stat"><strong>60s</strong><span>Procesamiento automático</span></div>
       </div>
     </div>
 
@@ -358,11 +348,6 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
           <h4>Declaración de IVA <span class="badge-free">Gratis</span></h4>
           <p>Formulario 300 bimestral</p>
         </a>
-        <div class="tool-mini" style="animation:float 5s 2.4s ease-in-out infinite;opacity:.6">
-          <div class="tool-mini-icon tmi-purple">📑</div>
-          <h4>Declaración de Renta <span class="badge-soon">Pronto</span></h4>
-          <p>F110 jurídicas · F210 naturales</p>
-        </div>
         <a href="estadosfinancieros.html" class="tool-mini" style="animation:float 5s 3.2s ease-in-out infinite;text-decoration:none;color:inherit;cursor:pointer">
           <div class="tool-mini-icon tmi-rose">📄</div>
           <h4>Estados Financieros <span class="badge-free">Gratis</span></h4>
@@ -406,13 +391,6 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <p class="tool-desc">Calculadora del formulario 300. IVA generado, descontable, retenciones que le practicaron y saldo a pagar/favor.</p>
       <div class="tool-status ts-free">Gratis · Disponible</div>
     </a>
-    <!-- RENTA -->
-    <div class="tool-card" style="opacity:0.7">
-      <div class="tool-icon tmi-purple">📑</div>
-      <h3>Declaración de Renta</h3>
-      <p class="tool-desc">Formulario 110 (jurídicas) y 210 (naturales). Depuración por cédulas, límites, descuentos y anticipo de renta.</p>
-      <div class="tool-status ts-soon">Próximamente</div>
-    </div>
     <!-- ESTADOS FINANCIEROS -->
     <a href="estadosfinancieros.html" class="tool-card" style="text-decoration:none;color:inherit">
       <div class="tool-icon tmi-rose">📄</div>
@@ -435,7 +413,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
   <div class="exogena-inner">
     <div class="section-tag">Producto Principal</div>
     <h2 class="section-title">Información Exógena DIAN</h2>
-    <p class="section-desc">Envía tu balance de prueba y recibe los 10 formatos listos para el prevalidador. Sin software, sin complicaciones.</p>
+    <p class="section-desc">Carga tu balance de prueba y descarga los 10 formatos listos para el prevalidador. Automático, sin esperas.</p>
 
     <div class="exo-grid">
       <div class="exo-features">
@@ -485,8 +463,42 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
   <div class="steps-row">
     <div class="step"><div class="step-circle">1</div><h3>Suscríbete PRO</h3><p>$14.500/mes · Pago seguro con Wompi</p></div>
     <div class="step"><div class="step-circle">2</div><h3>Carga tu balance</h3><p>Directamente en la herramienta</p></div>
-    <div class="step"><div class="step-circle">3</div><h3>Lo procesamos</h3><p>Clasificamos, validamos y generamos</p></div>
-    <div class="step"><div class="step-circle">4</div><h3>Recibe tu Excel</h3><p>Listo para el prevalidador DIAN</p></div>
+    <div class="step"><div class="step-circle">3</div><h3>Se procesa automáticamente</h3><p>Clasifica, valida y genera en segundos</p></div>
+    <div class="step"><div class="step-circle">4</div><h3>Descarga tu Excel</h3><p>Listo para el prevalidador DIAN</p></div>
+  </div>
+</section>
+
+<!-- ===== COMPATIBILIDAD ===== -->
+<section class="fade-in" style="padding:50px 48px;background:var(--white)">
+  <div style="max-width:1200px;margin:0 auto;text-align:center">
+    <p style="font-size:.82rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--gray-400);margin-bottom:24px">Compatible con tu software contable</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span style="font-size:1.8rem;font-weight:800;color:var(--gray-700)">Siigo</span>
+        <span style="font-size:.7rem;color:var(--gray-400)">Nube</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span style="font-size:1.8rem;font-weight:800;color:var(--gray-700)">World Office</span>
+        <span style="font-size:.7rem;color:var(--gray-400)">Desktop</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span style="font-size:1.8rem;font-weight:800;color:var(--gray-700)">Helisa</span>
+        <span style="font-size:.7rem;color:var(--gray-400)">GW</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span style="font-size:1.8rem;font-weight:800;color:var(--gray-700)">Alegra</span>
+        <span style="font-size:.7rem;color:var(--gray-400)">Nube</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span style="font-size:1.8rem;font-weight:800;color:var(--gray-700)">MidaSoft</span>
+        <span style="font-size:.7rem;color:var(--gray-400)">ERP</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+        <span style="font-size:1.8rem;font-weight:800;color:var(--gray-700)">ZEUS</span>
+        <span style="font-size:.7rem;color:var(--gray-400)">Tecnología</span>
+      </div>
+    </div>
+    <p style="font-size:.8rem;color:var(--gray-400);margin-top:16px">Y cualquier software que exporte balance de prueba en Excel o CSV</p>
   </div>
 </section>
 
@@ -503,12 +515,13 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <div class="price-val"><span class="price-sign">$</span><span class="price-num">14.500</span></div>
       <p class="price-per">/mes · Cancela cuando quieras</p>
       <ul class="price-list">
-        <li>Formulario 300 IVA — Excel formulado + cruce DIAN</li>
-        <li>Estados Financieros — Revelaciones con notas detalladas</li>
-        <li>Retención en la fuente 350 — Funciones avanzadas</li>
-        <li>Conciliación bancaria — Sin límites</li>
-        <li class="hl">Acceso a todas las herramientas actuales y futuras</li>
-        <li class="hl">Nuevas funciones cada mes</li>
+        <li>Información Exógena — 10 formatos + XML para MUISCA</li>
+        <li>Formulario 300 IVA — Excel formulado + cruce facturación electrónica DIAN</li>
+        <li>Estados Financieros NIIF — Revelaciones, notas y políticas en Word</li>
+        <li>Retención 350 — Borrador completo con casillas reales</li>
+        <li>Conciliación bancaria — Sin límite de filas</li>
+        <li class="hl">100% automático · Procesa en segundos</li>
+        <li class="hl">Compatible con Siigo, World Office, Helisa, Alegra, MidaSoft</li>
       </ul>
       <div class="wompi-btn-container">
         <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="1450000" data-reference="PRO-MENSUAL-001" data-redirect-url="https://exogenadian.com/gracias.html"></script>
@@ -532,12 +545,13 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 <section class="news fade-in" id="noticias">
   <div class="news-inner">
     <div class="section-tag">Actualidad</div>
-    <h2 class="section-title">Noticias tributarias e inteligencia artificial</h2>
-    <p class="section-desc">Lo último de los principales medios económicos de Colombia y del mundo de la IA.</p>
+    <h2 class="section-title">Noticias tributarias y económicas</h2>
+    <p class="section-desc">Lo último de los principales medios económicos de Colombia.</p>
 
     <div class="news-grid" id="newsGrid">
-      <div class="news-card" style="grid-column:span 3;text-align:center;padding:40px;color:var(--gray-400)">
-        Cargando noticias...
+      <div class="news-card" style="grid-column:span 3;text-align:center;padding:40px;color:var(--gray-400)" id="newsLoading">
+        <div style="display:inline-block;width:20px;height:20px;border:2px solid var(--gray-200);border-top-color:var(--green-500);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:8px"></div>
+        <div style="font-size:.85rem">Consultando medios...</div>
       </div>
     </div>
 
@@ -546,9 +560,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <a href="https://www.larepublica.co" target="_blank">La República</a> ·
       <a href="https://www.bloomberglinea.com" target="_blank">Bloomberg Línea</a> ·
       <a href="https://www.eltiempo.com/economia" target="_blank">El Tiempo</a> ·
-      <a href="https://www.semana.com/economia" target="_blank">Semana</a> ·
-      <a href="https://hipertextual.com/categoria/tecnologia/inteligencia-artificial" target="_blank">Hipertextual IA</a> ·
-      <a href="https://www.xataka.com/tag/inteligencia-artificial" target="_blank">Xataka IA</a>
+      <a href="https://www.semana.com/economia" target="_blank">Semana</a>
     </div>
   </div>
 </section>
@@ -557,7 +569,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 <section class="cta fade-in">
   <div class="cta-card">
     <h2>¿Listo para simplificar tu cierre fiscal?</h2>
-    <p>Genera tu exógena en menos de 24 horas y usa nuestras calculadoras tributarias gratis.</p>
+    <p>Genera tu exógena en segundos y usa nuestras calculadoras tributarias gratis.</p>
     <a href="#planes" class="btn-white">Suscribirse PRO ↗</a>
   </div>
 </section>
@@ -602,11 +614,8 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
         <a href="conciliacion.html">Conciliación Bancaria</a>
       </div>
       <div class="footer-col">
-        <h5>Próximamente</h5>
-        <a href="#herramientas" style="opacity:.5">Declaración de Renta</a>
-      </div>
-      <div class="footer-col">
         <h5>Contacto</h5>
+        <!-- TODO: Cuando configures soporte@exogenadian.com en DNS, cambia aquí y en el form de FormSubmit -->
         <a href="mailto:herramientascontables31@gmail.com">herramientascontables31@gmail.com</a>
         <a href="#buzon">Buzón de sugerencias</a>
       </div>
@@ -655,22 +664,16 @@ async function cargarNoticias(){
   const grid=document.getElementById('newsGrid');
   const API='https://api.rss2json.com/v1/api.json?rss_url=';
   const feeds=[
-    /* Tributarias / Economía Colombia */
     {url:'https://www.portafolio.co/rss/economia.xml',src:'Portafolio',dot:'ncd-blue',cat:'trib'},
     {url:'https://www.larepublica.co/rss/finanzas.xml',src:'La República',dot:'ncd-red',cat:'trib'},
     {url:'https://www.bloomberglinea.com/feed/',src:'Bloomberg Línea',dot:'ncd-purple',cat:'trib'},
     {url:'https://www.eltiempo.com/rss/economia.xml',src:'El Tiempo',dot:'ncd-blue',cat:'trib'},
     {url:'https://www.semana.com/rss/economia.xml',src:'Semana',dot:'ncd-red',cat:'trib'},
-    /* Inteligencia Artificial (en español) */
-    {url:'https://hipertextual.com/categoria/tecnologia/inteligencia-artificial/feed',src:'Hipertextual',dot:'ncd-ai',cat:'ia'},
-    {url:'https://wwwhatsnew.com/category/inteligencia-artificial/feed/',src:'WWWhat\'s New',dot:'ncd-ai',cat:'ia'},
-    {url:'https://www.xataka.com/tag/inteligencia-artificial/feed',src:'Xataka',dot:'ncd-ai',cat:'ia'},
   ];
-  let allTrib=[], allIA=[];
   try{
     const res=await Promise.allSettled(
       feeds.map(f=>fetch(API+encodeURIComponent(f.url)).then(r=>r.json()).then(d=>{
-        if(d.status==='ok'&&d.items)return d.items.slice(0,4).map(i=>({t:i.title,l:i.link,d:i.pubDate,s:f.src,dot:f.dot,cat:f.cat}));
+        if(d.status==='ok'&&d.items)return d.items.slice(0,4).map(i=>({t:i.title,l:i.link,d:i.pubDate,s:f.src,dot:f.dot}));
         return[];
       }).catch(()=>[]))
     );
@@ -681,30 +684,16 @@ async function cargarNoticias(){
     const seen=new Set();
     all=all.filter(n=>{const k=n.t.toLowerCase().substring(0,40);if(seen.has(k))return false;seen.add(k);return true});
 
-    allTrib=all.filter(n=>n.cat==='trib').sort((a,b)=>new Date(b.d)-new Date(a.d));
-    allIA=all.filter(n=>n.cat==='ia').sort((a,b)=>new Date(b.d)-new Date(a.d));
+    all.sort((a,b)=>new Date(b.d)-new Date(a.d));
 
     /* Max 2 por fuente para diversidad */
-    function diversificar(arr){
-      const porFuente={};
-      return arr.filter(n=>{
-        porFuente[n.s]=(porFuente[n.s]||0)+1;
-        return porFuente[n.s]<=2;
-      });
-    }
-    allTrib=diversificar(allTrib);
-    allIA=diversificar(allIA);
+    const porFuente={};
+    all=all.filter(n=>{porFuente[n.s]=(porFuente[n.s]||0)+1;return porFuente[n.s]<=2;});
 
-    /* Combinar: 5 tributarias + 1 IA */
-    let show=[];
-    const nTrib=Math.min(allTrib.length, allIA.length>=1 ? 5 : 6);
-    const nIA=Math.min(allIA.length, 1);
-    show=show.concat(allTrib.slice(0,nTrib));
-    show=show.concat(allIA.slice(0,nIA));
+    const show=all.slice(0,6);
 
-    /* Si no hay nada, fallback */
     if(show.length===0){
-      grid.innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)">Visita las fuentes en los enlaces de abajo</div>';
+      grid.innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)"><strong>Noticias económicas</strong><br>Visita <a href="https://www.portafolio.co/economia" target="_blank" style="color:var(--green-600)">Portafolio</a> · <a href="https://www.larepublica.co/finanzas" target="_blank" style="color:var(--green-600)">La República</a> · <a href="https://www.bloomberglinea.com" target="_blank" style="color:var(--green-600)">Bloomberg Línea</a></div>';
       return;
     }
 
@@ -720,7 +709,7 @@ async function cargarNoticias(){
     }).join('');
 
   }catch(e){
-    grid.innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)">Visita las fuentes en los enlaces de abajo</div>';
+    grid.innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)"><strong>Noticias económicas</strong><br>Visita <a href="https://www.portafolio.co/economia" target="_blank" style="color:var(--green-600)">Portafolio</a> · <a href="https://www.larepublica.co/finanzas" target="_blank" style="color:var(--green-600)">La República</a> · <a href="https://www.bloomberglinea.com" target="_blank" style="color:var(--green-600)">Bloomberg Línea</a></div>';
   }
 }
 
@@ -734,6 +723,13 @@ function tiempoRelativo(d){
 }
 
 cargarNoticias();
+/* Timeout: si después de 8s sigue "Consultando", mostrar fallback */
+setTimeout(()=>{
+  const loading=document.getElementById('newsLoading');
+  if(loading){
+    document.getElementById('newsGrid').innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)"><strong>Noticias económicas</strong><br>Visita <a href="https://www.portafolio.co/economia" target="_blank" style="color:var(--green-600)">Portafolio</a> · <a href="https://www.larepublica.co/finanzas" target="_blank" style="color:var(--green-600)">La República</a> · <a href="https://www.bloomberglinea.com" target="_blank" style="color:var(--green-600)">Bloomberg Línea</a></div>';
+  }
+},8000);
 </script>
 
 </body>

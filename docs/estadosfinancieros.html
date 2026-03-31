@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Estados Financieros NIIF — Generador desde Balance de Prueba</title>
+<title>Estados Financieros NIIF Gratis — Revelaciones, Notas y Políticas Contables | ExógenaDIAN</title>
+<meta name="description" content="Genera GRATIS estados financieros bajo NIIF desde tu balance de prueba. Estado de situación financiera, estado de resultados, revelaciones, notas y políticas contables. Descarga en Word listo para editar.">
+<meta name="keywords" content="estados financieros NIIF gratis, revelaciones NIIF, notas estados financieros, políticas contables NIIF, estado situación financiera, estado resultados integral, generador EEFF automático, NIIF pymes Colombia">
+<link rel="canonical" href="https://exogenadian.com/estadosfinancieros.html">
+<meta property="og:title" content="Estados Financieros NIIF Gratis — Revelaciones y Notas | ExógenaDIAN">
+<meta property="og:description" content="Genera GRATIS estados financieros bajo NIIF desde tu balance. Revelaciones, notas y políticas contables en Word.">
+<meta property="og:url" content="https://exogenadian.com/estadosfinancieros.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <style>
@@ -120,6 +128,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 </style>
 </head>
 <body>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:'DM Sans',sans-serif">
+  <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem"><div style="width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900">E</div>ExógenaDIAN</a>
+  <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">← Volver al inicio</a>
+</div>
 <div class="container">
   <div class="header"><div>
     <h1><span>EEFF</span> Estados Financieros NIIF</h1>
@@ -157,13 +169,81 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="dz-hint">Excel (.xlsx, .xls) o CSV — Siigo, MidaSoft, World Office, Helisa, Alegra, otros</div>
         <div class="dz-file" id="fileName"></div>
       </div>
+      <div style="margin-top:12px;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
+        <span style="font-size:1rem">🔒</span>
+        <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningún dato sale de tu equipo</strong> ni se almacena en ningún servidor.</span>
+      </div>
       <div style="margin-top:20px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)">
         <div style="font-weight:700;font-size:.95rem;margin-bottom:12px">Datos de la empresa</div>
         <div class="config-grid">
           <div class="config-item"><label>Año de corte</label><input type="number" id="cfgYear" value="2026" min="2020" max="2035"></div>
           <div class="config-item"><label>Razón social</label><input type="text" id="cfgEmpresa" placeholder="Ej: MI EMPRESA S.A.S"></div>
           <div class="config-item"><label>NIT</label><input type="text" id="cfgNit" placeholder="Ej: 901657282-9"></div>
-          <div class="config-item"><label>Ciudad</label><input type="text" id="cfgCiudad" placeholder="Ej: Bogotá D.C."></div>
+          <div class="config-item"><label>Ciudad</label><input type="text" id="cfgCiudad" list="listaCiudades" placeholder="Escribe para buscar..." autocomplete="off">
+            <datalist id="listaCiudades">
+              <option value="Bogotá D.C.">
+              <option value="Medellín">
+              <option value="Cali">
+              <option value="Barranquilla">
+              <option value="Cartagena">
+              <option value="Bucaramanga">
+              <option value="Cúcuta">
+              <option value="Pereira">
+              <option value="Manizales">
+              <option value="Santa Marta">
+              <option value="Ibagué">
+              <option value="Villavicencio">
+              <option value="Pasto">
+              <option value="Montería">
+              <option value="Neiva">
+              <option value="Armenia">
+              <option value="Valledupar">
+              <option value="Popayán">
+              <option value="Sincelejo">
+              <option value="Tunja">
+              <option value="Riohacha">
+              <option value="Florencia">
+              <option value="Quibdó">
+              <option value="Yopal">
+              <option value="Mocoa">
+              <option value="Leticia">
+              <option value="Inírida">
+              <option value="San José del Guaviare">
+              <option value="Mitú">
+              <option value="Puerto Carreño">
+              <option value="Arauca">
+              <option value="San Andrés">
+              <option value="Sogamoso">
+              <option value="Duitama">
+              <option value="Girardot">
+              <option value="Palmira">
+              <option value="Buenaventura">
+              <option value="Buga">
+              <option value="Tuluá">
+              <option value="Cartago">
+              <option value="Envigado">
+              <option value="Itagüí">
+              <option value="Bello">
+              <option value="Rionegro">
+              <option value="Apartadó">
+              <option value="Soledad">
+              <option value="Maicao">
+              <option value="Barrancabermeja">
+              <option value="Floridablanca">
+              <option value="Piedecuesta">
+              <option value="Girón">
+              <option value="Dosquebradas">
+              <option value="Soacha">
+              <option value="Zipaquirá">
+              <option value="Facatativá">
+              <option value="Chía">
+              <option value="Fusagasugá">
+              <option value="Mosquera">
+              <option value="Madrid">
+              <option value="Funza">
+              <option value="Cajicá">
+            </datalist>
+          </div>
           <div class="config-item"><label>Período PyG — Desde</label><input type="date" id="cfgFechaDesde" value="2026-01-01"></div>
           <div class="config-item"><label>Período PyG — Hasta</label><input type="date" id="cfgFechaHasta" value="2026-12-31"></div>
           <div class="config-item"><label>Tipo de entidad</label><select id="cfgTipoEntidad">
@@ -285,9 +365,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
 
     <div class="card">
-      <div style="padding:12px;background:#FFF8E1;border-radius:8px;border:1px solid #FCD34D;font-size:.8rem;color:#92400E">
-        <strong>Disclaimer:</strong> Este borrador fue generado automáticamente a partir del balance de prueba.
-        <strong>NO constituye estados financieros oficiales.</strong> Debe ser revisado, ajustado y aprobado por el representante legal y el contador público antes de su presentación.
+      <div style="padding:12px;background:#EFF6FF;border-radius:8px;border:1px solid #BFDBFE;font-size:.8rem;color:#1E40AF">
+        <strong>Nota importante:</strong> Este borrador es un punto de partida profesional generado desde su balance de prueba.
+        Como todo estado financiero, debe ser revisado, ajustado y aprobado por el representante legal y el contador público responsable antes de su presentación oficial (Art. 37, Ley 222/1995).
         Las notas son parte integral de los estados financieros.
       </div>
     </div>
@@ -2710,5 +2790,9 @@ th{background:#D6E4F0;font-weight:bold;color:#1B3A5C}
 
 /* ═══ PRO CHECK (handled by initPro on load) ═══ */
 </script>
+<div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
+  <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExógenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>
+  🔒 Información tratada con total confidencialidad · 100% procesado en tu navegador
+</div>
 </body>
 </html>

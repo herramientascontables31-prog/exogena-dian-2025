@@ -3,7 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Formulario 350 — Generador de Borrador</title>
+<title>Formulario 350 Retención en la Fuente Gratis — Generador de Borrador | ExógenaDIAN</title>
+<meta name="description" content="Genera GRATIS el borrador del formulario 350 de retención en la fuente desde tu balance de prueba. Mapeo automático de cuentas 2365, personas jurídicas y naturales. Compatible con Siigo, World Office, Helisa, Alegra, MidaSoft.">
+<meta name="keywords" content="formulario 350 gratis, retención en la fuente, declaración retención DIAN, calculadora retención, formulario 350 2025, cuentas 2365, retención servicios honorarios, borrador 350 automático">
+<link rel="canonical" href="https://exogenadian.com/retencion350.html">
+<meta property="og:title" content="Formulario 350 Retención en la Fuente Gratis | ExógenaDIAN">
+<meta property="og:description" content="Genera GRATIS el borrador del formulario 350 desde tu balance de prueba. Mapeo automático de cuentas 2365.">
+<meta property="og:url" content="https://exogenadian.com/retencion350.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <style>
@@ -127,6 +135,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 </style>
 </head>
 <body>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:'DM Sans',sans-serif">
+  <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem"><div style="width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900">E</div>ExógenaDIAN</a>
+  <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">← Volver al inicio</a>
+</div>
 <div class="container">
   <div class="header"><div>
     <h1><span>350</span> Declaración Retenciones en la Fuente</h1>
@@ -150,6 +162,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="dz-title">Arrastra tu archivo aquí o haz clic</div>
         <div class="dz-hint">Excel (.xlsx, .xls) o CSV — Siigo, MidaSoft, World Office, Helisa, Alegra, otros</div>
         <div class="dz-file" id="fileName"></div>
+      </div>
+      <div style="margin-top:12px;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
+        <span style="font-size:1rem">🔒</span>
+        <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningún dato sale de tu equipo</strong> ni se almacena en ningún servidor.</span>
       </div>
     </div>
   </div>
@@ -188,7 +204,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div class="card hidden" id="previewCard">
       <div class="card-title"><span>🔍</span> Resultado del Procesamiento</div>
       <div id="fileStats" class="stats"></div>
-      <div class="alert alert-warn hidden" id="alertNot2365"><span>⚠️</span><div>No se encontraron cuentas <strong>2365</strong> en el archivo. Verifica las columnas o el archivo.</div></div>
+      <div class="alert alert-warn hidden" id="alertNot2365"><span>⚠️</span><div>
+        <strong>No se encontraron cuentas 2365 (Retención en la fuente) en el archivo.</strong><br><br>
+        Esto puede ocurrir porque:<br>
+        <strong>1.</strong> El archivo no contiene cuentas del grupo 2365. Verifica que estés subiendo el balance de prueba completo o el auxiliar de la cuenta 2365.<br>
+        <strong>2.</strong> La columna de código de cuenta no fue detectada correctamente. Vuelve al paso anterior y verifica la asignación de columnas.<br>
+        <strong>3.</strong> Tu software contable usa un nombre diferente para la columna (ej: "Código", "Cuenta", "CodCta"). Ajústala manualmente en el paso 2.<br><br>
+        <strong>Formatos compatibles:</strong> Siigo, World Office, Helisa, Alegra, MidaSoft, ZEUS y cualquier Excel con columna de código PUC + saldo o movimiento.
+      </div></div>
       <div class="alert alert-success hidden" id="alertOk"><span>✅</span><div id="alertOkText"></div></div>
       <div class="scroll-box" id="previewTable"></div>
       <div class="actions"><button class="btn btn-primary" onclick="goToStep3()">Continuar al Mapeo →</button></div>
@@ -831,5 +854,9 @@ function goStep(n){
 }
 function switchTab(el,id){el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');el.closest('.card').querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active')}
 </script>
+<div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
+  <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExógenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>
+  🔒 Información tratada con total confidencialidad · 100% procesado en tu navegador
+</div>
 </body>
 </html>

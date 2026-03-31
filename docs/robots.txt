@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://exogenadian.com/sitemap.xml
+
+# Archivos de prueba no indexar
+Disallow: /archivos_prueba/
+Disallow: /referencias/
