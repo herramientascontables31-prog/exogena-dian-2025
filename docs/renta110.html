@@ -474,7 +474,7 @@ const REGLAS_NO_DED=[
   {id:47,nom:'Provisiones diversas',art:'105',tipo:'no_ded',test:(c,n)=>c.startsWith('5299')&&!/fiscal|deducible/.test(n)},
 
   // ── IMPUESTOS ASUMIDOS (Art. 115) ──
-  {id:48,nom:'IVA asumido no descontable',art:'115',tipo:'no_ded',test:(c,n)=>/iva.*asumido|iva.*no.*descontable/.test(n)},
+  {id:48,nom:'Impuestos asumidos no deducibles',art:'115',tipo:'no_ded',test:(c,n)=>/impuesto.*asumido|iva.*asumido|iva.*no.*descontable/.test(n)},
   {id:49,nom:'Retencion asumida',art:'115',tipo:'no_ded',test:(c,n)=>/retencion.*asumida.*no deducible/.test(n)},
   {id:50,nom:'ICA no deducible',art:'115',tipo:'no_ded',test:(c,n)=>/ica.*no deducible|industria.*comercio.*no deducible/.test(n)},
 
