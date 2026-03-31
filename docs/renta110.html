@@ -662,10 +662,17 @@ function clasificarPUCaF110(data,hdrRow,colMap){
       if(regla)ded=regla.tipo; // 'no_ded' o 'gmf'
     }
 
+    const valContable=Math.round(Math.abs(f.saldo));
+    // Valor fiscal precalculado segun deducibilidad
+    let valFiscal=valContable;
+    if(ded==='no_ded')valFiscal=0;
+    else if(ded==='gmf')valFiscal=Math.round(valContable*0.5);
+
     cuentasBalance.push({
       code:f.code,
       name:f.name,
-      val:Math.round(Math.abs(f.saldo)),
+      val:valContable,      // contable (fijo)
+      valFiscal,            // fiscal (editable)
       casilla,
       ded,        // 'ded', 'no_ded', 'gmf'
       regla,      // objeto regla o null
@@ -710,6 +717,29 @@ const CASILLA_OPTS=[
   {v:65,t:'65 Gtos financieros'},{v:66,t:'66 Otros gastos'},
 ];
 
+function cambiarDed(idx){
+  const c=cuentasBalance[idx];
+  const next=c.ded==='ded'?'no_ded':c.ded==='no_ded'?'gmf':'ded';
+  c.ded=next;
+  // Recalcular valor fiscal segun nueva deducibilidad
+  if(next==='no_ded')c.valFiscal=0;
+  else if(next==='gmf')c.valFiscal=Math.round(c.val*0.5);
+  else c.valFiscal=c.val;
+  mostrarClasificacion();
+}
+
+function editarFiscal(idx,valor){
+  const n=parseInt(String(valor).replace(/[,.\s$]/g,''))||0;
+  cuentasBalance[idx].valFiscal=n;
+  // Actualizar solo la celda de diferencia sin re-render completo
+  const diffEl=document.getElementById('diff_'+idx);
+  if(diffEl){
+    const diff=cuentasBalance[idx].val-n;
+    diffEl.textContent=diff?fN(diff):'';
+    diffEl.style.color=diff>0?'#C62828':diff<0?'#2E7D32':'#999';
+  }
+}
+
 function mostrarClasificacion(){
   if(!cuentasBalance.length){
     document.getElementById('errorBalance').classList.remove('hidden');
@@ -721,21 +751,21 @@ function mostrarClasificacion(){
   document.getElementById('clasifResult').classList.remove('hidden');
 
   // Stats
-  const sum=cas=>cuentasBalance.filter(c=>c.casilla===cas).reduce((s,c)=>s+c.val,0);
-  const totalActivos=[36,37,38,39,40,41,42,43].reduce((s,c)=>s+sum(c),0);
-  const totalPasivos=sum(45);
-  const totalIngresos=[47,48,57].reduce((s,c)=>s+sum(c),0);
-  const totalGastos=[62,63,64,65,66].reduce((s,c)=>s+sum(c),0);
-  const totalNoDed=cuentasBalance.filter(c=>c.ded==='no_ded').reduce((s,c)=>s+c.val,0);
-  const totalGmf=cuentasBalance.filter(c=>c.ded==='gmf').reduce((s,c)=>s+c.val,0);
+  const sumContable=cas=>cuentasBalance.filter(c=>c.casilla===cas).reduce((s,c)=>s+c.val,0);
+  const sumFiscal=cas=>cuentasBalance.filter(c=>c.casilla===cas).reduce((s,c)=>s+c.valFiscal,0);
+  const totalActivos=[36,37,38,39,40,41,42,43].reduce((s,c)=>s+sumContable(c),0);
+  const totalPasivos=sumContable(45);
+  const totalIngresos=[47,48,57].reduce((s,c)=>s+sumContable(c),0);
+  const totalGastosCtb=[62,63,64,65,66].reduce((s,c)=>s+sumContable(c),0);
+  const totalGastosFis=[62,63,64,65,66].reduce((s,c)=>s+sumFiscal(c),0);
+  const totalDif=totalGastosCtb-totalGastosFis;
 
   document.getElementById('clasifStats').innerHTML=`
     <div class="stat-card blue"><div class="val">${fN(totalActivos)}</div><div class="lbl">Activos</div></div>
     <div class="stat-card amber"><div class="val">${fN(totalPasivos)}</div><div class="lbl">Pasivos</div></div>
     <div class="stat-card green"><div class="val">${fN(totalIngresos)}</div><div class="lbl">Ingresos</div></div>
-    <div class="stat-card red"><div class="val">${fN(totalGastos)}</div><div class="lbl">Costos+Gastos</div></div>`;
+    <div class="stat-card ${totalDif>0?'red':'blue'}"><div class="val">${fN(totalGastosFis)}</div><div class="lbl">Gastos Fiscales${totalDif>0?' (−'+fN(totalDif)+' no ded)':''}</div></div>`;
 
-  // Tabla editable por cuenta
   const fmtN=n=>Math.round(n||0).toLocaleString('es-CO');
   const secciones=[
     {titulo:'Patrimonio',casillas:[36,37,38,39,40,41,42,43,45]},
@@ -743,57 +773,72 @@ function mostrarClasificacion(){
     {titulo:'Costos y Gastos',casillas:[62,63,64,65,66]},
   ];
 
-  let h='<table style="width:100%;border-collapse:collapse;font-size:.78rem">';
-  h+='<thead><tr style="background:var(--pri);color:#fff"><th style="padding:5px 6px;text-align:left">Cuenta</th><th style="padding:5px 6px;text-align:left">Nombre</th><th style="padding:5px 6px;text-align:right">Valor</th><th style="padding:5px 6px;text-align:center">Renglon</th><th style="padding:5px 6px;text-align:center">Deducibilidad</th></tr></thead><tbody>';
+  let h='<table style="width:100%;border-collapse:collapse;font-size:.75rem">';
+  h+='<thead><tr style="background:var(--pri);color:#fff">'
+    +'<th style="padding:4px 5px;text-align:left">Cuenta</th>'
+    +'<th style="padding:4px 5px;text-align:left">Nombre</th>'
+    +'<th style="padding:4px 5px;text-align:right">Contable</th>'
+    +'<th style="padding:4px 5px;text-align:right">Fiscal</th>'
+    +'<th style="padding:4px 5px;text-align:right">Diferencia</th>'
+    +'<th style="padding:4px 5px;text-align:center">Renglon</th>'
+    +'<th style="padding:4px 5px;text-align:center">Ded.</th>'
+    +'</tr></thead><tbody>';
 
   for(const sec of secciones){
     const cuentasSec=cuentasBalance.filter(c=>sec.casillas.includes(c.casilla)).sort((a,b)=>a.code.localeCompare(b.code));
     if(!cuentasSec.length)continue;
 
-    h+=`<tr style="background:var(--pri3)"><td colspan="5" style="padding:5px 8px;font-weight:700;color:var(--pri);font-size:.8rem">${sec.titulo}</td></tr>`;
+    h+=`<tr style="background:var(--pri3)"><td colspan="7" style="padding:4px 8px;font-weight:700;color:var(--pri);font-size:.78rem">${sec.titulo}</td></tr>`;
 
-    for(let i=0;i<cuentasSec.length;i++){
-      const c=cuentasSec[i];
+    for(const c of cuentasSec){
       const idx=cuentasBalance.indexOf(c);
       const esGasto=[62,63,64,65,66].includes(c.casilla);
+      const diff=c.val-c.valFiscal;
 
       // Dropdown casilla
-      let selHtml=`<select onchange="cuentasBalance[${idx}].casilla=+this.value;mostrarClasificacion()" style="font-size:.72rem;padding:2px 4px;border:1px solid var(--border);border-radius:4px;font-family:inherit;max-width:120px">`;
+      let selHtml=`<select onchange="cuentasBalance[${idx}].casilla=+this.value;mostrarClasificacion()" style="font-size:.68rem;padding:1px 3px;border:1px solid var(--border);border-radius:4px;font-family:inherit;max-width:110px">`;
       for(const o of CASILLA_OPTS){
         selHtml+=`<option value="${o.v}"${o.v===c.casilla?' selected':''}>${o.t}</option>`;
       }
       selHtml+='</select>';
 
-      // Deducibilidad (solo para gastos/costos)
-      let dedHtml='';
+      // Deducibilidad toggle
+      let dedHtml='<span style="color:#999">—</span>';
       if(esGasto){
         const dedColor=c.ded==='no_ded'?'#C62828':c.ded==='gmf'?'#D97706':'#2E7D32';
         const dedBg=c.ded==='no_ded'?'#FFEBEE':c.ded==='gmf'?'#FFF8E1':'#E8F5E9';
-        const dedLabel=c.ded==='no_ded'?'NO DED':c.ded==='gmf'?'GMF 50%':'DED';
-        const nextDed=c.ded==='ded'?'no_ded':c.ded==='no_ded'?'gmf':'ded';
-        dedHtml=`<button onclick="cuentasBalance[${idx}].ded='${nextDed}';mostrarClasificacion()" style="font-size:.65rem;padding:2px 8px;border:1px solid ${dedColor};border-radius:4px;background:${dedBg};color:${dedColor};cursor:pointer;font-weight:700;font-family:inherit">${dedLabel}</button>`;
-        if(c.regla){
-          dedHtml+=`<div style="font-size:.6rem;color:#888;margin-top:1px">R${c.regla.id}: Art.${c.regla.art}</div>`;
-        }
-      }else{
-        dedHtml='<span style="font-size:.65rem;color:#999">—</span>';
+        const dedLabel=c.ded==='no_ded'?'NO DED':c.ded==='gmf'?'50%':'DED';
+        dedHtml=`<button onclick="cambiarDed(${idx})" style="font-size:.62rem;padding:1px 6px;border:1px solid ${dedColor};border-radius:3px;background:${dedBg};color:${dedColor};cursor:pointer;font-weight:700;font-family:inherit;min-width:42px" title="${c.regla?'R'+c.regla.id+': '+c.regla.nom+' (Art.'+c.regla.art+')':'Clic para cambiar'}">${dedLabel}</button>`;
       }
 
+      // Color de fila
       const rowBg=c.ded==='no_ded'?'#FFF5F5':c.ded==='gmf'?'#FFFDF0':'';
-      h+=`<tr style="border-bottom:1px solid var(--border);background:${rowBg}">
-        <td style="padding:3px 6px;font-family:JetBrains Mono;font-size:.7rem;white-space:nowrap">${c.code}</td>
-        <td style="padding:3px 6px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.name}">${c.name}</td>
-        <td style="padding:3px 6px;text-align:right;font-family:JetBrains Mono;font-weight:600">${fmtN(c.val)}</td>
-        <td style="padding:3px 6px;text-align:center">${selHtml}</td>
-        <td style="padding:3px 6px;text-align:center">${dedHtml}</td>
+      const diffColor=diff>0?'#C62828':diff<0?'#2E7D32':'#999';
+
+      h+=`<tr style="border-bottom:1px solid #eee;background:${rowBg}">
+        <td style="padding:2px 5px;font-family:JetBrains Mono;font-size:.68rem">${c.code}</td>
+        <td style="padding:2px 5px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.name}">${c.name}</td>
+        <td style="padding:2px 5px;text-align:right;font-family:JetBrains Mono;color:#555">${fmtN(c.val)}</td>
+        <td style="padding:2px 3px;text-align:right"><input value="${c.valFiscal?fmtN(c.valFiscal):''}" onfocus="this.value=this.value.replace(/[,.\\s]/g,'')" onblur="editarFiscal(${idx},this.value);this.value=cuentasBalance[${idx}].valFiscal?fN(cuentasBalance[${idx}].valFiscal):''" style="width:90px;text-align:right;font-family:JetBrains Mono;font-size:.72rem;font-weight:600;border:1px solid #ddd;border-radius:3px;padding:2px 4px;color:var(--pri);background:${c.valFiscal!==c.val?'#EDF4FF':'#fff'}"></td>
+        <td id="diff_${idx}" style="padding:2px 5px;text-align:right;font-family:JetBrains Mono;font-size:.68rem;color:${diffColor}">${diff?fmtN(diff):''}</td>
+        <td style="padding:2px 4px;text-align:center">${selHtml}</td>
+        <td style="padding:2px 4px;text-align:center">${dedHtml}</td>
       </tr>`;
     }
   }
 
-  // Resumen no deducibles
-  if(totalNoDed>0||totalGmf>0){
-    const totalFiscalNoDed=totalNoDed+Math.round(totalGmf*0.5);
-    h+=`<tr style="background:#FFF8E1;border-top:2px solid #FCD34D"><td colspan="2" style="padding:6px 8px;font-weight:700;color:#92400E">Total no deducible fiscal</td><td style="padding:6px 8px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:#C62828">${fmtN(totalFiscalNoDed)}</td><td colspan="2" style="padding:6px 8px;font-size:.7rem;color:#92400E">NO DED: ${fmtN(totalNoDed)} · GMF 50%: ${fmtN(Math.round(totalGmf*0.5))}</td></tr>`;
+  // Resumen totales
+  const totalCtb=cuentasBalance.reduce((s,c)=>s+(c.casilla?c.val:0),0);
+  const totalFis=cuentasBalance.reduce((s,c)=>s+(c.casilla?c.valFiscal:0),0);
+  const totalDifAll=totalCtb-totalFis;
+  if(totalDifAll){
+    h+=`<tr style="background:#FFF8E1;border-top:2px solid #FCD34D">
+      <td colspan="2" style="padding:5px 8px;font-weight:700;color:#92400E;font-size:.78rem">Total diferencias contable vs fiscal</td>
+      <td style="padding:5px 5px;text-align:right;font-family:JetBrains Mono;font-weight:600">${fmtN(totalCtb)}</td>
+      <td style="padding:5px 5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:var(--pri)">${fmtN(totalFis)}</td>
+      <td style="padding:5px 5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:#C62828">${fmtN(totalDifAll)}</td>
+      <td colspan="2"></td>
+    </tr>`;
   }
 
   h+='</tbody></table>';
@@ -801,17 +846,13 @@ function mostrarClasificacion(){
 }
 
 function aplicarAlFormulario(){
-  // Totalizar por casilla desde cuentasBalance, restando no deducibles
+  // Totalizar por casilla usando valFiscal (ya editado por usuario)
   const totales={};
   for(const c of cuentasBalance){
-    if(!c.casilla)continue; // casilla 0 = no aplicar
+    if(!c.casilla)continue;
+    // Para gastos: usar valFiscal. Para patrimonio/ingresos: usar val contable
     const esGasto=[62,63,64,65,66].includes(c.casilla);
-    let valFiscal=c.val;
-    if(esGasto){
-      if(c.ded==='no_ded')valFiscal=0;          // 100% no deducible
-      else if(c.ded==='gmf')valFiscal=Math.round(c.val*0.5); // 50% deducible
-    }
-    totales[c.casilla]=(totales[c.casilla]||0)+valFiscal;
+    totales[c.casilla]=(totales[c.casilla]||0)+(esGasto?c.valFiscal:c.val);
   }
 
   // Aplicar al formulario
