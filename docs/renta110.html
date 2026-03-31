@@ -661,26 +661,16 @@ function clasificarPUCaF110(data,hdrRow,colMap){
     });
   }
 
-  // Deduplicar: si existe cuenta padre (ej: "11") Y sus hijas ("1105","1110"), usar solo el padre
-  const casillaGroups={};
-  for(const c of cuentasBalance){
-    if(!casillaGroups[c.casilla])casillaGroups[c.casilla]=[];
-    casillaGroups[c.casilla].push(c);
-  }
-  const filtrada=[];
-  for(const[cas,cuentas] of Object.entries(casillaGroups)){
-    cuentas.sort((a,b)=>a.len-b.len);
-    const minLen=cuentas[0].len;
-    // Si hay cuenta resumen (<=4 digitos) y detalle, usar solo resumen
-    const resumen=cuentas.find(x=>x.len<=4&&x.val>0);
-    if(resumen&&cuentas.length>1&&cuentas.some(x=>x.len>resumen.len)){
-      filtrada.push(resumen);
-    }else{
-      // Tomar cuentas del nivel mas bajo disponible
-      filtrada.push(...cuentas.filter(x=>x.len===minLen));
+  // Filtrar: solo cuentas de detalle (sin hijas), para no duplicar totales
+  // Si una cuenta tiene hijas en la lista, es cuenta padre → excluir
+  const codigos=new Set(cuentasBalance.map(c=>c.code));
+  cuentasBalance=cuentasBalance.filter(c=>{
+    // Si alguna otra cuenta empieza con este codigo y es mas larga → es padre
+    for(const otro of codigos){
+      if(otro!==c.code&&otro.startsWith(c.code)&&otro.length>c.code.length)return false;
     }
-  }
-  cuentasBalance=filtrada;
+    return true;
+  });
 
   return cuentasBalance;
 }
