@@ -206,15 +206,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div class="alert alert-warn hidden" id="alertNoData"><span>⚠️</span><div id="alertNoDataText"></div></div>
       <div class="alert alert-success hidden" id="alertOk"><span>✅</span><div id="alertOkText"></div></div>
       <div class="scroll-box" id="previewTable"></div>
-      <div class="actions"><button class="btn btn-primary" onclick="goStep(3)">Continuar a Clasificacion →</button></div>
+      <div class="actions"><button class="btn btn-primary" onclick="irAClasificacion()">Continuar a Clasificacion →</button></div>
     </div>
   </div>
 
   <!-- ═══ STEP 3: CLASIFICACION ═══ -->
   <div id="step3" class="hidden">
     <div class="card">
-      <div class="card-title"><span>📋</span> Clasificacion por Formato — En construccion</div>
-      <div class="alert alert-info"><span>🚧</span><div>Esta fase se habilitara en la siguiente sesion. Aqui veras todas las cuentas clasificadas en los 10 formatos DIAN con opcion de reclasificar.</div></div>
+      <div class="card-title"><span>📋</span> Clasificacion por Formato</div>
+      <div id="clasifStats" class="stats"></div>
+      <div class="alert alert-success hidden" id="clasifOk"><span>✅</span><div id="clasifOkText"></div></div>
+      <div class="alert alert-warn hidden" id="clasifWarn"><span>⚠️</span><div id="clasifWarnText"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>📊</span> Resumen por Formato</div>
+      <div id="formatSummary"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span>🔍</span> Detalle de Clasificacion <span style="font-size:.8rem;font-weight:400;color:var(--muted);margin-left:8px">(primeros 100 registros)</span></div>
+      <div class="scroll-box" id="clasifTable"></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="goStep(2)">← Volver a Columnas</button>
+      <button class="btn btn-primary" onclick="goStep(4)">Generar Formatos →</button>
     </div>
   </div>
 
@@ -574,6 +588,320 @@ function showPreview(skipped){
   if(parsedData.length>50)h+=`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:12px">... y ${parsedData.length-50} registros mas</td></tr>`;
   h+='</tbody></table>';
   document.getElementById('previewTable').innerHTML=h;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FASE B: CLASIFICACION DE CUENTAS EN 10 FORMATOS DIAN
+   ═══════════════════════════════════════════════════════════ */
+
+const NIT_DIAN='800197268';
+const CUENTAS_IMP_DIAN=['2365','2367','2404','2408','2412'];
+const NITS_EXCLUIR_1003=new Set([NIT_DIAN,'899999090','899999063']);
+
+/* ── RANGOS PUC → CONCEPTO (portados del Python) ── */
+const PARAM_1001_RANGOS=[
+  ['5005','5120','5120'],['5005','5220','5220'],
+  ['5011','5230','5230'],['5011','5130','5130'],
+  ['5055','5115','5115'],['5004','5110','5110'],
+  ['5016','5125','5125'],['5016','5135','5139'],
+  ['5016','5140','5199'],['5016','5210','5219'],
+  ['5016','5235','5249'],['5016','5295','5299'],
+  ['5006','5305','5305'],['5101','530515','530515'],
+  ['5007','1435','1499'],['5010','1504','1699'],['5010','1520','1540'],
+];
+const PARAM_1001_NOMINA_SUB={
+  '5001':['06','07','08','09','10','15','27','30','33','36','39','42','45'],
+  '5002':['01','03','05'],'5024':['02'],'5025':['03'],'5027':['04'],
+  '5023':['68','72','75'],
+};
+const PARAM_1003=[
+  ['1301','13551505','13551509'],['1301','13551510','13551514'],
+  ['1302','13551515','13551519'],['1303','13551520','13551524'],
+  ['1305','13551525','13551529'],['1304','13551530','13551534'],
+  ['1306','13551535','13551539'],['1308','13551540','13551594'],
+  ['1308','13551595','13551599'],['1307','135518','135518'],
+  ['1311','135599','135599'],
+];
+const PARAM_1007=[
+  ['4003','4210','4210'],['4001','4101','4199'],['4001','4135','4135'],['4002','4201','4299'],
+];
+const PARAM_1008=[
+  ['1315','1305','1305'],['1316','1380','1399'],['1317','1330','1340'],['1317','1365','1365'],
+];
+const PARAM_1009=[
+  ['2202','2105','2199'],['2201','2205','2295'],['2204','2305','2334'],
+  ['2210','2335','2364'],['2206','2365','2369'],['2207','2380','2399'],
+  ['2208','2404','2499'],['2209','2505','2599'],['2210','2605','2699'],
+  ['2210','2705','2799'],['2210','2805','2899'],['2210','2905','2999'],
+];
+const MAPEO_1012=[
+  ['8302','1105','1105'],['8301','1110','1110'],
+  ['8305','1201','1204'],['8303','1205','1205'],
+  ['8304','1210','1210'],['8306','1225','1225'],['8309','1265','1265'],
+];
+
+/* ── KEYWORDS POR NOMBRE DE CUENTA ── */
+const KW_1001=[
+  ['5001',['sueldo','salario','basico','jornal','hora extra','recargo','auxilio transporte','rodamiento']],
+  ['5002',['honorario','honorarios','comision','comisiones']],
+  ['5024',['aporte salud','aporte eps','aportes eps']],
+  ['5025',['aporte pension','aportes pension','fondo pension']],
+  ['5027',['arl','riesgo laboral','riesgos laborales']],
+  ['5023',['parafiscal','parafiscales','icbf','sena','caja de compensacion','compensacion familiar']],
+  ['5001',['vacacion','vacaciones','cesantia','cesantias','prima de servicio','prima servicio',
+           'dotacion','incapacidad','bonificacion']],
+  ['5011',['seguro','poliza','prima de seguro','todo riesgo']],
+  ['5005',['arriendo','arrendamiento','canon','alquiler']],
+  ['5004',['acueducto','energia','telefono','internet','gas','servicio publico','vigilancia',
+           'transporte','flete','acarreo','mensajeria']],
+  ['5055',['impuesto','ica','industria y comercio','predial','vehiculo','timbre','estampilla']],
+  ['5006',['interes bancario','gmf','4x1000','comision bancaria','gasto financiero','gravamen',
+           'diferencia en cambio']],
+  ['5010',['gastos de personal','bienestar','medicina prepagada']],
+  ['5016',['viaje','viatico','pasaje','tiquete','hospedaje','mantenimiento','reparacion',
+           'legal','notarial','registro','licencia','depreciacion','amortizacion','provision',
+           'aseo','cafeteria','papeleria','utiles','fotocopia','parqueadero','publicidad',
+           'propaganda','suscripcion','diversos']],
+  ['5007',['inventario','compra de','mercancia','materia prima','material','insumo','repuesto']],
+];
+const KW_1007=[
+  ['4001',['ingreso operacional','consultoria','asesoria','outsourcing','servicio','venta','comercio','producto']],
+  ['4002',['ingreso no operacional','extraordinario','recuperacion']],
+  ['4003',['arrendamiento recibido','arriendo recibido','rendimiento financiero']],
+];
+const KW_1003=[
+  ['1301',['retencion honorario','retfte honorario']],
+  ['1302',['retencion comision','retfte comision']],
+  ['1303',['retencion servicio','retfte servicio']],
+  ['1304',['retencion arriendo','retfte arriendo','retencion arrendamiento']],
+  ['1305',['retencion rendimiento','retfte rendimiento','rendimiento financiero']],
+  ['1306',['retencion compra','retfte compra']],
+  ['1307',['retencion ica','rete ica','reteica']],
+  ['1308',['otras retencion','retencion otros']],
+  ['1311',['autorretencion','auto retencion','autoretefte']],
+];
+
+const CONCEPTOS_NOMINA=new Set(['5001','5024','5025','5027','5023']);
+const CONCEPTOS_SOLO_ENTIDADES=new Set(['5011','5012','5013','5023','5024','5025','5027']);
+
+/* ── FUNCIONES DE CLASIFICACION ── */
+function enRango(cta,d,h){const n=d.length;return cta.substring(0,n)>=d&&cta.substring(0,n)<=h}
+
+function normNombre(nom){
+  if(!nom)return'';
+  return nom.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,;:\-_/\\()[\]{}#"'&$%@!¿?]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+function clasificarPorNombre(nom,tabla){
+  const nn=normNombre(nom);if(!nn)return null;
+  // Multi-word first
+  for(const[conc,kws] of tabla){
+    for(const kw of kws){
+      if(kw.includes(' ')&&nn.includes(kw))return conc;
+    }
+  }
+  // Single word
+  const words=new Set(nn.split(' '));
+  for(const[conc,kws] of tabla){
+    for(const kw of kws){
+      if(!kw.includes(' ')&&words.has(kw))return conc;
+    }
+  }
+  return null;
+}
+
+function concepto1001(cta,nom){
+  // 5105 = Gastos de personal → subcuenta de nómina
+  if(cta.startsWith('5105')){
+    const r=clasificarPorNombre(nom,KW_1001);if(r)return r;
+    const sc=cta.length>=6?cta.substring(4,6):cta.substring(4);
+    for(const[conc,subs] of Object.entries(PARAM_1001_NOMINA_SUB)){
+      if(subs.includes(sc))return conc;
+    }
+    return'5001';
+  }
+  // Clases 51, 52, 53 = Gastos/Costos
+  if(['51','52','53'].includes(cta.substring(0,2))){
+    const r=clasificarPorNombre(nom,KW_1001);if(r)return r;
+    for(const[conc,d,h] of PARAM_1001_RANGOS){if(enRango(cta,d,h))return conc}
+    return'5016';
+  }
+  // Clase 14 = Anticipos (activos deducibles)
+  if(cta.startsWith('14')){
+    for(const[conc,d,h] of PARAM_1001_RANGOS){if(enRango(cta,d,h))return conc}
+    const r=clasificarPorNombre(nom,KW_1001);if(r)return r;
+  }
+  return null;
+}
+
+function buscarConcepto(cta,params,nom,kwTable){
+  for(const[c,d,h] of params){if(enRango(cta,d,h))return c}
+  if(kwTable&&nom){return clasificarPorNombre(nom,kwTable)||''}
+  return'';
+}
+
+function detectarTipoDoc(nit){
+  if(!nit||nit===NM)return TDM;
+  nit=String(nit).replace(/[.\-\s]/g,'');
+  if(!/^\d+$/.test(nit))return nit.replace(/[^a-zA-Z]/g,'').length<=3?'41':'42';
+  if(nit.length===9&&(nit[0]==='8'||nit[0]==='9'))return'31';
+  if(nit.length>=9&&(nit[0]==='8'||nit[0]==='9'))return'31';
+  return'13';
+}
+
+/* ── CLASIFICADOR PRINCIPAL ── */
+let clasificacion=[];
+
+function clasificarCuentas(){
+  clasificacion=[];
+  let sinClasificar=0;
+
+  for(const r of parsedData){
+    const cta=r.code, nom=r.name, nit=r.nit;
+    const val=Math.abs(r.deb-r.cre)||Math.max(r.deb,r.cre);
+    let formato='',concepto='',descripcion='';
+
+    // F2276 — Nómina (5105 con subcuentas de salarios)
+    if(cta.startsWith('5105')){
+      const c=concepto1001(cta,nom);
+      if(c&&CONCEPTOS_NOMINA.has(c)){
+        formato='F2276';concepto=c;descripcion='Rentas de Trabajo';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;
+      }
+    }
+
+    // F1001 — Pagos (Clases 5, 6, 14 con rangos específicos)
+    const c1001=concepto1001(cta,nom);
+    if(c1001&&!CONCEPTOS_NOMINA.has(c1001)){
+      formato='F1001';concepto=c1001;descripcion='Pagos y Abonos';
+      clasificacion.push({...r,formato,concepto,descripcion,val});continue;
+    }
+
+    // F1003 — Retenciones que le practicaron (1355xx)
+    if(cta.startsWith('1355')&&cta.length>=6&&!cta.startsWith('135518')&&!cta.startsWith('135595')&&!cta.startsWith('135599')){
+      if(!NITS_EXCLUIR_1003.has(nit)){
+        const c=buscarConcepto(cta,PARAM_1003,nom,KW_1003);
+        formato='F1003';concepto=c||'1308';descripcion='Retenciones Practicadas';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;
+      }
+    }
+
+    // F1005 — IVA Descontable (2408 con débito > crédito)
+    if(cta.startsWith('2408')&&r.deb>r.cre){
+      formato='F1005';concepto='';descripcion='IVA Descontable';
+      clasificacion.push({...r,formato,concepto,descripcion,val:r.deb});continue;
+    }
+
+    // F1006 — IVA Generado (2408 con crédito > débito)
+    if(cta.startsWith('2408')&&r.cre>r.deb){
+      formato='F1006';concepto='';descripcion='IVA Generado';
+      clasificacion.push({...r,formato,concepto,descripcion,val:r.cre});continue;
+    }
+
+    // F1007 — Ingresos (Clase 4)
+    if(cta[0]==='4'){
+      const c=buscarConcepto(cta,PARAM_1007,nom,KW_1007);
+      if(c){formato='F1007';concepto=c;descripcion='Ingresos';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;}
+    }
+
+    // F1008 — CxC (Clase 1, excepto 1355)
+    if(cta[0]==='1'&&!cta.startsWith('1355')&&!cta.startsWith('1105')&&!cta.startsWith('1110')&&!cta.startsWith('12')){
+      const c=buscarConcepto(cta,PARAM_1008,nom,null);
+      if(c){formato='F1008';concepto=c;descripcion='Cuentas por Cobrar';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;}
+    }
+
+    // F1009 — CxP (Clase 2)
+    if(cta[0]==='2'&&!cta.startsWith('2408')){
+      const c=buscarConcepto(cta,PARAM_1009,nom,null);
+      if(c){formato='F1009';concepto=c;descripcion='Cuentas por Pagar';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;}
+    }
+
+    // F1010 — Socios (Clase 3, 31xx)
+    if(cta.startsWith('31')){
+      formato='F1010';concepto='';descripcion='Socios y Accionistas';
+      clasificacion.push({...r,formato,concepto,descripcion,val});continue;
+    }
+
+    // F1012 — Inversiones y Bancos (1105, 1110, 12xx)
+    if(cta.startsWith('1105')||cta.startsWith('1110')||cta.startsWith('12')){
+      const c=buscarConcepto(cta,MAPEO_1012,nom,null);
+      if(c){formato='F1012';concepto=c;descripcion='Inversiones y Bancos';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;}
+    }
+
+    // No clasificado
+    sinClasificar++;
+    clasificacion.push({...r,formato:'—',concepto:'',descripcion:'Sin clasificar',val});
+  }
+
+  renderClasificacion(sinClasificar);
+}
+
+function renderClasificacion(sinClasificar){
+  // Stats
+  const formatos={};
+  for(const r of clasificacion){
+    if(r.formato==='—')continue;
+    if(!formatos[r.formato])formatos[r.formato]={count:0,total:0};
+    formatos[r.formato].count++;
+    formatos[r.formato].total+=r.val;
+  }
+  const nFormatos=Object.keys(formatos).length;
+  const totalReg=clasificacion.filter(r=>r.formato!=='—').length;
+
+  document.getElementById('clasifStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${totalReg.toLocaleString()}</div><div class="lbl">Registros clasificados</div></div>
+    <div class="stat-card green"><div class="val">${nFormatos}</div><div class="lbl">Formatos con datos</div></div>
+    <div class="stat-card amber"><div class="val">${sinClasificar}</div><div class="lbl">Sin clasificar</div></div>
+    <div class="stat-card red"><div class="val">${clasificacion.filter(r=>CONCEPTOS_NOMINA.has(r.concepto)).length}</div><div class="lbl">Registros nomina</div></div>`;
+
+  if(totalReg>0){
+    document.getElementById('clasifOk').classList.remove('hidden');
+    document.getElementById('clasifOkText').innerHTML=`Se clasificaron <strong>${totalReg.toLocaleString()}</strong> registros en <strong>${nFormatos}</strong> formatos.${sinClasificar>0?' <strong>'+sinClasificar+'</strong> registros no pudieron ser clasificados (cuentas que no aplican para exogena).':''}`;
+  }
+  if(sinClasificar>0){
+    document.getElementById('clasifWarn').classList.remove('hidden');
+    document.getElementById('clasifWarnText').innerHTML=`<strong>${sinClasificar} registros</strong> no fueron clasificados. Esto es normal — no todas las cuentas del balance aplican para exogena (ej: clase 3 patrimonio distinto de socios, cuentas de orden, etc.)`;
+  }
+
+  // Format summary table
+  const fmtNames={'F1001':'Pagos y Abonos','F1003':'Retenciones Practicadas','F1005':'IVA Descontable',
+    'F1006':'IVA Generado','F1007':'Ingresos','F1008':'Cuentas por Cobrar','F1009':'Cuentas por Pagar',
+    'F1010':'Socios y Accionistas','F1012':'Inversiones y Bancos','F2276':'Rentas de Trabajo'};
+  const fmtOrder=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  let sh='<table class="map-table"><thead><tr><th>Formato</th><th>Descripcion</th><th>Registros</th><th>Valor Total</th></tr></thead><tbody>';
+  for(const f of fmtOrder){
+    const d=formatos[f];
+    const badge=`<span class="fmt-badge fmt-${f.substring(1)}">${f}</span>`;
+    if(d){
+      sh+=`<tr><td>${badge}</td><td>${fmtNames[f]||f}</td><td class="text-right mono">${d.count.toLocaleString()}</td><td class="text-right mono">${fN(d.total)}</td></tr>`;
+    }else{
+      sh+=`<tr><td>${badge}</td><td style="color:var(--muted)">${fmtNames[f]||f}</td><td class="text-right mono" style="color:var(--muted)">0</td><td class="text-right mono" style="color:var(--muted)">—</td></tr>`;
+    }
+  }
+  sh+='</tbody></table>';
+  document.getElementById('formatSummary').innerHTML=sh;
+
+  // Detail table (first 100)
+  let h='<table class="map-table"><thead><tr><th>#</th><th>Formato</th><th>Concepto</th><th>Cuenta</th><th>Nombre</th><th>NIT</th><th>Debito</th><th>Credito</th></tr></thead><tbody>';
+  const show=clasificacion.slice(0,100);
+  for(let i=0;i<show.length;i++){
+    const r=show[i];
+    const badge=r.formato!=='—'?`<span class="fmt-badge fmt-${r.formato.substring(1)}">${r.formato}</span>`:'<span style="color:var(--muted)">—</span>';
+    h+=`<tr><td>${i+1}</td><td>${badge}</td><td class="mono">${r.concepto}</td><td class="mono">${r.code}</td><td>${r.name.substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
+  }
+  if(clasificacion.length>100)h+=`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">... y ${clasificacion.length-100} registros mas</td></tr>`;
+  h+='</tbody></table>';
+  document.getElementById('clasifTable').innerHTML=h;
+}
+
+/* ── Conectar Step 2 → Step 3 ── */
+function irAClasificacion(){
+  clasificarCuentas();
+  goStep(3);
 }
 
 /* ── EJEMPLO DESCARGABLE ── */
