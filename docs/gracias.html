@@ -26,7 +26,6 @@
     --gray-700: #374151;
     --gray-800: #1F2937;
     --gray-900: #111827;
-    --wa-green: #25D366;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -101,46 +100,6 @@
     font-family: monospace; font-size: 0.9rem;
   }
 
-  .whatsapp-box {
-    background: linear-gradient(135deg, var(--green-900), #065F46, var(--green-700));
-    border-radius: 20px;
-    padding: 36px 32px;
-    margin-bottom: 28px;
-    animation: fadeUp 0.6s 0.2s ease-out both;
-    position: relative; overflow: hidden;
-  }
-  .whatsapp-box::before {
-    content: ''; position: absolute; top: -30%; right: -15%; width: 50%; height: 140%;
-    background: radial-gradient(circle, rgba(52,211,153,0.1) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .whatsapp-label {
-    color: var(--green-300);
-    font-size: 0.75rem; letter-spacing: 2.5px;
-    text-transform: uppercase; margin-bottom: 16px;
-    font-weight: 700; position: relative;
-  }
-  .whatsapp-msg {
-    color: rgba(255,255,255,0.75);
-    font-size: 0.98rem; line-height: 1.65;
-    margin-bottom: 24px; position: relative;
-  }
-  .whatsapp-btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--wa-green); color: var(--white);
-    padding: 15px 34px; border-radius: 12px;
-    font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.02rem;
-    text-decoration: none; transition: all 0.25s;
-    box-shadow: 0 4px 20px rgba(37,211,102,0.3);
-    position: relative;
-  }
-  .whatsapp-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(37,211,102,0.4);
-    background: #20BD5A;
-  }
-  .whatsapp-btn svg { width: 22px; height: 22px; fill: var(--white); }
-
   .steps-box {
     background: var(--white);
     border: 1.5px solid var(--gray-200);
@@ -196,7 +155,6 @@
   .back-link:hover { color: var(--green-600); gap: 8px; }
 
   @media (max-width: 600px) {
-    .whatsapp-box { padding: 28px 20px; }
     .steps-box { padding: 22px 18px; }
   }
 </style>
