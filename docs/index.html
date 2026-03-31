@@ -696,9 +696,24 @@ async function cargarNoticias(){
     let all=[];
     res.forEach(r=>{if(r.status==='fulfilled')all=all.concat(r.value)});
 
-    /* Dedup */
-    const seen=new Set();
-    all=all.filter(n=>{const k=n.t.toLowerCase().substring(0,40);if(seen.has(k))return false;seen.add(k);return true});
+    /* Dedup inteligente: extrae palabras clave y detecta temas repetidos */
+    function extraerPalabras(t){
+      return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+        .replace(/[^a-z0-9\s]/g,' ').split(/\s+/)
+        .filter(w=>w.length>3&&!['para','como','tras','este','esta','esto','estos','estas','sera','puede','sobre','desde','entre','hasta','segun','donde','tambien','ante','pero','cada','todo','todos','tiene','dice','dijo','afirmo','confirma','segun','habria','podria'].includes(w));
+    }
+    function similitud(a,b){
+      const wa=new Set(extraerPalabras(a)),wb=new Set(extraerPalabras(b));
+      if(wa.size===0||wb.size===0)return 0;
+      let comunes=0;wa.forEach(w=>{if(wb.has(w))comunes++});
+      return comunes/Math.min(wa.size,wb.size);
+    }
+    const dedup=[];
+    for(const n of all){
+      if(dedup.some(d=>similitud(d.t,n.t)>0.5))continue;
+      dedup.push(n);
+    }
+    all=dedup;
 
     all.sort((a,b)=>new Date(b.d)-new Date(a.d));
 
