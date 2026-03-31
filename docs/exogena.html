@@ -251,8 +251,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <!-- ═══ STEP 5: DESCARGAR ═══ -->
   <div id="step5" class="hidden">
     <div class="card">
-      <div class="card-title"><span>📥</span> Descargar Excel + XML — En construccion</div>
-      <div class="alert alert-info"><span>🚧</span><div>Aqui podras descargar el Excel con los 10 formatos y el ZIP con los 10 XML listos para el prevalidador MUISCA.</div></div>
+      <div class="card-title"><span>📥</span> Descargar Formatos</div>
+      <div id="dlStats" class="stats"></div>
+      <div id="dlSummary"></div>
+    </div>
+    <div class="card" style="text-align:center;padding:32px">
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px">
+        <button onclick="exportExcel()" class="btn btn-success" style="padding:14px 32px;font-size:1rem">📊 Descargar Excel</button>
+        <button onclick="exportXmlZip()" class="btn btn-primary" style="padding:14px 32px;font-size:1rem">📦 Descargar XML (ZIP)</button>
+      </div>
+      <p style="font-size:.82rem;color:var(--muted)">Excel: un libro con una hoja por formato, formateado profesional.<br>XML: 10 archivos listos para el prevalidador MUISCA en un ZIP.</p>
+    </div>
+    <div class="card">
+      <div style="padding:12px;background:var(--pri3);border-radius:8px;font-size:.8rem;color:var(--pri)">
+        <strong>Normatividad:</strong> Art. 631 E.T. · Res. 000227/2025 · UVT $49.799 · AG 2025<br>
+        <strong>Nota:</strong> Este borrador es un punto de partida. El contador debe validar, ajustar y prevalidar en el MUISCA antes de enviar a la DIAN.
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="goStep(4)">← Volver a Formatos</button>
     </div>
   </div>
 
@@ -1191,7 +1208,175 @@ function irAFormatos(){
 }
 
 function irADescargar(){
+  renderDescargar();
   goStep(5);
+}
+
+function renderDescargar(){
+  const fmtOrder=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  const fmtNames={'F1001':'Pagos','F1003':'Retenciones','F1005':'IVA Desc.','F1006':'IVA Gen.',
+    'F1007':'Ingresos','F1008':'CxC','F1009':'CxP','F1010':'Socios','F1012':'Inversiones','F2276':'Nomina'};
+  let totalReg=0,totalFmt=0;
+  for(const f of fmtOrder){if(formatos[f]&&formatos[f].length>0){totalReg+=formatos[f].length;totalFmt++}}
+  document.getElementById('dlStats').innerHTML=`
+    <div class="stat-card green"><div class="val">${totalFmt}</div><div class="lbl">Formatos</div></div>
+    <div class="stat-card blue"><div class="val">${totalReg.toLocaleString()}</div><div class="lbl">Registros</div></div>
+    <div class="stat-card amber"><div class="val">2</div><div class="lbl">Archivos</div></div>
+    <div class="stat-card green"><div class="val">✓</div><div class="lbl">Listo</div></div>`;
+  let s='<table class="map-table"><thead><tr><th>Formato</th><th>Registros</th><th>Estado</th></tr></thead><tbody>';
+  for(const f of fmtOrder){
+    const rows=formatos[f]||[];
+    const badge=`<span class="fmt-badge fmt-${f.substring(1)}">${f}</span>`;
+    if(rows.length>0)s+=`<tr><td>${badge} ${fmtNames[f]}</td><td class="text-right mono">${rows.length}</td><td style="color:var(--green)">✓ Listo</td></tr>`;
+    else s+=`<tr><td style="color:var(--muted)">${badge} ${fmtNames[f]}</td><td class="text-right mono" style="color:var(--muted)">0</td><td style="color:var(--muted)">Sin datos</td></tr>`;
+  }
+  s+='</tbody></table>';
+  document.getElementById('dlSummary').innerHTML=s;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FASE D: EXPORTAR EXCEL + XML
+   ═══════════════════════════════════════════════════════════ */
+
+const XML_DEFS={
+  'F1001':{formato:'1001',version:'10',tag:'pagos',row:'pag'},
+  'F1003':{formato:'1003',version:'7',tag:'retenciones',row:'ret'},
+  'F1005':{formato:'1005',version:'8',tag:'ivadescontable',row:'ivd'},
+  'F1006':{formato:'1006',version:'8',tag:'ivagenerado',row:'ivg'},
+  'F1007':{formato:'1007',version:'9',tag:'ingresos',row:'ing'},
+  'F1008':{formato:'1008',version:'7',tag:'cxcobrar',row:'cxc'},
+  'F1009':{formato:'1009',version:'7',tag:'cxpagar',row:'cxp'},
+  'F1010':{formato:'1010',version:'8',tag:'socios',row:'soc'},
+  'F1012':{formato:'1012',version:'8',tag:'inversiones',row:'inv'},
+  'F2276':{formato:'2276',version:'3',tag:'rentastrabajo',row:'ren'},
+};
+
+function getCompanyConfig(){
+  return{
+    nit:sanitizarNit(document.getElementById('cfgNit').value),
+    rs:document.getElementById('cfgEmpresa').value.trim().toUpperCase(),
+    td:document.getElementById('cfgTipoPersona').value,
+    dv:calcDv(sanitizarNit(document.getElementById('cfgNit').value)),
+    dir:document.getElementById('cfgDir').value.trim(),
+    dp:document.getElementById('cfgDpto').value,
+    mp:document.getElementById('cfgMpio').value,
+    a1:document.getElementById('cfgApe1').value.trim().toUpperCase(),
+    a2:document.getElementById('cfgApe2').value.trim().toUpperCase(),
+    n1:document.getElementById('cfgNom1').value.trim().toUpperCase(),
+    n2:document.getElementById('cfgNom2').value.trim().toUpperCase(),
+    year:document.getElementById('cfgYear').value,
+  };
+}
+
+async function exportExcel(){
+  const wb=new ExcelJS.Workbook();
+  const hdrFill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1F4E79'}};
+  const hdrFont={bold:true,color:{argb:'FFFFFFFF'},size:10,name:'Arial'};
+  const zebraFill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF2F7FB'}};
+  const thinBorder={top:{style:'thin',color:{argb:'FF808080'}},bottom:{style:'thin',color:{argb:'FF808080'}},left:{style:'thin',color:{argb:'FF808080'}},right:{style:'thin',color:{argb:'FF808080'}}};
+
+  const fmtOrder=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  for(const f of fmtOrder){
+    const rows=formatos[f];if(!rows||rows.length===0)continue;
+    const hdrs=FMT_HEADERS[f];
+    const ws=wb.addWorksheet(f);
+    // Headers
+    const hdrRow=ws.addRow(hdrs);
+    hdrRow.eachCell(c=>{c.fill=hdrFill;c.font=hdrFont;c.alignment={horizontal:'center',wrapText:true};c.border=thinBorder});
+    // Data
+    for(let i=0;i<rows.length;i++){
+      const r=ws.addRow(rows[i]);
+      r.eachCell((c,ci)=>{
+        c.font={size:10,name:'Arial'};c.border=thinBorder;
+        if(typeof rows[i][ci-1]==='number')c.numFmt='#,##0';
+        else c.numFmt='@';
+      });
+      if(i%2===0)r.eachCell(c=>{c.fill=zebraFill});
+    }
+    // Auto-width
+    ws.columns.forEach((col,i)=>{col.width=Math.max(hdrs[i].length+2,12)});
+  }
+
+  // Resumen sheet
+  const wsR=wb.addWorksheet('Resumen');
+  wsR.addRow(['Formato','Registros']).eachCell(c=>{c.fill=hdrFill;c.font=hdrFont;c.border=thinBorder});
+  for(const f of fmtOrder){
+    const n=(formatos[f]||[]).length;
+    wsR.addRow([f,n]).eachCell(c=>{c.font={size:10,name:'Arial'};c.border=thinBorder});
+  }
+  wsR.columns=[{width:20},{width:12}];
+
+  const buf=await wb.xlsx.writeBuffer();
+  const cfg=getCompanyConfig();
+  descargarBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),
+    `Exogena_AG${cfg.year}_${cfg.nit||'SIN_NIT'}.xlsx`);
+}
+
+async function exportXmlZip(){
+  const cfg=getCompanyConfig();
+  const zip=new JSZip();
+  const fmtOrder=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  let envio=1;
+
+  for(const f of fmtOrder){
+    const rows=formatos[f];if(!rows||rows.length===0)continue;
+    const def=XML_DEFS[f];if(!def)continue;
+    const hdrs=FMT_HEADERS[f];
+
+    let xml='<?xml version="1.0" encoding="ISO-8859-1"?>\n';
+    xml+=`<mas xmlns="http://www.dian.gov.co/muisca/mas">\n`;
+    xml+=`  <Cab>\n`;
+    xml+=`    <CodCpt>1</CodCpt>\n`;
+    xml+=`    <Formato>${def.formato}</Formato>\n`;
+    xml+=`    <Version>${def.version}</Version>\n`;
+    xml+=`    <AnoGrav>${cfg.year}</AnoGrav>\n`;
+    xml+=`    <NumEnvio>${String(envio).padStart(5,'0')}</NumEnvio>\n`;
+    xml+=`    <FecEnvio>${new Date().toISOString().substring(0,10)}</FecEnvio>\n`;
+    xml+=`    <FecIni>${cfg.year}-01-01</FecIni>\n`;
+    xml+=`    <FecFin>${cfg.year}-12-31</FecFin>\n`;
+    xml+=`    <NumReg>${rows.length}</NumReg>\n`;
+    xml+=`    <TipoDoc>${cfg.td}</TipoDoc>\n`;
+    xml+=`    <NumNit>${cfg.nit}</NumNit>\n`;
+    xml+=`    <DV>${cfg.dv}</DV>\n`;
+    xml+=`    <Ape1>${cfg.a1}</Ape1>\n`;
+    xml+=`    <Ape2>${cfg.a2}</Ape2>\n`;
+    xml+=`    <Nom1>${cfg.n1}</Nom1>\n`;
+    xml+=`    <Nom2>${cfg.n2}</Nom2>\n`;
+    xml+=`    <RazonSocial>${cfg.rs}</RazonSocial>\n`;
+    xml+=`    <Direccion>${cfg.dir}</Direccion>\n`;
+    xml+=`    <CodDpto>${cfg.dp}</CodDpto>\n`;
+    xml+=`    <CodMpio>${cfg.mp}</CodMpio>\n`;
+    xml+=`  </Cab>\n`;
+    xml+=`  <${def.tag}>\n`;
+
+    for(const row of rows){
+      xml+=`    <${def.row}>`;
+      for(let i=0;i<row.length;i++){
+        const tag=hdrs[i].toLowerCase().replace(/[^a-z0-9]/g,'_').substring(0,15);
+        const val=row[i]!=null?String(row[i]):'';
+        xml+=`<${tag}>${val}</${tag}>`;
+      }
+      xml+=`</${def.row}>\n`;
+    }
+
+    xml+=`  </${def.tag}>\n`;
+    xml+=`</mas>`;
+
+    zip.file(`${f}_AG${cfg.year}.xml`,xml);
+    envio++;
+  }
+
+  const blob=await zip.generateAsync({type:'blob'});
+  descargarBlob(blob,`Exogena_XML_AG${cfg.year}_${cfg.nit||'SIN_NIT'}.zip`);
+}
+
+function descargarBlob(blob,filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 /* ── EJEMPLO DESCARGABLE ── */
