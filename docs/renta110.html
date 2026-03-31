@@ -402,14 +402,14 @@ const PUC_F110=[
   // Costos
   {cas:62,prefijos:['6'],desc:'Costos'},
   // Gastos
-  {cas:63,prefijos:['51'],desc:'Gastos de administracion'},
+  {cas:63,prefijos:['51'],desc:'Gastos de administracion',excluir:['5160']},
   {cas:64,prefijos:['52'],desc:'Gastos de distribucion y ventas'},
   {cas:65,prefijos:['530505','5305'],desc:'Gastos financieros'},
   {cas:66,prefijos:['53'],desc:'Otros gastos',excluir:['530505','5305']},
 ];
 
-function clasificarPUCaF110(data,hdrRow,colMap){
-  const result={};
+function clasificarPUCaF110_OLD(data,hdrRow,colMap){
+  const result_old={};
   const detail=[];
   const rows=data.slice(hdrRow+1);
 
@@ -468,6 +468,78 @@ function clasificarPUCaF110(data,hdrRow,colMap){
   }
 
   return casillasFinales;
+}
+
+function clasificarPUCaF110(data,hdrRow,colMap){
+  const rows=data.slice(hdrRow+1);
+
+  // Detectar columna de nivel y nombre
+  const hdr=data[hdrRow]||[];
+  let nivelCol=-1,nameCol=colMap.name;
+  for(let i=0;i<hdr.length;i++){
+    if(/^nivel$/i.test(String(hdr[i]||'').trim()))nivelCol=i;
+    if(nameCol==null&&/cuenta.*contable|descripci|nombre/i.test(String(hdr[i]||'').trim()))nameCol=i;
+  }
+
+  // Recolectar filas
+  const filas=[];
+  for(const row of rows){
+    let code=String(row[colMap.code]||'').replace(/[.\-\s]/g,'').trim();
+    if(!code||!/^\d+/.test(code))continue;
+    const name=nameCol!=null?String(row[nameCol]||'').trim():'';
+    const nivel=nivelCol>=0?String(row[nivelCol]||'').trim():'';
+
+    let saldo=0;
+    if('saldoCargo' in colMap&&'saldoAbono' in colMap){
+      const cargo=parseFloat(row[colMap.saldoCargo])||0;
+      const abono=parseFloat(row[colMap.saldoAbono])||0;
+      saldo=(cargo||abono)?(cargo-abono):0;
+    }else if('deb' in colMap&&'cre' in colMap){
+      saldo=(parseFloat(row[colMap.deb])||0)-(parseFloat(row[colMap.cre])||0);
+    }
+
+    filas.push({code,name,nivel,saldo});
+  }
+
+  // Clasificar por casilla
+  const porCasilla={};
+  for(const f of filas){
+    if(f.saldo===0)continue;
+    let casilla=null;
+    for(const m of PUC_F110){
+      if(m.excluir&&m.excluir.some(e=>f.code.startsWith(e)))continue;
+      if(m.prefijos.some(p=>f.code.startsWith(p))){casilla=m.cas;break}
+    }
+    if(!casilla)continue;
+    if(!porCasilla[casilla])porCasilla[casilla]=[];
+    porCasilla[casilla].push({code:f.code,name:f.name,val:Math.abs(f.saldo),len:f.code.length});
+  }
+
+  // Para cada casilla: tomar cuenta resumen (codigo mas corto) si existe
+  const cas={};
+  for(const[c,cuentas] of Object.entries(porCasilla)){
+    cuentas.sort((a,b)=>a.len-b.len);
+    const resumen=cuentas.find(x=>x.len<=4&&x.val>0);
+    if(resumen){
+      cas[c]=Math.round(resumen.val);
+    }else{
+      const minLen=cuentas[0].len;
+      cas[c]=Math.round(cuentas.filter(x=>x.len===minLen).reduce((s,x)=>s+x.val,0));
+    }
+  }
+
+  // Devoluciones en ventas: separar de ingresos
+  const dev=filas.find(f=>/devolucion.*venta/i.test(f.name)&&f.saldo<0);
+  if(dev&&cas[47]){
+    const devVal=Math.abs(dev.saldo);
+    cas[47]+=devVal;
+    cas[59]=devVal;
+  }
+
+  // Gastos por impuestos (clase 54) no van en el F110 como deducibles
+  // No excluir: ya no estan en PUC_F110
+
+  return cas;
 }
 
 function mostrarClasificacion(){
