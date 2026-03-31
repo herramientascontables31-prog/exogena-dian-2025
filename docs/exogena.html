@@ -360,6 +360,96 @@ const BANCOS_COLOMBIANOS={
   'lulo bank':['901352782','LULO BANK S.A.'],
 };
 
+/* ── DIRECTORIO DE TERCEROS (auto-completar razon social) ── */
+const DIRECTORIO={
+  // Bancos
+  '890903938':{rs:'BANCOLOMBIA S.A.',cat:'Banco'},
+  '860034313':{rs:'BANCO DAVIVIENDA S.A.',cat:'Banco'},
+  '860002964':{rs:'BANCO DE BOGOTA S.A.',cat:'Banco'},
+  '890300279':{rs:'BANCO DE OCCIDENTE S.A.',cat:'Banco'},
+  '860007738':{rs:'BANCO POPULAR S.A.',cat:'Banco'},
+  '860003020':{rs:'BBVA COLOMBIA S.A.',cat:'Banco'},
+  '890903937':{rs:'SCOTIABANK COLPATRIA S.A.',cat:'Banco'},
+  '860035827':{rs:'BANCO AV VILLAS S.A.',cat:'Banco'},
+  '860007335':{rs:'BANCO CAJA SOCIAL S.A.',cat:'Banco'},
+  '800037800':{rs:'BANCO AGRARIO DE COLOMBIA S.A.',cat:'Banco'},
+  '900215071':{rs:'BANCAMIA S.A.',cat:'Banco'},
+  '860050750':{rs:'GNB SUDAMERIS S.A.',cat:'Banco'},
+  '890200756':{rs:'BANCO PICHINCHA S.A.',cat:'Banco'},
+  '900047981':{rs:'BANCO FALABELLA S.A.',cat:'Banco'},
+  '860043186':{rs:'BANCO SERFINANZA S.A.',cat:'Banco'},
+  '860051135':{rs:'CITIBANK COLOMBIA S.A.',cat:'Banco'},
+  '900378212':{rs:'BANCO W S.A.',cat:'Banco'},
+  '860051894':{rs:'BANCO FINANDINA S.A.',cat:'Banco'},
+  '890203088':{rs:'BANCO COOPCENTRAL',cat:'Banco'},
+  // EPS
+  '900156264':{rs:'NUEVA EPS S.A.',cat:'EPS'},
+  '800088702':{rs:'EPS SURA',cat:'EPS'},
+  '800251440':{rs:'EPS SANITAS S.A.',cat:'EPS'},
+  '830003564':{rs:'FAMISANAR LTDA. EPS',cat:'EPS'},
+  '900226715':{rs:'COMPENSAR EPS',cat:'EPS'},
+  '800130907':{rs:'SALUD TOTAL S.A. EPS',cat:'EPS'},
+  '900226846':{rs:'COOSALUD EPS S.A.',cat:'EPS'},
+  '806008394':{rs:'MUTUAL SER EPS',cat:'EPS'},
+  '830113831':{rs:'ALIANSALUD EPS S.A.',cat:'EPS'},
+  '890399010':{rs:'COMFENALCO VALLE EPS',cat:'EPS'},
+  '900298372':{rs:'CAPITAL SALUD EPS S.A.S.',cat:'EPS'},
+  // AFP
+  '800144331':{rs:'PORVENIR S.A.',cat:'AFP'},
+  '800138188':{rs:'PROTECCION S.A.',cat:'AFP'},
+  '800144467':{rs:'COLFONDOS S.A.',cat:'AFP'},
+  '800224808':{rs:'OLD MUTUAL SKANDIA',cat:'AFP'},
+  '900336004':{rs:'COLPENSIONES',cat:'AFP'},
+  // ARL
+  '890903790':{rs:'ARL SURA',cat:'ARL'},
+  '860011153':{rs:'POSITIVA COMPANIA DE SEGUROS S.A.',cat:'ARL'},
+  '860002503':{rs:'ARL COLMENA SEGUROS',cat:'ARL'},
+  '890903037':{rs:'SEGUROS BOLIVAR S.A.',cat:'ARL'},
+  '860524654':{rs:'ALFA S.A. ARL',cat:'ARL'},
+  // Cajas de Compensacion
+  '860066942':{rs:'COMPENSAR',cat:'Caja'},
+  '860007336':{rs:'COLSUBSIDIO',cat:'Caja'},
+  '860013570':{rs:'CAFAM',cat:'Caja'},
+  '890900842':{rs:'COMFAMA',cat:'Caja'},
+  '890300466':{rs:'COMFANDI',cat:'Caja'},
+  '890900650':{rs:'COMFENALCO ANTIOQUIA',cat:'Caja'},
+  '890102044':{rs:'COMBARRANQUILLA',cat:'Caja'},
+  // Entidades del Estado
+  '800197268':{rs:'DIAN',cat:'Estado'},
+  '900373788':{rs:'UGPP',cat:'Estado'},
+  '899999090':{rs:'MINISTERIO DE HACIENDA Y CREDITO PUBLICO',cat:'Estado'},
+  '899999067':{rs:'CONTRALORIA GENERAL DE LA REPUBLICA',cat:'Estado'},
+  '860007386':{rs:'CAMARA DE COMERCIO DE BOGOTA',cat:'Camara'},
+  '890904713':{rs:'CAMARA DE COMERCIO DE MEDELLIN',cat:'Camara'},
+  '890399011':{rs:'CAMARA DE COMERCIO DE CALI',cat:'Camara'},
+  '890102018':{rs:'CAMARA DE COMERCIO DE BARRANQUILLA',cat:'Camara'},
+  // Servicios Publicos
+  '830095213':{rs:'ENEL COLOMBIA S.A. E.S.P. (CODENSA)',cat:'Servicios'},
+  '890904996':{rs:'EMPRESAS PUBLICAS DE MEDELLIN E.S.P.',cat:'Servicios'},
+  '890399003':{rs:'EMCALI E.I.C.E. E.S.P.',cat:'Servicios'},
+  '900582006':{rs:'AIR-E S.A.S. E.S.P.',cat:'Servicios'},
+  '900464562':{rs:'VANTI S.A. E.S.P.',cat:'Servicios'},
+  '899999094':{rs:'ACUEDUCTO DE BOGOTA E.S.P.',cat:'Servicios'},
+  // Telecomunicaciones
+  '899999115':{rs:'COMCEL S.A. (CLARO)',cat:'Telecom'},
+  '830122566':{rs:'COLOMBIA TELECOMUNICACIONES S.A. E.S.P. (MOVISTAR)',cat:'Telecom'},
+  '900092385':{rs:'COLOMBIA MOVIL S.A. E.S.P. (TIGO)',cat:'Telecom'},
+  '800092200':{rs:'ETB S.A. E.S.P.',cat:'Telecom'},
+  '805003209':{rs:'DIRECTV COLOMBIA LTDA.',cat:'Telecom'},
+  // Transporte y Logistica
+  '890100813':{rs:'AVIANCA S.A.',cat:'Transporte'},
+  '900918936':{rs:'LATAM AIRLINES COLOMBIA S.A.S.',cat:'Transporte'},
+  '860512330':{rs:'SERVIENTREGA S.A.',cat:'Logistica'},
+  '890301884':{rs:'COORDINADORA MERCANTIL S.A.',cat:'Logistica'},
+  '890300225':{rs:'TCC S.A.S.',cat:'Logistica'},
+  // Grandes Superficies
+  '890900608':{rs:'ALMACENES EXITO S.A.',cat:'Comercio'},
+  '900017447':{rs:'FALABELLA DE COLOMBIA S.A.',cat:'Comercio'},
+  '800242106':{rs:'SODIMAC COLOMBIA S.A. (HOMECENTER)',cat:'Comercio'},
+  '890900943':{rs:'COLOMBIANA DE COMERCIO S.A. (ALKOSTO)',cat:'Comercio'},
+  '900059238':{rs:'MAKRO SUPERMAYORISTA S.A.S.',cat:'Comercio'},
+};
+
 const DV_PESOS=[71,67,59,53,47,43,41,37,29,23,19,17,13,7,3];
 
 /* ── UTILIDADES ── */
@@ -568,11 +658,14 @@ function processData(){
     const cre=toNum(row[colMap.cre]);
     if(deb===0&&cre===0){skipped++;continue}
     const nit=sanitizarNit(norm(row[colMap.nit]));
+    let razon='razon' in colMap?norm(row[colMap.razon]):'';
+    // Auto-completar razon social desde directorio si el balance no la trae
+    if(!razon&&nit&&DIRECTORIO[nit])razon=DIRECTORIO[nit].rs;
     parsedData.push({
       code,
       name:norm(row[colMap.name]),
       nit,
-      razon:'razon' in colMap?norm(row[colMap.razon]):'',
+      razon,
       deb,cre,
       neto:deb-cre
     });
