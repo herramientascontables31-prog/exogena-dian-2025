@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informacion Exogena DIAN 2025 — Generador de 10 Formatos | ExogenaDIAN</title>
+<meta name="description" content="Genera automaticamente los 10 formatos de informacion exogena DIAN (F1001 a F2276) desde tu balance de prueba. Excel + XML listos para el prevalidador MUISCA. 100% en tu navegador.">
+<meta name="keywords" content="informacion exogena DIAN 2025, formatos exogena, F1001 pagos, F1003 retenciones, F1007 ingresos, F2276 rentas trabajo, prevalidador MUISCA, medios magneticos DIAN">
+<link rel="canonical" href="https://exogenadian.com/exogena.html">
+<meta property="og:title" content="Informacion Exogena DIAN 2025 — 10 Formatos Automaticos | ExogenaDIAN">
+<meta property="og:description" content="Genera los 10 formatos de exogena DIAN desde tu balance de prueba. Excel + XML listos para MUISCA.">
+<meta property="og:url" content="https://exogenadian.com/exogena.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+:root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#548235;--green2:#E2EFDA;--red:#CC0000;--amber:#D97706;--amber2:#FFF8E1;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);padding:28px 32px;border-radius:16px;margin-bottom:24px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:1.6rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.header h1 span{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:600}
+.header p{opacity:.8;font-size:.85rem;margin-top:4px}
+.header-right{text-align:right;font-size:.8rem;opacity:.7}
+.steps{display:flex;gap:8px;margin-bottom:24px}
+.step-pill{flex:1;padding:12px 16px;background:var(--card);border:2px solid var(--border);border-radius:var(--radius);font-size:.82rem;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;transition:.3s;cursor:default}
+.step-pill .num{width:26px;height:26px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff}
+.step-pill.active{border-color:var(--pri2);color:var(--pri);background:var(--pri3)}
+.step-pill.active .num{background:var(--pri2)}
+.step-pill.done{border-color:var(--green);color:var(--green)}
+.step-pill.done .num{background:var(--green)}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.drop-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:48px 32px;text-align:center;cursor:pointer;transition:.3s;position:relative}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--pri2);background:var(--pri3)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.dz-icon{font-size:2.5rem;margin-bottom:8px;display:block}.dz-title{font-weight:700;font-size:1.1rem;color:var(--pri)}.dz-hint{color:var(--muted);font-size:.82rem;margin-top:4px}
+.dz-file{margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--green);font-weight:600}
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.config-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.config-item{display:flex;flex-direction:column;gap:4px}
+.config-item label{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.config-item input,.config-item select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit}
+.config-item input:focus,.config-item select:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 3px rgba(46,117,182,.15)}
+.col-mapper{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:16px 0}
+.col-map-item{background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:12px;transition:.3s}
+.col-map-item.mapped{border-color:var(--green);background:var(--green2)}
+.col-map-item.required{border-color:var(--amber)}
+.col-map-item .cml{font-size:.75rem;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.col-map-item .cml .req{color:var(--red);font-weight:800}
+.col-map-item select{width:100%;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit;background:#fff}
+.col-map-item .sample{font-size:.72rem;color:var(--muted);margin-top:6px;font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.col-map-item .sample strong{color:var(--pri)}
+.raw-preview{max-height:180px;overflow:auto;border:1px solid var(--border);border-radius:8px;font-size:.72rem;margin:12px 0}
+.raw-preview table{width:100%;border-collapse:collapse;min-width:800px}
+.raw-preview th,.raw-preview td{padding:4px 8px;border:1px solid var(--border);white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.raw-preview th{background:var(--pri3);position:sticky;top:0;font-weight:600;font-size:.7rem;color:var(--pri)}
+.raw-preview tr.hdr-row td{background:#FFF8E1;font-weight:600}
+.raw-preview tr:hover td{background:#f0f4f8}
+.hdr-selector{display:flex;align-items:center;gap:12px;margin:12px 0;padding:10px 14px;background:#f8fafc;border-radius:8px;border:1px solid var(--border)}
+.hdr-selector label{font-size:.82rem;font-weight:600;color:var(--pri)}
+.hdr-selector select{padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:.82rem;font-family:inherit}
+.hdr-selector .hdr-preview{font-size:.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-left:8px}
+.map-table{width:100%;border-collapse:separate;border-spacing:0;font-size:.82rem}
+.map-table th{background:var(--pri);color:#fff;padding:10px 12px;text-align:left;font-weight:600;position:sticky;top:0;z-index:1}
+.map-table th:first-child{border-radius:8px 0 0 0}.map-table th:last-child{border-radius:0 8px 0 0}
+.map-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.map-table tr:nth-child(even) td{background:#f8fafc}.map-table tr:hover td{background:var(--pri3)}
+.map-table input,.map-table select{padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:.8rem;font-family:inherit;width:100%}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.7rem;font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center}
+.stat-card .val{font-size:1.5rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.stat-card .lbl{font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:4px}
+.stat-card.blue .val{color:var(--pri2)}.stat-card.green .val{color:var(--green)}.stat-card.amber .val{color:var(--amber)}.stat-card.red .val{color:var(--red)}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:10px 20px;font-size:.85rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s}
+.tab.active{color:var(--pri);border-bottom-color:var(--pri2)}
+.tab-content{display:none}.tab-content.active{display:block}
+.scroll-box{max-height:500px;overflow-y:auto;border:1px solid var(--border);border-radius:8px}
+.btn{padding:10px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--pri2);color:#fff}.btn-primary:hover{background:var(--pri);transform:translateY(-1px)}
+.btn-success{background:var(--green);color:#fff}.btn-success:hover{opacity:.9}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--pri2);color:var(--pri)}
+.actions{display:flex;gap:12px;justify-content:flex-end;margin-top:20px}
+.alert{padding:14px 18px;border-radius:8px;font-size:.85rem;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.alert-info{background:var(--pri3);color:var(--pri);border:1px solid #B4C6E7}
+.alert-warn{background:var(--amber2);color:#92400E;border:1px solid #FCD34D}
+.alert-success{background:var(--green2);color:var(--green);border:1px solid #A5D6A7}
+.hidden{display:none!important}
+.mono{font-family:'JetBrains Mono',monospace}
+.text-right{text-align:right}
+.fmt-badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:.72rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.fmt-1001{background:#E3F2FD;color:#1565C0}.fmt-1003{background:#E8F5E9;color:#2E7D32}.fmt-1005{background:#FFF3E0;color:#E65100}
+.fmt-1006{background:#FCE4EC;color:#C62828}.fmt-1007{background:#E8EAF6;color:#283593}.fmt-1008{background:#E0F2F1;color:#00695C}
+.fmt-1009{background:#FBE9E7;color:#BF360C}.fmt-1010{background:#F3E5F5;color:#6A1B9A}.fmt-1012{background:#E1F5FE;color:#0277BD}
+.fmt-2276{background:#EFEBE9;color:#4E342E}
+@media(max-width:768px){.config-grid,.config-grid-3{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.steps{flex-wrap:wrap}.step-pill{font-size:.72rem;padding:8px 10px}}
+</style>
+</head>
+<body>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:'DM Sans',sans-serif">
+  <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem"><div style="width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900">E</div>ExogenaDIAN</a>
+  <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">← Volver al inicio</a>
+</div>
+<div class="container">
+  <div class="header"><div>
+    <h1><span>EXOGENA</span> Informacion Exogena DIAN</h1>
+    <p>Generador automatico de los 10 formatos · AG 2025 · Res. 000227</p>
+  </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
+
+  <!-- PRO bar -->
+  <div style="display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span id="proBadge"></span>
+      <span style="font-size:.85rem;color:var(--muted)" id="proStatus">Version gratuita</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center" id="proActivation">
+      <input type="text" id="proKeyInput" placeholder="Clave PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:140px">
+      <button onclick="activarPro()" class="btn btn-primary" style="padding:6px 16px;font-size:.82rem">Activar</button>
+      <a href="https://exogenadian.com/#planes" target="_blank" style="font-size:.78rem;color:var(--pri2);text-decoration:none">Suscribirse →</a>
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step-pill active" id="sp1"><span class="num">1</span> Inicio</div>
+    <div class="step-pill" id="sp2"><span class="num">2</span> Columnas</div>
+    <div class="step-pill" id="sp3"><span class="num">3</span> Clasificacion</div>
+    <div class="step-pill" id="sp4"><span class="num">4</span> Formatos</div>
+    <div class="step-pill" id="sp5"><span class="num">5</span> Descargar</div>
+  </div>
+
+  <!-- ═══ STEP 1: INICIO ═══ -->
+  <div id="step1">
+    <div class="card">
+      <div class="card-title"><span>📊</span> Balance de Prueba por Terceros</div>
+      <div class="alert alert-info"><span>💡</span><div>Sube el <strong>balance de prueba por terceros</strong> con las clases 1 a 6. Debe incluir <strong>codigo de cuenta, nombre, NIT del tercero, debitos y creditos</strong>. Compatible con cualquier software contable.</div></div>
+      <div class="drop-zone" id="dz">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileInput">
+        <span class="dz-icon">📊</span>
+        <div class="dz-title">Arrastra tu archivo aqui o haz clic</div>
+        <div class="dz-hint">Excel (.xlsx, .xls) o CSV — Siigo, MidaSoft, World Office, Helisa, Alegra, otros</div>
+        <div class="dz-file" id="fileName"></div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
+          <span style="font-size:1rem">🔒</span>
+          <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningun dato sale de tu equipo</strong> ni se almacena en ningun servidor.</span>
+        </div>
+        <button onclick="descargarEjemplo()" style="padding:8px 16px;background:#f0f2f5;border:1px solid #e2e8f0;border-radius:8px;font-size:.78rem;font-weight:600;color:#1B3A5C;cursor:pointer;white-space:nowrap;font-family:inherit">📥 Descargar ejemplo</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🏢</span> Datos del Declarante</div>
+      <div class="config-grid" style="margin-bottom:16px">
+        <div class="config-item"><label>NIT de la empresa</label><input type="text" id="cfgNit" placeholder="Ej: 901234567"></div>
+        <div class="config-item"><label>Razon social</label><input type="text" id="cfgEmpresa" placeholder="Ej: MI EMPRESA S.A.S"></div>
+        <div class="config-item"><label>Ano gravable</label><input type="number" id="cfgYear" value="2025" min="2020" max="2035"></div>
+        <div class="config-item"><label>Tipo persona</label><select id="cfgTipoPersona" onchange="onTipoPersonaChange()"><option value="31">Persona Juridica (NIT)</option><option value="13">Persona Natural (CC)</option></select></div>
+      </div>
+      <div class="config-grid" style="margin-bottom:16px">
+        <div class="config-item" style="grid-column:span 2"><label>Direccion</label><input type="text" id="cfgDir" placeholder="Ej: Calle 100 # 15-20 Oficina 301"></div>
+      </div>
+      <div class="config-grid" style="margin-bottom:16px">
+        <div class="config-item"><label>Departamento</label><select id="cfgDpto" onchange="onDptoChange()"><option value="">— Seleccionar —</option></select></div>
+        <div class="config-item"><label>Municipio</label><select id="cfgMpio"><option value="">— Seleccionar depto primero —</option></select></div>
+      </div>
+      <div id="repLegalBox">
+        <div style="font-weight:600;font-size:.85rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Representante Legal</div>
+        <div class="config-grid">
+          <div class="config-item"><label>Primer apellido</label><input type="text" id="cfgApe1" placeholder="Ej: GOMEZ"></div>
+          <div class="config-item"><label>Segundo apellido</label><input type="text" id="cfgApe2" placeholder="Ej: LOPEZ"></div>
+          <div class="config-item"><label>Primer nombre</label><input type="text" id="cfgNom1" placeholder="Ej: JUAN"></div>
+          <div class="config-item"><label>Segundo nombre</label><input type="text" id="cfgNom2" placeholder="Ej: CARLOS"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 2: COLUMNAS ═══ -->
+  <div id="step2" class="hidden">
+    <div class="card">
+      <div class="card-title"><span>🔧</span> Verificar Columnas del Archivo</div>
+      <div class="alert alert-info"><span>💡</span><div>Se detectaron las columnas automaticamente. <strong>Verifica que sean correctas</strong> y ajusta si es necesario.</div></div>
+      <div class="hdr-selector">
+        <label>📌 Fila de encabezados:</label>
+        <select id="hdrRowSelect" onchange="onHeaderRowChange()"></select>
+        <span class="hdr-preview" id="hdrPreviewText"></span>
+      </div>
+      <div class="raw-preview" id="rawPreview"></div>
+      <div style="margin:20px 0 8px;font-weight:700;font-size:.9rem;color:var(--pri)">📋 Asignacion de columnas <span style="font-weight:400;color:var(--muted);font-size:.8rem">(<span style="color:var(--red)">*</span> = obligatoria)</span></div>
+      <div class="col-mapper" id="colMapper"></div>
+      <div class="actions">
+        <button class="btn btn-outline" onclick="goStep(1)">← Cambiar archivo</button>
+        <button class="btn btn-primary" onclick="confirmColumns()">Confirmar y Procesar →</button>
+      </div>
+    </div>
+    <div class="card hidden" id="previewCard">
+      <div class="card-title"><span>🔍</span> Resultado del Procesamiento</div>
+      <div id="fileStats" class="stats"></div>
+      <div class="alert alert-warn hidden" id="alertNoData"><span>⚠️</span><div id="alertNoDataText"></div></div>
+      <div class="alert alert-success hidden" id="alertOk"><span>✅</span><div id="alertOkText"></div></div>
+      <div class="scroll-box" id="previewTable"></div>
+      <div class="actions"><button class="btn btn-primary" onclick="goStep(3)">Continuar a Clasificacion →</button></div>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 3: CLASIFICACION ═══ -->
+  <div id="step3" class="hidden">
+    <div class="card">
+      <div class="card-title"><span>📋</span> Clasificacion por Formato — En construccion</div>
+      <div class="alert alert-info"><span>🚧</span><div>Esta fase se habilitara en la siguiente sesion. Aqui veras todas las cuentas clasificadas en los 10 formatos DIAN con opcion de reclasificar.</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 4: FORMATOS ═══ -->
+  <div id="step4" class="hidden">
+    <div class="card">
+      <div class="card-title"><span>📑</span> Formatos Generados — En construccion</div>
+      <div class="alert alert-info"><span>🚧</span><div>Aqui veras los 10 formatos generados con tablas editables y validaciones.</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 5: DESCARGAR ═══ -->
+  <div id="step5" class="hidden">
+    <div class="card">
+      <div class="card-title"><span>📥</span> Descargar Excel + XML — En construccion</div>
+      <div class="alert alert-info"><span>🚧</span><div>Aqui podras descargar el Excel con los 10 formatos y el ZIP con los 10 XML listos para el prevalidador MUISCA.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
+  <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExogenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>
+  🔒 Informacion tratada con total confidencialidad · 100% procesado en tu navegador
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   EXOGENA DIAN — GENERADOR DE 10 FORMATOS
+   Fase A: Carga de archivo + Deteccion de columnas
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── CONSTANTES ── */
+const UVT=49799, C3UVT=149397, C12UVT=597588;
+const NM='222222222', TDM='43';
+const ANO_GRAVABLE='2025';
+
+const DPTOS={
+  '05':'Antioquia','08':'Atlantico','11':'Bogota D.C.','13':'Bolivar','15':'Boyaca',
+  '17':'Caldas','18':'Caqueta','19':'Cauca','20':'Cesar','23':'Cordoba',
+  '25':'Cundinamarca','27':'Choco','41':'Huila','44':'La Guajira','47':'Magdalena',
+  '50':'Meta','52':'Narino','54':'Norte de Santander','63':'Quindio','66':'Risaralda',
+  '68':'Santander','70':'Sucre','73':'Tolima','76':'Valle del Cauca','81':'Arauca',
+  '85':'Casanare','86':'Putumayo','88':'San Andres','91':'Amazonas','94':'Guainia',
+  '95':'Guaviare','97':'Vaupes','99':'Vichada'
+};
+
+const MPIOS_PRINCIPALES={
+  '11':{'001':'Bogota D.C.'},
+  '05':{'001':'Medellin','045':'Apartado','088':'Bello','148':'Carmen de Viboral','212':'Copacabana','266':'Envigado','360':'Itagui','615':'Rionegro'},
+  '08':{'001':'Barranquilla','758':'Soledad','573':'Puerto Colombia'},
+  '13':{'001':'Cartagena'},
+  '15':{'001':'Tunja','238':'Duitama','759':'Sogamoso'},
+  '17':{'001':'Manizales'},
+  '19':{'001':'Popayan'},
+  '20':{'001':'Valledupar'},
+  '23':{'001':'Monteria'},
+  '25':{'126':'Cajica','175':'Chia','269':'Facatativata','286':'Funza','473':'Mosquera','754':'Soacha','799':'Zipaquira','307':'Girardot','290':'Fusagasuga','377':'La Calera','430':'Madrid'},
+  '41':{'001':'Neiva'},
+  '44':{'001':'Riohacha','430':'Maicao'},
+  '47':{'001':'Santa Marta'},
+  '50':{'001':'Villavicencio'},
+  '52':{'001':'Pasto'},
+  '54':{'001':'Cucuta'},
+  '63':{'001':'Armenia'},
+  '66':{'001':'Pereira','170':'Dosquebradas'},
+  '68':{'001':'Bucaramanga','081':'Barrancabermeja','276':'Floridablanca','307':'Giron','547':'Piedecuesta'},
+  '70':{'001':'Sincelejo'},
+  '73':{'001':'Ibague'},
+  '76':{'001':'Cali','109':'Buenaventura','111':'Guadalajara de Buga','147':'Cartago','520':'Palmira','834':'Tulua'},
+  '81':{'001':'Arauca'},
+  '85':{'001':'Yopal'},
+  '86':{'001':'Mocoa'},
+  '88':{'001':'San Andres'},
+  '91':{'001':'Leticia'},
+  '94':{'001':'Inirida'},
+  '95':{'001':'San Jose del Guaviare'},
+  '97':{'001':'Mitu'},
+  '99':{'001':'Puerto Carreno'},
+  '18':{'001':'Florencia'},
+  '27':{'001':'Quibdo'}
+};
+
+const BANCOS_COLOMBIANOS={
+  'bancolombia':['890903938','BANCOLOMBIA S.A.'],
+  'davivienda':['860034313','BANCO DAVIVIENDA S.A.'],
+  'bogota':['860002964','BANCO DE BOGOTA S.A.'],
+  'occidente':['890300279','BANCO DE OCCIDENTE S.A.'],
+  'popular':['860007738','BANCO POPULAR S.A.'],
+  'bbva':['860003020','BBVA COLOMBIA S.A.'],
+  'scotiabank':['890903711','SCOTIABANK COLPATRIA S.A.'],
+  'av villas':['860035827','BANCO AV VILLAS S.A.'],
+  'caja social':['860007335','BANCO CAJA SOCIAL S.A.'],
+  'agrario':['800037800','BANCO AGRARIO DE COLOMBIA S.A.'],
+  'bancamia':['900215071','BANCAMIA S.A.'],
+  'nequi':['901237657','NEQUI'],
+  'nu colombia':['901658566','NU COLOMBIA S.A.'],
+  'daviplata':['860034313','DAVIPLATA'],
+  'gnb sudameris':['860050750','BANCO GNB SUDAMERIS S.A.'],
+  'pichincha':['890200756','BANCO PICHINCHA S.A.'],
+  'falabella':['900047981','BANCO FALABELLA S.A.'],
+  'serfinanza':['860043186','BANCO SERFINANZA S.A.'],
+  'itau':['890903937','ITAU CORPBANCA COLOMBIA S.A.'],
+  'citibank':['860051135','CITIBANK COLOMBIA S.A.'],
+  'jp morgan':['900017591','JP MORGAN CORPORACION FINANCIERA'],
+  'lulo bank':['901352782','LULO BANK S.A.'],
+};
+
+const DV_PESOS=[71,67,59,53,47,43,41,37,29,23,19,17,13,7,3];
+
+/* ── UTILIDADES ── */
+function calcDv(n){
+  n=String(n).replace(/[.\-\s]/g,'').trim();
+  if(!n||!/^\d+$/.test(n)||n===NM)return'';
+  const np=n.padStart(15,'0');
+  let s=0;for(let i=0;i<15;i++)s+=parseInt(np[i])*DV_PESOS[i];
+  const r=s%11;
+  return r>=2?String(11-r):String(r);
+}
+
+function norm(s){return(s||'').toString().trim()}
+function toNum(v){if(typeof v==='number')return v;const s=norm(v).replace(/[,$\s]/g,'').replace(/\./g,'');const n=parseFloat(s);return isNaN(n)?0:n}
+function fN(n){return typeof n==='number'?Math.round(n).toLocaleString('es-CO'):'0'}
+function sanitizarNit(v){return norm(v).replace(/[.\-\s]/g,'').replace(/\-\d$/,'')}
+
+/* ── ESTADO GLOBAL ── */
+let rawData=[], rawDisplay=[], headerRow=0, colMap={}, parsedData=[];
+
+/* ── STEP NAVIGATION ── */
+function goStep(n){
+  for(let i=1;i<=5;i++)document.getElementById('step'+i).classList.toggle('hidden',i!==n);
+  document.querySelectorAll('.step-pill').forEach((el,i)=>{
+    el.classList.remove('active','done');
+    if(i+1<n)el.classList.add('done');
+    if(i+1===n)el.classList.add('active');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ── DEPARTAMENTO / MUNICIPIO ── */
+function populateDptos(){
+  const sel=document.getElementById('cfgDpto');
+  Object.entries(DPTOS).sort((a,b)=>a[1].localeCompare(b[1])).forEach(([c,n])=>{
+    sel.innerHTML+=`<option value="${c}">${c} - ${n}</option>`;
+  });
+}
+function onDptoChange(){
+  const d=document.getElementById('cfgDpto').value;
+  const sel=document.getElementById('cfgMpio');
+  sel.innerHTML='<option value="">— Seleccionar —</option>';
+  const mpios=MPIOS_PRINCIPALES[d]||{};
+  Object.entries(mpios).sort((a,b)=>a[1].localeCompare(b[1])).forEach(([c,n])=>{
+    sel.innerHTML+=`<option value="${c}">${c} - ${n}</option>`;
+  });
+}
+function onTipoPersonaChange(){
+  document.getElementById('repLegalBox').style.display=document.getElementById('cfgTipoPersona').value==='31'?'block':'none';
+}
+
+/* ── FILE LOADING ── */
+const HEADER_HINTS={
+  code:[/^c[oó]d/i,/^cuenta$/i,/^cta/i,/^puc/i,/^cod.*cta/i,/^codigo/i],
+  name:[/^nombre.*cuenta/i,/^descripci/i,/^detalle.*cta/i,/^nom.*cta/i],
+  nit:[/^nit/i,/^identif/i,/^documento.*terc/i,/^c[eé]dula/i,/^nro.*doc/i,/^no.*id/i],
+  razon:[/^nombre.*terc/i,/^raz[oó]n/i,/^tercero$/i,/^beneficiario/i,/^proveedor/i],
+  deb:[/^d[eé]bito/i,/^cargo/i,/^debe$/i,/^mov.*d[eé]b/i],
+  cre:[/^cr[eé]dito/i,/^abono/i,/^haber$/i,/^mov.*cr[eé]/i]
+};
+const COL_FIELDS=[
+  {key:'code',label:'Codigo Cuenta',required:true},
+  {key:'name',label:'Nombre Cuenta',required:true},
+  {key:'nit',label:'NIT Tercero',required:true},
+  {key:'razon',label:'Nombre Tercero',required:false},
+  {key:'deb',label:'Debitos',required:true},
+  {key:'cre',label:'Creditos',required:true}
+];
+
+document.getElementById('fileInput').addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0])});
+const dz=document.getElementById('dz');
+['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));
+dz.addEventListener('drop',e=>{if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0])});
+
+function loadFile(file){
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'array',cellDates:true});
+      let best=null,bestN=0;
+      for(const sn of wb.SheetNames){
+        const raw=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:true});
+        const disp=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:false});
+        const n=raw.filter(r=>r.some(c=>c!==''&&c!=null)).length;
+        if(n>bestN){best={sn,raw,disp};bestN=n}
+      }
+      if(!best||bestN<3){alert('El archivo parece vacio.');return}
+      rawData=best.raw.filter(r=>r.some(c=>c!==''&&c!=null));
+      rawDisplay=best.disp.filter(r=>r.some(c=>c!==''&&c!=null));
+      document.getElementById('fileName').textContent=`${file.name} · ${rawData.length} filas · hoja: ${best.sn}`;
+      headerRow=autoDetectHeaderRow();
+      goStep(2);
+      renderStep2();
+    }catch(err){alert('Error al leer: '+err.message)}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function autoDetectHeaderRow(){
+  const KW=/^(c[oó]d|cuenta|nombre|descripci|nit|tercero|d[eé]bito|cr[eé]dito|saldo|identif|puc|cargo|abono|debe|haber|documento|beneficiario|proveedor)/i;
+  let bestI=0,bestScore=-Infinity;
+  for(let i=0;i<Math.min(rawData.length,25);i++){
+    const r=rawData[i];if(!r||r.length<3)continue;
+    let score=0,filled=0;
+    for(const c of r){if(c==null||c==='')continue;filled++;const s=norm(c);if(KW.test(s))score+=10;else if(typeof c==='string'&&isNaN(Number(s.replace(/[,$.\-\s]/g,''))))score+=1;else score-=1}
+    score+=filled*0.5;
+    if(i+1<rawData.length){const next=rawData[i+1];if(next){const nums=next.filter(c=>typeof c==='number'||(c&&!isNaN(Number(String(c).replace(/[,$.\-\s]/g,''))))).length;if(nums>=2)score+=5}}
+    if(score>bestScore){bestScore=score;bestI=i}
+  }
+  return bestI;
+}
+
+function renderStep2(){
+  // Header row selector
+  const sel=document.getElementById('hdrRowSelect');
+  sel.innerHTML='';
+  for(let i=0;i<Math.min(rawData.length,20);i++){
+    const preview=rawData[i].slice(0,4).map(c=>norm(c).substring(0,15)).join(' | ');
+    sel.innerHTML+=`<option value="${i}" ${i===headerRow?'selected':''}>Fila ${i+1}: ${preview}</option>`;
+  }
+  // Raw preview
+  renderRawPreview();
+  // Column mapper
+  autoDetectColumns();
+  renderColMapper();
+}
+
+function onHeaderRowChange(){
+  headerRow=parseInt(document.getElementById('hdrRowSelect').value);
+  renderRawPreview();
+  autoDetectColumns();
+  renderColMapper();
+}
+
+function renderRawPreview(){
+  const limit=Math.min(rawData.length,15);
+  let h='<table>';
+  for(let i=0;i<limit;i++){
+    const cls=i===headerRow?'hdr-row':'';
+    h+=`<tr class="${cls}">${(rawDisplay[i]||rawData[i]).map(c=>`<td>${norm(c).substring(0,30)}</td>`).join('')}</tr>`;
+  }
+  h+='</table>';
+  document.getElementById('rawPreview').innerHTML=h;
+}
+
+function autoDetectColumns(){
+  colMap={};
+  const hdrs=rawData[headerRow]||[];
+  for(const f of COL_FIELDS){
+    for(let ci=0;ci<hdrs.length;ci++){
+      const cell=norm(hdrs[ci]).toLowerCase().substring(0,50);
+      if(!cell)continue;
+      if(f.key in colMap)continue;
+      if(Object.values(colMap).includes(ci))continue;
+      for(const rx of HEADER_HINTS[f.key]){
+        if(rx.test(cell)){colMap[f.key]=ci;break}
+      }
+    }
+  }
+}
+
+function renderColMapper(){
+  const hdrs=rawData[headerRow]||[];
+  const firstDataRow=rawData[headerRow+1]||[];
+  let h='';
+  for(const f of COL_FIELDS){
+    const mapped=f.key in colMap;
+    const cls=mapped?'mapped':f.required?'required':'';
+    let opts='<option value="">— No asignada —</option>';
+    for(let ci=0;ci<hdrs.length;ci++){
+      const sel=colMap[f.key]===ci?'selected':'';
+      opts+=`<option value="${ci}" ${sel}>${norm(hdrs[ci]).substring(0,25)||'Col '+(ci+1)}</option>`;
+    }
+    const sampleVal=mapped&&firstDataRow[colMap[f.key]]!=null?norm(firstDataRow[colMap[f.key]]).substring(0,30):'';
+    h+=`<div class="col-map-item ${cls}">
+      <div class="cml">${f.required?'<span class="req">*</span>':''}${f.label}</div>
+      <select onchange="onColChange('${f.key}',this.value)">${opts}</select>
+      <div class="sample">${sampleVal?'Ej: <strong>'+sampleVal+'</strong>':'Sin datos'}</div>
+    </div>`;
+  }
+  document.getElementById('colMapper').innerHTML=h;
+}
+
+function onColChange(key,val){
+  if(val==='')delete colMap[key];else colMap[key]=parseInt(val);
+  renderColMapper();
+}
+
+function confirmColumns(){
+  // Validate required columns
+  for(const f of COL_FIELDS){
+    if(f.required&&!(f.key in colMap)){alert('Falta asignar la columna: '+f.label);return}
+  }
+  processData();
+}
+
+function processData(){
+  parsedData=[];
+  const dataRows=rawData.slice(headerRow+1);
+  let skipped=0;
+  for(const row of dataRows){
+    const code=norm(row[colMap.code]).replace(/[.\-\s]/g,'');
+    if(!code||!/^\d{4,}/.test(code)){skipped++;continue}
+    const deb=toNum(row[colMap.deb]);
+    const cre=toNum(row[colMap.cre]);
+    if(deb===0&&cre===0){skipped++;continue}
+    const nit=sanitizarNit(norm(row[colMap.nit]));
+    parsedData.push({
+      code,
+      name:norm(row[colMap.name]),
+      nit,
+      razon:'razon' in colMap?norm(row[colMap.razon]):'',
+      deb,cre,
+      neto:deb-cre
+    });
+  }
+  showPreview(skipped);
+}
+
+function showPreview(skipped){
+  document.getElementById('previewCard').classList.remove('hidden');
+  const total=parsedData.length;
+  const terceros=new Set(parsedData.map(r=>r.nit)).size;
+  const ctas=new Set(parsedData.map(r=>r.code.substring(0,4))).size;
+  const totalDeb=parsedData.reduce((s,r)=>s+r.deb,0);
+  const totalCre=parsedData.reduce((s,r)=>s+r.cre,0);
+
+  document.getElementById('fileStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${total.toLocaleString()}</div><div class="lbl">Registros</div></div>
+    <div class="stat-card green"><div class="val">${terceros.toLocaleString()}</div><div class="lbl">Terceros</div></div>
+    <div class="stat-card amber"><div class="val">${ctas}</div><div class="lbl">Cuentas</div></div>
+    <div class="stat-card ${Math.abs(totalDeb-totalCre)<1?'green':'red'}"><div class="val">${fN(totalDeb-totalCre)}</div><div class="lbl">Diferencia D-C</div></div>`;
+
+  if(total===0){
+    document.getElementById('alertNoData').classList.remove('hidden');
+    document.getElementById('alertNoDataText').innerHTML='<strong>No se encontraron registros validos.</strong> Verifica que el archivo sea un balance de prueba por terceros con codigo PUC, NIT, debitos y creditos.';
+  }else{
+    document.getElementById('alertOk').classList.remove('hidden');
+    document.getElementById('alertOkText').innerHTML=`Se procesaron <strong>${total.toLocaleString()}</strong> registros de <strong>${terceros.toLocaleString()}</strong> terceros.${skipped>0?' ('+skipped+' filas omitidas sin codigo o sin movimiento)':''}`;
+  }
+
+  // Preview table (first 50 rows)
+  let h='<table class="map-table"><thead><tr><th>#</th><th>Cuenta</th><th>Nombre</th><th>NIT</th><th>Tercero</th><th>Debito</th><th>Credito</th></tr></thead><tbody>';
+  for(let i=0;i<Math.min(parsedData.length,50);i++){
+    const r=parsedData[i];
+    h+=`<tr><td>${i+1}</td><td class="mono">${r.code}</td><td>${r.name.substring(0,30)}</td><td class="mono">${r.nit}</td><td>${r.razon.substring(0,25)}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
+  }
+  if(parsedData.length>50)h+=`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:12px">... y ${parsedData.length-50} registros mas</td></tr>`;
+  h+='</tbody></table>';
+  document.getElementById('previewTable').innerHTML=h;
+}
+
+/* ── EJEMPLO DESCARGABLE ── */
+function descargarEjemplo(){
+  const data=[
+    ['Codigo','Nombre Cuenta','NIT Tercero','Nombre Tercero','Debito','Credito'],
+    ['5135','Servicios','900123456','CONSULTOR ABC S.A.S',5000000,0],
+    ['236525','Retencion servicios','900123456','CONSULTOR ABC S.A.S',0,200000],
+    ['240810','IVA descontable','900123456','CONSULTOR ABC S.A.S',950000,0],
+    ['4135','Comercio al por mayor','800555444','CLIENTE XYZ LTDA',0,25000000],
+    ['240805','IVA generado','800555444','CLIENTE XYZ LTDA',0,4750000],
+    ['1305','Clientes','800555444','CLIENTE XYZ LTDA',29750000,0],
+    ['6135','Compras','811222333','DISTRIBUIDORA NACIONAL',15000000,0],
+    ['236540','Retencion compras','811222333','DISTRIBUIDORA NACIONAL',0,375000],
+    ['5105','Sueldos','1098765432','JUAN PEREZ',3500000,0],
+    ['236505','Retencion salarios','1098765432','JUAN PEREZ',0,175000],
+    ['1110','Bancos','890903938','BANCOLOMBIA S.A.',0,48850000],
+    ['2205','Proveedores','811222333','DISTRIBUIDORA NACIONAL',0,14625000],
+    ['3105','Capital social','901234567','MI EMPRESA S.A.S',0,10000000],
+  ];
+  const ws=XLSX.utils.aoa_to_sheet(data);
+  ws['!cols']=[{wch:10},{wch:28},{wch:14},{wch:28},{wch:16},{wch:16}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Balance Ejemplo');
+  XLSX.writeFile(wb,'Ejemplo_Exogena_ExogenaDIAN.xlsx');
+}
+
+/* ── PRO (placeholder - same pattern as other tools) ── */
+function activarPro(){
+  const key=document.getElementById('proKeyInput').value.trim();
+  if(!key){alert('Ingresa tu clave PRO');return}
+  localStorage.setItem('exogenadian_pro_key',key);
+  document.getElementById('proStatus').textContent='PRO activado';
+  document.getElementById('proBadge').innerHTML='<span style="background:#E8F5E9;color:#2E7D32;padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:700">PRO</span>';
+}
+(function initPro(){
+  const key=localStorage.getItem('exogenadian_pro_key');
+  if(key){
+    document.getElementById('proStatus').textContent='PRO activado';
+    document.getElementById('proBadge').innerHTML='<span style="background:#E8F5E9;color:#2E7D32;padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:700">PRO</span>';
+    document.getElementById('proKeyInput').value=key;
+  }
+})();
+
+/* ── INIT ── */
+populateDptos();
+onTipoPersonaChange();
+</script>
+</body>
+</html>
