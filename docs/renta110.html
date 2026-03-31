@@ -12,6 +12,7 @@
 <meta property="og:url" content="https://exogenadian.com/renta110.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CO">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -95,14 +96,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <!-- UPLOAD BALANCE -->
   <div id="uploadSection" class="card">
     <div class="card-title"><span>📄</span> Cargar Balance de Prueba</div>
-    <div class="alert alert-info"><span>💡</span><div>Sube el <strong>balance de prueba general</strong> con todas las clases (1-6). Compatible con <strong>Alegra, Siigo, World Office, Helisa, MidaSoft</strong> y cualquier software que exporte Excel.</div></div>
-    <div style="border:2px dashed var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;cursor:pointer;position:relative;transition:.3s" id="dzRenta">
+    <div class="alert alert-info"><span>💡</span><div>Sube el <strong>balance de prueba SIN cierre contable</strong> (antes de cerrar clases 4, 5 y 6). Debe incluir todas las clases <strong>1 a 6</strong> con saldos. Si tu balance ya esta cerrado (clases 4-6 en cero), necesitas el balance <strong>antes del cierre</strong>.<br><br>Compatible con <strong>Alegra, Siigo, World Office, Helisa, MidaSoft</strong> y cualquier software que exporte Excel.</div></div>
+    <div style="border:2px dashed var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;cursor:pointer;position:relative;transition:.3s" id="dzRenta" onclick="document.getElementById('fileInputRenta').click()">
       <input type="file" accept=".xlsx,.xls,.csv" id="fileInputRenta" style="position:absolute;inset:0;opacity:0;cursor:pointer">
       <span style="font-size:2.5rem;display:block;margin-bottom:8px">📊</span>
       <div style="font-weight:700;font-size:1.1rem;color:var(--pri)">Arrastra tu archivo aqui o haz clic</div>
       <div style="color:var(--muted);font-size:.82rem;margin-top:4px">Excel (.xlsx, .xls) o CSV</div>
       <div id="fileNameRenta" style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--green);font-weight:600"></div>
     </div>
+    <div id="errorBalance" class="hidden" style="margin-top:12px;padding:12px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;font-size:.82rem;color:#C62828"></div>
     <div style="margin-top:12px;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
       <span style="font-size:1rem">🔒</span>
       <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningun dato sale de tu equipo.</strong></span>
@@ -276,18 +278,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
    ═══════════════════════════════════════════════════════════ */
 
 /* ── CARGA DE BALANCE ── */
-const XLSX_CDN='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-let xlsxLoaded=false;
-function loadXLSX(cb){
-  if(xlsxLoaded)return cb();
-  const s=document.createElement('script');s.src=XLSX_CDN;s.onload=()=>{xlsxLoaded=true;cb()};document.head.appendChild(s);
-}
-
-document.getElementById('fileInputRenta').addEventListener('change',e=>{if(e.target.files[0])loadXLSX(()=>procesarBalance(e.target.files[0]))});
+document.getElementById('fileInputRenta').addEventListener('change',e=>{if(e.target.files[0])procesarBalance(e.target.files[0])});
 const dzR=document.getElementById('dzRenta');
 ['dragover','dragenter'].forEach(ev=>dzR.addEventListener(ev,e=>{e.preventDefault();dzR.style.borderColor='var(--pri2)'}));
 ['dragleave','drop'].forEach(ev=>dzR.addEventListener(ev,e=>{e.preventDefault();dzR.style.borderColor='var(--border)'}));
-dzR.addEventListener('drop',e=>{if(e.dataTransfer.files[0])loadXLSX(()=>procesarBalance(e.dataTransfer.files[0]))});
+dzR.addEventListener('drop',e=>{if(e.dataTransfer.files[0])procesarBalance(e.dataTransfer.files[0])});
 
 let clasificacionRenta=[];
 
@@ -516,8 +511,21 @@ function clasificarPUCaF110(data,hdrRow,colMap){
 }
 
 function mostrarClasificacion(){
-  document.getElementById('clasifResult').classList.remove('hidden');
   const cas=clasificacionRenta;
+
+  // Detectar si el balance esta cerrado (sin ingresos ni gastos)
+  const tieneIngresos=(cas[47]||0)+(cas[48]||0)+(cas[57]||0)>0;
+  const tieneGastos=(cas[62]||0)+(cas[63]||0)+(cas[64]||0)+(cas[65]||0)+(cas[66]||0)>0;
+  const tieneCostos=(cas[62]||0)>0;
+
+  if(!tieneIngresos&&!tieneGastos&&!tieneCostos){
+    document.getElementById('errorBalance').classList.remove('hidden');
+    document.getElementById('errorBalance').innerHTML='<strong>El balance parece estar cerrado.</strong> Las clases 4 (ingresos), 5 (gastos) y 6 (costos) estan en cero.<br><br>Para generar el F110 necesitas el balance <strong>ANTES del cierre contable</strong>. En tu software contable, exporta el balance de prueba del periodo sin incluir el asiento de cierre.<br><br><strong>Solo se pre-llenaran las casillas de patrimonio</strong> (activos y pasivos). Los ingresos, costos y gastos debes ingresarlos manualmente.';
+  }else{
+    document.getElementById('errorBalance').classList.add('hidden');
+  }
+
+  document.getElementById('clasifResult').classList.remove('hidden');
   const totalActivos=(cas[36]||0)+(cas[37]||0)+(cas[38]||0)+(cas[39]||0)+(cas[40]||0)+(cas[41]||0)+(cas[42]||0)+(cas[43]||0);
   const totalIngresos=(cas[47]||0)+(cas[48]||0)+(cas[57]||0);
 
