@@ -92,23 +92,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <p>Personas Juridicas · AG 2025 · Borrador con calculos automaticos</p>
   </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
 
-  <!-- MODO: Balance o Manual -->
-  <div class="card">
-    <div class="card-title"><span>📊</span> ¿Como quieres generar el borrador?</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div onclick="setModo('balance')" id="modoBalance" class="modo-card" style="padding:20px;border:2px solid var(--pri2);border-radius:12px;cursor:pointer;text-align:center;background:var(--pri3)">
-        <div style="font-size:1.8rem;margin-bottom:8px">📊</div>
-        <div style="font-weight:700">Desde Balance de Prueba</div>
-        <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Sube tu balance y se clasifican las cuentas automaticamente</div>
-      </div>
-      <div onclick="setModo('manual')" id="modoManual" class="modo-card" style="padding:20px;border:2px solid var(--border);border-radius:12px;cursor:pointer;text-align:center">
-        <div style="font-size:1.8rem;margin-bottom:8px">✏️</div>
-        <div style="font-weight:700">Llenar Manualmente</div>
-        <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Ingresa los valores directamente en las casillas del formulario</div>
-      </div>
-    </div>
-  </div>
-
   <!-- UPLOAD BALANCE -->
   <div id="uploadSection" class="card">
     <div class="card-title"><span>📄</span> Cargar Balance de Prueba</div>
@@ -126,10 +109,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
     <!-- Resultado clasificacion -->
     <div id="clasifResult" class="hidden" style="margin-top:16px">
+      <div class="alert alert-warn"><span>⚠️</span><div>Estos son <strong>valores contables</strong> del balance. El F110 requiere <strong>valores fiscales</strong>. Despues de aplicar, ajusta manualmente: renta exenta (cas 77), INCRNGO (cas 60), gastos no deducibles, y demas diferencias fiscales.</div></div>
       <div id="clasifStats" class="stats"></div>
       <div id="clasifDetail" style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;font-size:.78rem"></div>
       <div class="actions" style="margin-top:12px">
-        <button onclick="aplicarAlFormulario()" class="btn btn-primary">Aplicar al Formulario 110 →</button>
+        <button onclick="aplicarAlFormulario()" class="btn btn-primary">Aplicar valores contables al Formulario 110 →</button>
       </div>
     </div>
   </div>
@@ -290,17 +274,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
    FORMULARIO 110 — DECLARACION DE RENTA PERSONAS JURIDICAS
    Calculos automaticos con tarifas progresivas AG 2025
    ═══════════════════════════════════════════════════════════ */
-
-/* ── MODO BALANCE / MANUAL ── */
-let modo='balance';
-function setModo(m){
-  modo=m;
-  document.getElementById('modoBalance').style.borderColor=m==='balance'?'var(--pri2)':'var(--border)';
-  document.getElementById('modoBalance').style.background=m==='balance'?'var(--pri3)':'var(--card)';
-  document.getElementById('modoManual').style.borderColor=m==='manual'?'var(--pri2)':'var(--border)';
-  document.getElementById('modoManual').style.background=m==='manual'?'var(--pri3)':'var(--card)';
-  document.getElementById('uploadSection').style.display=m==='balance'?'block':'none';
-}
 
 /* ── CARGA DE BALANCE ── */
 const XLSX_CDN='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
@@ -836,7 +809,6 @@ async function exportExcel(){
 }
 
 // Init
-setModo('balance');
 recalcular();
 recalcularTTD();
 
