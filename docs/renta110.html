@@ -108,7 +108,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
     </div>
     <div id="balanceCerrado" class="hidden" style="padding:10px;background:#FFF8E1;border:1px solid #FCD34D;border-radius:8px;font-size:.82rem;color:#92400E">Se usara el <strong>saldo final</strong> para todas las cuentas. Si las clases 4, 5 y 6 estan en cero (cierre contable), solo se pre-llenara patrimonio.</div>
-    <div id="balanceZone" class="hidden">
+    <div id="balanceZone">
       <div style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;cursor:pointer;position:relative" id="dzRenta" onclick="document.getElementById('fileInputRenta').click()">
         <input type="file" accept=".xlsx,.xls,.csv" id="fileInputRenta" style="position:absolute;inset:0;opacity:0;cursor:pointer">
         <span style="font-size:1.5rem">📊</span>
@@ -290,11 +290,11 @@ function setModoLectura(modo){
   if(modo==='debcre'){
     btnD.style.background='var(--pri3)';btnD.style.borderColor='var(--pri2)';btnD.style.fontWeight='700';
     btnS.style.background='';btnS.style.borderColor='var(--border)';btnS.style.fontWeight='';
-    zone.classList.remove('hidden');cerr.classList.add('hidden');
+    cerr.classList.add('hidden');
   }else{
     btnS.style.background='var(--pri3)';btnS.style.borderColor='var(--pri2)';btnS.style.fontWeight='700';
     btnD.style.background='';btnD.style.borderColor='var(--border)';btnD.style.fontWeight='';
-    zone.classList.remove('hidden');cerr.classList.remove('hidden');
+    cerr.classList.remove('hidden');
   }
 }
 
@@ -1296,6 +1296,7 @@ async function exportExcel(){
 }
 
 // Init
+setModoLectura('debcre');
 recalcular();
 recalcularTTD();
 
