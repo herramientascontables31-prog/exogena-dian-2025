@@ -100,14 +100,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div class="card-title" style="margin:0"><span>📄</span> Cargar Balance (opcional)</div>
       <span style="font-size:.75rem;color:var(--muted)">🔒 100% en tu navegador</span>
     </div>
-    <div style="margin-bottom:10px">
-      <label style="font-size:.82rem;font-weight:600;color:var(--pri);display:flex;align-items:center;gap:8px;margin-bottom:8px">¿Como leer las cuentas de resultado (clases 4, 5 y 6)?</label>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button id="btnDebCre" onclick="setModoLectura('debcre')" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;transition:.2s">Debitos y Creditos <span style="font-size:.7rem;color:var(--muted)">(balance sin cerrar)</span></button>
-        <button id="btnSaldoFinal" onclick="setModoLectura('saldo')" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;transition:.2s">Saldo Final <span style="font-size:.7rem;color:var(--muted)">(balance cerrado)</span></button>
-      </div>
-    </div>
-    <div id="balanceCerrado" class="hidden" style="padding:10px;background:#FFF8E1;border:1px solid #FCD34D;border-radius:8px;font-size:.82rem;color:#92400E">Se usara el <strong>saldo final</strong> para todas las cuentas. Si las clases 4, 5 y 6 estan en cero (cierre contable), solo se pre-llenara patrimonio.</div>
+    <div id="balanceCerrado" class="hidden" style="padding:8px 10px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:8px;font-size:.78rem;color:#2E7D32"></div>
     <div id="balanceZone">
       <div style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;cursor:pointer;position:relative" id="dzRenta" onclick="document.getElementById('fileInputRenta').click()">
         <input type="file" accept=".xlsx,.xls,.csv" id="fileInputRenta" style="position:absolute;inset:0;opacity:0;cursor:pointer">
@@ -278,25 +271,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
    FORMULARIO 110 — DECLARACION DE RENTA PERSONAS JURIDICAS
    Calculos automaticos con tarifas progresivas AG 2025
    ═══════════════════════════════════════════════════════════ */
-
-/* ── MODO DE LECTURA (debcre / saldo) ── */
-let modoLectura='saldo'; // 'debcre' o 'saldo'
-function setModoLectura(modo){
-  modoLectura=modo;
-  const btnD=document.getElementById('btnDebCre');
-  const btnS=document.getElementById('btnSaldoFinal');
-  const zone=document.getElementById('balanceZone');
-  const cerr=document.getElementById('balanceCerrado');
-  if(modo==='debcre'){
-    btnD.style.background='var(--pri3)';btnD.style.borderColor='var(--pri2)';btnD.style.fontWeight='700';
-    btnS.style.background='';btnS.style.borderColor='var(--border)';btnS.style.fontWeight='';
-    cerr.classList.add('hidden');
-  }else{
-    btnS.style.background='var(--pri3)';btnS.style.borderColor='var(--pri2)';btnS.style.fontWeight='700';
-    btnD.style.background='';btnD.style.borderColor='var(--border)';btnD.style.fontWeight='';
-    cerr.classList.remove('hidden');
-  }
-}
 
 /* ── CARGA DE BALANCE ── */
 document.getElementById('fileInputRenta').addEventListener('change',e=>{if(e.target.files[0])procesarBalance(e.target.files[0])});
@@ -626,15 +600,21 @@ function clasificarPUCaF110(data,hdrRow,colMap){
     const hasDebCre='deb' in colMap&&'cre' in colMap;
 
     let saldo=0;
-    if(esResultado&&hasDebCre&&modoLectura==='debcre'){
+    if(esResultado&&hasDebCre){
+      // Cuentas de resultado (4,5,6): SIEMPRE usar movimientos (debito/credito)
+      // El saldo final en Alegra es acumulado historico, no del periodo
       const deb=parseFloat(row[colMap.deb])||0;
       const cre=parseFloat(row[colMap.cre])||0;
+      // Clase 4 (ingresos): naturaleza credito → cre - deb
+      // Clase 5,6 (gastos/costos): naturaleza debito → deb - cre
       saldo=code.startsWith('4')?(cre-deb):(deb-cre);
     }else if(hasSaldoFinal){
+      // Patrimonio (clases 1,2,3): usar saldo final
       const cargo=parseFloat(row[colMap.saldoCargo])||0;
       const abono=parseFloat(row[colMap.saldoAbono])||0;
       saldo=cargo-abono;
     }else if(hasDebCre){
+      // Fallback: solo tiene debito/credito
       saldo=(parseFloat(row[colMap.deb])||0)-(parseFloat(row[colMap.cre])||0);
     }
 
@@ -748,6 +728,19 @@ function mostrarClasificacion(){
   }
 
   document.getElementById('errorBalance').classList.add('hidden');
+
+  // Mostrar info sobre como se leyo
+  const tieneResultado=cuentasBalance.some(c=>[47,48,57,62,63,64,65,66].includes(c.casilla));
+  const infoEl=document.getElementById('balanceCerrado');
+  if(tieneResultado){
+    infoEl.classList.remove('hidden');
+    infoEl.innerHTML='<strong>Patrimonio:</strong> saldo final · <strong>Ingresos, costos y gastos:</strong> movimientos del periodo (debitos/creditos)';
+  }else{
+    infoEl.classList.remove('hidden');
+    infoEl.style.background='#FFF8E1';infoEl.style.borderColor='#FCD34D';infoEl.style.color='#92400E';
+    infoEl.innerHTML='<strong>Balance sin cuentas de resultado.</strong> Solo se cargara patrimonio. Ingresa ingresos, costos y gastos manualmente.';
+  }
+
   document.getElementById('clasifResult').classList.remove('hidden');
 
   // Stats
@@ -1356,7 +1349,6 @@ async function exportExcel(){
 }
 
 // Init
-setModoLectura('saldo');
 recalcular();
 recalcularTTD();
 
