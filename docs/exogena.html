@@ -14,7 +14,6 @@
 <meta property="og:locale" content="es_CO">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 :root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#548235;--green2:#E2EFDA;--red:#CC0000;--amber:#D97706;--amber2:#FFF8E1;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
@@ -244,7 +243,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
     <div class="actions">
       <button class="btn btn-outline" onclick="goStep(3)">← Volver a Clasificacion</button>
-      <button class="btn btn-primary" onclick="irADescargar()">Descargar Excel + XML →</button>
+      <button class="btn btn-primary" onclick="irADescargar()">Descargar Excel →</button>
     </div>
   </div>
 
@@ -257,10 +256,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
     <div class="card" style="text-align:center;padding:32px">
       <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px">
-        <button onclick="exportExcel()" class="btn btn-success" style="padding:14px 32px;font-size:1rem">📊 Descargar Excel</button>
-        <button onclick="exportXmlZip()" class="btn btn-primary" style="padding:14px 32px;font-size:1rem">📦 Descargar XML (ZIP)</button>
+        <button onclick="exportExcel()" class="btn btn-success" style="padding:14px 32px;font-size:1rem">📊 Descargar Excel con los 10 Formatos</button>
       </div>
-      <p style="font-size:.82rem;color:var(--muted)">Excel: un libro con una hoja por formato, formateado profesional.<br>XML: 10 archivos listos para el prevalidador MUISCA en un ZIP.</p>
+      <p style="font-size:.82rem;color:var(--muted)">Un libro Excel con una hoja por formato, formateado profesional.<br>Listo para revisar y subir al prevalidador DIAN para generar los XML.</p>
     </div>
     <div class="card">
       <div style="padding:12px;background:var(--pri3);border-radius:8px;font-size:.8rem;color:var(--pri)">
@@ -1238,19 +1236,6 @@ function renderDescargar(){
    FASE D: EXPORTAR EXCEL + XML
    ═══════════════════════════════════════════════════════════ */
 
-const XML_DEFS={
-  'F1001':{formato:'1001',version:'10',tag:'pagos',row:'pag'},
-  'F1003':{formato:'1003',version:'7',tag:'retenciones',row:'ret'},
-  'F1005':{formato:'1005',version:'8',tag:'ivadescontable',row:'ivd'},
-  'F1006':{formato:'1006',version:'8',tag:'ivagenerado',row:'ivg'},
-  'F1007':{formato:'1007',version:'9',tag:'ingresos',row:'ing'},
-  'F1008':{formato:'1008',version:'7',tag:'cxcobrar',row:'cxc'},
-  'F1009':{formato:'1009',version:'7',tag:'cxpagar',row:'cxp'},
-  'F1010':{formato:'1010',version:'8',tag:'socios',row:'soc'},
-  'F1012':{formato:'1012',version:'8',tag:'inversiones',row:'inv'},
-  'F2276':{formato:'2276',version:'3',tag:'rentastrabajo',row:'ren'},
-};
-
 function getCompanyConfig(){
   return{
     nit:sanitizarNit(document.getElementById('cfgNit').value),
@@ -1310,64 +1295,6 @@ async function exportExcel(){
   const cfg=getCompanyConfig();
   descargarBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),
     `Exogena_AG${cfg.year}_${cfg.nit||'SIN_NIT'}.xlsx`);
-}
-
-async function exportXmlZip(){
-  const cfg=getCompanyConfig();
-  const zip=new JSZip();
-  const fmtOrder=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
-  let envio=1;
-
-  for(const f of fmtOrder){
-    const rows=formatos[f];if(!rows||rows.length===0)continue;
-    const def=XML_DEFS[f];if(!def)continue;
-    const hdrs=FMT_HEADERS[f];
-
-    let xml='<?xml version="1.0" encoding="ISO-8859-1"?>\n';
-    xml+=`<mas xmlns="http://www.dian.gov.co/muisca/mas">\n`;
-    xml+=`  <Cab>\n`;
-    xml+=`    <CodCpt>1</CodCpt>\n`;
-    xml+=`    <Formato>${def.formato}</Formato>\n`;
-    xml+=`    <Version>${def.version}</Version>\n`;
-    xml+=`    <AnoGrav>${cfg.year}</AnoGrav>\n`;
-    xml+=`    <NumEnvio>${String(envio).padStart(5,'0')}</NumEnvio>\n`;
-    xml+=`    <FecEnvio>${new Date().toISOString().substring(0,10)}</FecEnvio>\n`;
-    xml+=`    <FecIni>${cfg.year}-01-01</FecIni>\n`;
-    xml+=`    <FecFin>${cfg.year}-12-31</FecFin>\n`;
-    xml+=`    <NumReg>${rows.length}</NumReg>\n`;
-    xml+=`    <TipoDoc>${cfg.td}</TipoDoc>\n`;
-    xml+=`    <NumNit>${cfg.nit}</NumNit>\n`;
-    xml+=`    <DV>${cfg.dv}</DV>\n`;
-    xml+=`    <Ape1>${cfg.a1}</Ape1>\n`;
-    xml+=`    <Ape2>${cfg.a2}</Ape2>\n`;
-    xml+=`    <Nom1>${cfg.n1}</Nom1>\n`;
-    xml+=`    <Nom2>${cfg.n2}</Nom2>\n`;
-    xml+=`    <RazonSocial>${cfg.rs}</RazonSocial>\n`;
-    xml+=`    <Direccion>${cfg.dir}</Direccion>\n`;
-    xml+=`    <CodDpto>${cfg.dp}</CodDpto>\n`;
-    xml+=`    <CodMpio>${cfg.mp}</CodMpio>\n`;
-    xml+=`  </Cab>\n`;
-    xml+=`  <${def.tag}>\n`;
-
-    for(const row of rows){
-      xml+=`    <${def.row}>`;
-      for(let i=0;i<row.length;i++){
-        const tag=hdrs[i].toLowerCase().replace(/[^a-z0-9]/g,'_').substring(0,15);
-        const val=row[i]!=null?String(row[i]):'';
-        xml+=`<${tag}>${val}</${tag}>`;
-      }
-      xml+=`</${def.row}>\n`;
-    }
-
-    xml+=`  </${def.tag}>\n`;
-    xml+=`</mas>`;
-
-    zip.file(`${f}_AG${cfg.year}.xml`,xml);
-    envio++;
-  }
-
-  const blob=await zip.generateAsync({type:'blob'});
-  descargarBlob(blob,`Exogena_XML_AG${cfg.year}_${cfg.nit||'SIN_NIT'}.zip`);
 }
 
 function descargarBlob(blob,filename){
