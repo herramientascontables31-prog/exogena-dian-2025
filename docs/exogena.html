@@ -228,15 +228,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
     <div class="actions">
       <button class="btn btn-outline" onclick="goStep(2)">← Volver a Columnas</button>
-      <button class="btn btn-primary" onclick="goStep(4)">Generar Formatos →</button>
+      <button class="btn btn-primary" onclick="irAFormatos()">Generar Formatos →</button>
     </div>
   </div>
 
   <!-- ═══ STEP 4: FORMATOS ═══ -->
   <div id="step4" class="hidden">
     <div class="card">
-      <div class="card-title"><span>📑</span> Formatos Generados — En construccion</div>
-      <div class="alert alert-info"><span>🚧</span><div>Aqui veras los 10 formatos generados con tablas editables y validaciones.</div></div>
+      <div class="card-title"><span>📑</span> Formatos Generados</div>
+      <div id="fmtStats" class="stats"></div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="tabs" id="fmtTabs"></div>
+      <div id="fmtPanels" style="padding:16px"></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="goStep(3)">← Volver a Clasificacion</button>
+      <button class="btn btn-primary" onclick="irADescargar()">Descargar Excel + XML →</button>
     </div>
   </div>
 
@@ -902,6 +910,288 @@ function renderClasificacion(sinClasificar){
 function irAClasificacion(){
   clasificarCuentas();
   goStep(3);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FASE C: GENERACION DE FORMATOS (STEP 4)
+   Agrega por NIT+concepto, aplica cuantias menores, tabs
+   ═══════════════════════════════════════════════════════════ */
+
+const PREFIJOS_DIAN_F1009=['2365','2367','2368','2370','2404','2408','2412'];
+let formatos={};
+
+const FMT_HEADERS={
+  'F1001':['Concepto','Tipo Doc','No ID','DV','Razon Social','Pago Deducible','Pago No Deducible','Ret Fte Renta','Ret IVA'],
+  'F1003':['Concepto','Tipo Doc','No ID','DV','Razon Social','Base Retencion','Retencion Acumulada'],
+  'F1005':['Tipo Doc','No ID','DV','Razon Social','IVA Descontable'],
+  'F1006':['Tipo Doc','No ID','DV','Razon Social','IVA Generado'],
+  'F1007':['Concepto','Tipo Doc','No ID','DV','Razon Social','Ingresos Brutos','Devoluciones'],
+  'F1008':['Concepto','Tipo Doc','No ID','DV','Razon Social','Saldo CxC Dic31'],
+  'F1009':['Concepto','Tipo Doc','No ID','DV','Razon Social','Saldo CxP Dic31'],
+  'F1010':['Tipo Doc','No ID','DV','Razon Social','Valor Patrimonial','% Participacion'],
+  'F1012':['Concepto','Tipo Doc','No ID','DV','Razon Social','Saldo Dic31'],
+  'F2276':['Tipo Doc','No ID','DV','Razon Social','Salarios','Honorarios','Vacaciones','Cesantias','Otros Pag','Total Bruto','Aporte Salud','Aporte Pension','Ret Fte'],
+};
+
+function generarFormatos(){
+  formatos={};
+
+  // Pre-calcular retenciones por NIT para F1001
+  const retFtePorNit={}, retIvaPorNit={}, gastosPorNit={};
+  for(const r of parsedData){
+    if(!r.nit)continue;
+    if(enRango(r.code,'236505','236530')){
+      retFtePorNit[r.nit]=(retFtePorNit[r.nit]||0)+Math.max(r.cre-r.deb,0);
+    }
+    if(r.code.startsWith('2367')){
+      retIvaPorNit[r.nit]=(retIvaPorNit[r.nit]||0)+Math.max(r.cre-r.deb,0);
+    }
+    if(['51','52','53'].includes(r.code.substring(0,2))){
+      gastosPorNit[r.nit]=(gastosPorNit[r.nit]||0)+Math.abs(r.deb-r.cre);
+    }
+  }
+
+  // ── F1001: Pagos ──
+  const dic1={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1001')continue;
+    const k=r.concepto+'|'+r.nit;
+    if(!dic1[k])dic1[k]={concepto:r.concepto,nit:r.nit,razon:r.razon,ded:0,noDed:0,retFte:0,retIva:0};
+    dic1[k].ded+=r.val;
+  }
+  // Distribuir retenciones proporcionalmente
+  const nitConceptos={};
+  for(const[k,v] of Object.entries(dic1)){
+    if(!nitConceptos[v.nit])nitConceptos[v.nit]=[];
+    nitConceptos[v.nit].push({key:k,total:v.ded+v.noDed});
+  }
+  for(const[nit,items] of Object.entries(nitConceptos)){
+    const retT=retFtePorNit[nit]||0, retI=retIvaPorNit[nit]||0;
+    if(retT===0&&retI===0)continue;
+    const totalPagado=items.reduce((s,i)=>s+i.total,0);
+    if(totalPagado===0)continue;
+    for(const item of items){
+      const prop=item.total/totalPagado;
+      dic1[item.key].retFte+=Math.round(retT*prop);
+      dic1[item.key].retIva+=Math.round(retI*prop);
+    }
+  }
+  // Cuantias menores F1001
+  const final1={},men1={};
+  for(const[k,v] of Object.entries(dic1)){
+    const total=v.ded+v.noDed;
+    const tieneRet=v.retFte>0||v.retIva>0;
+    if(total<C3UVT&&!tieneRet){
+      const mk=v.concepto+'|'+NM;
+      if(!men1[mk])men1[mk]={concepto:v.concepto,nit:NM,razon:'CUANTIAS MENORES',ded:0,noDed:0,retFte:0,retIva:0};
+      men1[mk].ded+=v.ded;men1[mk].noDed+=v.noDed;
+    }else{final1[k]=v}
+  }
+  Object.assign(final1,men1);
+  formatos['F1001']=Object.values(final1).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.ded),Math.round(v.noDed),Math.round(v.retFte),Math.round(v.retIva)]);
+
+  // ── F1003: Retenciones ──
+  const dic3={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1003')continue;
+    const k=r.concepto+'|'+r.nit;
+    if(!dic3[k])dic3[k]={concepto:r.concepto,nit:r.nit,razon:r.razon,base:0,ret:0};
+    // Valor retención: crédito del balance (o débito si ya se cruzó)
+    dic3[k].ret+=r.cre>0?r.cre:r.deb;
+  }
+  formatos['F1003']=Object.values(dic3).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,0,Math.round(v.ret)]);
+
+  // ── F1005: IVA Descontable ──
+  const dic5={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1005')continue;
+    if(!dic5[r.nit])dic5[r.nit]={nit:r.nit,razon:r.razon,val:0};
+    dic5[r.nit].val+=r.deb;
+  }
+  formatos['F1005']=Object.values(dic5).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+
+  // ── F1006: IVA Generado ──
+  const dic6={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1006')continue;
+    if(!dic6[r.nit])dic6[r.nit]={nit:r.nit,razon:r.razon,val:0};
+    dic6[r.nit].val+=r.cre;
+  }
+  formatos['F1006']=Object.values(dic6).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+
+  // ── F1007: Ingresos ──
+  const dic7={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1007')continue;
+    const k=r.concepto+'|'+r.nit;
+    if(!dic7[k])dic7[k]={concepto:r.concepto,nit:r.nit,razon:r.razon,val:0};
+    dic7[k].val+=r.val;
+  }
+  const final7={},men7={};
+  for(const[k,v] of Object.entries(dic7)){
+    if(v.val<C3UVT){const mk=v.concepto+'|'+NM;if(!men7[mk])men7[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men7[mk].val+=v.val}
+    else final7[k]=v;
+  }
+  Object.assign(final7,men7);
+  formatos['F1007']=Object.values(final7).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val),0]);
+
+  // ── F1008: CxC ──
+  const dic8={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1008')continue;
+    const k=r.concepto+'|'+r.nit;
+    if(!dic8[k])dic8[k]={concepto:r.concepto,nit:r.nit,razon:r.razon,val:0};
+    dic8[k].val+=r.val;
+  }
+  const final8={},men8={};
+  for(const[k,v] of Object.entries(dic8)){
+    if(v.val<C12UVT){const mk=v.concepto+'|'+NM;if(!men8[mk])men8[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men8[mk].val+=v.val}
+    else final8[k]=v;
+  }
+  Object.assign(final8,men8);
+  formatos['F1008']=Object.values(final8).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+
+  // ── F1009: CxP ──
+  const dic9={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1009')continue;
+    const esDian=PREFIJOS_DIAN_F1009.some(p=>r.code.startsWith(p));
+    if(esDian){
+      const k='2206|'+NIT_DIAN;
+      if(!dic9[k])dic9[k]={concepto:'2206',nit:NIT_DIAN,razon:'DIAN',val:0};
+      dic9[k].val+=Math.max(r.cre-r.deb,0);
+    }else{
+      const k=r.concepto+'|'+r.nit;
+      if(!dic9[k])dic9[k]={concepto:r.concepto,nit:r.nit,razon:r.razon,val:0};
+      dic9[k].val+=Math.max(r.cre-r.deb,0);
+    }
+  }
+  // Solo saldos credito y cuantias menores
+  const final9={},men9={};
+  for(const[k,v] of Object.entries(dic9)){
+    if(v.val<=0)continue;
+    if(v.nit===NIT_DIAN){final9[k]=v}
+    else if(v.val<C12UVT){const mk=v.concepto+'|'+NM;if(!men9[mk])men9[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men9[mk].val+=v.val}
+    else final9[k]=v;
+  }
+  Object.assign(final9,men9);
+  formatos['F1009']=Object.values(final9).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+
+  // ── F1010: Socios ──
+  const dic10={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1010')continue;
+    if(!dic10[r.nit])dic10[r.nit]={nit:r.nit,razon:r.razon,val:0};
+    dic10[r.nit].val+=r.val;
+  }
+  const capTotal=Object.values(dic10).reduce((s,v)=>s+v.val,0);
+  formatos['F1010']=Object.values(dic10).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val),capTotal>0?(v.val/capTotal*100).toFixed(2)+'%':'0%']);
+
+  // ── F1012: Inversiones y Bancos ──
+  const dic12={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1012')continue;
+    let nit=r.nit;
+    // Bancos sin NIT: detectar por nombre
+    if((!nit||nit==='')&&r.code.startsWith('1110')){
+      const nn=normNombre(r.name);
+      for(const[kw,[nitB,rsB]] of Object.entries(BANCOS_COLOMBIANOS)){
+        if(nn.includes(kw)){nit=nitB;break}
+      }
+      if(!nit)nit=NM;
+    }
+    if(!nit)nit=NM;
+    const k=r.concepto+'|'+nit;
+    if(!dic12[k])dic12[k]={concepto:r.concepto,nit,razon:r.razon,val:0};
+    dic12[k].val+=r.val;
+  }
+  formatos['F1012']=Object.values(dic12).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+
+  // ── F2276: Nomina ──
+  const dic26={};
+  for(const r of clasificacion){
+    if(r.formato!=='F2276')continue;
+    if(!dic26[r.nit])dic26[r.nit]={nit:r.nit,razon:r.razon,sal:0,hon:0,vac:0,ces:0,otros:0,bruto:0,apSalud:0,apPension:0,retFte:0};
+    const c=r.concepto;
+    if(c==='5001')dic26[r.nit].sal+=r.val;
+    else if(c==='5002')dic26[r.nit].hon+=r.val;
+    else if(c==='5024')dic26[r.nit].apSalud+=r.val;
+    else if(c==='5025')dic26[r.nit].apPension+=r.val;
+    else dic26[r.nit].otros+=r.val;
+  }
+  // Retenciones laborales
+  for(const r of parsedData){
+    if(r.code.startsWith('236505')&&r.nit&&dic26[r.nit]){
+      dic26[r.nit].retFte+=Math.max(r.cre-r.deb,0);
+    }
+  }
+  for(const v of Object.values(dic26)){v.bruto=v.sal+v.hon+v.vac+v.ces+v.otros}
+  formatos['F2276']=Object.values(dic26).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,
+    Math.round(v.sal),Math.round(v.hon),Math.round(v.vac),Math.round(v.ces),Math.round(v.otros),
+    Math.round(v.bruto),Math.round(v.apSalud),Math.round(v.apPension),Math.round(v.retFte)]);
+
+  renderFormatos();
+}
+
+function renderFormatos(){
+  const fmtOrder=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  const fmtNames={'F1001':'Pagos','F1003':'Retenciones','F1005':'IVA Desc.','F1006':'IVA Gen.',
+    'F1007':'Ingresos','F1008':'CxC','F1009':'CxP','F1010':'Socios','F1012':'Inversiones','F2276':'Nomina'};
+
+  let totalReg=0,totalFmt=0;
+  for(const f of fmtOrder){if(formatos[f]&&formatos[f].length>0){totalReg+=formatos[f].length;totalFmt++}}
+
+  document.getElementById('fmtStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${totalFmt}</div><div class="lbl">Formatos generados</div></div>
+    <div class="stat-card green"><div class="val">${totalReg.toLocaleString()}</div><div class="lbl">Registros totales</div></div>
+    <div class="stat-card amber"><div class="val">${(formatos['F1001']||[]).length}</div><div class="lbl">Reg. F1001 Pagos</div></div>
+    <div class="stat-card red"><div class="val">${(formatos['F2276']||[]).length}</div><div class="lbl">Reg. F2276 Nomina</div></div>`;
+
+  // Tabs
+  let tabs='',panels='';
+  let first=true;
+  for(const f of fmtOrder){
+    const rows=formatos[f]||[];
+    if(rows.length===0)continue;
+    const active=first?'active':'';
+    tabs+=`<div class="tab ${active}" onclick="switchFmtTab(this,'panel_${f}')">${f.substring(1)} ${fmtNames[f]} <span style="font-size:.7rem;background:var(--pri3);padding:1px 6px;border-radius:4px;margin-left:4px">${rows.length}</span></div>`;
+
+    const hdrs=FMT_HEADERS[f]||[];
+    let tbl=`<div id="panel_${f}" class="tab-content ${active}"><div class="scroll-box"><table class="map-table"><thead><tr><th>#</th>`;
+    for(const h of hdrs)tbl+=`<th>${h}</th>`;
+    tbl+='</tr></thead><tbody>';
+    for(let i=0;i<rows.length;i++){
+      tbl+='<tr><td>'+(i+1)+'</td>';
+      for(let j=0;j<rows[i].length;j++){
+        const v=rows[i][j];
+        const cls=typeof v==='number'?'text-right mono':'';
+        tbl+=`<td class="${cls}">${typeof v==='number'?fN(v):v}</td>`;
+      }
+      tbl+='</tr>';
+    }
+    tbl+='</tbody></table></div></div>';
+    panels+=tbl;
+    first=false;
+  }
+  document.getElementById('fmtTabs').innerHTML=tabs;
+  document.getElementById('fmtPanels').innerHTML=panels;
+}
+
+function switchFmtTab(el,panelId){
+  el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#fmtPanels .tab-content').forEach(p=>p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+}
+
+/* ── Conectar Step 3 → Step 4 ── */
+function irAFormatos(){
+  generarFormatos();
+  goStep(4);
+}
+
+function irADescargar(){
+  goStep(5);
 }
 
 /* ── EJEMPLO DESCARGABLE ── */
