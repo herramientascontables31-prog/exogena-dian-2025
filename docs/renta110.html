@@ -25,7 +25,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 .header h1 span{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:600}
 .header p{opacity:.8;font-size:.85rem;margin-top:4px}
 .header-right{text-align:right;font-size:.8rem;opacity:.7}
-.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
 .card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .btn{padding:10px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
 .btn-primary{background:var(--pri2);color:#fff}.btn-primary:hover{background:var(--pri);transform:translateY(-1px)}
@@ -88,43 +88,47 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   </div>
 </div>
 <div class="container">
-  <div class="header"><div>
+  <div class="header" style="padding:20px 28px"><div>
     <h1><span>110</span> Declaracion de Renta</h1>
-    <p>Personas Juridicas · AG 2025 · Borrador con calculos automaticos</p>
-  </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
+    <p>Personas Juridicas · AG 2025 · Casillas <strong style="color:#fff">blancas</strong> = editables · <strong style="color:#81C784">verdes</strong> = automaticas · Valores en miles ($1.000)</p>
+  </div><div class="header-right">100% en navegador</div></div>
 
   <!-- UPLOAD BALANCE -->
-  <div id="uploadSection" class="card">
-    <div class="card-title"><span>📄</span> Cargar Balance de Prueba</div>
-    <div class="alert alert-info"><span>💡</span><div>Sube el <strong>balance de prueba SIN cierre contable</strong> (antes de cerrar clases 4, 5 y 6). Debe incluir todas las clases <strong>1 a 6</strong> con saldos. Si tu balance ya esta cerrado (clases 4-6 en cero), necesitas el balance <strong>antes del cierre</strong>.<br><br>Compatible con <strong>Alegra, Siigo, World Office, Helisa, MidaSoft</strong> y cualquier software que exporte Excel.</div></div>
-    <div style="border:2px dashed var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;cursor:pointer;position:relative;transition:.3s" id="dzRenta" onclick="document.getElementById('fileInputRenta').click()">
-      <input type="file" accept=".xlsx,.xls,.csv" id="fileInputRenta" style="position:absolute;inset:0;opacity:0;cursor:pointer">
-      <span style="font-size:2.5rem;display:block;margin-bottom:8px">📊</span>
-      <div style="font-weight:700;font-size:1.1rem;color:var(--pri)">Arrastra tu archivo aqui o haz clic</div>
-      <div style="color:var(--muted);font-size:.82rem;margin-top:4px">Excel (.xlsx, .xls) o CSV</div>
-      <div id="fileNameRenta" style="margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--green);font-weight:600"></div>
+  <div class="card" style="padding:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="card-title" style="margin:0"><span>📄</span> Cargar Balance (opcional)</div>
+      <span style="font-size:.75rem;color:var(--muted)">🔒 100% en tu navegador</span>
     </div>
-    <div id="errorBalance" class="hidden" style="margin-top:12px;padding:12px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;font-size:.82rem;color:#C62828"></div>
-    <div style="margin-top:12px;padding:10px 14px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.78rem;color:#92400E;display:flex;align-items:center;gap:8px">
-      <span style="font-size:1rem">🔒</span>
-      <span>Tu archivo se procesa 100% en tu navegador. <strong>Ningun dato sale de tu equipo.</strong></span>
+    <div style="margin-bottom:10px">
+      <label style="font-size:.82rem;font-weight:600;color:var(--pri);display:flex;align-items:center;gap:8px;margin-bottom:8px">¿Tu balance tiene las cuentas de resultado abiertas (clases 4, 5 y 6 con saldo)?</label>
+      <div style="display:flex;gap:8px">
+        <button onclick="document.getElementById('balanceZone').classList.remove('hidden');this.style.background='var(--pri3)';this.nextElementSibling.style.background=''" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit;background:var(--pri3)">Si, esta sin cerrar</button>
+        <button onclick="document.getElementById('balanceZone').classList.add('hidden');document.getElementById('balanceCerrado').classList.remove('hidden');this.style.background='var(--pri3)';this.previousElementSibling.style.background=''" style="padding:6px 16px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;cursor:pointer;font-family:inherit">No, ya esta cerrado</button>
+      </div>
     </div>
-    <!-- Resultado clasificacion -->
-    <div id="clasifResult" class="hidden" style="margin-top:16px">
-      <div class="alert alert-warn"><span>⚠️</span><div>Estos son <strong>valores contables</strong> del balance. El F110 requiere <strong>valores fiscales</strong>. Despues de aplicar, ajusta manualmente: renta exenta (cas 77), INCRNGO (cas 60), gastos no deducibles, y demas diferencias fiscales.</div></div>
-      <div id="clasifStats" class="stats"></div>
-      <div id="clasifDetail" style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;font-size:.78rem"></div>
-      <div class="actions" style="margin-top:12px">
-        <button onclick="aplicarAlFormulario()" class="btn btn-primary">Aplicar valores contables al Formulario 110 →</button>
+    <div id="balanceCerrado" class="hidden" style="padding:10px;background:#FFF8E1;border:1px solid #FCD34D;border-radius:8px;font-size:.82rem;color:#92400E">Solo se pre-llenara el <strong>patrimonio</strong> (activos y pasivos). Los ingresos, costos y gastos debes ingresarlos manualmente en el formulario de abajo.</div>
+    <div id="balanceZone">
+      <div style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;cursor:pointer;position:relative" id="dzRenta" onclick="document.getElementById('fileInputRenta').click()">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileInputRenta" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+        <span style="font-size:1.5rem">📊</span>
+        <span style="font-weight:600;color:var(--pri);margin-left:8px">Arrastra o haz clic para cargar</span>
+        <span style="font-size:.78rem;color:var(--muted);margin-left:8px">Excel o CSV · Alegra, Siigo, WO, Helisa</span>
+        <div id="fileNameRenta" style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--green);font-weight:600"></div>
+      </div>
+    </div>
+    <div id="errorBalance" class="hidden" style="margin-top:8px;padding:10px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;font-size:.82rem;color:#C62828"></div>
+    <div id="clasifResult" class="hidden" style="margin-top:10px">
+      <div id="clasifStats" class="stats" style="margin-bottom:8px"></div>
+      <div id="clasifDetail" style="max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;font-size:.75rem"></div>
+      <div style="margin-top:8px;text-align:right">
+        <button onclick="aplicarAlFormulario()" class="btn btn-primary" style="padding:8px 20px;font-size:.85rem">Aplicar al Formulario →</button>
       </div>
     </div>
   </div>
 
-  <div class="alert alert-info"><span>💡</span><div>Casillas en <strong>blanco</strong> son editables. Las casillas en <strong style="color:#2E7D32">verde</strong> se calculan automaticamente. Valores en pesos, redondeados a miles ($1.000).</div></div>
-
   <!-- Datos del declarante -->
-  <div class="card">
-    <div class="card-title"><span>🏢</span> Datos del Declarante</div>
+  <div class="card" style="padding:16px">
+    <div class="card-title" style="margin-bottom:10px"><span>🏢</span> Datos del Declarante</div>
     <div class="config-grid">
       <div class="config-item"><label>5. NIT</label><input type="text" id="cfgNit" placeholder="Ej: 900875335" oninput="recalcular()"></div>
       <div class="config-item"><label>11. Razon Social</label><input type="text" id="cfgRazon" placeholder="Ej: MI EMPRESA SAS"></div>
@@ -239,30 +243,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   </div>
 
   <!-- IMPUESTO MINIMO (TTD) -->
-  <div class="card" style="margin-top:20px">
-    <div class="card-title"><span>📐</span> Tasa Minima de Tributacion (Art. 240 Par. 6 E.T.)</div>
-    <div class="alert alert-info"><span>💡</span><div>Si la Tasa de Tributacion Depurada (TTD) es menor al <strong>15%</strong>, se genera un <strong>Impuesto Adicional (IA)</strong> que se suma al impuesto a cargo.</div></div>
-    <div class="config-grid">
-      <div class="config-item"><label>Utilidad contable antes de impuestos</label><input type="text" id="ttdUtilidad" oninput="recalcularTTD()" placeholder="Ej: 1.500.000.000"></div>
-      <div class="config-item"><label>Diferencias permanentes que aumentan renta</label><input type="text" id="ttdDifPerm" oninput="recalcularTTD()" placeholder="Ej: 120.000.000"></div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div onclick="document.getElementById('ttdBody').classList.toggle('hidden')" style="padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f8fafc">
+      <span style="font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px"><span>📐</span> Tasa Minima de Tributacion (TTD) — Art. 240 Par. 6</span>
+      <span style="font-size:.75rem;color:var(--muted)">clic para expandir ▼</span>
     </div>
-    <div class="config-grid" style="margin-top:12px">
-      <div class="config-item"><label>INCRNGO (Ingresos no constitutivos)</label><input type="text" id="ttdINCRNGO" oninput="recalcularTTD()" placeholder="0"></div>
-      <div class="config-item"><label>Rentas exentas + compensaciones</label><input type="text" id="ttdExentas" oninput="recalcularTTD()" placeholder="0"></div>
+    <div id="ttdBody" class="hidden" style="padding:12px 16px">
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">Si la TTD es menor al 15%, se genera Impuesto Adicional (IA).</p>
+      <div class="config-grid">
+        <div class="config-item"><label>Utilidad contable antes de impuestos</label><input type="text" id="ttdUtilidad" oninput="recalcularTTD()" placeholder="0"></div>
+        <div class="config-item"><label>Diferencias permanentes (+renta)</label><input type="text" id="ttdDifPerm" oninput="recalcularTTD()" placeholder="0"></div>
+        <div class="config-item"><label>INCRNGO</label><input type="text" id="ttdINCRNGO" oninput="recalcularTTD()" placeholder="0"></div>
+        <div class="config-item"><label>Rentas exentas + compensaciones</label><input type="text" id="ttdExentas" oninput="recalcularTTD()" placeholder="0"></div>
+      </div>
+      <div id="ttdResultado" style="margin-top:10px"></div>
     </div>
-    <div id="ttdResultado" style="margin-top:16px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)"></div>
   </div>
 
   <!-- RESUMEN -->
-  <div class="stats" id="resumen" style="margin-top:20px"></div>
-
-  <div class="actions">
-    <button onclick="exportExcel()" class="btn btn-success" style="padding:14px 32px;font-size:1rem">📊 Descargar Excel con Formulas</button>
-  </div>
-
-  <div style="margin-top:16px;padding:12px;background:var(--pri3);border-radius:8px;font-size:.8rem;color:var(--pri);text-align:center">
-    <strong>Normatividad:</strong> Art. 240 E.T. · Tarifa general 35% · AG 2025<br>
-    Este borrador es un punto de partida profesional. El contador debe validar antes de presentar a la DIAN.
+  <div class="stats" id="resumen" style="margin-top:12px"></div>
+  <div style="text-align:center;margin-bottom:12px">
+    <button onclick="exportExcel()" class="btn btn-success" style="padding:12px 28px">📊 Descargar Excel con Formulas</button>
   </div>
 </div>
 
