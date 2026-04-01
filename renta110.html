@@ -1133,8 +1133,15 @@ async function validarPro(){
     const res=await fetch(url);
     const data=await res.json();
     if(data.valid){
-      errEl.textContent='';
-      exportExcel();
+      errEl.textContent='Generando Excel...';errEl.style.color='var(--green)';
+      try{
+        await exportExcel();
+        errEl.textContent='Excel descargado correctamente.';errEl.style.color='var(--green)';
+      }catch(ex){
+        errEl.style.color='var(--red)';
+        errEl.textContent='Error generando Excel: '+ex.message;
+        console.error('exportExcel error:',ex);
+      }
       return;
     }
     errEl.style.color='var(--red)';
@@ -1147,7 +1154,7 @@ async function validarPro(){
     }else{
       errEl.textContent='Clave no encontrada. Verifica o suscríbete en exogenadian.com';
     }
-  }catch(e){errEl.style.color='var(--red)';errEl.textContent='Error verificando. Intenta de nuevo.';}
+  }catch(e){errEl.style.color='var(--red)';errEl.textContent='Error de conexion: '+e.message;console.error(e);}
 }
 
 // ═══════════════════════════════════════════════════════════════
