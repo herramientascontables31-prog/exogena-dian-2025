@@ -1688,22 +1688,67 @@ function descargarEjemplo(){
   XLSX.writeFile(wb,'Ejemplo_Exogena_ExogenaDIAN.xlsx');
 }
 
-/* ── PRO (placeholder - same pattern as other tools) ── */
-function activarPro(){
-  const key=document.getElementById('proKeyInput').value.trim();
-  if(!key){alert('Ingresa tu clave PRO');return}
-  localStorage.setItem('exogenadian_pro_key',key);
-  document.getElementById('proStatus').textContent='PRO activado';
-  document.getElementById('proBadge').innerHTML='<span style="background:#E8F5E9;color:#2E7D32;padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:700">PRO</span>';
+/* ═══ PRO VALIDATION ═══ */
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
+let proUnlocked=false;
+
+function getDeviceFingerprint(){
+  const nav=navigator;
+  const raw=[nav.userAgent,nav.language,screen.width+'x'+screen.height,screen.colorDepth,new Date().getTimezoneOffset()].join('|');
+  let hash=0;for(let i=0;i<raw.length;i++){hash=((hash<<5)-hash)+raw.charCodeAt(i);hash|=0}
+  return 'FP-'+Math.abs(hash).toString(36).toUpperCase();
 }
-(function initPro(){
-  const key=localStorage.getItem('exogenadian_pro_key');
-  if(key){
-    document.getElementById('proStatus').textContent='PRO activado';
-    document.getElementById('proBadge').innerHTML='<span style="background:#E8F5E9;color:#2E7D32;padding:3px 10px;border-radius:6px;font-size:.75rem;font-weight:700">PRO</span>';
-    document.getElementById('proKeyInput').value=key;
+
+async function validarClavePro(clave){
+  try{
+    const fp=getDeviceFingerprint();
+    const url=APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(clave)+'&device='+encodeURIComponent(fp);
+    const resp=await fetch(url);
+    const data=await resp.json();
+    if(data.valid){
+      if(data.daysLeft&&data.daysLeft<=3){
+        console.log('PRO vence en '+data.daysLeft+' día(s) — '+data.expiry);
+      }
+      return true;
+    }
+    if(data.reason)console.warn('PRO rechazado:',data.reason);
+  }catch(e){console.error('Error validando PRO:',e)}
+  return false;
+}
+
+async function initPro(){
+  const savedKey=localStorage.getItem('exogenadian_pro_key');
+  if(savedKey){
+    const valid=await validarClavePro(savedKey);
+    if(valid){proUnlocked=true;updateProUI();return}
+    else{localStorage.removeItem('exogenadian_pro_key')}
   }
-})();
+}
+
+function updateProUI(){
+  const badge=document.getElementById('proBadge');
+  if(badge) badge.innerHTML=proUnlocked?'<span style="background:#059669;color:#fff;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700">PRO activo</span>':'';
+  const status=document.getElementById('proStatus');
+  if(status) status.textContent=proUnlocked?'Todas las funciones desbloqueadas':'Versión gratuita — Algunas funciones requieren PRO';
+  const input=document.getElementById('proKeyInput');
+  if(input&&proUnlocked) input.closest('.card')?.querySelector('[onclick]')?.setAttribute('disabled','true');
+}
+
+async function activarPro(){
+  const clave=document.getElementById('proKeyInput')?.value?.trim();
+  if(!clave){alert('Ingresa tu clave PRO');return}
+  const valid=await validarClavePro(clave);
+  if(valid){
+    proUnlocked=true;
+    localStorage.setItem('exogenadian_pro_key',clave);
+    updateProUI();
+    alert('PRO activado correctamente');
+  }else{
+    alert('Clave inválida o inactiva. Verifica tu clave o suscríbete en exogenadian.com');
+  }
+}
+
+initPro();
 
 /* ── INIT ── */
 populateDptos();

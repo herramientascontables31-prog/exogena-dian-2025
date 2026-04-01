@@ -365,8 +365,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
           <input type="text" id="proKeyInputPaywall" placeholder="Clave PRO" style="padding:8px 14px;border:1px solid #D97706;border-radius:8px;font-size:.85rem;width:160px">
           <button onclick="activarProFromPaywall()" class="btn btn-primary" style="padding:8px 18px;font-size:.85rem;background:#D97706;border-color:#D97706">Activar</button>
         </div>
-        <div class="wompi-btn-container" style="max-width:260px;margin:0 auto">
-          <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="2500000" data-reference="EEFF-PRO-001" data-redirect-url="https://exogenadian.com/estadosfinancieros.html?pro=1"></script>
+        <div style="max-width:260px;margin:0 auto">
+          <a href="https://exogenadian.com/#planes" class="btn btn-primary" style="display:block;padding:12px 24px;font-size:.85rem;background:#D97706;border-color:#D97706;color:#fff;text-decoration:none;border-radius:10px;text-align:center;font-weight:700">Suscríbete a PRO — $19.900/mes</a>
         </div>
       </div>
     </div>
@@ -383,22 +383,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 
 <script>
 /* ═══ PRO VALIDATION ═══ */
-const PRO_SHEET_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vQc7cTur8DOZ_Kqkpqf7WmbzFT4im5efh0gYzIix4HE9pYp5B24OSDaOCKWjuU5YVXAMZeMGYkVE1eH/pub?gid=0&single=true&output=csv';
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
 let proUnlocked=false;
+
+function getDeviceFingerprint(){
+  const nav=navigator;
+  const raw=[nav.userAgent,nav.language,screen.width+'x'+screen.height,screen.colorDepth,new Date().getTimezoneOffset()].join('|');
+  let hash=0;for(let i=0;i<raw.length;i++){hash=((hash<<5)-hash)+raw.charCodeAt(i);hash|=0}
+  return 'FP-'+Math.abs(hash).toString(36).toUpperCase();
+}
 
 async function validarClavePro(clave){
   try{
-    const resp=await fetch(PRO_SHEET_URL);
-    const csv=await resp.text();
-    const lines=csv.split('\n').slice(1);
-    for(const line of lines){
-      const cols=line.split(',');
-      const k=cols[0]?.trim();
-      const estado=cols[2]?.trim().toLowerCase();
-      if(k===clave && (estado==='activo'||estado==='si'||estado==='sí')){
-        return true;
+    const fp=getDeviceFingerprint();
+    const url=APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(clave)+'&device='+encodeURIComponent(fp);
+    const resp=await fetch(url);
+    const data=await resp.json();
+    if(data.valid){
+      if(data.daysLeft&&data.daysLeft<=3){
+        console.log('PRO vence en '+data.daysLeft+' día(s) — '+data.expiry);
       }
+      return true;
     }
+    if(data.reason)console.warn('PRO rechazado:',data.reason);
   }catch(e){console.error('Error validando PRO:',e)}
   return false;
 }
@@ -410,8 +417,7 @@ async function initPro(){
     if(valid){proUnlocked=true;updateProUI();return}
     else{localStorage.removeItem('exogenadian_pro_key')}
   }
-  const params=new URLSearchParams(window.location.search);
-  if(params.get('pro')==='1'){proUnlocked=true;updateProUI()}
+  /* bypass ?pro=1 eliminado por seguridad */
 }
 
 function updateProUI(){

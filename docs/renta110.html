@@ -1093,37 +1093,40 @@ function recalcular(){
 }
 
 // ── VALIDACION PRO ──
-const PRO_CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vQc7cTur8DOZ_Kqkpqf7WmbzFT4im5efh0gYzIix4HE9pYp5B24OSDaOCKWjuU5YVXAMZeMGYkVE1eH/pub?gid=0&single=true&output=csv';
-const ADMIN_KEY='ExoDIAN-2025-ADMIN';
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
+
+function getDeviceFingerprint(){
+  const nav=navigator;
+  const raw=[nav.userAgent,nav.language,screen.width+'x'+screen.height,screen.colorDepth,new Date().getTimezoneOffset()].join('|');
+  let hash=0;for(let i=0;i<raw.length;i++){hash=((hash<<5)-hash)+raw.charCodeAt(i);hash|=0}
+  return 'FP-'+Math.abs(hash).toString(36).toUpperCase();
+}
 
 async function validarPro(){
   const key=document.getElementById('proKey').value.trim();
   const errEl=document.getElementById('proError');
   if(!key){errEl.textContent='Ingresa tu clave PRO';return}
-  if(key===ADMIN_KEY){exportExcel();return}
   errEl.textContent='Verificando...';errEl.style.color='var(--muted)';
   try{
-    const res=await fetch(PRO_CSV);
-    const txt=await res.text();
-    const lines=txt.split('\n').map(l=>l.split(',').map(c=>c.trim().replace(/^"|"$/g,'')));
-    const hdr=lines[0].map(h=>h.toLowerCase());
-    const claveIdx=hdr.findIndex(h=>/clave/.test(h));
-    const estadoIdx=hdr.findIndex(h=>/estado/.test(h));
-    let found=false;
-    for(let i=1;i<lines.length;i++){
-      if(lines[i][claveIdx]===key){
-        found=true;
-        const estado=(lines[i][estadoIdx]||'').toLowerCase();
-        if(['activo','si','sí','1','true'].includes(estado)){
-          errEl.textContent='';
-          exportExcel();
-          return;
-        }else{
-          errEl.style.color='var(--red)';errEl.textContent='Tu suscripción está inactiva. Contacta al administrador.';return;
-        }
-      }
+    const fp=getDeviceFingerprint();
+    const url=APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(key)+'&device='+encodeURIComponent(fp);
+    const res=await fetch(url);
+    const data=await res.json();
+    if(data.valid){
+      errEl.textContent='';
+      exportExcel();
+      return;
     }
-    if(!found){errEl.style.color='var(--red)';errEl.textContent='Clave no encontrada. Verifica o suscríbete en exogenadian.com';}
+    errEl.style.color='var(--red)';
+    if(data.reason==='Clave expirada'){
+      errEl.textContent='Tu suscripción expiró el '+data.expiry+'. Renueva en exogenadian.com';
+    }else if(data.reason==='Clave cancelada'){
+      errEl.textContent='Tu suscripción fue cancelada. Contacta al administrador.';
+    }else if(data.reason&&data.reason.includes('dispositivos')){
+      errEl.textContent='Límite de dispositivos alcanzado. Contacta soporte.';
+    }else{
+      errEl.textContent='Clave no encontrada. Verifica o suscríbete en exogenadian.com';
+    }
   }catch(e){errEl.style.color='var(--red)';errEl.textContent='Error verificando. Intenta de nuevo.';}
 }
 

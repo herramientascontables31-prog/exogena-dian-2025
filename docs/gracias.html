@@ -213,30 +213,37 @@
 </div>
 
 <script>
-  const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwXpPw2_LS_qg6fyOhVPqHd4PFbEhSVDSHXpoegOErLL8mxDH_6jBLs2YIMz_xkg0-KnQ/exec';
+  const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
 
   const params = new URLSearchParams(window.location.search);
-  const referencia = params.get('reference') || params.get('ref') || params.get('id') || 'WEB-'+Date.now();
+  // Wompi redirige con ?id=TRANSACCION_ID
+  const transactionId = params.get('id') || '';
+  const referencia = params.get('reference') || params.get('ref') || transactionId || 'WEB-'+Date.now();
 
   if (referencia) {
     document.getElementById('refBox').style.display = 'inline-flex';
     document.getElementById('refId').textContent = referencia;
   }
 
-  // Generar clave PRO automáticamente
+  // Generar clave PRO verificando el pago con Wompi
   async function generarClavePro(){
     try{
-      const url=APPS_SCRIPT_URL+'?ref='+encodeURIComponent(referencia)+'&nombre=Suscriptor+Wompi&email=';
+      if(!transactionId){
+        throw new Error('No transaction ID from Wompi');
+      }
+      const url=APPS_SCRIPT_URL
+        +'?action=generateKey'
+        +'&transactionId='+encodeURIComponent(transactionId)
+        +'&ref='+encodeURIComponent(referencia);
       const resp=await fetch(url);
       const data=await resp.json();
-      if(data.clave){
+      if(data.success && data.clave){
         document.getElementById('proLoading').style.display='none';
         document.getElementById('proKeyBox').style.display='block';
         document.getElementById('proKeyDisplay').textContent=data.clave;
-        // Guardar en localStorage para activar PRO automáticamente
         localStorage.setItem('exogenadian_pro_key',data.clave);
       }else{
-        throw new Error('No key returned');
+        throw new Error(data.error || 'No key returned');
       }
     }catch(e){
       console.error('Error generando clave:',e);
