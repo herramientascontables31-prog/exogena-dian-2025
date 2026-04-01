@@ -540,7 +540,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
         <li class="hl">Compatible con Siigo, World Office, Helisa, Alegra, MidaSoft</li>
       </ul>
       <div class="wompi-btn-container">
-        <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="1990000" data-reference="PRO-MENSUAL-001" data-redirect-url="https://exogenadian.com/gracias.html"></script>
+        <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="1990000" data-reference="PRO-MENSUAL-001" data-signature:integrity="850dbd1399262fbf09a1646b18328cafde9300e157d49b6f9cbd7ae75c94f153" data-redirect-url="https://exogenadian.com/gracias.html"></script>
         <div class="wompi-fallback" style="display:none;padding:12px 24px;border-radius:10px;background:#FEF3C7;color:#92400E;font-weight:600;font-family:inherit;font-size:.85rem;text-align:center;border:1px solid #FDE68A">El botón de pago no cargó. Escríbenos por <a href="https://wa.me/573156178610" style="color:#D97706;font-weight:700;text-decoration:underline">WhatsApp</a> o recarga esta página.</div>
       </div>
     </div>
@@ -659,11 +659,8 @@ document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
 
 /* === Wompi: referencias únicas + fallback si no carga === */
 document.addEventListener('DOMContentLoaded',function(){
-  const t=Date.now(),r=Math.random().toString(36).substring(2,8).toUpperCase();
-  document.querySelectorAll('script[data-reference]').forEach((s,i)=>{
-    const p=['IND','CONT','FIRMA'][i]||'GEN';
-    s.setAttribute('data-reference','EXOG-'+p+'-'+t+'-'+r);
-  });
+  /* Referencia fija para que el hash de integridad de Wompi coincida.
+     El pago se identifica por transaction_id de Wompi, no por la referencia. */
   // Mostrar fallback si Wompi no renderiza botones después de 5 segundos
   setTimeout(function(){
     document.querySelectorAll('.wompi-btn-container').forEach(function(container){
