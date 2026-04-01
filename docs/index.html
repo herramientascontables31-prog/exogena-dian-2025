@@ -324,7 +324,16 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
     <a href="estadosfinancieros.html">Estados Financieros</a>
     <a href="conciliacion.html">Conciliación</a>
     <a href="blog.html">Blog</a>
-    <a href="#planes" class="btn btn-green btn-sm">Suscribirse PRO →</a>
+    <!-- PRO: login o badge -->
+    <div id="proNavLogin" style="display:flex;align-items:center;gap:6px">
+      <input type="text" id="proNavKey" placeholder="Clave PRO" style="padding:5px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:.8rem;font-family:inherit;width:140px;text-align:center">
+      <button onclick="activarProNav()" style="padding:5px 12px;background:var(--green-600);color:#fff;border:none;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer">Activar</button>
+    </div>
+    <div id="proNavActive" style="display:none;align-items:center;gap:8px">
+      <span style="background:var(--green-100);color:var(--green-700);padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:700">PRO activo</span>
+      <a href="#" onclick="cerrarProNav();return false" style="font-size:.7rem;color:var(--gray-400);text-decoration:none">salir</a>
+    </div>
+    <a href="#planes" id="proNavSubscribe" class="btn btn-green btn-sm" style="display:none">Suscribirse PRO →</a>
   </div>
   <button class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
 </nav>
@@ -823,6 +832,74 @@ setTimeout(()=>{
     document.getElementById('newsGrid').innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)"><strong>Noticias económicas</strong><br>Visita <a href="https://www.portafolio.co/economia" target="_blank" style="color:var(--green-600)">Portafolio</a> · <a href="https://www.larepublica.co/finanzas" target="_blank" style="color:var(--green-600)">La República</a> · <a href="https://www.bloomberglinea.com" target="_blank" style="color:var(--green-600)">Bloomberg Línea</a></div>';
   }
 },8000);
+</script>
+
+<script>
+/* === PRO Session (global, compartida con todas las paginas) === */
+const PRO_API='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
+
+function getDeviceFingerprint(){
+  let uid=localStorage.getItem('exogenadian_device_id');
+  if(!uid){uid='D-'+crypto.randomUUID().split('-').slice(0,2).join('');localStorage.setItem('exogenadian_device_id',uid)}
+  return uid;
+}
+
+function showProNav(){
+  document.getElementById('proNavLogin').style.display='none';
+  document.getElementById('proNavActive').style.display='flex';
+  document.getElementById('proNavSubscribe').style.display='none';
+}
+
+function cerrarProNav(){
+  localStorage.removeItem('exogenadian_pro_key');
+  document.getElementById('proNavLogin').style.display='flex';
+  document.getElementById('proNavActive').style.display='none';
+  document.getElementById('proNavKey').value='';
+}
+
+async function activarProNav(){
+  const key=document.getElementById('proNavKey').value.trim();
+  if(!key){alert('Ingresa tu clave PRO');return}
+  document.getElementById('proNavKey').style.borderColor='var(--green-400)';
+  try{
+    const fp=getDeviceFingerprint();
+    const res=await fetch(PRO_API+'?action=validateKey&key='+encodeURIComponent(key)+'&device='+encodeURIComponent(fp));
+    const data=await res.json();
+    if(data.valid){
+      localStorage.setItem('exogenadian_pro_key',key);
+      localStorage.setItem('exogenadian_pro_lastcheck',Date.now().toString());
+      showProNav();
+    }else{
+      document.getElementById('proNavKey').style.borderColor='#EF4444';
+      const msg=data.reason==='Clave expirada'?'Clave expirada ('+data.expiry+')'
+        :data.reason==='Clave cancelada'?'Clave cancelada'
+        :data.reason&&data.reason.includes('dispositivos')?'Limite de dispositivos'
+        :'Clave no encontrada';
+      alert(msg+'. Verifica o suscribete en exogenadian.com');
+    }
+  }catch(e){alert('Error de conexion. Intenta de nuevo.')}
+}
+
+// Auto-check al cargar
+(async function(){
+  const saved=localStorage.getItem('exogenadian_pro_key');
+  if(!saved){
+    document.getElementById('proNavSubscribe').style.display='';
+    return;
+  }
+  document.getElementById('proNavKey').value=saved;
+  try{
+    const fp=getDeviceFingerprint();
+    const res=await fetch(PRO_API+'?action=validateKey&key='+encodeURIComponent(saved)+'&device='+encodeURIComponent(fp));
+    const data=await res.json();
+    if(data.valid){showProNav()}
+    else{localStorage.removeItem('exogenadian_pro_key');document.getElementById('proNavSubscribe').style.display=''}
+  }catch(e){
+    const last=localStorage.getItem('exogenadian_pro_lastcheck');
+    if(last&&Date.now()-parseInt(last)<86400000){showProNav()}
+    else{document.getElementById('proNavSubscribe').style.display=''}
+  }
+})();
 </script>
 
 </body>
