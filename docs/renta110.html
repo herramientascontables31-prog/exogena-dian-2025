@@ -91,7 +91,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <div class="container">
   <div class="header" style="padding:20px 28px"><div>
     <h1><span>110</span> Declaracion de Renta</h1>
-    <p>Personas Juridicas · AG 2025 · Casillas <strong style="color:#fff">blancas</strong> = editables · <strong style="color:#81C784">verdes</strong> = automaticas · Valores en miles ($1.000)</p>
+    <p>Personas Juridicas · AG 2025 · Casillas <strong style="color:#fff">blancas</strong> = editables · <strong style="color:#81C784">verdes</strong> = automaticas</p>
   </div><div class="header-right">100% en navegador</div></div>
 
   <!-- UPLOAD BALANCE -->
@@ -128,6 +128,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div class="config-item"><label>11. Razon Social</label><input type="text" id="cfgRazon" placeholder="Ej: MI EMPRESA SAS"></div>
       <div class="config-item"><label>1. Año Gravable</label><input type="number" id="cfgYear" value="2025"></div>
       <div class="config-item"><label>24. Actividad Economica</label><input type="text" id="cfgActividad" placeholder="Ej: 6201"></div>
+      <div class="config-item">
+        <label>Tipo de contribuyente / Tarifa</label>
+        <select id="cfgTipo" onchange="recalcular()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit">
+          <option value="35">General — 35% (Art. 240)</option>
+          <option value="27">Mega-inversiones — 27% (Art. 235-4)</option>
+          <option value="20_zf">Zona Franca (industrial/servicios) — 20% (Art. 240-1)</option>
+          <option value="20_esal">ESAL Régimen Tributario Especial — 20% (Art. 356-2)</option>
+          <option value="20_ies">Instituciones Educación Superior — 20%</option>
+          <option value="15_hotel">Hoteles nuevos/remodelados — 15% (Art. 240 Par. 2)</option>
+          <option value="0_zese5">ZESE primeros 5 años — 0% (Art. 268 Ley 1955)</option>
+          <option value="17.5_zese">ZESE años 6-10 — 17.5%</option>
+          <option value="custom">Otra tarifa (digitar)</option>
+        </select>
+      </div>
+      <div class="config-item" id="tarifaCustomBox" style="display:none">
+        <label>Tarifa personalizada (%)</label>
+        <input type="number" id="cfgTarifaCustom" placeholder="Ej: 20" min="0" max="100" step="0.5" oninput="recalcular()">
+      </div>
     </div>
   </div>
 
@@ -949,12 +967,22 @@ function set(id,val){
 }
 function fN(n){return Math.round(n).toLocaleString('es-CO')}
 
-// Tarifa general Art. 240 E.T. AG 2025 = 35%
-const TARIFA_RENTA=0.35;
-// Ganancias ocasionales = 15%
+// Ganancias ocasionales = 15% (fija para todos)
 const TARIFA_GO=0.15;
-// Anticipo = 75% del impuesto neto
-const PCT_ANTICIPO=0.75;
+
+function getTarifaRenta(){
+  const sel=document.getElementById('cfgTipo').value;
+  const box=document.getElementById('tarifaCustomBox');
+  if(sel==='custom'){
+    box.style.display='';
+    const custom=parseFloat(document.getElementById('cfgTarifaCustom').value);
+    return isNaN(custom)?0.35:custom/100;
+  }
+  box.style.display='none';
+  // Extraer número del value (ej: "20_zf" → 20, "35" → 35)
+  const pct=parseFloat(sel);
+  return isNaN(pct)?0.35:pct/100;
+}
 
 function recalcular(){
   // PATRIMONIO
@@ -991,14 +1019,15 @@ function recalcular(){
   set('c83',c83);
 
   // LIQUIDACION
-  // Impuesto sobre renta liquida gravable (tarifa general 35%)
-  const impRenta=Math.round(rlg*TARIFA_RENTA/1000)*1000;
+  // Impuesto sobre renta liquida gravable
+  const tarifa=getTarifaRenta();
+  const impRenta=Math.round(rlg*tarifa/1000)*1000;
   set('c84',impRenta);
 
   // Impuesto dividendos
   const impDiv75=Math.round(v('c53')*0.075/1000)*1000;
   set('c85',impDiv75);
-  const impDivGen=Math.round(v('c54')*TARIFA_RENTA/1000)*1000;
+  const impDivGen=Math.round(v('c54')*tarifa/1000)*1000;
   set('c86',impDivGen);
 
   // Total impuesto
@@ -1227,9 +1256,9 @@ async function exportExcel(){
     {c:82,d:'Ganancias ocasionales no gravadas y exentas'},
     {c:83,d:'Ganancias ocasionales gravables',f:'MAX(L{r80}-L{r81}-L{r82},0)',t:1},
     {s:'Liquidacion Privada'},
-    {c:84,d:'Impuesto sobre rentas liquidas gravables',f:'ROUND(L{r79}*0.35,-3)',t:1},
+    {c:84,d:'Impuesto sobre rentas liquidas gravables',f:'ROUND(L{r79}*'+getTarifaRenta()+',-3)',t:1},
     {c:85,d:'Impuesto dividendos 7,5%',f:'ROUND(L{r53}*0.075,-3)'},
-    {c:86,d:'Impuesto dividendos tarifa general',f:'ROUND(L{r54}*0.35,-3)'},
+    {c:86,d:'Impuesto dividendos tarifa general',f:'ROUND(L{r54}*'+getTarifaRenta()+',-3)'},
     {c:87,d:'Impuesto dividendos exterior'},
     {c:91,d:'Total impuesto sobre rentas',f:'L{r84}+L{r85}+L{r86}+L{r87}',t:1},
     {c:92,d:'Descuentos tributarios'},
