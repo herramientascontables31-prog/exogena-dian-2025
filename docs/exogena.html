@@ -148,75 +148,75 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   </div>
 
   <!-- ═══ CALENDARIO DE VENCIMIENTOS ═══ -->
-  <div id="calVenc" style="background:linear-gradient(135deg,#0f172a,#1e293b);border:1px solid #334155;border-radius:var(--radius);padding:0;margin-bottom:16px;overflow:hidden">
-    <div onclick="document.getElementById('calBody').style.display=document.getElementById('calBody').style.display==='none'?'block':'none';this.querySelector('.cal-arrow').textContent=document.getElementById('calBody').style.display==='none'?'▸':'▾'" style="padding:14px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+    <div onclick="document.getElementById('calBody').style.display=document.getElementById('calBody').style.display==='none'?'block':'none';this.querySelector('.cal-arrow').textContent=document.getElementById('calBody').style.display==='none'?'▸':'▾'" style="padding:16px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
       <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:1.2rem">📅</span>
-        <span style="color:#f1f5f9;font-weight:600;font-size:.92rem">Calendario de Vencimientos Exógena AG 2025</span>
-        <span style="background:#22c55e;color:#fff;padding:2px 10px;border-radius:12px;font-size:.7rem;font-weight:700">OFICIAL DIAN</span>
+        <span style="font-size:1.1rem">📅</span>
+        <span style="font-weight:700;font-size:.92rem;color:var(--pri)">Calendario de Vencimientos Exógena AG 2025</span>
+        <span style="background:var(--pri2);color:#fff;padding:2px 10px;border-radius:12px;font-size:.68rem;font-weight:700">OFICIAL DIAN</span>
       </div>
-      <span class="cal-arrow" style="color:#94a3b8;font-size:.9rem">▸</span>
+      <span class="cal-arrow" style="color:var(--muted);font-size:.9rem">▸</span>
     </div>
-    <div id="calBody" style="display:none;padding:0 20px 20px">
+    <div id="calBody" style="display:none;padding:0 24px 20px">
       <!-- Buscador por NIT -->
-      <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <span style="color:#94a3b8;font-size:.85rem">Consulta tu fecha:</span>
-        <input type="text" id="nitVenc" placeholder="NIT (sin DV)" maxlength="15" style="padding:8px 14px;border:1px solid #475569;border-radius:8px;font-size:.88rem;width:180px;background:#0f172a;color:#f1f5f9">
-        <label style="color:#94a3b8;font-size:.82rem;display:flex;align-items:center;gap:6px">
-          <input type="checkbox" id="esGranContrib" style="accent-color:#22c55e"> Gran Contribuyente
+      <div style="background:var(--pri3);border:1px solid #B4C6E7;border-radius:8px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span style="color:var(--pri);font-size:.85rem;font-weight:600">Consulta tu fecha:</span>
+        <input type="text" id="nitVenc" placeholder="NIT (sin DV)" maxlength="15" style="padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:.88rem;width:180px;background:#fff;color:var(--text)">
+        <label style="color:var(--muted);font-size:.82rem;display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="esGranContrib" style="accent-color:var(--pri2)"> Gran Contribuyente
         </label>
-        <button onclick="buscarVencimiento()" style="padding:8px 18px;background:#22c55e;color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:600;cursor:pointer">Consultar</button>
+        <button onclick="buscarVencimiento()" class="btn btn-primary" style="padding:8px 18px;font-size:.85rem">Consultar</button>
         <div id="resVenc" style="flex-basis:100%;margin-top:4px"></div>
       </div>
 
       <!-- Tablas -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <!-- Grandes Contribuyentes -->
-        <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px">
-          <div style="color:#22c55e;font-weight:700;font-size:.82rem;margin-bottom:10px">GRANDES CONTRIBUYENTES</div>
-          <table style="width:100%;font-size:.78rem;color:#cbd5e1;border-collapse:collapse">
-            <tr style="color:#64748b;border-bottom:1px solid #334155"><th style="text-align:left;padding:4px 8px">Último dígito</th><th style="text-align:left;padding:4px 8px">Vencimiento</th></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">1</td><td style="padding:4px 8px">28 abril 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">2</td><td style="padding:4px 8px">29 abril 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">3</td><td style="padding:4px 8px">4 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">4</td><td style="padding:4px 8px">5 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">5</td><td style="padding:4px 8px">6 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">6</td><td style="padding:4px 8px">7 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">7</td><td style="padding:4px 8px">8 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">8</td><td style="padding:4px 8px">11 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">9</td><td style="padding:4px 8px">12 mayo 2026</td></tr>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px">
+          <div style="color:var(--pri);font-weight:700;font-size:.82rem;margin-bottom:10px">GRANDES CONTRIBUYENTES</div>
+          <table style="width:100%;font-size:.78rem;color:var(--text);border-collapse:collapse">
+            <tr style="color:var(--muted);border-bottom:1px solid var(--border)"><th style="text-align:left;padding:4px 8px">Último dígito</th><th style="text-align:left;padding:4px 8px">Vencimiento</th></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">1</td><td style="padding:4px 8px">28 abril 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">2</td><td style="padding:4px 8px">29 abril 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">3</td><td style="padding:4px 8px">4 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">4</td><td style="padding:4px 8px">5 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">5</td><td style="padding:4px 8px">6 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">6</td><td style="padding:4px 8px">7 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">7</td><td style="padding:4px 8px">8 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">8</td><td style="padding:4px 8px">11 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">9</td><td style="padding:4px 8px">12 mayo 2026</td></tr>
             <tr><td style="padding:4px 8px">0</td><td style="padding:4px 8px">13 mayo 2026</td></tr>
           </table>
         </div>
         <!-- Personas Jurídicas y Naturales -->
-        <div style="background:#1e293b;border:1px solid #334155;border-radius:8px;padding:14px">
-          <div style="color:#22c55e;font-weight:700;font-size:.82rem;margin-bottom:10px">PERSONAS JURÍDICAS Y NATURALES</div>
-          <table style="width:100%;font-size:.78rem;color:#cbd5e1;border-collapse:collapse">
-            <tr style="color:#64748b;border-bottom:1px solid #334155"><th style="text-align:left;padding:4px 8px">Últimos 2 dígitos</th><th style="text-align:left;padding:4px 8px">Vencimiento</th></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">01 – 05</td><td style="padding:4px 8px">14 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">06 – 10</td><td style="padding:4px 8px">15 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">11 – 15</td><td style="padding:4px 8px">19 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">16 – 20</td><td style="padding:4px 8px">20 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">21 – 25</td><td style="padding:4px 8px">21 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">26 – 30</td><td style="padding:4px 8px">22 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">31 – 35</td><td style="padding:4px 8px">25 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">36 – 40</td><td style="padding:4px 8px">26 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">41 – 45</td><td style="padding:4px 8px">27 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">46 – 50</td><td style="padding:4px 8px">28 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">51 – 55</td><td style="padding:4px 8px">29 mayo 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">56 – 60</td><td style="padding:4px 8px">1 junio 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">61 – 65</td><td style="padding:4px 8px">2 junio 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">66 – 70</td><td style="padding:4px 8px">3 junio 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">71 – 75</td><td style="padding:4px 8px">4 junio 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">76 – 80</td><td style="padding:4px 8px">5 junio 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">81 – 85</td><td style="padding:4px 8px">9 junio 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">86 – 90</td><td style="padding:4px 8px">10 junio 2026</td></tr>
-            <tr style="border-bottom:1px solid #1e293b"><td style="padding:4px 8px">91 – 95</td><td style="padding:4px 8px">11 junio 2026</td></tr>
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px">
+          <div style="color:var(--pri);font-weight:700;font-size:.82rem;margin-bottom:10px">PERSONAS JURÍDICAS Y NATURALES</div>
+          <table style="width:100%;font-size:.78rem;color:var(--text);border-collapse:collapse">
+            <tr style="color:var(--muted);border-bottom:1px solid var(--border)"><th style="text-align:left;padding:4px 8px">Últimos 2 dígitos</th><th style="text-align:left;padding:4px 8px">Vencimiento</th></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">01 – 05</td><td style="padding:4px 8px">14 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">06 – 10</td><td style="padding:4px 8px">15 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">11 – 15</td><td style="padding:4px 8px">19 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">16 – 20</td><td style="padding:4px 8px">20 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">21 – 25</td><td style="padding:4px 8px">21 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">26 – 30</td><td style="padding:4px 8px">22 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">31 – 35</td><td style="padding:4px 8px">25 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">36 – 40</td><td style="padding:4px 8px">26 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">41 – 45</td><td style="padding:4px 8px">27 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">46 – 50</td><td style="padding:4px 8px">28 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">51 – 55</td><td style="padding:4px 8px">29 mayo 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">56 – 60</td><td style="padding:4px 8px">1 junio 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">61 – 65</td><td style="padding:4px 8px">2 junio 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">66 – 70</td><td style="padding:4px 8px">3 junio 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">71 – 75</td><td style="padding:4px 8px">4 junio 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">76 – 80</td><td style="padding:4px 8px">5 junio 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">81 – 85</td><td style="padding:4px 8px">9 junio 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">86 – 90</td><td style="padding:4px 8px">10 junio 2026</td></tr>
+            <tr style="border-bottom:1px solid var(--border)"><td style="padding:4px 8px">91 – 95</td><td style="padding:4px 8px">11 junio 2026</td></tr>
             <tr><td style="padding:4px 8px">96 – 00</td><td style="padding:4px 8px">12 junio 2026</td></tr>
           </table>
         </div>
       </div>
-      <div style="margin-top:10px;font-size:.72rem;color:#64748b;text-align:right">Fuente: <a href="https://www.dian.gov.co/impuestos/sociedades/ExogenaTributaria/CalendarioExogena/Paginas/vigencia-2025.aspx" target="_blank" style="color:#94a3b8">DIAN — Res. 000162/2023 mod. Res. 000188/2024</a></div>
+      <div style="margin-top:10px;font-size:.72rem;color:var(--muted);text-align:right">Fuente: <a href="https://www.dian.gov.co/impuestos/sociedades/ExogenaTributaria/CalendarioExogena/Paginas/vigencia-2025.aspx" target="_blank" style="color:var(--pri2)">DIAN — Res. 000162/2023 mod. Res. 000188/2024</a></div>
     </div>
   </div>
 
@@ -225,7 +225,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     const nit=document.getElementById('nitVenc').value.replace(/[^0-9]/g,'');
     const esGran=document.getElementById('esGranContrib').checked;
     const res=document.getElementById('resVenc');
-    if(!nit){res.innerHTML='<span style="color:#f87171;font-size:.82rem">Ingresa el NIT</span>';return}
+    if(!nit){res.innerHTML='<span style="color:var(--red);font-size:.82rem">Ingresa el NIT</span>';return}
 
     const granFechas={1:'28 de abril de 2026',2:'29 de abril de 2026',3:'4 de mayo de 2026',4:'5 de mayo de 2026',5:'6 de mayo de 2026',6:'7 de mayo de 2026',7:'8 de mayo de 2026',8:'11 de mayo de 2026',9:'12 de mayo de 2026',0:'13 de mayo de 2026'};
     const pjFechas=[[1,5,'14 de mayo de 2026'],[6,10,'15 de mayo de 2026'],[11,15,'19 de mayo de 2026'],[16,20,'20 de mayo de 2026'],[21,25,'21 de mayo de 2026'],[26,30,'22 de mayo de 2026'],[31,35,'25 de mayo de 2026'],[36,40,'26 de mayo de 2026'],[41,45,'27 de mayo de 2026'],[46,50,'28 de mayo de 2026'],[51,55,'29 de mayo de 2026'],[56,60,'1 de junio de 2026'],[61,65,'2 de junio de 2026'],[66,70,'3 de junio de 2026'],[71,75,'4 de junio de 2026'],[76,80,'5 de junio de 2026'],[81,85,'9 de junio de 2026'],[86,90,'10 de junio de 2026'],[91,95,'11 de junio de 2026'],[96,100,'12 de junio de 2026']];
@@ -246,12 +246,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     const fVenc=new Date(parseInt(partes[3]),meses[partes[2]],parseInt(partes[1]));
     const dias=Math.ceil((fVenc-hoy)/(1000*60*60*24));
     const diasTxt=dias>0?`Faltan <strong>${dias} días</strong>`:`<strong style="color:#f87171">Venció hace ${Math.abs(dias)} días</strong>`;
-    const color=dias>15?'#22c55e':dias>0?'#f59e0b':'#f87171';
+    const color=dias>15?'var(--green)':dias>0?'var(--amber)':'var(--red)';
+    const bgColor=dias>15?'var(--green2)':dias>0?'var(--amber2)':'#FEE2E2';
 
-    res.innerHTML=`<div style="background:#0f172a;border:1px solid ${color};border-radius:8px;padding:10px 16px;margin-top:8px;display:flex;align-items:center;gap:12px">
+    res.innerHTML=`<div style="background:${bgColor};border:1px solid ${color};border-radius:8px;padding:10px 16px;margin-top:8px;display:flex;align-items:center;gap:12px">
       <span style="font-size:1.3rem">📅</span>
-      <div><span style="color:#f1f5f9;font-size:.88rem;font-weight:600">NIT ${nit}: vence el ${fecha}</span><br>
-      <span style="color:#94a3b8;font-size:.8rem">${diasTxt}</span></div>
+      <div><span style="color:var(--text);font-size:.88rem;font-weight:600">NIT ${nit}: vence el ${fecha}</span><br>
+      <span style="color:var(--muted);font-size:.8rem">${diasTxt}</span></div>
     </div>`;
   }
   </script>
