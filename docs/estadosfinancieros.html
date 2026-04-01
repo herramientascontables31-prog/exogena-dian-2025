@@ -387,10 +387,9 @@ const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBl
 let proUnlocked=false;
 
 function getDeviceFingerprint(){
-  const nav=navigator;
-  const raw=[nav.userAgent,nav.language,screen.width+'x'+screen.height,screen.colorDepth,new Date().getTimezoneOffset()].join('|');
-  let hash=0;for(let i=0;i<raw.length;i++){hash=((hash<<5)-hash)+raw.charCodeAt(i);hash|=0}
-  return 'FP-'+Math.abs(hash).toString(36).toUpperCase();
+  let uid=localStorage.getItem('exogenadian_device_id');
+  if(!uid){uid='D-'+crypto.randomUUID().split('-').slice(0,2).join('');localStorage.setItem('exogenadian_device_id',uid)}
+  return uid;
 }
 
 async function validarClavePro(clave){
@@ -408,6 +407,12 @@ async function validarClavePro(clave){
     if(data.reason)console.warn('PRO rechazado:',data.reason);
   }catch(e){console.error('Error validando PRO:',e)}
   return false;
+}
+
+async function revalidarPro(){
+  const k=localStorage.getItem('exogenadian_pro_key');
+  if(!k||!proUnlocked)return false;
+  return await validarClavePro(k);
 }
 
 async function initPro(){
@@ -1965,8 +1970,10 @@ ${firmaBlock}
   a.click();URL.revokeObjectURL(url);
 }
 
-function exportRevelacionesWordPro(){
+async function exportRevelacionesWordPro(){
   if(!proUnlocked){alert('La versión con Notas detalladas es una función PRO.\\n\\nDesbloquea PRO para descargar las Revelaciones completas con notas por cuenta.');return}
+  const valid=await revalidarPro();
+  if(!valid){proUnlocked=false;updateProUI();alert('Tu clave PRO expiró o fue desactivada. Verifica tu suscripción.');return}
 
   const year=document.getElementById('cfgYear').value;
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';

@@ -626,18 +626,18 @@ const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBl
 let proUnlocked=false;
 
 function getDeviceFingerprint(){
-  const nav=navigator;
-  const raw=[nav.userAgent,nav.language,screen.width+'x'+screen.height,screen.colorDepth,new Date().getTimezoneOffset()].join('|');
-  let hash=0;for(let i=0;i<raw.length;i++){hash=((hash<<5)-hash)+raw.charCodeAt(i);hash|=0}
-  return 'FP-'+Math.abs(hash).toString(36).toUpperCase();
+  let uid=localStorage.getItem('exogenadian_device_id');
+  if(!uid){uid='D-'+crypto.randomUUID().split('-').slice(0,2).join('');localStorage.setItem('exogenadian_device_id',uid)}
+  return uid;
 }
 
 async function validarClavePro(clave){
   try{
     const fp=getDeviceFingerprint();
     const url=APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(clave)+'&device='+encodeURIComponent(fp);
-    const resp=await fetch(url);
-    const data=await resp.json();
+    const resp=await fetch(url,{redirect:'follow',mode:'cors'});
+    const txt=await resp.text();
+    const data=JSON.parse(txt);
     if(data.valid){
       if(data.daysLeft&&data.daysLeft<=3){
         console.log('PRO vence en '+data.daysLeft+' día(s) — '+data.expiry);
@@ -647,6 +647,12 @@ async function validarClavePro(clave){
     if(data.reason)console.warn('PRO rechazado:',data.reason);
   }catch(e){console.error('Error validando PRO:',e)}
   return false;
+}
+
+async function revalidarPro(){
+  const k=localStorage.getItem('exogenadian_pro_key');
+  if(!k||!proUnlocked)return false;
+  return await validarClavePro(k);
 }
 
 async function initPro(){
@@ -1965,13 +1971,15 @@ td{font-size:8px;padding:2px 4px;border-bottom:1px solid #e0e0e0}
   setTimeout(()=>{pw.print()},500);
 }
 
-function exportXls300Pro(){
+async function exportXls300Pro(){
   if(!proUnlocked){
     if(confirm('La descarga en Excel es una función PRO.\n\n¿Deseas ir al paso 5 para activar PRO?\n(También puedes descargar PDF gratis)')){
       goStep(5);
     }
     return;
   }
+  const valid=await revalidarPro();
+  if(!valid){proUnlocked=false;updateProUI();alert('Tu clave PRO expiró o fue desactivada. Verifica tu suscripción.');return}
   exportXls300();
 }
 
@@ -2651,10 +2659,14 @@ function setModo(modo){
   }
 }
 
-function iniciarProceso(){
+async function iniciarProceso(){
   if((modoActual==='dian'||modoActual==='comparar')&&!proUnlocked){
     alert('Activa PRO para usar el listado DIAN. Paga con el botón de arriba.');
     return;
+  }
+  if((modoActual==='dian'||modoActual==='comparar')&&proUnlocked){
+    const valid=await revalidarPro();
+    if(!valid){proUnlocked=false;updateProUI();alert('Tu clave PRO expiró o fue desactivada. Verifica tu suscripción.');return}
   }
   if(modoActual==='balance'||modoActual==='comparar'){
     if(!rawData.length){alert('Carga un balance de prueba primero.');return}
