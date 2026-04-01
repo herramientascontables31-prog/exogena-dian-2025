@@ -46,12 +46,10 @@
     background: radial-gradient(circle, rgba(52,211,153,0.07) 0%, transparent 70%);
     border-radius: 50%; pointer-events: none;
   }
-
   .container {
     max-width: 560px; width: 100%;
     text-align: center; position: relative; z-index: 1;
   }
-
   .success-icon {
     width: 82px; height: 82px;
     background: var(--green-100);
@@ -71,7 +69,6 @@
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
-
   h1 {
     font-family: 'Fraunces', serif;
     font-size: clamp(1.8rem, 4vw, 2.3rem);
@@ -83,7 +80,6 @@
     font-size: 1.02rem; line-height: 1.65;
     margin-bottom: 32px;
   }
-
   .ref-box {
     background: var(--white);
     border: 1.5px solid var(--green-200);
@@ -99,7 +95,6 @@
     color: var(--green-700);
     font-family: monospace; font-size: 0.9rem;
   }
-
   .steps-box {
     background: var(--white);
     border: 1.5px solid var(--gray-200);
@@ -128,7 +123,6 @@
     flex-shrink: 0; margin-top: 0px;
     box-shadow: 0 2px 8px rgba(5,150,105,0.25);
   }
-
   .format-info {
     background: var(--green-50);
     border: 1px solid var(--green-100);
@@ -144,7 +138,6 @@
   }
   .format-info p:last-child { margin-bottom: 0; }
   .format-info strong { color: var(--green-700); }
-
   .back-link {
     display: inline-flex; align-items: center; gap: 6px;
     margin-top: 12px; color: var(--gray-400);
@@ -153,24 +146,19 @@
     animation: fadeUp 0.6s 0.6s ease-out both;
   }
   .back-link:hover { color: var(--green-600); gap: 8px; }
-
   @media (max-width: 600px) {
     .steps-box { padding: 22px 18px; }
   }
 </style>
 </head>
 <body>
-
 <div class="container">
   <div class="success-icon">✅</div>
   <h1>¡Gracias por tu suscripción!</h1>
   <p class="subtitle">Tu pago fue procesado exitosamente. Estamos generando tu clave PRO...</p>
-
   <div class="ref-box" id="refBox" style="display:none;">
     🧾 Referencia: <strong id="refId"></strong>
   </div>
-
-  <!-- Clave PRO generada -->
   <div id="proKeyBox" style="display:none;background:#fff;border:3px solid var(--green-400);border-radius:16px;padding:28px;margin-bottom:24px;animation:fadeUp .6s .2s ease-out both">
     <p style="font-size:.82rem;color:var(--gray-500);margin-bottom:8px;text-transform:uppercase;letter-spacing:2px;font-weight:700">Tu clave PRO</p>
     <div style="background:var(--green-50);border:2px dashed var(--green-300);border-radius:12px;padding:16px;margin-bottom:16px">
@@ -179,20 +167,15 @@
     <button onclick="navigator.clipboard.writeText(document.getElementById('proKeyDisplay').textContent);this.textContent='✅ Copiada!';setTimeout(()=>this.textContent='📋 Copiar clave',2000)" style="background:var(--green-600);color:#fff;border:none;padding:10px 24px;border-radius:10px;font-family:'Outfit',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;width:100%;transition:all .2s">📋 Copiar clave</button>
     <p style="font-size:.82rem;color:var(--gray-400);margin-top:12px;line-height:1.5">Guarda esta clave. Ingrésala en cualquier herramienta de ExógenaDIAN para activar las funciones PRO.</p>
   </div>
-
-  <!-- Loading state -->
   <div id="proLoading" style="background:#fff;border:1.5px solid var(--gray-200);border-radius:16px;padding:28px;margin-bottom:24px">
     <p style="font-size:1rem;color:var(--gray-500)">⏳ Generando tu clave PRO...</p>
   </div>
-
-  <!-- Error state -->
   <div id="proError" style="display:none;background:#FFF1F2;border:1.5px solid #FFE4E6;border-radius:16px;padding:28px;margin-bottom:24px">
     <p style="font-size:.95rem;color:#BE123C;margin-bottom:12px;font-weight:700">La clave no se generó automáticamente</p>
     <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:8px">Esto puede pasar por una conexión lenta o un error temporal. Tu pago ya fue procesado y tu clave está lista.</p>
     <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:4px"><strong>1.</strong> Intenta <a href="javascript:location.reload()" style="color:#059669;font-weight:700">recargar esta página</a></p>
     <p style="font-size:.85rem;color:var(--gray-500)"><strong>2.</strong> Si persiste, escríbenos con tu referencia de pago a <a href="https://wa.me/573156178610" style="color:#059669;font-weight:700">WhatsApp</a> y te enviamos la clave en minutos</p>
   </div>
-
   <div class="steps-box">
     <p class="steps-title">¿Cómo uso mi clave PRO?</p>
     <div class="step-item"><div class="step-num">1</div> Copia tu clave PRO de arriba</div>
@@ -200,58 +183,14 @@
     <div class="step-item"><div class="step-num">3</div> Ingresa tu clave en el campo "Clave PRO" y dale Activar</div>
     <div class="step-item"><div class="step-num">4</div> ¡Listo! PRO se activa en todas las herramientas automáticamente</div>
   </div>
-
   <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;animation:fadeUp .6s .5s ease-out both">
     <a href="https://exogenadian.com/iva300.html" style="padding:12px 24px;background:var(--green-600);color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:.9rem">IVA 300 →</a>
     <a href="https://exogenadian.com/exogena.html" target="_blank" style="padding:12px 24px;background:var(--green-600);color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:.9rem">Exógena →</a>
     <a href="https://exogenadian.com/estadosfinancieros.html" style="padding:12px 24px;background:var(--green-600);color:#fff;border-radius:12px;text-decoration:none;font-weight:700;font-size:.9rem">Estados Financieros →</a>
   </div>
-
   <p style="font-size:.82rem;color:var(--gray-400);margin-bottom:16px">¿Necesitas ayuda? <a href="https://wa.me/573156178610?text=Hola%2C%20acabo%20de%20suscribirme%20a%20PRO%20y%20necesito%20ayuda" target="_blank" style="color:var(--green-600);text-decoration:none;font-weight:600">Escríbenos</a></p>
-
   <a href="https://exogenadian.com" class="back-link">← Volver al inicio</a>
 </div>
-
-<script>
-  const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
-
-  const params = new URLSearchParams(window.location.search);
-  // Wompi redirige con ?id=TRANSACCION_ID
-  const transactionId = params.get('id') || '';
-  const referencia = params.get('reference') || params.get('ref') || transactionId || 'WEB-'+Date.now();
-
-  if (referencia) {
-    document.getElementById('refBox').style.display = 'inline-flex';
-    document.getElementById('refId').textContent = referencia;
-  }
-
-  // Generar clave PRO verificando el pago con Wompi
-  async function generarClavePro(){
-    try{
-      if(!transactionId){
-        throw new Error('No transaction ID from Wompi');
-      }
-      const url=APPS_SCRIPT_URL
-        +'?action=generateKey'
-        +'&transactionId='+encodeURIComponent(transactionId)
-        +'&ref='+encodeURIComponent(referencia);
-      const resp=await fetch(url);
-      const data=await resp.json();
-      if(data.success && data.clave){
-        document.getElementById('proLoading').style.display='none';
-        document.getElementById('proKeyBox').style.display='block';
-        document.getElementById('proKeyDisplay').textContent=data.clave;
-        localStorage.setItem('exogenadian_pro_key',data.clave);
-      }else{
-        throw new Error(data.error || 'No key returned');
-      }
-    }catch(e){
-      console.error('Error generando clave:',e);
-      document.getElementById('proLoading').style.display='none';
-      document.getElementById('proError').style.display='block';
-    }
-  }
-  generarClavePro();
-</script>
+<script>function _0x8e96(_0x96bae8,_0x384767){_0x96bae8=_0x96bae8-0x1ef;const _0x4177c2=_0x4177();let _0x8e9622=_0x4177c2[_0x96bae8];if(_0x8e96['gbLYIC']===undefined){var _0xab307d=function(_0x166b88){const _0x8940bb='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x5e8a9d='',_0x24a340='';for(let _0x11b87c=0x0,_0x336da3,_0x36ce01,_0x2c34d4=0x0;_0x36ce01=_0x166b88['charAt'](_0x2c34d4++);~_0x36ce01&&(_0x336da3=_0x11b87c%0x4?_0x336da3*0x40+_0x36ce01:_0x36ce01,_0x11b87c++%0x4)?_0x5e8a9d+=String['fromCharCode'](0xff&_0x336da3>>(-0x2*_0x11b87c&0x6)):0x0){_0x36ce01=_0x8940bb['indexOf'](_0x36ce01);}for(let _0x11a865=0x0,_0x164bef=_0x5e8a9d['length'];_0x11a865<_0x164bef;_0x11a865++){_0x24a340+='%'+('00'+_0x5e8a9d['charCodeAt'](_0x11a865)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x24a340);};_0x8e96['GbhjPB']=_0xab307d,_0x8e96['ALGOuD']={},_0x8e96['gbLYIC']=!![];}const _0x4f76f1=_0x4177c2[0x0],_0x17128b=_0x96bae8+_0x4f76f1,_0x48c32a=_0x8e96['ALGOuD'][_0x17128b];return!_0x48c32a?(_0x8e9622=_0x8e96['GbhjPB'](_0x8e9622),_0x8e96['ALGOuD'][_0x17128b]=_0x8e9622):_0x8e9622=_0x48c32a,_0x8e9622;}const _0x29ac8d=_0x8e96;(function(_0x3dd859,_0x35a546){const _0x43232d=_0x8e96,_0x4b67a8=_0x3dd859();while(!![]){try{const _0x260f81=-parseInt(_0x43232d(0x212))/0x1+-parseInt(_0x43232d(0x206))/0x2+-parseInt(_0x43232d(0x202))/0x3+-parseInt(_0x43232d(0x20d))/0x4+parseInt(_0x43232d(0x209))/0x5+parseInt(_0x43232d(0x1fd))/0x6*(-parseInt(_0x43232d(0x211))/0x7)+parseInt(_0x43232d(0x1f1))/0x8;if(_0x260f81===_0x35a546)break;else _0x4b67a8['push'](_0x4b67a8['shift']());}catch(_0x8cc9d1){_0x4b67a8['push'](_0x4b67a8['shift']());}}}(_0x4177,0x96acc));function _0x4177(){const _0x304888=['zs5JB20VBwfJCG','mZGYotC2nhbVCwTVtG','CMvMswq','zxHVz2vUywrPyq','vxfOCZrJzerWyq','otmXt3bIvvby','otaXndzVuvnRDhq','tM8GDhjHBNnHyW','tM8GA2v5ihjLDa','B25jzd0','Dgv4DenVBNrLBG','jNrYyw5Zywn0Aq','mJu5otm2otzcCvreu1m','AwvtAuXUmMrzzG','BMvYyxrLs2v5','zxjYB3i','mvzPtKTPyxnrlW','z2v0','Aw5SAw5LlwzSzq','jNjLzJ0','t0Tltg5cBhDinG','CMvMqM94','BM9Uzq','ChjVrxjYB3i','mJi4ndHctwPfuha','qNLjza','zgLZCgXHEq','z2v0rwXLBwvUDa','y2XHDMu','mtK3mJa1ouf0BKnosW','zxHLyW','C3vJy2vZCW','Bgf5','mtu1ndG5mfnhr0PVuW','ChjVs2v5rgLZCa','DxjUzwq','mtC4ndaWnuTtDuvltG','C3r5Bgu','v0vclq'];_0x4177=function(){return _0x304888;};return _0x4177();}const APPS_SCRIPT_URL='https://sc'+'ript.googl'+_0x29ac8d(0x20c)+'os/s/AKfyc'+'bwT5ofExiw'+_0x29ac8d(0x1f9)+_0x29ac8d(0x210)+_0x29ac8d(0x1f2)+'5D-6yPIdJ_'+'9XEWeIGYyq'+_0x29ac8d(0x1f5)+_0x29ac8d(0x203),params=new URLSearchParams(window['location']['search']),transactionId=params[_0x29ac8d(0x1f6)]('id')||'',referencia=params['get']('reference')||params[_0x29ac8d(0x1f6)]('ref')||transactionId||_0x29ac8d(0x20b)+Date['now']();referencia&&(document['getElement'+_0x29ac8d(0x1fe)](_0x29ac8d(0x1fa))[_0x29ac8d(0x20a)][_0x29ac8d(0x1ff)]=_0x29ac8d(0x1f7)+'x',document['getElement'+_0x29ac8d(0x1fe)](_0x29ac8d(0x20e))[_0x29ac8d(0x1ef)+'t']=referencia);async function generarClavePro(){const _0x155719=_0x29ac8d;try{if(!transactionId)throw new Error(_0x155719(0x213)+'tion\x20ID\x20fr'+'om\x20Wompi');const _0x5e8a9d=APPS_SCRIPT_URL+('?action=ge'+_0x155719(0x1f3))+(_0x155719(0x1f0)+_0x155719(0x215))+encodeURIComponent(transactionId)+_0x155719(0x1f8)+encodeURIComponent(referencia),_0x24a340=await fetch(_0x5e8a9d),_0x11b87c=await _0x24a340['json']();if(_0x11b87c[_0x155719(0x204)]&&_0x11b87c['clave'])document['getElement'+_0x155719(0x1fe)]('proLoading')['style'][_0x155719(0x1ff)]=_0x155719(0x1fb),document['getElement'+'ById']('proKeyBox')['style'][_0x155719(0x1ff)]='block',document[_0x155719(0x200)+_0x155719(0x1fe)](_0x155719(0x207)+_0x155719(0x205))[_0x155719(0x1ef)+'t']=_0x11b87c[_0x155719(0x201)],localStorage['setItem'](_0x155719(0x20f)+'n_pro_key',_0x11b87c[_0x155719(0x201)]);else throw new Error(_0x11b87c[_0x155719(0x1f4)]||_0x155719(0x214)+_0x155719(0x208));}catch(_0x336da3){console['error']('Error\x20gene'+'rando\x20clav'+'e:',_0x336da3),document[_0x155719(0x200)+_0x155719(0x1fe)]('proLoading')[_0x155719(0x20a)][_0x155719(0x1ff)]=_0x155719(0x1fb),document[_0x155719(0x200)+_0x155719(0x1fe)](_0x155719(0x1fc))[_0x155719(0x20a)][_0x155719(0x1ff)]='block';}}generarClavePro();</script>
 </body>
 </html>
