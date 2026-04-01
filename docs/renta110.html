@@ -126,25 +126,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div class="config-grid">
       <div class="config-item"><label>5. NIT</label><input type="text" id="cfgNit" placeholder="Ej: 900875335" oninput="recalcular()"></div>
       <div class="config-item"><label>11. Razon Social</label><input type="text" id="cfgRazon" placeholder="Ej: MI EMPRESA SAS"></div>
-      <div class="config-item"><label>1. Ano Gravable</label><input type="number" id="cfgYear" value="2025"></div>
+      <div class="config-item"><label>1. Año Gravable</label><input type="number" id="cfgYear" value="2025"></div>
       <div class="config-item"><label>24. Actividad Economica</label><input type="text" id="cfgActividad" placeholder="Ej: 6201"></div>
     </div>
   </div>
 
   <!-- DATOS AÑO ANTERIOR -->
   <div class="card" style="padding:12px">
-    <div class="card-title" style="margin-bottom:8px"><span>📋</span> Declaracion Ano Anterior (AG 2024)</div>
+    <div class="card-title" style="margin-bottom:8px"><span>📋</span> Declaracion Año Anterior (AG 2024)</div>
     <p style="font-size:.75rem;color:var(--muted);margin-bottom:10px">Para calcular anticipo y aplicar saldos. Si es primera declaracion, deja en blanco.</p>
     <div class="config-grid">
       <div class="config-item"><label>Impuesto neto de renta AG anterior</label><input type="text" id="antImpNeto" placeholder="0" oninput="recalcular()"></div>
-      <div class="config-item"><label>Anticipo liquidado ano anterior (cas. 104 del F110 anterior)</label><input type="text" id="antAnticipo" placeholder="0" oninput="recalcular()"></div>
-      <div class="config-item"><label>Saldo a favor ano anterior</label><input type="text" id="antSaldoFavor" placeholder="0" oninput="recalcular()"></div>
+      <div class="config-item"><label>Anticipo liquidado año anterior (cas. 104 del F110 anterior)</label><input type="text" id="antAnticipo" placeholder="0" oninput="recalcular()"></div>
+      <div class="config-item"><label>Saldo a favor año anterior</label><input type="text" id="antSaldoFavor" placeholder="0" oninput="recalcular()"></div>
       <div class="config-item">
-        <label>Metodo anticipo ano siguiente</label>
+        <label>Metodo anticipo año siguiente</label>
         <select id="antMetodo" onchange="recalcular()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit">
-          <option value="75">75% del impuesto neto (3er ano en adelante)</option>
-          <option value="promedio">Promedio (2do ano declarando)</option>
-          <option value="25">25% del impuesto neto (1er ano declarando)</option>
+          <option value="75">75% del impuesto neto (3er año en adelante)</option>
+          <option value="promedio">Promedio (2do año declarando)</option>
+          <option value="25">25% del impuesto neto (1er año declarando)</option>
           <option value="0">No aplica anticipo</option>
         </select>
       </div>
@@ -238,12 +238,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="f110-row f-total"><div class="f-label">Total impuesto a cargo</div><div class="f-cas">96</div><div class="f-val"><input id="c96" class="computed" readonly></div></div>
 
         <div class="dian-sec">Pagos</div>
-        <div class="f110-row"><div class="f-label">Anticipo renta ano anterior</div><div class="f-cas">99</div><div class="f-val"><input id="c99" oninput="this._manual=true;recalcular()"></div></div>
-        <div class="f110-row"><div class="f-label">Saldo a favor ano anterior</div><div class="f-cas">100</div><div class="f-val"><input id="c100" oninput="this._manual=true;recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Anticipo renta año anterior</div><div class="f-cas">99</div><div class="f-val"><input id="c99" oninput="this._manual=true;recalcular()"></div></div>
+        <div class="f110-row"><div class="f-label">Saldo a favor año anterior</div><div class="f-cas">100</div><div class="f-val"><input id="c100" oninput="this._manual=true;recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Autorretenciones</div><div class="f-cas">101</div><div class="f-val"><input id="c101" oninput="recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Otras retenciones</div><div class="f-cas">102</div><div class="f-val"><input id="c102" oninput="recalcular()"></div></div>
-        <div class="f110-row f-total"><div class="f-label">Total retenciones ano gravable</div><div class="f-cas">103</div><div class="f-val"><input id="c103" class="computed" readonly></div></div>
-        <div class="f110-row"><div class="f-label">Anticipo renta para el ano siguiente</div><div class="f-cas">104</div><div class="f-val"><input id="c104" class="computed" readonly></div></div>
+        <div class="f110-row f-total"><div class="f-label">Total retenciones año gravable</div><div class="f-cas">103</div><div class="f-val"><input id="c103" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Anticipo renta para el año siguiente</div><div class="f-cas">104</div><div class="f-val"><input id="c104" class="computed" readonly></div></div>
 
         <div class="dian-sec">Saldo</div>
         <div class="f110-row f-result"><div class="f-label">Saldo a pagar</div><div class="f-cas">110</div><div class="f-val"><input id="c110" class="computed" readonly></div></div>
@@ -460,7 +460,7 @@ const REGLAS_NO_DED=[
   {id:29,nom:'Amortizacion gastos preoperativos exceso',art:'142',tipo:'no_ded',test:(c,n)=>/amortizacion.*preoperativ.*no deducible/.test(n)},
 
   // ── GASTOS DE PERIODOS ANTERIORES (Art. 107) ──
-  {id:30,nom:'Gastos de vigencias anteriores',art:'107',tipo:'no_ded',test:(c,n)=>/vigencia.*anterior|periodo.*anterior|ejercicio.*anterior|ano.*anterior/.test(n)},
+  {id:30,nom:'Gastos de vigencias anteriores',art:'107',tipo:'no_ded',test:(c,n)=>/vigencia.*anterior|periodo.*anterior|ejercicio.*anterior|a[nñ]o.*anterior/.test(n)},
 
   // ── GASTOS SIN RELACION DE CAUSALIDAD (Art. 107) ──
   {id:31,nom:'Gastos personales socios',art:'107',tipo:'no_ded',test:(c,n)=>/gasto.*personal.*socio|gasto.*socio.*personal/.test(n)},
@@ -1196,12 +1196,12 @@ async function exportExcel(){
     {c:95,d:'Descuento impuestos pagados en el exterior'},
     {c:96,d:'Total impuesto a cargo',f:'MAX(L{r93}+L{r94}-L{r95},0)',t:1},
     {s:'Pagos'},
-    {c:99,d:'Anticipo renta ano gravable anterior'},
-    {c:100,d:'Saldo a favor ano gravable anterior sin solicitud de devolucion'},
+    {c:99,d:'Anticipo renta año gravable anterior'},
+    {c:100,d:'Saldo a favor año gravable anterior sin solicitud de devolucion'},
     {c:101,d:'Autorretenciones'},
     {c:102,d:'Otras retenciones'},
-    {c:103,d:'Total retenciones ano gravable',f:'L{r101}+L{r102}',t:1},
-    {c:104,d:'Anticipo renta para el ano gravable siguiente'},
+    {c:103,d:'Total retenciones año gravable',f:'L{r101}+L{r102}',t:1},
+    {c:104,d:'Anticipo renta para el año gravable siguiente'},
     {s:'Saldo'},
     {c:110,d:'SALDO A PAGAR',f:'MAX(L{r96}+L{r104}-L{r99}-L{r100}-L{r103},0)',t:2},
     {c:111,d:'SALDO A FAVOR',f:'MAX(L{r99}+L{r100}+L{r103}-L{r96}-L{r104},0)',t:2},
