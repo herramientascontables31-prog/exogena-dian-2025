@@ -1228,109 +1228,14 @@ async function descargarPro(){
 }
 
 // ═══════════════════════════════════════════════════════════════
-// EXCEL EXPORT — Formato 2516 + F110 con formulas cruzadas
-// 7 hojas: ESF, ERI, 110, Impuesto Minimo, Anticipo, Resumen, Gastos No Ded
+// ═══════════════════════════════════════════════════════════════
+// EXCEL EXPORT — Replica exacta del formulario DIAN 110
 // ═══════════════════════════════════════════════════════════════
 
 const _cL=n=>{let s='';while(n>0){s=String.fromCharCode(65+(n-1)%26)+s;n=Math.floor((n-1)/26)}return s};
 
-function _S(){
-  const DB='FF1A3C6E',LB='FFE1F0F7',SB='FFD4E6F1',TG='FFF0F2F5',RG='FFE8F5E9',W='FFFFFFFF',WA='FFFFF8E1',ER='FFFFEBEE';
-  const tn={style:'thin',color:{argb:'FFB0B0B0'}};
-  const bd={top:tn,bottom:tn,left:tn,right:tn};
-  const tb={top:{style:'medium',color:{argb:'FF333333'}},bottom:{style:'medium',color:{argb:'FF333333'}},left:{style:'medium',color:{argb:'FF333333'}},right:{style:'medium',color:{argb:'FF333333'}}};
-  const f={name:'Arial',size:10},fb={...f,bold:true},fw={...fb,color:{argb:W}},fs={...fb,color:{argb:DB},size:9};
-  const fD={type:'pattern',pattern:'solid',fgColor:{argb:DB}};
-  const fL={type:'pattern',pattern:'solid',fgColor:{argb:LB}};
-  const fS={type:'pattern',pattern:'solid',fgColor:{argb:SB}};
-  const fT={type:'pattern',pattern:'solid',fgColor:{argb:TG}};
-  const fR={type:'pattern',pattern:'solid',fgColor:{argb:RG}};
-  const fW={type:'pattern',pattern:'solid',fgColor:{argb:WA}};
-  const fE={type:'pattern',pattern:'solid',fgColor:{argb:ER}};
-  const nF='#,##0';const pF='0.00%';
-  return{DB,W,tn,bd,tb,f,fb,fw,fs,fD,fL,fS,fT,fR,fW,fE,nF,pF};
-}
-
-// ── Helper: render category block (header + accounts + subtotal) ──
-function _cat(ws,S,accts,name,r,fallback){
-  ws.mergeCells(`A${r}:B${r}`);
-  ws.getCell(`A${r}`).value=name;ws.getCell(`A${r}`).font={...S.fb,size:9,color:{argb:S.DB}};
-  ws.getCell(`A${r}`).fill=S.fS;ws.getCell(`A${r}`).border=S.bd;ws.getCell(`A${r}`).alignment={vertical:'middle'};
-  for(let c=3;c<=7;c++){ws.getCell(r,c).fill=S.fS;ws.getCell(r,c).border=S.bd}
-  r++;
-  const ds=r;
-  if(!accts||accts.length===0){
-    ws.getCell(`A${r}`).border=S.bd;
-    ws.getCell(`B${r}`).value=fallback?'(valor del formulario)':'(digitar en Excel)';
-    ws.getCell(`B${r}`).font={...S.f,italic:true,color:{argb:'FF999999'}};ws.getCell(`B${r}`).border=S.bd;
-    ws.getCell(`C${r}`).value=fallback||0;ws.getCell(`C${r}`).numFmt=S.nF;ws.getCell(`C${r}`).font=S.f;ws.getCell(`C${r}`).border=S.bd;
-    ws.getCell(`D${r}`).value=0;ws.getCell(`D${r}`).numFmt=S.nF;ws.getCell(`D${r}`).font=S.f;ws.getCell(`D${r}`).border=S.bd;
-    ws.getCell(`E${r}`).value=0;ws.getCell(`E${r}`).numFmt=S.nF;ws.getCell(`E${r}`).font=S.f;ws.getCell(`E${r}`).border=S.bd;
-    ws.getCell(`F${r}`).value=0;ws.getCell(`F${r}`).numFmt=S.nF;ws.getCell(`F${r}`).font=S.f;ws.getCell(`F${r}`).border=S.bd;
-    ws.getCell(`G${r}`).value={formula:`C${r}+D${r}-E${r}+F${r}`};ws.getCell(`G${r}`).numFmt=S.nF;ws.getCell(`G${r}`).font=S.fb;ws.getCell(`G${r}`).border=S.bd;
-    r++;
-  }else{
-    for(const a of accts){
-      ws.getCell(`A${r}`).value=a.code;ws.getCell(`A${r}`).font={...S.f,size:8,name:'Consolas'};ws.getCell(`A${r}`).border=S.bd;
-      ws.getCell(`B${r}`).value=a.name;ws.getCell(`B${r}`).font=S.f;ws.getCell(`B${r}`).border=S.bd;
-      ws.getCell(`B${r}`).alignment={wrapText:true};
-      const mn=Math.max(a.val-a.valFiscal,0),my=Math.max(a.valFiscal-a.val,0);
-      [a.val,0,mn,my].forEach((val,i)=>{ws.getCell(r,3+i).value=val;ws.getCell(r,3+i).numFmt=S.nF;ws.getCell(r,3+i).font=S.f;ws.getCell(r,3+i).border=S.bd});
-      ws.getCell(`G${r}`).value={formula:`C${r}+D${r}-E${r}+F${r}`};ws.getCell(`G${r}`).numFmt=S.nF;ws.getCell(`G${r}`).font=S.fb;ws.getCell(`G${r}`).border=S.bd;
-      if(mn>0||my>0)for(let c=1;c<=7;c++)ws.getCell(r,c).fill=S.fW;
-      r++;
-    }
-  }
-  const de=r-1;
-  ws.getCell(`A${r}`).border=S.bd;ws.getCell(`B${r}`).value='Subtotal '+name.split(',')[0].substring(0,30);
-  ws.getCell(`B${r}`).font=S.fb;ws.getCell(`B${r}`).border=S.bd;
-  for(let c=3;c<=7;c++){
-    ws.getCell(r,c).value={formula:`SUM(${_cL(c)}${ds}:${_cL(c)}${de})`};
-    ws.getCell(r,c).numFmt=S.nF;ws.getCell(r,c).font=S.fb;ws.getCell(r,c).fill=S.fT;ws.getCell(r,c).border=S.bd;
-  }
-  return{next:r+1,sub:r};
-}
-
-// ── Helper: section header row ──
-function _sec(ws,S,r,text,lastCol){
-  ws.mergeCells(`A${r}:${_cL(lastCol)}${r}`);
-  ws.getCell(`A${r}`).value=text;ws.getCell(`A${r}`).font={...S.fw,size:11};
-  ws.getCell(`A${r}`).fill=S.fD;ws.getCell(`A${r}`).border=S.bd;ws.getCell(`A${r}`).alignment={horizontal:'left'};
-}
-
-// ── Helper: total row across columns ──
-function _totalRow(ws,S,r,label,formulaParts,lastCol,style){
-  ws.getCell(`A${r}`).border=S.tb;
-  ws.getCell(`B${r}`).value=label;ws.getCell(`B${r}`).font=style||{...S.fb,size:11};ws.getCell(`B${r}`).border=S.tb;
-  for(let c=3;c<=lastCol;c++){
-    ws.getCell(r,c).value={formula:formulaParts(c)};
-    ws.getCell(r,c).numFmt=S.nF;ws.getCell(r,c).font=style||{...S.fb,size:11};
-    ws.getCell(r,c).fill=S.fR;ws.getCell(r,c).border=S.tb;
-  }
-}
-
-// ── Helper: column headers for 2516 ──
-function _hdr2516(ws,S,r){
-  ['Codigo','Concepto','Valor Contable','Efecto Conversion\n(NIIF)','Menor Valor\nFiscal','Mayor Valor\nFiscal','Valor Fiscal'].forEach((h,i)=>{
-    const c=ws.getCell(r,i+1);c.value=h;c.font=S.fw;c.fill=S.fD;c.border=S.bd;
-    c.alignment={horizontal:'center',vertical:'middle',wrapText:true};
-  });
-  ws.getRow(r).height=30;
-}
-
-// ── Helper: title block ──
-function _title(ws,S,r,title,subtitle,lastCol){
-  ws.mergeCells(`A${r}:${_cL(lastCol)}${r}`);
-  ws.getCell(`A${r}`).value=title;ws.getCell(`A${r}`).font={...S.fb,size:14,color:{argb:S.DB}};ws.getCell(`A${r}`).alignment={horizontal:'center'};
-  r++;
-  ws.mergeCells(`A${r}:${_cL(lastCol)}${r}`);
-  ws.getCell(`A${r}`).value=subtitle;ws.getCell(`A${r}`).font={...S.f,size:9,italic:true};ws.getCell(`A${r}`).alignment={horizontal:'center'};
-  return r+2;
-}
-
 async function exportExcel(){
   const wb=new ExcelJS.Workbook();
-  const S=_S();
 
   const nit=document.getElementById('cfgNit').value||'';
   const razon=document.getElementById('cfgRazon').value||'';
@@ -1339,332 +1244,218 @@ async function exportExcel(){
   const tarifa=getTarifaRenta();
   const tarifaPct=(tarifa*100).toFixed(1)+'%';
 
+  // Estilos comunes
+  const NAVY='FF2B2D45',DBLUE='FF1A3C6E',LBLUE='FFE1F0F7',WHITE='FFFFFFFF';
+  const tn={style:'thin',color:{argb:NAVY}};
+  const bd={top:tn,bottom:tn,left:tn,right:tn};
+  const noBd={};
+  const fA={name:'Arial',size:10},fAB={...fA,bold:true},fAN={name:'Arial Narrow',size:10};
+  const fANB={...fAN,bold:true};
+  const fillBlue={type:'pattern',pattern:'solid',fgColor:{argb:LBLUE}};
+  const fillDark={type:'pattern',pattern:'solid',fgColor:{argb:DBLUE}};
+  const fillWhite={type:'pattern',pattern:'solid',fgColor:{argb:WHITE}};
+  const fillGreen={type:'pattern',pattern:'solid',fgColor:{argb:'FFE2EFDA'}};
+  const fillGray={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F2F5'}};
+  const fillRed={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFEBEE'}};
+  const nF='#,##0';
+  const alC={horizontal:'center',vertical:'middle'};
+  const alL={horizontal:'left',vertical:'middle',wrapText:true};
+  const alR={horizontal:'right',vertical:'middle'};
+
   const acctsByCas=cas=>cuentasBalance.filter(c=>c.casilla===cas).sort((a,b)=>a.code.localeCompare(b.code));
 
   // ══════════════════════════════════════════════════════════
-  //  HOJA 1: ESF — Estado de Situacion Financiera (F2516)
-  // ══════════════════════════════════════════════════════════
-  const wsE=wb.addWorksheet('ESF');
-  wsE.getColumn(1).width=13;wsE.getColumn(2).width=48;
-  for(let c=3;c<=7;c++)wsE.getColumn(c).width=18;
-
-  let re=_title(wsE,S,1,'REPORTE DE CONCILIACION FISCAL — ESF Patrimonio',`Formato 2516 · AG ${year} · ${razon} · NIT ${nit}`,7);
-  _hdr2516(wsE,S,re);re++;
-
-  // ACTIVOS
-  _sec(wsE,S,re,'ACTIVOS',7);re++;
-  const esfRef={};const esfSubs=[];
-  const esfCats=[
-    [36,'Efectivo y equivalentes al efectivo'],
-    [37,'Inversiones e instrumentos financieros derivados'],
-    [38,'Cuentas, documentos y arrendamientos financieros por cobrar'],
-    [39,'Inventarios'],
-    [40,'Activos intangibles'],
-    [41,'Activos biologicos'],
-    [42,'Propiedades, planta y equipo, prop. de inversion y ANCMV'],
-    [43,'Otros activos'],
-  ];
-  for(const[cas,nm] of esfCats){
-    const res=_cat(wsE,S,acctsByCas(cas),nm,re,v('c'+cas));
-    esfRef[cas]=res.sub;esfSubs.push(res.sub);re=res.next;
-  }
-
-  // TOTAL PATRIMONIO BRUTO
-  _totalRow(wsE,S,re,'TOTAL PATRIMONIO BRUTO (Casilla 44)',c=>esfSubs.map(sr=>`${_cL(c)}${sr}`).join('+'),7);
-  esfRef[44]=re;re+=2;
-
-  // PASIVOS
-  _sec(wsE,S,re,'PASIVOS',7);re++;
-  const pasRes=_cat(wsE,S,acctsByCas(45),'Pasivos',re,v('c45'));
-  esfRef[45]=pasRes.sub;re=pasRes.next;
-
-  // TOTAL PASIVOS
-  wsE.getCell(`A${re}`).border=S.tb;wsE.getCell(`B${re}`).value='TOTAL PASIVOS (Casilla 45)';
-  wsE.getCell(`B${re}`).font={...S.fb,size:11};wsE.getCell(`B${re}`).border=S.tb;
-  for(let c=3;c<=7;c++){
-    wsE.getCell(re,c).value={formula:`${_cL(c)}${pasRes.sub}`};
-    wsE.getCell(re,c).numFmt=S.nF;wsE.getCell(re,c).font={...S.fb,size:11};wsE.getCell(re,c).fill=S.fR;wsE.getCell(re,c).border=S.tb;
-  }
-  re+=2;
-
-  // PATRIMONIO LIQUIDO
-  _totalRow(wsE,S,re,'PATRIMONIO LIQUIDO (Casilla 46 = 44 - 45)',c=>`${_cL(c)}${esfRef[44]}-${_cL(c)}${esfRef[45]}`,7,{...S.fb,size:12,color:{argb:S.DB}});
-  esfRef[46]=re;re+=2;
-
-  // Nota
-  wsE.mergeCells(`A${re}:G${re}`);
-  wsE.getCell(`A${re}`).value='Valor Fiscal = Valor Contable + Efecto Conversion - Menor Valor Fiscal + Mayor Valor Fiscal · Edite columnas D, E y F para ajustes fiscales';
-  wsE.getCell(`A${re}`).font={...S.f,size:8,italic:true,color:{argb:'FF999999'}};
-  wsE.pageSetup={orientation:'landscape',fitToPage:true,fitToWidth:1};
-
-  // ══════════════════════════════════════════════════════════
-  //  HOJA 2: ERI — Estado de Resultados Integral (F2516)
-  // ══════════════════════════════════════════════════════════
-  const wsR=wb.addWorksheet('ERI');
-  wsR.getColumn(1).width=13;wsR.getColumn(2).width=48;
-  for(let c=3;c<=7;c++)wsR.getColumn(c).width=18;
-
-  let ri=_title(wsR,S,1,'REPORTE DE CONCILIACION FISCAL — ERI Renta Liquida',`Formato 2516 · AG ${year} · ${razon} · NIT ${nit}`,7);
-  _hdr2516(wsR,S,ri);ri++;
-  const eriRef={};
-
-  // INGRESOS
-  _sec(wsR,S,ri,'INGRESOS',7);ri++;
-  const ingCats=[[47,'Ingresos brutos de actividades ordinarias'],[48,'Ingresos financieros'],[57,'Otros ingresos']];
-  const ingSubs=[];
-  for(const[cas,nm] of ingCats){
-    const res=_cat(wsR,S,acctsByCas(cas),nm,ri,v('c'+cas));
-    eriRef[cas]=res.sub;ingSubs.push(res.sub);ri=res.next;
-  }
-
-  // Total ingresos brutos (sin dividendos — se agregan en el 110)
-  _totalRow(wsR,S,ri,'TOTAL INGRESOS BRUTOS (Casilla 58)',c=>ingSubs.map(sr=>`${_cL(c)}${sr}`).join('+'),7);
-  eriRef[58]=ri;ri+=2;
-
-  // Devoluciones e INCRNGO
-  _sec(wsR,S,ri,'DEVOLUCIONES E INGRESOS NO CONSTITUTIVOS DE RENTA',7);ri++;
-  const devCats=[[59,'Devoluciones, rebajas y descuentos en ventas'],[60,'Ingresos no constitutivos de renta ni GO']];
-  const devSubs=[];
-  for(const[cas,nm] of devCats){
-    const res=_cat(wsR,S,acctsByCas(cas),nm,ri,v('c'+cas));
-    eriRef[cas]=res.sub;devSubs.push(res.sub);ri=res.next;
-  }
-  _totalRow(wsR,S,ri,'TOTAL DEVOLUCIONES E INCRNGO',c=>devSubs.map(sr=>`${_cL(c)}${sr}`).join('+'),7);
-  const devTotalRow=ri;ri+=2;
-
-  // TOTAL INGRESOS NETOS
-  _totalRow(wsR,S,ri,'TOTAL INGRESOS NETOS (Casilla 61)',c=>`${_cL(c)}${eriRef[58]}-${_cL(c)}${devTotalRow}`,7,{...S.fb,size:11,color:{argb:S.DB}});
-  eriRef[61]=ri;ri+=2;
-
-  // COSTOS
-  _sec(wsR,S,ri,'COSTOS',7);ri++;
-  const cosRes=_cat(wsR,S,acctsByCas(62),'Costos de ventas',ri,v('c62'));
-  eriRef[62]=cosRes.sub;ri=cosRes.next;
-  _totalRow(wsR,S,ri,'TOTAL COSTOS (Casilla 62)',c=>`${_cL(c)}${cosRes.sub}`,7);
-  const cosTotalRow=ri;ri+=2;
-
-  // GASTOS
-  _sec(wsR,S,ri,'GASTOS',7);ri++;
-  const gasCats=[[63,'Gastos de administracion'],[64,'Gastos de distribucion y ventas'],[65,'Gastos financieros'],[66,'Otros gastos y deducciones']];
-  const gasSubs=[];
-  for(const[cas,nm] of gasCats){
-    const res=_cat(wsR,S,acctsByCas(cas),nm,ri,v('c'+cas));
-    eriRef[cas]=res.sub;gasSubs.push(res.sub);ri=res.next;
-  }
-  _totalRow(wsR,S,ri,'TOTAL GASTOS',c=>gasSubs.map(sr=>`${_cL(c)}${sr}`).join('+'),7);
-  const gasTotalRow=ri;ri+=2;
-
-  // TOTAL COSTOS Y GASTOS
-  _totalRow(wsR,S,ri,'TOTAL COSTOS Y GASTOS DEDUCIBLES (Casilla 67)',c=>`${_cL(c)}${cosTotalRow}+${_cL(c)}${gasTotalRow}`,7,{...S.fb,size:11,color:{argb:S.DB}});
-  eriRef[67]=ri;ri+=2;
-
-  // RESULTADO ANTES DE IMPUESTOS
-  _totalRow(wsR,S,ri,'RESULTADO ANTES DE IMPUESTOS',c=>`${_cL(c)}${eriRef[61]}-${_cL(c)}${eriRef[67]}`,7,{...S.fb,size:12});
-  eriRef.resultado=ri;ri+=2;
-
-  // DIFERENCIAS PERMANENTES
-  _sec(wsR,S,ri,'DIFERENCIAS PERMANENTES QUE AUMENTAN LA RENTA LIQUIDA',7);ri++;
-  const noDed=cuentasBalance.filter(c=>c.ded==='no_ded'||c.ded==='gmf').sort((a,b)=>b.val-a.val);
-  const dpStart=ri;
-  if(noDed.length===0){
-    wsR.getCell(`A${ri}`).border=S.bd;wsR.getCell(`B${ri}`).value='(sin diferencias permanentes)';
-    wsR.getCell(`B${ri}`).font={...S.f,italic:true,color:{argb:'FF999999'}};wsR.getCell(`B${ri}`).border=S.bd;
-    wsR.getCell(`C${ri}`).value=0;wsR.getCell(`C${ri}`).numFmt=S.nF;wsR.getCell(`C${ri}`).border=S.bd;
-    for(let c=4;c<=7;c++){wsR.getCell(ri,c).value=0;wsR.getCell(ri,c).numFmt=S.nF;wsR.getCell(ri,c).border=S.bd}
-    ri++;
-  }else{
-    for(const a of noDed){
-      wsR.getCell(`A${ri}`).value=a.code;wsR.getCell(`A${ri}`).font={...S.f,size:8,name:'Consolas'};wsR.getCell(`A${ri}`).border=S.bd;
-      const ruleText=a.regla?' → '+a.regla.nom+' (Art. '+a.regla.art+')':'';
-      wsR.getCell(`B${ri}`).value=a.name+ruleText;wsR.getCell(`B${ri}`).font={...S.f,color:{argb:'FFC62828'}};
-      wsR.getCell(`B${ri}`).border=S.bd;wsR.getCell(`B${ri}`).alignment={wrapText:true};
-      const diff=a.ded==='gmf'?Math.round(a.val*0.5):a.val;
-      wsR.getCell(`C${ri}`).value=diff;wsR.getCell(`C${ri}`).numFmt=S.nF;wsR.getCell(`C${ri}`).font=S.f;wsR.getCell(`C${ri}`).border=S.bd;
-      for(let c=4;c<=7;c++){wsR.getCell(ri,c).value=0;wsR.getCell(ri,c).numFmt=S.nF;wsR.getCell(ri,c).font=S.f;wsR.getCell(ri,c).border=S.bd}
-      for(let c=1;c<=7;c++)wsR.getCell(ri,c).fill=S.fE;
-      ri++;
-    }
-  }
-  const dpEnd=ri-1;
-  wsR.getCell(`A${ri}`).border=S.tb;wsR.getCell(`B${ri}`).value='TOTAL DIFERENCIAS PERMANENTES (+renta)';
-  wsR.getCell(`B${ri}`).font={...S.fb,color:{argb:'FFC62828'}};wsR.getCell(`B${ri}`).border=S.tb;
-  wsR.getCell(`C${ri}`).value={formula:`SUM(C${dpStart}:C${dpEnd})`};
-  wsR.getCell(`C${ri}`).numFmt=S.nF;wsR.getCell(`C${ri}`).font={...S.fb,color:{argb:'FFC62828'}};wsR.getCell(`C${ri}`).fill=S.fT;wsR.getCell(`C${ri}`).border=S.tb;
-  for(let c=4;c<=7;c++){wsR.getCell(ri,c).fill=S.fT;wsR.getCell(ri,c).border=S.tb;wsR.getCell(ri,c).numFmt=S.nF}
-  eriRef.difPerm=ri;ri+=2;
-
-  // RENTA LIQUIDA ORDINARIA
-  _totalRow(wsR,S,ri,'RENTA LIQUIDA ORDINARIA DEL EJERCICIO (Casilla 72)',c=>`MAX(${_cL(c)}${eriRef[61]}-${_cL(c)}${eriRef[67]},0)`,7,{...S.fb,size:12,color:{argb:'FF2E7D32'}});
-  eriRef[72]=ri;ri+=2;
-
-  // Nota
-  wsR.mergeCells(`A${ri}:G${ri}`);
-  wsR.getCell(`A${ri}`).value='Valor Fiscal = Contable + Efecto Conversion - Menor Valor Fiscal + Mayor Valor Fiscal · Diferencias permanentes resaltadas en rojo';
-  wsR.getCell(`A${ri}`).font={...S.f,size:8,italic:true,color:{argb:'FF999999'}};
-  wsR.pageSetup={orientation:'landscape',fitToPage:true,fitToWidth:1};
-
-  // ══════════════════════════════════════════════════════════
-  //  HOJA 3: FORMULARIO 110 (dos columnas, formulado)
+  //  HOJA 1: FORMULARIO 110 — Replica exacta formato DIAN
+  //  Cols: A(sec izq), B-J(concepto izq), K(cas izq), L-Q(valor izq)
+  //        R(sec der), S-AA(concepto der), AB(cas der), AC-AH(valor der)
   // ══════════════════════════════════════════════════════════
   const ws=wb.addWorksheet('110');
+  ws.properties.showGridLines=false;
 
-  // Columnas: A(spacer), B-J(concept), K(cas), L(val) | M(gap) | N-V(concept), W(cas), X(val)
-  ws.getColumn(1).width=2;
-  for(let c=2;c<=10;c++)ws.getColumn(c).width=6.5;
-  ws.getColumn(11).width=5;ws.getColumn(12).width=17;
-  ws.getColumn(13).width=1;
-  for(let c=14;c<=22;c++)ws.getColumn(c).width=6.5;
-  ws.getColumn(23).width=5;ws.getColumn(24).width=17;
+  // Column widths (replica del borrador)
+  const cw={1:5.3,2:8.4,3:8.4,4:8.4,5:8.4,6:6.7,7:5.3,8:6.3,9:5.3,10:8.4,11:4.7,12:3,13:8.4,14:8.4,15:8.4,16:8.4,17:8.4,18:4.7,19:8.4,20:5,21:8.4,22:8.4,23:8.4,24:8.4,25:8.4,26:9.4,27:8.4,28:5,29:3,30:8.4,31:8.4,32:8.4,33:8.4,34:8.4};
+  for(const[c,w] of Object.entries(cw))ws.getColumn(+c).width=w;
 
-  // Header DIAN
-  let r=1;
-  ws.mergeCells('A1:A3');ws.getCell('A1').value='DIAN';ws.getCell('A1').font={...S.fw,size:11};
-  ws.getCell('A1').fill=S.fD;ws.getCell('A1').alignment={vertical:'middle',horizontal:'center',wrapText:true};ws.getCell('A1').border=S.tb;
-  ws.mergeCells('B1:V2');ws.getCell('B1').value='Declaracion de Renta y Complementarios\nPersonas Juridicas y Asimiladas';
-  ws.getCell('B1').font={...S.fb,size:12};ws.getCell('B1').alignment={vertical:'middle',horizontal:'center',wrapText:true};ws.getCell('B1').border=S.tb;
-  ws.mergeCells('W1:X2');ws.getCell('W1').value='110';ws.getCell('W1').font={name:'Arial',size:28,bold:true,color:{argb:S.W}};
-  ws.getCell('W1').fill=S.fD;ws.getCell('W1').alignment={vertical:'middle',horizontal:'center'};ws.getCell('W1').border=S.tb;
-  r=3;
-  ws.mergeCells(`B${r}:V${r}`);ws.getCell(`B${r}`).value=`Privada · AG ${year} · Tarifa ${tarifaPct}`;
-  ws.getCell(`B${r}`).font={...S.f,size:9,italic:true};ws.getCell(`B${r}`).alignment={horizontal:'center'};
-  r=4;
-  ws.mergeCells(`B${r}:F${r}`);ws.getCell(`B${r}`).value='5. NIT: '+nit;ws.getCell(`B${r}`).font=S.fb;ws.getCell(`B${r}`).border=S.bd;
-  ws.mergeCells(`G${r}:L${r}`);ws.getCell(`G${r}`).value='24. Actividad: '+actividad;ws.getCell(`G${r}`).font=S.f;ws.getCell(`G${r}`).border=S.bd;
-  ws.mergeCells(`N${r}:X${r}`);ws.getCell(`N${r}`).value='12. Razon social: '+razon;ws.getCell(`N${r}`).font=S.fb;ws.getCell(`N${r}`).border=S.bd;
-  r=6;
-
-  // ── Render helper for 110 rows ──
-  const rowMap={};const cellRef={};
-  // Left: concept B-J, casilla K, value L
-  // Right: concept N-V, casilla W, value X
-  function f110Row(ws,item,r,side){
-    const cStart=side==='L'?2:14, cEnd=side==='L'?10:22;
-    const casCol=side==='L'?11:23, valCol=side==='L'?12:24;
-    const lastCol=valCol;
-
-    if(item.s){
-      // Section header
-      ws.mergeCells(r,cStart-1,r,lastCol);
-      ws.getCell(r,cStart-1).value=item.s.toUpperCase();ws.getCell(r,cStart-1).font=S.fs;
-      ws.getCell(r,cStart-1).fill=S.fS;ws.getCell(r,cStart-1).border=S.bd;ws.getCell(r,cStart-1).alignment={horizontal:'left'};
-      return;
+  // Helper: aplicar borde y fill a rango
+  function fillRange(r,c1,c2,fill,border){
+    for(let c=c1;c<=c2;c++){
+      if(fill)ws.getCell(r,c).fill=fill;
+      if(border)ws.getCell(r,c).border=border;
     }
-    rowMap[item.c]=r;
-    cellRef[item.c]=_cL(valCol)+r;
-
-    ws.mergeCells(r,cStart,r,cEnd);
-    ws.getCell(r,cStart).value=item.d;ws.getCell(r,cStart).font=item.t===2?S.fb:S.f;
-    ws.getCell(r,cStart).alignment={vertical:'middle',wrapText:true};
-
-    ws.getCell(r,casCol).value=item.c;ws.getCell(r,casCol).font={...S.f,size:7.5,color:{argb:'FF888888'}};
-    ws.getCell(r,casCol).alignment={horizontal:'center',vertical:'middle'};
-
-    // Value: from ESF/ERI if available, else from HTML form
-    const vc=ws.getCell(r,valCol);
-    const esfCasillas=[36,37,38,39,40,41,42,43,45];
-    const eriCasillas=[47,48,57,59,60,62,63,64,65,66];
-    if(esfCasillas.includes(item.c)&&esfRef[item.c]){
-      vc.value={formula:`ROUND(ESF!G${esfRef[item.c]},-3)`};
-    }else if(eriCasillas.includes(item.c)&&eriRef[item.c]){
-      vc.value={formula:`ROUND(ERI!G${eriRef[item.c]},-3)`};
-    }else{
-      vc.value=v('c'+item.c)||0;
-    }
-    vc.numFmt=S.nF;
-    vc.font=item.t===2?{...S.fb,size:11}:item.t===1?S.fb:S.f;
-
-    // Fill entire row range
-    const fill=item.t===2?S.fR:item.t===1?S.fT:S.fL;
-    for(let c=cStart-1;c<=lastCol;c++){ws.getCell(r,c).fill=fill;ws.getCell(r,c).border=S.bd}
-    ws.getRow(r).height=item.d.length>50?26:19;
+  }
+  // Helper: merge y escribir celda
+  function mc(range,val,font,fill,align,border){
+    ws.mergeCells(range);
+    const c=ws.getCell(range.split(':')[0]);
+    if(val!==undefined)c.value=val;
+    if(font)c.font=font;
+    if(fill)c.fill=fill;
+    if(align)c.alignment=align;
+    if(border)c.border=border;
+    return c;
   }
 
-  // Define left and right items
-  const leftItems=[
-    {s:'Patrimonio'},
-    {c:36,d:'Efectivo y equivalentes al efectivo'},
-    {c:37,d:'Inversiones e instrumentos financieros derivados'},
-    {c:38,d:'Cuentas, documentos y arrend. financiero x cobrar'},
-    {c:39,d:'Inventarios'},
-    {c:40,d:'Activos intangibles'},
-    {c:41,d:'Activos biologicos'},
-    {c:42,d:'PPE, propiedades de inversion y ANCMV'},
-    {c:43,d:'Otros activos'},
-    {c:44,d:'Total patrimonio bruto (36 a 43)',t:1},
-    {c:45,d:'Pasivos'},
-    {c:46,d:'Total patrimonio liquido (44 - 45)',t:1},
-    {s:'Ingresos'},
-    {c:47,d:'Ingresos brutos actividades ordinarias'},
-    {c:48,d:'Ingresos financieros'},
-    {c:49,d:'Dividendos y/o participaciones INCRNGO'},
-    {c:50,d:'Dividendos CHC exentos'},
-    {c:51,d:'Dividendos gravados recibidos'},
-    {c:52,d:'Dividendos gravados recibidos (ext)'},
-    {c:53,d:'Dividendos gravados al 7,5%'},
-    {c:54,d:'Dividendos gravados a tarifa general'},
-    {c:57,d:'Otros ingresos'},
-    {c:58,d:'Total ingresos brutos (47 a 54 + 57)',t:1},
-    {c:59,d:'Devoluciones, rebajas y descuentos'},
-    {c:60,d:'Ingresos no constitutivos de renta ni GO'},
-    {c:61,d:'Total ingresos netos (58 - 59 - 60)',t:1},
-    {s:'Costos y Deducciones'},
-    {c:62,d:'Costos'},
-    {c:63,d:'Gastos de administracion'},
-    {c:64,d:'Gastos de distribucion y ventas'},
-    {c:65,d:'Gastos financieros'},
-    {c:66,d:'Otros gastos y deducciones'},
-    {c:67,d:'Total costos y gastos deducibles (62 a 66)',t:1},
-    {s:'Renta'},
-    {c:70,d:'Renta por recuperacion de deducciones'},
-    {c:71,d:'Renta Pasiva - ECE'},
-    {c:72,d:'Renta liquida ordinaria del ejercicio',t:1},
-    {c:73,d:'Perdida liquida del ejercicio',t:1},
+  // ── HEADER DIAN (rows 1-4) ──
+  mc('A1:F4','DIAN',{...fANB,size:12,color:{argb:WHITE}},fillDark,alC,bd);
+  mc('G1:W4','Declaracion de Renta y Complementarios\nPersonas Juridicas y Asimiladas',fANB,fillWhite,{...alC,wrapText:true},bd);
+  mc('X1:AC4','Privada',{...fAB,size:12,color:{argb:NAVY}},fillBlue,alC,bd);
+  mc('AD1:AH4','110',{...fANB,size:16,color:{argb:WHITE}},fillDark,alC,bd);
+  for(let r=1;r<=4;r++)ws.getRow(r).height=10.5;
+
+  // ── YEAR ROW (row 6) ──
+  for(let r=5;r<=7;r++)ws.getRow(r).height=10.5;
+  mc('B6:C6','1. Ano',fA,fillWhite,alL);
+  mc('D6:F6',parseInt(year),fAB,fillWhite,alC,bd);
+  mc('P6:T6','4. Numero de formulario',fA,fillWhite,alL);
+
+  // ── ROWS 8-14: reserved + note ──
+  for(let r=8;r<=14;r++)ws.getRow(r).height=3;
+  mc('A8:O9','Espacio reservado para la DIAN',{...fA,color:{argb:'FF999999'}},null,{horizontal:'left',vertical:'center'},bd);
+  mc('P9:AH14','Generado por ExogenaDIAN\nexogenadian.com',{...fAB,color:{argb:'FF999999'}},null,{...alC,wrapText:true});
+
+  // ── DATOS GENERALES (rows 15-19) ──
+  for(let r=15;r<=19;r++)ws.getRow(r).height=13.8;
+  mc('A15:A19','Datos\nGenerales',fAB,null,{...alC,wrapText:true},bd);
+  mc('B15:G15','5. NIT',fA,null,alL,bd);
+  mc('B16:G16',nit,fAB,null,alL,bd);
+  mc('I15:O15','Primer apellido / Razon social',fA,null,alL,bd);
+  mc('B17:AE17','12. Razon social',fA,null,alL,bd);
+  mc('B18:AE18','  '+razon,fAB,null,alL,bd);
+  mc('B19:G19','24. Actividad economica',fA,null,alL,bd);
+  mc('H19:L19',actividad,fAB,null,alC,bd);
+  mc('M19:T19','Tarifa: '+tarifaPct,fAB,null,alL,bd);
+
+  // ── ROW 21: Datos Informativos ──
+  ws.getRow(21).height=33;
+  mc('A21:B21','Datos\nInformativos',{...fA,size:8},null,{...alC,wrapText:true},bd);
+
+  // ── MAIN DATA AREA (rows 22-59) ──
+  // Row height
+  for(let r=22;r<=59;r++)ws.getRow(r).height=13.8;
+
+  // Define left and right casillas with their positions
+  // LEFT: concept B-J, casilla K, value L-Q
+  // RIGHT: concept S-AA, casilla AB, value AC-AH
+  const leftData=[
+    // [row, casilla, description, formula_or_null, isTotal]
+    [22,36,'Efectivo y equivalentes al efectivo'],
+    [23,37,'Inversiones e instrumentos financieros derivados'],
+    [24,38,'Cuentas, documentos y arrendamientos financ. por cobrar'],
+    [25,39,'Inventarios'],
+    [26,40,'Activos intangibles'],
+    [27,41,'Activos biologicos'],
+    [28,42,'Propiedades, planta y equipo, prop. de inversion y ANCMV'],
+    [29,43,'Otros activos'],
+    [30,44,'Total patrimonio bruto (Suma 36 a 43)',null,true],
+    [31,45,'Pasivos'],
+    [32,46,'Total patrimonio liquido (44 - 45)',null,true],
+    // Ingresos
+    [33,47,'Ingresos brutos de actividades ordinarias'],
+    [34,48,'Ingresos financieros'],
+    [35,49,'Dividendos y/o participaciones no constit. de renta ni GO'],
+    [36,50,'Dividendos y/o participaciones recibidas por CHC - exentos'],
+    [37,51,'Dividendos y/o participaciones gravadas recibidas'],
+    [38,52,'Dividendos y/o participaciones gravadas recibidas (exterior)'],
+    [39,53,'Dividendos y/o participaciones gravadas al 7,5%'],
+    [40,54,'Dividendos y/o participaciones gravadas a tarifa general'],
+    [42,57,'Otros ingresos'],
+    [43,58,'Total ingresos brutos (Suma 47 a 54 + 57)',null,true],
+    [44,59,'Devoluciones, rebajas y descuentos en ventas'],
+    [45,60,'Ingresos no constitutivos de renta ni ganancia ocasional'],
+    [46,61,'Total ingresos netos (58 - 59 - 60)',null,true],
+    // Costos y Deducciones
+    [47,62,'Costos'],
+    [48,63,'Gastos de administracion'],
+    [49,64,'Gastos de distribucion y ventas'],
+    [50,65,'Gastos financieros'],
+    [51,66,'Otros gastos y deducciones'],
+    [52,67,'Total costos y gastos deducibles (Suma 62 a 66)',null,true],
+    // Renta inicio
+    [55,70,'Renta por recuperacion de deducciones'],
+    [56,71,'Renta Pasiva - ECE sin residencia fiscal en Colombia'],
+    [57,72,'Renta liquida ordinaria del ejercicio (61-67+70+71)',null,true],
+    [58,73,'Perdida liquida del ejercicio',null,true],
   ];
 
-  const rightItems=[
-    {s:'Renta (continuacion)'},
-    {c:74,d:'Compensaciones'},
-    {c:75,d:'Renta liquida (72 - 74)',t:1},
-    {c:76,d:'Renta presuntiva'},
-    {c:77,d:'Renta exenta'},
-    {c:78,d:'Rentas gravables'},
-    {c:79,d:'Renta liquida gravable',t:2},
-    {s:'Ganancias Ocasionales'},
-    {c:80,d:'Ingresos por ganancias ocasionales'},
-    {c:81,d:'Costos por ganancias ocasionales'},
-    {c:82,d:'Ganancias ocasionales no gravadas y exentas'},
-    {c:83,d:'Ganancias ocasionales gravables',t:1},
-    {s:'Liquidacion Privada'},
-    {c:84,d:'Impuesto sobre rentas liquidas gravables',t:1},
-    {c:85,d:'Impuesto dividendos 7,5%'},
-    {c:86,d:'Impuesto dividendos tarifa general'},
-    {c:87,d:'Impuesto dividendos exterior'},
-    {c:91,d:'Total impuesto sobre rentas',t:1},
-    {c:92,d:'Descuentos tributarios'},
-    {c:93,d:'Impuesto neto de renta (91 - 92)',t:1},
-    {c:94,d:'Impuesto de ganancias ocasionales'},
-    {c:95,d:'Impuesto a adicionar (IA - Tasa minima)',t:1},
-    {c:96,d:'Total impuesto a cargo',t:1},
-    {s:'Pagos'},
-    {c:99,d:'Anticipo renta ano gravable anterior'},
-    {c:100,d:'Saldo a favor ano anterior'},
-    {c:101,d:'Autorretenciones'},
-    {c:102,d:'Otras retenciones'},
-    {c:103,d:'Total retenciones ano gravable',t:1},
-    {c:104,d:'Anticipo renta para el ano siguiente'},
-    {s:'Saldo'},
-    {c:110,d:'SALDO A PAGAR',t:2},
-    {c:111,d:'SALDO A FAVOR',t:2},
+  const rightData=[
+    [22,74,'Compensaciones'],
+    [23,75,'Renta liquida (72 - 74)',null,true],
+    [24,76,'Renta presuntiva'],
+    [25,77,'Renta exenta'],
+    [26,78,'Rentas gravables'],
+    [27,79,'Renta liquida gravable',null,true],
+    // GO
+    [28,80,'Ingresos por ganancias ocasionales'],
+    [29,81,'Costos por ganancias ocasionales'],
+    [30,82,'Ganancias ocasionales no gravadas y exentas'],
+    [31,83,'Ganancias ocasionales gravables',null,true],
+    // Liquidacion privada
+    [32,84,'Impuesto sobre la renta liquida gravable',null,true],
+    [33,85,'Impuesto sobre dividendos gravados al 7,5%'],
+    [34,86,'Impuesto sobre dividendos a tarifa general'],
+    [35,87,'Impuesto sobre dividendos recibidos del exterior'],
+    [36,91,'Total impuesto sobre las rentas liquidas gravables',null,true],
+    [37,92,'Descuentos tributarios'],
+    [38,95,'Impuesto a adicionar (IA) - Tasa minima tributacion',null,true],
+    [39,93,'Impuesto neto de renta (91 - 92)',null,true],
+    [40,94,'Impuesto de ganancias ocasionales'],
+    [41,96,'Total impuesto a cargo (93 + 94 + 95)',null,true],
+    // Pagos
+    [42,97,'Anticipo renta liquidado ano gravable anterior'],
+    [43,98,'Saldo a favor del periodo fiscal anterior'],
+    [44,99,'Anticipo renta ano anterior (cas. 104 F110 anterior)'],
+    [45,100,'Saldo a favor ano anterior sin solicitud devolucion'],
+    [46,101,'Autorretenciones'],
+    [47,102,'Otras retenciones'],
+    [48,103,'Total retenciones ano gravable (101+102)',null,true],
+    [49,104,'Anticipo renta para el ano gravable siguiente'],
+    // Saldo
+    [54,110,'Total saldo a pagar',null,true],
+    [55,111,'o Total saldo a favor',null,true],
   ];
 
-  // Render both columns
-  const startRow=r;
-  let rL=startRow,rR=startRow;
-  for(const item of leftItems){f110Row(ws,item,rL,'L');rL++}
-  for(const item of rightItems){f110Row(ws,item,rR,'R');rR++}
+  // Section labels (vertical merges)
+  mc('A22:A32','Patrimonio',{...fA,size:8},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
+  mc('A33:A46','Ingresos',{...fA,size:8},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
+  mc('A47:A52','Costos y\nDeducciones',{...fA,size:8},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
+  mc('A53:A54','ESAL',{...fA,size:7},null,{...alC,wrapText:true,textRotation:90},bd);
+  mc('A55:A58','Renta',{...fA,size:8},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
 
-  // Now apply formulas (after all rows rendered, so cellRef is complete)
-  const formulas110={
+  mc('R22:R27','Continuacion\nRenta',{...fA,size:7},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
+  mc('R28:R31','Ganancias\nOcasionales',{...fA,size:7},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
+  mc('R32:R55','Liquidacion\nPrivada',{...fA,size:7},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
+
+  // Cell references for formulas
+  const cellRef={};
+
+  // Render LEFT side
+  for(const item of leftData){
+    const[row,cas,desc,,isTot]=item;
+    mc(`B${row}:J${row}`,desc,isTot?fAB:fA,null,alL,bd);
+    ws.getCell(`K${row}`).value=cas;ws.getCell(`K${row}`).font={...fA,size:8,color:{argb:'FF666666'}};
+    ws.getCell(`K${row}`).alignment=alC;ws.getCell(`K${row}`).border=bd;
+    mc(`L${row}:Q${row}`,v('c'+cas)||0,isTot?fAB:fA,null,alR,bd);
+    ws.getCell(`L${row}`).numFmt=nF;
+    cellRef[cas]='L'+row;
+    // Zebra
+    if(row%2===0){fillRange(row,2,17,fillBlue)}
+  }
+
+  // Render RIGHT side
+  for(const item of rightData){
+    const[row,cas,desc,,isTot]=item;
+    mc(`S${row}:AA${row}`,desc,isTot?fAB:fA,null,alL,bd);
+    ws.getCell(`AB${row}`).value=cas;ws.getCell(`AB${row}`).font={...fA,size:8,color:{argb:'FF666666'}};
+    ws.getCell(`AB${row}`).alignment=alC;ws.getCell(`AB${row}`).border=bd;
+    mc(`AC${row}:AH${row}`,v('c'+cas)||0,isTot?fAB:fA,null,alR,bd);
+    ws.getCell(`AC${row}`).numFmt=nF;
+    cellRef[cas]='AC'+row;
+    // Zebra (same row as left)
+    if(row%2===0){fillRange(row,19,34,fillBlue)}
+  }
+
+  // ── FORMULAS del 110 ──
+  const F={
     44:`SUM(${cellRef[36]}:${cellRef[43]})`,
     46:`${cellRef[44]}-${cellRef[45]}`,
     58:`SUM(${cellRef[47]}:${cellRef[54]})+${cellRef[57]}`,
@@ -1686,300 +1477,65 @@ async function exportExcel(){
     110:`MAX(${cellRef[96]}+${cellRef[104]}-${cellRef[99]}-${cellRef[100]}-${cellRef[103]},0)`,
     111:`MAX(${cellRef[99]}+${cellRef[100]}+${cellRef[103]}-${cellRef[96]}-${cellRef[104]},0)`,
   };
-  for(const[cas,formula] of Object.entries(formulas110)){
+  for(const[cas,formula] of Object.entries(F)){
     const ref=cellRef[cas];if(!ref)continue;
     ws.getCell(ref).value={formula};
   }
 
-  // Footer
-  const footRow=Math.max(rL,rR)+1;
-  ws.mergeCells(`A${footRow}:X${footRow}`);
-  ws.getCell(`A${footRow}`).value='Borrador generado por ExogenaDIAN · El contador debe validar antes de presentar · Valores formulados desde hojas ESF y ERI';
-  ws.getCell(`A${footRow}`).font={...S.f,size:8,italic:true,color:{argb:'FF999999'}};ws.getCell(`A${footRow}`).alignment={horizontal:'center'};
+  // Highlight key results
+  const greenCells=[cellRef[79],cellRef[96]];
+  greenCells.forEach(ref=>{if(ref){const r=parseInt(ref.replace(/\D/g,''));fillRange(r,19,34,fillGreen)}});
+  const redCells=[cellRef[110],cellRef[111]];
+  redCells.forEach(ref=>{if(ref){ws.getCell(ref).font={...fAB,color:{argb:'FFFF0000'}}}});
+
+  // ── FOOTER (rows 59-65) ──
+  ws.getRow(60).height=30;
+  mc('A59:H59','106. No. Identificacion signatario',fA,null,alL,bd);
+  mc('J60:T60','997. Espacio exclusivo para uso de la DIAN',{...fA,size:8,color:{argb:'FF999999'}},null,alL);
+  mc('A61:I61','Firma del declarante o apoderado',{...fA,size:8},null,alL);
+  mc('A65:D65','982. Codigo Contador',fA,null,alL);
+  mc('A66:E66','Firma Contador o Revisor Fiscal',{...fA,size:8},null,alL);
+  mc('A69:D69','983. No. Tarjeta profesional',fA,null,alL);
+
   ws.pageSetup={orientation:'landscape',fitToPage:true,fitToWidth:1};
 
   // ══════════════════════════════════════════════════════════
-  //  HOJA 4: IMPUESTO MINIMO (TTD)
+  //  HOJA 2: GASTOS NO DEDUCIBLES (si hay datos)
   // ══════════════════════════════════════════════════════════
-  const ws2=wb.addWorksheet('Impuesto minimo');
-  ws2.getColumn(1).width=5;ws2.getColumn(2).width=38;ws2.getColumn(3).width=20;ws2.getColumn(4).width=22;ws2.getColumn(5).width=55;
 
-  let r2=1;
-  ws2.mergeCells(`A${r2}:E${r2}`);
-  ws2.getCell(`A${r2}`).value='TASA MINIMA DE TRIBUTACION EN RENTA';
-  ws2.getCell(`A${r2}`).font={...S.fb,size:14,color:{argb:S.DB}};ws2.getCell(`A${r2}`).alignment={horizontal:'center'};
-  r2++;
-  ws2.mergeCells(`A${r2}:E${r2}`);
-  ws2.getCell(`A${r2}`).value='Paragrafo 6, Articulo 240 E.T. · Reforma Tributaria Ley 2277/2022';
-  ws2.getCell(`A${r2}`).font={...S.f,size:9,italic:true};ws2.getCell(`A${r2}`).alignment={horizontal:'center'};
-  r2+=2;
-
-  ws2.getCell(`B${r2}`).value='TTD = ID / UD';ws2.getCell(`B${r2}`).font={...S.fb,size:12};
-  ws2.getCell(`D${r2}`).value='Si TTD < 15%, se genera Impuesto Adicional (IA)';ws2.getCell(`D${r2}`).font={...S.f,italic:true};
-  r2+=2;
-
-  const ref93=cellRef[93],ref92=cellRef[92];
-
-  const ttdItems=[
-    {d:'INR: Impuesto neto de renta',ref:`'110'!${ref93}`,id:'ttd_inr',desc:'Despues de descuentos tributarios (casilla 93)'},
-    {d:'DTC: Descuentos tributarios',ref:`'110'!${ref92}`,id:'ttd_dtc',desc:'Creditos tributarios y Art. 254 ET (casilla 92)'},
-    {d:'IRP: Impuesto renta pasiva ECE',val:0,id:'ttd_irp',desc:'Renta liquida pasiva x tarifa general (si aplica)'},
-    {d:'',sep:true},
-    {d:'UC: Utilidad contable antes de impuestos',val:vTTD('ttdUtilidad'),id:'ttd_uc',desc:'Utilidad contable antes de impuestos (ERI contable)'},
-    {d:'DPARL: Diferencias permanentes (+renta)',val:vTTD('ttdDifPerm'),id:'ttd_dparl',desc:'Diferencias permanentes que aumentan la renta liquida'},
-    {d:'INCRNGO',val:vTTD('ttdINCRNGO'),id:'ttd_incrngo',desc:'Ingresos no constitutivos de renta ni ganancia ocasional'},
-    {d:'VIMPP: Valor metodo participacion',val:0,id:'ttd_vimpp',desc:'Ingreso metodo de participacion patrimonial'},
-    {d:'VNGO: Valor neto ganancia ocasional',val:0,id:'ttd_vngo',desc:'Valor neto de ingresos por ganancia ocasional'},
-    {d:'RE: Rentas exentas (tratados, CHC, 235-2)',val:vTTD('ttdExentas'),id:'ttd_re',desc:'Rentas exentas por tratados, CHC, Art. 235-2 lit a) y b)'},
-    {d:'C: Compensaciones no contables',val:0,id:'ttd_c',desc:'Compensacion de perdidas fiscales no en utilidad contable'},
-  ];
-
-  ['','Componente','Valor','Referencia','Descripcion'].forEach((h,i)=>{
-    if(!h)return;
-    ws2.getCell(r2,i+1).value=h;ws2.getCell(r2,i+1).font=S.fw;ws2.getCell(r2,i+1).fill=S.fD;ws2.getCell(r2,i+1).border=S.bd;
-  });
-  r2++;
-
-  const ttdRowMap={};
-  for(const item of ttdItems){
-    if(item.sep){r2++;continue}
-    ttdRowMap[item.id]=r2;
-    ws2.getCell(`B${r2}`).value=item.d;ws2.getCell(`B${r2}`).font=S.f;ws2.getCell(`B${r2}`).border=S.bd;
-    ws2.getCell(`C${r2}`).value=item.ref?{formula:item.ref}:(item.val||0);
-    ws2.getCell(`C${r2}`).numFmt=S.nF;ws2.getCell(`C${r2}`).font=S.fb;ws2.getCell(`C${r2}`).border=S.bd;ws2.getCell(`C${r2}`).fill=S.fL;
-    ws2.getCell(`D${r2}`).value=item.ref?'← Hoja 110':'Digitar';ws2.getCell(`D${r2}`).font={...S.f,size:8,color:{argb:'FF999999'}};ws2.getCell(`D${r2}`).border=S.bd;
-    ws2.getCell(`E${r2}`).value=item.desc;ws2.getCell(`E${r2}`).font={...S.f,size:9};ws2.getCell(`E${r2}`).border=S.bd;
-    r2++;
-  }
-
-  r2+=2;
-  const tINR=ttdRowMap['ttd_inr'],tDTC=ttdRowMap['ttd_dtc'],tIRP=ttdRowMap['ttd_irp'];
-  const tUC=ttdRowMap['ttd_uc'],tDP=ttdRowMap['ttd_dparl'],tIN=ttdRowMap['ttd_incrngo'];
-  const tVI=ttdRowMap['ttd_vimpp'],tVN=ttdRowMap['ttd_vngo'],tRE=ttdRowMap['ttd_re'],tCC=ttdRowMap['ttd_c'];
-
-  // ID
-  ws2.getCell(`B${r2}`).value='Impuesto Depurado (ID) = INR + DTC - IRP';ws2.getCell(`B${r2}`).font=S.fb;ws2.getCell(`B${r2}`).fill=S.fT;ws2.getCell(`B${r2}`).border=S.bd;
-  ws2.getCell(`C${r2}`).value={formula:`C${tINR}+C${tDTC}-C${tIRP}`};ws2.getCell(`C${r2}`).numFmt=S.nF;ws2.getCell(`C${r2}`).font=S.fb;ws2.getCell(`C${r2}`).fill=S.fT;ws2.getCell(`C${r2}`).border=S.bd;
-  const rID=r2;r2++;
-
-  // UD
-  ws2.getCell(`B${r2}`).value='Utilidad Depurada (UD) = UC+DPARL-INCRNGO-VIMPP-VNGO-RE-C';ws2.getCell(`B${r2}`).font=S.fb;ws2.getCell(`B${r2}`).fill=S.fT;ws2.getCell(`B${r2}`).border=S.bd;
-  ws2.getCell(`C${r2}`).value={formula:`C${tUC}+C${tDP}-C${tIN}-C${tVI}-C${tVN}-C${tRE}-C${tCC}`};ws2.getCell(`C${r2}`).numFmt=S.nF;ws2.getCell(`C${r2}`).font=S.fb;ws2.getCell(`C${r2}`).fill=S.fT;ws2.getCell(`C${r2}`).border=S.bd;
-  const rUD=r2;r2+=2;
-
-  // TTD
-  ws2.getCell(`B${r2}`).value='TTD (Tasa de Tributacion Depurada)';ws2.getCell(`B${r2}`).font={...S.fb,size:13};ws2.getCell(`B${r2}`).fill=S.fR;ws2.getCell(`B${r2}`).border=S.tb;
-  ws2.getCell(`C${r2}`).value={formula:`IF(C${rUD}>0,C${rID}/C${rUD},0)`};ws2.getCell(`C${r2}`).numFmt=S.pF;ws2.getCell(`C${r2}`).font={...S.fb,size:16};ws2.getCell(`C${r2}`).fill=S.fR;ws2.getCell(`C${r2}`).border=S.tb;
-  ws2.getCell(`D${r2}`).value='Minimo exigido: 15%';ws2.getCell(`D${r2}`).font={...S.fb,color:{argb:'FFC62828'}};
-  const rTTD=r2;r2+=2;
-
-  // IA
-  ws2.getCell(`B${r2}`).value='IMPUESTO ADICIONAL (IA)';ws2.getCell(`B${r2}`).font={...S.fb,size:13,color:{argb:'FFC62828'}};ws2.getCell(`B${r2}`).border=S.tb;
-  ws2.getCell(`C${r2}`).value={formula:`IF(AND(C${rTTD}<0.15,C${rUD}>0),ROUND(C${rUD}*0.15-C${rID},-3),0)`};
-  ws2.getCell(`C${r2}`).numFmt=S.nF;ws2.getCell(`C${r2}`).font={...S.fb,size:16,color:{argb:'FFC62828'}};ws2.getCell(`C${r2}`).border=S.tb;
-  ws2.getCell(`D${r2}`).value='→ Se suma a casilla 95 del F110';ws2.getCell(`D${r2}`).font={...S.fb,size:9,color:{argb:'FFC62828'}};
-  r2+=2;
-
-  // Total impuesto neto con IA
-  ws2.getCell(`B${r2}`).value='TOTAL IMPUESTO NETO + IA';ws2.getCell(`B${r2}`).font={...S.fb,size:12};ws2.getCell(`B${r2}`).fill=S.fR;ws2.getCell(`B${r2}`).border=S.tb;
-  ws2.getCell(`C${r2}`).value={formula:`C${tINR}+C${r2-2}`};ws2.getCell(`C${r2}`).numFmt=S.nF;ws2.getCell(`C${r2}`).font={...S.fb,size:14};ws2.getCell(`C${r2}`).fill=S.fR;ws2.getCell(`C${r2}`).border=S.tb;
-
-  // ══════════════════════════════════════════════════════════
-  //  HOJA 5: ANTICIPO DE RENTA (Art. 807-809 ET)
-  // ══════════════════════════════════════════════════════════
-  const wsA=wb.addWorksheet('Anticipo de Renta');
-  wsA.getColumn(1).width=5;wsA.getColumn(2).width=45;wsA.getColumn(3).width=20;wsA.getColumn(4).width=20;wsA.getColumn(5).width=40;
-
-  let ra=_title(wsA,S,1,'CALCULO DEL ANTICIPO DE RENTA','Articulos 807, 808 y 809 del Estatuto Tributario · AG '+year,5);
-
-  // Datos base
-  wsA.getCell(`B${ra}`).value='DATOS BASE';wsA.getCell(`B${ra}`).font={...S.fw,size:10};wsA.getCell(`B${ra}`).fill=S.fD;wsA.getCell(`B${ra}`).border=S.bd;
-  wsA.getCell(`C${ra}`).value='Valor';wsA.getCell(`C${ra}`).font=S.fw;wsA.getCell(`C${ra}`).fill=S.fD;wsA.getCell(`C${ra}`).border=S.bd;
-  wsA.getCell(`D${ra}`).value='Referencia';wsA.getCell(`D${ra}`).font=S.fw;wsA.getCell(`D${ra}`).fill=S.fD;wsA.getCell(`D${ra}`).border=S.bd;
-  ra++;
-
-  const antImpNeto=vTTD('antImpNeto')||0;
-  const antRetenciones=v('c103');
-
-  wsA.getCell(`B${ra}`).value='Impuesto neto de renta AG actual (cas. 93+95)';wsA.getCell(`B${ra}`).font=S.f;wsA.getCell(`B${ra}`).border=S.bd;
-  wsA.getCell(`C${ra}`).value={formula:`'110'!${cellRef[93]}+'110'!${cellRef[95]}`};wsA.getCell(`C${ra}`).numFmt=S.nF;wsA.getCell(`C${ra}`).font=S.fb;wsA.getCell(`C${ra}`).border=S.bd;wsA.getCell(`C${ra}`).fill=S.fL;
-  wsA.getCell(`D${ra}`).value='← Hoja 110';wsA.getCell(`D${ra}`).font={...S.f,size:8,color:{argb:'FF999999'}};wsA.getCell(`D${ra}`).border=S.bd;
-  const raImpActual=ra;ra++;
-
-  wsA.getCell(`B${ra}`).value='Impuesto neto de renta AG anterior';wsA.getCell(`B${ra}`).font=S.f;wsA.getCell(`B${ra}`).border=S.bd;
-  wsA.getCell(`C${ra}`).value=antImpNeto;wsA.getCell(`C${ra}`).numFmt=S.nF;wsA.getCell(`C${ra}`).font=S.fb;wsA.getCell(`C${ra}`).border=S.bd;wsA.getCell(`C${ra}`).fill=S.fL;
-  wsA.getCell(`D${ra}`).value='Digitar (F110 AG anterior, cas. 93)';wsA.getCell(`D${ra}`).font={...S.f,size:8,color:{argb:'FF999999'}};wsA.getCell(`D${ra}`).border=S.bd;
-  const raImpAnt=ra;ra++;
-
-  wsA.getCell(`B${ra}`).value='Total retenciones ano gravable (cas. 103)';wsA.getCell(`B${ra}`).font=S.f;wsA.getCell(`B${ra}`).border=S.bd;
-  wsA.getCell(`C${ra}`).value={formula:`'110'!${cellRef[103]}`};wsA.getCell(`C${ra}`).numFmt=S.nF;wsA.getCell(`C${ra}`).font=S.fb;wsA.getCell(`C${ra}`).border=S.bd;wsA.getCell(`C${ra}`).fill=S.fL;
-  wsA.getCell(`D${ra}`).value='← Hoja 110';wsA.getCell(`D${ra}`).font={...S.f,size:8,color:{argb:'FF999999'}};wsA.getCell(`D${ra}`).border=S.bd;
-  const raRet=ra;ra+=2;
-
-  // OPCION 1: 75% impuesto neto actual
-  wsA.getCell(`B${ra}`).value='OPCION 1: 75% del impuesto neto (3er ano en adelante)';wsA.getCell(`B${ra}`).font={...S.fb,color:{argb:S.DB}};wsA.getCell(`B${ra}`).fill=S.fS;wsA.getCell(`B${ra}`).border=S.bd;
-  for(let c=3;c<=4;c++){wsA.getCell(ra,c).fill=S.fS;wsA.getCell(ra,c).border=S.bd}
-  ra++;
-
-  wsA.getCell(`B${ra}`).value='Base: Impuesto neto AG actual × 75%';wsA.getCell(`B${ra}`).font=S.f;wsA.getCell(`B${ra}`).border=S.bd;
-  wsA.getCell(`C${ra}`).value={formula:`ROUND(C${raImpActual}*0.75,-3)`};wsA.getCell(`C${ra}`).numFmt=S.nF;wsA.getCell(`C${ra}`).font=S.fb;wsA.getCell(`C${ra}`).border=S.bd;
-  const raOp1Base=ra;ra++;
-
-  wsA.getCell(`B${ra}`).value='(-) Retenciones';wsA.getCell(`B${ra}`).font=S.f;wsA.getCell(`B${ra}`).border=S.bd;
-  wsA.getCell(`C${ra}`).value={formula:`C${raRet}`};wsA.getCell(`C${ra}`).numFmt=S.nF;wsA.getCell(`C${ra}`).font=S.f;wsA.getCell(`C${ra}`).border=S.bd;
-  ra++;
-
-  wsA.getCell(`B${ra}`).value='ANTICIPO Opcion 1';wsA.getCell(`B${ra}`).font={...S.fb,size:11};wsA.getCell(`B${ra}`).fill=S.fT;wsA.getCell(`B${ra}`).border=S.tb;
-  wsA.getCell(`C${ra}`).value={formula:`MAX(C${raOp1Base}-C${raRet},0)`};wsA.getCell(`C${ra}`).numFmt=S.nF;wsA.getCell(`C${ra}`).font={...S.fb,size:11};wsA.getCell(`C${ra}`).fill=S.fT;wsA.getCell(`C${ra}`).border=S.tb;
-  const raOp1=ra;ra+=2;
-
-  // OPCION 2: Promedio
-  wsA.getCell(`B${ra}`).value='OPCION 2: Promedio (2do ano declarando)';wsA.getCell(`B${ra}`).font={...S.fb,color:{argb:S.DB}};wsA.getCell(`B${ra}`).fill=S.fS;wsA.getCell(`B${ra}`).border=S.bd;
-  for(let c=3;c<=4;c++){wsA.getCell(ra,c).fill=S.fS;wsA.getCell(ra,c).border=S.bd}
-  ra++;
-
-  wsA.getCell(`B${ra}`).value='Promedio: (Imp. anterior + Imp. actual) / 2 × 75%';wsA.getCell(`B${ra}`).font=S.f;wsA.getCell(`B${ra}`).border=S.bd;
-  wsA.getCell(`C${ra}`).value={formula:`ROUND((C${raImpAnt}+C${raImpActual})/2*0.75,-3)`};wsA.getCell(`C${ra}`).numFmt=S.nF;wsA.getCell(`C${ra}`).font=S.fb;wsA.getCell(`C${ra}`).border=S.bd;
-  const raOp2Base=ra;ra++;
-
-  wsA.getCell(`B${ra}`).value='(-) Retenciones';wsA.getCell(`B${ra}`).font=S.f;wsA.getCell(`B${ra}`).border=S.bd;
-  wsA.getCell(`C${ra}`).value={formula:`C${raRet}`};wsA.getCell(`C${ra}`).numFmt=S.nF;wsA.getCell(`C${ra}`).font=S.f;wsA.getCell(`C${ra}`).border=S.bd;
-  ra++;
-
-  wsA.getCell(`B${ra}`).value='ANTICIPO Opcion 2';wsA.getCell(`B${ra}`).font={...S.fb,size:11};wsA.getCell(`B${ra}`).fill=S.fT;wsA.getCell(`B${ra}`).border=S.tb;
-  wsA.getCell(`C${ra}`).value={formula:`MAX(C${raOp2Base}-C${raRet},0)`};wsA.getCell(`C${ra}`).numFmt=S.nF;wsA.getCell(`C${ra}`).font={...S.fb,size:11};wsA.getCell(`C${ra}`).fill=S.fT;wsA.getCell(`C${ra}`).border=S.tb;
-  const raOp2=ra;ra+=2;
-
-  // OPCION 3: 25% primer año
-  wsA.getCell(`B${ra}`).value='OPCION 3: 25% del impuesto neto (1er ano declarando)';wsA.getCell(`B${ra}`).font={...S.fb,color:{argb:S.DB}};wsA.getCell(`B${ra}`).fill=S.fS;wsA.getCell(`B${ra}`).border=S.bd;
-  for(let c=3;c<=4;c++){wsA.getCell(ra,c).fill=S.fS;wsA.getCell(ra,c).border=S.bd}
-  ra++;
-
-  wsA.getCell(`B${ra}`).value='Base: Impuesto neto AG actual × 25%';wsA.getCell(`B${ra}`).font=S.f;wsA.getCell(`B${ra}`).border=S.bd;
-  wsA.getCell(`C${ra}`).value={formula:`ROUND(C${raImpActual}*0.25,-3)`};wsA.getCell(`C${ra}`).numFmt=S.nF;wsA.getCell(`C${ra}`).font=S.fb;wsA.getCell(`C${ra}`).border=S.bd;
-  const raOp3=ra;ra+=2;
-
-  // RESULTADO
-  wsA.mergeCells(`B${ra}:D${ra}`);
-  wsA.getCell(`B${ra}`).value='ANTICIPO SELECCIONADO → Casilla 104 del Formulario 110';
-  wsA.getCell(`B${ra}`).font={...S.fw,size:12};wsA.getCell(`B${ra}`).fill=S.fD;wsA.getCell(`B${ra}`).border=S.tb;
-  ra++;
-
-  const metodo=document.getElementById('antMetodo').value;
-  let anticipoFormula;
-  if(metodo==='75')anticipoFormula=`C${raOp1}`;
-  else if(metodo==='promedio')anticipoFormula=`C${raOp2}`;
-  else if(metodo==='25')anticipoFormula=`C${raOp3}`;
-  else anticipoFormula='0';
-
-  const metodoLabel={'75':'Opcion 1 (75%)','promedio':'Opcion 2 (Promedio)','25':'Opcion 3 (25%)','0':'No aplica anticipo'};
-  wsA.getCell(`B${ra}`).value='Metodo seleccionado: '+(metodoLabel[metodo]||metodo);wsA.getCell(`B${ra}`).font={...S.fb,size:11};wsA.getCell(`B${ra}`).border=S.tb;
-  wsA.getCell(`C${ra}`).value={formula:anticipoFormula};wsA.getCell(`C${ra}`).numFmt=S.nF;
-  wsA.getCell(`C${ra}`).font={...S.fb,size:16,color:{argb:'FF2E7D32'}};wsA.getCell(`C${ra}`).fill=S.fR;wsA.getCell(`C${ra}`).border=S.tb;
-  ra+=2;
-
-  wsA.getCell(`B${ra}`).value='Nota: El contribuyente puede optar por el metodo que arroje menor valor (Art. 809 ET).';
-  wsA.getCell(`B${ra}`).font={...S.f,size:9,italic:true,color:{argb:'FF999999'}};
-
-  // ══════════════════════════════════════════════════════════
-  //  HOJA 6: RESUMEN CONTABLE VS FISCAL
-  // ══════════════════════════════════════════════════════════
-  const wsRs=wb.addWorksheet('Resumen');
-  wsRs.getColumn(1).width=5;wsRs.getColumn(2).width=42;wsRs.getColumn(3).width=20;wsRs.getColumn(4).width=20;wsRs.getColumn(5).width=20;wsRs.getColumn(6).width=35;
-
-  let rs=_title(wsRs,S,1,'RESUMEN CONTABLE VS FISCAL',`Explicacion de diferencias · AG ${year} · ${razon}`,6);
-
-  ['','Concepto','Valor Contable','Valor Fiscal','Diferencia','Observacion'].forEach((h,i)=>{
-    if(!h)return;
-    wsRs.getCell(rs,i+1).value=h;wsRs.getCell(rs,i+1).font=S.fw;wsRs.getCell(rs,i+1).fill=S.fD;wsRs.getCell(rs,i+1).border=S.bd;
-  });
-  rs++;
-
-  // Helper to add resumen row
-  function resRow(label,esfOrEri,refRow,isTotal,obs){
-    wsRs.getCell(`B${rs}`).value=label;wsRs.getCell(`B${rs}`).font=isTotal?{...S.fb,size:11}:S.f;wsRs.getCell(`B${rs}`).border=S.bd;
-    wsRs.getCell(`A${rs}`).border=S.bd;
-    const sheet=esfOrEri==='esf'?'ESF':'ERI';
-    wsRs.getCell(`C${rs}`).value={formula:`${sheet}!C${refRow}`};wsRs.getCell(`C${rs}`).numFmt=S.nF;wsRs.getCell(`C${rs}`).font=isTotal?S.fb:S.f;wsRs.getCell(`C${rs}`).border=S.bd;
-    wsRs.getCell(`D${rs}`).value={formula:`${sheet}!G${refRow}`};wsRs.getCell(`D${rs}`).numFmt=S.nF;wsRs.getCell(`D${rs}`).font=isTotal?S.fb:S.f;wsRs.getCell(`D${rs}`).border=S.bd;
-    wsRs.getCell(`E${rs}`).value={formula:`C${rs}-D${rs}`};wsRs.getCell(`E${rs}`).numFmt=S.nF;wsRs.getCell(`E${rs}`).font=isTotal?{...S.fb,color:{argb:'FFC62828'}}:S.f;wsRs.getCell(`E${rs}`).border=S.bd;
-    wsRs.getCell(`F${rs}`).value=obs||'';wsRs.getCell(`F${rs}`).font={...S.f,size:9,color:{argb:'FF666666'}};wsRs.getCell(`F${rs}`).border=S.bd;
-    if(isTotal){for(let c=1;c<=6;c++)wsRs.getCell(rs,c).fill=S.fT}
-    rs++;
-  }
-
-  // ESF
-  _sec(wsRs,S,rs,'ESTADO DE SITUACION FINANCIERA',6);rs++;
-  for(const[cas,nm] of esfCats){resRow(nm,'esf',esfRef[cas],false)}
-  resRow('TOTAL PATRIMONIO BRUTO','esf',esfRef[44],true);
-  resRow('TOTAL PASIVOS','esf',esfRef[45],true);
-  resRow('PATRIMONIO LIQUIDO','esf',esfRef[46],true);
-  rs++;
-
-  // ERI
-  _sec(wsRs,S,rs,'ESTADO DE RESULTADOS INTEGRAL',6);rs++;
-  for(const[cas,nm] of ingCats){resRow(nm,'eri',eriRef[cas],false)}
-  resRow('Total Ingresos Brutos','eri',eriRef[58],true);
-  for(const[cas,nm] of devCats){resRow(nm,'eri',eriRef[cas],false)}
-  resRow('Total Ingresos Netos','eri',eriRef[61],true,'Casilla 61');
-  rs++;
-
-  resRow('Costos','eri',eriRef[62],false);
-  for(const[cas,nm] of gasCats){resRow(nm,'eri',eriRef[cas],false)}
-  resRow('Total Costos y Gastos','eri',eriRef[67],true,'Casilla 67');
-  rs++;
-
-  resRow('Resultado antes de impuestos','eri',eriRef.resultado,true,'Contable vs Fiscal');
-  rs++;
-
-  // Nota explicativa
-  wsRs.mergeCells(`B${rs}:F${rs}`);
-  wsRs.getCell(`B${rs}`).value='DIFERENCIA = Valor Contable - Valor Fiscal. Una diferencia positiva en gastos indica gastos no deducibles fiscalmente.';
-  wsRs.getCell(`B${rs}`).font={...S.f,size:9,italic:true,color:{argb:'FF999999'}};
-  rs++;
-  wsRs.mergeCells(`B${rs}:F${rs}`);
-  wsRs.getCell(`B${rs}`).value='La renta liquida fiscal es mayor que la utilidad contable cuando hay gastos no deducibles (diferencias permanentes).';
-  wsRs.getCell(`B${rs}`).font={...S.f,size:9,italic:true,color:{argb:'FF999999'}};
-
-  // ══════════════════════════════════════════════════════════
-  //  HOJA 7: GASTOS NO DEDUCIBLES (si hay datos)
-  // ══════════════════════════════════════════════════════════
   const noDedCuentas=cuentasBalance.filter(c=>c.ded==='no_ded'||c.ded==='gmf');
   if(noDedCuentas.length>0){
-    const ws3=wb.addWorksheet('Gastos No Deducibles');
-    ws3.getColumn(1).width=13;ws3.getColumn(2).width=45;ws3.getColumn(3).width=18;
-    ws3.getColumn(4).width=10;ws3.getColumn(5).width=35;ws3.getColumn(6).width=12;
-
-    let r3=_title(ws3,S,1,'GASTOS NO DEDUCIBLES FISCALMENTE',`${noDedCuentas.length} cuentas detectadas · AG ${year}`,6);
-
+    const wsG=wb.addWorksheet('Gastos No Deducibles');
+    wsG.getColumn(1).width=13;wsG.getColumn(2).width=45;wsG.getColumn(3).width=18;
+    wsG.getColumn(4).width=10;wsG.getColumn(5).width=35;wsG.getColumn(6).width=12;
+    let rg=1;
+    wsG.mergeCells('A1:F1');wsG.getCell('A1').value='GASTOS NO DEDUCIBLES FISCALMENTE';
+    wsG.getCell('A1').font={...fAB,size:14,color:{argb:DBLUE}};wsG.getCell('A1').alignment={horizontal:'center'};
+    rg=3;
     ['Cuenta','Nombre','Valor Contable','Tipo','Regla Aplicada','Articulo ET'].forEach((h,i)=>{
-      ws3.getCell(r3,i+1).value=h;ws3.getCell(r3,i+1).font=S.fw;ws3.getCell(r3,i+1).fill=S.fD;ws3.getCell(r3,i+1).border=S.bd;
-    });
-    r3++;
-
-    const detStart=r3;
+      wsG.getCell(rg,i+1).value=h;wsG.getCell(rg,i+1).font={...fAB,color:{argb:WHITE}};
+      wsG.getCell(rg,i+1).fill=fillDark;wsG.getCell(rg,i+1).border=bd;
+    });rg++;
     for(const d of noDedCuentas.sort((a,b)=>b.val-a.val)){
-      ws3.getCell(r3,1).value=d.code;ws3.getCell(r3,1).font={...S.f,name:'Consolas',size:9};ws3.getCell(r3,1).border=S.bd;
-      ws3.getCell(r3,2).value=d.name;ws3.getCell(r3,2).font=S.f;ws3.getCell(r3,2).border=S.bd;ws3.getCell(r3,2).alignment={wrapText:true};
-      ws3.getCell(r3,3).value=d.val;ws3.getCell(r3,3).numFmt=S.nF;ws3.getCell(r3,3).font=S.fb;ws3.getCell(r3,3).border=S.bd;
-      ws3.getCell(r3,4).value=d.ded==='gmf'?'50% DED':'NO DED';
-      ws3.getCell(r3,4).font={...S.fb,size:9,color:{argb:d.ded==='gmf'?'FFD97706':'FFC62828'}};ws3.getCell(r3,4).border=S.bd;
-      ws3.getCell(r3,5).value=d.regla?d.regla.nom:'Clasificacion manual';ws3.getCell(r3,5).font={...S.f,size:9};ws3.getCell(r3,5).border=S.bd;
-      ws3.getCell(r3,6).value=d.regla?'Art. '+d.regla.art:'';ws3.getCell(r3,6).font={...S.f,size:9};ws3.getCell(r3,6).border=S.bd;
-      ws3.getCell(r3,4).fill=d.ded==='gmf'?S.fW:S.fE;
-      r3++;
+      wsG.getCell(rg,1).value=d.code;wsG.getCell(rg,1).font={...fA,name:'Consolas',size:9};wsG.getCell(rg,1).border=bd;
+      wsG.getCell(rg,2).value=d.name;wsG.getCell(rg,2).font=fA;wsG.getCell(rg,2).border=bd;
+      wsG.getCell(rg,3).value=d.val;wsG.getCell(rg,3).numFmt=nF;wsG.getCell(rg,3).font=fAB;wsG.getCell(rg,3).border=bd;
+      wsG.getCell(rg,4).value=d.ded==='gmf'?'50% DED':'NO DED';
+      wsG.getCell(rg,4).font={...fAB,size:9,color:{argb:d.ded==='gmf'?'FFD97706':'FFC62828'}};wsG.getCell(rg,4).border=bd;
+      wsG.getCell(rg,5).value=d.regla?d.regla.nom:'Manual';wsG.getCell(rg,5).font={...fA,size:9};wsG.getCell(rg,5).border=bd;
+      wsG.getCell(rg,6).value=d.regla?'Art. '+d.regla.art:'';wsG.getCell(rg,6).font={...fA,size:9};wsG.getCell(rg,6).border=bd;
+      rg++;
     }
-
-    r3++;
-    const totalNoDed=noDedCuentas.filter(c=>c.ded==='no_ded').reduce((s,c)=>s+c.val,0);
+    rg++;
+    const totalND=noDedCuentas.filter(c=>c.ded==='no_ded').reduce((s,c)=>s+c.val,0);
     const totalGmf=noDedCuentas.filter(c=>c.ded==='gmf').reduce((s,c)=>s+c.val,0);
-    ws3.getCell(`B${r3}`).value='100% No deducible:';ws3.getCell(`B${r3}`).font=S.fb;ws3.getCell(`B${r3}`).border=S.bd;
-    ws3.getCell(`C${r3}`).value=totalNoDed;ws3.getCell(`C${r3}`).numFmt=S.nF;ws3.getCell(`C${r3}`).font=S.fb;ws3.getCell(`C${r3}`).border=S.bd;r3++;
-    ws3.getCell(`B${r3}`).value='GMF 4x1000 (50% no deducible):';ws3.getCell(`B${r3}`).font=S.fb;ws3.getCell(`B${r3}`).border=S.bd;
-    ws3.getCell(`C${r3}`).value=Math.round(totalGmf*0.5);ws3.getCell(`C${r3}`).numFmt=S.nF;ws3.getCell(`C${r3}`).font=S.fb;ws3.getCell(`C${r3}`).border=S.bd;r3++;
-    ws3.getCell(`B${r3}`).value='TOTAL NO DEDUCIBLE FISCALMENTE:';ws3.getCell(`B${r3}`).font={...S.fb,size:11,color:{argb:'FFC62828'}};ws3.getCell(`B${r3}`).border=S.tb;
-    ws3.getCell(`C${r3}`).value=totalNoDed+Math.round(totalGmf*0.5);ws3.getCell(`C${r3}`).numFmt=S.nF;
-    ws3.getCell(`C${r3}`).font={...S.fb,size:11,color:{argb:'FFC62828'}};ws3.getCell(`C${r3}`).fill=S.fE;ws3.getCell(`C${r3}`).border=S.tb;
+    wsG.getCell(`B${rg}`).value='100% No deducible:';wsG.getCell(`B${rg}`).font=fAB;
+    wsG.getCell(`C${rg}`).value=totalND;wsG.getCell(`C${rg}`).numFmt=nF;wsG.getCell(`C${rg}`).font=fAB;rg++;
+    wsG.getCell(`B${rg}`).value='GMF (50% no deducible):';wsG.getCell(`B${rg}`).font=fAB;
+    wsG.getCell(`C${rg}`).value=Math.round(totalGmf*0.5);wsG.getCell(`C${rg}`).numFmt=nF;wsG.getCell(`C${rg}`).font=fAB;rg++;
+    wsG.getCell(`B${rg}`).value='TOTAL NO DEDUCIBLE:';wsG.getCell(`B${rg}`).font={...fAB,size:11,color:{argb:'FFC62828'}};
+    wsG.getCell(`C${rg}`).value=totalND+Math.round(totalGmf*0.5);wsG.getCell(`C${rg}`).numFmt=nF;
+    wsG.getCell(`C${rg}`).font={...fAB,size:11,color:{argb:'FFC62828'}};wsG.getCell(`C${rg}`).fill=fillRed;
   }
 
   // ══════════════════════════════════════════════════════════
@@ -1989,7 +1545,7 @@ async function exportExcel(){
   const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url;a.download=`F110_2516_AG${year}_${nit||'SIN_NIT'}.xlsx`;
+  a.href=url;a.download=`F110_AG${year}_${nit||'SIN_NIT'}.xlsx`;
   document.body.appendChild(a);a.click();document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
