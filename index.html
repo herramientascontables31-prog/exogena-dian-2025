@@ -855,48 +855,57 @@ function cerrarProNav(){
 }
 
 async function activarProNav(){
-  const key=document.getElementById('proNavKey').value.trim();
+  const inp=document.getElementById('proNavKey');
+  const key=inp?inp.value.trim():'';
   if(!key){alert('Ingresa tu clave PRO');return}
-  document.getElementById('proNavKey').style.borderColor='var(--green-400)';
+  inp.style.borderColor='var(--green-400)';
+  inp.disabled=true;
   try{
     const fp=getDeviceFingerprint();
-    const res=await fetch(PRO_API+'?action=validateKey&key='+encodeURIComponent(key)+'&device='+encodeURIComponent(fp));
+    const url=PRO_API+'?action=validateKey&key='+encodeURIComponent(key)+'&device='+encodeURIComponent(fp);
+    console.log('[PRO] Validando clave...');
+    const res=await fetch(url);
     const data=await res.json();
+    console.log('[PRO] Respuesta:',data);
     if(data.valid){
       localStorage.setItem('exogenadian_pro_key',key);
       localStorage.setItem('exogenadian_pro_lastcheck',Date.now().toString());
       showProNav();
+      console.log('[PRO] Activado OK');
     }else{
-      document.getElementById('proNavKey').style.borderColor='#EF4444';
+      inp.style.borderColor='#EF4444';
       const msg=data.reason==='Clave expirada'?'Clave expirada ('+data.expiry+')'
         :data.reason==='Clave cancelada'?'Clave cancelada'
         :data.reason&&data.reason.includes('dispositivos')?'Limite de dispositivos'
         :'Clave no encontrada';
       alert(msg+'. Verifica o suscribete en exogenadian.com');
     }
-  }catch(e){alert('Error de conexion. Intenta de nuevo.')}
+  }catch(e){console.error('[PRO] Error:',e);alert('Error de conexion: '+e.message)}
+  finally{if(inp)inp.disabled=false}
 }
 
-// Auto-check al cargar
-(async function(){
+// Auto-check al cargar — con try/catch global para no romper nada
+try{
   const saved=localStorage.getItem('exogenadian_pro_key');
   if(!saved){
-    document.getElementById('proNavSubscribe').style.display='';
-    return;
+    const sub=document.getElementById('proNavSubscribe');if(sub)sub.style.display='';
+  }else{
+    const inp=document.getElementById('proNavKey');if(inp)inp.value=saved;
+    (async()=>{
+      try{
+        const fp=getDeviceFingerprint();
+        const res=await fetch(PRO_API+'?action=validateKey&key='+encodeURIComponent(saved)+'&device='+encodeURIComponent(fp));
+        const data=await res.json();
+        if(data.valid){showProNav()}
+        else{localStorage.removeItem('exogenadian_pro_key');const s=document.getElementById('proNavSubscribe');if(s)s.style.display=''}
+      }catch(e){
+        const last=localStorage.getItem('exogenadian_pro_lastcheck');
+        if(last&&Date.now()-parseInt(last)<86400000){showProNav()}
+        else{const s=document.getElementById('proNavSubscribe');if(s)s.style.display=''}
+      }
+    })();
   }
-  document.getElementById('proNavKey').value=saved;
-  try{
-    const fp=getDeviceFingerprint();
-    const res=await fetch(PRO_API+'?action=validateKey&key='+encodeURIComponent(saved)+'&device='+encodeURIComponent(fp));
-    const data=await res.json();
-    if(data.valid){showProNav()}
-    else{localStorage.removeItem('exogenadian_pro_key');document.getElementById('proNavSubscribe').style.display=''}
-  }catch(e){
-    const last=localStorage.getItem('exogenadian_pro_lastcheck');
-    if(last&&Date.now()-parseInt(last)<86400000){showProNav()}
-    else{document.getElementById('proNavSubscribe').style.display=''}
-  }
-})();
+}catch(e){console.error('[PRO] Init error:',e)}
 </script>
 
 </body>
