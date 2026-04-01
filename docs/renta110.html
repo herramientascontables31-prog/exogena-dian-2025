@@ -277,7 +277,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <!-- RESUMEN -->
   <div class="stats" id="resumen" style="margin-top:12px"></div>
   <div style="text-align:center;margin-bottom:12px">
-    <button onclick="exportExcel()" class="btn btn-success" style="padding:12px 28px">📊 Descargar Excel con Formulas</button>
+    <div id="excelProLock" style="display:inline-block;padding:16px 28px;background:#f8fafc;border:2px dashed var(--border);border-radius:12px">
+      <div style="font-size:.85rem;font-weight:600;color:var(--muted);margin-bottom:6px">📊 Descargar Excel con Fórmulas</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-bottom:10px">Incluye: formulario DIAN, impuesto mínimo (TTD) y gastos no deducibles</div>
+      <input type="text" id="proKey" placeholder="Ingresa tu clave PRO" style="padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;width:220px;text-align:center">
+      <button onclick="validarPro()" class="btn btn-success" style="padding:8px 20px;margin-left:6px">Descargar</button>
+      <div id="proError" style="margin-top:6px;font-size:.75rem;color:var(--red)"></div>
+      <div style="margin-top:8px"><a href="index.html#planes" style="font-size:.78rem;color:#059669;font-weight:600;text-decoration:none">¿No tienes clave? Suscríbete PRO →</a></div>
+    </div>
   </div>
 </div>
 
@@ -1053,6 +1060,41 @@ function recalcular(){
     <div class="stat-card amber"><div class="val">${fN(c96)}</div><div class="lbl">Total Impuesto a Cargo</div></div>
     <div class="stat-card ${v('c110')>0?'red':'green'}"><div class="val">${fN(v('c110'))}</div><div class="lbl">Saldo a Pagar</div></div>
     <div class="stat-card green"><div class="val">${fN(v('c111'))}</div><div class="lbl">Saldo a Favor</div></div>`;
+}
+
+// ── VALIDACION PRO ──
+const PRO_CSV='https://docs.google.com/spreadsheets/d/e/2PACX-1vQc7cTur8DOZ_Kqkpqf7WmbzFT4im5efh0gYzIix4HE9pYp5B24OSDaOCKWjuU5YVXAMZeMGYkVE1eH/pub?gid=0&single=true&output=csv';
+const ADMIN_KEY='ExoDIAN-2025-ADMIN';
+
+async function validarPro(){
+  const key=document.getElementById('proKey').value.trim();
+  const errEl=document.getElementById('proError');
+  if(!key){errEl.textContent='Ingresa tu clave PRO';return}
+  if(key===ADMIN_KEY){exportExcel();return}
+  errEl.textContent='Verificando...';errEl.style.color='var(--muted)';
+  try{
+    const res=await fetch(PRO_CSV);
+    const txt=await res.text();
+    const lines=txt.split('\n').map(l=>l.split(',').map(c=>c.trim().replace(/^"|"$/g,'')));
+    const hdr=lines[0].map(h=>h.toLowerCase());
+    const claveIdx=hdr.findIndex(h=>/clave/.test(h));
+    const estadoIdx=hdr.findIndex(h=>/estado/.test(h));
+    let found=false;
+    for(let i=1;i<lines.length;i++){
+      if(lines[i][claveIdx]===key){
+        found=true;
+        const estado=(lines[i][estadoIdx]||'').toLowerCase();
+        if(['activo','si','sí','1','true'].includes(estado)){
+          errEl.textContent='';
+          exportExcel();
+          return;
+        }else{
+          errEl.style.color='var(--red)';errEl.textContent='Tu suscripción está inactiva. Contacta al administrador.';return;
+        }
+      }
+    }
+    if(!found){errEl.style.color='var(--red)';errEl.textContent='Clave no encontrada. Verifica o suscríbete en exogenadian.com';}
+  }catch(e){errEl.style.color='var(--red)';errEl.textContent='Error verificando. Intenta de nuevo.';}
 }
 
 // Excel export — Formato DIAN real con 2 hojas
