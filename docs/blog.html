@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog Contable Colombia — Guías Exógena DIAN, Renta, IVA y Tributario | ExógenaDIAN</title>
+<meta name="description" content="Recursos para contadores colombianos: guías sobre información exógena DIAN 2025, gastos no deducibles, cruces de información, metadatos DIAN y calendario de vencimientos. Tips y actualizaciones tributarias para el cierre fiscal.">
+<meta name="keywords" content="blog contable Colombia, guías exógena DIAN, gastos no deducibles Colombia, cruces información DIAN, metadatos DIAN, fechas exógena 2025, información exógena paso a paso, cierre fiscal 2025, contador público Colombia">
+<meta name="author" content="ExógenaDIAN">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://exogenadian.com/blog.html">
+<!-- Open Graph -->
+<meta property="og:title" content="Blog Contable — Guías y Recursos para Contadores Colombianos | ExógenaDIAN">
+<meta property="og:description" content="Guías prácticas sobre exógena DIAN, gastos no deducibles, cruces de información, metadatos y calendario de vencimientos. Recursos gratuitos para contadores.">
+<meta property="og:url" content="https://exogenadian.com/blog.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="ExógenaDIAN">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog Contable — Guías para Contadores Colombianos | ExógenaDIAN">
+<meta name="twitter:description" content="Guías prácticas sobre exógena DIAN 2025, gastos no deducibles, cruces de información y calendario de vencimientos para contadores colombianos.">
+<!-- Schema.org -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "Blog ExógenaDIAN — Recursos para Contadores",
+  "description": "Guías, tips y actualizaciones tributarias para contadores colombianos",
+  "url": "https://exogenadian.com/blog.html",
+  "publisher": {
+    "@type": "Organization",
+    "name": "ExógenaDIAN",
+    "url": "https://exogenadian.com"
+  },
+  "blogPost": [
+    {
+      "@type": "BlogPosting",
+      "headline": "Cruces de información DIAN: cómo evitar inconsistencias entre IVA, renta y exógena",
+      "url": "https://exogenadian.com/blog/cruces-informacion-dian.html",
+      "description": "Aprende a identificar y corregir las inconsistencias más comunes entre las declaraciones de IVA, renta y la información exógena antes de que la DIAN las detecte.",
+      "author": {"@type": "Organization", "name": "ExógenaDIAN"}
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Gastos no deducibles en Colombia: guía completa para personas jurídicas",
+      "url": "https://exogenadian.com/blog/gastos-no-deducibles.html",
+      "description": "Conoce los 63 tipos de gastos no deducibles según el Estatuto Tributario colombiano y cómo clasificarlos correctamente en tu depuración de renta.",
+      "author": {"@type": "Organization", "name": "ExógenaDIAN"}
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Metadatos DIAN: qué son, para qué sirven y ejemplos prácticos",
+      "url": "https://exogenadian.com/blog/metadatos-dian.html",
+      "description": "Entiende la estructura de metadatos que exige la DIAN para los reportes de información exógena y cómo configurarlos correctamente en tus archivos XML.",
+      "author": {"@type": "Organization", "name": "ExógenaDIAN"}
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Fechas de vencimiento información exógena DIAN 2025: calendario completo",
+      "url": "https://exogenadian.com/blog/fechas-exogena-2025.html",
+      "description": "Calendario oficial de vencimientos para la presentación de información exógena DIAN año gravable 2025, organizado por último dígito del NIT.",
+      "author": {"@type": "Organization", "name": "ExógenaDIAN"}
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Cómo hacer la información exógena DIAN 2025 paso a paso",
+      "url": "https://exogenadian.com/blog/como-hacer-exogena-dian-2025.html",
+      "description": "Tutorial completo para generar y presentar la información exógena DIAN 2025: desde el balance de prueba hasta la carga exitosa en el MUISCA.",
+      "author": {"@type": "Organization", "name": "ExógenaDIAN"}
+    }
+  ]
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-900: #064E3B; --green-800: #065F46; --green-700: #047857;
+  --green-600: #059669; --green-500: #10B981; --green-400: #34D399;
+  --green-300: #6EE7B7; --green-200: #A7F3D0; --green-100: #D1FAE5;
+  --green-50: #ECFDF5; --mint: #F0FFF4;
+  --white: #FFF; --gray-50: #F9FAFB; --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB; --gray-300: #D1D5DB; --gray-400: #9CA3AF;
+  --gray-500: #6B7280; --gray-600: #4B5563; --gray-700: #374151;
+  --gray-800: #1F2937; --gray-900: #111827;
+  --radius: 16px; --radius-sm: 10px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+  --shadow: 0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -2px rgba(0,0,0,.05);
+  --shadow-lg: 0 20px 50px -12px rgba(0,0,0,.12);
+  --shadow-xl: 0 25px 60px -12px rgba(5,150,105,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--white);color:var(--gray-900);overflow-x:hidden}
+
+/* ===== NAV ===== */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.04);transition:all .3s}
+nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--gray-900);font-weight:800;font-size:1.2rem;letter-spacing:-.02em}
+.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--green-600),var(--green-400));border-radius:10px;display:grid;place-items:center;color:#fff;font-size:.85rem;font-weight:900}
+.logo small{font-weight:400;font-size:.65rem;color:var(--gray-400);display:block;margin-top:-2px;letter-spacing:.04em}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{text-decoration:none;color:var(--gray-500);font-size:.88rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--gray-900)}
+.nav-links a.active{color:var(--green-600);font-weight:700}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:600;font-size:1rem;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
+.btn-green{background:var(--green-600);color:#fff}
+.btn-green:hover{background:var(--green-700);transform:translateY(-1px);box-shadow:var(--shadow-xl)}
+.btn-sm{padding:8px 16px;font-size:.82rem;border-radius:10px}
+.hamburger{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:8px;color:var(--gray-700)}
+@media(max-width:900px){
+  .hamburger{display:block}
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:var(--white);padding:16px 20px;flex-direction:column;gap:12px;border-top:1px solid var(--gray-200);box-shadow:0 8px 20px rgba(0,0,0,.08)}
+  .nav-links.open{display:flex}
+}
+
+/* ===== HERO ===== */
+.hero{min-height:auto;display:flex;align-items:center;padding:130px 48px 70px;position:relative;background:linear-gradient(170deg,var(--white) 0%,var(--green-50) 40%,var(--mint) 100%);overflow:hidden;text-align:center}
+.hero::after{content:'';position:absolute;top:-30%;right:-15%;width:700px;height:700px;background:radial-gradient(circle,rgba(16,185,129,.12) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+.hero::before{content:'';position:absolute;bottom:-20%;left:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(52,211,153,.08) 0%,transparent 70%);border-radius:50%;pointer-events:none}
+.hero-inner{max-width:800px;width:100%;margin:0 auto;position:relative;z-index:1;animation:slideUp .7s ease-out}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--green-300);padding:7px 18px 7px 10px;border-radius:100px;font-size:.85rem;font-weight:600;color:var(--green-700);margin-bottom:20px;box-shadow:var(--shadow-sm)}
+.pill-dot{width:8px;height:8px;background:var(--green-500);border-radius:50%;animation:pulse 2s infinite}
+.hero h1{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(2.2rem,4.5vw,3.2rem);line-height:1.1;color:var(--gray-900);margin-bottom:16px;letter-spacing:-.02em}
+.hero h1 em{font-style:italic;font-weight:600;color:var(--green-600)}
+.hero-desc{font-size:1.15rem;line-height:1.65;color:var(--gray-500);max-width:560px;margin:0 auto}
+
+/* ===== BLOG CARDS ===== */
+.blog-section{padding:70px 48px 90px;max-width:1200px;margin:0 auto}
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.blog-card{background:var(--white);border-radius:20px;padding:32px 28px 28px;border:1.5px solid var(--gray-200);transition:all .35s;display:flex;flex-direction:column;position:relative}
+.blog-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-lg);border-color:var(--green-300)}
+.blog-card-meta{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.blog-card-icon{width:44px;height:44px;border-radius:12px;background:var(--green-50);border:1px solid var(--green-100);display:grid;place-items:center;font-size:1.2rem;flex-shrink:0}
+.blog-card-time{font-size:.78rem;font-weight:600;color:var(--gray-400);background:var(--gray-50);padding:4px 10px;border-radius:8px}
+.blog-card h3{font-size:1.1rem;font-weight:700;line-height:1.4;color:var(--gray-900);margin-bottom:10px}
+.blog-card h3 a{color:inherit;text-decoration:none;transition:color .2s}
+.blog-card h3 a:hover{color:var(--green-600)}
+.blog-card .excerpt{font-size:.92rem;color:var(--gray-500);line-height:1.55;flex:1;margin-bottom:20px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.blog-card .read-link{display:inline-flex;align-items:center;gap:6px;font-size:.9rem;font-weight:600;color:var(--green-600);text-decoration:none;transition:all .2s;margin-top:auto}
+.blog-card .read-link:hover{color:var(--green-700);gap:10px}
+
+/* ===== FOOTER ===== */
+footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:36px}
+.footer-brand h4{font-family:'Fraunces',serif;color:var(--white);font-size:1.2rem;margin-bottom:8px}
+.footer-brand p{font-size:.9rem;line-height:1.6;color:var(--gray-500)}
+.footer-col h5{color:var(--gray-300);font-size:.82rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.footer-col a{display:block;color:var(--gray-500);font-size:.9rem;text-decoration:none;padding:3px 0;transition:color .2s}
+.footer-col a:hover{color:var(--green-400)}
+.footer-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:.82rem;color:var(--gray-600);line-height:1.8}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+.fade-in{opacity:0;transform:translateY(20px);transition:all .5s ease-out}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+  nav{padding:12px 20px}
+  .hero{padding:100px 20px 50px}
+  .blog-section{padding:40px 20px 60px}
+  .blog-grid{grid-template-columns:1fr}
+  footer{padding:32px 20px 24px}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:24px}
+}
+@media(min-width:901px) and (max-width:1100px){
+  .blog-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav id="nav">
+  <a href="https://exogenadian.com" class="logo">
+    <div class="logo-mark">E</div>
+    <div>ExógenaDIAN<small>Portal Contable</small></div>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="exogena.html">Exógena DIAN</a>
+    <a href="renta110.html">Renta 110</a>
+    <a href="retencion350.html">Retención 350</a>
+    <a href="iva300.html">IVA 300</a>
+    <a href="estadosfinancieros.html">Estados Financieros</a>
+    <a href="conciliacion.html">Conciliación</a>
+    <a href="blog.html" class="active">Blog</a>
+  </div>
+  <button class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">&#9776;</button>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-pill"><div class="pill-dot"></div> Blog Contable</div>
+    <h1>Recursos para <em>Contadores</em></h1>
+    <p class="hero-desc">Guías, tips y actualizaciones tributarias para el cierre fiscal 2025. Todo lo que necesitas saber sobre exógena DIAN, renta, IVA y normatividad colombiana.</p>
+  </div>
+</section>
+
+<!-- ===== BLOG CARDS ===== -->
+<section class="blog-section">
+  <div class="blog-grid">
+
+    <!-- Card 1 -->
+    <article class="blog-card fade-in">
+      <div class="blog-card-meta">
+        <div class="blog-card-icon">&#128269;</div>
+        <span class="blog-card-time">8 min lectura</span>
+      </div>
+      <h3><a href="blog/cruces-informacion-dian.html">Cruces de información DIAN: cómo evitar inconsistencias entre IVA, renta y exógena</a></h3>
+      <p class="excerpt">Aprende a identificar y corregir las inconsistencias más comunes entre las declaraciones de IVA, renta y la información exógena antes de que la DIAN las detecte.</p>
+      <a href="blog/cruces-informacion-dian.html" class="read-link">Leer artículo &#8594;</a>
+    </article>
+
+    <!-- Card 2 -->
+    <article class="blog-card fade-in">
+      <div class="blog-card-meta">
+        <div class="blog-card-icon">&#128203;</div>
+        <span class="blog-card-time">12 min lectura</span>
+      </div>
+      <h3><a href="blog/gastos-no-deducibles.html">Gastos no deducibles en Colombia: guía completa para personas jurídicas</a></h3>
+      <p class="excerpt">Conoce los 63 tipos de gastos no deducibles según el Estatuto Tributario colombiano y cómo clasificarlos correctamente en tu depuración de renta.</p>
+      <a href="blog/gastos-no-deducibles.html" class="read-link">Leer artículo &#8594;</a>
+    </article>
+
+    <!-- Card 3 -->
+    <article class="blog-card fade-in">
+      <div class="blog-card-meta">
+        <div class="blog-card-icon">&#128451;</div>
+        <span class="blog-card-time">6 min lectura</span>
+      </div>
+      <h3><a href="blog/metadatos-dian.html">Metadatos DIAN: qué son, para qué sirven y ejemplos prácticos</a></h3>
+      <p class="excerpt">Entiende la estructura de metadatos que exige la DIAN para los reportes de información exógena y cómo configurarlos correctamente en tus archivos XML.</p>
+      <a href="blog/metadatos-dian.html" class="read-link">Leer artículo &#8594;</a>
+    </article>
+
+    <!-- Card 4 -->
+    <article class="blog-card fade-in">
+      <div class="blog-card-meta">
+        <div class="blog-card-icon">&#128197;</div>
+        <span class="blog-card-time">5 min lectura</span>
+      </div>
+      <h3><a href="blog/fechas-exogena-2025.html">Fechas de vencimiento información exógena DIAN 2025: calendario completo</a></h3>
+      <p class="excerpt">Calendario oficial de vencimientos para la presentación de información exógena DIAN año gravable 2025, organizado por último dígito del NIT.</p>
+      <a href="blog/fechas-exogena-2025.html" class="read-link">Leer artículo &#8594;</a>
+    </article>
+
+    <!-- Card 5 -->
+    <article class="blog-card fade-in">
+      <div class="blog-card-meta">
+        <div class="blog-card-icon">&#128221;</div>
+        <span class="blog-card-time">15 min lectura</span>
+      </div>
+      <h3><a href="blog/como-hacer-exogena-dian-2025.html">Cómo hacer la información exógena DIAN 2025 paso a paso</a></h3>
+      <p class="excerpt">Tutorial completo para generar y presentar la información exógena DIAN 2025: desde el balance de prueba hasta la carga exitosa en el MUISCA.</p>
+      <a href="blog/como-hacer-exogena-dian-2025.html" class="read-link">Leer artículo &#8594;</a>
+    </article>
+
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>ExógenaDIAN</h4>
+        <p>Portal contable y tributario para contadores colombianos. Herramientas profesionales que simplifican el cierre fiscal.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Herramientas</h5>
+        <a href="exogena.html">Exógena DIAN</a>
+        <a href="renta110.html">Declaración de Renta</a>
+        <a href="retencion350.html">Retención en la Fuente</a>
+        <a href="iva300.html">Declaración de IVA</a>
+        <a href="estadosfinancieros.html">Estados Financieros</a>
+        <a href="conciliacion.html">Conciliación Bancaria</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contacto</h5>
+        <a href="mailto:soporte@exogenadian.com">soporte@exogenadian.com</a>
+        <a href="https://wa.me/573156178610">WhatsApp</a>
+        <a href="blog.html">Blog</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      Exógena DIAN AG 2025 · Resolución 000227/2025 · UVT $49.799<br>
+      <a href="terminos.html" style="color:var(--gray-500)">Términos y condiciones · Política de privacidad</a> · Aziendale S.A.S. · Medellín
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Nav scroll */
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>20));
+document.querySelectorAll('#navLinks a').forEach(a=>a.addEventListener('click',()=>{
+  document.getElementById('navLinks').classList.remove('open');
+}));
+
+/* Fade in observer */
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:.1});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

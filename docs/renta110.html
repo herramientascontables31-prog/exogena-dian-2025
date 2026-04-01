@@ -12,6 +12,11 @@
 <meta property="og:url" content="https://exogenadian.com/renta110.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="ExógenaDIAN">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Formulario 110 Declaración de Renta Personas Jurídicas","url":"https://exogenadian.com/renta110.html","description":"Genera GRATIS el borrador del formulario 110 de renta para personas jurídicas. Cálculos automáticos de renta líquida, presuntiva, impuesto y anticipo.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <style>
@@ -34,6 +39,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 .actions{display:flex;gap:12px;justify-content:center;margin-top:20px}
 .alert{padding:14px 18px;border-radius:8px;font-size:.85rem;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
 .alert-info{background:var(--pri3);color:var(--pri);border:1px solid #B4C6E7}
+
 /* ── DIAN FORM STYLES ── */
 .dian-form{border:2px solid #000;font-family:Arial,Helvetica,sans-serif;font-size:11px;background:#fff;max-width:1100px;margin:0 auto}
 .dian-top{display:grid;grid-template-columns:80px 1fr 120px;border-bottom:2px solid #000}
@@ -92,6 +98,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <h1><span>110</span> Declaracion de Renta</h1>
     <p>Personas Juridicas · AG 2025 · Casillas <strong style="color:#fff">blancas</strong> = editables · <strong style="color:#81C784">verdes</strong> = automaticas</p>
   </div><div class="header-right">100% en navegador</div></div>
+
+  <!-- UPLOAD BALANCE -->
   <div class="card" style="padding:16px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
       <div class="card-title" style="margin:0"><span>📄</span> Cargar Balance (opcional)</div>
@@ -116,6 +124,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
     </div>
   </div>
+
+  <!-- Datos del declarante -->
   <div class="card" style="padding:16px">
     <div class="card-title" style="margin-bottom:10px"><span>🏢</span> Datos del Declarante</div>
     <div class="config-grid">
@@ -144,6 +154,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
     </div>
   </div>
+
+  <!-- DATOS AÑO ANTERIOR -->
   <div class="card" style="padding:12px">
     <div class="card-title" style="margin-bottom:8px"><span>📋</span> Declaracion Año Anterior (AG 2024)</div>
     <p style="font-size:.75rem;color:var(--muted);margin-bottom:10px">Para calcular anticipo y aplicar saldos. Si es primera declaracion, deja en blanco.</p>
@@ -162,6 +174,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
     </div>
   </div>
+
+  <!-- FORMULARIO 110 -->
   <div class="dian-form">
     <div class="dian-top">
       <div class="dian-top-left">DIAN<br>Colombia</div>
@@ -171,7 +185,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
       <div class="dian-top-right">110</div>
     </div>
+
+    <!-- PATRIMONIO + RENTA CONTINUACION (2 columnas) -->
     <div class="f110-grid">
+      <!-- COLUMNA IZQUIERDA -->
       <div class="f110-col">
         <div class="dian-sec">Patrimonio</div>
         <div class="f110-row"><div class="f-label">Efectivo y equivalentes</div><div class="f-cas">36</div><div class="f-val"><input id="c36" oninput="recalcular()"></div></div>
@@ -185,6 +202,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="f110-row f-total"><div class="f-label">Total patrimonio bruto (36 a 43)</div><div class="f-cas">44</div><div class="f-val"><input id="c44" class="computed" readonly></div></div>
         <div class="f110-row"><div class="f-label">Pasivos</div><div class="f-cas">45</div><div class="f-val"><input id="c45" oninput="recalcular()"></div></div>
         <div class="f110-row f-total"><div class="f-label">Total patrimonio liquido (44 - 45)</div><div class="f-cas">46</div><div class="f-val"><input id="c46" class="computed" readonly></div></div>
+
         <div class="dian-sec">Ingresos</div>
         <div class="f110-row"><div class="f-label">Ingresos brutos actividades ordinarias</div><div class="f-cas">47</div><div class="f-val"><input id="c47" oninput="recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Ingresos financieros</div><div class="f-cas">48</div><div class="f-val"><input id="c48" oninput="recalcular()"></div></div>
@@ -199,6 +217,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="f110-row"><div class="f-label">Devoluciones, rebajas y descuentos</div><div class="f-cas">59</div><div class="f-val"><input id="c59" oninput="recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Ingresos no constitutivos de renta</div><div class="f-cas">60</div><div class="f-val"><input id="c60" oninput="recalcular()"></div></div>
         <div class="f110-row f-total"><div class="f-label">Total ingresos netos (58 - 59 - 60)</div><div class="f-cas">61</div><div class="f-val"><input id="c61" class="computed" readonly></div></div>
+
         <div class="dian-sec">Costos y Deducciones</div>
         <div class="f110-row"><div class="f-label">Costos</div><div class="f-cas">62</div><div class="f-val"><input id="c62" oninput="recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Gastos de administracion</div><div class="f-cas">63</div><div class="f-val"><input id="c63" oninput="recalcular()"></div></div>
@@ -206,12 +225,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="f110-row"><div class="f-label">Gastos financieros</div><div class="f-cas">65</div><div class="f-val"><input id="c65" oninput="recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Otros gastos y deducciones</div><div class="f-cas">66</div><div class="f-val"><input id="c66" oninput="recalcular()"></div></div>
         <div class="f110-row f-total"><div class="f-label">Total costos y gastos deducibles</div><div class="f-cas">67</div><div class="f-val"><input id="c67" class="computed" readonly></div></div>
+
         <div class="dian-sec">Renta</div>
         <div class="f110-row"><div class="f-label">Renta por recuperacion de deducciones</div><div class="f-cas">70</div><div class="f-val"><input id="c70" oninput="recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Renta Pasiva - ECE</div><div class="f-cas">71</div><div class="f-val"><input id="c71" oninput="recalcular()"></div></div>
         <div class="f110-row f-total"><div class="f-label">Renta liquida ordinaria del ejercicio</div><div class="f-cas">72</div><div class="f-val"><input id="c72" class="computed" readonly></div></div>
         <div class="f110-row"><div class="f-label">Perdida liquida del ejercicio</div><div class="f-cas">73</div><div class="f-val"><input id="c73" class="computed" readonly></div></div>
       </div>
+
+      <!-- COLUMNA DERECHA -->
       <div class="f110-col">
         <div class="dian-sec">Continuacion Renta</div>
         <div class="f110-row"><div class="f-label">Compensaciones</div><div class="f-cas">74</div><div class="f-val"><input id="c74" oninput="recalcular()"></div></div>
@@ -220,11 +242,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="f110-row"><div class="f-label">Renta exenta</div><div class="f-cas">77</div><div class="f-val"><input id="c77" oninput="recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Rentas gravables</div><div class="f-cas">78</div><div class="f-val"><input id="c78" oninput="recalcular()"></div></div>
         <div class="f110-row f-result"><div class="f-label">Renta liquida gravable</div><div class="f-cas">79</div><div class="f-val"><input id="c79" class="computed" readonly></div></div>
+
         <div class="dian-sec">Ganancias Ocasionales</div>
         <div class="f110-row"><div class="f-label">Ingresos por ganancias ocasionales</div><div class="f-cas">80</div><div class="f-val"><input id="c80" oninput="recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Costos por ganancias ocasionales</div><div class="f-cas">81</div><div class="f-val"><input id="c81" oninput="recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Ganancias ocasionales no gravadas y exentas</div><div class="f-cas">82</div><div class="f-val"><input id="c82" oninput="recalcular()"></div></div>
         <div class="f110-row f-total"><div class="f-label">Ganancias ocasionales gravables</div><div class="f-cas">83</div><div class="f-val"><input id="c83" class="computed" readonly></div></div>
+
         <div class="dian-sec">Liquidacion Privada</div>
         <div class="f110-row"><div class="f-label">Impuesto sobre rentas liquidas gravables</div><div class="f-cas">84</div><div class="f-val"><input id="c84" class="computed" readonly></div></div>
         <div class="f110-row"><div class="f-label">Impuesto dividendos 7.5%</div><div class="f-cas">85</div><div class="f-val"><input id="c85" class="computed" readonly></div></div>
@@ -236,6 +260,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="f110-row"><div class="f-label">Impuesto de ganancias ocasionales</div><div class="f-cas">94</div><div class="f-val"><input id="c94" class="computed" readonly></div></div>
         <div class="f110-row"><div class="f-label">Descuento impuestos pagados exterior</div><div class="f-cas">95</div><div class="f-val"><input id="c95" oninput="recalcular()"></div></div>
         <div class="f110-row f-total"><div class="f-label">Total impuesto a cargo</div><div class="f-cas">96</div><div class="f-val"><input id="c96" class="computed" readonly></div></div>
+
         <div class="dian-sec">Pagos</div>
         <div class="f110-row"><div class="f-label">Anticipo renta año anterior</div><div class="f-cas">99</div><div class="f-val"><input id="c99" oninput="this._manual=true;recalcular()"></div></div>
         <div class="f110-row"><div class="f-label">Saldo a favor año anterior</div><div class="f-cas">100</div><div class="f-val"><input id="c100" oninput="this._manual=true;recalcular()"></div></div>
@@ -243,15 +268,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="f110-row"><div class="f-label">Otras retenciones</div><div class="f-cas">102</div><div class="f-val"><input id="c102" oninput="recalcular()"></div></div>
         <div class="f110-row f-total"><div class="f-label">Total retenciones año gravable</div><div class="f-cas">103</div><div class="f-val"><input id="c103" class="computed" readonly></div></div>
         <div class="f110-row"><div class="f-label">Anticipo renta para el año siguiente</div><div class="f-cas">104</div><div class="f-val"><input id="c104" class="computed" readonly></div></div>
+
         <div class="dian-sec">Saldo</div>
         <div class="f110-row f-result"><div class="f-label">Saldo a pagar</div><div class="f-cas">110</div><div class="f-val"><input id="c110" class="computed" readonly></div></div>
         <div class="f110-row f-result"><div class="f-label">Saldo a favor</div><div class="f-cas">111</div><div class="f-val"><input id="c111" class="computed" readonly></div></div>
       </div>
     </div>
+
     <div class="dian-footer">
       <strong>ExogenaDIAN</strong> · Borrador automatico · Art. 240 E.T. · AG 2025 · El contador debe validar antes de presentar
     </div>
   </div>
+
+  <!-- IMPUESTO MINIMO (TTD) -->
   <div class="card" style="padding:0;overflow:hidden">
     <div onclick="document.getElementById('ttdBody').classList.toggle('hidden')" style="padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f8fafc">
       <span style="font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px"><span>📐</span> Tasa Minima de Tributacion (TTD) — Art. 240 Par. 6</span>
@@ -268,6 +297,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div id="ttdResultado" style="margin-top:10px"></div>
     </div>
   </div>
+
+  <!-- RESUMEN -->
   <div class="stats" id="resumen" style="margin-top:12px"></div>
   <div style="text-align:center;margin-bottom:12px">
     <div id="excelProLock" style="display:inline-block;padding:16px 28px;background:#f8fafc;border:2px dashed var(--border);border-radius:12px">
@@ -280,10 +311,1189 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
   </div>
 </div>
+
 <div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
   <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExogenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>
   🔒 Informacion tratada con total confidencialidad · 100% procesado en tu navegador
 </div>
-<script>const _0x692876=_0x4965;(function(_0x2b0d9a,_0x2040d3){const _0x1be8cd=_0x4965,_0xf67887=_0x2b0d9a();while(!![]){try{const _0x48950b=parseInt(_0x1be8cd(0x365))/0x1+-parseInt(_0x1be8cd(0x1be))/0x2+parseInt(_0x1be8cd(0xe8))/0x3*(parseInt(_0x1be8cd(0x291))/0x4)+-parseInt(_0x1be8cd(0x199))/0x5+parseInt(_0x1be8cd(0x3a6))/0x6+-parseInt(_0x1be8cd(0x42a))/0x7+parseInt(_0x1be8cd(0x353))/0x8;if(_0x48950b===_0x2040d3)break;else _0xf67887['push'](_0xf67887['shift']());}catch(_0x342e0c){_0xf67887['push'](_0xf67887['shift']());}}}(_0x3cb1,0x7f7d1),document['getElement'+'ById'](_0x692876(0x405)+_0x692876(0x1b6))['addEventLi'+'stener']('change',_0x3cdac5=>{const _0x1bdea0=_0x692876;if(_0x3cdac5['target']['files'][0x0])procesarBalance(_0x3cdac5[_0x1bdea0(0x154)]['files'][0x0]);}));const dzR=document['getElement'+_0x692876(0x1c6)](_0x692876(0x193));[_0x692876(0x3d2),_0x692876(0x17d)]['forEach'](_0xb5d04d=>dzR['addEventLi'+'stener'](_0xb5d04d,_0x519e0a=>{const _0x2ee166=_0x692876;_0x519e0a['preventDef'+_0x2ee166(0x139)](),dzR[_0x2ee166(0x1ce)]['borderColo'+'r']=_0x2ee166(0x1e0)+')';})),['dragleave',_0x692876(0x17b)][_0x692876(0x378)](_0x419b59=>dzR[_0x692876(0x122)+'stener'](_0x419b59,_0x231bfe=>{const _0x41ebb1=_0x692876;_0x231bfe[_0x41ebb1(0x2ea)+'ault'](),dzR[_0x41ebb1(0x1ce)]['borderColo'+'r']=_0x41ebb1(0x13a)+'er)';})),dzR['addEventLi'+_0x692876(0x2b5)]('drop',_0x2609a8=>{if(_0x2609a8['dataTransf'+'er']['files'][0x0])procesarBalance(_0x2609a8['dataTransf'+'er']['files'][0x0]);});let clasificacionRenta=[],cuentasBalance=[];function procesarBalance(_0x145a48){const _0xa43611=_0x692876,_0x4cae69=new FileReader();_0x4cae69[_0xa43611(0xef)]=_0x59031c=>{const _0x12ab7b=_0xa43611;try{const _0x183fae=XLSX[_0x12ab7b(0x38d)](_0x59031c['target'][_0x12ab7b(0x2ca)],{'type':_0x12ab7b(0x29a)});let _0xb4b708=null,_0x475bf9=0x0;for(const _0x63acff of _0x183fae['SheetNames']){const _0x4f1f6e=XLSX[_0x12ab7b(0xf5)]['sheet_to_j'+_0x12ab7b(0x36e)](_0x183fae['Sheets'][_0x63acff],{'header':0x1,'defval':'','raw':!![]}),_0x146abe=_0x4f1f6e[_0x12ab7b(0x42f)](_0x5202b6=>_0x5202b6['some'](_0x4d3e72=>_0x4d3e72!==''&&_0x4d3e72!=null))['length'];_0x146abe>_0x475bf9&&(_0xb4b708={'sn':_0x63acff,'raw':_0x4f1f6e},_0x475bf9=_0x146abe);}if(!_0xb4b708||_0x475bf9<0x5){alert('Archivo\x20va'+_0x12ab7b(0x336)+'datos\x20sufi'+_0x12ab7b(0x1ed));return;}document['getElement'+_0x12ab7b(0x1c6)](_0x12ab7b(0x33a)+'nta')['textConten'+'t']=_0x145a48['name']+_0x12ab7b(0x126)+_0x475bf9+(_0x12ab7b(0x169)+'oja:\x20')+_0xb4b708['sn'];const _0x44f92f=_0xb4b708['raw'][_0x12ab7b(0x42f)](_0x1ca74b=>_0x1ca74b[_0x12ab7b(0x371)](_0x1df03c=>_0x1df03c!==''&&_0x1df03c!=null)),_0x3a114d=detectHeaderRow(_0x44f92f),_0x46f0ce=detectColumns(_0x44f92f,_0x3a114d);clasificarPUCaF110(_0x44f92f,_0x3a114d,_0x46f0ce),mostrarClasificacion();}catch(_0x48863b){alert('Error:\x20'+_0x48863b[_0x12ab7b(0x2a7)]);}},_0x4cae69[_0xa43611(0x2ab)+'yBuffer'](_0x145a48);}function detectHeaderRow(_0x1260a7){const _0x3ffd4e=_0x692876,_0x317559=/^(nivel|n[uú]mero|cuenta|c[oó]d|nombre|descripci|saldo|d[eé]bito|cr[eé]dito|cargo|abono|debe|haber)/i;let _0xf5a234=0x0,_0x11d48b=-Infinity;for(let _0x207077=0x0;_0x207077<Math['min'](_0x1260a7[_0x3ffd4e(0x3e3)],0xf);_0x207077++){const _0x555ae3=_0x1260a7[_0x207077];if(!_0x555ae3||_0x555ae3['length']<0x3)continue;let _0x2f5aa8=0x0;for(const _0x120c9e of _0x555ae3){if(_0x120c9e==null||_0x120c9e==='')continue;if(_0x317559[_0x3ffd4e(0x37d)](String(_0x120c9e)['trim']()))_0x2f5aa8+=0xa;else _0x2f5aa8-=0x1;}_0x2f5aa8>_0x11d48b&&(_0x11d48b=_0x2f5aa8,_0xf5a234=_0x207077);}return _0xf5a234;}function detectColumns(_0x3a11b9,_0x48e7b2){const _0x53bb9a=_0x692876,_0x15d963=_0x3a11b9[_0x48e7b2]||[],_0x439857={};for(let _0x15ee46=0x0;_0x15ee46<_0x15d963[_0x53bb9a(0x3e3)];_0x15ee46++){const _0xb775ec=String(_0x15d963[_0x15ee46]||'')['trim']();if(!_0xb775ec)continue;if(!('code'in _0x439857)&&/n[uú]mero.*cuenta|cuenta.*n[uú]m|c[oó]d/i[_0x53bb9a(0x37d)](_0xb775ec))_0x439857[_0x53bb9a(0x2c1)]=_0x15ee46;else{if(!('code'in _0x439857)&&/^cuenta$/i['test'](_0xb775ec))_0x439857['code']=_0x15ee46;}if(!('name'in _0x439857)&&/cuenta.*contable|nombre|descripci/i['test'](_0xb775ec))_0x439857['name']=_0x15ee46;}for(let _0x5725a3=0x0;_0x5725a3<_0x15d963[_0x53bb9a(0x3e3)];_0x5725a3++){const _0x1585c2=String(_0x15d963[_0x5725a3]||'')[_0x53bb9a(0x3ec)]();if(!(_0x53bb9a(0x32c)in _0x439857)&&/d[eé]bito|^debe$/i['test'](_0x1585c2))_0x439857[_0x53bb9a(0x32c)]=_0x5725a3;if(!('cre'in _0x439857)&&/cr[eé]dito|^haber$/i['test'](_0x1585c2))_0x439857[_0x53bb9a(0x3f7)]=_0x5725a3;}let _0x31f456=-0x1,_0x586157=-0x1;for(let _0x466805=0x0;_0x466805<_0x15d963['length'];_0x466805++){const _0x5e5fb8=String(_0x15d963[_0x466805]||'')['trim']();if(/^cargo$|saldo.*cargo/i[_0x53bb9a(0x37d)](_0x5e5fb8))_0x31f456=_0x466805;if(/^abono$|saldo.*abono/i['test'](_0x5e5fb8))_0x586157=_0x466805;}return _0x31f456>=0x0&&_0x586157>=0x0&&(_0x439857['saldoCargo']=_0x31f456,_0x439857[_0x53bb9a(0x409)]=_0x586157),_0x439857;}const PUC_F110=[{'cas':0x24,'prefijos':['11'],'desc':_0x692876(0x2be)+_0x692876(0x30f)+_0x692876(0x1aa)},{'cas':0x25,'prefijos':['12'],'desc':_0x692876(0x197)+'s'},{'cas':0x26,'prefijos':['13'],'desc':_0x692876(0x403)+'r\x20cobrar'},{'cas':0x27,'prefijos':['14'],'desc':_0x692876(0x2b0)+'s'},{'cas':0x28,'prefijos':['16',_0x692876(0x205)],'desc':'Activos\x20in'+'tangibles'},{'cas':0x29,'prefijos':['1705',_0x692876(0x3df)],'desc':'Activos\x20bi'+'ologicos'},{'cas':0x2a,'prefijos':['15'],'desc':_0x692876(0x211)+'iedades\x20de'+_0x692876(0x107)},{'cas':0x2b,'prefijos':['17','18','19'],'desc':_0x692876(0x393)+'vos','excluir':[_0x692876(0x305),_0x692876(0x205),_0x692876(0x3df)]},{'cas':0x2d,'prefijos':['2'],'desc':_0x692876(0x15f)},{'cas':0x2f,'prefijos':['4135',_0x692876(0x354),_0x692876(0x272),'4125','4130',_0x692876(0x14f),_0x692876(0x2a8),'4150','4155',_0x692876(0x322),_0x692876(0x166),'4170',_0x692876(0x2bb),'41'],'desc':_0x692876(0x145)+_0x692876(0x125)},{'cas':0x30,'prefijos':['420505','4210'],'desc':_0x692876(0x425)+_0x692876(0x260)},{'cas':0x39,'prefijos':['42'],'desc':_0x692876(0x3c3)+'esos','excluir':[_0x692876(0x31a),'4210']},{'cas':0x3e,'prefijos':['6'],'desc':'Costos'},{'cas':0x3f,'prefijos':['51'],'desc':_0x692876(0x1c5)+'administra'+'cion','excluir':[_0x692876(0x358)]},{'cas':0x40,'prefijos':['52'],'desc':'Gastos\x20de\x20'+'distribuci'+'on\x20y\x20venta'+'s'},{'cas':0x41,'prefijos':['530505',_0x692876(0x419)],'desc':'Gastos\x20fin'+_0x692876(0x179)},{'cas':0x42,'prefijos':['53'],'desc':'Otros\x20gast'+'os','excluir':['530505',_0x692876(0x419)]}];let deducibilidadDetalle=[];function normNom(_0x3ca566){const _0x1b7db8=_0x692876;return(_0x3ca566||'')['toLowerCas'+'e']()['normalize'](_0x1b7db8(0x134))['replace'](/[\u0300-\u036f]/g,'')[_0x1b7db8(0x32b)](/[^a-z0-9 ]/g,'\x20')['replace'](/\s+/g,'\x20')['trim']();}function _0x4965(_0x3394b0,_0x17b545){_0x3394b0=_0x3394b0-0xe3;const _0x3cb1e6=_0x3cb1();let _0x496550=_0x3cb1e6[_0x3394b0];if(_0x4965['FprbRD']===undefined){var _0x5ab0e1=function(_0x8973dd){const _0x22f506='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x3cdac5='',_0xb5d04d='';for(let _0x519e0a=0x0,_0x419b59,_0x231bfe,_0x2609a8=0x0;_0x231bfe=_0x8973dd['charAt'](_0x2609a8++);~_0x231bfe&&(_0x419b59=_0x519e0a%0x4?_0x419b59*0x40+_0x231bfe:_0x231bfe,_0x519e0a++%0x4)?_0x3cdac5+=String['fromCharCode'](0xff&_0x419b59>>(-0x2*_0x519e0a&0x6)):0x0){_0x231bfe=_0x22f506['indexOf'](_0x231bfe);}for(let _0x145a48=0x0,_0x4cae69=_0x3cdac5['length'];_0x145a48<_0x4cae69;_0x145a48++){_0xb5d04d+='%'+('00'+_0x3cdac5['charCodeAt'](_0x145a48)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0xb5d04d);};_0x4965['exWjIR']=_0x5ab0e1,_0x4965['FQFKbv']={},_0x4965['FprbRD']=!![];}const _0x40426d=_0x3cb1e6[0x0],_0x337c05=_0x3394b0+_0x40426d,_0x56cdce=_0x4965['FQFKbv'][_0x337c05];return!_0x56cdce?(_0x496550=_0x4965['exWjIR'](_0x496550),_0x4965['FQFKbv'][_0x337c05]=_0x496550):_0x496550=_0x56cdce,_0x496550;}const REGLAS_NO_DED=[{'id':0x1,'nom':'Multas','art':_0x692876(0x404),'tipo':_0x692876(0x2ee),'test':(_0x4418bc,_0x14009d)=>/multa/['test'](_0x14009d)},{'id':0x2,'nom':'Sanciones','art':_0x692876(0x404),'tipo':'no_ded','test':(_0x1069fd,_0x403866)=>/sancion/[_0x692876(0x37d)](_0x403866)},{'id':0x3,'nom':'Intereses\x20'+_0x692876(0x2b1),'art':_0x692876(0x404),'tipo':_0x692876(0x2ee),'test':(_0xfdb78b,_0x255485)=>/interes.*(mora|moratorio)|mora.*interes/[_0x692876(0x37d)](_0x255485)},{'id':0x4,'nom':_0x692876(0x207)+'moratorios'+_0x692876(0xf0),'art':'107-1','tipo':_0x692876(0x2ee),'test':(_0x3dcddf,_0x12398d)=>_0x3dcddf[_0x692876(0x215)](_0x692876(0x35e))},{'id':0x5,'nom':_0x692876(0x40a)+'DIAN','art':_0x692876(0x404),'tipo':'no_ded','test':(_0xfe1b83,_0x26fea4)=>_0xfe1b83['startsWith']('53950520')},{'id':0x6,'nom':_0x692876(0x30e)+'\x20demandas','art':'107-1','tipo':'no_ded','test':(_0x5d7bd8,_0xcb5a69)=>/litigio|demanda|proceso judicial/[_0x692876(0x37d)](_0xcb5a69)},{'id':0x7,'nom':_0x692876(0x23a)+_0x692876(0x3a2)+_0x692876(0x36b),'art':'107-1','tipo':'no_ded','test':(_0x4fa861,_0x477027)=>/penalidad|clausula penal|indemnizacion por incumpl/[_0x692876(0x37d)](_0x477027)},{'id':0x8,'nom':'GMF\x20/\x204x10'+'00','art':'115','tipo':'gmf','pct':0.5,'test':(_0x56351b,_0x519b22)=>/gmf|4.?x.?1000|gravamen.*movimiento|4 por mil/['test'](_0x519b22)},{'id':0x9,'nom':_0x692876(0x342)+'enta\x20PUC','art':'115','tipo':_0x692876(0x285),'pct':0.5,'test':(_0x1bd233,_0x1c9a8d)=>_0x1bd233['startsWith'](_0x692876(0x3b7))&&/gravamen|gmf|movimiento/[_0x692876(0x37d)](_0x1c9a8d)},{'id':0xa,'nom':'Donaciones','art':_0x692876(0x2eb),'tipo':_0x692876(0x2ee),'test':(_0x220468,_0x335938)=>/donacion/[_0x692876(0x37d)](_0x335938)&&!/descuento tributario/['test'](_0x335938)},{'id':0xb,'nom':_0x692876(0x22f)+'\x20PUC\x205395','art':_0x692876(0x2eb),'tipo':_0x692876(0x2ee),'test':(_0xdd13e1,_0x3bbac9)=>_0xdd13e1['startsWith'](_0x692876(0x396))},{'id':0xc,'nom':'Gasto\x20marc'+_0x692876(0x426)+'ucible','art':_0x692876(0x248),'tipo':'no_ded','test':(_0x402ffb,_0x5df446)=>/no deducible|no deduci/[_0x692876(0x37d)](_0x5df446)},{'id':0xd,'nom':'Impuesto\x20d'+'e\x20renta','art':_0x692876(0x269),'tipo':'no_ded','test':(_0x3f7d51,_0x42086f)=>/impuesto.*renta|provision.*renta|gasto.*impuesto.*renta/['test'](_0x42086f)},{'id':0xe,'nom':'Impuesto\x20a'+_0x692876(0x3cc)+'io','art':'115','tipo':_0x692876(0x2ee),'test':(_0x2183be,_0x1e8cb5)=>/impuesto.*patrimonio/['test'](_0x1e8cb5)},{'id':0xf,'nom':'Impuesto\x20d'+_0x692876(0x1f1)+_0x692876(0x3dc),'art':_0x692876(0x269),'tipo':_0x692876(0x2ee),'test':(_0x1a916c,_0x278831)=>/normalizacion tributaria/['test'](_0x278831)},{'id':0x10,'nom':'Impuesto\x20d'+_0x692876(0x132)+'sto','art':'115','tipo':'no_ded','test':(_0x20ad70,_0x1bfd33)=>/impuesto diferido/['test'](_0x1bfd33)},{'id':0x11,'nom':'IVA\x20descon'+'table\x20no\x20p'+'rocedente','art':_0x692876(0x269),'tipo':'no_ded','test':(_0x5d5f7e,_0x4b39e1)=>/iva.*no.*deducible|iva.*no.*descontable|iva.*mayor.*valor/['test'](_0x4b39e1)},{'id':0x12,'nom':'Provision\x20'+_0x692876(0x174),'art':_0x692876(0x390),'tipo':'no_ded','test':(_0x215a5d,_0x2d6c9f)=>/provision.*cartera|deterioro.*cartera/[_0x692876(0x37d)](_0x2d6c9f)&&!/fiscal/['test'](_0x2d6c9f)},{'id':0x13,'nom':'Provision\x20'+_0x692876(0x20c)+'rios','art':_0x692876(0x1dc),'tipo':_0x692876(0x2ee),'test':(_0x2c3d4f,_0x1bb8ec)=>/provision.*inventario|deterioro.*inventario|obsolescencia/[_0x692876(0x37d)](_0x1bb8ec)},{'id':0x14,'nom':_0x692876(0x3d8)+'de\x20inversi'+'ones','art':'105','tipo':'no_ded','test':(_0x3c9f50,_0x23907e)=>/provision.*inversion|deterioro.*inversion/[_0x692876(0x37d)](_0x23907e)},{'id':0x15,'nom':'Provision\x20'+'de\x20activos'+'\x20biologico'+'s','art':_0x692876(0x1dc),'tipo':'no_ded','test':(_0x7d066e,_0x978729)=>/provision.*biolog|deterioro.*biolog/[_0x692876(0x37d)](_0x978729)},{'id':0x16,'nom':_0x692876(0x3d8)+_0x692876(0xee)+_0x692876(0x2b8),'art':'105','tipo':_0x692876(0x2ee),'test':(_0x159221,_0x55e7a7)=>/provision.*intangible|deterioro.*intangible|amortizacion.*intangible.*contable/['test'](_0x55e7a7)},{'id':0x17,'nom':_0x692876(0x3d8)+_0x692876(0x3e2),'art':_0x692876(0x1dc),'tipo':_0x692876(0x2ee),'test':(_0x24f95c,_0x36f336)=>/provision.*propiedad|deterioro.*propiedad|deterioro.*planta|deterioro.*equipo/['test'](_0x36f336)},{'id':0x18,'nom':'Provision\x20'+_0x692876(0x203),'art':'105','tipo':'no_ded','test':(_0x4f21c9,_0x1cf264)=>/^provision|gasto.*provision/['test'](_0x1cf264)&&!/fiscal|deducible/['test'](_0x1cf264)},{'id':0x19,'nom':'Deterioro\x20'+'cuentas\x20po'+_0x692876(0x385)+_0x692876(0x13b),'art':_0x692876(0x390),'tipo':'no_ded','test':(_0x3b1035,_0x44a756)=>/deterioro.*cuenta.*cobrar|deterioro.*deudor/['test'](_0x44a756)&&!/fiscal/[_0x692876(0x37d)](_0x44a756)},{'id':0x1a,'nom':'Depreciaci'+_0x692876(0xff)+_0x692876(0x2f1)+'fiscal','art':_0x692876(0x153),'tipo':_0x692876(0x2ee),'test':(_0x3c24d5,_0x4daf70)=>/depreciacion.*exceso|depreciacion.*no deducible|depreciacion.*contable.*mayor/['test'](_0x4daf70)},{'id':0x1b,'nom':'Depreciaci'+_0x692876(0x246)+'\x20revaluado'+'s','art':'128','tipo':'no_ded','test':(_0x49921f,_0x31b944)=>/depreciacion.*revalua/['test'](_0x31b944)},{'id':0x1c,'nom':_0x692876(0x2fa)+_0x692876(0x3dd)+'\x20mercantil','art':'143','tipo':'no_ded','test':(_0x267a62,_0xd6a1bf)=>/amortizacion.*credito.*mercantil|amortizacion.*goodwill|amortizacion.*plusvalia/[_0x692876(0x37d)](_0xd6a1bf)},{'id':0x1d,'nom':'Amortizaci'+_0x692876(0x368)+_0x692876(0x3be)+_0x692876(0x1c4),'art':'142','tipo':_0x692876(0x2ee),'test':(_0x4f8972,_0x4f702a)=>/amortizacion.*preoperativ.*no deducible/['test'](_0x4f702a)},{'id':0x1e,'nom':_0x692876(0x1c5)+'vigencias\x20'+_0x692876(0x20a),'art':'107','tipo':_0x692876(0x2ee),'test':(_0x3b82f8,_0x187e32)=>/vigencia.*anterior|periodo.*anterior|ejercicio.*anterior|a[nñ]o.*anterior/[_0x692876(0x37d)](_0x187e32)},{'id':0x1f,'nom':'Gastos\x20per'+_0x692876(0x1f6)+'cios','art':_0x692876(0x248),'tipo':_0x692876(0x2ee),'test':(_0x494755,_0xe38545)=>/gasto.*personal.*socio|gasto.*socio.*personal/[_0x692876(0x37d)](_0xe38545)},{'id':0x20,'nom':_0x692876(0x35b)+_0x692876(0x11c),'art':_0x692876(0x248),'tipo':_0x692876(0x2ee),'test':(_0x39cf14,_0x3e8840)=>/suntuario|lujo.*no.*necesario/[_0x692876(0x37d)](_0x3e8840)},{'id':0x21,'nom':_0x692876(0x1c5)+'representa'+_0x692876(0x11b)+'o','art':_0x692876(0x404),'tipo':'no_ded','test':(_0x3b8571,_0x53b5b7)=>/representacion.*exceso|representacion.*no deducible/[_0x692876(0x37d)](_0x53b5b7)},{'id':0x22,'nom':_0x692876(0x300)+'reacion\x20no'+'\x20soportado'+'s','art':_0x692876(0x248),'tipo':'no_ded','test':(_0x1f08cb,_0x6e57cc)=>/recreacion.*no deducible|bienestar.*no deducible/['test'](_0x6e57cc)},{'id':0x23,'nom':_0x692876(0x387)+_0x692876(0x194)+'lariales\x20e'+_0x692876(0x407),'art':_0x692876(0x22b),'tipo':'no_ded','test':(_0x4bf745,_0x127863)=>/bonificacion.*no.*salarial.*exceso|bonificacion.*no deducible/[_0x692876(0x37d)](_0x127863)},{'id':0x24,'nom':'Indemnizac'+'iones\x20labo'+_0x692876(0x26e)+_0x692876(0x29e),'art':_0x692876(0x22b),'tipo':'no_ded','test':(_0x457934,_0x5ce7db)=>/indemnizacion.*laboral.*no deducible/[_0x692876(0x37d)](_0x5ce7db)},{'id':0x25,'nom':'Gastos\x20sin'+_0x692876(0x200)+'factura\x20el'+_0x692876(0x241),'art':_0x692876(0x276),'tipo':_0x692876(0x2ee),'test':(_0x258e4f,_0x4830cf)=>/sin.*factura|sin.*soporte|no.*facturado|gasto.*no.*soportado/['test'](_0x4830cf)},{'id':0x26,'nom':'Regalias\x20a'+'\x20vinculado'+'s\x20exterior'+'\x20exceso','art':'124','tipo':_0x692876(0x2ee),'test':(_0x3da822,_0x39c5d1)=>/regalia.*vinculado.*exceso|regalia.*no deducible/['test'](_0x39c5d1)},{'id':0x27,'nom':_0x692876(0x1d7)+_0x692876(0x178)+_0x692876(0x1bd),'art':'124-2','tipo':_0x692876(0x2ee),'test':(_0x282c9b,_0x1de50c)=>/paraiso fiscal|jurisdiccion.*no cooperante|pago.*exterior.*no deducible/['test'](_0x1de50c)},{'id':0x28,'nom':'Intereses\x20'+'subcapital'+_0x692876(0x267),'art':_0x692876(0x1f4),'tipo':'no_ded','test':(_0x1d0420,_0x13d2bd)=>/subcapitalizacion|interes.*exceso.*endeudamiento|interes.*vinculado.*exceso/['test'](_0x13d2bd)},{'id':0x29,'nom':_0x692876(0x207)+_0x692876(0x32f)+'socios\x20no\x20'+_0x692876(0x13d)+'os','art':_0x692876(0x369),'tipo':_0x692876(0x2ee),'test':(_0x4ef230,_0x1ae10e)=>/interes.*socio.*no deducible|interes.*prestamo.*socio/['test'](_0x1ae10e)&&/no deducible/[_0x692876(0x37d)](_0x1ae10e)},{'id':0x2a,'nom':_0x692876(0x207)+'usura','art':_0x692876(0x258),'tipo':'no_ded','test':(_0x31fc9d,_0x3f812f)=>/interes.*usura|interes.*exceso.*legal/[_0x692876(0x37d)](_0x3f812f)},{'id':0x2b,'nom':'Gastos\x20fin'+'ancieros\x20d'+_0x692876(0x245)+'en\x20cambio\x20'+'no\x20realiza'+'da','art':_0x692876(0x36d),'tipo':'no_ded','test':(_0x3335ad,_0x280dcf)=>/diferencia.*cambio.*no realizada|diferencia.*cambio.*contable/[_0x692876(0x37d)](_0x280dcf)},{'id':0x2c,'nom':_0x692876(0x294)+_0x692876(0x16a)+_0x692876(0x367)+'a\x20exceso','art':_0x692876(0x2c6),'tipo':_0x692876(0x2ee),'test':(_0x52d828,_0x6228a0)=>/precio.*transferencia.*exceso|vinculado.*exceso.*arm/[_0x692876(0x37d)](_0x6228a0)},{'id':0x2d,'nom':_0x692876(0x278)+_0x692876(0x1f0)+'rovisionad'+'os','art':_0x692876(0x1dc),'tipo':_0x692876(0x2ee),'test':(_0x5a79cd,_0x54f929)=>/costo.*estimado|costo.*provisionado|provision.*costo/['test'](_0x54f929)&&!/fiscal/[_0x692876(0x37d)](_0x54f929)},{'id':0x2e,'nom':_0x692876(0x10a)+_0x692876(0x224)+'provisione'+'s','art':_0x692876(0x1dc),'tipo':_0x692876(0x2ee),'test':(_0x29dcd8,_0x720b95)=>_0x29dcd8['startsWith'](_0x692876(0x358))||_0x29dcd8['startsWith']('526')},{'id':0x2f,'nom':'Provisione'+_0x692876(0x3cb),'art':'105','tipo':_0x692876(0x2ee),'test':(_0x191e5d,_0x34164b)=>_0x191e5d['startsWith'](_0x692876(0x380))&&!/fiscal|deducible/[_0x692876(0x37d)](_0x34164b)},{'id':0x30,'nom':'Impuestos\x20'+'asumidos\x20n'+_0x692876(0x2ff)+'es','art':'115','tipo':_0x692876(0x2ee),'test':(_0x4cd15d,_0x469ea1)=>/impuesto.*asumido|iva.*asumido|iva.*no.*descontable/[_0x692876(0x37d)](_0x469ea1)},{'id':0x31,'nom':'Retencion\x20'+'asumida','art':_0x692876(0x269),'tipo':_0x692876(0x2ee),'test':(_0x49169d,_0x49de5c)=>/retencion.*asumida.*no deducible/['test'](_0x49de5c)},{'id':0x32,'nom':'ICA\x20no\x20ded'+_0x692876(0x2bc),'art':_0x692876(0x269),'tipo':'no_ded','test':(_0x4275d4,_0x89a193)=>/ica.*no deducible|industria.*comercio.*no deducible/['test'](_0x89a193)},{'id':0x33,'nom':_0x692876(0x325)+_0x692876(0x2d7)+'retención','art':'121-123','tipo':'no_ded','test':(_0x597701,_0x49359a)=>/gasto.*exterior.*sin.*retencion|exterior.*no deducible/['test'](_0x49359a)},{'id':0x34,'nom':'Gastos\x20ext'+_0x692876(0x413)+'so\x2015%','art':'122','tipo':'no_ded','test':(_0x3fd957,_0x246536)=>/exterior.*exceso.*15|gasto.*exterior.*limite/['test'](_0x246536)},{'id':0x35,'nom':_0x692876(0x256)+'\x20venta\x20de\x20'+'activos\x20a\x20'+_0x692876(0x108),'art':_0x692876(0x3b3),'tipo':_0x692876(0x2ee),'test':(_0x1bf8c3,_0x366888)=>/perdida.*venta.*activo.*vinculado|perdida.*enajenacion.*vinculado/['test'](_0x366888)},{'id':0x36,'nom':_0x692876(0x256)+'\x20activos\x20n'+'o\x20producti'+_0x692876(0x2c2),'art':_0x692876(0x343),'tipo':_0x692876(0x2ee),'test':(_0x224b52,_0x164dd6)=>/perdida.*activo.*no productivo|perdida.*activo.*personal/[_0x692876(0x37d)](_0x164dd6)},{'id':0x37,'nom':'Beneficios'+_0x692876(0x28b)+'os\x20largo\x20p'+_0x692876(0x345)+')','art':_0x692876(0x1dc),'tipo':'no_ded','test':(_0x117749,_0x5ec132)=>/beneficio.*empleado.*largo plazo|beneficio.*post.*empleo|pension.*actuarial/[_0x692876(0x37d)](_0x5ec132)},{'id':0x38,'nom':_0x692876(0x223)+_0x692876(0x14b)+'iones\x20(NII'+'F)','art':_0x692876(0x1dc),'tipo':_0x692876(0x2ee),'test':(_0x4956fd,_0xc7a337)=>/pago.*basado.*accion|stock.*option|compensacion.*accion/[_0x692876(0x37d)](_0xc7a337)},{'id':0x39,'nom':'Ajuste\x20val'+'or\x20razonab'+_0x692876(0x148)+_0x692876(0x28a),'art':'105','tipo':_0x692876(0x2ee),'test':(_0x3ef917,_0xc1ef1b)=>/valor razonable.*no realizado|ajuste.*valor razonable|medicion.*valor razonable.*gasto/[_0x692876(0x37d)](_0xc1ef1b)},{'id':0x3a,'nom':'Perdida\x20no'+_0x692876(0x416)+'\x20inversion'+'es','art':_0x692876(0x1dc),'tipo':'no_ded','test':(_0x358ba9,_0x31cd24)=>/perdida.*no realizada|perdida.*valoracion/[_0x692876(0x37d)](_0x31cd24)},{'id':0x3b,'nom':'Gastos\x20div'+'ersos\x20no\x20d'+'educibles\x20'+_0x692876(0x163),'art':_0x692876(0x248),'tipo':_0x692876(0x2ee),'test':(_0x277e3f,_0x49cc9d)=>_0x277e3f['startsWith']('539520')},{'id':0x3c,'nom':_0x692876(0x325)+'raordinari'+_0x692876(0x2a6)+_0x692876(0x217),'art':'107','tipo':'no_ded','test':(_0x5803b9,_0x543646)=>_0x5803b9[_0x692876(0x215)]('5310')&&/extraordinario|no.*recurrente/[_0x692876(0x37d)](_0x543646)},{'id':0x3d,'nom':_0x692876(0x236)+'rafiscales'+'\x20no\x20pagado'+'s','art':'114-1','tipo':_0x692876(0x2ee),'test':(_0x5218e6,_0x1a38ed)=>/parafiscal.*no.*pagado|parafiscal.*no deducible|aportes.*no.*pagado/[_0x692876(0x37d)](_0x1a38ed)},{'id':0x3e,'nom':'Gastos\x20de\x20'+_0x692876(0x12e)+'\x20futuros','art':'105','tipo':'no_ded','test':(_0xd4d136,_0x2da4bb)=>/gasto.*futuro|gasto.*anticip.*no deducible|diferido.*gasto/[_0x692876(0x37d)](_0x2da4bb)&&/no deducible/['test'](_0x2da4bb)},{'id':0x3f,'nom':'Ajustes\x20po'+'r\x20converge'+'ncia\x20NIIF','art':_0x692876(0x1dc),'tipo':'no_ded','test':(_0x579655,_0x537c02)=>/convergencia.*niif|ajuste.*niif.*no deducible|efecto.*niif/['test'](_0x537c02)}];function clasificarDeducibilidad(_0x381f5d,_0xf5eab8){const _0x3f6843=normNom(_0xf5eab8);for(const _0x8bab26 of REGLAS_NO_DED){if(_0x8bab26['test'](_0x381f5d,_0x3f6843))return _0x8bab26;}return null;}function clasificarPUCaF110_OLD(_0x1de141,_0x353492,_0x4d3f2b){const _0x5ceb12=_0x692876,_0x4fdf9a={},_0x106036=[],_0x1da1af=_0x1de141['slice'](_0x353492+0x1);for(const _0x519a69 of _0x1da1af){let _0x6be9e5=String(_0x519a69[_0x4d3f2b[_0x5ceb12(0x2c1)]]||'')['replace'](/[.\-\s]/g,'')['trim']();if(!_0x6be9e5||!/^\d{2,}/['test'](_0x6be9e5))continue;const _0x3da884=String(_0x519a69[_0x4d3f2b['name']||_0x4d3f2b[_0x5ceb12(0x2c1)]+0x1]||'')[_0x5ceb12(0x3ec)]();let _0x59b81d=0x0;if(_0x5ceb12(0x34a)in _0x4d3f2b&&'saldoAbono'in _0x4d3f2b){const _0x3fc1f8=parseFloat(_0x519a69[_0x4d3f2b[_0x5ceb12(0x34a)]])||0x0,_0x12264e=parseFloat(_0x519a69[_0x4d3f2b['saldoAbono']])||0x0;_0x59b81d=_0x3fc1f8-_0x12264e;}else'deb'in _0x4d3f2b&&'cre'in _0x4d3f2b&&(_0x59b81d=(parseFloat(_0x519a69[_0x4d3f2b['deb']])||0x0)-(parseFloat(_0x519a69[_0x4d3f2b[_0x5ceb12(0x3f7)]])||0x0));if(_0x59b81d===0x0)continue;if(_0x6be9e5[_0x5ceb12(0x3e3)]<0x2)continue;let _0x18891d=null,_0x55808e='';for(const _0x345fd1 of PUC_F110){if(_0x345fd1[_0x5ceb12(0x18d)]&&_0x345fd1[_0x5ceb12(0x18d)]['some'](_0x200326=>_0x6be9e5[_0x5ceb12(0x215)](_0x200326)))continue;if(_0x345fd1['prefijos'][_0x5ceb12(0x371)](_0x5a9ede=>_0x6be9e5['startsWith'](_0x5a9ede))){_0x18891d=_0x345fd1[_0x5ceb12(0x2a4)],_0x55808e=_0x345fd1['desc'];break;}}if(_0x18891d){const _0x52ca57=Math[_0x5ceb12(0x11f)](_0x59b81d);if(!result[_0x18891d])result[_0x18891d]={'val':0x0,'cuentas':[]};result[_0x18891d]['val']+=_0x52ca57,result[_0x18891d][_0x5ceb12(0x152)][_0x5ceb12(0x2ae)]({'code':_0x6be9e5,'name':_0x3da884['substring'](0x0,0x28),'val':_0x52ca57}),_0x106036[_0x5ceb12(0x2ae)]({'code':_0x6be9e5,'name':_0x3da884,'casilla':_0x18891d,'desc':_0x55808e,'val':_0x52ca57});}}const _0x2b1410={};for(const [_0x534494,_0x41ace9]of Object['entries'](result)){const _0x602ede=_0x41ace9['cuentas']['sort']((_0x434c79,_0x3ddb76)=>_0x434c79['code']['length']-_0x3ddb76[_0x5ceb12(0x2c1)]['length']);_0x602ede['length']>0x1&&_0x602ede[0x0]['code']['length']<=0x3?_0x2b1410[_0x534494]=Math['round'](_0x602ede[0x0][_0x5ceb12(0x31b)]):_0x2b1410[_0x534494]=Math['round'](_0x41ace9['val']);}return _0x2b1410;}function clasificarPUCaF110(_0x15db03,_0x50b949,_0x358264){const _0x13f867=_0x692876,_0x50dcfc=_0x15db03[_0x13f867(0x281)](_0x50b949+0x1),_0x16dcb9=_0x15db03[_0x50b949]||[];let _0x2074f7=-0x1,_0xac0091=_0x358264['name'];for(let _0x107e3c=0x0;_0x107e3c<_0x16dcb9['length'];_0x107e3c++){if(/^nivel$/i[_0x13f867(0x37d)](String(_0x16dcb9[_0x107e3c]||'')['trim']()))_0x2074f7=_0x107e3c;if(_0xac0091==null&&/cuenta.*contable|descripci|nombre/i[_0x13f867(0x37d)](String(_0x16dcb9[_0x107e3c]||'')['trim']()))_0xac0091=_0x107e3c;}const _0x4871f2=[];for(const _0x42faca of _0x50dcfc){let _0x2f7468=String(_0x42faca[_0x358264[_0x13f867(0x2c1)]]||'')[_0x13f867(0x32b)](/[.\-\s]/g,'')['trim']();if(!_0x2f7468||!/^\d+/['test'](_0x2f7468))continue;const _0x47494a=_0xac0091!=null?String(_0x42faca[_0xac0091]||'')[_0x13f867(0x3ec)]():'',_0x565c06=_0x2074f7>=0x0?parseInt(_0x42faca[_0x2074f7])||0x0:-0x1,_0x2e04b4=/^[456]/[_0x13f867(0x37d)](_0x2f7468),_0x548c3d='saldoCargo'in _0x358264&&_0x13f867(0x409)in _0x358264,_0x3639c2=_0x13f867(0x32c)in _0x358264&&'cre'in _0x358264;let _0x5c799a=0x0;if(_0x2e04b4&&_0x3639c2){const _0x26c5da=parseFloat(_0x42faca[_0x358264[_0x13f867(0x32c)]])||0x0,_0x2775f6=parseFloat(_0x42faca[_0x358264['cre']])||0x0;_0x5c799a=_0x2f7468[_0x13f867(0x215)]('4')?_0x2775f6-_0x26c5da:_0x26c5da-_0x2775f6;}else{if(_0x548c3d){const _0x170ec0=parseFloat(_0x42faca[_0x358264[_0x13f867(0x34a)]])||0x0,_0x108ab9=parseFloat(_0x42faca[_0x358264[_0x13f867(0x409)]])||0x0;_0x5c799a=_0x170ec0-_0x108ab9;}else _0x3639c2&&(_0x5c799a=(parseFloat(_0x42faca[_0x358264[_0x13f867(0x32c)]])||0x0)-(parseFloat(_0x42faca[_0x358264['cre']])||0x0));}_0x4871f2['push']({'code':_0x2f7468,'name':_0x47494a,'nivel':_0x565c06,'saldo':_0x5c799a});}cuentasBalance=[];for(const _0x2839e7 of _0x4871f2){if(_0x2839e7['saldo']===0x0)continue;let _0x1fefe1=0x0;for(const _0x1e5dfc of PUC_F110){if(_0x1e5dfc['excluir']&&_0x1e5dfc['excluir'][_0x13f867(0x371)](_0x3c28d8=>_0x2839e7[_0x13f867(0x2c1)]['startsWith'](_0x3c28d8)))continue;if(_0x1e5dfc['prefijos'][_0x13f867(0x371)](_0x370a62=>_0x2839e7[_0x13f867(0x2c1)]['startsWith'](_0x370a62))){_0x1fefe1=_0x1e5dfc['cas'];break;}}if(!_0x1fefe1)continue;const _0x129f19=[0x3e,0x3f,0x40,0x41,0x42][_0x13f867(0x29b)](_0x1fefe1);let _0x1c26fa='ded',_0x2914d0=null;if(_0x129f19){_0x2914d0=clasificarDeducibilidad(_0x2839e7['code'],_0x2839e7['name']);if(_0x2914d0)_0x1c26fa=_0x2914d0[_0x13f867(0x302)];}const _0x120947=Math[_0x13f867(0x2f0)](Math['abs'](_0x2839e7['saldo']));let _0x346fe5=_0x120947;if(_0x1c26fa==='no_ded')_0x346fe5=0x0;else{if(_0x1c26fa===_0x13f867(0x285))_0x346fe5=Math['round'](_0x120947*0.5);}cuentasBalance['push']({'code':_0x2839e7[_0x13f867(0x2c1)],'name':_0x2839e7[_0x13f867(0x2b2)],'val':_0x120947,'valFiscal':_0x346fe5,'casilla':_0x1fefe1,'ded':_0x1c26fa,'regla':_0x2914d0,'nivel':_0x2839e7[_0x13f867(0x1ec)],'len':_0x2839e7['code']['length']});}const _0x3b1abf=new Set(cuentasBalance['map'](_0x33622e=>_0x33622e['code']));return cuentasBalance=cuentasBalance[_0x13f867(0x42f)](_0x181fe4=>{const _0x9408cc=_0x13f867;for(const _0x312afb of _0x3b1abf){if(_0x312afb!==_0x181fe4[_0x9408cc(0x2c1)]&&_0x312afb[_0x9408cc(0x215)](_0x181fe4[_0x9408cc(0x2c1)])&&_0x312afb[_0x9408cc(0x3e3)]>_0x181fe4['code'][_0x9408cc(0x3e3)])return![];}return!![];}),cuentasBalance;}const CASILLA_OPTS=[{'v':0x0,'t':'—\x20No\x20aplic'+'ar'},{'v':0x24,'t':_0x692876(0x1cc)+'o'},{'v':0x25,'t':'37\x20Inversi'+_0x692876(0x222)},{'v':0x26,'t':'38\x20CxC'},{'v':0x27,'t':_0x692876(0x20e)+_0x692876(0x189)},{'v':0x28,'t':_0x692876(0x2e4)+'bles'},{'v':0x29,'t':'41\x20Biologi'+'cos'},{'v':0x2a,'t':'42\x20PPE'},{'v':0x2b,'t':_0x692876(0x18e)+'ctivos'},{'v':0x2d,'t':_0x692876(0x117)},{'v':0x2f,'t':_0x692876(0x16c)+_0x692876(0x125)},{'v':0x30,'t':'48\x20Ingr.\x20f'+_0x692876(0x260)},{'v':0x39,'t':_0x692876(0x23e)+'ngresos'},{'v':0x3b,'t':'59\x20Devoluc'+_0x692876(0x234)},{'v':0x3c,'t':_0x692876(0x401)},{'v':0x3e,'t':'62\x20Costos'},{'v':0x3f,'t':'63\x20Gtos\x20ad'+_0x692876(0x1e1)},{'v':0x40,'t':'64\x20Gtos\x20ve'+'ntas'},{'v':0x41,'t':'65\x20Gtos\x20fi'+_0x692876(0x235)},{'v':0x42,'t':'66\x20Otros\x20g'+'astos'}];function cambiarDed(_0x4b81fd){const _0x30b94a=_0x692876,_0x5972ce=cuentasBalance[_0x4b81fd],_0xc36a6f=_0x5972ce['ded']==='ded'?'no_ded':_0x5972ce[_0x30b94a(0x1f8)]===_0x30b94a(0x2ee)?_0x30b94a(0x285):_0x30b94a(0x1f8);_0x5972ce[_0x30b94a(0x1f8)]=_0xc36a6f;if(_0xc36a6f===_0x30b94a(0x2ee))_0x5972ce[_0x30b94a(0x341)]=0x0;else{if(_0xc36a6f==='gmf')_0x5972ce[_0x30b94a(0x341)]=Math[_0x30b94a(0x2f0)](_0x5972ce[_0x30b94a(0x31b)]*0.5);else _0x5972ce['valFiscal']=_0x5972ce[_0x30b94a(0x31b)];}mostrarClasificacion();}function editarFiscal(_0x5519e6,_0x41190c){const _0x54d14b=_0x692876,_0x254502=parseInt(String(_0x41190c)[_0x54d14b(0x32b)](/[,.\s$]/g,''))||0x0;cuentasBalance[_0x5519e6][_0x54d14b(0x341)]=_0x254502;const _0x483cf6=document['getElement'+'ById']('diff_'+_0x5519e6);if(_0x483cf6){const _0x2130fb=cuentasBalance[_0x5519e6][_0x54d14b(0x31b)]-_0x254502;_0x483cf6[_0x54d14b(0x42d)+'t']=_0x2130fb?fN(_0x2130fb):'',_0x483cf6['style'][_0x54d14b(0xf9)]=_0x2130fb>0x0?_0x54d14b(0xfc):_0x2130fb<0x0?'#2E7D32':'#999';}}function mostrarClasificacion(){const _0x1b5385=_0x692876;if(!cuentasBalance['length']){document[_0x1b5385(0xfd)+'ById']('errorBalan'+'ce')[_0x1b5385(0x10f)][_0x1b5385(0x221)](_0x1b5385(0x111)),document['getElement'+_0x1b5385(0x1c6)]('errorBalan'+'ce')['innerHTML']='No\x20se\x20enco'+_0x1b5385(0x27f)+_0x1b5385(0x11e)+'saldo\x20en\x20e'+_0x1b5385(0x172);return;}document[_0x1b5385(0xfd)+'ById']('errorBalan'+'ce')[_0x1b5385(0x10f)]['add']('hidden');const _0x33ef70=cuentasBalance['some'](_0x504e94=>[0x2f,0x30,0x39,0x3e,0x3f,0x40,0x41,0x42][_0x1b5385(0x29b)](_0x504e94[_0x1b5385(0x10b)])),_0x51be1e=document['getElement'+'ById'](_0x1b5385(0x402)+'rado');_0x33ef70?(_0x51be1e['classList'][_0x1b5385(0x221)](_0x1b5385(0x111)),_0x51be1e['innerHTML']=_0x1b5385(0x20d)+_0x1b5385(0x381)+_0x1b5385(0x22a)+'aldo\x20final'+_0x1b5385(0x219)+'>Ingresos,'+_0x1b5385(0x3b9)+'gastos:</s'+'trong>\x20mov'+_0x1b5385(0x1e2)+'el\x20periodo'+'\x20(debitos/'+'creditos)'):(_0x51be1e[_0x1b5385(0x10f)]['remove']('hidden'),_0x51be1e[_0x1b5385(0x1ce)]['background']=_0x1b5385(0x192),_0x51be1e[_0x1b5385(0x1ce)]['borderColo'+'r']='#FCD34D',_0x51be1e['style'][_0x1b5385(0xf9)]='#92400E',_0x51be1e[_0x1b5385(0x26d)]='<strong>Ba'+_0x1b5385(0x2a2)+_0x1b5385(0x32e)+'\x20resultado'+_0x1b5385(0x265)+_0x1b5385(0x280)+'argara\x20pat'+'rimonio.\x20I'+_0x1b5385(0x3a1)+'resos,\x20cos'+'tos\x20y\x20gast'+'os\x20manualm'+'ente.');document['getElement'+'ById'](_0x1b5385(0x388)+'lt')['classList'][_0x1b5385(0x221)](_0x1b5385(0x111));const _0x18b6dd=_0x518aa0=>cuentasBalance['filter'](_0x29d221=>_0x29d221['casilla']===_0x518aa0)['reduce']((_0xe68101,_0x429e48)=>_0xe68101+_0x429e48['val'],0x0),_0xd996da=_0x3c2683=>cuentasBalance['filter'](_0x419194=>_0x419194[_0x1b5385(0x10b)]===_0x3c2683)['reduce']((_0x2efc26,_0x1cbc05)=>_0x2efc26+_0x1cbc05['valFiscal'],0x0),_0x26c51a=[0x24,0x25,0x26,0x27,0x28,0x29,0x2a,0x2b][_0x1b5385(0xeb)]((_0x5504fe,_0x333ea6)=>_0x5504fe+_0x18b6dd(_0x333ea6),0x0),_0x38a687=_0x18b6dd(0x2d),_0x31a4fe=[0x2f,0x30,0x39][_0x1b5385(0xeb)]((_0x3c24ef,_0x3f1450)=>_0x3c24ef+_0x18b6dd(_0x3f1450),0x0),_0x5f4fec=[0x3e,0x3f,0x40,0x41,0x42]['reduce']((_0x452d18,_0x5c83c1)=>_0x452d18+_0x18b6dd(_0x5c83c1),0x0),_0x5ee383=[0x3e,0x3f,0x40,0x41,0x42]['reduce']((_0x5bd2b0,_0x1b0861)=>_0x5bd2b0+_0xd996da(_0x1b0861),0x0),_0x65e751=_0x5f4fec-_0x5ee383;document['getElement'+'ById'](_0x1b5385(0x1bf)+'s')[_0x1b5385(0x26d)]='\x0a\x20\x20\x20\x20<div\x20'+'class=\x22sta'+_0x1b5385(0x133)+_0x1b5385(0x377)+_0x1b5385(0x1d8)+fN(_0x26c51a)+(_0x1b5385(0x38f)+_0x1b5385(0x3f1)+_0x1b5385(0x127)+'</div></di'+'v>\x0a\x20\x20\x20\x20<di'+_0x1b5385(0x40c)+_0x1b5385(0x251)+_0x1b5385(0x266)+'\x20class=\x22va'+_0x1b5385(0x2d2))+fN(_0x38a687)+('</div><div'+'\x20class=\x22lb'+_0x1b5385(0x157)+'</div></di'+'v>\x0a\x20\x20\x20\x20<di'+'v\x20class=\x22s'+'tat-card\x20g'+'reen\x22><div'+'\x20class=\x22va'+'l\x22>')+fN(_0x31a4fe)+(_0x1b5385(0x38f)+_0x1b5385(0x3f1)+_0x1b5385(0x408)+'s</div></d'+_0x1b5385(0x39a)+_0x1b5385(0x373)+_0x1b5385(0x112))+(_0x65e751>0x0?'red':'blue')+(_0x1b5385(0x3c9)+'ss=\x22val\x22>')+fN(_0x5ee383)+('</div><div'+_0x1b5385(0x3f1)+'l\x22>Gastos\x20'+_0x1b5385(0x2e6))+(_0x65e751>0x0?'\x20(−'+fN(_0x65e751)+'\x20no\x20ded)':'')+('</div></di'+'v>');const _0x3f2e3e=_0xa9d624=>Math['round'](_0xa9d624||0x0)[_0x1b5385(0xfb)+_0x1b5385(0x29f)]('es-CO'),_0x3ba7be=cuentasBalance[_0x1b5385(0x281)]()['sort']((_0x2976a4,_0x7b809)=>_0x2976a4[_0x1b5385(0x2c1)][_0x1b5385(0x37f)+'are'](_0x7b809[_0x1b5385(0x2c1)]));let _0x11e4cd=_0x1b5385(0x391)+'le=\x22width:'+'100%;borde'+_0x1b5385(0x2fd)+':collapse;'+_0x1b5385(0x2b4)+_0x1b5385(0x1b5);_0x11e4cd+=_0x1b5385(0x1af)+_0x1b5385(0x19f)+'ckground:v'+_0x1b5385(0x2d6)+'color:#fff'+_0x1b5385(0x210)+'sticky;top'+':0;z-index'+_0x1b5385(0x332)+('<th\x20style='+_0x1b5385(0x220)+_0x1b5385(0x183)+_0x1b5385(0x286)+_0x1b5385(0x3b4)+'</th>')+(_0x1b5385(0x33f)+_0x1b5385(0x220)+_0x1b5385(0x183)+'t-align:le'+'ft\x22>Nombre'+_0x1b5385(0x21b))+('<th\x20style='+'\x22padding:4'+_0x1b5385(0x183)+_0x1b5385(0x3a8)+_0x1b5385(0x2c4)+'ble</th>')+('<th\x20style='+_0x1b5385(0x220)+_0x1b5385(0x183)+'t-align:ri'+_0x1b5385(0x1b7)+_0x1b5385(0x1da))+(_0x1b5385(0x33f)+_0x1b5385(0x220)+_0x1b5385(0x183)+_0x1b5385(0x3a8)+'ght\x22>Difer'+_0x1b5385(0x2e9))+('<th\x20style='+'\x22padding:4'+_0x1b5385(0x183)+_0x1b5385(0x1a3)+_0x1b5385(0x109)+_0x1b5385(0x12d)+_0x1b5385(0x34c))+('<th\x20style='+_0x1b5385(0x220)+_0x1b5385(0x183)+_0x1b5385(0x1a3)+'nter\x22>Ded.'+'</th>')+(_0x1b5385(0x36f)+'ad><tbody>');let _0x80a7c='';const _0x3ae777={'1':'Activos','2':_0x1b5385(0x15f),'3':'Patrimonio','4':'Ingresos','5':'Gastos','6':_0x1b5385(0x10c)};for(const _0x36b3e1 of _0x3ba7be){const _0x42d3c0=cuentasBalance[_0x1b5385(0x1e4)](_0x36b3e1),_0x2c3c45=_0x36b3e1[_0x1b5385(0x2c1)][0x0];_0x2c3c45!==_0x80a7c&&(_0x80a7c=_0x2c3c45,_0x11e4cd+='<tr\x20style='+_0x1b5385(0x2c3)+_0x1b5385(0x34b)+_0x1b5385(0x331)+'olspan=\x227\x22'+'\x20style=\x22pa'+_0x1b5385(0x32d)+'8px;font-w'+_0x1b5385(0x262)+'color:var('+_0x1b5385(0x337)+'t-size:.78'+_0x1b5385(0x398)+(_0x3ae777[_0x2c3c45]||'Clase\x20'+_0x2c3c45)+'</td></tr>');const _0x59ed5a=[0x3e,0x3f,0x40,0x41,0x42][_0x1b5385(0x29b)](_0x36b3e1[_0x1b5385(0x10b)]),_0x5a7dff=_0x36b3e1[_0x1b5385(0x31b)]-_0x36b3e1[_0x1b5385(0x341)];let _0x4aa1b3=_0x1b5385(0x1a0)+'change=\x22cu'+_0x1b5385(0x1cd)+'ce['+_0x42d3c0+('].casilla='+'+this.valu'+'e;mostrarC'+_0x1b5385(0x1eb)+_0x1b5385(0x3bd)+_0x1b5385(0xf8)+_0x1b5385(0x115)+'padding:1p'+_0x1b5385(0x106)+_0x1b5385(0x143)+'id\x20var(--b'+_0x1b5385(0x415)+'der-radius'+_0x1b5385(0x11a)+_0x1b5385(0x156)+_0x1b5385(0x311)+_0x1b5385(0x27e)+'\x22>');for(const _0x331065 of CASILLA_OPTS){_0x4aa1b3+='<option\x20va'+_0x1b5385(0x142)+_0x331065['v']+'\x22'+(_0x331065['v']===_0x36b3e1['casilla']?_0x1b5385(0x3c7):'')+'>'+_0x331065['t']+'</option>';}_0x4aa1b3+='</select>';let _0x57b8ea='<span\x20styl'+_0x1b5385(0xe5)+'999\x22>—</sp'+'an>';if(_0x59ed5a){const _0x1b7bc6=_0x36b3e1[_0x1b5385(0x1f8)]==='no_ded'?_0x1b5385(0xfc):_0x36b3e1[_0x1b5385(0x1f8)]===_0x1b5385(0x285)?'#D97706':_0x1b5385(0x307),_0x530570=_0x36b3e1['ded']==='no_ded'?'#FFEBEE':_0x36b3e1['ded']===_0x1b5385(0x285)?'#FFF8E1':_0x1b5385(0x2d9),_0x228c86=_0x36b3e1[_0x1b5385(0x1f8)]==='no_ded'?_0x1b5385(0x290):_0x36b3e1['ded']===_0x1b5385(0x285)?'50%':_0x1b5385(0x230);_0x57b8ea='<button\x20on'+'click=\x22cam'+_0x1b5385(0x297)+_0x42d3c0+(_0x1b5385(0x3b8)+'font-size:'+_0x1b5385(0x1fd)+_0x1b5385(0x39b)+'px;border:'+_0x1b5385(0x406))+_0x1b7bc6+(_0x1b5385(0x229)+_0x1b5385(0x116)+'ackground:')+_0x530570+_0x1b5385(0x2c0)+_0x1b7bc6+(_0x1b5385(0x2f6)+_0x1b5385(0x41f)+'-weight:70'+_0x1b5385(0x242)+_0x1b5385(0x155)+'t;min-widt'+'h:42px\x22\x20ti'+_0x1b5385(0x327))+(_0x36b3e1[_0x1b5385(0x3ea)]?'R'+_0x36b3e1['regla']['id']+':\x20'+_0x36b3e1['regla'][_0x1b5385(0x138)]+_0x1b5385(0x1d6)+_0x36b3e1['regla'][_0x1b5385(0xe6)]+')':'Clic\x20para\x20'+'cambiar')+'\x22>'+_0x228c86+'</button>';}const _0x1b5b1c=_0x36b3e1[_0x1b5385(0x1f8)]===_0x1b5385(0x2ee)?'#FFF5F5':_0x36b3e1[_0x1b5385(0x1f8)]===_0x1b5385(0x285)?'#FFFDF0':'',_0x387322=_0x5a7dff>0x0?_0x1b5385(0xfc):_0x5a7dff<0x0?'#2E7D32':_0x1b5385(0x1d9);_0x11e4cd+='<tr\x20style='+'\x22border-bo'+_0x1b5385(0x326)+'olid\x20#eee;'+'background'+':'+_0x1b5b1c+('\x22>\x0a\x20\x20\x20\x20\x20\x20<'+_0x1b5385(0x180)+'padding:2p'+'x\x205px;font'+_0x1b5385(0x23f)+_0x1b5385(0x17c)+'no;font-si'+_0x1b5385(0x149)+'>')+_0x36b3e1[_0x1b5385(0x2c1)]+('</td>\x0a\x20\x20\x20\x20'+'\x20\x20<td\x20styl'+'e=\x22padding'+':2px\x205px;m'+'ax-width:1'+_0x1b5385(0x42c)+'low:hidden'+_0x1b5385(0x340)+_0x1b5385(0x114)+_0x1b5385(0x1b8)+'space:nowr'+_0x1b5385(0x310)+'\x22')+_0x36b3e1[_0x1b5385(0x2b2)]+'\x22>'+_0x36b3e1['name']+('</td>\x0a\x20\x20\x20\x20'+_0x1b5385(0x3ab)+_0x1b5385(0x25f)+_0x1b5385(0x1e8)+_0x1b5385(0x430)+_0x1b5385(0x3fc)+'-family:Je'+'tBrains\x20Mo'+_0x1b5385(0x252)+_0x1b5385(0x355))+_0x3f2e3e(_0x36b3e1[_0x1b5385(0x31b)])+('</td>\x0a\x20\x20\x20\x20'+_0x1b5385(0x3ab)+_0x1b5385(0x25f)+':2px\x203px;t'+_0x1b5385(0x430)+_0x1b5385(0x1ab)+'put\x20value='+'\x22')+(_0x36b3e1['valFiscal']?_0x3f2e3e(_0x36b3e1['valFiscal']):'')+('\x22\x20onfocus='+'\x22this.valu'+_0x1b5385(0x3ac)+_0x1b5385(0x1f7)+'(/[,.\x5cs]/g'+_0x1b5385(0x1e9)+_0x1b5385(0xec)+'Fiscal(')+_0x42d3c0+(',this.valu'+_0x1b5385(0x3c8)+'lue=cuenta'+'sBalance[')+_0x42d3c0+(_0x1b5385(0x25d)+_0x1b5385(0x1ba)+_0x1b5385(0x289))+_0x42d3c0+('].valFisca'+'l):\x27\x27\x22\x20sty'+_0x1b5385(0x186)+_0x1b5385(0x19d)+_0x1b5385(0x3af)+'t;font-fam'+'ily:JetBra'+'ins\x20Mono;f'+'ont-size:.'+_0x1b5385(0x333)+_0x1b5385(0x3eb)+'0;border:1'+_0x1b5385(0x21a)+_0x1b5385(0x249)+'-radius:3p'+'x;padding:'+'2px\x204px;co'+'lor:var(--'+_0x1b5385(0x2cd)+_0x1b5385(0x3db))+(_0x36b3e1[_0x1b5385(0x341)]!==_0x36b3e1['val']?_0x1b5385(0x41a):'#fff')+('\x22></td>\x0a\x20\x20'+'\x20\x20\x20\x20<td\x20id'+'=\x22diff_')+_0x42d3c0+(_0x1b5385(0x356)+_0x1b5385(0x295)+_0x1b5385(0x201)+'align:righ'+_0x1b5385(0x362)+_0x1b5385(0x175)+_0x1b5385(0x338)+_0x1b5385(0x41d)+_0x1b5385(0x372)+'r:')+_0x387322+'\x22>'+(_0x5a7dff?_0x3f2e3e(_0x5a7dff):'')+('</td>\x0a\x20\x20\x20\x20'+'\x20\x20<td\x20styl'+'e=\x22padding'+':2px\x204px;t'+'ext-align:'+_0x1b5385(0x1b0))+_0x4aa1b3+(_0x1b5385(0x334)+_0x1b5385(0x3ab)+_0x1b5385(0x25f)+':2px\x204px;t'+_0x1b5385(0x430)+_0x1b5385(0x1b0))+_0x57b8ea+(_0x1b5385(0x334)+_0x1b5385(0x167));}const _0x142fa4=[{'n':_0x1b5385(0x1dd),'cas':[0x24,0x25,0x26,0x27,0x28,0x29,0x2a,0x2b]},{'n':_0x1b5385(0x15f),'cas':[0x2d]},{'n':_0x1b5385(0x32a),'cas':[0x2f,0x30,0x39]},{'n':_0x1b5385(0x42e)+_0x1b5385(0x247),'cas':[0x3e,0x3f,0x40,0x41,0x42]}];_0x11e4cd+='<tr\x20style='+'\x22backgroun'+'d:var(--pr'+'i);color:#'+_0x1b5385(0x23d)+_0x1b5385(0x346)+_0x1b5385(0x15c)+_0x1b5385(0x2fc)+_0x1b5385(0x38e)+'eight:700\x22'+_0x1b5385(0x1d0)+_0x1b5385(0x184)+'le=\x22paddin'+'g:5px;text'+_0x1b5385(0x191)+'ht;font-we'+'ight:700\x22>'+'Contable</'+_0x1b5385(0x184)+_0x1b5385(0x2f9)+'g:5px;text'+'-align:rig'+_0x1b5385(0x421)+_0x1b5385(0x3d3)+_0x1b5385(0x37a)+'><td\x20style'+_0x1b5385(0x3f5)+'5px;text-a'+'lign:right'+';font-weig'+'ht:700\x22>Di'+_0x1b5385(0x3f0)+_0x1b5385(0x364)+'span=\x222\x22><'+_0x1b5385(0x2e5);let _0x8f98f1=0x0,_0x37f210=0x0;for(const _0x562eee of _0x142fa4){const _0x2d5bd4=cuentasBalance[_0x1b5385(0x42f)](_0x18476b=>_0x562eee[_0x1b5385(0x2a4)]['includes'](_0x18476b[_0x1b5385(0x10b)]))['reduce']((_0x38cf16,_0xc9c2d8)=>_0x38cf16+_0xc9c2d8['val'],0x0),_0x559140=cuentasBalance['filter'](_0x29e1ba=>_0x562eee['cas'][_0x1b5385(0x29b)](_0x29e1ba[_0x1b5385(0x10b)]))['reduce']((_0x23b9f3,_0x6dcfe9)=>_0x23b9f3+_0x6dcfe9['valFiscal'],0x0),_0x41025d=_0x2d5bd4-_0x559140;_0x8f98f1+=_0x2d5bd4,_0x37f210+=_0x559140,_0x11e4cd+='<tr\x20style='+_0x1b5385(0x2c3)+_0x1b5385(0x33e)+_0x1b5385(0x2e2)+_0x1b5385(0x3da)+'lid\x20var(--'+_0x1b5385(0x1a5)+_0x1b5385(0x411)+_0x1b5385(0x25c)+'\x22\x20style=\x22p'+_0x1b5385(0x1c1)+_0x1b5385(0x3e5)+'weight:600'+';font-size'+':.76rem\x22>'+_0x562eee['n']+(_0x1b5385(0x334)+'\x20\x20<td\x20styl'+_0x1b5385(0x25f)+_0x1b5385(0xf4)+_0x1b5385(0x430)+'right;font'+'-family:Je'+_0x1b5385(0x17c)+_0x1b5385(0xf7)+'ight:600\x22>')+_0x3f2e3e(_0x2d5bd4)+(_0x1b5385(0x334)+'\x20\x20<td\x20styl'+'e=\x22padding'+_0x1b5385(0xf4)+_0x1b5385(0x430)+'right;font'+'-family:Je'+_0x1b5385(0x17c)+_0x1b5385(0xf7)+'ight:700;c'+'olor:var(-'+'-pri)\x22>')+_0x3f2e3e(_0x559140)+('</td>\x0a\x20\x20\x20\x20'+'\x20\x20<td\x20styl'+'e=\x22padding'+_0x1b5385(0xf4)+_0x1b5385(0x430)+_0x1b5385(0x3fc)+_0x1b5385(0x23f)+_0x1b5385(0x17c)+'no;font-we'+_0x1b5385(0x41e)+_0x1b5385(0x237))+(_0x41025d?'#C62828':_0x1b5385(0x1d9))+'\x22>'+(_0x41025d?_0x3f2e3e(_0x41025d):'')+('</td>\x0a\x20\x20\x20\x20'+'\x20\x20<td\x20cols'+'pan=\x222\x22></'+_0x1b5385(0x317)+'tr>');}const _0x4c1dd0=_0x8f98f1-_0x37f210;_0x4c1dd0&&(_0x11e4cd+='<tr\x20style='+_0x1b5385(0x2c3)+_0x1b5385(0x190)+'border-top'+':2px\x20solid'+_0x1b5385(0x13e)+'\x0a\x20\x20\x20\x20\x20\x20<td'+_0x1b5385(0x3e0)+_0x1b5385(0x40f)+_0x1b5385(0x38c)+_0x1b5385(0x25e)+'-weight:70'+'0;color:#9'+_0x1b5385(0x27d)+_0x1b5385(0x261)+'cias</td>\x0a'+'\x20\x20\x20\x20\x20\x20<td\x20'+'style=\x22pad'+'ding:5px;t'+_0x1b5385(0x430)+'right;font'+'-family:Je'+'tBrains\x20Mo'+'no;font-we'+'ight:600\x22>'+_0x3f2e3e(_0x8f98f1)+('</td>\x0a\x20\x20\x20\x20'+_0x1b5385(0x3ab)+'e=\x22padding'+':5px;text-'+_0x1b5385(0x3af)+'t;font-fam'+_0x1b5385(0x175)+'ins\x20Mono;f'+_0x1b5385(0x2b3)+':700;color'+':var(--pri'+')\x22>')+_0x3f2e3e(_0x37f210)+(_0x1b5385(0x334)+_0x1b5385(0x3ab)+_0x1b5385(0x25f)+':5px;text-'+'align:righ'+'t;font-fam'+'ily:JetBra'+'ins\x20Mono;f'+'ont-weight'+':700;color'+':#C62828\x22>')+_0x3f2e3e(_0x4c1dd0)+('</td>\x0a\x20\x20\x20\x20'+_0x1b5385(0x254)+'pan=\x222\x22></'+'td>\x0a\x20\x20\x20\x20</'+'tr>')),_0x11e4cd+='</tbody></'+'table>',document[_0x1b5385(0xfd)+_0x1b5385(0x1c6)](_0x1b5385(0x309)+'il')['innerHTML']=_0x11e4cd;}function aplicarAlFormulario(){const _0x2a9ee8=_0x692876,_0x1efe3f={};for(const _0x57c8e9 of cuentasBalance){if(!_0x57c8e9[_0x2a9ee8(0x10b)])continue;const _0x1702ce=[0x3e,0x3f,0x40,0x41,0x42][_0x2a9ee8(0x29b)](_0x57c8e9[_0x2a9ee8(0x10b)]);_0x1efe3f[_0x57c8e9[_0x2a9ee8(0x10b)]]=(_0x1efe3f[_0x57c8e9[_0x2a9ee8(0x10b)]]||0x0)+(_0x1702ce?_0x57c8e9[_0x2a9ee8(0x341)]:_0x57c8e9['val']);}for(const _0x422aac of PUC_F110){const _0x3bc46b=document['getElement'+'ById']('c'+_0x422aac[_0x2a9ee8(0x2a4)]);_0x3bc46b&&!_0x3bc46b[_0x2a9ee8(0x21c)]&&(_0x3bc46b[_0x2a9ee8(0x2cb)]='',_0x3bc46b[_0x2a9ee8(0x10f)]['remove'](_0x2a9ee8(0x16e)));}for(const [_0x2e53c2,_0x208725]of Object['entries'](_0x1efe3f)){const _0x1ee1ed=document[_0x2a9ee8(0xfd)+_0x2a9ee8(0x1c6)]('c'+_0x2e53c2);if(_0x1ee1ed&&!_0x1ee1ed['readOnly']){const _0x3b4a96=Math['round'](_0x208725/0x3e8)*0x3e8;_0x1ee1ed[_0x2a9ee8(0x2cb)]=_0x3b4a96?_0x3b4a96['toLocaleSt'+'ring'](_0x2a9ee8(0x313)):'',_0x1ee1ed[_0x2a9ee8(0x10f)][_0x2a9ee8(0x216)]('filled',_0x3b4a96!==0x0);}}recalcular(),document['querySelec'+_0x2a9ee8(0x253)]('.dian-form')[_0x2a9ee8(0x2d5)+'View']({'behavior':_0x2a9ee8(0x130)});}function vTTD(_0x47cb35){const _0x2f98a6=_0x692876,_0x41e282=document['getElement'+_0x2f98a6(0x1c6)](_0x47cb35);if(!_0x41e282)return 0x0;return parseInt(_0x41e282['value'][_0x2f98a6(0x32b)](/[,.\s$]/g,''))||0x0;}function recalcularTTD(){const _0x31f63f=_0x692876,_0x9bdb6=vTTD(_0x31f63f(0x3a3)+'d'),_0x19205c=vTTD(_0x31f63f(0x2dd)),_0x4844a7=vTTD(_0x31f63f(0x103)),_0x59227f=vTTD('ttdExentas'),_0x4215bb=_0x9bdb6+_0x19205c-_0x4844a7-_0x59227f,_0x2a3fae=v(_0x31f63f(0x40d)),_0xb17745=v('c92'),_0x686297=_0x2a3fae+_0xb17745,_0x35558a=_0x4215bb>0x0?_0x686297/_0x4215bb*0x64:0x0,_0x5b5f68=_0x35558a<0xf&&_0x4215bb>0x0?Math['round']((_0x4215bb*0.15-_0x686297)/0x3e8)*0x3e8:0x0,_0x3bc091=_0x35558a>=0xf?'var(--gree'+'n)':'var(--red)';document[_0x31f63f(0xfd)+_0x31f63f(0x1c6)]('ttdResulta'+'do')[_0x31f63f(0x26d)]=_0x31f63f(0x39c)+_0x31f63f(0x1a7)+_0x31f63f(0x12b)+'grid-templ'+'ate-column'+_0x31f63f(0xfa)+_0x31f63f(0x173)+'p:12px;tex'+'t-align:ce'+_0x31f63f(0x316)+_0x31f63f(0x3c6)+_0x31f63f(0x239)+_0x31f63f(0x2b4)+_0x31f63f(0x2ba)+_0x31f63f(0x14a)+_0x31f63f(0x1c9)+'-transform'+_0x31f63f(0x3f2)+'\x22>Utilidad'+'\x20Depurada<'+'/div><div\x20'+_0x31f63f(0x227)+'t-size:1.1'+'rem;font-w'+_0x31f63f(0x262)+_0x31f63f(0x24f)+'y:JetBrain'+_0x31f63f(0x384)+Math[_0x31f63f(0x2f0)](_0x4215bb)['toLocaleSt'+_0x31f63f(0x29f)](_0x31f63f(0x313))+('</div></di'+_0x31f63f(0x3a9)+_0x31f63f(0x2a1)+'tyle=\x22font'+'-size:.72r'+'em;color:v'+_0x31f63f(0x3de)+_0x31f63f(0xf6)+_0x31f63f(0x208)+'ercase\x22>Im'+'puesto\x20Dep'+'urado</div'+_0x31f63f(0x2b9)+_0x31f63f(0xf8)+'ze:1.1rem;'+'font-weigh'+'t:700;font'+'-family:Je'+'tBrains\x20Mo'+_0x31f63f(0x427))+Math[_0x31f63f(0x2f0)](_0x686297)['toLocaleSt'+'ring'](_0x31f63f(0x313))+('</div></di'+'v>\x0a\x20\x20\x20\x20\x20\x20<'+_0x31f63f(0x2a1)+'tyle=\x22font'+'-size:.72r'+_0x31f63f(0x2de)+_0x31f63f(0x3de)+');text-tra'+'nsform:upp'+_0x31f63f(0x35c)+_0x31f63f(0x1ee)+'v\x20style=\x22f'+'ont-size:1'+_0x31f63f(0x158)+'-weight:80'+_0x31f63f(0x2f8))+_0x3bc091+'\x22>'+_0x35558a['toFixed'](0x2)+('%</div></d'+_0x31f63f(0x24b)+_0x31f63f(0x37e)+'style=\x22fon'+'t-size:.72'+_0x31f63f(0x176)+_0x31f63f(0x28f)+_0x31f63f(0x2a0)+'ansform:up'+'percase\x22>I'+'mpuesto\x20Ad'+_0x31f63f(0x198)+'A)</div><d'+_0x31f63f(0x239)+_0x31f63f(0x2b4)+_0x31f63f(0x2dc)+_0x31f63f(0x1a1)+'00;font-fa'+'mily:JetBr'+_0x31f63f(0x3ef)+_0x31f63f(0x3ba))+(_0x5b5f68>0x0?'var(--red)':'var(--gree'+'n)')+'\x22>'+(_0x5b5f68>0x0?_0x5b5f68[_0x31f63f(0xfb)+'ring']('es-CO'):'No\x20aplica')+('</div></di'+'v>\x0a\x20\x20\x20\x20</d'+'iv>\x0a\x20\x20\x20\x20')+(_0x35558a<0xf&&_0x4215bb>0x0?_0x31f63f(0x30d)+'=\x22margin-t'+_0x31f63f(0x344)+_0x31f63f(0x3c2)+_0x31f63f(0x429)+_0x31f63f(0x308)+'border:1px'+_0x31f63f(0x1d3)+'CDD2;borde'+'r-radius:8'+'px;font-si'+_0x31f63f(0x18f)+'color:#C62'+_0x31f63f(0x16f)+'ng>Atencio'+'n:</strong'+'>\x20La\x20TTD\x20('+_0x35558a[_0x31f63f(0x339)](0x2)+('%)\x20es\x20meno'+_0x31f63f(0x284)+_0x31f63f(0x23b)+_0x31f63f(0x1bc)+_0x31f63f(0x1d4)+'l\x20de\x20<stro'+_0x31f63f(0x3e9))+_0x5b5f68['toLocaleSt'+_0x31f63f(0x29f)](_0x31f63f(0x313))+('</strong>\x20'+'que\x20se\x20sum'+'a\x20a\x20la\x20cas'+_0x31f63f(0x168)+_0x31f63f(0x161)+'io.</div>'):'<div\x20style'+_0x31f63f(0x26c)+'op:12px;pa'+_0x31f63f(0x3c2)+_0x31f63f(0x429)+'d:#E8F5E9;'+_0x31f63f(0x324)+_0x31f63f(0x383)+'D6A7;borde'+'r-radius:8'+'px;font-si'+_0x31f63f(0x18f)+'color:#2E7'+'D32\x22><stro'+_0x31f63f(0x119)+'rong>\x20La\x20T'+_0x31f63f(0x39e)+_0x35558a['toFixed'](0x2)+('%)\x20es\x20igua'+'l\x20o\x20mayor\x20'+_0x31f63f(0x3fd)+_0x31f63f(0x363)+'\x20impuesto\x20'+_0x31f63f(0x2fb)+_0x31f63f(0x33b)));}function v(_0x32fc01){const _0x2f8c46=_0x692876,_0x20d368=document['getElement'+'ById'](_0x32fc01);if(!_0x20d368)return 0x0;const _0x2c067b=_0x20d368[_0x2f8c46(0x2cb)]['replace'](/[,.\s$]/g,'');return parseInt(_0x2c067b)||0x0;}function set(_0x131aa3,_0x17f79e){const _0x5459e6=_0x692876,_0x479f86=document[_0x5459e6(0xfd)+'ById'](_0x131aa3);if(!_0x479f86)return;const _0xbd751=Math['round'](_0x17f79e/0x3e8)*0x3e8;_0x479f86['value']=_0xbd751!==0x0?_0xbd751['toLocaleSt'+'ring']('es-CO'):'',_0x479f86['classList'][_0x5459e6(0x216)]('filled',_0xbd751!==0x0);}function fN(_0x13fbf8){const _0x3d39c7=_0x692876;return Math[_0x3d39c7(0x2f0)](_0x13fbf8)[_0x3d39c7(0xfb)+'ring']('es-CO');}function _0x3cb1(){const _0x45ab2f=['zNqIpKn1zw50yq','xhTY','rKzeotC3mdy','nteXnq','ksiGC3r5Bgu9iG','ignVC3rVCYb5ia','y29SB3i6','DhjHDgfKB3mSia','CMvM','B24OksiGC3r5Ba','ChjLB3bLCMf0Aq','yxjKia','yZC5','r2fZDg9ZigzPBG','zgrPBMC6mtbWEa','t3rYB3mGAw5NCG','ihKGq29TCgXLBq','r2fUyw5JAwfZia','icaGpgrPDJ48za','ihnLBgvJDgvK','zsK7DgHPCY52yq','iJ48zgL2ignSyq','BYbZDxnJCSoTyMu','CYbKAxzLCNnHCW','BcbWyxrYAw1VBG','Aw9UywW','ve9uquWGzMLZyW','ihjLy2LIAwrHCW','CMvZDw1LBG','BNvTrM10','zhjHz292zxi','AwDODdO3mdaIpG','DgL2B3mGzguGCG','E3iXmdn9luX7CG','yZG1','zMLUyw5JAwvYyq','uhjVDMLZAw9Uia','yZu5','Dg9ToJfWEcbZBW','CM91BMq6','ywnPB24','B24Gy3ldQwrPDg8','yxiOls1TDxrLza','mtCX','ignVBhnWyw49iG','CYb0CMLIDxrHCG','zguGufbf','BgvUz3rO','tgLXDwLKywnPBW','idHWEdTMB250lq','r0fs','zw4GzxHVz2vUyq','CMfKB3iU','BMC+ja','CMvNBge','lxDLAwDODdO2ma','DhjPBq','DgHPBG','rKzeneu2rJe','ywLUCYbnB25VoW','zMvYzw5JAwe8lW','ignSyxnZpsjSyG','oNvWCgvYy2fZzq','thTYntH9luX7CG','zw50ysbWyxjHia','psjWywrKAw5NoG','C2LVBIb5iefoqW','y3jL','CYbSAxf1AwrHCW','rJeXmf9szw50yq','yZeWna','yw5JAwvYB3mGza','CMLNAhq7zM9UDa','ywWGmtuLlIboBW','p2fJDgLVBJ12yq','q29TCg9Uzw50zq','yZyZ','nJaGsu5duK5htW','yMfSyw5JzunLCG','q3vLBNrHCYbWBW','mta3lte','zMLSzuLUChv0uG','mxb4ihnVBgLKia','EgnLC28','Bci+sw5NCMvZBW','C2fSzg9byM9UBW','u2fUy2LVBMvZia','rKyXqtndnKu','DIbJBgfZCZ0ICW','yZKZ','ChjVCgLLzgfKzq','mIiGC3r5Bgu9iG','zM9UDa','icaGicaGphrKia','mx0TthTYnJD9kW','zxjPB3iGzxHJzq','BNrHCW','B3jKzxiPo2jVCG','ihjLywXPEMfKyq','CMvHC29U','B24GzguGCgvYza','ntmWnq','i0verJrgrG','qsbersbuuKLcvq','BY4UlG','B250lxnPEMu6lG','AwDODdO3mda7yW','Aw50zxi7zM9UDa','mZuTmIbSAxqGyq','Ahq7zM9UDc13zq','B2XVz2LJB3m','zxb1CMfKBYaOsq','rKzgrKzgrKy','sw5NCMvZB3mGzG','ywrVig5VigrLza','BM8IpG','ywDYywzVidyGyq','o2jHy2TNCM91BG','ndm1odG3mNLyq3nOAa','tufykeX7CJKZFq','odbWEdTVDMvYzG','Dgv4DenVBNrLBG','q29ZDg9Zk0DHCW','zMLSDgvY','zxH0lwfSAwDUoG','yZy1','B24GEsb2zw50yq','luX7CJKYFsWWkq','yZC0','zt0Iy29SB3i6iW','yxj0','y2NdS24GzNvLigm','nJaZwePTr0Xe','DhrKx3jL','uMvMzxjLBMnPyq','CMvKDwnL','Dxi9iMvKAxrHCG','yZq1','zguGAw50yw5NAq','B25SB2fK','ierjqu4','DgfYAwzHigDLBG','tufyke1bwcHmEW','yZeXma','oJrWEca1ChG7Da','DxrPBhm','ktT0zxH0lxrYyq','BM87zM9UDc13zq','zt0IzM9UDc1ZAq','y29SB3i','CZOXzNiGmwzYia','Dg9mB2nHBgvtDa','i0m2mJGYoa','z2v0rwXLBwvUDa','yxjKigfTyMvYiG','B24GzxHJzxnVia','CxvLCNLtzwXLyW','ksb5igiP','Dw1LBNqUC3bYzq','DhrKsu5duK5htW','yZyX','CYbKzsbPBNzLCG','EcaZChG7yM9Yza','igLUDMvYC2LVBG','DMLUy3vSywrVCW','BNrLCIi+uMvUzW','ugfZAxzVCYbLCW','y2fZAwXSyq','q29ZDg9Z','igrLihbYzxnLBG','qxnPBwLSywrHCW','y2XHC3nmAxn0','svjqoIbjBxb1zq','AgLKzgvU','C3rHDc1JyxjKia','y2LVBIbezxb1CG','zMXVDZPLBgXPCa','EMu6lJy4CMvToW','zgL1CZOZChG7yG','nduGugfZAxzVCW','zxHVz2vUywrPyq','BMC+t0S6pc9ZDa','oJrWEdTMB250lq','y2LVBIbLEgnLCW','DhvHCMLVCW','lw9MzMLJzwrVyW','zw50yxmGy29Uia','ywjZ','CJGYFsWWkq','z2v0q29SDw1U','ywrKrxzLBNrmAq','EgvUDg9Z','Axf1AwrHieDYyq','CMrPBMfYAw9Z','imk3ia','Bci+qwn0AxzVCW','igvSigv4DgvYAq','yZGX','Dg9KBYbKzsbWyq','CgXHEtPNCMLKoW','vMvYAwzPy2fUza','Bg9UieyXmta8lW','zwPLCMnPy2LVCW','y2zNtML0','C21VB3rO','pJWVzgL2pGOGia','AwzLCMLKBYbNyq','Dc1JyxjKigjSDq','tKze','D3jPDgvcDwzMzq','CMf0ywrVCYWGqW','z2vUzxjHBcaOCW','BM9T','yxvSDa','DMfYkc0TyM9Yza','y29UDgfIBguP','z2v0sxrLBq','yMfUy2fYAxPHza','icngq0qZneqIpG','igrLigLUz3jLCW','sw1WDwvZDg8Gqq','zgfZihKGzxHLBG','BhvLpsi','zxi6mxb4ihnVBa','lsa2mcK','sw5NCMvZB3mGBW','veftqsbnsu5jtq','yM9YzgvY','BguGkg5VihjLyq','EMu6lJy4CMvTiG','B3i6DMfYkc0TBq','zg9ZigvUigfJyW','nYW1jq','sw5NCMvZB3mGyG','mdb9luX7CJeWmW','nde0ma','CJeWmN0','DMfYkc0TCMvKkq','y3vLBNrHCW','mtm3','DgfYz2v0','AwX5oMLUAgvYAq','zMfTAwX5oMLUAa','Bci+ugfZAxzVCW','lJnYzw07zM9UDa','zgLZCgXHEq','tufykeX7CJK2Fq','CMLKAwnHCYb5ia','ihn0EwXLpsjWyq','yZG3','yZuZ','ugfZAxzVCW','x0fh','BcbMB3jTDwXHCG','reLbtG','kfbvqYa1mZK1kq','kgv4DcK','ysb0yxjPzMeGzW','nde2nq','pc90CJ4','AwXSysa5nsbKzq','igzPBgfZimk3igG','y2LVCYbKzsb0CG','y2fYzcbNCMvLBG','ndCGsw5NCI4GBW','B250ywjSzq','zMLSBgvK','odi4iJ48C3rYBW','ox0Q','BwvYz2vdzwXSCW','BcbIywXHBMnLlG','mwzYidfMCJTNyq','zguGy2fYDgvYyq','AwX5oKPLDejYyq','CMvTo2nVBg9YoG','B2jYzsbYzw50yq','CMfPC29ZigzPCW','yw5JAwvYB3m','yxnZpsjZDgf0lq','zhjVCa','DejYywLUCYbnBW','zhjHz2vUDgvY','uhjVCgLLzgfKzq','DMfSAwq','DgqGC3r5Bgu9iG','yZeXmq','rgvJBgfYywnPBW','ChGGnxb4o3rLEa','Dgq+phrKihn0Eq','iezHDM9Ypc9KAq','Bgu9iNDPzhrOoG','CgfZAxzHievdrq','rgvZy3vLBNrVia','CMLVCW','nZqP','y2LVBMvZ','uK9vtKqOthTYnq','zxHJBhvPCG','ndmGt3rYB3mGyq','EMu6lJGYCMvToW','zdOJrKzgoeuXoW','lwfSAwDUoNjPzW','i0zgrJHfmq','zhPszw50yq','B25LCYbUBYbZyq','BNrLBNrHigrLia','yZC1','sw52zxjZAw9Uzq','AwnPB25HBcaOsq','mZeXmdCXnxL6ruLqvW','pdaUmtuSqW','u2KGsueGpIaWla','yZC2','otbWEdT0zxH0lq','BMfUy2LHig9Jyq','ihn0EwXLpsjIyq','phnLBgvJDcbVBG','Dc13zwLNAhq6nW','yZu3','Dc1HBgLNBJPJzq','zw50ysbUAsbNyq','yM9YzgvYksi+cG','uMvUDgeGBgLXDq','C3r5Bgu9iMrPCW','C29SAwq','AwvtAuXUmMrzzG','DgvZ','CMLNAhqIpJXPBG','mJqUiefJDgL2Aq','pJaPlfjpvu5eka','BcbHzg1PBMLZDa','phrOzwfKpJX0CG','y2vUDgvYiJ4','rwWGy29UDgfKBW','DgfZ','C3m9iNn0yxqTyW','revevunjqKXfuW','lJC1CMvTiJ4','zw50yq','z2H0iJ5gAxnJyq','C2LZo3DOAxrLlq','igDYyxzHzgfZia','Bd9MtIHJDwvUDa','uMvUDgfZigv4zq','Dw4Gsw1WDwvZDa','y2fSzxm','mtK4mdKZmM5QrfPlva','y2XHC2LMu3rHDa','yw5JzwXHzgeUia','ywrKAw5NoJrWEa','zwXHzge','zhvJAwjSztO','DM9Zigv4y2vZBW','r2fZDg9ZigrLia','qNLjza','BwvKAxvT','CYbWzxjTyw5LBG','DxrLzcK7Dgv4Da','ywWGkeLbkq','A2v5pq','mZyGrwzLy3rPDG','zw50yxncywXHBG','C3r5Bgu','yZy3','pLrpvefmrvm8lW','ihGGDgfYAwzHia','y2LWywnPB25LCW','ihnVBgLKicngrG','BYbbzgLJAw9Uyq','vMfSB3i','icHbCNqU','ugfNB3mGysbWyq','yxnZpsj2ywWIpG','iZK5oq','BdWVDgG+','yZG0','mta1','qwn0AxzVCW','lNHSC3G','sw5NCMvZB3mGBG','DMfYkc0TChjPmG','BwLU','Aw1Pzw50B3mGza','y3rvuKW','Aw5KzxHpzG','yZeWma','DgeGC29WB3j0zq','CIbKzwjLihzHBa','oJjWEca1ChG7Da','lcCNksiGB25IBa','vg90ywWGAw5NCG','BgfZAwzPy2fJAq','BML2zwW','y2LLBNrLCW','rdWVzgL2pJXKAq','qxjPywW','Aw1Hzg9Zig8GCa','zsbUB3jTywXPEG','zxjPDMfKB3m','yZm4','mte4lte','DhrKx2m','C29UywXLCYbZBW','DwuUCMvWBgfJzq','zgvK','zxjTyw5LBNrLCW','CYbLigLUC3rYDq','ywrVihbVCIbfEa','q2XHDMuGy2fUyW','lJyYCMvTo3bHza','sw5NCMvZysb0Dq','yZK1','ihnVCg9YDguGka','idvWEdT0zxH0lq','yZq2','z2vUzxjHBa','DMfIBguGC2LNDq','mtCXma','tufykeX7CJGWFq','sw50zxjLC2vZia','BNnMB3jToNvWCa','vgLWBW','yw50zxjPB3jLCW','CYbVy2fZAw9Uyq','zguGAw52zw50yq','phn0CM9UzZ5qyq','mZKGsw52zw50yq','yZCY','o3bVC2L0Aw9UoG','ufbfihKGChjVCa','ugfNB3m','DgvYAw9Y','zwPLCMnPy2LV','C3rHCNrZv2L0Aa','Dg9Nz2XL','mtaP','k0X7CJeWmh0Rta','imk3idXZDhjVBMC','ChGGC29SAwqGiW','pc90Ad4','CMvHze9UBhK','zxb1CMfKysaOvq','ywrZAgvLDg1SlG','y3jLyxrLrwXLBq','iNbHzgrPBMC6na','CMvTB3zL','B25LCW','ugfNB3mGyMfZyq','DgLTywrVCYb5ia','vfreid0GsuqGlW','BwvUDg9ZigzPBG','C3r5Bgu9iMzVBG','yZu0','o2jVCMrLCI1Yyq','l3n0CM9UzZ4GCW','mta4','CNv0B3mGzguGyq','BYbJB25ZDgL0Dq','AxzPzgvUzg9Zia','rg9UywnPB25LCW','reve','C3rVig5LDg8Gza','CgfYDgLJAxbHyW','ywqGy29UDgfIBa','Aw9Uzxm','BMfUy2LLCM9Z','qxbVCNrLCYbWyq','B2XVCJO','m30Qmc4XnsWTmW','AxyGC3r5Bgu9iG','ugvUywXPzgfKzq','u2uGz2vUzxjHia','Aw1VBMLVigXPCq','zMzMiJ48DgqGyW','ntCGt3rYB3mGAq','lwzHBwLSEtPkzq','DhrKx3zUz28','zwn0CM9UAwnHkq','mdTMB250lwzHBq','Aw1WDwvZDg9Z','Ahr0Chm6lY9ZyW','AwzLCMvUy2LHia','B24Gywn0AxzVCW','Dg9Z','mta3','zgrKo2jVCMrLCG','DgfYAwzHq3vZDa','Axy+cIaGicaGia','CYWGCgXHBNrHia','t3rYB3mGz2fZDa','AgvPz2H0','zM9UDc1Myw1PBa','t2nHC2LVBMfSzq','Dgf0lwnHCMqGyq','BM87y29SB3i6iW','Dg9Y','ica8DgqGy29SCW','BNvLDM8U','ugvYzgLKysbLBG','y2XPy2S','odG0iemUq28','ig9YzgLUyxjPyq','pJaSqW','ig5LDg8GzguGCG','y29SC3bHBJ0ImG','xs52ywXgAxnJyq','Eca4ChG7zM9UDa','zt0ICgfKzgLUzW','Aw5HBMnPzxjVCW','ywWGzgLMzxjLBG','zwLNAhq6nZaWoW','ihKVBYbWyxj0Aq','ywXPz25Tzw50','lJWVC3rYB25NpG','BwjLCIi+pgrPDG','AxPHy2LVBG','ntaLierfra','mte1','vg90ywWGy29ZDa','yZGY','psjTyxjNAw4TDa','Aw5Uzxjive1m','CMfSzxmGBM8Gza','yZyY','AwrHCIbHBNrLCW','DgvZihf1zsbHDq','ndeYma','yZK0','jZeXmcCHta','B3mGywXJyw56yq','nZCXlti','yZq3','q29ZDg9ZigvZDa','Aw4GCMvZAwrLBG','AwvUDgu','t0Tltg5cBhDinG','rgLNAxrHCG','mJqWmeuIpLrVDa','Awr0AdOXmtbWEa','BNrYyxjVBIbJDq','ifnVBg8GC2uGyW','C2XPy2u','rgL2AwrLBMrVCW','C2LVBMfS','CIbHBcaXnsuUia','z21M','Dc1HBgLNBJPSzq','jMrLDMLJzt0','zw50ysbHW7fVigC','yxncywXHBMnLwW','BgL6ywrVkq','igeGzw1WBgvHza','sw1WDwvZDg8GCW','u1vnkeX7CJm2Fq','DhrKx2r0yW','DMfYkc0TBxv0zq','tK8Greve','ohPzrfDkBq','u1vnkeX7CJyYFq','y3rPDM8','r2fZDg9ZihbYzq','ywrKAw5NoJjWEa','icSGntCP','yMLHCKrLzcG','ns4GtKLuoIa','yw50sw1WtMv0BW','yxjYyxK','Aw5JBhvKzxm','sw1WDwvZDg8Gra','u2fSzg8GysbMyq','zwr1y2LIBgvZ','CMLUzW','zcK7Dgv4Dc10CG','zgL2pJXKAxyGCW','BgfUy2uGC2LUia','rgvZChvLCYbKzq','y2fZ','z2v0uM93','B3mGkfbvqYa1mW','BwvZC2fNzq','nde0nq','CNqUidi0mcbfva','DhrKx3vJ','CMvHzefZqxjYyq','BwLKzgXL','tM9TyNjL','ChvZAa','CMvTB3zLq2HPBa','sw52zw50yxjPBW','zguGBw9Yyq','BMfTzq','B250lxDLAwDODa','zM9UDc1ZAxPLoG','C3rLBMvY','CMfSzxm','DMeGlsbfq0uGCW','yMXLCW','pJXKAxyGC3r5Ba','lJCYCMvTo2nVBa','nde3nq','DwnPyMXL','Cgf0DgvYBG','rwzLy3rPDM8GEq','zxnVCW','o2nVBg9YoG','y29Kzq','DM9Z','iMjHy2TNCM91BG','z2H0iJ5dB250yq','EsbHCNjLBMrHBq','mJyWlti','zgLJAw9UywWGka','Dg8Gkdm2igeGna','q2XHDMuGBM8Gzq','CMvZDwX0','DMfSDwu','y2fZAw9UywW','ChjPktTIywnRzW','Dg8GqwrPy2LVBG','mvzPtKTPyxnrlW','CMfKyq','ig9JyxnPB25HBa','Bci+','zguGzgv2B2X1yW','AsbHCgXPy2eP','C2nYB2XSsw50BW','yxiOls1WCMKPoW','zxjPB3iGC2LUia','kJaUmtuTqW','i0u4rJvfoq','BgeGotmP','z2v0q2vSBa','ms4XCMvTo2zVBG','DhrKrgLMugvYBq','zw07y29SB3i6DG','AwrHihbHC2L2yq','ihnLihn1BweGyq','yM9KEq','yM9YzgvYlwjVDa','BMnVBNrYywrHlG','ndaGsw50yw5NAq','l3rKpJWVDhi+','rMLZy2fSzxm','otz9luX7CJeWna','su5soIbjBxb1zq','zw5JAwe8l3rOpG','ChjLDMvUDerLzG','mJu3','DhrKx3zPBxbW','DhrKx2LUy3jUzW','BM9FzgvK','Bci+u2fSzg8Gyq','CM91BMq','DMLKysb1DgLSia','vg90ywWGCgf0CG','yZK5','rKzfoey1rtK','q29ZDg9ZihKGra','o2n1CNnVCJPWBW','zw50CMLLCW','mdTJB2XVCJO','Bgu9iNbHzgrPBG','qw1VCNrPEMfJAq','ywrPy2LVBMfSlG','zgrPBMC6nxb4ia','CI1JB2XSyxbZzq','BI92BMqUB3bLBG','BYbKzwr1y2LIBa','r2fZDg9ZihjLyW','yNDunw9MrxHPDW','DgLWBW','yw5JAweGB2nHCW','yZCZ','mtCWnq','BNrVCYbLBIb2zq','iZjfn0qZmG','zdOJrKzfqKvfoW','y2XHC2LMrgv0yq','Bwf4','CMvJAwjPzgfZ','yZu4','pgrPDIbZDhLSzq','tgL0AwDPB3mGEq','igvXDwL2ywXLBG','yxaIihrPDgXLpq','zxjPDdTTyxGTDW','qwn0AxzVCYbIAq','zxmTq08','DM9YighdSw8Gz3i','ignVBNrHyMXLCW','BNrLCIi+cIaGia','Dgq+cIaGica8lW','E3i5ox0TthTYmq','sw1WDwvZDg8Gza','ndiWnta1','DMfS','ldaP','uMvUDgeGzxHLBG','vhuGC3vZy3jPCa','D2LKDgG','q0HdlcaYmZuTmG','iYWJiZa','nde2ma','zxn0BYbHignHCG','yM9YzgvYoJfWEa','r2fZDg9Zigv4Da','DhrVBtOXChGGCW','DgXLpsi','ywXLCW','zxmGkdyYigeGnG','sw5NCMvZB3m','CMvWBgfJzq','zgvI','zgrPBMC6nhb4ia','y3vLBNrHCYbKzq','ChjLC3rHBw9Zia','icG1ocaTidu5ia','AtmPiJ48DgqGyW','oJeIpG','nZjYzw07zM9UDa','pc90zd4kicaGia','yZqY','y2LVig8GC2LUia','ls1WCMKPo2zVBG','Aw5Zie1VBM87zG','Dg9gAxHLza','zMLSzu5HBwvszq','pc9KAxy+','Dhv0AxzVCYbKzq','zxH0zxjPB3i','zdOJzJHMywzJoW','phrOihn0EwXLpq','o3rLEhqTB3zLCG','DMfSrMLZy2fS','r01gihbVCIbJDq','mtq4','B3a6mtjWEdTWyq','Bgf6BYaOtKLjrG','B2XZCgfUpsiYiG','sw1WDwvZDg8GBG','yxbWBgLJyxrPBW','uMvUDgeGugfZAq','C2fSzg9dyxjNBW','zdP2yxiOls1WCG','DgG+','igrLC2n1zw50BW','nh0Q','zxnVCYbICNv0BW','CMfUzg9Tvvvjra','ywrVCIbNzw5LCG','CMvUDgeGBgLXDq','otC4mJy1nNPKDejltG','ndeXnq','ntu1iJ4','iIbZDhLSzt0ICa','zxHWAxj5','nte2ma','uKu6ifjLBNrHCW','ChjVs2v5','r2fZDg9Zihn1BG','zxjJyxnLiJ5uva','Dg9vChbLCKnHCW','ntmWnta1mdq','rgvKDwnPyMXLCW','BYbNCMf2ywjSzq','y2nPB25LCW','DdTMB250lwzHBq','ihnLigDLBMvYyq','Dgq+phrKignVBa','oti5odK5s1Pvt3Lj','icaGpgrPDIbJBa','yw5ZzMvYzw5JAq','B24Gz2fZDg9Zia','mte3','zw5LCMfS','DwfSzxm','C3m9iNzHBci+','mJG4','C29U','pc90CJ48l3rOzq','z3jLzw4','C29Tzq','nJHYzw07y29SBW','AxyGy2XHC3m9iG','yZGZ','rKy4mdGWoda','y2vUDgvY','zsi+pgrPDIbJBa','zM9YrwfJAa','zMLSBa','rMLZy2fSpc90za','rKzdnJi4mJG','ChjVBwvKAw8','DgvZDa','pgrPDJ48zgL2ia','Bg9JywXLq29TCa','nti5oq','DhjPBw9UAw86pa','DM9Y','ihnVBgLKicnbnq','CYbnB25ViJ4','CIbJB2jYyxiGka','B3mGEsbNyxn0BW','qM9UAwzPy2fJAq','y2XHC2LMuMvZDq','DgvZigfSigvMzq','y2zNqwn0AxzPza','z2fUyw5JAweGBW','CgfKzgLUzZO1Ca','CMvHza','ohb4o2zVBNqTDW','pc9KAxy+pgrPDG','mtq1','phrHyMXLihn0Eq','yZy0','t3rYB3mGywn0Aq','r2fZDg9Zie5Via','vK5htZOGvMfSBW','ntm5nti1','DgeGkdKXic0Goq','CMvTiJ4','ugvYzgLKysbSAq','Axy+cIaGica8za','zgLUzZOXChGGnG','cIaGica8zgL2ia','B2nHC2LVBMfSzq','veqGka','CMvJAwjPzgfZia','ywrTAw5PC3rYyq','BMDYzxnHigLUzW','CYbJB250CMfJDa','DhrKvxrPBgLKyq','DhrKx2LUCG','C2HLzxq','mZyYnJe5mhDOsvbJqG','vxrPBgLKywqGra','Dc1HBgLNBJPYAq','DJ4kicaGicaGpa','ihbVCIbdsemGzq','ica8DgqGC3r5Ba','zt10AgLZlNzHBa','BIbWyxrYAw1VBG','FsWWkq','ywXPz246CMLNAa','lc0Zkq','CYbUBYbNCMf2yq','qw50AwnPCg8GCG','mtuX'];_0x3cb1=function(){return _0x45ab2f;};return _0x3cb1();}const TARIFA_GO=0.15;function getTarifaRenta(){const _0x28ac41=_0x692876,_0x5f36cb=document[_0x28ac41(0xfd)+'ById']('cfgTipo')[_0x28ac41(0x2cb)],_0x763914=document[_0x28ac41(0xfd)+'ById'](_0x28ac41(0x24a)+'omBox');if(_0x5f36cb==='custom'){_0x763914[_0x28ac41(0x1ce)][_0x28ac41(0x159)]='';const _0x6c107=parseFloat(document[_0x28ac41(0xfd)+'ById']('cfgTarifaC'+'ustom')[_0x28ac41(0x2cb)]);return isNaN(_0x6c107)?0.35:_0x6c107/0x64;}_0x763914[_0x28ac41(0x1ce)][_0x28ac41(0x159)]='none';const _0x4e65e5=parseFloat(_0x5f36cb);return isNaN(_0x4e65e5)?0.35:_0x4e65e5/0x64;}function recalcular(){const _0x5228a4=_0x692876,_0x45b6c3=v('c36')+v('c37')+v(_0x5228a4(0x1f3))+v('c39')+v('c40')+v('c41')+v(_0x5228a4(0x335))+v('c43');set('c44',_0x45b6c3);const _0x35294c=_0x45b6c3-v(_0x5228a4(0xed));set(_0x5228a4(0x202),_0x35294c);const _0x4bb71e=v(_0x5228a4(0x277))+v('c48')+v('c49')+v('c50')+v('c51')+v('c52')+v('c53')+v('c54')+v(_0x5228a4(0x1a2));set(_0x5228a4(0x30c),_0x4bb71e);const _0x4f78a=_0x4bb71e-v(_0x5228a4(0x3d9))-v('c60');set(_0x5228a4(0x104),_0x4f78a);const _0x37197c=v(_0x5228a4(0x26f))+v(_0x5228a4(0x400))+v(_0x5228a4(0x392))+v(_0x5228a4(0x431))+v('c66');set(_0x5228a4(0x1cf),_0x37197c);const _0x5b3194=_0x4f78a-_0x37197c+v('c70')+v('c71');_0x5b3194>=0x0?(set(_0x5228a4(0x20f),_0x5b3194),set(_0x5228a4(0x304),0x0)):(set('c72',0x0),set('c73',Math['abs'](_0x5b3194)));const _0x419b99=Math[_0x5228a4(0x30a)](v('c72')-v(_0x5228a4(0xe4)),0x0);set(_0x5228a4(0x196),_0x419b99);const _0x3a4807=Math[_0x5228a4(0x30a)](Math[_0x5228a4(0x30a)](_0x419b99,v(_0x5228a4(0x19c)))-v('c77')+v('c78'),0x0);set(_0x5228a4(0x3c0),_0x3a4807);const _0x3b101b=Math[_0x5228a4(0x30a)](v('c80')-v(_0x5228a4(0x129))-v(_0x5228a4(0x26b)),0x0);set(_0x5228a4(0x374),_0x3b101b);const _0x4e5826=getTarifaRenta(),_0x322569=Math[_0x5228a4(0x2f0)](_0x3a4807*_0x4e5826/0x3e8)*0x3e8;set(_0x5228a4(0x1db),_0x322569);const _0x774a66=Math['round'](v(_0x5228a4(0x15e))*0.075/0x3e8)*0x3e8;set(_0x5228a4(0x3d6),_0x774a66);const _0x32635a=Math[_0x5228a4(0x2f0)](v(_0x5228a4(0x228))*_0x4e5826/0x3e8)*0x3e8;set('c86',_0x32635a);const _0x10a0dc=_0x322569+_0x774a66+_0x32635a+v(_0x5228a4(0x15d));set('c91',_0x10a0dc);const _0x1883dc=Math['max'](_0x10a0dc-v('c92'),0x0);set(_0x5228a4(0x40d),_0x1883dc);const _0x5a469a=Math[_0x5228a4(0x2f0)](_0x3b101b*TARIFA_GO/0x3e8)*0x3e8;set(_0x5228a4(0x273),_0x5a469a);const _0x261162=Math[_0x5228a4(0x30a)](_0x1883dc+_0x5a469a-v(_0x5228a4(0x1ff)),0x0);set('c96',_0x261162);const _0x7130aa=vTTD('antAnticip'+'o'),_0x327608=vTTD('antSaldoFa'+_0x5228a4(0x382));_0x7130aa&&!document['getElement'+_0x5228a4(0x1c6)]('c99')['_manual']&&set(_0x5228a4(0x2f3),_0x7130aa);_0x327608&&!document['getElement'+'ById'](_0x5228a4(0x1e5))['_manual']&&set('c100',_0x327608);const _0x230f32=v('c101')+v('c102');set('c103',_0x230f32);const _0x15ee36=document[_0x5228a4(0xfd)+'ById']('antMetodo')[_0x5228a4(0x2cb)],_0x4df46a=vTTD(_0x5228a4(0x299));let _0x40da6e=0x0;if(_0x15ee36==='75')_0x40da6e=Math['round'](_0x1883dc*0.75/0x3e8)*0x3e8;else{if(_0x15ee36===_0x5228a4(0x37c)){const _0x117467=Math[_0x5228a4(0x2f0)]((_0x4df46a*0.75+_0x1883dc*0.75)/0x2/0x3e8)*0x3e8;_0x40da6e=_0x117467;}else _0x15ee36==='25'&&(_0x40da6e=Math['round'](_0x1883dc*0.25/0x3e8)*0x3e8);}set(_0x5228a4(0x3fa),_0x40da6e);const _0x3b443d=v('c99')+v(_0x5228a4(0x1e5))+_0x230f32,_0x1d0657=_0x261162+_0x40da6e;_0x1d0657>_0x3b443d?(set('c110',_0x1d0657-_0x3b443d),set('c111',0x0)):(set(_0x5228a4(0xf3),0x0),set(_0x5228a4(0x181),_0x3b443d-_0x1d0657)),document[_0x5228a4(0xfd)+'ById'](_0x5228a4(0x3d0))[_0x5228a4(0x26d)]='\x0a\x20\x20\x20\x20<div\x20'+'class=\x22sta'+_0x5228a4(0x133)+_0x5228a4(0x377)+'ass=\x22val\x22>'+fN(_0x3a4807)+(_0x5228a4(0x38f)+_0x5228a4(0x3f1)+'l\x22>Renta\x20L'+_0x5228a4(0x124)+'vable</div'+_0x5228a4(0x131)+'\x20\x20<div\x20cla'+'ss=\x22stat-c'+_0x5228a4(0xfe)+'><div\x20clas'+'s=\x22val\x22>')+fN(_0x261162)+(_0x5228a4(0x38f)+_0x5228a4(0x3f1)+'l\x22>Total\x20I'+'mpuesto\x20a\x20'+'Cargo</div'+'></div>\x0a\x20\x20'+'\x20\x20<div\x20cla'+_0x5228a4(0x1b3)+_0x5228a4(0x3bf))+(v('c110')>0x0?'red':_0x5228a4(0x370))+('\x22><div\x20cla'+'ss=\x22val\x22>')+fN(v(_0x5228a4(0xf3)))+(_0x5228a4(0x38f)+'\x20class=\x22lb'+'l\x22>Saldo\x20a'+'\x20Pagar</di'+'v></div>\x0a\x20'+_0x5228a4(0x366)+_0x5228a4(0x17a)+_0x5228a4(0x16b)+_0x5228a4(0x3c9)+_0x5228a4(0x36c))+fN(v('c111'))+(_0x5228a4(0x38f)+'\x20class=\x22lb'+_0x5228a4(0x2ef)+_0x5228a4(0x185)+'v></div>');}const APPS_SCRIPT_URL=_0x692876(0x244)+'ript.googl'+'e.com/macr'+'os/s/AKfyc'+_0x692876(0x301)+_0x692876(0x27b)+'Uqhs4cdDpa'+_0x692876(0x1a9)+'5D-6yPIdJ_'+'9XEWeIGYyq'+_0x692876(0x2cf)+'exec';function getDeviceFingerprint(){const _0xe63018=_0x692876;let _0x4c9468=localStorage[_0xe63018(0x13c)](_0xe63018(0x118)+'n_device_i'+'d');return!_0x4c9468&&(_0x4c9468='D-'+crypto[_0xe63018(0x350)]()['split']('-')[_0xe63018(0x281)](0x0,0x2)['join'](''),localStorage['setItem'](_0xe63018(0x118)+'n_device_i'+'d',_0x4c9468)),_0x4c9468;}async function validarPro(){const _0x1fd8bc=_0x692876,_0x147d7f=document[_0x1fd8bc(0xfd)+_0x1fd8bc(0x1c6)](_0x1fd8bc(0x35a))['value']['trim'](),_0x56d1c9=document['getElement'+'ById']('proError');if(!_0x147d7f){_0x56d1c9[_0x1fd8bc(0x42d)+'t']=_0x1fd8bc(0x1fe)+'\x20clave\x20PRO';return;}_0x56d1c9['textConten'+'t']=_0x1fd8bc(0x12c)+_0x1fd8bc(0x41c),_0x56d1c9[_0x1fd8bc(0x1ce)]['color']=_0x1fd8bc(0x28f)+'d)';try{const _0x6fe4f6=getDeviceFingerprint(),_0x552ac8=APPS_SCRIPT_URL+(_0x1fd8bc(0x3fe)+'lidateKey&'+_0x1fd8bc(0x1cb))+encodeURIComponent(_0x147d7f)+_0x1fd8bc(0x287)+encodeURIComponent(_0x6fe4f6),_0x2da661=await fetch(_0x552ac8),_0xc8fb32=await _0x2da661['json']();if(_0xc8fb32[_0x1fd8bc(0x17f)]){_0x56d1c9[_0x1fd8bc(0x42d)+'t']='',exportExcel();return;}_0x56d1c9['style']['color']=_0x1fd8bc(0x151);if(_0xc8fb32['reason']==='Clave\x20expi'+_0x1fd8bc(0x2d0))_0x56d1c9[_0x1fd8bc(0x42d)+'t']=_0x1fd8bc(0x31e)+'ción\x20expir'+'ó\x20el\x20'+_0xc8fb32[_0x1fd8bc(0x357)]+('.\x20Renueva\x20'+_0x1fd8bc(0x3e7)+'dian.com');else{if(_0xc8fb32[_0x1fd8bc(0x417)]===_0x1fd8bc(0x1fc)+_0x1fd8bc(0x1c2))_0x56d1c9['textConten'+'t']='Tu\x20suscrip'+_0x1fd8bc(0xe7)+_0x1fd8bc(0x1c0)+'Contacta\x20a'+_0x1fd8bc(0x1ae)+_0x1fd8bc(0x3e8);else _0xc8fb32['reason']&&_0xc8fb32['reason']['includes']('dispositiv'+'os')?_0x56d1c9['textConten'+'t']='Límite\x20de\x20'+'dispositiv'+_0x1fd8bc(0x275)+'do.\x20Contac'+_0x1fd8bc(0x1e6)+'.':_0x56d1c9['textConten'+'t']=_0x1fd8bc(0x2c9)+_0x1fd8bc(0x2e3)+'\x20Verifica\x20'+_0x1fd8bc(0x3ca)+'te\x20en\x20exog'+'enadian.co'+'m';}}catch(_0x4e2245){_0x56d1c9[_0x1fd8bc(0x1ce)]['color']=_0x1fd8bc(0x151),_0x56d1c9['textConten'+'t']='Error\x20veri'+'ficando.\x20I'+_0x1fd8bc(0x195)+_0x1fd8bc(0x255);}}async function exportExcel(){const _0x30c599=_0x692876,_0x7b13d4=new ExcelJS['Workbook'](),_0x3a7019=_0x7b13d4['addWorkshe'+'et']('110'),_0x4bfe19=_0x30c599(0x40b),_0x4cc434='FFE1F0F7',_0x2bedee=_0x30c599(0x3ee),_0x5b9834='FFF0F2F5',_0x2450dc=_0x30c599(0x2f4),_0x36486b=_0x30c599(0x424),_0x2d441c={'style':_0x30c599(0x3ed),'color':{'argb':_0x30c599(0x375)}},_0xcd9ce6={'top':_0x2d441c,'bottom':_0x2d441c,'left':_0x2d441c,'right':_0x2d441c},_0xbe5043={'top':{'style':'medium'},'bottom':{'style':'medium'},'left':{'style':_0x30c599(0x1c7)},'right':{'style':'medium'}},_0x525848={'name':_0x30c599(0x1ef),'size':0xa},_0x23579c={..._0x525848,'bold':!![]},_0x434214={..._0x23579c,'color':{'argb':_0x36486b}},_0x4f8ff5={..._0x23579c,'color':{'argb':_0x4bfe19},'size':0x9},_0x30c559={'type':_0x30c599(0x2bd),'pattern':'solid','fgColor':{'argb':_0x4bfe19}},_0x53727b={'type':'pattern','pattern':_0x30c599(0x1a8),'fgColor':{'argb':_0x4cc434}},_0x2cc8e2={'type':'pattern','pattern':'solid','fgColor':{'argb':_0x2bedee}},_0x417091={'type':_0x30c599(0x2bd),'pattern':_0x30c599(0x1a8),'fgColor':{'argb':_0x5b9834}},_0xff2268={'type':'pattern','pattern':'solid','fgColor':{'argb':_0x2450dc}},_0x5d93e6=_0x30c599(0x321);_0x3a7019['getColumn'](0x1)['width']=0x6;for(let _0x54f4d6=0x2;_0x54f4d6<=0xa;_0x54f4d6++)_0x3a7019[_0x30c599(0x121)](_0x54f4d6)[_0x30c599(0x31f)]=0xa;_0x3a7019[_0x30c599(0x121)](0xb)['width']=0x5,_0x3a7019[_0x30c599(0x121)](0xc)[_0x30c599(0x31f)]=0x12;const _0x566f84=document['getElement'+_0x30c599(0x1c6)](_0x30c599(0x12f))[_0x30c599(0x2cb)]||'',_0x15fbf9=document[_0x30c599(0xfd)+'ById']('cfgRazon')[_0x30c599(0x2cb)]||'',_0x5a58d1=document[_0x30c599(0xfd)+_0x30c599(0x1c6)]('cfgYear')['value']||'2025',_0x5b4e83=document['getElement'+'ById'](_0x30c599(0x38a)+'ad')['value']||'';let _0x120608=0x1;_0x3a7019['mergeCells']('A'+_0x120608+':A'+(_0x120608+0x3));const _0x4752bd=_0x3a7019[_0x30c599(0x2db)]('A'+_0x120608);_0x4752bd['value']=_0x30c599(0x162),_0x4752bd['font']={..._0x434214,'size':0xc},_0x4752bd[_0x30c599(0x379)]=_0x30c559,_0x4752bd[_0x30c599(0x264)]={'vertical':_0x30c599(0x2ac),'horizontal':_0x30c599(0x376),'wrapText':!![]},_0x4752bd[_0x30c599(0x147)]=_0xbe5043,_0x3a7019[_0x30c599(0x171)]('B'+_0x120608+':J'+(_0x120608+0x1));const _0x7e2e4c=_0x3a7019[_0x30c599(0x2db)]('B'+_0x120608);_0x7e2e4c['value']=_0x30c599(0x182)+'n\x20de\x20Renta'+_0x30c599(0x3c4)+'entarios\x0aP'+'ersonas\x20Ju'+_0x30c599(0x15b)+_0x30c599(0x10e),_0x7e2e4c['font']={..._0x23579c,'size':0xb},_0x7e2e4c[_0x30c599(0x264)]={'vertical':'middle','horizontal':_0x30c599(0x376),'wrapText':!![]},_0x7e2e4c['border']=_0xbe5043,_0x3a7019[_0x30c599(0x171)]('K'+_0x120608+':L'+(_0x120608+0x1));const _0x551a02=_0x3a7019['getCell']('K'+_0x120608);_0x551a02['value']='110',_0x551a02[_0x30c599(0x410)]={'name':_0x30c599(0x1ef),'size':0x1c,'bold':!![],'color':{'argb':_0x36486b}},_0x551a02['fill']=_0x30c559,_0x551a02['alignment']={'vertical':_0x30c599(0x2ac),'horizontal':'center'},_0x551a02['border']=_0xbe5043,_0x120608=0x3,_0x3a7019['mergeCells']('B'+_0x120608+':J'+_0x120608),_0x3a7019[_0x30c599(0x2db)]('B'+_0x120608)['value']='Privada\x20·\x20'+'AG\x20'+_0x5a58d1,_0x3a7019['getCell']('B'+_0x120608)[_0x30c599(0x410)]={..._0x525848,'size':0x9,'italic':!![]},_0x3a7019['getCell']('B'+_0x120608)[_0x30c599(0x264)]={'horizontal':_0x30c599(0x376)},_0x120608=0x5,_0x3a7019[_0x30c599(0x171)]('A'+_0x120608+':A'+(_0x120608+0x1));const _0x4db61b=_0x3a7019['getCell']('A'+_0x120608);_0x4db61b[_0x30c599(0x2cb)]='Datos\x0aGene'+_0x30c599(0x2b6),_0x4db61b['font']=_0x4f8ff5,_0x4db61b['fill']=_0x2cc8e2,_0x4db61b['alignment']={'vertical':_0x30c599(0x2ac),'horizontal':_0x30c599(0x376),'wrapText':!![]},_0x4db61b[_0x30c599(0x147)]=_0xcd9ce6,_0x3a7019[_0x30c599(0x171)]('B'+_0x120608+':E'+_0x120608),_0x3a7019['getCell']('B'+_0x120608)[_0x30c599(0x2cb)]=_0x30c599(0x298)+_0x566f84,_0x3a7019[_0x30c599(0x2db)]('B'+_0x120608)['font']=_0x23579c,_0x3a7019['getCell']('B'+_0x120608)['border']=_0xcd9ce6,_0x3a7019[_0x30c599(0x171)]('F'+_0x120608+':J'+_0x120608),_0x3a7019[_0x30c599(0x2db)]('F'+_0x120608)[_0x30c599(0x2cb)]=_0x30c599(0x1ac)+'dad:\x20'+_0x5b4e83,_0x3a7019[_0x30c599(0x2db)]('F'+_0x120608)[_0x30c599(0x410)]=_0x525848,_0x3a7019['getCell']('F'+_0x120608)['border']=_0xcd9ce6,_0x3a7019[_0x30c599(0x171)]('K'+_0x120608+':L'+_0x120608),_0x3a7019[_0x30c599(0x2db)]('K'+_0x120608)['value']='1.\x20Ano:\x20'+_0x5a58d1,_0x3a7019[_0x30c599(0x2db)]('K'+_0x120608)['font']=_0x23579c,_0x3a7019['getCell']('K'+_0x120608)[_0x30c599(0x147)]=_0xcd9ce6,_0x120608=0x6,_0x3a7019['mergeCells']('B'+_0x120608+':L'+_0x120608),_0x3a7019[_0x30c599(0x2db)]('B'+_0x120608)[_0x30c599(0x2cb)]='11.\x20Razon\x20'+'social:\x20'+_0x15fbf9,_0x3a7019[_0x30c599(0x2db)]('B'+_0x120608)['font']=_0x23579c,_0x3a7019[_0x30c599(0x2db)]('B'+_0x120608)[_0x30c599(0x147)]=_0xcd9ce6;const _0xf4fbd4=[{'s':'Patrimonio'},{'c':0x24,'d':_0x30c599(0x2be)+_0x30c599(0x30f)+_0x30c599(0x389)+_0x30c599(0x293)},{'c':0x25,'d':_0x30c599(0x197)+_0x30c599(0x1fa)+_0x30c599(0x226)+_0x30c599(0x3fb)+_0x30c599(0x1f2)},{'c':0x26,'d':'Cuentas,\x20d'+'ocumentos\x20'+_0x30c599(0x2c5)+'ientos\x20fin'+'ancieros\x20p'+'or\x20cobrar'},{'c':0x27,'d':_0x30c599(0x2b0)+'s'},{'c':0x28,'d':'Activos\x20in'+'tangibles'},{'c':0x29,'d':_0x30c599(0x312)+_0x30c599(0x422)},{'c':0x2a,'d':_0x30c599(0x17e)+_0x30c599(0x24c)+'y\x20equipo,\x20'+_0x30c599(0x40e)+_0x30c599(0x105)+_0x30c599(0x3f6)+'MV'},{'c':0x2b,'d':'Otros\x20acti'+'vos'},{'c':0x2c,'d':_0x30c599(0x2f2)+'imonio\x20bru'+_0x30c599(0x2c8)+'3)','f':_0x30c599(0x28d)+':L{r43})','t':0x1},{'c':0x2d,'d':'Pasivos'},{'c':0x2e,'d':'Total\x20patr'+_0x30c599(0x23c)+'uido\x20(44\x20-'+'\x2045)','f':'L{r44}-L{r'+'45}','t':0x1},{'s':'Ingresos'},{'c':0x2f,'d':_0x30c599(0x14d)+_0x30c599(0x22c)+'ctividades'+_0x30c599(0x259)+'s'},{'c':0x30,'d':'Ingresos\x20f'+'inancieros'},{'c':0x31,'d':'Dividendos'+_0x30c599(0x263)+'cipaciones'+'\x20no\x20consti'+_0x30c599(0x33c)+'\x20renta\x20ni\x20'+_0x30c599(0x38b)+_0x30c599(0x2cc)},{'c':0x32,'d':_0x30c599(0x282)+_0x30c599(0x263)+'cipaciones'+_0x30c599(0x3cf)+_0x30c599(0x3aa)+_0x30c599(0x123)},{'c':0x33,'d':'Dividendos'+_0x30c599(0x263)+_0x30c599(0x1d2)+_0x30c599(0x1b9)+_0x30c599(0x30b)},{'c':0x34,'d':'Dividendos'+_0x30c599(0x263)+_0x30c599(0x1d2)+_0x30c599(0x1b9)+_0x30c599(0x39f)+_0x30c599(0x164)},{'c':0x35,'d':_0x30c599(0x282)+'\x20y/o\x20parti'+'cipaciones'+'\x20gravadas\x20'+'al\x207,5%'},{'c':0x36,'d':_0x30c599(0x282)+_0x30c599(0x263)+'cipaciones'+_0x30c599(0x1b9)+_0x30c599(0x165)+_0x30c599(0x36a)},{'c':0x39,'d':'Otros\x20ingr'+_0x30c599(0x2bf)},{'c':0x3a,'d':_0x30c599(0x1ea)+_0x30c599(0x34f)+'s\x20(47\x20a\x2054'+_0x30c599(0x296),'f':'SUM(L{r47}'+':L{r54})+L'+'{r57}','t':0x1},{'c':0x3b,'d':'Devolucion'+'es,\x20rebaja'+'s\x20y\x20descue'+_0x30c599(0x306)+_0x30c599(0x414)},{'c':0x3c,'d':_0x30c599(0x1df)+_0x30c599(0x22d)+_0x30c599(0x3d4)+_0x30c599(0x1a4)+_0x30c599(0x19e)+'sional'},{'c':0x3d,'d':'Total\x20ingr'+'esos\x20netos'+_0x30c599(0x330)+_0x30c599(0x144),'f':_0x30c599(0x3f3)+'59}-L{r60}','t':0x1},{'s':_0x30c599(0x2f5)+'educciones'},{'c':0x3e,'d':'Costos'},{'c':0x3f,'d':'Gastos\x20de\x20'+_0x30c599(0x3a0)+'cion'},{'c':0x40,'d':'Gastos\x20de\x20'+'distribuci'+_0x30c599(0x432)+'s'},{'c':0x41,'d':_0x30c599(0x3c1)+_0x30c599(0x179)},{'c':0x42,'d':_0x30c599(0x24d)+'os\x20y\x20deduc'+'ciones'},{'c':0x43,'d':_0x30c599(0x26a)+_0x30c599(0x386)+'s\x20deducibl'+_0x30c599(0x329)+'6)','f':_0x30c599(0x292)+':L{r66})','t':0x1},{'s':'Renta'},{'c':0x46,'d':'Renta\x20por\x20'+'recuperaci'+'on\x20de\x20dedu'+_0x30c599(0x361)},{'c':0x47,'d':_0x30c599(0x349)+_0x30c599(0x2b7)+_0x30c599(0x279)+'cia\x20fiscal'+'\x20en\x20Colomb'+'ia'},{'c':0x48,'d':_0x30c599(0x1a6)+'ida\x20ordina'+'ria\x20del\x20ej'+'ercicio','f':'MAX(L{r61}'+'-L{r67}+L{'+'r70}+L{r71'+'},0)','t':0x1},{'c':0x49,'d':_0x30c599(0x399)+'quida\x20del\x20'+_0x30c599(0x214),'f':'MAX(-(L{r6'+_0x30c599(0x412)+'L{r70}+L{r'+'71}),0)','t':0x1},{'c':0x4a,'d':'Compensaci'+'ones'},{'c':0x4b,'d':'Renta\x20liqu'+'ida\x20(72\x20-\x20'+_0x30c599(0x18a),'f':'MAX(L{r72}'+'-L{r74},0)','t':0x1},{'c':0x4c,'d':'Renta\x20pres'+'untiva'},{'c':0x4d,'d':_0x30c599(0x31d)+'ta'},{'c':0x4e,'d':'Rentas\x20gra'+'vables'},{'c':0x4f,'d':'Renta\x20liqu'+'ida\x20gravab'+'le','f':_0x30c599(0xf2)+'r75},L{r76'+'})-L{r77}+'+'L{r78},0)','t':0x2},{'s':'Ganancias\x20'+_0x30c599(0x250)+'s'},{'c':0x50,'d':'Ingresos\x20p'+'or\x20gananci'+'as\x20ocasion'+_0x30c599(0x328)},{'c':0x51,'d':'Costos\x20por'+'\x20ganancias'+_0x30c599(0x2d1)+'es'},{'c':0x52,'d':'Ganancias\x20'+_0x30c599(0x39d)+_0x30c599(0x3b1)+_0x30c599(0x141)+_0x30c599(0x1b2)},{'c':0x53,'d':_0x30c599(0x3c5)+'ocasionale'+'s\x20gravable'+'s','f':_0x30c599(0x206)+'-L{r81}-L{'+_0x30c599(0x120),'t':0x1},{'s':_0x30c599(0x3e4)+'n\x20Privada'},{'c':0x54,'d':_0x30c599(0x28c)+_0x30c599(0x177)+_0x30c599(0x3f8)+'\x20gravables','f':'ROUND(L{r7'+_0x30c599(0x170)+getTarifaRenta()+_0x30c599(0x3b0),'t':0x1},{'c':0x55,'d':'Impuesto\x20d'+_0x30c599(0x22e)+_0x30c599(0x14c),'f':_0x30c599(0x18c)+'3}*0.075,-'+'3)'},{'c':0x56,'d':_0x30c599(0x319)+'ividendos\x20'+_0x30c599(0xf1)+'eral','f':'ROUND(L{r5'+_0x30c599(0x34e)+getTarifaRenta()+',-3)'},{'c':0x57,'d':_0x30c599(0x319)+_0x30c599(0x22e)+_0x30c599(0x33d)},{'c':0x5b,'d':'Total\x20impu'+'esto\x20sobre'+'\x20rentas','f':'L{r84}+L{r'+'85}+L{r86}'+'+L{r87}','t':0x1},{'c':0x5c,'d':'Descuentos'+'\x20tributari'+'os'},{'c':0x5d,'d':_0x30c599(0x347)+'eto\x20de\x20ren'+_0x30c599(0x397)+'2)','f':'MAX(L{r91}'+_0x30c599(0xe3),'t':0x1},{'c':0x5e,'d':_0x30c599(0x319)+'e\x20ganancia'+_0x30c599(0x20b)+'les','f':'ROUND(L{r8'+_0x30c599(0x238)+')'},{'c':0x5f,'d':_0x30c599(0x188)+'impuestos\x20'+'pagados\x20en'+_0x30c599(0x128)+'or'},{'c':0x60,'d':'Total\x20impu'+_0x30c599(0x323)+'go','f':_0x30c599(0x42b)+'+L{r94}-L{'+'r95},0)','t':0x1},{'s':_0x30c599(0x212)},{'c':0x63,'d':'Anticipo\x20r'+_0x30c599(0x288)+'ravable\x20an'+_0x30c599(0x213)},{'c':0x64,'d':_0x30c599(0x29d)+_0x30c599(0x314)+'avable\x20ant'+'erior\x20sin\x20'+'solicitud\x20'+_0x30c599(0x2d3)+'ion'},{'c':0x65,'d':'Autorreten'+_0x30c599(0x18b)},{'c':0x66,'d':'Otras\x20rete'+'nciones'},{'c':0x67,'d':'Total\x20rete'+'nciones\x20añ'+_0x30c599(0x360),'f':'L{r101}+L{'+_0x30c599(0x150),'t':0x1},{'c':0x68,'d':_0x30c599(0x3b2)+_0x30c599(0x3f4)+'el\x20año\x20gra'+_0x30c599(0x204)+_0x30c599(0x27a)},{'s':'Saldo'},{'c':0x6e,'d':'SALDO\x20A\x20PA'+_0x30c599(0x3e6),'f':_0x30c599(0x15a)+'+L{r104}-L'+_0x30c599(0x318)+_0x30c599(0x14e)+_0x30c599(0x3ae),'t':0x2},{'c':0x6f,'d':'SALDO\x20A\x20FA'+'VOR','f':'MAX(L{r99}'+_0x30c599(0x218)+_0x30c599(0x3d5)+_0x30c599(0x2e7)+_0x30c599(0x3ae),'t':0x2}];_0x120608=0x8;const _0x4040eb={};let _0x37a35f=_0x120608;for(const _0x13c36c of _0xf4fbd4){if(_0x13c36c['s']){_0x3a7019[_0x30c599(0x171)]('A'+_0x120608+':L'+_0x120608);const _0xd2b61b=_0x3a7019[_0x30c599(0x2db)]('A'+_0x120608);_0xd2b61b['value']=_0x13c36c['s'][_0x30c599(0x35d)+'e'](),_0xd2b61b['font']=_0x4f8ff5,_0xd2b61b['fill']=_0x2cc8e2,_0xd2b61b[_0x30c599(0x264)]={'horizontal':'left'},_0xd2b61b[_0x30c599(0x147)]=_0xcd9ce6,_0x120608++;continue;}_0x4040eb[_0x13c36c['c']]=_0x120608,_0x3a7019[_0x30c599(0x171)]('B'+_0x120608+':J'+_0x120608);const _0x510d57=_0x3a7019[_0x30c599(0x2db)]('B'+_0x120608);_0x510d57['value']=_0x13c36c['d'],_0x510d57[_0x30c599(0x410)]=_0x13c36c['t']===0x2?_0x23579c:_0x525848,_0x510d57[_0x30c599(0x264)]={'vertical':'middle','wrapText':!![]};const _0x3b0f50=_0x3a7019[_0x30c599(0x2db)]('K'+_0x120608);_0x3b0f50['value']=_0x13c36c['c'],_0x3b0f50['font']={..._0x525848,'size':0x8,'color':{'argb':'FF888888'}},_0x3b0f50[_0x30c599(0x264)]={'horizontal':_0x30c599(0x376),'vertical':'middle'};const _0x16c24c=_0x3a7019['getCell']('L'+_0x120608),_0x38e859=v('c'+_0x13c36c['c']);_0x16c24c['value']=_0x38e859||0x0,_0x16c24c[_0x30c599(0x3d1)]=_0x5d93e6,_0x16c24c[_0x30c599(0x410)]=_0x13c36c['t']===0x2?{..._0x23579c,'size':0xb}:_0x13c36c['t']===0x1?_0x23579c:_0x525848;const _0x252f5e=_0x13c36c['t']===0x2?_0xff2268:_0x13c36c['t']===0x1?_0x417091:_0x53727b;for(let _0x5778e3=0x1;_0x5778e3<=0xc;_0x5778e3++){const _0x104eed=_0x3a7019[_0x30c599(0x2db)](_0x120608,_0x5778e3);_0x104eed[_0x30c599(0x379)]=_0x252f5e,_0x104eed['border']=_0xcd9ce6;}_0x3a7019[_0x30c599(0x2a5)](_0x120608)[_0x30c599(0x24e)]=_0x13c36c['d']['length']>0x3c?0x1c:0x14,_0x120608++;}for(const _0x3c6197 of _0xf4fbd4){if(_0x3c6197['s']||!_0x3c6197['f'])continue;let _0x382170=_0x3c6197['f'];for(const [_0x236b1b,_0x4a4fdc]of Object[_0x30c599(0x2f7)](_0x4040eb)){_0x382170=_0x382170[_0x30c599(0x32b)](new RegExp(_0x30c599(0x3b5)+_0x236b1b+'\x5c}','g'),_0x4a4fdc);}_0x3a7019['getCell']('L'+_0x4040eb[_0x3c6197['c']])[_0x30c599(0x2cb)]={'formula':_0x382170};}_0x120608+=0x2,_0x3a7019['mergeCells']('A'+_0x120608+':L'+_0x120608),_0x3a7019[_0x30c599(0x2db)]('A'+_0x120608)['value']=_0x30c599(0x1b1)+_0x30c599(0x1e7)+_0x30c599(0x270)+_0x30c599(0x10d)+'tar\x20—\x20Borr'+_0x30c599(0x351)+_0x30c599(0x1fb)+'ogenaDIAN',_0x3a7019['getCell']('A'+_0x120608)[_0x30c599(0x410)]={..._0x525848,'size':0x8,'italic':!![],'color':{'argb':'FF999999'}};const _0x1b62aa=_0x7b13d4['addWorkshe'+'et']('Impuesto\x20m'+'inimo');_0x1b62aa[_0x30c599(0x121)](0x1)['width']=0x5,_0x1b62aa[_0x30c599(0x121)](0x2)['width']=0x23,_0x1b62aa[_0x30c599(0x121)](0x3)[_0x30c599(0x31f)]=0x12,_0x1b62aa['getColumn'](0x4)['width']=0x14,_0x1b62aa['getColumn'](0x5)[_0x30c599(0x31f)]=0x37;let _0x7c7407=0x1;_0x1b62aa['mergeCells']('B'+_0x7c7407+':E'+_0x7c7407),_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)['value']=_0x30c599(0x146)+_0x30c599(0x41b)+'TACION\x20EN\x20'+'RENTA\x20(Par'+_0x30c599(0x428)+_0x30c599(0x2a9)+')',_0x1b62aa['getCell']('B'+_0x7c7407)[_0x30c599(0x410)]={..._0x23579c,'size':0xc,'color':{'argb':_0x4bfe19}},_0x7c7407+=0x2,_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)[_0x30c599(0x2cb)]=_0x30c599(0x225)+'\x20UD',_0x1b62aa['getCell']('B'+_0x7c7407)['font']={..._0x23579c,'size':0xb},_0x1b62aa['getCell']('D'+_0x7c7407)['value']='Si\x20TTD\x20<\x201'+'5%,\x20se\x20gen'+'era\x20Impues'+_0x30c599(0x2ce)+_0x30c599(0x1ca),_0x1b62aa['getCell']('D'+_0x7c7407)[_0x30c599(0x410)]={..._0x525848,'italic':!![]},_0x7c7407+=0x2;const _0x8bae89=_0x30c599(0x274)+_0x4040eb[0x5d],_0x517d8b=_0x30c599(0x274)+_0x4040eb[0x5c],_0x8e05e0=[{'d':_0x30c599(0x2e8)+_0x30c599(0x231)+'e\x20renta','ref':_0x8bae89,'id':_0x30c599(0x3a4),'desc':_0x30c599(0x2a3)+_0x30c599(0x34d)+_0x30c599(0x3e1)+'ios\x20(casil'+_0x30c599(0x2da)},{'d':'DTC:\x20Descu'+'entos\x20trib'+'utarios','ref':_0x517d8b,'id':'ttd_dtc','desc':'Creditos\x20t'+'ributarios'+'\x20y\x20Art.\x2025'+'4\x20ET\x20(casi'+'lla\x2092)'},{'d':_0x30c599(0x110)+'sto\x20renta\x20'+_0x30c599(0x187),'val':0x0,'id':'ttd_irp','desc':_0x30c599(0x1a6)+_0x30c599(0x2df)+_0x30c599(0x1d1)+_0x30c599(0x137)+_0x30c599(0x2d4)},{'d':'','sep':!![]},{'d':'UC:\x20Utilid'+_0x30c599(0x233)+'e\x20antes\x20de'+'\x20impuestos','val':vTTD(_0x30c599(0x3a3)+'d'),'id':_0x30c599(0x2aa),'desc':'Utilidad\x20c'+'ontable\x20o\x20'+_0x30c599(0x3d7)+'\x20antes\x20de\x20'+_0x30c599(0x243)},{'d':'DPARL:\x20Dif'+'erencias\x20p'+_0x30c599(0x1f9)+'\x20(+renta)','val':vTTD('ttdDifPerm'),'id':'ttd_dparl','desc':'Diferencia'+_0x30c599(0x1c8)+_0x30c599(0x271)+'mentan\x20la\x20'+_0x30c599(0x352)+'ida'},{'d':'INCRNGO','val':vTTD('ttdINCRNGO'),'id':_0x30c599(0x2ed)+'o','desc':'Ingresos\x20n'+_0x30c599(0x22d)+'tivos\x20de\x20r'+'enta\x20ni\x20ga'+_0x30c599(0x19e)+_0x30c599(0x283)},{'d':'VIMPP:\x20Val'+'or\x20metodo\x20'+_0x30c599(0x232)+'ion','val':0x0,'id':'ttd_vimpp','desc':'Ingreso\x20me'+_0x30c599(0x12a)+'rticipacio'+_0x30c599(0x3ad)+'ial'},{'d':_0x30c599(0x395)+'r\x20neto\x20gan'+'ancia\x20ocas'+_0x30c599(0x3cd),'val':0x0,'id':_0x30c599(0x240),'desc':'Valor\x20neto'+_0x30c599(0x13f)+'os\x20por\x20gan'+_0x30c599(0x303)+'ional'},{'d':_0x30c599(0x359)+'\x20exentas\x20('+_0x30c599(0x3bb)+_0x30c599(0x320)+')','val':vTTD('ttdExentas'),'id':_0x30c599(0xe9),'desc':_0x30c599(0x1bb)+'ntas\x20por\x20t'+_0x30c599(0x136)+'HC,\x20Art.\x202'+_0x30c599(0x420)+_0x30c599(0x101)},{'d':'C:\x20Compens'+'aciones\x20no'+_0x30c599(0x315),'val':0x0,'id':_0x30c599(0x1f5),'desc':'Compensaci'+_0x30c599(0x418)+'idas\x20fisca'+'les\x20no\x20en\x20'+'utilidad\x20c'+_0x30c599(0x16d)}];_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)['value']=_0x30c599(0x3ff),_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)[_0x30c599(0x410)]=_0x23579c,_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)['fill']=_0x2cc8e2,_0x1b62aa['getCell']('B'+_0x7c7407)['border']=_0xcd9ce6,_0x1b62aa['getCell']('C'+_0x7c7407)[_0x30c599(0x2cb)]=_0x30c599(0x1d5),_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)['font']=_0x23579c,_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)[_0x30c599(0x379)]=_0x2cc8e2,_0x1b62aa['getCell']('C'+_0x7c7407)[_0x30c599(0x147)]=_0xcd9ce6,_0x1b62aa['getCell']('D'+_0x7c7407)[_0x30c599(0x2cb)]=_0x30c599(0xea),_0x1b62aa['getCell']('D'+_0x7c7407)['font']=_0x23579c,_0x1b62aa['getCell']('D'+_0x7c7407)['fill']=_0x2cc8e2,_0x1b62aa['getCell']('D'+_0x7c7407)[_0x30c599(0x147)]=_0xcd9ce6,_0x1b62aa['getCell']('E'+_0x7c7407)['value']='Descripcio'+'n',_0x1b62aa['getCell']('E'+_0x7c7407)['font']=_0x23579c,_0x1b62aa[_0x30c599(0x2db)]('E'+_0x7c7407)['fill']=_0x2cc8e2,_0x1b62aa['getCell']('E'+_0x7c7407)[_0x30c599(0x147)]=_0xcd9ce6,_0x7c7407++;const _0x2ebf31={};for(const _0x5cc2c6 of _0x8e05e0){if(_0x5cc2c6['sep']){_0x7c7407++;continue;}_0x2ebf31[_0x5cc2c6['id']]=_0x7c7407,_0x1b62aa['getCell']('B'+_0x7c7407)[_0x30c599(0x2cb)]=_0x5cc2c6['d'],_0x1b62aa['getCell']('B'+_0x7c7407)['font']=_0x525848,_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)[_0x30c599(0x147)]=_0xcd9ce6,_0x5cc2c6[_0x30c599(0x3bc)]?_0x1b62aa['getCell']('C'+_0x7c7407)['value']={'formula':_0x5cc2c6[_0x30c599(0x3bc)]}:_0x1b62aa['getCell']('C'+_0x7c7407)['value']=_0x5cc2c6['val']||0x0,_0x1b62aa['getCell']('C'+_0x7c7407)['numFmt']=_0x5d93e6,_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)['font']=_0x23579c,_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)[_0x30c599(0x147)]=_0xcd9ce6,_0x1b62aa['getCell']('C'+_0x7c7407)[_0x30c599(0x379)]=_0x53727b,_0x1b62aa['getCell']('D'+_0x7c7407)['value']=_0x5cc2c6['ref']?'←\x20Hoja\x20110':_0x30c599(0x27c),_0x1b62aa[_0x30c599(0x2db)]('D'+_0x7c7407)[_0x30c599(0x410)]={..._0x525848,'size':0x8,'color':{'argb':'FF999999'}},_0x1b62aa['getCell']('D'+_0x7c7407)[_0x30c599(0x147)]=_0xcd9ce6,_0x1b62aa['getCell']('E'+_0x7c7407)['value']=_0x5cc2c6['desc'],_0x1b62aa[_0x30c599(0x2db)]('E'+_0x7c7407)['font']={..._0x525848,'size':0x9},_0x1b62aa[_0x30c599(0x2db)]('E'+_0x7c7407)['border']=_0xcd9ce6,_0x7c7407++;}_0x7c7407+=0x2;const _0x2ca294=_0x2ebf31['ttd_inr'],_0x376d04=_0x2ebf31[_0x30c599(0x28e)],_0x4a0f71=_0x2ebf31['ttd_irp'],_0x46242c=_0x2ebf31['ttd_uc'],_0x3f498f=_0x2ebf31['ttd_dparl'],_0x32ea8a=_0x2ebf31['ttd_incrng'+'o'],_0xec439a=_0x2ebf31[_0x30c599(0x2ec)],_0x5a7724=_0x2ebf31[_0x30c599(0x240)],_0x1c4ba0=_0x2ebf31[_0x30c599(0xe9)],_0x3c3758=_0x2ebf31['ttd_c'];_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)['value']=_0x30c599(0x29c)+_0x30c599(0x423)+'D)',_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)['font']=_0x23579c,_0x1b62aa['getCell']('B'+_0x7c7407)[_0x30c599(0x379)]=_0x417091,_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)[_0x30c599(0x147)]=_0xcd9ce6,_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)['value']={'formula':'C'+_0x2ca294+'+C'+_0x376d04+'-C'+_0x4a0f71},_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)['numFmt']=_0x5d93e6,_0x1b62aa['getCell']('C'+_0x7c7407)[_0x30c599(0x410)]=_0x23579c,_0x1b62aa['getCell']('C'+_0x7c7407)['fill']=_0x417091,_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)['border']=_0xcd9ce6;const _0x4bce12=_0x7c7407;_0x7c7407++,_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)[_0x30c599(0x2cb)]=_0x30c599(0x3a7)+_0x30c599(0x21d)+'D)',_0x1b62aa['getCell']('B'+_0x7c7407)[_0x30c599(0x410)]=_0x23579c,_0x1b62aa['getCell']('B'+_0x7c7407)[_0x30c599(0x379)]=_0x417091,_0x1b62aa['getCell']('B'+_0x7c7407)[_0x30c599(0x147)]=_0xcd9ce6,_0x1b62aa['getCell']('C'+_0x7c7407)['value']={'formula':'C'+_0x46242c+'+C'+_0x3f498f+'-C'+_0x32ea8a+'-C'+_0xec439a+'-C'+_0x5a7724+'-C'+_0x1c4ba0+'-C'+_0x3c3758},_0x1b62aa['getCell']('C'+_0x7c7407)['numFmt']=_0x5d93e6,_0x1b62aa['getCell']('C'+_0x7c7407)[_0x30c599(0x410)]=_0x23579c,_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)['fill']=_0x417091,_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)[_0x30c599(0x147)]=_0xcd9ce6;const _0x5d7631=_0x7c7407;_0x7c7407+=0x2,_0x1b62aa['getCell']('B'+_0x7c7407)[_0x30c599(0x2cb)]='TTD\x20(Tasa\x20'+'de\x20Tributa'+_0x30c599(0x113)+'ada)',_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)[_0x30c599(0x410)]={..._0x23579c,'size':0xc},_0x1b62aa['getCell']('B'+_0x7c7407)[_0x30c599(0x379)]=_0xff2268,_0x1b62aa['getCell']('B'+_0x7c7407)[_0x30c599(0x147)]=_0xcd9ce6,_0x1b62aa['getCell']('C'+_0x7c7407)[_0x30c599(0x2cb)]={'formula':'IF(C'+_0x5d7631+_0x30c599(0x25a)+_0x4bce12+'/C'+_0x5d7631+_0x30c599(0x31c)},_0x1b62aa['getCell']('C'+_0x7c7407)['numFmt']='0.00%',_0x1b62aa['getCell']('C'+_0x7c7407)['font']={..._0x23579c,'size':0xe},_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)['fill']=_0xff2268,_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)['border']=_0xcd9ce6;const _0x4930f7=_0x7c7407;_0x7c7407+=0x2,_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)[_0x30c599(0x2cb)]=_0x30c599(0x140)+_0x30c599(0x2c7)+'IA)',_0x1b62aa['getCell']('B'+_0x7c7407)['font']={..._0x23579c,'size':0xc,'color':{'argb':_0x30c599(0x37b)}},_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)[_0x30c599(0x147)]=_0xcd9ce6,_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)[_0x30c599(0x2cb)]={'formula':'IF(AND(C'+_0x4930f7+_0x30c599(0x19a)+_0x5d7631+(_0x30c599(0x1ad)+'C')+_0x5d7631+_0x30c599(0x2d8)+_0x4bce12+',-3),0)'},_0x1b62aa['getCell']('C'+_0x7c7407)[_0x30c599(0x3d1)]=_0x5d93e6,_0x1b62aa[_0x30c599(0x2db)]('C'+_0x7c7407)[_0x30c599(0x410)]={..._0x23579c,'size':0xe,'color':{'argb':'FFC62828'}},_0x1b62aa['getCell']('C'+_0x7c7407)['border']=_0xcd9ce6,_0x7c7407+=0x2,_0x1b62aa['getCell']('B'+_0x7c7407)[_0x30c599(0x2cb)]=_0x30c599(0x19b)+_0x30c599(0x2e0)+'l\x20impuesto'+_0x30c599(0x25b)+'enta.',_0x1b62aa[_0x30c599(0x2db)]('B'+_0x7c7407)['font']={..._0x525848,'size':0x9,'italic':!![]};const _0x2dfcb8=cuentasBalance['filter'](_0x492923=>_0x492923[_0x30c599(0x1f8)]==='no_ded'||_0x492923['ded']==='gmf');if(_0x2dfcb8['length']>0x0){const _0x1fe723=_0x7b13d4['addWorkshe'+'et'](_0x30c599(0x394)+_0x30c599(0x35f));_0x1fe723[_0x30c599(0x121)](0x1)[_0x30c599(0x31f)]=0xc,_0x1fe723[_0x30c599(0x121)](0x2)['width']=0x2d,_0x1fe723['getColumn'](0x3)['width']=0x12,_0x1fe723['getColumn'](0x4)['width']=0x8,_0x1fe723['getColumn'](0x5)[_0x30c599(0x31f)]=0x1e,_0x1fe723['getColumn'](0x6)[_0x30c599(0x31f)]=0xa;let _0x4e0c8b=0x1;_0x1fe723['getCell']('A'+_0x4e0c8b)[_0x30c599(0x2cb)]='GASTOS\x20NO\x20'+_0x30c599(0x1b4),_0x1fe723[_0x30c599(0x2db)]('A'+_0x4e0c8b)[_0x30c599(0x410)]={..._0x23579c,'size':0xc,'color':{'argb':_0x4bfe19}},_0x4e0c8b+=0x2;const _0x4cbc08=['Cuenta',_0x30c599(0x2ad),'Valor',_0x30c599(0x209),'Regla','Articulo'];_0x4cbc08[_0x30c599(0x378)]((_0x551da0,_0x2644c9)=>{const _0x3d3487=_0x30c599,_0x343be1=_0x1fe723[_0x3d3487(0x2db)](_0x4e0c8b,_0x2644c9+0x1);_0x343be1['value']=_0x551da0,_0x343be1['font']=_0x23579c,_0x343be1['fill']=_0x2cc8e2,_0x343be1['border']=_0xcd9ce6;}),_0x4e0c8b++;for(const _0x18fe98 of _0x2dfcb8['sort']((_0x32357e,_0x4e9c87)=>_0x4e9c87['val']-_0x32357e[_0x30c599(0x31b)])){_0x1fe723['getCell'](_0x4e0c8b,0x1)[_0x30c599(0x2cb)]=_0x18fe98[_0x30c599(0x2c1)],_0x1fe723['getCell'](_0x4e0c8b,0x1)[_0x30c599(0x410)]=_0x525848,_0x1fe723['getCell'](_0x4e0c8b,0x1)['border']=_0xcd9ce6,_0x1fe723['getCell'](_0x4e0c8b,0x2)[_0x30c599(0x2cb)]=_0x18fe98[_0x30c599(0x2b2)],_0x1fe723[_0x30c599(0x2db)](_0x4e0c8b,0x2)['font']=_0x525848,_0x1fe723[_0x30c599(0x2db)](_0x4e0c8b,0x2)['border']=_0xcd9ce6,_0x1fe723[_0x30c599(0x2db)](_0x4e0c8b,0x3)[_0x30c599(0x2cb)]=_0x18fe98[_0x30c599(0x31b)],_0x1fe723['getCell'](_0x4e0c8b,0x3)[_0x30c599(0x3d1)]=_0x5d93e6,_0x1fe723[_0x30c599(0x2db)](_0x4e0c8b,0x3)['font']=_0x23579c,_0x1fe723['getCell'](_0x4e0c8b,0x3)['border']=_0xcd9ce6,_0x1fe723[_0x30c599(0x2db)](_0x4e0c8b,0x4)['value']=_0x18fe98['ded']===_0x30c599(0x285)?_0x30c599(0x268):_0x30c599(0x290),_0x1fe723[_0x30c599(0x2db)](_0x4e0c8b,0x4)['font']={..._0x525848,'color':{'argb':_0x18fe98[_0x30c599(0x1f8)]==='gmf'?_0x30c599(0x3b6):_0x30c599(0x37b)}},_0x1fe723['getCell'](_0x4e0c8b,0x4)[_0x30c599(0x147)]=_0xcd9ce6,_0x1fe723[_0x30c599(0x2db)](_0x4e0c8b,0x5)[_0x30c599(0x2cb)]=_0x18fe98['regla']?_0x18fe98[_0x30c599(0x3ea)][_0x30c599(0x138)]:'Manual',_0x1fe723[_0x30c599(0x2db)](_0x4e0c8b,0x5)['font']=_0x525848,_0x1fe723['getCell'](_0x4e0c8b,0x5)['border']=_0xcd9ce6,_0x1fe723['getCell'](_0x4e0c8b,0x6)['value']=_0x18fe98[_0x30c599(0x3ea)]?'Art.\x20'+_0x18fe98[_0x30c599(0x3ea)]['art']:'',_0x1fe723[_0x30c599(0x2db)](_0x4e0c8b,0x6)['font']={..._0x525848,'size':0x9},_0x1fe723[_0x30c599(0x2db)](_0x4e0c8b,0x6)['border']=_0xcd9ce6,_0x4e0c8b++;}_0x4e0c8b+=0x2;const _0x3aa3d0=_0x2dfcb8[_0x30c599(0x42f)](_0x37e577=>_0x37e577['ded']==='no_ded')[_0x30c599(0xeb)]((_0x23b437,_0x486ab9)=>_0x23b437+_0x486ab9['val'],0x0),_0x4d9a11=Math['round'](_0x2dfcb8[_0x30c599(0x42f)](_0x1cd849=>_0x1cd849[_0x30c599(0x1f8)]===_0x30c599(0x285))[_0x30c599(0xeb)]((_0x53f1d3,_0x5ed8b4)=>_0x53f1d3+_0x5ed8b4[_0x30c599(0x31b)],0x0)*0.5);_0x1fe723['getCell']('A'+_0x4e0c8b)['value']='100%\x20No\x20de'+_0x30c599(0x1c3),_0x1fe723[_0x30c599(0x2db)]('B'+_0x4e0c8b)[_0x30c599(0x2cb)]=_0x3aa3d0,_0x1fe723['getCell']('B'+_0x4e0c8b)[_0x30c599(0x3d1)]=_0x5d93e6,_0x4e0c8b++,_0x1fe723[_0x30c599(0x2db)]('A'+_0x4e0c8b)['value']='GMF\x20(50%\x20n'+'o\x20ded):',_0x1fe723['getCell']('B'+_0x4e0c8b)['value']=_0x4d9a11,_0x1fe723['getCell']('B'+_0x4e0c8b)[_0x30c599(0x3d1)]=_0x5d93e6,_0x4e0c8b++,_0x1fe723[_0x30c599(0x2db)]('A'+_0x4e0c8b)[_0x30c599(0x2cb)]=_0x30c599(0x3ce)+'al\x20no\x20ded:',_0x1fe723['getCell']('A'+_0x4e0c8b)[_0x30c599(0x410)]=_0x23579c,_0x1fe723['getCell']('B'+_0x4e0c8b)[_0x30c599(0x2cb)]=_0x3aa3d0+_0x4d9a11,_0x1fe723['getCell']('B'+_0x4e0c8b)[_0x30c599(0x3d1)]=_0x5d93e6,_0x1fe723['getCell']('B'+_0x4e0c8b)['font']={..._0x23579c,'color':{'argb':_0x30c599(0x37b)}};}const _0x5e0e45=await _0x7b13d4['xlsx'][_0x30c599(0x135)+'r'](),_0x2f43b6=new Blob([_0x5e0e45],{'type':_0x30c599(0x348)+_0x30c599(0x2fe)+'xmlformats'+_0x30c599(0x11d)+_0x30c599(0x102)+_0x30c599(0x21e)+_0x30c599(0x3a5)}),_0x2c1fcc=URL['createObje'+_0x30c599(0x1e3)](_0x2f43b6),_0x14a84e=document[_0x30c599(0x21f)+'ent']('a');_0x14a84e['href']=_0x2c1fcc,_0x14a84e['download']=_0x30c599(0x3f9)+_0x30c599(0x160)+_0x5a58d1+'_'+(_0x566f84||'SIN_NIT')+_0x30c599(0x1de),document[_0x30c599(0x2e1)]['appendChil'+'d'](_0x14a84e),_0x14a84e[_0x30c599(0x257)](),document[_0x30c599(0x2e1)][_0x30c599(0x2af)+'d'](_0x14a84e),URL['revokeObje'+_0x30c599(0x1e3)](_0x2c1fcc);}recalcular(),recalcularTTD(),document[_0x692876(0x100)+'torAll']('.f110-row\x20'+'.f-val\x20inp'+'ut:not([re'+'adonly])')['forEach'](_0x45e24a=>{const _0x3ef531=_0x692876;_0x45e24a[_0x3ef531(0x122)+_0x3ef531(0x2b5)]('focus',function(){const _0x32df74=_0x3ef531;this[_0x32df74(0x2cb)]=this[_0x32df74(0x2cb)]['replace'](/[,.\s]/g,''),this['select']();}),_0x45e24a['addEventLi'+_0x3ef531(0x2b5)]('blur',function(){const _0x286906=_0x3ef531,_0x556a16=parseInt(this['value']['replace'](/[,.\s]/g,''))||0x0;if(_0x556a16)this[_0x286906(0x2cb)]=_0x556a16[_0x286906(0xfb)+_0x286906(0x29f)]('es-CO');this['classList']['toggle']('filled',_0x556a16!==0x0);});});</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   FORMULARIO 110 — DECLARACION DE RENTA PERSONAS JURIDICAS
+   Calculos automaticos con tarifas progresivas AG 2025
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── CARGA DE BALANCE ── */
+document.getElementById('fileInputRenta').addEventListener('change',e=>{if(e.target.files[0])procesarBalance(e.target.files[0])});
+const dzR=document.getElementById('dzRenta');
+['dragover','dragenter'].forEach(ev=>dzR.addEventListener(ev,e=>{e.preventDefault();dzR.style.borderColor='var(--pri2)'}));
+['dragleave','drop'].forEach(ev=>dzR.addEventListener(ev,e=>{e.preventDefault();dzR.style.borderColor='var(--border)'}));
+dzR.addEventListener('drop',e=>{if(e.dataTransfer.files[0])procesarBalance(e.dataTransfer.files[0])});
+
+let clasificacionRenta=[];
+let cuentasBalance=[];  // array de {code,name,val,casilla,ded,regla}
+
+function procesarBalance(file){
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'array'});
+      let best=null,bestN=0;
+      for(const sn of wb.SheetNames){
+        const raw=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:true});
+        const n=raw.filter(r=>r.some(c=>c!==''&&c!=null)).length;
+        if(n>bestN){best={sn,raw};bestN=n}
+      }
+      if(!best||bestN<5){alert('Archivo vacio o sin datos suficientes');return}
+
+      document.getElementById('fileNameRenta').textContent=file.name+' · '+bestN+' filas · hoja: '+best.sn;
+
+      // Auto-detect columns
+      const data=best.raw.filter(r=>r.some(c=>c!==''&&c!=null));
+      const hdrRow=detectHeaderRow(data);
+      const colMap=detectColumns(data,hdrRow);
+
+      // Parse and classify
+      clasificarPUCaF110(data,hdrRow,colMap);
+      mostrarClasificacion();
+    }catch(err){alert('Error: '+err.message)}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function detectHeaderRow(data){
+  const KW=/^(nivel|n[uú]mero|cuenta|c[oó]d|nombre|descripci|saldo|d[eé]bito|cr[eé]dito|cargo|abono|debe|haber)/i;
+  let bestI=0,bestScore=-Infinity;
+  for(let i=0;i<Math.min(data.length,15);i++){
+    const r=data[i];if(!r||r.length<3)continue;
+    let score=0;
+    for(const c of r){if(c==null||c==='')continue;if(KW.test(String(c).trim()))score+=10;else score-=1}
+    if(score>bestScore){bestScore=score;bestI=i}
+  }
+  return bestI;
+}
+
+function detectColumns(data,hdrRow){
+  const hdrs=data[hdrRow]||[];
+  const map={};
+
+  // 1. Detectar code y name
+  for(let ci=0;ci<hdrs.length;ci++){
+    const cell=String(hdrs[ci]||'').trim();
+    if(!cell)continue;
+    if(!('code' in map)&&/n[uú]mero.*cuenta|cuenta.*n[uú]m|c[oó]d/i.test(cell))map.code=ci;
+    else if(!('code' in map)&&/^cuenta$/i.test(cell))map.code=ci;
+    if(!('name' in map)&&/cuenta.*contable|nombre|descripci/i.test(cell))map.name=ci;
+  }
+
+  // 2. Detectar Debito/Credito (movimientos) — siempre las primeras que digan debito/credito
+  for(let ci=0;ci<hdrs.length;ci++){
+    const cell=String(hdrs[ci]||'').trim();
+    if(!('deb' in map)&&/d[eé]bito|^debe$/i.test(cell))map.deb=ci;
+    if(!('cre' in map)&&/cr[eé]dito|^haber$/i.test(cell))map.cre=ci;
+  }
+
+  // 3. Detectar Saldo Final (Cargo/Abono) — las ULTIMAS columnas cargo/abono
+  //    Alegra: Saldo anterior(Cargo|Abono) | Movimientos(Debito|Credito) | Saldo final(Cargo|Abono)
+  //    Otros: puede ser solo Saldo(Debito|Credito) o Saldo(Cargo|Abono)
+  let lastCargo=-1,lastAbono=-1;
+  for(let ci=0;ci<hdrs.length;ci++){
+    const cell=String(hdrs[ci]||'').trim();
+    if(/^cargo$|saldo.*cargo/i.test(cell))lastCargo=ci;
+    if(/^abono$|saldo.*abono/i.test(cell))lastAbono=ci;
+  }
+  if(lastCargo>=0&&lastAbono>=0){
+    map.saldoCargo=lastCargo;
+    map.saldoAbono=lastAbono;
+  }
+
+  return map;
+}
+
+/* ── MAPEO PUC → CASILLAS F110 ── */
+const PUC_F110=[
+  // Patrimonio
+  {cas:36,prefijos:['11'],desc:'Efectivo y equivalentes'},
+  {cas:37,prefijos:['12'],desc:'Inversiones'},
+  {cas:38,prefijos:['13'],desc:'Cuentas por cobrar'},
+  {cas:39,prefijos:['14'],desc:'Inventarios'},
+  {cas:40,prefijos:['16','1710'],desc:'Activos intangibles'},
+  {cas:41,prefijos:['1705','171'],desc:'Activos biologicos'},
+  {cas:42,prefijos:['15'],desc:'PPE y propiedades de inversion'},
+  {cas:43,prefijos:['17','18','19'],desc:'Otros activos',excluir:['1705','1710','171']},
+  {cas:45,prefijos:['2'],desc:'Pasivos'},
+  // Ingresos
+  {cas:47,prefijos:['4135','4115','4120','4125','4130','4140','4145','4150','4155','4160','4165','4170','4175','41'],desc:'Ingresos ordinarios'},
+  {cas:48,prefijos:['420505','4210'],desc:'Ingresos financieros'},
+  {cas:57,prefijos:['42'],desc:'Otros ingresos',excluir:['420505','4210']},
+  // Costos
+  {cas:62,prefijos:['6'],desc:'Costos'},
+  // Gastos
+  {cas:63,prefijos:['51'],desc:'Gastos de administracion',excluir:['5160']},
+  {cas:64,prefijos:['52'],desc:'Gastos de distribucion y ventas'},
+  {cas:65,prefijos:['530505','5305'],desc:'Gastos financieros'},
+  {cas:66,prefijos:['53'],desc:'Otros gastos',excluir:['530505','5305']},
+];
+
+/* ═══════════════════════════════════════════════════════════════
+   63 REGLAS DE GASTOS NO DEDUCIBLES — Estatuto Tributario Colombia
+   Cada regla: {id, nombre, articulo, tipo ('no_ded'|'gmf'|'parcial'),
+                test(cta,nom) → true si aplica, pct: fraccion deducible}
+   ═══════════════════════════════════════════════════════════════ */
+let deducibilidadDetalle=[]; // [{code,name,val,regla,tipo}]
+
+function normNom(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
+
+const REGLAS_NO_DED=[
+  // ── MULTAS, SANCIONES, INTERESES MORATORIOS (Art. 107, 107-1) ──
+  {id:1,nom:'Multas',art:'107-1',tipo:'no_ded',test:(c,n)=>/multa/.test(n)},
+  {id:2,nom:'Sanciones',art:'107-1',tipo:'no_ded',test:(c,n)=>/sancion/.test(n)},
+  {id:3,nom:'Intereses de mora',art:'107-1',tipo:'no_ded',test:(c,n)=>/interes.*(mora|moratorio)|mora.*interes/.test(n)},
+  {id:4,nom:'Intereses moratorios DIAN',art:'107-1',tipo:'no_ded',test:(c,n)=>c.startsWith('53050504')},
+  {id:5,nom:'Sanciones DIAN',art:'107-1',tipo:'no_ded',test:(c,n)=>c.startsWith('53950520')},
+  {id:6,nom:'Litigios y demandas',art:'107-1',tipo:'no_ded',test:(c,n)=>/litigio|demanda|proceso judicial/.test(n)},
+  {id:7,nom:'Penalidades contractuales',art:'107-1',tipo:'no_ded',test:(c,n)=>/penalidad|clausula penal|indemnizacion por incumpl/.test(n)},
+
+  // ── GMF / 4x1000 (Art. 115) — 50% deducible ──
+  {id:8,nom:'GMF / 4x1000',art:'115',tipo:'gmf',pct:0.5,test:(c,n)=>/gmf|4.?x.?1000|gravamen.*movimiento|4 por mil/.test(n)},
+  {id:9,nom:'GMF por cuenta PUC',art:'115',tipo:'gmf',pct:0.5,test:(c,n)=>c.startsWith('5115')&&/gravamen|gmf|movimiento/.test(n)},
+
+  // ── DONACIONES (Art. 257, 125) ──
+  {id:10,nom:'Donaciones',art:'257',tipo:'no_ded',test:(c,n)=>/donacion/.test(n)&&!/descuento tributario/.test(n)},
+  {id:11,nom:'Donaciones PUC 5395',art:'257',tipo:'no_ded',test:(c,n)=>c.startsWith('539525')},
+
+  // ── GASTOS NO DEDUCIBLES EXPLICITOS EN NOMBRE ──
+  {id:12,nom:'Gasto marcado no deducible',art:'107',tipo:'no_ded',test:(c,n)=>/no deducible|no deduci/.test(n)},
+
+  // ── IMPUESTOS NO DEDUCIBLES (Art. 115) ──
+  {id:13,nom:'Impuesto de renta',art:'115',tipo:'no_ded',test:(c,n)=>/impuesto.*renta|provision.*renta|gasto.*impuesto.*renta/.test(n)},
+  {id:14,nom:'Impuesto al patrimonio',art:'115',tipo:'no_ded',test:(c,n)=>/impuesto.*patrimonio/.test(n)},
+  {id:15,nom:'Impuesto de normalizacion',art:'115',tipo:'no_ded',test:(c,n)=>/normalizacion tributaria/.test(n)},
+  {id:16,nom:'Impuesto diferido gasto',art:'115',tipo:'no_ded',test:(c,n)=>/impuesto diferido/.test(n)},
+  {id:17,nom:'IVA descontable no procedente',art:'115',tipo:'no_ded',test:(c,n)=>/iva.*no.*deducible|iva.*no.*descontable|iva.*mayor.*valor/.test(n)},
+
+  // ── PROVISIONES Y DETERIOROS (Art. 105, 145) ──
+  {id:18,nom:'Provision de cartera',art:'145',tipo:'no_ded',test:(c,n)=>/provision.*cartera|deterioro.*cartera/.test(n)&&!/fiscal/.test(n)},
+  {id:19,nom:'Provision de inventarios',art:'105',tipo:'no_ded',test:(c,n)=>/provision.*inventario|deterioro.*inventario|obsolescencia/.test(n)},
+  {id:20,nom:'Provision de inversiones',art:'105',tipo:'no_ded',test:(c,n)=>/provision.*inversion|deterioro.*inversion/.test(n)},
+  {id:21,nom:'Provision de activos biologicos',art:'105',tipo:'no_ded',test:(c,n)=>/provision.*biolog|deterioro.*biolog/.test(n)},
+  {id:22,nom:'Provision de intangibles',art:'105',tipo:'no_ded',test:(c,n)=>/provision.*intangible|deterioro.*intangible|amortizacion.*intangible.*contable/.test(n)},
+  {id:23,nom:'Provision de PPE',art:'105',tipo:'no_ded',test:(c,n)=>/provision.*propiedad|deterioro.*propiedad|deterioro.*planta|deterioro.*equipo/.test(n)},
+  {id:24,nom:'Provision general',art:'105',tipo:'no_ded',test:(c,n)=>/^provision|gasto.*provision/.test(n)&&!/fiscal|deducible/.test(n)},
+  {id:25,nom:'Deterioro cuentas por cobrar (contable)',art:'145',tipo:'no_ded',test:(c,n)=>/deterioro.*cuenta.*cobrar|deterioro.*deudor/.test(n)&&!/fiscal/.test(n)},
+
+  // ── DEPRECIACIONES NO DEDUCIBLES (Art. 128-140) ──
+  {id:26,nom:'Depreciacion exceso vida util fiscal',art:'137',tipo:'no_ded',test:(c,n)=>/depreciacion.*exceso|depreciacion.*no deducible|depreciacion.*contable.*mayor/.test(n)},
+  {id:27,nom:'Depreciacion activos revaluados',art:'128',tipo:'no_ded',test:(c,n)=>/depreciacion.*revalua/.test(n)},
+
+  // ── AMORTIZACIONES NO DEDUCIBLES (Art. 142-143) ──
+  {id:28,nom:'Amortizacion crédito mercantil',art:'143',tipo:'no_ded',test:(c,n)=>/amortizacion.*credito.*mercantil|amortizacion.*goodwill|amortizacion.*plusvalia/.test(n)},
+  {id:29,nom:'Amortizacion gastos preoperativos exceso',art:'142',tipo:'no_ded',test:(c,n)=>/amortizacion.*preoperativ.*no deducible/.test(n)},
+
+  // ── GASTOS DE PERIODOS ANTERIORES (Art. 107) ──
+  {id:30,nom:'Gastos de vigencias anteriores',art:'107',tipo:'no_ded',test:(c,n)=>/vigencia.*anterior|periodo.*anterior|ejercicio.*anterior|a[nñ]o.*anterior/.test(n)},
+
+  // ── GASTOS SIN RELACION DE CAUSALIDAD (Art. 107) ──
+  {id:31,nom:'Gastos personales socios',art:'107',tipo:'no_ded',test:(c,n)=>/gasto.*personal.*socio|gasto.*socio.*personal/.test(n)},
+  {id:32,nom:'Gastos suntuarios',art:'107',tipo:'no_ded',test:(c,n)=>/suntuario|lujo.*no.*necesario/.test(n)},
+  {id:33,nom:'Gastos de representacion exceso',art:'107-1',tipo:'no_ded',test:(c,n)=>/representacion.*exceso|representacion.*no deducible/.test(n)},
+  {id:34,nom:'Gastos recreacion no soportados',art:'107',tipo:'no_ded',test:(c,n)=>/recreacion.*no deducible|bienestar.*no deducible/.test(n)},
+
+  // ── EXCESO PAGOS LABORALES (Art. 108, 109, 110) ──
+  {id:35,nom:'Bonificaciones no salariales exceso',art:'108',tipo:'no_ded',test:(c,n)=>/bonificacion.*no.*salarial.*exceso|bonificacion.*no deducible/.test(n)},
+  {id:36,nom:'Indemnizaciones laborales no deducibles',art:'108',tipo:'no_ded',test:(c,n)=>/indemnizacion.*laboral.*no deducible/.test(n)},
+
+  // ── COSTOS Y GASTOS SIN FACTURA ELECTRONICA (Art. 771-2, 616-1) ──
+  {id:37,nom:'Gastos sin soporte (factura electronica)',art:'771-2',tipo:'no_ded',test:(c,n)=>/sin.*factura|sin.*soporte|no.*facturado|gasto.*no.*soportado/.test(n)},
+
+  // ── REGALIAS E INTANGIBLES (Art. 120, 124) ──
+  {id:38,nom:'Regalias a vinculados exterior exceso',art:'124',tipo:'no_ded',test:(c,n)=>/regalia.*vinculado.*exceso|regalia.*no deducible/.test(n)},
+  {id:39,nom:'Pagos a paraisos fiscales',art:'124-2',tipo:'no_ded',test:(c,n)=>/paraiso fiscal|jurisdiccion.*no cooperante|pago.*exterior.*no deducible/.test(n)},
+
+  // ── INTERESES Y GASTOS FINANCIEROS (Art. 117, 118-1) ──
+  {id:40,nom:'Intereses subcapitalizacion',art:'118-1',tipo:'no_ded',test:(c,n)=>/subcapitalizacion|interes.*exceso.*endeudamiento|interes.*vinculado.*exceso/.test(n)},
+  {id:41,nom:'Intereses prestamos socios no bancarizados',art:'117',tipo:'no_ded',test:(c,n)=>/interes.*socio.*no deducible|interes.*prestamo.*socio/.test(n)&&/no deducible/.test(n)},
+  {id:42,nom:'Intereses usura',art:'884 C.Co',tipo:'no_ded',test:(c,n)=>/interes.*usura|interes.*exceso.*legal/.test(n)},
+  {id:43,nom:'Gastos financieros diferencia en cambio no realizada',art:'288',tipo:'no_ded',test:(c,n)=>/diferencia.*cambio.*no realizada|diferencia.*cambio.*contable/.test(n)},
+
+  // ── GASTOS CON VINCULADOS ECONOMICOS (Art. 260-1 a 260-11, precios de transferencia) ──
+  {id:44,nom:'Gastos precios de transferencia exceso',art:'260-2',tipo:'no_ded',test:(c,n)=>/precio.*transferencia.*exceso|vinculado.*exceso.*arm/.test(n)},
+
+  // ── COSTOS Y GASTOS ESTIMADOS (Art. 105) ──
+  {id:45,nom:'Costos estimados o provisionados',art:'105',tipo:'no_ded',test:(c,n)=>/costo.*estimado|costo.*provisionado|provision.*costo/.test(n)&&!/fiscal/.test(n)},
+  {id:46,nom:'Pasivos estimados y provisiones',art:'105',tipo:'no_ded',test:(c,n)=>c.startsWith('5160')||c.startsWith('526')},
+  {id:47,nom:'Provisiones diversas',art:'105',tipo:'no_ded',test:(c,n)=>c.startsWith('5299')&&!/fiscal|deducible/.test(n)},
+
+  // ── IMPUESTOS ASUMIDOS (Art. 115) ──
+  {id:48,nom:'Impuestos asumidos no deducibles',art:'115',tipo:'no_ded',test:(c,n)=>/impuesto.*asumido|iva.*asumido|iva.*no.*descontable/.test(n)},
+  {id:49,nom:'Retencion asumida',art:'115',tipo:'no_ded',test:(c,n)=>/retencion.*asumida.*no deducible/.test(n)},
+  {id:50,nom:'ICA no deducible',art:'115',tipo:'no_ded',test:(c,n)=>/ica.*no deducible|industria.*comercio.*no deducible/.test(n)},
+
+  // ── GASTOS EN EL EXTERIOR (Art. 121, 122, 123, 124) ──
+  {id:51,nom:'Gastos exterior sin retención',art:'121-123',tipo:'no_ded',test:(c,n)=>/gasto.*exterior.*sin.*retencion|exterior.*no deducible/.test(n)},
+  {id:52,nom:'Gastos exterior exceso 15%',art:'122',tipo:'no_ded',test:(c,n)=>/exterior.*exceso.*15|gasto.*exterior.*limite/.test(n)},
+
+  // ── PERDIDAS EN ACTIVOS (Art. 148, 149) ──
+  {id:53,nom:'Perdida en venta de activos a vinculados',art:'151',tipo:'no_ded',test:(c,n)=>/perdida.*venta.*activo.*vinculado|perdida.*enajenacion.*vinculado/.test(n)},
+  {id:54,nom:'Perdida en activos no productivos',art:'148',tipo:'no_ded',test:(c,n)=>/perdida.*activo.*no productivo|perdida.*activo.*personal/.test(n)},
+
+  // ── BENEFICIOS A EMPLEADOS NIIF (Art. 105) ──
+  {id:55,nom:'Beneficios a empleados largo plazo (NIIF)',art:'105',tipo:'no_ded',test:(c,n)=>/beneficio.*empleado.*largo plazo|beneficio.*post.*empleo|pension.*actuarial/.test(n)},
+  {id:56,nom:'Pagos basados en acciones (NIIF)',art:'105',tipo:'no_ded',test:(c,n)=>/pago.*basado.*accion|stock.*option|compensacion.*accion/.test(n)},
+
+  // ── VALOR RAZONABLE (Art. 105, 28) ──
+  {id:57,nom:'Ajuste valor razonable (no realizado)',art:'105',tipo:'no_ded',test:(c,n)=>/valor razonable.*no realizado|ajuste.*valor razonable|medicion.*valor razonable.*gasto/.test(n)},
+  {id:58,nom:'Perdida no realizada inversiones',art:'105',tipo:'no_ded',test:(c,n)=>/perdida.*no realizada|perdida.*valoracion/.test(n)},
+
+  // ── CUENTAS PUC ESPECIFICAS NO DEDUCIBLES ──
+  {id:59,nom:'Gastos diversos no deducibles (PUC 5395)',art:'107',tipo:'no_ded',test:(c,n)=>c.startsWith('539520')},
+  {id:60,nom:'Gastos extraordinarios (PUC 5310)',art:'107',tipo:'no_ded',test:(c,n)=>c.startsWith('5310')&&/extraordinario|no.*recurrente/.test(n)},
+
+  // ── APORTES PARAFISCALES (Art. 114-1) ──
+  {id:61,nom:'Aportes parafiscales no pagados',art:'114-1',tipo:'no_ded',test:(c,n)=>/parafiscal.*no.*pagado|parafiscal.*no deducible|aportes.*no.*pagado/.test(n)},
+
+  // ── OTROS ──
+  {id:62,nom:'Gastos de ejercicios futuros',art:'105',tipo:'no_ded',test:(c,n)=>/gasto.*futuro|gasto.*anticip.*no deducible|diferido.*gasto/.test(n)&&/no deducible/.test(n)},
+  {id:63,nom:'Ajustes por convergencia NIIF',art:'105',tipo:'no_ded',test:(c,n)=>/convergencia.*niif|ajuste.*niif.*no deducible|efecto.*niif/.test(n)},
+];
+
+function clasificarDeducibilidad(code,name){
+  const n=normNom(name);
+  for(const r of REGLAS_NO_DED){
+    if(r.test(code,n))return r;
+  }
+  return null; // deducible
+}
+
+function clasificarPUCaF110_OLD(data,hdrRow,colMap){
+  const result_old={};
+  const detail=[];
+  const rows=data.slice(hdrRow+1);
+
+  for(const row of rows){
+    let code=String(row[colMap.code]||'').replace(/[.\-\s]/g,'').trim();
+    if(!code||!/^\d{2,}/.test(code))continue;
+    const name=String(row[colMap.name||colMap.code+1]||'').trim();
+
+    // Determinar saldo: cargo-abono o debito-credito
+    let saldo=0;
+    if('saldoCargo' in colMap&&'saldoAbono' in colMap){
+      const cargo=parseFloat(row[colMap.saldoCargo])||0;
+      const abono=parseFloat(row[colMap.saldoAbono])||0;
+      saldo=cargo-abono; // positivo=deudor, negativo=acreedor
+    }else if('deb' in colMap&&'cre' in colMap){
+      saldo=(parseFloat(row[colMap.deb])||0)-(parseFloat(row[colMap.cre])||0);
+    }
+
+    if(saldo===0)continue;
+
+    // Solo tomar cuentas de nivel detalle (4+ digitos) o de nivel 2 si no hay detalle
+    // Excluir cuentas padre (clase 1 digito)
+    if(code.length<2)continue;
+
+    // Buscar casilla
+    let casilla=null,desc='';
+    for(const m of PUC_F110){
+      // Verificar exclusiones
+      if(m.excluir&&m.excluir.some(e=>code.startsWith(e)))continue;
+      if(m.prefijos.some(p=>code.startsWith(p))){
+        casilla=m.cas;desc=m.desc;break;
+      }
+    }
+
+    if(casilla){
+      const val=Math.abs(saldo);
+      if(!result[casilla])result[casilla]={val:0,cuentas:[]};
+      result[casilla].val+=val;
+      result[casilla].cuentas.push({code,name:name.substring(0,40),val});
+      detail.push({code,name,casilla,desc,val});
+    }
+  }
+
+  // Deduplicar: tomar solo el nivel más alto de cada grupo
+  // (si existe 11 con total, no sumar 1110, 1105 etc.)
+  const casillasFinales={};
+  for(const[cas,data] of Object.entries(result)){
+    // Buscar si hay una cuenta resumen (nivel 2, ej: "11") y cuentas detalle (ej: "1105","1110")
+    const cuentas=data.cuentas.sort((a,b)=>a.code.length-b.code.length);
+    // Si la primera cuenta tiene 2 digitos y hay más, usar solo la de 2 digitos (es el total)
+    if(cuentas.length>1&&cuentas[0].code.length<=3){
+      casillasFinales[cas]=Math.round(cuentas[0].val);
+    }else{
+      casillasFinales[cas]=Math.round(data.val);
+    }
+  }
+
+  return casillasFinales;
+}
+
+function clasificarPUCaF110(data,hdrRow,colMap){
+  const rows=data.slice(hdrRow+1);
+
+  // Detectar columna de nivel y nombre
+  const hdr=data[hdrRow]||[];
+  let nivelCol=-1,nameCol=colMap.name;
+  for(let i=0;i<hdr.length;i++){
+    if(/^nivel$/i.test(String(hdr[i]||'').trim()))nivelCol=i;
+    if(nameCol==null&&/cuenta.*contable|descripci|nombre/i.test(String(hdr[i]||'').trim()))nameCol=i;
+  }
+
+  // Recolectar filas
+  const filas=[];
+  for(const row of rows){
+    let code=String(row[colMap.code]||'').replace(/[.\-\s]/g,'').trim();
+    if(!code||!/^\d+/.test(code))continue;
+    const name=nameCol!=null?String(row[nameCol]||'').trim():'';
+    const nivel=nivelCol>=0?parseInt(row[nivelCol])||0:-1;
+
+    const esResultado=/^[456]/.test(code);
+    const hasSaldoFinal='saldoCargo' in colMap&&'saldoAbono' in colMap;
+    const hasDebCre='deb' in colMap&&'cre' in colMap;
+
+    let saldo=0;
+    if(esResultado&&hasDebCre){
+      // Cuentas de resultado (4,5,6): SIEMPRE usar movimientos (debito/credito)
+      // El saldo final en Alegra es acumulado historico, no del periodo
+      const deb=parseFloat(row[colMap.deb])||0;
+      const cre=parseFloat(row[colMap.cre])||0;
+      // Clase 4 (ingresos): naturaleza credito → cre - deb
+      // Clase 5,6 (gastos/costos): naturaleza debito → deb - cre
+      saldo=code.startsWith('4')?(cre-deb):(deb-cre);
+    }else if(hasSaldoFinal){
+      // Patrimonio (clases 1,2,3): usar saldo final
+      const cargo=parseFloat(row[colMap.saldoCargo])||0;
+      const abono=parseFloat(row[colMap.saldoAbono])||0;
+      saldo=cargo-abono;
+    }else if(hasDebCre){
+      // Fallback: solo tiene debito/credito
+      saldo=(parseFloat(row[colMap.deb])||0)-(parseFloat(row[colMap.cre])||0);
+    }
+
+    filas.push({code,name,nivel,saldo});
+  }
+
+  // Clasificar cada cuenta individualmente
+  cuentasBalance=[];  // global: tabla editable
+  for(const f of filas){
+    if(f.saldo===0)continue;
+
+    // Buscar casilla
+    let casilla=0;
+    for(const m of PUC_F110){
+      if(m.excluir&&m.excluir.some(e=>f.code.startsWith(e)))continue;
+      if(m.prefijos.some(p=>f.code.startsWith(p))){casilla=m.cas;break}
+    }
+    if(!casilla)continue;
+
+    // Deducibilidad (solo gastos/costos)
+    const esGasto=[62,63,64,65,66].includes(casilla);
+    let ded='ded',regla=null;
+    if(esGasto){
+      regla=clasificarDeducibilidad(f.code,f.name);
+      if(regla)ded=regla.tipo; // 'no_ded' o 'gmf'
+    }
+
+    const valContable=Math.round(Math.abs(f.saldo));
+    // Valor fiscal precalculado segun deducibilidad
+    let valFiscal=valContable;
+    if(ded==='no_ded')valFiscal=0;
+    else if(ded==='gmf')valFiscal=Math.round(valContable*0.5);
+
+    cuentasBalance.push({
+      code:f.code,
+      name:f.name,
+      val:valContable,      // contable (fijo)
+      valFiscal,            // fiscal (editable)
+      casilla,
+      ded,        // 'ded', 'no_ded', 'gmf'
+      regla,      // objeto regla o null
+      nivel:f.nivel,
+      len:f.code.length
+    });
+  }
+
+  // Filtrar: solo cuentas de detalle (sin hijas), para no duplicar totales
+  // Si una cuenta tiene hijas en la lista, es cuenta padre → excluir
+  const codigos=new Set(cuentasBalance.map(c=>c.code));
+  cuentasBalance=cuentasBalance.filter(c=>{
+    // Si alguna otra cuenta empieza con este codigo y es mas larga → es padre
+    for(const otro of codigos){
+      if(otro!==c.code&&otro.startsWith(c.code)&&otro.length>c.code.length)return false;
+    }
+    return true;
+  });
+
+  return cuentasBalance;
+}
+
+// Opciones de casilla para dropdowns
+const CASILLA_OPTS=[
+  {v:0,t:'— No aplicar'},
+  {v:36,t:'36 Efectivo'},{v:37,t:'37 Inversiones'},{v:38,t:'38 CxC'},{v:39,t:'39 Inventarios'},
+  {v:40,t:'40 Intangibles'},{v:41,t:'41 Biologicos'},{v:42,t:'42 PPE'},{v:43,t:'43 Otros activos'},
+  {v:45,t:'45 Pasivos'},
+  {v:47,t:'47 Ingr. ordinarios'},{v:48,t:'48 Ingr. financieros'},{v:57,t:'57 Otros ingresos'},
+  {v:59,t:'59 Devoluciones'},{v:60,t:'60 INCRNGO'},
+  {v:62,t:'62 Costos'},{v:63,t:'63 Gtos admin'},{v:64,t:'64 Gtos ventas'},
+  {v:65,t:'65 Gtos financieros'},{v:66,t:'66 Otros gastos'},
+];
+
+function cambiarDed(idx){
+  const c=cuentasBalance[idx];
+  const next=c.ded==='ded'?'no_ded':c.ded==='no_ded'?'gmf':'ded';
+  c.ded=next;
+  // Recalcular valor fiscal segun nueva deducibilidad
+  if(next==='no_ded')c.valFiscal=0;
+  else if(next==='gmf')c.valFiscal=Math.round(c.val*0.5);
+  else c.valFiscal=c.val;
+  mostrarClasificacion();
+}
+
+function editarFiscal(idx,valor){
+  const n=parseInt(String(valor).replace(/[,.\s$]/g,''))||0;
+  cuentasBalance[idx].valFiscal=n;
+  // Actualizar solo la celda de diferencia sin re-render completo
+  const diffEl=document.getElementById('diff_'+idx);
+  if(diffEl){
+    const diff=cuentasBalance[idx].val-n;
+    diffEl.textContent=diff?fN(diff):'';
+    diffEl.style.color=diff>0?'#C62828':diff<0?'#2E7D32':'#999';
+  }
+}
+
+function mostrarClasificacion(){
+  if(!cuentasBalance.length){
+    document.getElementById('errorBalance').classList.remove('hidden');
+    document.getElementById('errorBalance').innerHTML='No se encontraron cuentas con saldo en el balance.';
+    return;
+  }
+
+  document.getElementById('errorBalance').classList.add('hidden');
+
+  // Mostrar info sobre como se leyo
+  const tieneResultado=cuentasBalance.some(c=>[47,48,57,62,63,64,65,66].includes(c.casilla));
+  const infoEl=document.getElementById('balanceCerrado');
+  if(tieneResultado){
+    infoEl.classList.remove('hidden');
+    infoEl.innerHTML='<strong>Patrimonio:</strong> saldo final · <strong>Ingresos, costos y gastos:</strong> movimientos del periodo (debitos/creditos)';
+  }else{
+    infoEl.classList.remove('hidden');
+    infoEl.style.background='#FFF8E1';infoEl.style.borderColor='#FCD34D';infoEl.style.color='#92400E';
+    infoEl.innerHTML='<strong>Balance sin cuentas de resultado.</strong> Solo se cargara patrimonio. Ingresa ingresos, costos y gastos manualmente.';
+  }
+
+  document.getElementById('clasifResult').classList.remove('hidden');
+
+  // Stats
+  const sumContable=cas=>cuentasBalance.filter(c=>c.casilla===cas).reduce((s,c)=>s+c.val,0);
+  const sumFiscal=cas=>cuentasBalance.filter(c=>c.casilla===cas).reduce((s,c)=>s+c.valFiscal,0);
+  const totalActivos=[36,37,38,39,40,41,42,43].reduce((s,c)=>s+sumContable(c),0);
+  const totalPasivos=sumContable(45);
+  const totalIngresos=[47,48,57].reduce((s,c)=>s+sumContable(c),0);
+  const totalGastosCtb=[62,63,64,65,66].reduce((s,c)=>s+sumContable(c),0);
+  const totalGastosFis=[62,63,64,65,66].reduce((s,c)=>s+sumFiscal(c),0);
+  const totalDif=totalGastosCtb-totalGastosFis;
+
+  document.getElementById('clasifStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${fN(totalActivos)}</div><div class="lbl">Activos</div></div>
+    <div class="stat-card amber"><div class="val">${fN(totalPasivos)}</div><div class="lbl">Pasivos</div></div>
+    <div class="stat-card green"><div class="val">${fN(totalIngresos)}</div><div class="lbl">Ingresos</div></div>
+    <div class="stat-card ${totalDif>0?'red':'blue'}"><div class="val">${fN(totalGastosFis)}</div><div class="lbl">Gastos Fiscales${totalDif>0?' (−'+fN(totalDif)+' no ded)':''}</div></div>`;
+
+  const fmtN=n=>Math.round(n||0).toLocaleString('es-CO');
+
+  // Tabla plana: todas las cuentas ordenadas por codigo
+  const todas=cuentasBalance.slice().sort((a,b)=>a.code.localeCompare(b.code));
+
+  let h='<table style="width:100%;border-collapse:collapse;font-size:.75rem">';
+  h+='<thead><tr style="background:var(--pri);color:#fff;position:sticky;top:0;z-index:1">'
+    +'<th style="padding:4px 5px;text-align:left">Cuenta</th>'
+    +'<th style="padding:4px 5px;text-align:left">Nombre</th>'
+    +'<th style="padding:4px 5px;text-align:right">Contable</th>'
+    +'<th style="padding:4px 5px;text-align:right">Fiscal</th>'
+    +'<th style="padding:4px 5px;text-align:right">Diferencia</th>'
+    +'<th style="padding:4px 5px;text-align:center">Renglon F110</th>'
+    +'<th style="padding:4px 5px;text-align:center">Ded.</th>'
+    +'</tr></thead><tbody>';
+
+  // Separadores por clase
+  let lastClass='';
+  const claseNombres={'1':'Activos','2':'Pasivos','3':'Patrimonio','4':'Ingresos','5':'Gastos','6':'Costos'};
+
+  for(const c of todas){
+    const idx=cuentasBalance.indexOf(c);
+    const cls=c.code[0];
+
+    // Separador de clase
+    if(cls!==lastClass){
+      lastClass=cls;
+      h+=`<tr style="background:var(--pri3)"><td colspan="7" style="padding:4px 8px;font-weight:700;color:var(--pri);font-size:.78rem">${claseNombres[cls]||'Clase '+cls}</td></tr>`;
+    }
+
+    const esGasto=[62,63,64,65,66].includes(c.casilla);
+    const diff=c.val-c.valFiscal;
+
+    // Dropdown casilla
+    let selHtml=`<select onchange="cuentasBalance[${idx}].casilla=+this.value;mostrarClasificacion()" style="font-size:.68rem;padding:1px 3px;border:1px solid var(--border);border-radius:4px;font-family:inherit;max-width:110px">`;
+    for(const o of CASILLA_OPTS){
+      selHtml+=`<option value="${o.v}"${o.v===c.casilla?' selected':''}>${o.t}</option>`;
+    }
+    selHtml+='</select>';
+
+    // Deducibilidad toggle (solo gastos/costos)
+    let dedHtml='<span style="color:#999">—</span>';
+    if(esGasto){
+      const dedColor=c.ded==='no_ded'?'#C62828':c.ded==='gmf'?'#D97706':'#2E7D32';
+      const dedBg=c.ded==='no_ded'?'#FFEBEE':c.ded==='gmf'?'#FFF8E1':'#E8F5E9';
+      const dedLabel=c.ded==='no_ded'?'NO DED':c.ded==='gmf'?'50%':'DED';
+      dedHtml=`<button onclick="cambiarDed(${idx})" style="font-size:.62rem;padding:1px 6px;border:1px solid ${dedColor};border-radius:3px;background:${dedBg};color:${dedColor};cursor:pointer;font-weight:700;font-family:inherit;min-width:42px" title="${c.regla?'R'+c.regla.id+': '+c.regla.nom+' (Art.'+c.regla.art+')':'Clic para cambiar'}">${dedLabel}</button>`;
+    }
+
+    const rowBg=c.ded==='no_ded'?'#FFF5F5':c.ded==='gmf'?'#FFFDF0':'';
+    const diffColor=diff>0?'#C62828':diff<0?'#2E7D32':'#999';
+
+    h+=`<tr style="border-bottom:1px solid #eee;background:${rowBg}">
+      <td style="padding:2px 5px;font-family:JetBrains Mono;font-size:.68rem">${c.code}</td>
+      <td style="padding:2px 5px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.name}">${c.name}</td>
+      <td style="padding:2px 5px;text-align:right;font-family:JetBrains Mono;color:#555">${fmtN(c.val)}</td>
+      <td style="padding:2px 3px;text-align:right"><input value="${c.valFiscal?fmtN(c.valFiscal):''}" onfocus="this.value=this.value.replace(/[,.\\s]/g,'')" onblur="editarFiscal(${idx},this.value);this.value=cuentasBalance[${idx}].valFiscal?fN(cuentasBalance[${idx}].valFiscal):''" style="width:90px;text-align:right;font-family:JetBrains Mono;font-size:.72rem;font-weight:600;border:1px solid #ddd;border-radius:3px;padding:2px 4px;color:var(--pri);background:${c.valFiscal!==c.val?'#EDF4FF':'#fff'}"></td>
+      <td id="diff_${idx}" style="padding:2px 5px;text-align:right;font-family:JetBrains Mono;font-size:.68rem;color:${diffColor}">${diff?fmtN(diff):''}</td>
+      <td style="padding:2px 4px;text-align:center">${selHtml}</td>
+      <td style="padding:2px 4px;text-align:center">${dedHtml}</td>
+    </tr>`;
+  }
+
+  // Totales por clase
+  const clases=[
+    {n:'Activos',cas:[36,37,38,39,40,41,42,43]},
+    {n:'Pasivos',cas:[45]},
+    {n:'Ingresos',cas:[47,48,57]},
+    {n:'Costos+Gastos',cas:[62,63,64,65,66]},
+  ];
+  h+=`<tr style="background:var(--pri);color:#fff"><td colspan="2" style="padding:5px 8px;font-weight:700">TOTALES</td><td style="padding:5px;text-align:right;font-weight:700">Contable</td><td style="padding:5px;text-align:right;font-weight:700">Fiscal</td><td style="padding:5px;text-align:right;font-weight:700">Diferencia</td><td colspan="2"></td></tr>`;
+  let grandCtb=0,grandFis=0;
+  for(const cl of clases){
+    const ctb=cuentasBalance.filter(c=>cl.cas.includes(c.casilla)).reduce((s,c)=>s+c.val,0);
+    const fis=cuentasBalance.filter(c=>cl.cas.includes(c.casilla)).reduce((s,c)=>s+c.valFiscal,0);
+    const dif=ctb-fis;
+    grandCtb+=ctb;grandFis+=fis;
+    h+=`<tr style="background:#f8fafc;border-bottom:1px solid var(--border)">
+      <td colspan="2" style="padding:4px 8px;font-weight:600;font-size:.76rem">${cl.n}</td>
+      <td style="padding:4px 5px;text-align:right;font-family:JetBrains Mono;font-weight:600">${fmtN(ctb)}</td>
+      <td style="padding:4px 5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:var(--pri)">${fmtN(fis)}</td>
+      <td style="padding:4px 5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:${dif?'#C62828':'#999'}">${dif?fmtN(dif):''}</td>
+      <td colspan="2"></td>
+    </tr>`;
+  }
+  const grandDif=grandCtb-grandFis;
+  if(grandDif){
+    h+=`<tr style="background:#FFF8E1;border-top:2px solid #FCD34D">
+      <td colspan="2" style="padding:5px 8px;font-weight:700;color:#92400E">Total diferencias</td>
+      <td style="padding:5px;text-align:right;font-family:JetBrains Mono;font-weight:600">${fmtN(grandCtb)}</td>
+      <td style="padding:5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:var(--pri)">${fmtN(grandFis)}</td>
+      <td style="padding:5px;text-align:right;font-family:JetBrains Mono;font-weight:700;color:#C62828">${fmtN(grandDif)}</td>
+      <td colspan="2"></td>
+    </tr>`;
+  }
+
+  h+='</tbody></table>';
+  document.getElementById('clasifDetail').innerHTML=h;
+}
+
+function aplicarAlFormulario(){
+  // Totalizar por casilla usando valFiscal (ya editado por usuario)
+  const totales={};
+  for(const c of cuentasBalance){
+    if(!c.casilla)continue;
+    // Para gastos: usar valFiscal. Para patrimonio/ingresos: usar val contable
+    const esGasto=[62,63,64,65,66].includes(c.casilla);
+    totales[c.casilla]=(totales[c.casilla]||0)+(esGasto?c.valFiscal:c.val);
+  }
+
+  // Aplicar al formulario
+  // Primero limpiar casillas editables
+  for(const m of PUC_F110){
+    const el=document.getElementById('c'+m.cas);
+    if(el&&!el.readOnly){el.value='';el.classList.remove('filled')}
+  }
+
+  for(const[cas,val] of Object.entries(totales)){
+    const el=document.getElementById('c'+cas);
+    if(el&&!el.readOnly){
+      const rounded=Math.round(val/1000)*1000;
+      el.value=rounded?rounded.toLocaleString('es-CO'):'';
+      el.classList.toggle('filled',rounded!==0);
+    }
+  }
+
+  recalcular();
+  document.querySelector('.dian-form').scrollIntoView({behavior:'smooth'});
+}
+
+/* ── TTD (TASA MINIMA DE TRIBUTACION) ── */
+function vTTD(id){const el=document.getElementById(id);if(!el)return 0;return parseInt(el.value.replace(/[,.\s$]/g,''))||0}
+
+function recalcularTTD(){
+  const utilidad=vTTD('ttdUtilidad');
+  const difPerm=vTTD('ttdDifPerm');
+  const incrngo=vTTD('ttdINCRNGO');
+  const exentas=vTTD('ttdExentas');
+
+  // Utilidad Depurada = UC + DPARL - INCRNGO - RE
+  const UD=utilidad+difPerm-incrngo-exentas;
+
+  // Impuesto Depurado = Impuesto neto + Descuentos
+  const impNeto=v('c93');
+  const descuentos=v('c92');
+  const ID=impNeto+descuentos;
+
+  // TTD
+  const TTD=UD>0?(ID/UD*100):0;
+
+  // Impuesto Adicional
+  const IA=TTD<15&&UD>0?Math.round((UD*0.15-ID)/1000)*1000:0;
+
+  const color=TTD>=15?'var(--green)':'var(--red)';
+  document.getElementById('ttdResultado').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;text-align:center">
+      <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase">Utilidad Depurada</div><div style="font-size:1.1rem;font-weight:700;font-family:JetBrains Mono">${Math.round(UD).toLocaleString('es-CO')}</div></div>
+      <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase">Impuesto Depurado</div><div style="font-size:1.1rem;font-weight:700;font-family:JetBrains Mono">${Math.round(ID).toLocaleString('es-CO')}</div></div>
+      <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase">TTD</div><div style="font-size:1.3rem;font-weight:800;color:${color}">${TTD.toFixed(2)}%</div></div>
+      <div><div style="font-size:.72rem;color:var(--muted);text-transform:uppercase">Impuesto Adicional (IA)</div><div style="font-size:1.1rem;font-weight:700;font-family:JetBrains Mono;color:${IA>0?'var(--red)':'var(--green)'}">${IA>0?IA.toLocaleString('es-CO'):'No aplica'}</div></div>
+    </div>
+    ${TTD<15&&UD>0?'<div style="margin-top:12px;padding:10px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;font-size:.82rem;color:#C62828"><strong>Atencion:</strong> La TTD ('+TTD.toFixed(2)+'%) es menor al 15%. Se genera un Impuesto Adicional de <strong>$'+IA.toLocaleString('es-CO')+'</strong> que se suma a la casilla 95 del formulario.</div>':'<div style="margin-top:12px;padding:10px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:8px;font-size:.82rem;color:#2E7D32"><strong>OK:</strong> La TTD ('+TTD.toFixed(2)+'%) es igual o mayor al 15%. No se genera impuesto adicional.</div>'}`;
+}
+
+function v(id){const el=document.getElementById(id);if(!el)return 0;const s=el.value.replace(/[,.\s$]/g,'');return parseInt(s)||0}
+function set(id,val){
+  const el=document.getElementById(id);if(!el)return;
+  const n=Math.round(val/1000)*1000; // Redondear a miles
+  el.value=n!==0?n.toLocaleString('es-CO'):'';
+  el.classList.toggle('filled',n!==0);
+}
+function fN(n){return Math.round(n).toLocaleString('es-CO')}
+
+// Ganancias ocasionales = 15% (fija para todos)
+const TARIFA_GO=0.15;
+
+function getTarifaRenta(){
+  const sel=document.getElementById('cfgTipo').value;
+  const box=document.getElementById('tarifaCustomBox');
+  if(sel==='custom'){
+    box.style.display='';
+    const custom=parseFloat(document.getElementById('cfgTarifaCustom').value);
+    return isNaN(custom)?0.35:custom/100;
+  }
+  box.style.display='none';
+  // Extraer número del value (ej: "20_zf" → 20, "35" → 35)
+  const pct=parseFloat(sel);
+  return isNaN(pct)?0.35:pct/100;
+}
+
+function recalcular(){
+  // PATRIMONIO
+  const c44=v('c36')+v('c37')+v('c38')+v('c39')+v('c40')+v('c41')+v('c42')+v('c43');
+  set('c44',c44);
+  const c46=c44-v('c45');
+  set('c46',c46);
+
+  // INGRESOS
+  const c58=v('c47')+v('c48')+v('c49')+v('c50')+v('c51')+v('c52')+v('c53')+v('c54')+v('c57');
+  set('c58',c58);
+  const c61=c58-v('c59')-v('c60');
+  set('c61',c61);
+
+  // COSTOS Y DEDUCCIONES
+  const c67=v('c62')+v('c63')+v('c64')+v('c65')+v('c66');
+  set('c67',c67);
+
+  // RENTA
+  const rentaOrdinaria=c61-c67+v('c70')+v('c71');
+  if(rentaOrdinaria>=0){set('c72',rentaOrdinaria);set('c73',0)}
+  else{set('c72',0);set('c73',Math.abs(rentaOrdinaria))}
+
+  // CONTINUACION RENTA
+  const c75=Math.max(v('c72')-v('c74'),0);
+  set('c75',c75);
+
+  // Renta liquida gravable = MAX(renta liquida, renta presuntiva) - exenta + gravables
+  const rlg=Math.max(Math.max(c75,v('c76'))-v('c77')+v('c78'),0);
+  set('c79',rlg);
+
+  // GANANCIAS OCASIONALES
+  const c83=Math.max(v('c80')-v('c81')-v('c82'),0);
+  set('c83',c83);
+
+  // LIQUIDACION
+  // Impuesto sobre renta liquida gravable
+  const tarifa=getTarifaRenta();
+  const impRenta=Math.round(rlg*tarifa/1000)*1000;
+  set('c84',impRenta);
+
+  // Impuesto dividendos
+  const impDiv75=Math.round(v('c53')*0.075/1000)*1000;
+  set('c85',impDiv75);
+  const impDivGen=Math.round(v('c54')*tarifa/1000)*1000;
+  set('c86',impDivGen);
+
+  // Total impuesto
+  const c91=impRenta+impDiv75+impDivGen+v('c87');
+  set('c91',c91);
+
+  // Impuesto neto
+  const c93=Math.max(c91-v('c92'),0);
+  set('c93',c93);
+
+  // Ganancias ocasionales impuesto
+  const c94=Math.round(c83*TARIFA_GO/1000)*1000;
+  set('c94',c94);
+
+  // Total impuesto a cargo
+  const c96=Math.max(c93+c94-v('c95'),0);
+  set('c96',c96);
+
+  // ── DATOS AÑO ANTERIOR → casillas 99, 100 ──
+  const antAnticipo=vTTD('antAnticipo');   // anticipo liquidado año anterior
+  const antSaldoFavor=vTTD('antSaldoFavor'); // saldo a favor año anterior
+  // Auto-fill casillas 99 y 100 si el usuario no las ha editado manualmente
+  if(antAnticipo&&!document.getElementById('c99')._manual){set('c99',antAnticipo)}
+  if(antSaldoFavor&&!document.getElementById('c100')._manual){set('c100',antSaldoFavor)}
+
+  // Retenciones
+  const c103=v('c101')+v('c102');
+  set('c103',c103);
+
+  // ── ANTICIPO AÑO SIGUIENTE (Art. 807-809 ET) ──
+  const metodo=document.getElementById('antMetodo').value;
+  const antImpNeto=vTTD('antImpNeto'); // impuesto neto año anterior
+  let c104=0;
+  if(metodo==='75'){
+    // 75% del impuesto neto del año actual
+    c104=Math.round(c93*0.75/1000)*1000;
+  }else if(metodo==='promedio'){
+    // Promedio: (impNeto anterior * 75% + impNeto actual * 75%) / 2
+    const base=Math.round(((antImpNeto*0.75)+(c93*0.75))/2/1000)*1000;
+    c104=base;
+  }else if(metodo==='25'){
+    // 25% del impuesto neto del año actual
+    c104=Math.round(c93*0.25/1000)*1000;
+  }
+  set('c104',c104);
+
+  // SALDO
+  const totalPagos=v('c99')+v('c100')+c103;
+  const totalCargo=c96+c104;
+  if(totalCargo>totalPagos){
+    set('c110',totalCargo-totalPagos);set('c111',0);
+  }else{
+    set('c110',0);set('c111',totalPagos-totalCargo);
+  }
+
+  // Resumen cards
+  document.getElementById('resumen').innerHTML=`
+    <div class="stat-card blue"><div class="val">${fN(rlg)}</div><div class="lbl">Renta Liquida Gravable</div></div>
+    <div class="stat-card amber"><div class="val">${fN(c96)}</div><div class="lbl">Total Impuesto a Cargo</div></div>
+    <div class="stat-card ${v('c110')>0?'red':'green'}"><div class="val">${fN(v('c110'))}</div><div class="lbl">Saldo a Pagar</div></div>
+    <div class="stat-card green"><div class="val">${fN(v('c111'))}</div><div class="lbl">Saldo a Favor</div></div>`;
+}
+
+// ── VALIDACION PRO ──
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
+
+function getDeviceFingerprint(){
+  let uid=localStorage.getItem('exogenadian_device_id');
+  if(!uid){uid='D-'+crypto.randomUUID().split('-').slice(0,2).join('');localStorage.setItem('exogenadian_device_id',uid)}
+  return uid;
+}
+
+async function validarPro(){
+  const key=document.getElementById('proKey').value.trim();
+  const errEl=document.getElementById('proError');
+  if(!key){errEl.textContent='Ingresa tu clave PRO';return}
+  errEl.textContent='Verificando...';errEl.style.color='var(--muted)';
+  try{
+    const fp=getDeviceFingerprint();
+    const url=APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(key)+'&device='+encodeURIComponent(fp);
+    const res=await fetch(url);
+    const data=await res.json();
+    if(data.valid){
+      errEl.textContent='';
+      exportExcel();
+      return;
+    }
+    errEl.style.color='var(--red)';
+    if(data.reason==='Clave expirada'){
+      errEl.textContent='Tu suscripción expiró el '+data.expiry+'. Renueva en exogenadian.com';
+    }else if(data.reason==='Clave cancelada'){
+      errEl.textContent='Tu suscripción fue cancelada. Contacta al administrador.';
+    }else if(data.reason&&data.reason.includes('dispositivos')){
+      errEl.textContent='Límite de dispositivos alcanzado. Contacta soporte.';
+    }else{
+      errEl.textContent='Clave no encontrada. Verifica o suscríbete en exogenadian.com';
+    }
+  }catch(e){errEl.style.color='var(--red)';errEl.textContent='Error verificando. Intenta de nuevo.';}
+}
+
+// Excel export — Formato DIAN real con 2 hojas
+async function exportExcel(){
+  const wb=new ExcelJS.Workbook();
+
+  // ═══ HOJA 1: FORMULARIO 110 ═══
+  const ws=wb.addWorksheet('110');
+
+  // Estilos
+  const DIAN_BLUE='FF1A3C6E';
+  const LIGHT_BLUE='FFE1F0F7';
+  const SEC_BLUE='FFD4E6F1';
+  const TOTAL_GRAY='FFF0F2F5';
+  const RESULT_GREEN='FFE8F5E9';
+  const WHITE='FFFFFFFF';
+  const thin={style:'thin',color:{argb:'FF808080'}};
+  const border={top:thin,bottom:thin,left:thin,right:thin};
+  const thickBorder={top:{style:'medium'},bottom:{style:'medium'},left:{style:'medium'},right:{style:'medium'}};
+  const fArial={name:'Arial',size:10};
+  const fBold={...fArial,bold:true};
+  const fWhite={...fBold,color:{argb:WHITE}};
+  const fSec={...fBold,color:{argb:DIAN_BLUE},size:9};
+  const fillDian={type:'pattern',pattern:'solid',fgColor:{argb:DIAN_BLUE}};
+  const fillLight={type:'pattern',pattern:'solid',fgColor:{argb:LIGHT_BLUE}};
+  const fillSec={type:'pattern',pattern:'solid',fgColor:{argb:SEC_BLUE}};
+  const fillTotal={type:'pattern',pattern:'solid',fgColor:{argb:TOTAL_GRAY}};
+  const fillResult={type:'pattern',pattern:'solid',fgColor:{argb:RESULT_GREEN}};
+  const numFmt='#,##0';
+
+  // Columnas: A=seccion(5), B-J=concepto(merge), K=casilla(5), L=valor(15)
+  ws.getColumn(1).width=6;
+  for(let c=2;c<=10;c++)ws.getColumn(c).width=10;
+  ws.getColumn(11).width=5;ws.getColumn(12).width=18;
+
+  const nit=document.getElementById('cfgNit').value||'';
+  const razon=document.getElementById('cfgRazon').value||'';
+  const year=document.getElementById('cfgYear').value||'2025';
+  const actividad=document.getElementById('cfgActividad').value||'';
+
+  // ── Encabezado DIAN ──
+  let r=1;
+  // Fila 1: DIAN | Titulo | 110
+  ws.mergeCells(`A${r}:A${r+3}`);
+  const dianCell=ws.getCell(`A${r}`);
+  dianCell.value='DIAN';dianCell.font={...fWhite,size:12};dianCell.fill=fillDian;
+  dianCell.alignment={vertical:'middle',horizontal:'center',wrapText:true};
+  dianCell.border=thickBorder;
+
+  ws.mergeCells(`B${r}:J${r+1}`);
+  const tituloCell=ws.getCell(`B${r}`);
+  tituloCell.value='Declaracion de Renta y Complementarios\nPersonas Juridicas y Asimiladas';
+  tituloCell.font={...fBold,size:11};tituloCell.alignment={vertical:'middle',horizontal:'center',wrapText:true};
+  tituloCell.border=thickBorder;
+
+  ws.mergeCells(`K${r}:L${r+1}`);
+  const f110Cell=ws.getCell(`K${r}`);
+  f110Cell.value='110';f110Cell.font={name:'Arial',size:28,bold:true,color:{argb:WHITE}};
+  f110Cell.fill=fillDian;f110Cell.alignment={vertical:'middle',horizontal:'center'};
+  f110Cell.border=thickBorder;
+
+  r=3;
+  ws.mergeCells(`B${r}:J${r}`);
+  ws.getCell(`B${r}`).value='Privada · AG '+year;ws.getCell(`B${r}`).font={...fArial,size:9,italic:true};
+  ws.getCell(`B${r}`).alignment={horizontal:'center'};
+
+  // Fila datos generales
+  r=5;
+  ws.mergeCells(`A${r}:A${r+1}`);
+  const dgCell=ws.getCell(`A${r}`);
+  dgCell.value='Datos\nGenerales';dgCell.font=fSec;dgCell.fill=fillSec;
+  dgCell.alignment={vertical:'middle',horizontal:'center',wrapText:true};dgCell.border=border;
+
+  ws.mergeCells(`B${r}:E${r}`);ws.getCell(`B${r}`).value='5. NIT: '+nit;ws.getCell(`B${r}`).font=fBold;ws.getCell(`B${r}`).border=border;
+  ws.mergeCells(`F${r}:J${r}`);ws.getCell(`F${r}`).value='24. Actividad: '+actividad;ws.getCell(`F${r}`).font=fArial;ws.getCell(`F${r}`).border=border;
+  ws.mergeCells(`K${r}:L${r}`);ws.getCell(`K${r}`).value='1. Ano: '+year;ws.getCell(`K${r}`).font=fBold;ws.getCell(`K${r}`).border=border;
+
+  r=6;
+  ws.mergeCells(`B${r}:L${r}`);ws.getCell(`B${r}`).value='11. Razon social: '+razon;ws.getCell(`B${r}`).font=fBold;ws.getCell(`B${r}`).border=border;
+
+  // ── Casillas del formulario ──
+  const casillas=[
+    {s:'Patrimonio'},
+    {c:36,d:'Efectivo y equivalentes al efectivo'},
+    {c:37,d:'Inversiones e instrumentos financieros derivados'},
+    {c:38,d:'Cuentas, documentos y arrendamientos financieros por cobrar'},
+    {c:39,d:'Inventarios'},
+    {c:40,d:'Activos intangibles'},
+    {c:41,d:'Activos biologicos'},
+    {c:42,d:'Propiedades, planta y equipo, propiedades de inversion y ANCMV'},
+    {c:43,d:'Otros activos'},
+    {c:44,d:'Total patrimonio bruto (36 a 43)',f:'SUM(L{r36}:L{r43})',t:1},
+    {c:45,d:'Pasivos'},
+    {c:46,d:'Total patrimonio liquido (44 - 45)',f:'L{r44}-L{r45}',t:1},
+    {s:'Ingresos'},
+    {c:47,d:'Ingresos brutos de actividades ordinarias'},
+    {c:48,d:'Ingresos financieros'},
+    {c:49,d:'Dividendos y/o participaciones no constitutivos de renta ni ganancia ocasional'},
+    {c:50,d:'Dividendos y/o participaciones recibidas por CHC exentos'},
+    {c:51,d:'Dividendos y/o participaciones gravadas recibidas'},
+    {c:52,d:'Dividendos y/o participaciones gravadas recibidas (ext)'},
+    {c:53,d:'Dividendos y/o participaciones gravadas al 7,5%'},
+    {c:54,d:'Dividendos y/o participaciones gravadas a tarifa general'},
+    {c:57,d:'Otros ingresos'},
+    {c:58,d:'Total ingresos brutos (47 a 54 + 57)',f:'SUM(L{r47}:L{r54})+L{r57}',t:1},
+    {c:59,d:'Devoluciones, rebajas y descuentos en ventas'},
+    {c:60,d:'Ingresos no constitutivos de renta ni ganancia ocasional'},
+    {c:61,d:'Total ingresos netos (58 - 59 - 60)',f:'L{r58}-L{r59}-L{r60}',t:1},
+    {s:'Costos y Deducciones'},
+    {c:62,d:'Costos'},
+    {c:63,d:'Gastos de administracion'},
+    {c:64,d:'Gastos de distribucion y ventas'},
+    {c:65,d:'Gastos financieros'},
+    {c:66,d:'Otros gastos y deducciones'},
+    {c:67,d:'Total costos y gastos deducibles (62 a 66)',f:'SUM(L{r62}:L{r66})',t:1},
+    {s:'Renta'},
+    {c:70,d:'Renta por recuperacion de deducciones'},
+    {c:71,d:'Renta Pasiva - ECE sin residencia fiscal en Colombia'},
+    {c:72,d:'Renta liquida ordinaria del ejercicio',f:'MAX(L{r61}-L{r67}+L{r70}+L{r71},0)',t:1},
+    {c:73,d:'Perdida liquida del ejercicio',f:'MAX(-(L{r61}-L{r67}+L{r70}+L{r71}),0)',t:1},
+    {c:74,d:'Compensaciones'},
+    {c:75,d:'Renta liquida (72 - 74)',f:'MAX(L{r72}-L{r74},0)',t:1},
+    {c:76,d:'Renta presuntiva'},
+    {c:77,d:'Renta exenta'},
+    {c:78,d:'Rentas gravables'},
+    {c:79,d:'Renta liquida gravable',f:'MAX(MAX(L{r75},L{r76})-L{r77}+L{r78},0)',t:2},
+    {s:'Ganancias Ocasionales'},
+    {c:80,d:'Ingresos por ganancias ocasionales'},
+    {c:81,d:'Costos por ganancias ocasionales'},
+    {c:82,d:'Ganancias ocasionales no gravadas y exentas'},
+    {c:83,d:'Ganancias ocasionales gravables',f:'MAX(L{r80}-L{r81}-L{r82},0)',t:1},
+    {s:'Liquidacion Privada'},
+    {c:84,d:'Impuesto sobre rentas liquidas gravables',f:'ROUND(L{r79}*'+getTarifaRenta()+',-3)',t:1},
+    {c:85,d:'Impuesto dividendos 7,5%',f:'ROUND(L{r53}*0.075,-3)'},
+    {c:86,d:'Impuesto dividendos tarifa general',f:'ROUND(L{r54}*'+getTarifaRenta()+',-3)'},
+    {c:87,d:'Impuesto dividendos exterior'},
+    {c:91,d:'Total impuesto sobre rentas',f:'L{r84}+L{r85}+L{r86}+L{r87}',t:1},
+    {c:92,d:'Descuentos tributarios'},
+    {c:93,d:'Impuesto neto de renta (91 - 92)',f:'MAX(L{r91}-L{r92},0)',t:1},
+    {c:94,d:'Impuesto de ganancias ocasionales',f:'ROUND(L{r83}*0.15,-3)'},
+    {c:95,d:'Descuento impuestos pagados en el exterior'},
+    {c:96,d:'Total impuesto a cargo',f:'MAX(L{r93}+L{r94}-L{r95},0)',t:1},
+    {s:'Pagos'},
+    {c:99,d:'Anticipo renta año gravable anterior'},
+    {c:100,d:'Saldo a favor año gravable anterior sin solicitud de devolucion'},
+    {c:101,d:'Autorretenciones'},
+    {c:102,d:'Otras retenciones'},
+    {c:103,d:'Total retenciones año gravable',f:'L{r101}+L{r102}',t:1},
+    {c:104,d:'Anticipo renta para el año gravable siguiente'},
+    {s:'Saldo'},
+    {c:110,d:'SALDO A PAGAR',f:'MAX(L{r96}+L{r104}-L{r99}-L{r100}-L{r103},0)',t:2},
+    {c:111,d:'SALDO A FAVOR',f:'MAX(L{r99}+L{r100}+L{r103}-L{r96}-L{r104},0)',t:2},
+  ];
+
+  r=8;
+  const rowMap={};
+  let secStart=r;
+
+  for(const item of casillas){
+    if(item.s){
+      // Seccion
+      ws.mergeCells(`A${r}:L${r}`);
+      const sc=ws.getCell(`A${r}`);
+      sc.value=item.s.toUpperCase();sc.font=fSec;sc.fill=fillSec;
+      sc.alignment={horizontal:'left'};sc.border=border;
+      r++;continue;
+    }
+    rowMap[item.c]=r;
+
+    // Col A: vacio (seccion ya puesta arriba)
+    // Col B-J: concepto (merge)
+    ws.mergeCells(`B${r}:J${r}`);
+    const conceptCell=ws.getCell(`B${r}`);
+    conceptCell.value=item.d;
+    conceptCell.font=item.t===2?fBold:fArial;
+    conceptCell.alignment={vertical:'middle',wrapText:true};
+
+    // Col K: casilla
+    const casCell=ws.getCell(`K${r}`);
+    casCell.value=item.c;casCell.font={...fArial,size:8,color:{argb:'FF888888'}};
+    casCell.alignment={horizontal:'center',vertical:'middle'};
+
+    // Col L: valor
+    const valCell=ws.getCell(`L${r}`);
+    const val=v('c'+item.c);
+    valCell.value=val||0;
+    valCell.numFmt=numFmt;
+    valCell.font=item.t===2?{...fBold,size:11}:item.t===1?fBold:fArial;
+
+    // Fills
+    const rowFill=item.t===2?fillResult:item.t===1?fillTotal:fillLight;
+    for(let c=1;c<=12;c++){
+      const cell=ws.getCell(r,c);
+      cell.fill=rowFill;cell.border=border;
+    }
+    ws.getRow(r).height=item.d.length>60?28:20;
+    r++;
+  }
+
+  // Aplicar formulas
+  for(const item of casillas){
+    if(item.s||!item.f)continue;
+    let formula=item.f;
+    for(const[cas,row] of Object.entries(rowMap)){
+      formula=formula.replace(new RegExp('\\{r'+cas+'\\}','g'),row);
+    }
+    ws.getCell(`L${rowMap[item.c]}`).value={formula};
+  }
+
+  // Firma
+  r+=2;
+  ws.mergeCells(`A${r}:L${r}`);
+  ws.getCell(`A${r}`).value='El contador debe validar antes de presentar — Borrador generado por ExogenaDIAN';
+  ws.getCell(`A${r}`).font={...fArial,size:8,italic:true,color:{argb:'FF999999'}};
+
+  // ═══ HOJA 2: IMPUESTO MINIMO (TTD) ═══
+  const ws2=wb.addWorksheet('Impuesto minimo');
+  ws2.getColumn(1).width=5;ws2.getColumn(2).width=35;ws2.getColumn(3).width=18;ws2.getColumn(4).width=20;ws2.getColumn(5).width=55;
+
+  let r2=1;
+  ws2.mergeCells(`B${r2}:E${r2}`);
+  ws2.getCell(`B${r2}`).value='TASA MINIMA DE TRIBUTACION EN RENTA (Paragrafo 6 art. 240 ET)';
+  ws2.getCell(`B${r2}`).font={...fBold,size:12,color:{argb:DIAN_BLUE}};
+  r2+=2;
+
+  ws2.getCell(`B${r2}`).value='TTD = ID / UD';ws2.getCell(`B${r2}`).font={...fBold,size:11};
+  ws2.getCell(`D${r2}`).value='Si TTD < 15%, se genera Impuesto Adicional (IA)';ws2.getCell(`D${r2}`).font={...fArial,italic:true};
+  r2+=2;
+
+  // Referencia a hoja 110
+  const refImpNeto=`'110'!L${rowMap[93]}`;
+  const refDescTrib=`'110'!L${rowMap[92]}`;
+
+  const ttdItems=[
+    {d:'INR: Impuesto neto de renta',ref:refImpNeto,id:'ttd_inr',desc:'Despues de descuentos tributarios (casilla 93)'},
+    {d:'DTC: Descuentos tributarios',ref:refDescTrib,id:'ttd_dtc',desc:'Creditos tributarios y Art. 254 ET (casilla 92)'},
+    {d:'IRP: Impuesto renta pasiva ECE',val:0,id:'ttd_irp',desc:'Renta liquida pasiva x tarifa general (si aplica)'},
+    {d:'',sep:true},
+    {d:'UC: Utilidad contable antes de impuestos',val:vTTD('ttdUtilidad'),id:'ttd_uc',desc:'Utilidad contable o financiera antes de impuestos'},
+    {d:'DPARL: Diferencias permanentes (+renta)',val:vTTD('ttdDifPerm'),id:'ttd_dparl',desc:'Diferencias permanentes que aumentan la renta liquida'},
+    {d:'INCRNGO',val:vTTD('ttdINCRNGO'),id:'ttd_incrngo',desc:'Ingresos no constitutivos de renta ni ganancia ocasional'},
+    {d:'VIMPP: Valor metodo participacion',val:0,id:'ttd_vimpp',desc:'Ingreso metodo de participacion patrimonial'},
+    {d:'VNGO: Valor neto ganancia ocasional',val:0,id:'ttd_vngo',desc:'Valor neto de ingresos por ganancia ocasional'},
+    {d:'RE: Rentas exentas (tratados, CHC, 235-2)',val:vTTD('ttdExentas'),id:'ttd_re',desc:'Rentas exentas por tratados, CHC, Art. 235-2 lit a) y b)'},
+    {d:'C: Compensaciones no contables',val:0,id:'ttd_c',desc:'Compensacion de perdidas fiscales no en utilidad contable'},
+  ];
+
+  ws2.getCell(`B${r2}`).value='Componente';ws2.getCell(`B${r2}`).font=fBold;ws2.getCell(`B${r2}`).fill=fillSec;ws2.getCell(`B${r2}`).border=border;
+  ws2.getCell(`C${r2}`).value='Valor';ws2.getCell(`C${r2}`).font=fBold;ws2.getCell(`C${r2}`).fill=fillSec;ws2.getCell(`C${r2}`).border=border;
+  ws2.getCell(`D${r2}`).value='Referencia';ws2.getCell(`D${r2}`).font=fBold;ws2.getCell(`D${r2}`).fill=fillSec;ws2.getCell(`D${r2}`).border=border;
+  ws2.getCell(`E${r2}`).value='Descripcion';ws2.getCell(`E${r2}`).font=fBold;ws2.getCell(`E${r2}`).fill=fillSec;ws2.getCell(`E${r2}`).border=border;
+  r2++;
+
+  const ttdRowMap={};
+  for(const item of ttdItems){
+    if(item.sep){r2++;continue}
+    ttdRowMap[item.id]=r2;
+    ws2.getCell(`B${r2}`).value=item.d;ws2.getCell(`B${r2}`).font=fArial;ws2.getCell(`B${r2}`).border=border;
+    if(item.ref){
+      ws2.getCell(`C${r2}`).value={formula:item.ref};
+    }else{
+      ws2.getCell(`C${r2}`).value=item.val||0;
+    }
+    ws2.getCell(`C${r2}`).numFmt=numFmt;ws2.getCell(`C${r2}`).font=fBold;ws2.getCell(`C${r2}`).border=border;
+    ws2.getCell(`C${r2}`).fill=fillLight;
+    ws2.getCell(`D${r2}`).value=item.ref?'← Hoja 110':'Digitar';ws2.getCell(`D${r2}`).font={...fArial,size:8,color:{argb:'FF999999'}};ws2.getCell(`D${r2}`).border=border;
+    ws2.getCell(`E${r2}`).value=item.desc;ws2.getCell(`E${r2}`).font={...fArial,size:9};ws2.getCell(`E${r2}`).border=border;
+    r2++;
+  }
+
+  // Formulas de resultado
+  r2+=2;
+  const rINR=ttdRowMap['ttd_inr'],rDTC=ttdRowMap['ttd_dtc'],rIRP=ttdRowMap['ttd_irp'];
+  const rUC=ttdRowMap['ttd_uc'],rDPARL=ttdRowMap['ttd_dparl'],rINCRNGO=ttdRowMap['ttd_incrngo'];
+  const rVIMPP=ttdRowMap['ttd_vimpp'],rVNGO=ttdRowMap['ttd_vngo'],rRE=ttdRowMap['ttd_re'],rC=ttdRowMap['ttd_c'];
+
+  ws2.getCell(`B${r2}`).value='Impuesto Depurado (ID)';ws2.getCell(`B${r2}`).font=fBold;ws2.getCell(`B${r2}`).fill=fillTotal;ws2.getCell(`B${r2}`).border=border;
+  ws2.getCell(`C${r2}`).value={formula:`C${rINR}+C${rDTC}-C${rIRP}`};
+  ws2.getCell(`C${r2}`).numFmt=numFmt;ws2.getCell(`C${r2}`).font=fBold;ws2.getCell(`C${r2}`).fill=fillTotal;ws2.getCell(`C${r2}`).border=border;
+  const rID=r2;r2++;
+
+  ws2.getCell(`B${r2}`).value='Utilidad Depurada (UD)';ws2.getCell(`B${r2}`).font=fBold;ws2.getCell(`B${r2}`).fill=fillTotal;ws2.getCell(`B${r2}`).border=border;
+  ws2.getCell(`C${r2}`).value={formula:`C${rUC}+C${rDPARL}-C${rINCRNGO}-C${rVIMPP}-C${rVNGO}-C${rRE}-C${rC}`};
+  ws2.getCell(`C${r2}`).numFmt=numFmt;ws2.getCell(`C${r2}`).font=fBold;ws2.getCell(`C${r2}`).fill=fillTotal;ws2.getCell(`C${r2}`).border=border;
+  const rUD=r2;r2+=2;
+
+  ws2.getCell(`B${r2}`).value='TTD (Tasa de Tributacion Depurada)';ws2.getCell(`B${r2}`).font={...fBold,size:12};ws2.getCell(`B${r2}`).fill=fillResult;ws2.getCell(`B${r2}`).border=border;
+  ws2.getCell(`C${r2}`).value={formula:`IF(C${rUD}>0,C${rID}/C${rUD},0)`};
+  ws2.getCell(`C${r2}`).numFmt='0.00%';ws2.getCell(`C${r2}`).font={...fBold,size:14};ws2.getCell(`C${r2}`).fill=fillResult;ws2.getCell(`C${r2}`).border=border;
+  const rTTD=r2;r2+=2;
+
+  ws2.getCell(`B${r2}`).value='Impuesto Adicional (IA)';ws2.getCell(`B${r2}`).font={...fBold,size:12,color:{argb:'FFC62828'}};ws2.getCell(`B${r2}`).border=border;
+  ws2.getCell(`C${r2}`).value={formula:`IF(AND(C${rTTD}<0.15,C${rUD}>0),ROUND(C${rUD}*0.15-C${rID},-3),0)`};
+  ws2.getCell(`C${r2}`).numFmt=numFmt;ws2.getCell(`C${r2}`).font={...fBold,size:14,color:{argb:'FFC62828'}};ws2.getCell(`C${r2}`).border=border;
+  r2+=2;
+
+  ws2.getCell(`B${r2}`).value='Si IA > 0, se suma al impuesto neto de renta.';ws2.getCell(`B${r2}`).font={...fArial,size:9,italic:true};
+
+  // ═══ HOJA 3: DEDUCIBILIDAD (si hay datos) ═══
+  const noDedCuentas=cuentasBalance.filter(c=>c.ded==='no_ded'||c.ded==='gmf');
+  if(noDedCuentas.length>0){
+    const ws3=wb.addWorksheet('Gastos No Deducibles');
+    ws3.getColumn(1).width=12;ws3.getColumn(2).width=45;ws3.getColumn(3).width=18;
+    ws3.getColumn(4).width=8;ws3.getColumn(5).width=30;ws3.getColumn(6).width=10;
+
+    let r3=1;
+    ws3.getCell(`A${r3}`).value='GASTOS NO DEDUCIBLES';ws3.getCell(`A${r3}`).font={...fBold,size:12,color:{argb:DIAN_BLUE}};
+    r3+=2;
+
+    const headers=['Cuenta','Nombre','Valor','Tipo','Regla','Articulo'];
+    headers.forEach((h,i)=>{
+      const cell=ws3.getCell(r3,i+1);
+      cell.value=h;cell.font=fBold;cell.fill=fillSec;cell.border=border;
+    });
+    r3++;
+
+    for(const d of noDedCuentas.sort((a,b)=>b.val-a.val)){
+      ws3.getCell(r3,1).value=d.code;ws3.getCell(r3,1).font=fArial;ws3.getCell(r3,1).border=border;
+      ws3.getCell(r3,2).value=d.name;ws3.getCell(r3,2).font=fArial;ws3.getCell(r3,2).border=border;
+      ws3.getCell(r3,3).value=d.val;ws3.getCell(r3,3).numFmt=numFmt;ws3.getCell(r3,3).font=fBold;ws3.getCell(r3,3).border=border;
+      ws3.getCell(r3,4).value=d.ded==='gmf'?'50% DED':'NO DED';ws3.getCell(r3,4).font={...fArial,color:{argb:d.ded==='gmf'?'FFD97706':'FFC62828'}};ws3.getCell(r3,4).border=border;
+      ws3.getCell(r3,5).value=d.regla?d.regla.nom:'Manual';ws3.getCell(r3,5).font=fArial;ws3.getCell(r3,5).border=border;
+      ws3.getCell(r3,6).value=d.regla?'Art. '+d.regla.art:'';ws3.getCell(r3,6).font={...fArial,size:9};ws3.getCell(r3,6).border=border;
+      r3++;
+    }
+
+    r3+=2;
+    const totalNoDed=noDedCuentas.filter(c=>c.ded==='no_ded').reduce((s,c)=>s+c.val,0);
+    const totalGmfNoDed=Math.round(noDedCuentas.filter(c=>c.ded==='gmf').reduce((s,c)=>s+c.val,0)*0.5);
+    ws3.getCell(`A${r3}`).value='100% No deducible:';ws3.getCell(`B${r3}`).value=totalNoDed;ws3.getCell(`B${r3}`).numFmt=numFmt;
+    r3++;
+    ws3.getCell(`A${r3}`).value='GMF (50% no ded):';ws3.getCell(`B${r3}`).value=totalGmfNoDed;ws3.getCell(`B${r3}`).numFmt=numFmt;
+    r3++;
+    ws3.getCell(`A${r3}`).value='TOTAL fiscal no ded:';ws3.getCell(`A${r3}`).font=fBold;ws3.getCell(`B${r3}`).value=totalNoDed+totalGmfNoDed;ws3.getCell(`B${r3}`).numFmt=numFmt;ws3.getCell(`B${r3}`).font={...fBold,color:{argb:'FFC62828'}};
+  }
+
+  // ── Descargar ──
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`F110_Renta_AG${year}_${nit||'SIN_NIT'}.xlsx`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// Init
+recalcular();
+recalcularTTD();
+
+// Format inputs on blur
+document.querySelectorAll('.f110-row .f-val input:not([readonly])').forEach(inp=>{
+  inp.addEventListener('focus',function(){
+    this.value=this.value.replace(/[,.\s]/g,'');
+    this.select();
+  });
+  inp.addEventListener('blur',function(){
+    const n=parseInt(this.value.replace(/[,.\s]/g,''))||0;
+    if(n)this.value=n.toLocaleString('es-CO');
+    this.classList.toggle('filled',n!==0);
+  });
+});
+</script>
 </body>
 </html>

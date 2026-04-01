@@ -12,6 +12,11 @@
 <meta property="og:url" content="https://exogenadian.com/conciliacion.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="ExógenaDIAN">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Conciliación Bancaria Automática","url":"https://exogenadian.com/conciliacion.html","description":"Concilia GRATIS extracto bancario vs libro auxiliar contable. Detección automática de columnas, cruce por monto y fecha.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
@@ -80,6 +85,7 @@
 <div class="page-header"><div class="page-badge">Conciliación Bancaria Automática</div><h1>Concilia extracto vs libro auxiliar</h1><p>Sube ambos archivos en Excel o CSV. La herramienta detecta automáticamente la estructura y te permite verificar antes de procesar.</p></div>
 <div class="security"><div class="sec-icon">🔒</div><div class="sec-content"><strong>Tu información está 100% protegida</strong><p>Esta herramienta funciona completamente en tu navegador. Tus archivos <u>nunca se suben a ningún servidor</u>, no se transmiten por internet y no quedan almacenados. Ni ExógenaDIAN ni terceros acceden a tu información financiera. Al cerrar la pestaña, todo desaparece.</p></div></div>
 <div class="steps-indicator"><div class="step-ind active" id="si1"><div class="step-num">1</div> Subir</div><div class="step-arrow">→</div><div class="step-ind" id="si2"><div class="step-num">2</div> Verificar</div><div class="step-arrow">→</div><div class="step-ind" id="si3"><div class="step-num">3</div> Resultados</div></div>
+
 <div id="step1">
 <div class="upload-grid">
 <div class="drop-zone" id="dzE"><input type="file" accept=".xlsx,.xls,.csv,.tsv,.txt" id="fE"><button class="dz-clear" onclick="clearFile('E');event.stopPropagation()">✕</button><span class="dz-icon">🏦</span><div class="dz-title">Extracto Bancario</div><div class="dz-hint">Excel o CSV · Bancolombia, Davivienda, Bogotá, otros</div><div class="dz-file" id="nE"></div><div class="dz-rows" id="rE"></div></div>
@@ -90,6 +96,7 @@
   <button class="btn btn-primary" id="btnNext" disabled onclick="goStep2()">Continuar → Verificar columnas</button>
 </div>
 </div>
+
 <div id="step2" class="hidden">
 <div class="card" id="cardE"></div>
 <div class="card" id="cardA"></div>
@@ -97,6 +104,7 @@
 <div class="ctrl-row"><div class="ctrl-item"><label>Tolerancia monto</label><select id="optTol"><option value="0">Exacto</option><option value="1" selected>± $1</option><option value="10">± $10</option><option value="100">± $100</option><option value="500">± $500</option></select></div></div></div>
 <div class="actions"><button class="btn btn-outline" onclick="goStep1()">← Volver</button><button class="btn btn-primary" onclick="ejecutar()">🔄 Conciliar</button></div>
 </div>
+
 <div id="step3" class="hidden">
 <div class="summary" id="sumCards"></div><div id="reconBox"></div><div id="analysisBox"></div>
 <div class="card" style="padding:0;overflow:hidden"><div class="results-tabs" id="rTabs"></div><div id="rPanels"></div></div>
@@ -105,6 +113,1090 @@
 <div class="disclaimer-footer"><p>🔒 Ningún dato fue enviado, almacenado ni procesado fuera de tu navegador. Al cerrar esta pestaña, toda la información se elimina automáticamente.</p></div>
 </div>
 </div>
-<script>const _0x5087be=_0x4b81;(function(_0x6a5d68,_0x3987b7){const _0x174eb9=_0x4b81,_0x49004e=_0x6a5d68();while(!![]){try{const _0x1d6ada=-parseInt(_0x174eb9(0x2c0))/0x1+-parseInt(_0x174eb9(0x1da))/0x2*(parseInt(_0x174eb9(0x30b))/0x3)+-parseInt(_0x174eb9(0x1f3))/0x4*(-parseInt(_0x174eb9(0x120))/0x5)+parseInt(_0x174eb9(0x153))/0x6*(parseInt(_0x174eb9(0x341))/0x7)+-parseInt(_0x174eb9(0x2e9))/0x8+-parseInt(_0x174eb9(0x333))/0x9+-parseInt(_0x174eb9(0x10b))/0xa;if(_0x1d6ada===_0x3987b7)break;else _0x49004e['push'](_0x49004e['shift']());}catch(_0xc3576a){_0x49004e['push'](_0x49004e['shift']());}}}(_0x1af2,0x74073));const FREE_LIMIT=0x1f4,PRICING=[{'max':0x32,'price':0x0},{'max':0xc8,'price':0xbb8,'label':'$3.000'},{'max':0x1f4,'price':0x1388,'label':'$5.000'},{'max':0xf423f,'price':0x2710,'label':_0x5087be(0x352)}],F={'E':{'raw':null,'display':null,'headerRow':0x0,'noHeader':![],'numFmt':_0x5087be(0x2a4),'map':{},'name':''},'A':{'raw':null,'display':null,'headerRow':0x0,'noHeader':![],'numFmt':'auto','map':{},'name':''}};let resultados=null;['E','A'][_0x5087be(0x28c)](_0x17ac98=>{const _0x3fd888=_0x5087be,_0x46d0af=document['getElement'+'ById']('dz'+_0x17ac98),_0x416529=document[_0x3fd888(0x386)+'ById']('f'+_0x17ac98);['dragover',_0x3fd888(0x2f5)]['forEach'](_0x3c565a=>_0x46d0af['addEventLi'+'stener'](_0x3c565a,_0x19590c=>{_0x19590c['preventDef'+'ault'](),_0x46d0af['classList']['add']('dragover');})),['dragleave',_0x3fd888(0x13c)][_0x3fd888(0x28c)](_0x2c7958=>_0x46d0af['addEventLi'+'stener'](_0x2c7958,_0x568d24=>{const _0x3233f0=_0x3fd888;_0x568d24['preventDef'+_0x3233f0(0x103)](),_0x46d0af['classList'][_0x3233f0(0x383)]('dragover');})),_0x46d0af[_0x3fd888(0x141)+_0x3fd888(0x2c1)](_0x3fd888(0x13c),_0x38d353=>{const _0x370abc=_0x3fd888;if(_0x38d353['dataTransf'+'er'][_0x370abc(0x309)][0x0])readFile(_0x38d353[_0x370abc(0x20a)+'er']['files'][0x0],_0x17ac98);}),_0x416529['addEventLi'+'stener'](_0x3fd888(0x374),_0x5b66ff=>{const _0x42a585=_0x3fd888;if(_0x5b66ff[_0x42a585(0x18b)]['files'][0x0])readFile(_0x5b66ff['target']['files'][0x0],_0x17ac98);});});function readFile(_0x582f99,_0xf45ce0){const _0x42ef36=new FileReader();_0x42ef36['onload']=_0x2e138f=>{const _0x13b5b3=_0x4b81;try{const _0x12267f=XLSX[_0x13b5b3(0x173)](_0x2e138f['target']['result'],{'type':'array','cellDates':!![]});let _0xb77041=null,_0xbb0bb6=0x0;for(const _0x2e2c3c of _0x12267f['SheetNames']){const _0x2a8ff4=XLSX['utils'][_0x13b5b3(0x177)+'son'](_0x12267f[_0x13b5b3(0x3b5)][_0x2e2c3c],{'header':0x1,'defval':'','raw':!![]}),_0x2055b0=XLSX[_0x13b5b3(0x199)][_0x13b5b3(0x177)+'son'](_0x12267f[_0x13b5b3(0x3b5)][_0x2e2c3c],{'header':0x1,'defval':'','raw':![]}),_0x3ce551=_0x2a8ff4[_0x13b5b3(0x1c5)](_0x40b129=>_0x40b129['some'](_0x24ddaf=>_0x24ddaf!==''&&_0x24ddaf!=null))[_0x13b5b3(0x361)];_0x3ce551>_0xbb0bb6&&(_0xb77041={'sn':_0x2e2c3c,'raw':_0x2a8ff4,'disp':_0x2055b0},_0xbb0bb6=_0x3ce551);}if(!_0xb77041||_0xbb0bb6<0x2){alert(_0x13b5b3(0x326)+_0x13b5b3(0x12d)+'cío\x20o\x20no\x20t'+'iene\x20datos'+'\x20suficient'+_0x13b5b3(0xc9));return;}const _0x47aa54=[],_0x5e2361=[];for(let _0x196f22=0x0;_0x196f22<_0xb77041[_0x13b5b3(0x261)]['length'];_0x196f22++){_0xb77041[_0x13b5b3(0x261)][_0x196f22]['some'](_0x38a0d7=>_0x38a0d7!==''&&_0x38a0d7!=null)&&(_0x47aa54['push'](_0xb77041[_0x13b5b3(0x261)][_0x196f22]),_0x5e2361[_0x13b5b3(0x17b)](_0xb77041['disp'][_0x196f22]||_0xb77041[_0x13b5b3(0x261)][_0x196f22]));}F[_0xf45ce0][_0x13b5b3(0x261)]=_0x47aa54,F[_0xf45ce0][_0x13b5b3(0x14f)]=_0x5e2361,F[_0xf45ce0]['name']=_0x582f99[_0x13b5b3(0x2b0)],F[_0xf45ce0][_0x13b5b3(0xdb)]=findBestHeaderRow(_0x47aa54),F[_0xf45ce0][_0x13b5b3(0x22b)]=![],F[_0xf45ce0][_0x13b5b3(0x198)]='auto',document['getElement'+_0x13b5b3(0x2ab)]('n'+_0xf45ce0)[_0x13b5b3(0x25a)+'t']=_0x582f99[_0x13b5b3(0x2b0)],document[_0x13b5b3(0x386)+_0x13b5b3(0x2ab)]('r'+_0xf45ce0)[_0x13b5b3(0x25a)+'t']=_0x47aa54['length']+('\x20filas\x20·\x20h'+_0x13b5b3(0x11b))+_0xb77041['sn'],document['getElement'+_0x13b5b3(0x2ab)]('dz'+_0xf45ce0)['classList'][_0x13b5b3(0x19e)](_0x13b5b3(0x193)),checkReady();}catch(_0xf7045b){alert(_0x13b5b3(0x13f)+_0x13b5b3(0x32e)+'hivo:\x20'+_0xf7045b[_0x13b5b3(0xc7)]);}},_0x42ef36['readAsArra'+'yBuffer'](_0x582f99);}function clearFile(_0x3e1145){const _0x204f98=_0x5087be;F[_0x3e1145][_0x204f98(0x261)]=null,F[_0x3e1145]['display']=null,document[_0x204f98(0x386)+'ById']('f'+_0x3e1145)[_0x204f98(0x2d5)]='',document['getElement'+_0x204f98(0x2ab)]('n'+_0x3e1145)['textConten'+'t']='',document['getElement'+'ById']('r'+_0x3e1145)[_0x204f98(0x25a)+'t']='',document[_0x204f98(0x386)+_0x204f98(0x2ab)]('dz'+_0x3e1145)[_0x204f98(0x10a)][_0x204f98(0x383)](_0x204f98(0x193)),checkReady();}function checkReady(){const _0x5b2168=_0x5087be;document[_0x5b2168(0x386)+'ById']('btnNext')['disabled']=!(F['E'][_0x5b2168(0x261)]&&F['A'][_0x5b2168(0x261)]);}function _0x4b81(_0x32aee4,_0x548780){_0x32aee4=_0x32aee4-0xbf;const _0x1af253=_0x1af2();let _0x4b81f7=_0x1af253[_0x32aee4];if(_0x4b81['iygReS']===undefined){var _0x22975c=function(_0x5e64c4){const _0x1c91ab='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x17ac98='',_0x46d0af='';for(let _0x416529=0x0,_0x3c565a,_0x19590c,_0x2c7958=0x0;_0x19590c=_0x5e64c4['charAt'](_0x2c7958++);~_0x19590c&&(_0x3c565a=_0x416529%0x4?_0x3c565a*0x40+_0x19590c:_0x19590c,_0x416529++%0x4)?_0x17ac98+=String['fromCharCode'](0xff&_0x3c565a>>(-0x2*_0x416529&0x6)):0x0){_0x19590c=_0x1c91ab['indexOf'](_0x19590c);}for(let _0x568d24=0x0,_0x38d353=_0x17ac98['length'];_0x568d24<_0x38d353;_0x568d24++){_0x46d0af+='%'+('00'+_0x17ac98['charCodeAt'](_0x568d24)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x46d0af);};_0x4b81['ovxCHK']=_0x22975c,_0x4b81['ErLllg']={},_0x4b81['iygReS']=!![];}const _0x1fe006=_0x1af253[0x0],_0x37b0be=_0x32aee4+_0x1fe006,_0x27d0a7=_0x4b81['ErLllg'][_0x37b0be];return!_0x27d0a7?(_0x4b81f7=_0x4b81['ovxCHK'](_0x4b81f7),_0x4b81['ErLllg'][_0x37b0be]=_0x4b81f7):_0x4b81f7=_0x27d0a7,_0x4b81f7;}const HEADER_KEYWORDS=/^(fecha|descripci|detalle|concepto|valor|monto|saldo|d[eé]bito|cr[eé]dito|referencia|documento|comprobante|cuenta|tercero|nombre|sucursal|dcto|c[oó]digo|tipo|abono|cargo|retiro|identificaci|movimiento|secuencia|centro|cheque|nro|desde|hasta)/i;function findBestHeaderRow(_0x3115e9){const _0x1ab922=_0x5087be;let _0x5b3af1=0x0,_0x12efe0=-Infinity;const _0x4c4191=Math[_0x1ab922(0x1d0)](_0x3115e9['length'],0x1e);for(let _0x482d7e=0x0;_0x482d7e<_0x4c4191;_0x482d7e++){const _0x10ae75=_0x3115e9[_0x482d7e];if(!_0x10ae75||_0x10ae75[_0x1ab922(0x361)]<0x2)continue;let _0xa459a7=0x0,_0x454978=0x0;for(const _0x1112a9 of _0x10ae75){if(_0x1112a9==null||_0x1112a9==='')continue;_0x454978++;const _0xd615b2=String(_0x1112a9)[_0x1ab922(0x145)]();if(HEADER_KEYWORDS[_0x1ab922(0x299)](_0xd615b2))_0xa459a7+=0xa;else{if(typeof _0x1112a9===_0x1ab922(0x20e)&&isNaN(Number(_0xd615b2[_0x1ab922(0x162)](/[,$.\-\s]/g,''))))_0xa459a7+=0x1;else _0xa459a7-=0x1;}}_0xa459a7+=_0x454978*0.5;if(_0x482d7e+0x1<_0x3115e9[_0x1ab922(0x361)]){const _0x115a55=_0x3115e9[_0x482d7e+0x1];if(_0x115a55){const _0x4524f8=_0x115a55['filter'](_0x5b303f=>typeof _0x5b303f==='number'||_0x5b303f&&!isNaN(Number(String(_0x5b303f)[_0x1ab922(0x162)](/[,$.\-\s]/g,''))))['length'];if(_0x4524f8>=0x2)_0xa459a7+=0x5;}}_0xa459a7>_0x12efe0&&(_0x12efe0=_0xa459a7,_0x5b3af1=_0x482d7e);}return _0x5b3af1;}function detectNumFormat(_0x105455,_0x3db5b8){const _0x4482ed=_0x5087be;let _0x14b5ad=0x0,_0x5ed49b=0x0,_0x1ada25=0x0;for(let _0x2d2886=0x0;_0x2d2886<Math['min'](_0x105455[_0x4482ed(0x361)],0x32);_0x2d2886++){const _0x3cdbb2=_0x105455[_0x2d2886][_0x3db5b8];if(_0x3cdbb2==null||_0x3cdbb2===''||typeof _0x3cdbb2==='number'){_0x1ada25++;continue;}const _0x3630ed=String(_0x3cdbb2)['trim']()[_0x4482ed(0x162)](/[$\s\-()]/g,'');if(!_0x3630ed||!/\d/[_0x4482ed(0x299)](_0x3630ed))continue;if(/^\d{1,3}(\.\d{3})+(,\d{1,2})?$/['test'](_0x3630ed)){_0x14b5ad++;continue;}if(/^\d{1,3}(,\d{3})+(\.\d{1,2})?$/[_0x4482ed(0x299)](_0x3630ed)){_0x5ed49b++;continue;}if(/,\d{1,2}$/['test'](_0x3630ed)&&!_0x3630ed['includes']('.')){_0x14b5ad++;continue;}if(/\.\d{1,2}$/[_0x4482ed(0x299)](_0x3630ed)&&!_0x3630ed['includes'](',')){_0x5ed49b++;continue;}_0x1ada25++;}if(_0x14b5ad>_0x5ed49b&&_0x14b5ad>_0x1ada25)return _0x4482ed(0x283);if(_0x5ed49b>_0x14b5ad)return'us';return'plain';}function toNum(_0x25bb78,_0x4949bb){const _0x231f14=_0x5087be;if(typeof _0x25bb78==='number')return _0x25bb78;if(_0x25bb78==null||_0x25bb78==='')return 0x0;let _0x13b34d=String(_0x25bb78)[_0x231f14(0x145)]();if(/^[-–—]+$/['test'](_0x13b34d))return 0x0;_0x13b34d=_0x13b34d['replace'](/[$COP\s]/gi,'');let _0x148a7e=![];_0x13b34d['startsWith']('(')&&_0x13b34d['endsWith'](')')&&(_0x148a7e=!![],_0x13b34d=_0x13b34d['slice'](0x1,-0x1));_0x13b34d[_0x231f14(0x211)]('-')&&(_0x148a7e=!![],_0x13b34d=_0x13b34d['substring'](0x1));_0x13b34d=_0x13b34d['trim']();if(!_0x13b34d||!/\d/[_0x231f14(0x299)](_0x13b34d))return 0x0;if(_0x4949bb===_0x231f14(0x283))_0x13b34d=_0x13b34d[_0x231f14(0x162)](/\./g,'')['replace'](',','.');else{if(_0x4949bb==='us')_0x13b34d=_0x13b34d[_0x231f14(0x162)](/,/g,'');else{if(_0x13b34d[_0x231f14(0x29c)]('.')&&_0x13b34d['includes'](',')){const _0x39d08e=_0x13b34d['lastIndexO'+'f']('.'),_0x18ae5c=_0x13b34d[_0x231f14(0x1a6)+'f'](',');if(_0x18ae5c>_0x39d08e)_0x13b34d=_0x13b34d[_0x231f14(0x162)](/\./g,'')[_0x231f14(0x162)](',','.');else _0x13b34d=_0x13b34d[_0x231f14(0x162)](/,/g,'');}else{if(_0x13b34d['includes'](',')){const _0x3cad56=_0x13b34d[_0x231f14(0x231)](',')['pop']();if(_0x3cad56['length']<=0x2)_0x13b34d=_0x13b34d['replace'](',','.');else _0x13b34d=_0x13b34d[_0x231f14(0x162)](/,/g,'');}else{if(_0x13b34d['includes']('.')){const _0x134c96=_0x13b34d['split']('.');if(_0x134c96['length']>0x2)_0x13b34d=_0x13b34d[_0x231f14(0x162)](/\./g,'');}}}}}_0x13b34d=_0x13b34d[_0x231f14(0x162)](/[^\d.]/g,'');const _0x2ddd04=parseFloat(_0x13b34d);return isNaN(_0x2ddd04)?0x0:_0x148a7e?-_0x2ddd04:_0x2ddd04;}function guessYearFromTransactions(_0x305507,_0x4228fd,_0x2dbf7c){const _0x37800f=_0x5087be,_0x5a9772={};for(let _0x5af4e5=_0x2dbf7c;_0x5af4e5<Math['min'](_0x305507[_0x37800f(0x361)],_0x2dbf7c+0x64);_0x5af4e5++){const _0x14e6a9=_0x305507[_0x5af4e5]?_0x305507[_0x5af4e5][_0x4228fd]:null;if(!_0x14e6a9)continue;if(_0x14e6a9 instanceof Date&&!isNaN(_0x14e6a9)){const _0x5750e2=_0x14e6a9['getFullYea'+'r']();if(_0x5750e2>=0x7e4&&_0x5750e2<=0x7f3)_0x5a9772[_0x5750e2]=(_0x5a9772[_0x5750e2]||0x0)+0x5;else{const _0x241c40=_0x14e6a9[_0x37800f(0xf9)+_0x37800f(0x2db)]();if(_0x241c40>=0x7e4&&_0x241c40<=0x7f3)_0x5a9772[_0x241c40]=(_0x5a9772[_0x241c40]||0x0)+0x5;}continue;}const _0x3ac290=String(_0x14e6a9),_0x226bf9=_0x3ac290['match'](/20[2-3]\d/g);if(_0x226bf9)_0x226bf9[_0x37800f(0x28c)](_0x1efb11=>_0x5a9772[_0x1efb11]=(_0x5a9772[_0x1efb11]||0x0)+0x1);if(typeof _0x14e6a9===_0x37800f(0x367)&&_0x14e6a9>0x9c40&&_0x14e6a9<0xd6d8){const _0x50e61a=new Date((_0x14e6a9-0x63e1)*0x5265c00),_0x56858f=_0x50e61a['getUTCFull'+_0x37800f(0x2db)]();if(_0x56858f>=0x7e4&&_0x56858f<=0x7f3)_0x5a9772[_0x56858f]=(_0x5a9772[_0x56858f]||0x0)+0x5;}}const _0x4c7452=Object['keys'](_0x5a9772);if(_0x4c7452['length']===0x0)return null;return _0x4c7452[_0x37800f(0x2f3)]((_0x16ac91,_0x2ea47c)=>_0x5a9772[_0x2ea47c]-_0x5a9772[_0x16ac91]||+_0x2ea47c-+_0x16ac91),+_0x4c7452[0x0];}const MONTHS_ES={'ene':0x0,'feb':0x1,'mar':0x2,'abr':0x3,'may':0x4,'jun':0x5,'jul':0x6,'ago':0x7,'sep':0x8,'oct':0x9,'nov':0xa,'dic':0xb,'enero':0x0,'febrero':0x1,'marzo':0x2,'abril':0x3,'mayo':0x4,'junio':0x5,'julio':0x6,'agosto':0x7,'septiembre':0x8,'octubre':0x9,'noviembre':0xa,'diciembre':0xb};function parseDate(_0x24067f,_0x2f95c6){const _0x2a47c1=_0x5087be;if(!_0x24067f)return null;if(_0x24067f instanceof Date&&!isNaN(_0x24067f)){const _0x1ea99d=new Date(_0x24067f['getFullYea'+'r'](),_0x24067f['getMonth'](),_0x24067f[_0x2a47c1(0x3c2)]());return isNaN(_0x1ea99d)?null:_0x1ea99d;}if(typeof _0x24067f==='number'){if(_0x24067f>0x9c40&&_0x24067f<0xd6d8){const _0x3de87e=new Date((_0x24067f-0x63e1)*0x5265c00);return new Date(_0x3de87e[_0x2a47c1(0xf9)+'Year'](),_0x3de87e['getUTCMont'+'h'](),_0x3de87e[_0x2a47c1(0x371)]());}return null;}let _0x4a4467=String(_0x24067f)['trim']();_0x4a4467=_0x4a4467['replace'](/\s+\d{1,2}:\d{2}(:\d{2})?.*$/,'');let _0x2d6732,_0x4b3192,_0x38ca6a,_0x5be187;_0x5be187=_0x4a4467[_0x2a47c1(0x3c3)](/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);if(_0x5be187)return _0x2d6732=+_0x5be187[0x1],_0x4b3192=+_0x5be187[0x2],_0x38ca6a=+_0x5be187[0x3],new Date(_0x38ca6a,_0x4b3192-0x1,_0x2d6732);_0x5be187=_0x4a4467['match'](/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);if(_0x5be187)return _0x38ca6a=+_0x5be187[0x1],_0x4b3192=+_0x5be187[0x2],_0x2d6732=+_0x5be187[0x3],new Date(_0x38ca6a,_0x4b3192-0x1,_0x2d6732);_0x5be187=_0x4a4467[_0x2a47c1(0x3c3)](/^(\d{1,2})[\/\-](\d{1,2})$/);if(_0x5be187)return _0x2d6732=+_0x5be187[0x1],_0x4b3192=+_0x5be187[0x2],new Date(_0x2f95c6||0x7ea,_0x4b3192-0x1,_0x2d6732);_0x5be187=_0x4a4467[_0x2a47c1(0xde)+'e']()[_0x2a47c1(0x3c3)](/(\d{1,2})\s+de\s+(\w+)(?:\s+(?:de\s+)?(\d{4}))?/);if(_0x5be187&&MONTHS_ES[_0x5be187[0x2]]!==undefined)return _0x2d6732=+_0x5be187[0x1],_0x4b3192=MONTHS_ES[_0x5be187[0x2]],_0x38ca6a=_0x5be187[0x3]?+_0x5be187[0x3]:_0x2f95c6,new Date(_0x38ca6a,_0x4b3192,_0x2d6732);_0x5be187=_0x4a4467['toLowerCas'+'e']()['match'](/(\w{3,})\s+(\d{1,2})/);if(_0x5be187&&MONTHS_ES[_0x5be187[0x1]]!==undefined)return new Date(_0x2f95c6,MONTHS_ES[_0x5be187[0x1]],+_0x5be187[0x2]);_0x5be187=_0x4a4467[_0x2a47c1(0xde)+'e']()[_0x2a47c1(0x3c3)](/(\d{1,2})\s+(\w{3,})/);if(_0x5be187&&MONTHS_ES[_0x5be187[0x2]]!==undefined)return new Date(_0x2f95c6,MONTHS_ES[_0x5be187[0x2]],+_0x5be187[0x1]);return null;}const BLACKLIST=/saldo|identificaci|nit|codigo|cuenta|secuencia|centro|sucursal|consecutivo|c[oó]digo/i;function detectColumns(_0x6cfb6b,_0x351fb5,_0x1e6d2c){const _0x38c53c=_0x5087be,_0x37c3cc=_0x6cfb6b['map'](_0x367780=>norm(_0x367780)),_0x7ef02={'fecha':-0x1,'desc':-0x1,'ref':-0x1,'debito':-0x1,'credito':-0x1,'valor':-0x1,'tercero':-0x1},_0x371086=[[_0x38c53c(0x17f),['fecha','date',_0x38c53c(0x1fa),'fch']],['desc',['descripcio'+'n',_0x38c53c(0xc4),_0x38c53c(0x1d3),'observacio'+'n','movimiento']],[_0x38c53c(0x171),[_0x38c53c(0x3ab),_0x38c53c(0x2e5),_0x38c53c(0x18c),_0x38c53c(0x216)+'e','nro','cheque',_0x38c53c(0x1e1)+'n']],[_0x38c53c(0x289),[_0x38c53c(0x289),'cargo','retiro',_0x38c53c(0x1d8),_0x38c53c(0x307)]],['credito',[_0x38c53c(0x131),'abono',_0x38c53c(0xfc),'entrada','consignaci'+'on']],['valor',['valor','monto','importe','amount','vlr']],[_0x38c53c(0x30c),['nombre\x20ter'+'cero',_0x38c53c(0x30c),'razon\x20soci'+'al',_0x38c53c(0x329)+'io']]];for(const [_0x2be121,_0x5acaf9]of _0x371086){for(let _0x38b80b=0x0;_0x38b80b<_0x37c3cc['length'];_0x38b80b++){if(Object['values'](_0x7ef02)[_0x38c53c(0x29c)](_0x38b80b))continue;if(_0x5acaf9[_0x38c53c(0x2aa)](_0x40ada2=>_0x37c3cc[_0x38b80b]['includes'](_0x40ada2))){if([_0x38c53c(0x289),'credito',_0x38c53c(0x118)]['includes'](_0x2be121)&&BLACKLIST['test'](_0x6cfb6b[_0x38b80b]))continue;if(_0x2be121==='valor'&&_0x37c3cc[_0x38b80b]['includes'](_0x38c53c(0x144)))continue;if(_0x2be121==='desc'&&(_0x37c3cc[_0x38b80b][_0x38c53c(0x29c)](_0x38c53c(0x30c))||_0x37c3cc[_0x38b80b]['includes']('cuenta')))continue;_0x7ef02[_0x2be121]=_0x38b80b;break;}}}if(_0x1e6d2c&&_0x7ef02['valor']===-0x1&&_0x7ef02[_0x38c53c(0x289)]===-0x1&&_0x7ef02[_0x38c53c(0x131)]===-0x1)for(let _0x2447bf=0x0;_0x2447bf<_0x6cfb6b[_0x38c53c(0x361)];_0x2447bf++){if(Object['values'](_0x7ef02)[_0x38c53c(0x29c)](_0x2447bf))continue;if(BLACKLIST[_0x38c53c(0x299)](_0x6cfb6b[_0x2447bf])||_0x37c3cc[_0x2447bf]['includes'](_0x38c53c(0x144)))continue;let _0x2f792e=0x0,_0x28bdbe=0x0;for(let _0x14beb6=0x0;_0x14beb6<Math[_0x38c53c(0x1d0)](0x32,_0x351fb5[_0x38c53c(0x361)]);_0x14beb6++){const _0xc0d4b0=typeof _0x351fb5[_0x14beb6][_0x2447bf]===_0x38c53c(0x367)?_0x351fb5[_0x14beb6][_0x2447bf]:toNum(_0x351fb5[_0x14beb6][_0x2447bf],_0x38c53c(0x2a4));if(_0xc0d4b0>0x0)_0x2f792e++;if(_0xc0d4b0<0x0)_0x28bdbe++;}if(_0x2f792e>=0x3&&_0x28bdbe>=0x2){_0x7ef02['valor']=_0x2447bf;break;}}if(!_0x1e6d2c&&_0x7ef02['debito']===-0x1&&_0x7ef02['credito']===-0x1&&_0x7ef02['valor']===-0x1){const _0x21bdb3=[];for(let _0x650eaa=0x0;_0x650eaa<_0x6cfb6b['length'];_0x650eaa++){if(Object['values'](_0x7ef02)['includes'](_0x650eaa))continue;if(BLACKLIST['test'](_0x6cfb6b[_0x650eaa])||_0x37c3cc[_0x650eaa]['includes'](_0x38c53c(0x144))||_0x37c3cc[_0x650eaa]['includes']('inicial')||_0x37c3cc[_0x650eaa]['includes'](_0x38c53c(0x1f1)))continue;let _0x39d497=0x0;for(let _0x44698e=0x0;_0x44698e<Math['min'](0x14,_0x351fb5['length']);_0x44698e++){const _0x5aa2c0=_0x351fb5[_0x44698e][_0x650eaa];if(typeof _0x5aa2c0==='number')_0x39d497++;else{if(_0x5aa2c0&&!isNaN(Number(String(_0x5aa2c0)['replace'](/[,$.\-\s()]/g,''))))_0x39d497++;}}if(_0x39d497>=0x5)_0x21bdb3[_0x38c53c(0x17b)](_0x650eaa);}if(_0x21bdb3[_0x38c53c(0x361)]>=0x2)_0x7ef02['debito']=_0x21bdb3[0x0],_0x7ef02[_0x38c53c(0x131)]=_0x21bdb3[0x1];else _0x21bdb3[_0x38c53c(0x361)]===0x1&&(_0x7ef02[_0x38c53c(0x118)]=_0x21bdb3[0x0]);}if(_0x7ef02[_0x38c53c(0x17f)]===-0x1)for(let _0xe7062=0x0;_0xe7062<_0x6cfb6b[_0x38c53c(0x361)];_0xe7062++){if(Object[_0x38c53c(0x34c)](_0x7ef02)['includes'](_0xe7062))continue;let _0x212d5e=0x0;for(let _0x535baf=0x0;_0x535baf<Math[_0x38c53c(0x1d0)](0xf,_0x351fb5['length']);_0x535baf++){const _0x116bc4=_0x351fb5[_0x535baf][_0xe7062];if(_0x116bc4 instanceof Date)_0x212d5e++;else{if(typeof _0x116bc4===_0x38c53c(0x367)&&_0x116bc4>0x9c40&&_0x116bc4<0xd6d8)_0x212d5e++;else{if(typeof _0x116bc4==='string'&&/\d{1,2}[\/\-]\d{1,2}/[_0x38c53c(0x299)](_0x116bc4))_0x212d5e++;}}}if(_0x212d5e>=0x5){_0x7ef02[_0x38c53c(0x17f)]=_0xe7062;break;}}if(_0x7ef02['desc']===-0x1){let _0x26fe84=0x0,_0x9db99c=-0x1;for(let _0x2f4c90=0x0;_0x2f4c90<_0x6cfb6b['length'];_0x2f4c90++){if(Object['values'](_0x7ef02)[_0x38c53c(0x29c)](_0x2f4c90))continue;const _0xc79ab3=_0x351fb5['slice'](0x0,0x14)['reduce']((_0x45c5b3,_0x4e6987)=>_0x45c5b3+String(_0x4e6987[_0x2f4c90]||'')['length'],0x0)/Math['min'](0x14,_0x351fb5['length']);_0xc79ab3>_0x26fe84&&(_0x26fe84=_0xc79ab3,_0x9db99c=_0x2f4c90);}if(_0x9db99c>=0x0)_0x7ef02[_0x38c53c(0x280)]=_0x9db99c;}return _0x7ef02;}function _0x1af2(){const _0x3df6da=['zM9YrwfJAa','y2HLy2TLza','iJ7IMQaGtM8GC2uG','pc90zd48l3rYpG','phrOpKnVBMy8lW','C3vIqMC','tYbsruzmruPbra','l3nWyw4+phnWyq','CMvTo2zVBNqTDW','BgvJDd48l2rPDG','ihnLz8o6BIbLEhq','zwLNAhq6nZaWoW','qKXfuW','DgvZDa','y29ICM8Gy3vVDa','4PYtiefSDge','Aw5JBhvKzxm','y3jLyxrLt2jQzq','pc90ywjSzt48lW','pc9ZCgfUpJWVDa','u29SBYbLBIbLEa','C3vIrMC','ieuUzMvJAge9','C29SAwq','yxv0BW','tw92Aw1Pzw50BW','CLnRAxa','CYbLBIbLEhrYyq','BxrtzwW','DgG+','C29Tzq','qNLjza','qu4UEgXZEa','iYWJiZa','AxrVCW','u29SBYbLBIbHDq','BMfTzq','CMv0zwL2yq','i0jfmtG1ra','CIbPBNrLCMvZzq','BYbWB3iGzwWGyG','rMvJAge','iwnVBhm','pc90zd4','phrOpLjLzJWVDa','DgHPCY52ywX1zq','C3m9iNbTlxjVDW','zwPHzg9ZigvUia','rKzgrKzg','mJaYnI0Wms0YmG','ig5VigfJy2vKAq','iJ48Dhi+phrOpG','mtm4odiWqwrnDwLV','C3rLBMvY','iM51BsiGDgL0Ba','igf1EgLSAwfYpq','C3rLCde','zt0IyM9YzgvYlq','Dg9ju09tDhjPBG','CIGTlwy1mdaPiG','l2rPDJ4','Ad5wywXVCIbbDq','uefsveLeqvmGqW','pc9KAxy+','iJ48Adm+8j+sScbszq','DJ48DwWGy2XHCW','AgrYpq','vgLWBYbqCM9Iyq','y3rvuKW','CMv0zw5JAw9U','Cg8SimkXmtuGzmoT','ignSyxnZpsjWBq','y2LH','DMfSDwu','Dg90qMC','CgfUpLrVDgfSia','Dg9mB2nHBgveyq','DgG+phrOpLzHBa','iM51Bsa','wwvHCG','EgLSAwfY','zgfZ','ugfYDgLKyxmGyW','AgrYqMC','ihnPBIbTB3zPBq','CYi+sgfZDgeG','lxrVDgfSiJ48CW','AgvJA3mGzM91BG','z2fZDg8Gr01gia','zgn0BW','ywX0yq','iJ48BgfIzwW+','qwnJACoZBIbtDwC','mJq5ndryDK51wMG','yw9Hx3rVx3nOzq','DgjSsgrY','uKmTmdaY','pgrPDIbJBgfZCW','CZ0Iy2f0lwXPCW','zsbWCM9JzxnHza','Bc1NCMvLBIi+ja','DhmTDgfIia','ugfNBYbqu0u','C29YDa','xsb2CYbbwW','zhjHz2vUDgvY','iMj0BIbIDg4TCa','CMvKDwnL','revcvuCGyxv4wW','8j+rPcbuzxjJzxjV','ve9uquWGtKvutW','CMfYifjq','CMvHC29U','BNqIpG','y29TAxnPB24','BwvKAwe','ieuUy3jLpq','zw5JAwe','DgG+phrOpKrLCW','zxH0','uMvMpc90Ad48Da','CLbHBMvSCW','qKLmsvPbuG','zwDYzxnV','z2fZDg9ZigjHBG','zMLSzxm','zguGy2XHC2LMAq','mJm4mJLUrND5q1i','DgvYy2vYBW','BML0','zgL2pJWVzgL2pG','8j+tNsbezxnJCMLWyW','y2fYza','BI92BMqUB3bLBG','iZzcnZi4ma','pc90CJ4','q0uTmde4','yw5JBW','BCoPCMLJBZWVBge','C3m9iNjLC3vSDa','zgLMzG','BMq6','imk3igzVCM1HDg8','iNjtA2LWiJ48Da','y3jPCgnPW7nUpc8','y2XPy2S','zcC6jYCIpJXVCa','CMv0zw5JACoZBG','jNf1B3q7','8j+pPIbtB2XViev4Da','yw4Gy2XHC3m9iG','DhjHy3rV','tK8GC2uGzw5JBW','icaO4OIsksbdCSoPza','rwWGyxjJAgL2BW','BYi+','iZaZnJLbmq','yMvUzwzPy2LHCG','ChnL','z3jLzw5czW','BMvXDwK','iokaLcbosvqG','zwvYigvSigfYyW','phrYpJX0zd4','icGXldiZnc41nG','yM9Sza','zd48l3rYpG','mtqYotGZCwXkAwvR','psjJDhjSlxjVDW','DgjSsgrYrMC','zw1WCMvZyq','y29UC2LNBMfJAq','BwfW','lwy0mdaPo21HCG','Dg9ZlG','ruDsrvnpuYbftG','iZa1oty2oq','y29UyW','ig1VDMLTAwvUDa','DMfSihzHBc1Yzq','t05uqujmrvmGtG','mJHuuuz0t0C','ihn0EwXLpsjJBW','tw9UDg8GEsbYzq','DwW+','C2LNBM8P','pJWVzgL2pGOGia','DgvtDhjPBMC','rxH0CMfJDg8GqG','uMvJAwjVignHAG','B3mGCgvUzgLLBG','q3vVDgeGzguGBq','DMfSDwvZ','cKuGBNvTrM10pq','8j+pM++4JW','zg9Uzq','iokaLcbYzxzPC2uG','revcvuCGrsbTyq','jdeWlJaWma','yw5JyxjPB3m8lW','C2vJqMC','ug9ZAwjSzsbWCG','AgeGEsb0AxbVia','ywjSzt48Dhi+pa','yxG9iG','mv09','AwrHigrLihjLDa','pc9ZzwXLy3q+pa','vMfSB3iGrxH0CG','zsbTDwvZDhjHBG','zNjVBunOyxjdBW','DMfSB3iGW7PUAwm','CMvJAwjPzg9Z','BgvUz3rO','BgfZCZ0IzgvZyW','revcvuCGywz0zq','yNiTDMfSiJ4','Bwf0y2HLCW','Aw5NCMvZBYbWBW','BNvTyMvY','qvmGru4GrvHuuG','BgfYigvUihbYAq','psjZDw1Tyxj5lq','BwfWCgvK','CIbIzw5LzMLJAq','o2n1CNnVCJPWBW','zw5KAwvUDgvZia','AwnV','ifnjtIbdt05uqq','z2v0vvrdrgf0zq','CMfJDg8GyMfUyW','rgvZy3jPCgnPW7m','y2HHBMDL','rJjgn0zc','rwPLBxbSB19dBW','q0uTmde1','y29SB3i6DMfYka','Aw50zxiIpLnPBG','revg','rmoPyML0BW','ihzHBg9Y','DMLTAwvUDg9Zia','BNrYyxjVBIbTBW','pgrPDIbZDhLSzq','uMv0zw5JACoZBG','xtOGzMvJAge9','DgG+pc90CJ4','CMvTB3zL','CY1Zy3jVBgWIpG','ieeUzMvJAge9','z2v0rwXLBwvUDa','ugfNBYbZzxj2Aq','B3mGy29Uy2LSAq','zxjUBW','CMfWCgLWyxK','ywn0BY4','ywXPz25Tzw50','rxH0CMfJDg86ia','u1rjq08GkdaGyW','y2vUDgvY','tw9UDg8SigzLyW','yMXL','lwnLBgWIihrPDa','ywn0AxzL','xs5Kzwi9','ieeGBNvTrM10pq','phrHyMXLignSyq','Bc1YzwqIpIqG','psjKAxnWBgf5oG','lwnHCMqIpJXOmW','DMLTAwvUDg8GyG','zwXLy3qGy2XHCW','yw5LAM8','BgfZCZ0Iy2f0lq','zxnVCYbLBIbLEa','AgrYrMC','FIbnzwrPyq','ywrKv29YA3nOzq','B3b0vg9S','ugfNBYbqu0uGCG','zxjPzge','tgLICM9ZienVBG','4PQGiehdSw9ZigrPzG','y2NdS24','Dg9mB2nHBgvtDa','yxjJAgL2BYb0Aq','phrOpKrPzJWVDa','CMvMzxjLBMnPyq','z2v0rNvSBfLLyq','ifbHCMeGDg9KBW','zgvI','vhjHBNnMzxjLBG','qu7dGuXju0Ltieq','Dc1JB2XVCJP2yq','iM1HEc13Awr0Aa','CZ0I','AgLKzgvU','u2HLzxrZ','8j+tKIbtB2XVief1Ea','mJaYnI0Wms0Zma','D3jPDgvgAwXL','yNiTC3rHCNq','Bgu9iG','BwvYB3mGmtaGCG','yMfUy2fYAw8Gyq','C3r5Bgu9iMzVBG','pg9WDgLVBIb2yq','vKvsveLetYbfwW','r0Hj','phrYignSyxnZpq','z2v0rgf0zq','Bwf0y2G','ugfYDgLKyxmGCG','DcbVBMnOyw5Nzq','yxnZpsi','ugvUzgLLBNrLia','ig9Uy2HHBMDLpq','CKHLywq','CIbWyxnZmIaOWRe','iNrLEhqTDhjHBG','ihnLz8o6BIbSAwi','z2fZDg8GyMfUyW','CM91BMq','psjJB2WTBwfWiG','mKu3nui2','q29SxW','zgv0ywXSzq','zgLZywjSzwq','BhvLktT0AgLZlG','BwvZC2fNzq','CMv0zwz0zq','zxmU','W7nTAw5H','zw4GBgeGzNvLBG','pYbcywPH','DhjSlwL0zw0IpG','uhjVy2vZywrVia','ihbHCNrPzgfZpa','zxH0CMfJDg88lW','jYX0AgLZlNzHBa','l29WDgLVBJ4','BuzTDcGN','zsbLz3jLC28GBG','ztOUnJHYzw07yW','BgfZCZ0I','yxrH','AM9PBG','4PQGierPzMvYzw5J','y29UDhjHCgfYDa','AgvHzgvYuM93','BgfIzwW','BgLZDci+','Dg9mB3DLCKnHCW','zwfJAenLBgW','D29TCgK','CIbVCMLNzw4GEq','zgvM','C3m9iNj0ywjSzq','Aw4Gq29UDgfIAq','B25JAwXPywrHCW','CMvNAxn0CM8GyW','zM9UBW','CYbKAwDPDgfSzq','sw1WDwvZDg8GrW','zw4GzwWGyxv4Aq','iJ5wAxn0ysbWCG','Eg1SzM9YBwf0CW','Bsi+pgXHyMvSpG','BYaOms4YmZqSnq','iokaLcbfEmoZz2vUyq','WReYigtdRwfZ','lxvUAxqIpKnpua','BNvTzxjPyW','psjICMLKz2uTyW','u2fSzg8','psjJB2WIia','tM90yxm','CYbUBYbYzwzSzq','y2XHC2LMAwnHCG','z2v0vvrdrNvSBa','psiTmsi+4Ocuie5V','ihr5Cgu9iMnOzq','zgvWB3nPDg8','DJ48l2rPDJ48za','ysbLBMvYBW','mJaYnI0Wms0Ynq','zwnOysbbDxG8lW','ihbHCNrPzgfZkq','pc90Ad48l3rYpG','yxvSDa','rMvJAgeGqxv4lG','CgfUzwWGywn0Aq','zMLSBa','pc9KAxy+pc9SAq','zM9YBwe','Aw50zxjLCW','y2XHC3nmAxn0','nJy3ntCWrfrmtvfz','ihjLzJ0','qurbuYbftIbmsq','qxjPywW','DMvNywrVCI4Grq','zsHKyxLuB2W9ma','CYbLBIbSAwjYBW','nhGXmdaW','phrKihn0EwXLpq','odG4odG4','WRe1igtdRwfZ','yMvSpJXZzwXLyW','yNiTC3vI','DMfSB3i','B3CG','q29UC2LNBMfJAq','B2PHoIa','AxrLBxm','tM8GC2uGzw5JBW','Axy+','zsbSB3mGDMfSBW','nuP6D2vyDW','AgvPz2H0','y2XHC3m9iMnHDa','Ad5uAxbVpc90Aa','zM9UDa','C2uGzgv0zwn0yq','i0yWrJLgrG','BZWVBgfIzwW+pa','BdOG','ica8zgL2ignSyq','ihjLz2LZDhjVCW','vvrd','zg91yMXL','ihbHCMvJzsb2yq','ugfYDgLKyxmGqW','CKrHDge','C3rLCdi','y3jLzgL0BW','C29JAwfKBW','B24+cIaGicaGia','y2HX','W5noiejbtKnbuKK','psjYDgfIBguIpG','C2vSzwn0zwq','AwXPyxiU','icbbwW','v29YA2jVB2S','BNrYW7mGBMLUz8o6','zhjVCa','igvUy2fIzxPHza','iokaLca','rxjYB3iGywWGBa','pKnHDgvNB3ldRwe','ywrKrxzLBNrmAq','pc9KAxy+pgj1Da','yxjPBYb5ihjLzW','C2fSzg8','DhjPBq','id09iefB','qLjpuYbdt05uqq','xs5JCMu9','BgLHCI4','ignSyxnZpsjJyq','psjWBs1VChqG','DMfYkc0TCMvKkq','yM9YzgvY','oJe2mhb4o292zq','zgLZCgXHEq','z3jPzdTNCMLKlq','yY1SywjLBci+qW','pc90Ad48DgG+qW','ndK2mZi2sKPUvKzo','z3jLzw5izhi','C3r5Bgu','q3ldQwrPDg8','y2fYzciGC3r5Ba','y29UzG','y2f0lwnVDw50iG','zxjPzMLJysbXDq','AxyGy2XHC3m9iG','q09oq0Lmsufdsq','igzLy2HHpq','y29SDw1UCW','suft','DgvZpc9SAt48lW','BwLKzgXL','CMvWBgfJzq','phrKignSyxnZpq','icaO4OIsksbfz3jL','CZ0Iy2f0lw5HBq','yNiTywrK','uefsveLeqvmGrq','BtTJB2XVCJP2yq','kcSPienYW6LKAxq','pJXKAxyGy2XHCW','tcbTyxrJAgvZoG','ihrPDgXLpsjpCG','CMv2B2TLt2jQzq','BZWVAdm+','y29Z','Axn0CMfKB3mGzq','CMvM','zt0IBNvTyMvYiG','CMvHza','Cg88l3rOpJX0Aa','ywX0uM93','jYX0AgLZlMnOzq','C2HLzxrFDg9FAG','B250lxDLAwDODa','pJ0WpYDTyxbWzq','uKmTmdaX','ChvZAa','z2v0tw9UDgG','igfWBgLJysdIGjq8','y2XHC3m9iMnVBG','zMvJAge','ywjSzsdIGjqGtw92','Aw1WDg8Gz29IAq','zw50','y2HLCxvL','yxjPBYdIGjqGq3vL','CYbLEhrYywn0BW','iMnHDc1SAxn0iG','ugfNBYbUW7nTAw4','icbduLvdrsbjtG','rtjfrKrb','cKeGBwfWpq','DgfYz2v0','zgn0BY4','ierfrG','BM9YBwfSAxPL','CIbWCM92zwvKBW','CMv0zwz1zw50zq','BgLICM9Z','pc90zd48DgqGyW','Bg9HzgvK','uMvNAxn0CMfYia','y2f0lxzHBcb2yq','phrOpLrLCMnLCG','Aw1Pzw50B3mGyG','BNvTrM10','DxrPBhm','zci+jca','W7fVigrLBcbHDxG','Dg9YqwXS','lgnOA1nPz249Da','ywrK','iJ48zgL2ignSyq','ieLor1jfu09tia','uMv0zw5JACoZBIa','CMfJDg8','8j+tKIbmAwjYBYbbDq','oJHWEci+8j+uTsa9ia','Dg90ywXezwi','BgfZDeLUzgv4tW','zw4GzwWGzxH0CG','ywjZ','pc9KAxy+pc9KAq','BMnPBgLHy2LVBG','iMnHDc1PDgvTiG','Bxm6y2vUDgvYoW','pc9KAxy+pgrPDG','yw4+phnWyw4GyW','zgf2AxbSyxrH','igzPBgfZicHNCG','C2mTyw1Izxi','rxHWBgLJywnPW7m','BtO4ChGIpKLUzW','jYWRDgHPCY52yq','AweGzguGjca','rdzfneyW','z3jLzw4IpIqG','q29Uy2LSAwfJAq','Dwu9iMf1Dg8Iia','ug9ZAwjSzsbdyq','ve9uquW','psjICMLKz2uIpG','psjJDhjSlwL0zq','yNiTC2vW','yxjPBYbJB3jYzq','zw47Dgv4Dc1VDG','DgfIBgvZ','iZy0nZq4qG','zw5KAwvUDgvZ','BNvTrM10pq','zMLSDgvY','Aw5Uzxjive1m','4P6wietdQwjPDg8','zwnPyMLKBW','yw5JyxjPB3mGCa','yw5HBhLZAxncBW','icaOkYKGsw5NCG','C3vTzw4Gy29UDa','vMfSB3i','BgfZCZ0IBNvTiG','pc91Bd48zgL2ia','BwLU','z21M','y29TAxnPW7nU','y29Uy2vWDg8','icHnqvrdscbfwa','yxnZpsjWCMLJAq','W7nUiejHBMnHCMK','x0v4B2DLBMfesq','C2fSAwrH','psjHBMfSExnPCW','ntbIC0f0CMG','y2f0lxzHBca','y3vVDgeGBwfUzq','B250ywjSzq','BIbSAwjYB3m','CIbPzgvUDgLMAq','iIb0AxrSzt0I','DhjHBNnHy2nPBW','mJaYnI0Wms0Wnq','jMfTCdS','pKf1Dg8Tzgv0zq','C29ZigvUigv4Da','vgvYy2vYBW','xtOGyw10pq','zxmTq08','oNzHCIGTlwy2ma','Bg9N','CIbWyxnZmsaOzq','imk3ienYW6KGja','mI1KAwDPDa','z2v0q2vSBa','CMvKrMC','y3jL','Dg90ywW','zcbJBgfZCZ0ICG','mJi3mda5nKLJrKLHyG','z25VCMfKBZWVza','C2HVCNq','y2LHihjLy2LIAq','vMvYAwzPy2fYia','AwXPyxi','C3vIC3rYAw5N','zMvJ','pc91Bd4','Bgu9iMDYAwqTyW','CIGTlwfTyMvYkq','CMv0zwLJyq','ihbHCNrPzgfZ','DgLWBY1VDxq','DMfYkc0TzJmWma','CMvZihnLigXLyq','CgXHDgfMB3jTyq','mJaYnI0Wms0Xoa','B2X1Bw46ms8Tmq','pVcFJ6yGugfYDgLKyq','C3vTq2fYzhm','qxv4pc90Ad48Da','z2fWoJzWEdTHBa','zgf0yvrYyw5ZzG','zw4GBgLICM9Z','psjJAgfUz2vizq','Dg90ywXdCMu','C3rYAw5N','Axn0CMfYpc9KAq','icaOkYKGrmoPyMK','C3rHCNrZv2L0Aa','B3rYBW','icbKyxrLq2XVCW','ihjLz2LZDhjHCG','C2XPy2u','y29TChjVyMfUDa','uKLp','zf9ZAgvLDa','ywrKuM93','Bwf4','B25JAwXPywnPW7m','r1jfu09ticG','y3rVig5VihjLzW','AgfZ','zxnVCYaVietdQwi','Dci+pgrPDIbJBa','ifjd','idfMCJTNyxa6mq','DMfYkc0Tyw1Izq','yNiTzw5K','lwDYAwqIpG','zxHHy3rVCW','zw5LBIbKzwiVyW','zgf0ywzVBM8','AwnVBG','Acb0zxn0ievB','BM9izwfKzxi','ztOUnZHYzw07zG','B3bVCNrLCW','ls1NnJaWktTTyq','BwvYz2vdzwXSCW','y3jLyxrLrwXLBq','C3bSAxq','jYWN','Dg9UignSyxnZpq','C29SBYbLBIbLEa','BZWVDgG+','uKfeqvmGru4Gta','ntq4mJm1','ysbJBgLLBNrLia','CxvLCNLtzwXLyW','y29UDgfIBgu','pgXPignSyxnZpq','yw51ywWGls0TcG','y2fYzca','y2f0C0e','8j+sScbwywXVCIddUM4','ig1PBJ0ImsiGBq','i0q5nZCWnG','y3vVDge','EgXZEa','AwDPBMfSoIa','4P6vienYW6LKAxrV','y3vVDgeGzguGBq','imk3ietdQwiGja','yMfUy2fYAw8','Dc1ZAxPLoI43oa','EwvHCKe9','i0vfrJjgrG','qujd','iJ4kicaGidXKAq','lwnHCMqIihn0Eq','pc9ZCgfUpJWVza','zxjMBg93oMvSBa','zxnIBg9XDwvHCG','ihjLz2LZDhjVia','ignYzt0','pc90zd48Dgq+','DgvTiIbZDhLSzq','y3vLBNrH','zguGsvzb','q29Uy2vWDg8','CMuGAw52zxj0Aq','Dgv4DenVBNrLBG','CMLMAwnHigXHia','psjYzxn1BhrZlq','CNqOj0LUDgvNCG','iZWVDgG+phrOpG','swrLBNrPzMLJyq','rg9JDw1LBNrV','CMf3','B3mGyMfUy2fYAq','C3rYAw5NAwz5','C3m9iMn0CMWTAq','yMfQyq','zNvLBNrL','z2v0uM93','tw9UDg8GEsb0Aq','qunutYbcqu5dqq','Bg9YoNzHCIGTlq','igvUigv4DhjHyW','DMuIigLKpsjWyq','Dc1JB3vUDci+','mJaYnI0Wms0Xma','zw5Lia','yxnZpsjICI1Syq','zwDPC3rYywrHCW','yxnZpsjJyxqTAq','yMfUy2fYAw9Z','DhjHBNnMzxjLBG','AwvUDg8GyMfUyW','psjMBgv4lwrPCG','CMvUzgLTAwvUDa','rM9YBwf0BYbUDq','q29TChjVyMfUDa','CMvJB25cB3G','CYbIyw5JyxjPBW','icJcStmXigtdRwfZ','jsbdB25JAwXPyq','icbfwW','zt48Dhi+phrOia','zgvZyW','yM9YzgvYlwXLzG','W7mGysbSB3mGzge','y29S','l3rOpG','zt0It3jPz2LUyq','z2LUlwjVDhrVBq','tIbfwfrsqunutW','rgLMzxjLBMnPyq','zgvIAxrV','pJXOmZ7WN5ssifr1ia','y2LHierHDMLWBa'];_0x1af2=function(){return _0x3df6da;};return _0x1af2();}function norm(_0x15d25c){const _0xa549c2=_0x5087be;return(_0x15d25c||'')['toString']()[_0xa549c2(0xde)+'e']()[_0xa549c2(0x18e)]('NFD')['replace'](/[\u0300-\u036f]/g,'')[_0xa549c2(0x145)]();}function goStep1(){const _0x5cf1a2=_0x5087be;show(_0x5cf1a2(0x2c4)),hide('step2'),hide('step3'),setSI(0x1);}function goStep2(){const _0x385f65=_0x5087be;for(const _0x5ed5d9 of['E','A']){const _0xb4d533=F[_0x5ed5d9],_0x535a30=_0xb4d533['headerRow'],_0x5cf249=_0xb4d533[_0x385f65(0x22b)]?_0xb4d533['raw'][0x0][_0x385f65(0x338)]((_0x2efb8e,_0x5a4198)=>_0x385f65(0xc3)+String[_0x385f65(0x35e)+'de'](0x41+_0x5a4198)):(_0xb4d533[_0x385f65(0x261)][_0x535a30]||[])['map']((_0x3444b4,_0x3c1806)=>_0x3444b4?String(_0x3444b4)['trim']():_0x385f65(0xc3)+(_0x3c1806+0x1)),_0x2779bf=_0xb4d533[_0x385f65(0x22b)]?0x0:_0x535a30+0x1,_0x22f3be=cleanRows(_0xb4d533[_0x385f65(0x261)]['slice'](_0x2779bf));_0xb4d533['map']=detectColumns(_0x5cf249,_0x22f3be,_0x5ed5d9==='E');const _0x2627cf=_0xb4d533[_0x385f65(0x338)]['valor']>=0x0?_0xb4d533[_0x385f65(0x338)]['valor']:_0xb4d533[_0x385f65(0x338)]['debito']>=0x0?_0xb4d533[_0x385f65(0x338)]['debito']:-0x1;_0x2627cf>=0x0&&_0xb4d533['numFmt']===_0x385f65(0x2a4)&&(_0xb4d533[_0x385f65(0x198)]=detectNumFormat(_0xb4d533[_0x385f65(0x14f)][_0x385f65(0x215)](_0x2779bf),_0x2627cf));}renderFileCard('E'),renderFileCard('A'),hide(_0x385f65(0x2c4)),show(_0x385f65(0x130)),hide('step3'),setSI(0x2);}function renderFileCard(_0xef1896){const _0x2adb35=_0x5087be,_0x30ef5a=F[_0xef1896],_0x52c44e=_0xef1896==='E',_0x1c1bfa=_0x52c44e?'🏦\x20Extracto'+'\x20Bancario':_0x2adb35(0x1a3)+_0x2adb35(0x2dc),_0x27cefa=_0x30ef5a[_0x2adb35(0x261)],_0xc32750=_0x30ef5a[_0x2adb35(0xdb)],_0xee35df=_0x30ef5a[_0x2adb35(0x22b)],_0x140121=_0xee35df?0x0:_0xc32750+0x1,_0x358989=_0xee35df?_0x27cefa[0x0][_0x2adb35(0x338)]((_0x53d4c4,_0x579bcc)=>'Col_'+String[_0x2adb35(0x35e)+'de'](0x41+_0x579bcc%0x1a)):(_0x27cefa[_0xc32750]||[])[_0x2adb35(0x338)]((_0x11f014,_0x9c1e7f)=>_0x11f014?String(_0x11f014)[_0x2adb35(0x145)]():'Col_'+(_0x9c1e7f+0x1)),_0x43bc35=cleanRows(_0x27cefa['slice'](_0x140121));let _0x118481=_0x2adb35(0x2ed)+'=\x22card-tit'+'le\x22>'+_0x1c1bfa+_0x2adb35(0x13e)+esc(_0x30ef5a['name'])+_0x2adb35(0x2cb);_0x118481+='<div\x20class'+_0x2adb35(0x334)+_0x2adb35(0x24d)+'v\x20class=\x22c'+_0x2adb35(0xcd)+'<label>Fil'+'a\x20encabeza'+'do</label>'+'<input\x20typ'+_0x2adb35(0x172)+_0x2adb35(0x240)+_0x2adb35(0x358)+_0x27cefa[_0x2adb35(0x361)]+'\x22\x20value=\x22'+(_0xc32750+0x1)+('\x22\x20onchange'+_0x2adb35(0x20c)+'ader(\x27')+_0xef1896+('\x27,+this.va'+'lue-1)\x22\x20id'+'=\x22hdrIn')+_0xef1896+'\x22\x20'+(_0xee35df?'disabled':'')+(_0x2adb35(0x346)+_0x2adb35(0x129)+_0x2adb35(0x264)+_0x2adb35(0x255)+_0x2adb35(0x276)+'ection:row'+';align-ite'+_0x2adb35(0x1ac)+_0x2adb35(0x209)+'ign-self:e'+'nd\x22><input'+_0x2adb35(0xfb)+'ckbox\x22\x20')+(_0xee35df?_0x2adb35(0x28d):'')+(_0x2adb35(0x3c8)+'\x22toggleNoH'+'eader(\x27')+_0xef1896+(_0x2adb35(0x176)+'cked)\x22><la'+'bel\x20style='+_0x2adb35(0x3cb)+'sform:none'+_0x2adb35(0x36d)+_0x2adb35(0x379)+_0x2adb35(0x13d)+_0x2adb35(0x127)+'/div>\x0a\x20\x20\x20\x20'+'<div\x20class'+_0x2adb35(0x1bd)+_0x2adb35(0xed)+_0x2adb35(0x278)+_0x2adb35(0x316)+_0x2adb35(0x116)+_0x2adb35(0x3c5)+'=\x22changeNu'+_0x2adb35(0xd3))+_0xef1896+(_0x2adb35(0xd1)+'ue)\x22\x20id=\x22f'+_0x2adb35(0x2a8))+_0xef1896+('\x22>\x0a\x20\x20\x20\x20\x20\x20<'+'option\x20val'+_0x2adb35(0x1b9))+(_0x30ef5a['numFmt']==='auto'?'selected':'')+(_0x2adb35(0x1e4)+'ctar</opti'+_0x2adb35(0x133)+'<option\x20va'+'lue=\x22plain'+'\x22\x20')+(_0x30ef5a['numFmt']==='plain'?_0x2adb35(0x137):'')+('>Sin\x20separ'+'ador\x20(1234'+'.56)</opti'+'on>\x0a\x20\x20\x20\x20\x20\x20'+'<option\x20va'+'lue=\x22us\x22\x20')+(_0x30ef5a[_0x2adb35(0x198)]==='us'?_0x2adb35(0x137):'')+('>Americano'+_0x2adb35(0x330)+')</option>'+'\x0a\x20\x20\x20\x20\x20\x20<op'+'tion\x20value'+_0x2adb35(0xf5))+(_0x30ef5a[_0x2adb35(0x198)]==='col'?_0x2adb35(0x137):'')+('>Colombian'+_0x2adb35(0xee)+'6)</option'+'>\x0a\x20\x20\x20\x20</se'+_0x2adb35(0x295)+'>\x0a\x20\x20</div>');const _0x417cbf=_0x30ef5a[_0x2adb35(0x338)][_0x2adb35(0x118)]>=0x0?_0x2adb35(0x35f)+'o\x20con\x20sign'+'o':_0x30ef5a['map'][_0x2adb35(0x289)]>=0x0?'débito/cré'+'dito\x20separ'+'ados':'⚠\x20no\x20se\x20de'+'tectaron\x20c'+'olumnas\x20de'+_0x2adb35(0x37c);_0x118481+='<div\x20class'+'=\x22card-inf'+_0x2adb35(0x327)+_0x43bc35['length']+('\x20movimient'+'os\x20·\x20')+_0x417cbf+(_0x2adb35(0x31a)+':\x20')+_0x30ef5a[_0x2adb35(0x198)]+'</div>';const _0x905346=Math['min'](_0x27cefa['length'],0x19);_0x118481+='<div\x20class'+'=\x22raw-prev'+'iew\x22><tabl'+_0x2adb35(0x27f)+'style=\x22wid'+'th:30px\x22>#'+'</th>';const _0x23b2ee=Math[_0x2adb35(0x21a)](..._0x27cefa[_0x2adb35(0x215)](0x0,_0x905346)[_0x2adb35(0x338)](_0x1dcd18=>_0x1dcd18['length']));for(let _0x32369f=0x0;_0x32369f<Math['min'](_0x23b2ee,0xc);_0x32369f++)_0x118481+='<th>Col\x20'+(_0x32369f+0x1)+'</th>';_0x118481+='</tr>';for(let _0x1d03d5=0x0;_0x1d03d5<_0x905346;_0x1d03d5++){const _0x5b64c0=_0x1d03d5===_0xc32750&&!_0xee35df?_0x2adb35(0x3c9):_0x1d03d5<_0x140121?_0x2adb35(0x2a6):_0x2adb35(0x12f);_0x118481+='<tr\x20class='+'\x22'+_0x5b64c0+('\x22><td\x20clas'+'s=\x22rn\x22>')+(_0x1d03d5+0x1)+'</td>';for(let _0xfccd65=0x0;_0xfccd65<Math['min'](_0x23b2ee,0xc);_0xfccd65++){let _0x1a8ead=_0x30ef5a[_0x2adb35(0x14f)][_0x1d03d5]?_0x30ef5a[_0x2adb35(0x14f)][_0x1d03d5][_0xfccd65]:'';if(_0x1a8ead instanceof Date)_0x1a8ead=_0x1a8ead['toLocaleDa'+'teString'](_0x2adb35(0x1e8));_0x118481+='<td\x20title='+'\x22'+esc(String(_0x1a8ead||''))+'\x22>'+esc(String(_0x1a8ead||'')['substring'](0x0,0x1e))+'</td>';}_0x118481+=_0x2adb35(0x313);}if(_0x27cefa['length']>_0x905346)_0x118481+=_0x2adb35(0x3c1)+_0x2adb35(0x31b)+_0x2adb35(0x1f2)+'n\x22>…</td><'+'td\x20colspan'+'=\x22'+Math[_0x2adb35(0x1d0)](_0x23b2ee,0xc)+'\x22>…\x20'+(_0x27cefa[_0x2adb35(0x361)]-_0x905346)+('\x20filas\x20más'+_0x2adb35(0x28f));_0x118481+=_0x2adb35(0x29e)+'div>',_0x118481+=_0x2adb35(0x37f)+'=\x22font-siz'+_0x2adb35(0xd5)+'olor:var(-'+_0x2adb35(0x339)+_0x2adb35(0x286)+_0x2adb35(0x1a4)+'encabezado'+'\x20·\x20⬜\x20=\x20dat'+'os\x20·\x20🔘\x20=\x20i'+_0x2adb35(0x1f4)+'iv>';const _0x24bcd1=_0x52c44e?[{'k':_0x2adb35(0x17f),'l':'📅\x20Fecha'},{'k':_0x2adb35(0x280),'l':'📝\x20Descripc'+'ión'},{'k':'ref','l':'🔢\x20Ref/Dcto'},{'k':'valor','l':'💰\x20Valor\x20(±'+_0x2adb35(0x345)},{'k':_0x2adb35(0x289),'l':_0x2adb35(0x1c7)},{'k':_0x2adb35(0x131),'l':'➕\x20Crédito'}]:[{'k':_0x2adb35(0x17f),'l':'📅\x20Fecha'},{'k':_0x2adb35(0x280),'l':_0x2adb35(0x30f)+'ión'},{'k':_0x2adb35(0x171),'l':'🔢\x20Comproba'+'nte'},{'k':'tercero','l':_0x2adb35(0x2f9)},{'k':_0x2adb35(0x289),'l':_0x2adb35(0x1c7)},{'k':'credito','l':_0x2adb35(0x245)},{'k':_0x2adb35(0x118),'l':_0x2adb35(0x23f)+_0x2adb35(0x36f)}];_0x118481+=_0x2adb35(0x2ed)+_0x2adb35(0xc1)+'>';for(const _0x34caec of _0x24bcd1){const _0x3e67fb=_0x358989['map']((_0x3c430a,_0x2ff16e)=>_0x2adb35(0x3be)+'lue=\x22'+_0x2ff16e+'\x22\x20'+(_0x30ef5a[_0x2adb35(0x338)][_0x34caec['k']]===_0x2ff16e?_0x2adb35(0x137):'')+'>'+esc(_0x3c430a)+'</option>')[_0x2adb35(0xd8)]('');_0x118481+='<div\x20class'+'=\x22map-item'+_0x2adb35(0x2e7)+_0x34caec['l']+('</label><s'+_0x2adb35(0x39b)+_0x2adb35(0x3b3))+(_0x30ef5a[_0x2adb35(0x338)][_0x34caec['k']]>=0x0?_0x2adb35(0x36b):'')+('\x22\x20onchange'+'=\x22changeMa'+'p(\x27')+_0xef1896+_0x2adb35(0x232)+_0x34caec['k']+(_0x2adb35(0x1b4)+_0x2adb35(0xc6)+'className='+_0x2adb35(0x2b9)+_0x2adb35(0x179)+_0x2adb35(0x31e)+'tion\x20value'+_0x2adb35(0xfa)+_0x2adb35(0x17d)+_0x2adb35(0xd2))+_0x3e67fb+(_0x2adb35(0x35b)+_0x2adb35(0x2c8));}_0x118481+='</div>';const _0x3f127f=_0x30ef5a['map']['fecha']>=0x0?guessYearFromTransactions(_0x27cefa,_0x30ef5a['map'][_0x2adb35(0x17f)],_0x140121):null,_0x4e2495=_0xef1896==='E'?'A':'E',_0x48f284=F[_0x4e2495][_0x2adb35(0x261)]?getTransactionYear(_0x4e2495):null,_0xa2ffaa=_0x3f127f||_0x48f284||new Date()[_0x2adb35(0x3ac)+'r']();_0x118481+='<div\x20style'+'=\x22font-siz'+_0x2adb35(0x22c)+_0x2adb35(0x178)+':700;color'+_0x2adb35(0x1e9)+'0);margin:'+'12px\x200\x204px'+_0x2adb35(0xeb)+'evia\x20inter'+'pretada\x20(v'+_0x2adb35(0x15a)+_0x2adb35(0x11f)+_0x2adb35(0x202)+'n\x20bien):</'+'div>',_0x118481+='<div\x20class'+'=\x22parsed-p'+'review\x22><t'+_0x2adb35(0x357)+'th>Fecha</'+_0x2adb35(0x302)+_0x2adb35(0x31c)+_0x2adb35(0x2a9);if(!_0x52c44e)_0x118481+=_0x2adb35(0x196)+_0x2adb35(0x235);_0x118481+=_0x2adb35(0x2b8)+'h>';if(_0x30ef5a['map']['valor']>=0x0)_0x118481+='<th>Valor<'+_0x2adb35(0x284);else _0x118481+='<th>Débito'+_0x2adb35(0x152)+'rédito</th'+'>';_0x118481+=_0x2adb35(0x313);const _0xa6be5f=_0x43bc35['slice'](0x0,0x5);for(const _0x13841c of _0xa6be5f){const _0x646042=_0x30ef5a['map'][_0x2adb35(0x17f)]>=0x0?parseDate(_0x13841c[_0x30ef5a[_0x2adb35(0x338)]['fecha']],_0xa2ffaa):null,_0x7522cf=_0x30ef5a[_0x2adb35(0x338)][_0x2adb35(0x280)]>=0x0?String(_0x13841c[_0x30ef5a[_0x2adb35(0x338)][_0x2adb35(0x280)]]||''):'',_0x2f9bb1=_0x30ef5a['map']['ref']>=0x0?String(_0x13841c[_0x30ef5a['map']['ref']]||''):'',_0x236c34=_0x30ef5a['map'][_0x2adb35(0x30c)]>=0x0?String(_0x13841c[_0x30ef5a[_0x2adb35(0x338)][_0x2adb35(0x30c)]]||''):'';let _0x1e8e7c='';if(_0x30ef5a['map'][_0x2adb35(0x118)]>=0x0){const _0x27fee8=_0x13841c[_0x30ef5a[_0x2adb35(0x338)]['valor']],_0x31c437=toNum(_0x27fee8,_0x30ef5a['numFmt']),_0x5db72d=_0x31c437===0x0&&_0x27fee8!==0x0&&_0x27fee8!==''&&_0x27fee8!=null?'warn':'ok';_0x1e8e7c=_0x2adb35(0x163)+_0x2adb35(0x2da)+_0x5db72d+('\x22\x20title=\x22O'+'riginal:\x20')+esc(String(_0x27fee8))+'\x22>'+fmtN(_0x31c437)+_0x2adb35(0x2b7);}else{const _0x5eee45=_0x30ef5a['map'][_0x2adb35(0x289)]>=0x0?_0x13841c[_0x30ef5a[_0x2adb35(0x338)]['debito']]:'',_0x26a821=_0x30ef5a[_0x2adb35(0x338)][_0x2adb35(0x131)]>=0x0?_0x13841c[_0x30ef5a[_0x2adb35(0x338)][_0x2adb35(0x131)]]:'',_0x16e280=toNum(_0x5eee45,_0x30ef5a['numFmt']),_0x107b33=toNum(_0x26a821,_0x30ef5a[_0x2adb35(0x198)]);_0x1e8e7c='<td\x20class='+_0x2adb35(0x2c2)+_0x2adb35(0x285)+_0x2adb35(0x128)+esc(String(_0x5eee45))+'\x22>'+fmtN(_0x16e280)+('</td><td\x20c'+'lass=\x22num\x22'+_0x2adb35(0x16c)+_0x2adb35(0x244))+esc(String(_0x26a821))+'\x22>'+fmtN(_0x107b33)+_0x2adb35(0x2b7);}_0x118481+='<tr><td\x20cl'+_0x2adb35(0x3c6)+(_0x646042?'ok':'warn')+'\x22>'+(_0x646042?_0x646042[_0x2adb35(0x2d8)+_0x2adb35(0x347)]('es-CO',{'day':_0x2adb35(0x1ed),'month':_0x2adb35(0x1f5),'year':'numeric'}):'⚠\x20?')+_0x2adb35(0x2b7),_0x118481+=_0x2adb35(0x113)+_0x2adb35(0x3b2)+_0x2adb35(0x14e)+'rflow:hidd'+_0x2adb35(0x1c0)+_0x2adb35(0x250)+'ipsis;whit'+'e-space:no'+'wrap\x22>'+esc(_0x7522cf[_0x2adb35(0x1f9)](0x0,0x28))+'</td>';if(!_0x52c44e)_0x118481+='<td>'+esc(_0x236c34['substring'](0x0,0x19))+'</td>';_0x118481+='<td>'+esc(_0x2f9bb1['substring'](0x0,0x14))+'</td>'+_0x1e8e7c+'</tr>';}_0x118481+='</table></'+'div>';if(_0xa6be5f['length']===0x0)_0x118481+='<div\x20class'+'=\x22card-inf'+'o\x22\x20style=\x22'+_0x2adb35(0x281)+_0x2adb35(0x3b1)+_0x2adb35(0x1fd)+_0x2adb35(0x28e)+'encontraro'+'n\x20filas\x20de'+'\x20datos.\x20Ve'+_0x2adb35(0x25b)+'fila\x20del\x20e'+'ncabezado.'+'</div>';document['getElement'+_0x2adb35(0x2ab)](_0x2adb35(0x310)+_0xef1896)[_0x2adb35(0x1c6)]=_0x118481;}function changeHeader(_0x55c1f4,_0x585db8){const _0x3ae5be=_0x5087be;F[_0x55c1f4][_0x3ae5be(0xdb)]=Math['max'](0x0,Math[_0x3ae5be(0x1d0)](_0x585db8,F[_0x55c1f4]['raw']['length']-0x2)),refreshDetection(_0x55c1f4);}function toggleNoHeader(_0x43061d,_0x14004a){const _0x227d7b=_0x5087be;F[_0x43061d]['noHeader']=_0x14004a;const _0x13a9de=document['getElement'+_0x227d7b(0x2ab)]('hdrIn'+_0x43061d);if(_0x13a9de)_0x13a9de[_0x227d7b(0xc5)]=_0x14004a;refreshDetection(_0x43061d);}function changeNumFmt(_0x17185a,_0x759bb6){const _0x2ed147=_0x5087be;F[_0x17185a][_0x2ed147(0x198)]=_0x759bb6,renderFileCard(_0x17185a);}function changeMap(_0x37e5c4,_0x1fcfec,_0x129356){F[_0x37e5c4]['map'][_0x1fcfec]=_0x129356,renderFileCard(_0x37e5c4);}function refreshDetection(_0x3b9482){const _0x34e623=_0x5087be,_0x5cebc1=F[_0x3b9482],_0x55796f=_0x5cebc1[_0x34e623(0x22b)]?0x0:_0x5cebc1['headerRow'],_0x8e096e=_0x5cebc1['noHeader']?_0x5cebc1['raw'][0x0]['map']((_0x578d5d,_0x1b504f)=>'Col_'+String[_0x34e623(0x35e)+'de'](0x41+_0x1b504f)):(_0x5cebc1[_0x34e623(0x261)][_0x55796f]||[])['map']((_0x16e6c7,_0x93da9f)=>_0x16e6c7?String(_0x16e6c7)['trim']():_0x34e623(0xc3)+(_0x93da9f+0x1)),_0x867964=_0x5cebc1[_0x34e623(0x22b)]?0x0:_0x55796f+0x1,_0x3f7286=cleanRows(_0x5cebc1['raw'][_0x34e623(0x215)](_0x867964));_0x5cebc1['map']=detectColumns(_0x8e096e,_0x3f7286,_0x3b9482==='E');const _0x5ef648=_0x5cebc1[_0x34e623(0x338)]['valor']>=0x0?_0x5cebc1[_0x34e623(0x338)]['valor']:_0x5cebc1['map'][_0x34e623(0x289)]>=0x0?_0x5cebc1['map']['debito']:-0x1;if(_0x5ef648>=0x0)_0x5cebc1['numFmt']=detectNumFormat(_0x5cebc1[_0x34e623(0x14f)][_0x34e623(0x215)](_0x867964),_0x5ef648);renderFileCard(_0x3b9482);}function cleanRows(_0x5e82f1){return _0x5e82f1['filter'](_0xcb1cab=>{const _0x3add27=_0x4b81;if(!_0xcb1cab||_0xcb1cab['every'](_0x9bcc82=>_0x9bcc82==null||_0x9bcc82===''))return![];const _0x5d1367=norm(String(_0xcb1cab[0x0]||''));if(_0x5d1367['startsWith'](_0x3add27(0x1f1))||_0x5d1367[_0x3add27(0x29c)]('fin\x20estado')||_0x5d1367['includes']('procesado\x20'+'en')||_0x5d1367[_0x3add27(0x211)]('saldo\x20ante'+'rior')||_0x5d1367['startsWith']('subtotal')||_0x5d1367['includes']('resumen'))return![];return!![];});}function ejecutar(){const _0x445656=_0x5087be,_0x157a4e=+(document['getElement'+'ById'](_0x445656(0x3a2))['value']||0x1),_0xc778ea=getTransactionYear('E'),_0x4143bc=getTransactionYear('A'),_0x58b021=new Date()['getFullYea'+'r']();let _0xc8fb57,_0x3e246e;_0xc778ea&&_0x4143bc&&_0xc778ea!==_0x4143bc?(console['log'](_0x445656(0x3a6)+'ieren:\x20ext'+'racto='+_0xc778ea+_0x445656(0x2c3)+_0x4143bc+('.\x20Usando\x20a'+_0x445656(0x19b)+_0x445656(0x138))),_0x3e246e=_0x4143bc,_0xc8fb57=_0x4143bc):(_0xc8fb57=_0xc778ea||_0x4143bc||_0x58b021,_0x3e246e=_0x4143bc||_0xc778ea||_0x58b021);console['log']('DEBUG\x20year'+'E=',_0xc778ea,_0x445656(0x24a),_0x4143bc,'finalE=',_0xc8fb57,'finalA=',_0x3e246e),console[_0x445656(0x1ea)](_0x445656(0x351)+'p=',JSON[_0x445656(0x263)](F['E']['map']),_0x445656(0x1c4),F['E'][_0x445656(0x198)],'hdr=',F['E'][_0x445656(0xdb)]),console[_0x445656(0x1ea)]('DEBUG\x20A\x20ma'+'p=',JSON['stringify'](F['A'][_0x445656(0x338)]),'numFmt=',F['A']['numFmt'],_0x445656(0x2ce),F['A'][_0x445656(0xdb)]);const _0x1670e5=buildRecords('E',_0xc8fb57),_0x2ccfd9=buildRecords('A',_0x3e246e);if(_0x1670e5['length']===0x0){alert('No\x20se\x20enco'+'ntraron\x20mo'+'vimientos\x20'+_0x445656(0x1a7)+_0x445656(0x38b));return;}if(_0x2ccfd9['length']===0x0){alert(_0x445656(0x11d)+_0x445656(0x37e)+_0x445656(0x37d)+_0x445656(0xea)+_0x445656(0x149));return;}console[_0x445656(0x1ea)]('DEBUG\x20ext['+'0]=',JSON['stringify'](_0x1670e5[0x0],(_0xcec89d,_0x1d67bd)=>_0x1d67bd instanceof Date?_0x1d67bd['toISOStrin'+'g']():_0x1d67bd)),console['log']('DEBUG\x20ext['+'1]=',JSON[_0x445656(0x263)](_0x1670e5[0x1],(_0xeb2fb3,_0x135383)=>_0x135383 instanceof Date?_0x135383['toISOStrin'+'g']():_0x135383)),console['log']('DEBUG\x20aux['+'0]=',JSON['stringify'](_0x2ccfd9[0x0],(_0x24f1c1,_0x403887)=>_0x403887 instanceof Date?_0x403887[_0x445656(0x2c6)+'g']():_0x403887)),console[_0x445656(0x1ea)](_0x445656(0x2f8)+_0x445656(0x359),JSON[_0x445656(0x263)](_0x2ccfd9[0x1],(_0x3d2bec,_0x406977)=>_0x406977 instanceof Date?_0x406977['toISOStrin'+'g']():_0x406977));let _0x4870b8=0x0;for(let _0x427a81=0x0;_0x427a81<Math['min'](0x5,_0x1670e5[_0x445656(0x361)]);_0x427a81++){for(let _0x543750=0x0;_0x543750<Math['min'](0x5,_0x2ccfd9['length']);_0x543750++){const _0x26b7e3=amtMatch(_0x1670e5[_0x427a81],_0x2ccfd9[_0x543750],_0x157a4e,!![]),_0xa9312f=dateClose(_0x1670e5[_0x427a81][_0x445656(0x17f)],_0x2ccfd9[_0x543750]['fecha'],0x0);(_0x26b7e3||_0x1670e5[_0x427a81]['deb']>0x0&&_0x2ccfd9[_0x543750][_0x445656(0x3ae)]>0x0&&Math[_0x445656(0x1a8)](_0x1670e5[_0x427a81][_0x445656(0x3ae)]-_0x2ccfd9[_0x543750][_0x445656(0x3ae)])<0x64)&&(console['log']('DEBUG\x20matc'+_0x445656(0x22a)+_0x427a81+_0x445656(0x2f4)+_0x543750+_0x445656(0x1e7)+_0x26b7e3+'\x20date='+_0xa9312f,'E.deb='+_0x1670e5[_0x427a81][_0x445656(0x3ae)]+_0x445656(0x300)+_0x1670e5[_0x427a81][_0x445656(0x1f0)]+_0x445656(0x2a2)+_0x1670e5[_0x427a81][_0x445656(0x17f)],'A.deb='+_0x2ccfd9[_0x543750][_0x445656(0x3ae)]+'\x20A.cre='+_0x2ccfd9[_0x543750][_0x445656(0x1f0)]+_0x445656(0x385)+_0x2ccfd9[_0x543750][_0x445656(0x17f)]),_0x4870b8++);}}console['log']('DEBUG\x20manu'+'al\x20match\x20c'+_0x445656(0x2e3)+'d:',_0x4870b8);const _0x29c9e=[],_0x857b0b=new Set(),_0x379b5a=new Set();doPass(_0x1670e5,_0x2ccfd9,_0x857b0b,_0x379b5a,_0x29c9e,_0x157a4e,0x0,!![],_0x445656(0x2e6),_0x445656(0x390)+_0x445656(0x356)+_0x445656(0x226)),console['log'](_0x445656(0x363)+_0x445656(0x1eb)+'xact):',_0x29c9e[_0x445656(0x361)],'matches'),doPass(_0x1670e5,_0x2ccfd9,_0x857b0b,_0x379b5a,_0x29c9e,_0x157a4e,0x2,!![],_0x445656(0x2e6),'Monto\x20y\x20ti'+'po,\x20fecha\x20'+_0x445656(0xf0)),console['log'](_0x445656(0x363)+_0x445656(0x3ca)+'2d):',_0x29c9e['length'],_0x445656(0x365)),doPass(_0x1670e5,_0x2ccfd9,_0x857b0b,_0x379b5a,_0x29c9e,_0x157a4e,0x5,!![],_0x445656(0x2ff),'Monto\x20y\x20ti'+'po,\x20fecha\x20'+_0x445656(0x115)),doPassRef(_0x1670e5,_0x2ccfd9,_0x857b0b,_0x379b5a,_0x29c9e,_0x157a4e,_0x445656(0x2ff),_0x445656(0x343)+'ferencia'),doPass(_0x1670e5,_0x2ccfd9,_0x857b0b,_0x379b5a,_0x29c9e,_0x157a4e,0xf,!![],'baja',_0x445656(0x268)+_0x445656(0x2d2)+'as'),doPass(_0x1670e5,_0x2ccfd9,_0x857b0b,_0x379b5a,_0x29c9e,_0x157a4e,0x1f,![],_0x445656(0x265),'Solo\x20monto'+_0x445656(0x27c)+')'),console['log']('DEBUG\x20TOTA'+_0x445656(0x16b),_0x29c9e['length']);if(_0x29c9e[_0x445656(0x361)]===0x0&&_0x1670e5['length']>0x0&&_0x2ccfd9[_0x445656(0x361)]>0x0){let _0x572c6d='===\x20DIAGNÓ'+_0x445656(0x38e)+'onciliadas'+')\x20===\x0a\x0a';_0x572c6d+=_0x445656(0x38d)+_0x1670e5[_0x445656(0x361)]+('\x20registros'+'\x0a');for(let _0x292f6b=0x0;_0x292f6b<Math[_0x445656(0x1d0)](0x3,_0x1670e5[_0x445656(0x361)]);_0x292f6b++){const _0x19b28c=_0x1670e5[_0x292f6b];_0x572c6d+=_0x445656(0x27e)+_0x292f6b+_0x445656(0x381)+(_0x19b28c['fecha']?_0x19b28c[_0x445656(0x17f)]['toLocaleDa'+'teString']('es-CO'):'NULL')+'\x20deb='+_0x19b28c['deb']+_0x445656(0x253)+_0x19b28c[_0x445656(0x1f0)]+'\x20desc='+(_0x19b28c['desc']||'')['substring'](0x0,0x23)+'\x0a';}_0x572c6d+='\x0aAuxiliar:'+'\x20'+_0x2ccfd9['length']+(_0x445656(0x12a)+'\x0a');for(let _0x5f1362=0x0;_0x5f1362<Math['min'](0x3,_0x2ccfd9[_0x445656(0x361)]);_0x5f1362++){const _0x1db5ad=_0x2ccfd9[_0x5f1362];_0x572c6d+=_0x445656(0x139)+_0x5f1362+']:\x20fecha='+(_0x1db5ad['fecha']?_0x1db5ad['fecha'][_0x445656(0x2d8)+'teString']('es-CO'):'NULL')+'\x20deb='+_0x1db5ad[_0x445656(0x3ae)]+_0x445656(0x253)+_0x1db5ad[_0x445656(0x1f0)]+'\x20desc='+(_0x1db5ad['desc']||'')[_0x445656(0x1f9)](0x0,0x23)+_0x445656(0x10c)+_0x1db5ad[_0x445656(0x171)]+'\x0a';}_0x572c6d+='\x0a---\x20Test\x20'+'de\x20cruce\x20m'+_0x445656(0x23c);let _0x27e24b=![];for(let _0x4e553e=0x0;_0x4e553e<Math[_0x445656(0x1d0)](0xa,_0x1670e5['length'])&&!_0x27e24b;_0x4e553e++){for(let _0xf31027=0x0;_0xf31027<Math['min'](0xa,_0x2ccfd9['length'])&&!_0x27e24b;_0xf31027++){const _0x85579=_0x1670e5[_0x4e553e],_0x1d28f8=_0x2ccfd9[_0xf31027],_0x462781=_0x85579[_0x445656(0x3ae)]>0x0&&_0x1d28f8[_0x445656(0x3ae)]>0x0&&Math[_0x445656(0x1a8)](_0x85579[_0x445656(0x3ae)]-_0x1d28f8['deb'])<0x2,_0x1537f7=_0x85579['cre']>0x0&&_0x1d28f8['cre']>0x0&&Math[_0x445656(0x1a8)](_0x85579[_0x445656(0x1f0)]-_0x1d28f8['cre'])<0x2;(_0x462781||_0x1537f7)&&(_0x572c6d+='MATCH\x20POSI'+'BLE\x20E['+_0x4e553e+']\x20vs\x20A['+_0xf31027+']:\x0a',_0x572c6d+='\x20\x20E:\x20deb='+_0x85579[_0x445656(0x3ae)]+_0x445656(0x253)+_0x85579[_0x445656(0x1f0)]+'\x20fecha='+_0x85579[_0x445656(0x17f)]?.[_0x445656(0x2d8)+_0x445656(0x347)]('es-CO')+'\x0a',_0x572c6d+='\x20\x20A:\x20deb='+_0x1d28f8[_0x445656(0x3ae)]+'\x20cre='+_0x1d28f8['cre']+_0x445656(0x15d)+_0x1d28f8['fecha']?.['toLocaleDa'+'teString'](_0x445656(0x1e8))+'\x0a',_0x572c6d+='\x20\x20amtMatch'+'(tol='+_0x157a4e+(_0x445656(0x19d)+'rue)=')+amtMatch(_0x85579,_0x1d28f8,_0x157a4e,!![])+'\x0a',_0x572c6d+=_0x445656(0x213)+_0x445656(0x110)+')='+dateClose(_0x85579[_0x445656(0x17f)],_0x1d28f8['fecha'],0x0)+'\x0a',_0x572c6d+=_0x445656(0x213)+'e(dayTol=3'+'1)='+dateClose(_0x85579[_0x445656(0x17f)],_0x1d28f8[_0x445656(0x17f)],0x1f)+'\x0a',_0x27e24b=!![]);}}if(!_0x27e24b){_0x572c6d+=_0x445656(0x324)+_0x445656(0x13b)+'n\x20par\x20con\x20'+'monto\x20simi'+_0x445656(0x369)+_0x445656(0x3bb)+'egistros.\x0a',_0x572c6d+=_0x445656(0x355)+'oblema:\x20ex'+'tracto\x20y\x20a'+'uxiliar\x20ti'+_0x445656(0x227)+_0x445656(0x259)+'dos.\x0a';for(let _0x34895c=0x0;_0x34895c<Math['min'](0x5,_0x1670e5['length']);_0x34895c++){for(let _0x8a1df4=0x0;_0x8a1df4<Math['min'](0x5,_0x2ccfd9[_0x445656(0x361)]);_0x8a1df4++){const _0xe824b6=_0x1670e5[_0x34895c],_0x266f77=_0x2ccfd9[_0x8a1df4];if(_0xe824b6[_0x445656(0x3ae)]>0x0&&_0x266f77[_0x445656(0x1f0)]>0x0&&Math[_0x445656(0x1a8)](_0xe824b6['deb']-_0x266f77['cre'])<0x2){_0x572c6d+=_0x445656(0x188)+_0x445656(0x3bf)+_0x34895c+_0x445656(0x394)+_0xe824b6['deb']+_0x445656(0x146)+_0x8a1df4+'].cre='+_0x266f77[_0x445656(0x1f0)]+'\x0a',_0x27e24b=!![];break;}if(_0xe824b6['cre']>0x0&&_0x266f77[_0x445656(0x3ae)]>0x0&&Math['abs'](_0xe824b6[_0x445656(0x1f0)]-_0x266f77[_0x445656(0x3ae)])<0x2){_0x572c6d+=_0x445656(0x188)+'VERTIDO\x20E['+_0x34895c+_0x445656(0x148)+_0xe824b6[_0x445656(0x1f0)]+_0x445656(0x146)+_0x8a1df4+_0x445656(0x394)+_0x266f77['deb']+'\x0a',_0x27e24b=!![];break;}}if(_0x27e24b)break;}}_0x572c6d+='\x0aE\x20map='+JSON['stringify'](F['E'][_0x445656(0x338)])+_0x445656(0x18a)+JSON[_0x445656(0x263)](F['A'][_0x445656(0x338)]),_0x572c6d+=_0x445656(0x34d)+F['E'][_0x445656(0x198)]+_0x445656(0x395)+F['A']['numFmt'],alert(_0x572c6d);}const _0x5d9997=_0x1670e5['filter']((_0x2030e4,_0x50516d)=>!_0x857b0b['has'](_0x50516d)),_0x181f11=_0x2ccfd9[_0x445656(0x1c5)]((_0x14fcb3,_0x9c46d3)=>!_0x379b5a[_0x445656(0x21e)](_0x9c46d3)),_0x864ea7={'d':sum(_0x1670e5,_0x445656(0x3ae)),'c':sum(_0x1670e5,_0x445656(0x1f0))},_0x4eeda1={'d':sum(_0x2ccfd9,'deb'),'c':sum(_0x2ccfd9,_0x445656(0x1f0))},_0x211f53={'d':sum(_0x5d9997,_0x445656(0x3ae)),'c':sum(_0x5d9997,_0x445656(0x1f0))},_0x1aaab2={'d':sum(_0x181f11,_0x445656(0x3ae)),'c':sum(_0x181f11,_0x445656(0x1f0))};resultados={'matched':_0x29c9e,'soloE':_0x5d9997,'soloA':_0x181f11,'ext':_0x1670e5,'aux':_0x2ccfd9,'sE':_0x864ea7,'sA':_0x4eeda1,'ssE':_0x211f53,'ssA':_0x1aaab2,'tol':_0x157a4e},renderResults(),hide('step2'),show('step3'),setSI(0x3);}function getTransactionYear(_0x3ce26d){const _0x46a40c=_0x5087be,_0x35c108=F[_0x3ce26d];if(!_0x35c108[_0x46a40c(0x261)]||_0x35c108['map']['fecha']<0x0)return null;const _0x19fa31=_0x35c108[_0x46a40c(0x22b)]?0x0:_0x35c108['headerRow']+0x1;return guessYearFromTransactions(_0x35c108[_0x46a40c(0x261)],_0x35c108['map'][_0x46a40c(0x17f)],_0x19fa31);}function buildRecords(_0xf29838,_0x5423c6){const _0x14f35c=_0x5087be,_0xc179b5=F[_0xf29838],_0x1f8d0d=_0xc179b5[_0x14f35c(0x22b)]?0x0:_0xc179b5[_0x14f35c(0xdb)],_0x9d6864=_0xc179b5['noHeader']?0x0:_0x1f8d0d+0x1,_0x373872=cleanRows(_0xc179b5[_0x14f35c(0x261)]['slice'](_0x9d6864)),_0x483880=_0xc179b5[_0x14f35c(0x198)],_0x2a0f2e=[];for(const _0x32d926 of _0x373872){const _0x42c891=_0xc179b5[_0x14f35c(0x338)][_0x14f35c(0x17f)]>=0x0?parseDate(_0x32d926[_0xc179b5['map'][_0x14f35c(0x17f)]],_0x5423c6):null,_0x4c6505=_0xc179b5[_0x14f35c(0x338)][_0x14f35c(0x280)]>=0x0?String(_0x32d926[_0xc179b5[_0x14f35c(0x338)]['desc']]||'')['trim']():'',_0x2cd42e=_0xc179b5[_0x14f35c(0x338)][_0x14f35c(0x171)]>=0x0?String(_0x32d926[_0xc179b5[_0x14f35c(0x338)][_0x14f35c(0x171)]]||'')[_0x14f35c(0x145)]():'',_0x1994c7=_0xc179b5[_0x14f35c(0x338)][_0x14f35c(0x30c)]>=0x0?String(_0x32d926[_0xc179b5['map'][_0x14f35c(0x30c)]]||'')['trim']():'';let _0x376058=0x0,_0x1705db=0x0;if(_0xc179b5['map']['valor']>=0x0&&_0xc179b5[_0x14f35c(0x338)][_0x14f35c(0x289)]<0x0&&_0xc179b5[_0x14f35c(0x338)][_0x14f35c(0x131)]<0x0){const _0x5b5712=toNum(_0x32d926[_0xc179b5['map'][_0x14f35c(0x118)]],_0x483880);if(_0x5b5712>0x0)_0x376058=_0x5b5712;else{if(_0x5b5712<0x0)_0x1705db=Math[_0x14f35c(0x1a8)](_0x5b5712);}}else _0x376058=_0xc179b5['map']['debito']>=0x0?Math['abs'](toNum(_0x32d926[_0xc179b5['map']['debito']],_0x483880)):0x0,_0x1705db=_0xc179b5['map'][_0x14f35c(0x131)]>=0x0?Math['abs'](toNum(_0x32d926[_0xc179b5['map'][_0x14f35c(0x131)]],_0x483880)):0x0;if(_0x376058===0x0&&_0x1705db===0x0)continue;_0x2a0f2e[_0x14f35c(0x17b)]({'fecha':_0x42c891,'desc':_0x4c6505,'ref':_0x2cd42e,'tercero':_0x1994c7,'deb':_0x376058,'cre':_0x1705db});}return _0x2a0f2e;}function doPass(_0x150bf6,_0x49ff7d,_0x48b268,_0x294886,_0x2af7a2,_0x41a5e1,_0x101ece,_0x39ebae,_0x183889,_0x20b1a8){const _0x19915a=_0x5087be;for(let _0x1fd6bb=0x0;_0x1fd6bb<_0x150bf6['length'];_0x1fd6bb++){if(_0x48b268['has'](_0x1fd6bb))continue;for(let _0x219a3d=0x0;_0x219a3d<_0x49ff7d[_0x19915a(0x361)];_0x219a3d++){if(_0x294886[_0x19915a(0x21e)](_0x219a3d))continue;if(!amtMatch(_0x150bf6[_0x1fd6bb],_0x49ff7d[_0x219a3d],_0x41a5e1,_0x39ebae))continue;if(!dateClose(_0x150bf6[_0x1fd6bb][_0x19915a(0x17f)],_0x49ff7d[_0x219a3d][_0x19915a(0x17f)],_0x101ece))continue;_0x2af7a2[_0x19915a(0x17b)]({'ei':_0x1fd6bb,'ai':_0x219a3d,'conf':_0x183889,'reason':_0x20b1a8}),_0x48b268['add'](_0x1fd6bb),_0x294886[_0x19915a(0x19e)](_0x219a3d);break;}}}function doPassRef(_0x30cfd4,_0x19edd1,_0x3fb523,_0x2f3c7f,_0x2a556a,_0x9d415d,_0x5bbe04,_0xcf92fa){const _0x56c198=_0x5087be;for(let _0x32aee5=0x0;_0x32aee5<_0x30cfd4[_0x56c198(0x361)];_0x32aee5++){if(_0x3fb523[_0x56c198(0x21e)](_0x32aee5))continue;for(let _0x4edf03=0x0;_0x4edf03<_0x19edd1['length'];_0x4edf03++){if(_0x2f3c7f['has'](_0x4edf03))continue;if(!amtMatch(_0x30cfd4[_0x32aee5],_0x19edd1[_0x4edf03],_0x9d415d,!![]))continue;if(!refMatch(_0x30cfd4[_0x32aee5],_0x19edd1[_0x4edf03]))continue;_0x2a556a[_0x56c198(0x17b)]({'ei':_0x32aee5,'ai':_0x4edf03,'conf':_0x5bbe04,'reason':_0xcf92fa}),_0x3fb523['add'](_0x32aee5),_0x2f3c7f[_0x56c198(0x19e)](_0x4edf03);break;}}}function amtMatch(_0x5d96c9,_0x489130,_0xbf87d9,_0x43af83){const _0x46477f=_0x5087be;if(_0x43af83){if(_0x5d96c9[_0x46477f(0x3ae)]>0x0&&_0x489130['deb']>0x0)return Math['abs'](Math[_0x46477f(0xc0)](_0x5d96c9[_0x46477f(0x3ae)]*0x64)-Math[_0x46477f(0xc0)](_0x489130['deb']*0x64))<=_0xbf87d9*0x64;if(_0x5d96c9[_0x46477f(0x1f0)]>0x0&&_0x489130['cre']>0x0)return Math[_0x46477f(0x1a8)](Math[_0x46477f(0xc0)](_0x5d96c9[_0x46477f(0x1f0)]*0x64)-Math[_0x46477f(0xc0)](_0x489130['cre']*0x64))<=_0xbf87d9*0x64;return![];}const _0x274ac3=_0x5d96c9['deb']||_0x5d96c9['cre'],_0x50156e=_0x489130['deb']||_0x489130[_0x46477f(0x1f0)];return Math['abs'](Math['round'](_0x274ac3*0x64)-Math[_0x46477f(0xc0)](_0x50156e*0x64))<=_0xbf87d9*0x64;}function dateClose(_0x3849a4,_0x4dc788,_0x3302e3){const _0x2b7881=_0x5087be;if(!_0x3849a4||!_0x4dc788)return _0x3302e3>=0xf;const _0x27ea1b=Date['UTC'](_0x3849a4[_0x2b7881(0x3ac)+'r'](),_0x3849a4['getMonth'](),_0x3849a4['getDate']()),_0x138260=Date['UTC'](_0x4dc788['getFullYea'+'r'](),_0x4dc788['getMonth'](),_0x4dc788[_0x2b7881(0x3c2)]()),_0x1fc624=Math[_0x2b7881(0x1a8)](_0x27ea1b-_0x138260)/0x5265c00;if(_0x1fc624<=_0x3302e3)return!![];if(_0x3849a4['getFullYea'+'r']()!==_0x4dc788['getFullYea'+'r']()){const _0x10efee=Date[_0x2b7881(0x12b)](0x7d0,_0x3849a4['getMonth'](),_0x3849a4['getDate']()),_0x3fd2c6=Date[_0x2b7881(0x12b)](0x7d0,_0x4dc788[_0x2b7881(0x17c)](),_0x4dc788[_0x2b7881(0x3c2)]());return Math[_0x2b7881(0x1a8)](_0x10efee-_0x3fd2c6)/0x5265c00<=_0x3302e3;}return![];}function refMatch(_0x5cfa7a,_0x5b816e){const _0xaffc3d=_0x5087be,_0x658dc6=(_0x5cfa7a['ref']+'\x20'+_0x5cfa7a[_0xaffc3d(0x280)])['match'](/\d{4,}/g)||[],_0x5b134e=(_0x5b816e['ref']+'\x20'+_0x5b816e['desc'])['match'](/\d{4,}/g)||[];for(const _0x340921 of _0x658dc6)if(_0x5b134e[_0xaffc3d(0x2aa)](_0x196bd1=>_0x196bd1['includes'](_0x340921)||_0x340921[_0xaffc3d(0x29c)](_0x196bd1)))return!![];return![];}function sum(_0x1e2e50,_0xce0722){return _0x1e2e50['reduce']((_0x535f89,_0x4f4fef)=>_0x535f89+(_0x4f4fef[_0xce0722]||0x0),0x0);}const CATEGORIES=[{'id':_0x5087be(0x1d1),'name':'GMF\x20/\x204×10'+'00','icon':_0x5087be(0x34e),'color':'#DC2626','bg':'#FEF2F2','test':_0x237635=>_0x237635['includes'](_0x5087be(0x112))||_0x237635[_0x5087be(0x29c)](_0x5087be(0x181)+'erno')||_0x237635['includes'](_0x5087be(0x1d1))||_0x237635[_0x5087be(0x29c)]('4\x20x\x201000')||_0x237635[_0x5087be(0x29c)]('gravamen')},{'id':_0x5087be(0x109),'name':'Intereses\x20'+'recibidos','icon':'📈','color':_0x5087be(0x33c),'bg':'#ECFDF5','test':_0x46484b=>(_0x46484b[_0x5087be(0x29c)]('interes')||_0x46484b['includes']('interés'))&&(_0x46484b['includes']('ahorro')||_0x46484b['includes'](_0x5087be(0x248))||_0x46484b[_0x5087be(0x29c)]('cdt')||_0x46484b['includes'](_0x5087be(0x277)+'o'))},{'id':_0x5087be(0x2fe),'name':'Comisiones'+'\x20bancarias','icon':'🏦','color':_0x5087be(0x241),'bg':'#FFFBEB','test':_0x319042=>_0x319042[_0x5087be(0x29c)](_0x5087be(0x2fe))||_0x319042['includes'](_0x5087be(0x1d2))||_0x319042[_0x5087be(0x29c)]('cobro\x20serv'+'icio')},{'id':'cuota','name':_0x5087be(0x34b)+_0x5087be(0x39c),'icon':'💳','color':'#9333EA','bg':'#F5F3FF','test':_0x97c826=>_0x97c826['includes'](_0x5087be(0x1dc)+'jo')||_0x97c826[_0x5087be(0x29c)](_0x5087be(0x246)+'anejo')||_0x97c826[_0x5087be(0x29c)](_0x5087be(0x29a)+'a')},{'id':_0x5087be(0xc8),'name':'Retención\x20'+_0x5087be(0xcb)+'te','icon':'📋','color':_0x5087be(0x2b2),'bg':'#FDF2F8','test':_0x3dfcf5=>_0x3dfcf5[_0x5087be(0x29c)]('retefuente')||_0x3dfcf5['includes']('retefte')||_0x3dfcf5[_0x5087be(0x29c)](_0x5087be(0x2d1))&&_0x3dfcf5[_0x5087be(0x29c)](_0x5087be(0x266))||_0x3dfcf5[_0x5087be(0x29c)]('retención')&&_0x3dfcf5['includes']('fuente')},{'id':_0x5087be(0x2b1),'name':'Retención\x20'+_0x5087be(0x257),'icon':'📑','color':_0x5087be(0x328),'bg':_0x5087be(0x126),'test':_0x15b1d8=>(_0x15b1d8[_0x5087be(0x29c)]('retencion')||_0x15b1d8['includes'](_0x5087be(0x31f)))&&(_0x15b1d8['includes']('iva')||_0x15b1d8[_0x5087be(0x29c)]('i.v.a'))},{'id':_0x5087be(0x1fe),'name':'Retención\x20'+'de\x20ICA','icon':'🏢','color':'#4338CA','bg':_0x5087be(0x24b),'test':_0x18d9e1=>(_0x18d9e1[_0x5087be(0x29c)](_0x5087be(0x2d1))||_0x18d9e1[_0x5087be(0x29c)]('retención'))&&_0x18d9e1['includes']('ica')},{'id':_0x5087be(0x203),'name':'Plataforma'+_0x5087be(0xe8)+'s','icon':'📱','color':'#0891B2','bg':'#ECFEFF','test':_0x4ff6eb=>_0x4ff6eb['includes'](_0x5087be(0x331))||_0x4ff6eb[_0x5087be(0x29c)](_0x5087be(0x32c))||_0x4ff6eb[_0x5087be(0x29c)](_0x5087be(0x1af))||_0x4ff6eb[_0x5087be(0x29c)]('pse')||_0x4ff6eb['includes'](_0x5087be(0x38a))||_0x4ff6eb['includes'](_0x5087be(0xe0))},{'id':_0x5087be(0x183),'name':'Cheques','icon':'📝','color':_0x5087be(0x1c2),'bg':'#F8FAFC','test':_0x161ca3=>_0x161ca3['includes'](_0x5087be(0x183))||_0x161ca3['includes'](_0x5087be(0x134))},{'id':_0x5087be(0x212),'name':'Otros\x20sin\x20'+_0x5087be(0xf8),'icon':'❓','color':_0x5087be(0x312),'bg':'#F9FAFB','test':()=>!![]}];function categorize(_0x24ec6e){const _0x1b2bf9=_0x5087be,_0x5be4f1={};CATEGORIES[_0x1b2bf9(0x28c)](_0x39dd4f=>_0x5be4f1[_0x39dd4f['id']]={'def':_0x39dd4f,'items':[],'totalDeb':0x0,'totalCre':0x0});for(const _0x23f498 of _0x24ec6e){const _0x321945=(_0x23f498[_0x1b2bf9(0x280)]||'')[_0x1b2bf9(0xde)+'e']();for(const _0x3e7e30 of CATEGORIES){if(_0x3e7e30['test'](_0x321945)){_0x5be4f1[_0x3e7e30['id']][_0x1b2bf9(0x11c)]['push'](_0x23f498),_0x5be4f1[_0x3e7e30['id']][_0x1b2bf9(0x1a5)]+=_0x23f498['deb']||0x0,_0x5be4f1[_0x3e7e30['id']][_0x1b2bf9(0x20d)]+=_0x23f498[_0x1b2bf9(0x1f0)]||0x0;break;}}}return _0x5be4f1;}function guessCausa(_0x21126b){const _0x3e0793=_0x5087be,_0x2965bd=(_0x21126b||'')[_0x3e0793(0xde)+'e']();for(const _0x348b74 of CATEGORIES){if(_0x348b74['id']!=='otro'&&_0x348b74['test'](_0x2965bd))return _0x348b74['name'];}return _0x3e0793(0x3c7)+_0x3e0793(0x30a)+'car';}function renderResults(){const _0x314296=_0x5087be,{matched:_0x140e3f,soloE:_0x443ca6,soloA:_0x531b03,ext:_0x30aed8,aux:_0xe79e15,sE:_0x2debcd,sA:_0x1c26ac,ssE:_0x3f8967,ssA:_0x2d1bc2,tol:_0x4cfc45}=resultados,_0x431e0b=Math['max'](_0x30aed8[_0x314296(0x361)],_0xe79e15[_0x314296(0x361)]),_0x4f94a9=_0x431e0b>FREE_LIMIT,_0x6f01a8=_0x4f94a9?FREE_LIMIT:0xf423f,_0x42a8fd=_0x30aed8['length']>0x0?Math['round'](_0x140e3f[_0x314296(0x361)]/Math['max'](_0x30aed8[_0x314296(0x361)],_0xe79e15['length'])*0x64):0x0;document[_0x314296(0x386)+'ById'](_0x314296(0x207))[_0x314296(0x1c6)]=sc('sc-green',_0x140e3f['length'],'Conciliada'+'s')+sc('sc-blue',_0x443ca6[_0x314296(0x361)],'Solo\x20extra'+'cto')+sc(_0x314296(0x1b1),_0x531b03['length'],'Solo\x20auxil'+'iar')+('<div\x20class'+'=\x22summary-'+_0x314296(0x157)+_0x314296(0x2c5)+'color:'+(_0x42a8fd>=0x5a?'var(--g400'+')':_0x42a8fd>=0x46?_0x314296(0x223)+'r)':_0x314296(0x14c))+('\x22><div\x20cla'+'ss=\x22sc-val'+'\x22\x20style=\x22c'+'olor:')+(_0x42a8fd>=0x5a?'var(--g600'+')':_0x42a8fd>=0x46?'var(--ambe'+'r)':'var(--red)')+'\x22>'+_0x42a8fd+('%</div><di'+'v\x20class=\x22s'+_0x314296(0x151)+_0x314296(0x21b)+'n</div></d'+_0x314296(0x11e)));const _0x50ac3c=_0x2debcd['d']-_0x2debcd['c'],_0x42fbd8=_0x1c26ac['d']-_0x1c26ac['c'];let _0x55e5ef='<div\x20class'+_0x314296(0x1bc)+'<h3>🔗\x20Puen'+'te\x20de\x20Conc'+'iliación</'+'h3>';_0x55e5ef+=br(_0x314296(0x3b9),'Saldo\x20neto'+_0x314296(0x296)+_0x314296(0x372)+'ario',fmtS(_0x50ac3c)),_0x55e5ef+=br(_0x314296(0x1be),_0x314296(0x3c4)+_0x314296(0x271)+_0x314296(0x26b)+'to,\x20NO\x20en\x20'+_0x314296(0x191),'');if(_0x3f8967['d']>0x0)_0x55e5ef+=br('br-add','(+)\x20Débito'+_0x314296(0x2a7)+_0x314296(0x21d)+_0x314296(0x170)+_0x314296(0x1de),'+\x20'+fmtS(_0x3f8967['d']));if(_0x3f8967['c']>0x0)_0x55e5ef+=br(_0x314296(0x117),'(−)\x20Crédit'+'os\x20en\x20extr'+'acto\x20no\x20re'+'gistrados\x20'+_0x314296(0x20b),'−\x20'+fmtS(_0x3f8967['c']));_0x55e5ef+=br('br-sep',_0x314296(0x3c4)+_0x314296(0x271)+'\x20en\x20libros'+',\x20NO\x20en\x20ex'+_0x314296(0x323),'');if(_0x2d1bc2['d']>0x0)_0x55e5ef+=br('br-sub','(−)\x20Débito'+_0x314296(0x111)+_0x314296(0xf7)+'jados\x20en\x20e'+'xtracto','−\x20'+fmtS(_0x2d1bc2['d']));if(_0x2d1bc2['c']>0x0)_0x55e5ef+=br(_0x314296(0x166),_0x314296(0x169)+'os\x20en\x20libr'+'os\x20no\x20refl'+_0x314296(0x2bb)+'extracto','+\x20'+fmtS(_0x2d1bc2['c']));_0x55e5ef+=br(_0x314296(0x224),'Saldo\x20neto'+_0x314296(0x3cc)+'ro\x20auxilia'+'r',fmtS(_0x42fbd8));const _0x3df1a8=_0x50ac3c+_0x3f8967['d']-_0x3f8967['c']-_0x2d1bc2['d']+_0x2d1bc2['c'],_0x13ea36=Math['abs'](_0x3df1a8-_0x42fbd8)<0x2;_0x55e5ef+='<div\x20class'+_0x314296(0xf3)+'heck\x20'+(_0x13ea36?'ok':_0x314296(0x318))+'\x22>'+(_0x13ea36?'✓\x20El\x20puent'+'e\x20cuadra\x20c'+'orrectamen'+'te':_0x314296(0xd9)+_0x314296(0x1b5)+fmtN(Math['abs'](_0x3df1a8-_0x42fbd8))+(_0x314296(0x350)+'partidas\x20p'+_0x314296(0x1c3)))+'</div>',_0x55e5ef+=_0x314296(0x2cb),document['getElement'+'ById'](_0x314296(0x27a))['innerHTML']=_0x55e5ef;const _0x284caa=categorize(_0x443ca6),_0x29fdc1=categorize(_0x531b03);let _0x36dafe=_0x314296(0x2ed)+_0x314296(0x1d9)+_0x314296(0x225);_0x36dafe+='<div\x20class'+_0x314296(0x1d9)+'-card\x22><h3'+_0x314296(0x206)+'s\x20solo\x20en\x20'+_0x314296(0xd0)+'h3>',_0x36dafe+=renderCatList(_0x284caa,_0x443ca6),_0x36dafe+=_0x314296(0x2cb),_0x36dafe+='<div\x20class'+'=\x22analysis'+_0x314296(0x399)+'>📒\x20Partida'+'s\x20solo\x20en\x20'+'libros</h3'+'>',_0x36dafe+=renderCatList(_0x29fdc1,_0x531b03),_0x36dafe+='</div>',_0x36dafe+=_0x314296(0x2cb);const _0xfffce0=[{'id':_0x314296(0x1d1),'label':'GMF\x20/\x204×10'+'00'},{'id':'comision','label':'Comisiones'+'\x20bancarias'},{'id':'cuota','label':'Cuota\x20de\x20m'+_0x314296(0x39c)},{'id':'retefte','label':'Retención\x20'+_0x314296(0xcb)+'te'},{'id':'reteiva','label':_0x314296(0x1a1)+'de\x20IVA'},{'id':'reteica','label':_0x314296(0x1a1)+'de\x20ICA'}],_0x32625b=_0xfffce0['some'](_0x21fe4d=>_0x284caa[_0x21fe4d['id']]&&_0x284caa[_0x21fe4d['id']][_0x314296(0x11c)][_0x314296(0x361)]>0x0),_0x1e43bd=_0x284caa['interes']?_0x284caa['interes']['items']:[];if(_0x32625b||_0x1e43bd['length']>0x0){_0x36dafe+=_0x314296(0x2ed)+_0x314296(0x1d9)+_0x314296(0x24e)+_0x314296(0x1fc)+_0x314296(0x205)+_0x314296(0x2cc)+_0x314296(0x1cc)+_0x314296(0x180)+_0x314296(0x197)+_0x314296(0x1c9)+_0x314296(0x36e)+'de\x20registr'+_0x314296(0x16e),_0x36dafe+='<div\x20style'+_0x314296(0x398)+_0x314296(0x150)+'template-c'+'olumns:1fr'+_0x314296(0x222)+'6px\x22>';if(_0x32625b){_0x36dafe+='<div><div\x20'+_0x314296(0x3bd)+_0x314296(0x249)+_0x314296(0x294)+_0x314296(0x297)+_0x314296(0x378)+'--red);mar'+_0x314296(0x286)+':8px\x22>Gast'+_0x314296(0x262)+'os\x20por\x20reg'+_0x314296(0x20f)+_0x314296(0x2cd)+_0x314296(0x2ee)+'t\x22>';let _0x379a8a=0x0;for(const _0x255283 of _0xfffce0){const _0x589745=_0x284caa[_0x255283['id']];if(!_0x589745||_0x589745['items']['length']===0x0)continue;const _0x308f33=_0x589745[_0x314296(0x20d)];_0x379a8a+=_0x308f33,_0x36dafe+='<li\x20class='+'\x22cat-item\x22'+'><div\x20clas'+'s=\x22cat-lef'+_0x314296(0x220)+_0x314296(0x272)+'con\x22\x20style'+'=\x22backgrou'+_0x314296(0x319)+_0x589745['def']['bg']+'\x22>'+_0x589745['def']['icon']+(_0x314296(0x1ad)+_0x314296(0x16a)+_0x314296(0x165)+'e\x22>')+_0x255283[_0x314296(0xdc)]+(_0x314296(0x1ad)+_0x314296(0x14a)+'t-count\x22>')+_0x589745[_0x314296(0x11c)][_0x314296(0x361)]+('\x20movimient'+'o')+(_0x589745['items'][_0x314296(0x361)]>0x1?'s':'')+(_0x314296(0x1a9)+_0x314296(0xfd)+_0x314296(0x15b)+_0x314296(0x195)+_0x314296(0x397))+fmtN(_0x308f33)+(_0x314296(0x107)+'>');}_0x36dafe+=_0x314296(0x1cf)+_0x314296(0x122)+_0x314296(0x2e2)+_0x314296(0x2d7)+_0x314296(0x308)+'carios</sp'+_0x314296(0x1ae)+'lass=\x22cat-'+_0x314296(0x33f)+_0x314296(0x19a)+fmtN(_0x379a8a)+(_0x314296(0x24f)+'iv></div>');}_0x36dafe+='<div><div\x20'+_0x314296(0x3bd)+'t-size:.78'+'rem;font-w'+_0x314296(0x297)+_0x314296(0x378)+_0x314296(0x22e)+'rgin-botto'+_0x314296(0x1b3)+'resos\x20banc'+'arios\x20por\x20'+'registrar<'+'/div><ul\x20c'+_0x314296(0x39d)+_0x314296(0xdd);if(_0x1e43bd[_0x314296(0x361)]>0x0){const _0xc39be2=_0x284caa[_0x314296(0x109)][_0x314296(0x1a5)];_0x36dafe+=_0x314296(0x23b)+_0x314296(0x1ab)+'><div\x20clas'+'s=\x22cat-lef'+'t\x22><div\x20cl'+_0x314296(0x272)+'con\x22\x20style'+'=\x22backgrou'+'nd:'+_0x284caa[_0x314296(0x109)][_0x314296(0xe2)]['bg']+'\x22>'+_0x284caa['interes']['def'][_0x314296(0x229)]+('</div><div'+_0x314296(0x16a)+_0x314296(0x165)+'e\x22>Interes'+'es\x20recibid'+'os</div><d'+'iv\x20class=\x22'+_0x314296(0x159)+'>')+_0x1e43bd[_0x314296(0x361)]+(_0x314296(0x33e)+'o')+(_0x1e43bd[_0x314296(0x361)]>0x1?'s':'')+(_0x314296(0x1a9)+'v></div><d'+'iv\x20class=\x22'+_0x314296(0x195)+_0x314296(0x2f0)+'\x20')+fmtN(_0xc39be2)+('</div></li'+'>'),_0x36dafe+='</ul><div\x20'+_0x314296(0x122)+'-total\x22><s'+'pan>Total\x20'+'ingresos\x20b'+_0x314296(0x353)+'span><span'+'\x20class=\x22ca'+'t-val\x20val-'+_0x314296(0x1b7)+fmtN(_0xc39be2)+(_0x314296(0x24f)+'iv>');}else _0x36dafe+=_0x314296(0x23b)+'\x22cat-item\x22'+_0x314296(0x342)+_0x314296(0x26a)+'f400)\x22>No\x20'+_0x314296(0x125)+'ron\x20ingres'+_0x314296(0x262)+_0x314296(0x34a)+_0x314296(0x160)+_0x314296(0x344);_0x36dafe+=_0x314296(0x1a9)+'v></div>';}resultados['catsE']=_0x284caa,resultados[_0x314296(0x23e)]=_0x29fdc1,document[_0x314296(0x386)+'ById'](_0x314296(0x1ca)+'x')['innerHTML']=_0x36dafe;const _0x287848=[{'id':_0x314296(0x33d),'l':'✓\x20Concilia'+_0x314296(0x2dd),'n':_0x140e3f['length']},{'id':_0x314296(0x303),'l':_0x314296(0x321)+_0x314296(0x1a2),'n':_0x443ca6[_0x314296(0x361)]},{'id':'aux','l':_0x314296(0x3b6)+_0x314296(0x1f8),'n':_0x531b03[_0x314296(0x361)]}];document[_0x314296(0x386)+'ById']('rTabs')[_0x314296(0x1c6)]=_0x287848[_0x314296(0x338)]((_0x4c11db,_0x33a01e)=>'<button\x20cl'+'ass=\x22resul'+_0x314296(0x2f1)+(_0x33a01e===0x0?_0x314296(0x393):'')+('\x22\x20onclick='+'\x22swTab(\x27')+_0x4c11db['id']+'\x27,this)\x22>'+_0x4c11db['l']+('<span\x20clas'+'s=\x22tab-cou'+_0x314296(0x2fd))+_0x4c11db['n']+('</span></b'+'utton>'))[_0x314296(0xd8)]('');let _0x7ce016='';_0x7ce016+='<div\x20class'+'=\x22results-'+_0x314296(0x105)+_0x314296(0x26c)+'nel-conc\x22>'+_0x314296(0x2ed)+'=\x22results-'+'scroll\x22><t'+'able\x20class'+_0x314296(0x136)+'<tr><th>#<'+'/th><th>Fe'+'cha\x20Ext</t'+'h><th>Desc'+'\x20Extracto<'+'/th><th>Ti'+_0x314296(0x174)+'>Valor\x20Ext'+'</th><th>F'+_0x314296(0x100)+'th><th>Ter'+'cero/Desc\x20'+_0x314296(0x208)+_0x314296(0x2c9)+'x</th>';if(_0x4cfc45>0x0)_0x7ce016+=_0x314296(0x3aa)+'h>';_0x7ce016+=_0x314296(0x290)+_0x314296(0x382),_0x140e3f['slice'](0x0,_0x6f01a8)['forEach']((_0x4eebf6,_0x2f3f51)=>{const _0x14db23=_0x314296,_0x3b412c=_0x30aed8[_0x4eebf6['ei']],_0xdd1235=_0xe79e15[_0x4eebf6['ai']],_0x993786=_0x3b412c['deb']>0x0?'Entrada':'Salida',_0x1d5712=_0x3b412c['deb']>0x0?'tipo-in':_0x14db23(0x200),_0x2c43c3=_0x3b412c[_0x14db23(0x3ae)]||_0x3b412c['cre'],_0xe015c9=_0xdd1235[_0x14db23(0x3ae)]||_0xdd1235['cre'],_0x1ee806=Math['abs'](_0x2c43c3-_0xe015c9),_0x379865='conf-'+_0x4eebf6[_0x14db23(0x158)],_0x206e29=_0x4eebf6['conf']===_0x14db23(0x2e6)?_0x14db23(0x29b):_0x4eebf6['conf']===_0x14db23(0x2ff)?_0x14db23(0x3a0):_0x14db23(0xcc),_0x430b3e=_0xdd1235['tercero']||_0xdd1235['desc'];_0x7ce016+='<tr><td>'+(_0x2f3f51+0x1)+_0x14db23(0x254)+fD(_0x3b412c['fecha'])+('</td><td\x20c'+'lass=\x22desc'+'-cell\x22\x20tit'+_0x14db23(0x3ba))+esc(_0x3b412c[_0x14db23(0x280)])+'\x22>'+esc(_0x3b412c[_0x14db23(0x280)])+(_0x14db23(0x192)+_0x14db23(0xd6))+_0x1d5712+'\x22>'+_0x993786+(_0x14db23(0x192)+'lass=\x22num\x22'+'>')+fmtN(_0x2c43c3)+'</td><td>'+fD(_0xdd1235['fecha'])+('</td><td\x20c'+_0x14db23(0x362)+'-cell\x22\x20tit'+_0x14db23(0x3ba))+esc(_0x430b3e)+'\x22>'+esc(_0x430b3e)+('</td><td\x20c'+'lass=\x22num\x22'+'>')+fmtN(_0xe015c9)+'</td>';if(_0x4cfc45>0x0)_0x7ce016+='<td\x20class='+'\x22num\x22\x20styl'+'e=\x22color:'+(_0x1ee806>0x0?'var(--ambe'+'r)':_0x14db23(0x201)+')')+'\x22>'+(_0x1ee806>0x0?fmtN(_0x1ee806):'—')+_0x14db23(0x2b7);_0x7ce016+='<td><span\x20'+_0x14db23(0x17e)+'f\x20'+_0x379865+_0x14db23(0x1e0)+_0x4eebf6[_0x14db23(0x2fc)]+'\x22>'+_0x206e29+(_0x14db23(0x29f)+_0x14db23(0x332));}),_0x7ce016+='</table></'+_0x314296(0x30e),_0x7ce016+=_0x314296(0x2ed)+_0x314296(0x25c)+'panel\x22\x20id='+'\x22panel-ext'+'\x22><div\x20cla'+_0x314296(0x317)+_0x314296(0x384)+_0x314296(0x396)+_0x314296(0xe3)+_0x314296(0x2bf)+_0x314296(0x25e)+'Fecha</th>'+'<th>Descri'+'pción</th>'+'<th>Tipo</'+_0x314296(0x2d9)+'or</th><th'+_0x314296(0x140)+_0x314296(0x102),_0x443ca6['slice'](0x0,_0x6f01a8)['forEach']((_0xd571fd,_0xc87f7c)=>{const _0x119d44=_0x314296,_0x1d867a=_0xd571fd[_0x119d44(0x3ae)]>0x0?'Entrada':'Salida',_0x168675=_0xd571fd[_0x119d44(0x3ae)]>0x0?'tipo-in':'tipo-out',_0x36dce2=guessCausa(_0xd571fd['desc']);_0x7ce016+='<tr><td>'+(_0xc87f7c+0x1)+_0x119d44(0x254)+fD(_0xd571fd['fecha'])+(_0x119d44(0x192)+_0x119d44(0x362)+_0x119d44(0x392)+'le=\x22')+esc(_0xd571fd[_0x119d44(0x280)])+'\x22>'+esc(_0xd571fd[_0x119d44(0x280)])+('</td><td\x20c'+_0x119d44(0xd6))+_0x168675+'\x22>'+_0x1d867a+('</td><td\x20c'+_0x119d44(0x1ce)+'>')+fmtN(_0xd571fd[_0x119d44(0x3ae)]||_0xd571fd['cre'])+('</td><td\x20s'+'tyle=\x22font'+'-size:.7re'+_0x119d44(0x168)+_0x119d44(0x2c7)+'>')+_0x36dce2+'</td></tr>';}),_0x7ce016+=_0x314296(0x29e)+'div></div>',_0x7ce016+='<div\x20class'+'=\x22results-'+'panel\x22\x20id='+'\x22panel-aux'+'\x22><div\x20cla'+_0x314296(0x317)+'s-scroll\x22>'+'<table\x20cla'+'ss=\x22rtable'+'\x22><tr><th>'+_0x314296(0x25e)+'Fecha</th>'+_0x314296(0x196)+'o</th><th>'+_0x314296(0x373)+'n</th><th>'+_0x314296(0x304)+_0x314296(0x123)+'><th>Valor'+'</th></tr>',_0x531b03[_0x314296(0x215)](0x0,_0x6f01a8)[_0x314296(0x28c)]((_0x599cf1,_0x26c177)=>{const _0xcac2b2=_0x314296,_0x5b9984=_0x599cf1['deb']>0x0?_0xcac2b2(0x37b):_0xcac2b2(0x156),_0x292d9c=_0x599cf1['deb']>0x0?'tipo-in':_0xcac2b2(0x200);_0x7ce016+=_0xcac2b2(0x32f)+(_0x26c177+0x1)+_0xcac2b2(0x254)+fD(_0x599cf1['fecha'])+(_0xcac2b2(0x192)+_0xcac2b2(0x362)+'-cell\x22\x20tit'+'le=\x22')+esc(_0x599cf1['tercero'])+'\x22>'+esc(_0x599cf1[_0xcac2b2(0x30c)])+(_0xcac2b2(0x192)+_0xcac2b2(0x362)+_0xcac2b2(0x392)+_0xcac2b2(0x3ba))+esc(_0x599cf1['desc'])+'\x22>'+esc(_0x599cf1['desc'])+_0xcac2b2(0x254)+esc(_0x599cf1[_0xcac2b2(0x171)])+('</td><td\x20c'+'lass=\x22')+_0x292d9c+'\x22>'+_0x5b9984+(_0xcac2b2(0x192)+_0xcac2b2(0x1ce)+'>')+fmtN(_0x599cf1[_0xcac2b2(0x3ae)]||_0x599cf1['cre'])+'</td></tr>';}),_0x7ce016+='</table></'+'div></div>',document[_0x314296(0x386)+'ById'](_0x314296(0x305))['innerHTML']=_0x7ce016,_0x4f94a9?(document[_0x314296(0x386)+'ById']('payZone')['innerHTML']='<div\x20class'+'=\x22paywall\x22'+_0x314296(0x28a)+_0x314296(0x3a9)+_0x314296(0x26f)+_0x431e0b+(_0x314296(0x1b0)+'atis:\x20')+FREE_LIMIT+(')</h3><p>S'+_0x314296(0x35d)+'\x20')+FREE_LIMIT+('\x20partidas.'+_0x314296(0x3ad)+'\x20+\x20Excel:<'+'/p><div\x20cl'+_0x314296(0x1d5)+'ng-mini\x22>')+PRICING['filter'](_0x43a12d=>_0x43a12d['price']>0x0)['map'](_0x3e7937=>'<div\x20class'+_0x314296(0x14b)+(_0x431e0b<=_0x3e7937[_0x314296(0x21a)]?_0x314296(0x137):'')+(_0x314296(0x19f)+_0x314296(0x2ba)+_0x314296(0x2e1))+_0x3e7937['max']+('</div><div'+_0x314296(0x2d3)+'-price\x22>')+_0x3e7937['label']+(_0x314296(0x1ad)+'\x20class=\x22pm'+_0x314296(0xf1)+_0x314296(0x1a9)+'v>'))['join']('')+(_0x314296(0x142)+_0x314296(0x233)+_0x314296(0x2f6)+'rimary\x22\x20on'+'click=\x22ale'+_0x314296(0x25d)+'ación\x20Womp'+'i\x20próximam'+'ente.\x27)\x22>D'+_0x314296(0x251)+'</button><'+_0x314296(0x2c8)),document[_0x314296(0x386)+'ById']('btnXls')[_0x314296(0x155)][_0x314296(0x14f)]='none'):(document[_0x314296(0x386)+'ById']('payZone')[_0x314296(0x1c6)]='',document[_0x314296(0x386)+'ById']('btnXls')['style'][_0x314296(0x14f)]='');}function renderCatList(_0x3a431c,_0x138d89){const _0x184ec5=_0x5087be;let _0x44b706='<ul\x20class='+_0x184ec5(0x186)+'>',_0x3ea6f4=0x0;for(const _0x2f7721 of CATEGORIES){const _0xda2e87=_0x3a431c[_0x2f7721['id']];if(!_0xda2e87||_0xda2e87[_0x184ec5(0x11c)][_0x184ec5(0x361)]===0x0)continue;const _0x386944=_0xda2e87['totalDeb']-_0xda2e87[_0x184ec5(0x20d)];_0x3ea6f4+=_0xda2e87[_0x184ec5(0x1a5)]+_0xda2e87[_0x184ec5(0x20d)];const _0x1f9539=_0x386944>0x0?'val-green':_0x386944<0x0?'val-red':'';_0x44b706+=_0x184ec5(0x23b)+_0x184ec5(0x1ab)+_0x184ec5(0x16a)+'s=\x22cat-lef'+'t\x22><div\x20cl'+_0x184ec5(0x272)+'con\x22\x20style'+'=\x22backgrou'+'nd:'+_0x2f7721['bg']+'\x22>'+_0x2f7721['icon']+('</div><div'+_0x184ec5(0x16a)+'s=\x22cat-nam'+'e\x22>')+_0x2f7721[_0x184ec5(0x2b0)]+('</div><div'+_0x184ec5(0x14a)+_0x184ec5(0x26d))+_0xda2e87[_0x184ec5(0x11c)][_0x184ec5(0x361)]+_0x184ec5(0x247)+fmtN(_0xda2e87[_0x184ec5(0x1a5)])+_0x184ec5(0x1ec)+fmtN(_0xda2e87['totalCre'])+('</div></di'+'v></div><d'+_0x184ec5(0x15b)+_0x184ec5(0x1db))+_0x1f9539+'\x22>$\x20'+fmtN(_0xda2e87['totalDeb']+_0xda2e87[_0x184ec5(0x20d)])+(_0x184ec5(0x107)+'>');}return _0x44b706+=_0x184ec5(0x1fb),_0x44b706+='<div\x20class'+'=\x22cat-tota'+'l\x22><span>T'+'otal\x20'+_0x138d89['length']+(_0x184ec5(0xcf)+_0x184ec5(0x293)+'n>$\x20')+fmtN(_0x3ea6f4)+('</span></d'+'iv>'),_0x44b706;}function br(_0x184472,_0x2bc8d2,_0x2353e0){const _0xdb4300=_0x5087be;return'<div\x20class'+'=\x22bridge-r'+_0xdb4300(0x119)+_0x184472+('\x22><span\x20cl'+_0xdb4300(0x270)+'bel\x22>')+_0x2bc8d2+('</span><sp'+_0xdb4300(0x322)+_0xdb4300(0x364))+_0x2353e0+(_0xdb4300(0x24f)+'iv>');}function fmtS(_0x3f425c){return(_0x3f425c<0x0?'−':'')+'$\x20'+fmtN(Math['abs'](_0x3f425c));}function extractMeta(_0x3ee8f6){const _0xfcd9d9=_0x5087be,_0x198290=F[_0x3ee8f6];if(!_0x198290[_0xfcd9d9(0x261)])return{};const _0x5db987={},_0x14708c=_0x198290[_0xfcd9d9(0x22b)]?0x0:_0x198290[_0xfcd9d9(0xdb)];for(let _0x3f53b8=0x0;_0x3f53b8<_0x14708c;_0x3f53b8++){const _0x40e590=_0x198290[_0xfcd9d9(0x261)][_0x3f53b8];if(!_0x40e590)continue;for(let _0x592299=0x0;_0x592299<_0x40e590['length'];_0x592299++){const _0x492d37=String(_0x40e590[_0x592299]||'')['trim']();if(!_0x492d37)continue;const _0x2d6ce1=_0x492d37['toLowerCas'+'e']();if(!_0x5db987[_0xfcd9d9(0x336)]&&_0x492d37[_0xfcd9d9(0x361)]>0x8&&!/desde|hasta|tipo|cuenta|nro|sucursal|informaci|movimiento|auxiliar/i[_0xfcd9d9(0x299)](_0x492d37)&&/[A-Z]/[_0xfcd9d9(0x299)](_0x492d37)&&!/^\d/[_0xfcd9d9(0x299)](_0x492d37)&&_0x3f53b8<0x5)_0x5db987[_0xfcd9d9(0x336)]=_0x492d37;const _0x2f02ec=_0x492d37[_0xfcd9d9(0x3c3)](/(\d{3,}[\.\d]*\s*-\s*\d)/);if(_0x2f02ec&&!_0x5db987[_0xfcd9d9(0x30d)])_0x5db987['nit']=_0x2f02ec[0x0]['replace'](/\./g,'');if(/^\d{8,}$/['test'](_0x492d37)&&!_0x5db987[_0xfcd9d9(0x256)])_0x5db987[_0xfcd9d9(0x256)]=_0x492d37;}}return _0x5db987;}function tipoProbable(_0x266046,_0x21ae37){const _0x373efd=_0x5087be,_0x54b321=(_0x266046||'')[_0x373efd(0xde)+'e']();if(_0x54b321['includes'](_0x373efd(0x331))||_0x54b321[_0x373efd(0x29c)](_0x373efd(0x228)))return'Datáfono/T'+'arjeta\x20Cré'+'dito';if(_0x54b321['includes'](_0x373efd(0x32a)))return _0x21ae37?_0x373efd(0x3a3)+_0x373efd(0x1c8):_0x373efd(0x2f2);if(_0x54b321['includes'](_0x373efd(0x32c)))return'Transferen'+'cia\x20Nequi';if(_0x54b321[_0x373efd(0x29c)]('daviplata'))return'Transferen'+_0x373efd(0x28b)+_0x373efd(0xd7);if(_0x54b321[_0x373efd(0x29c)](_0x373efd(0x337)+'on'))return _0x373efd(0x11a)+'ón';if(_0x54b321[_0x373efd(0x29c)](_0x373efd(0x274)+_0x373efd(0x2d4)))return _0x21ae37?_0x373efd(0x3af)+_0x373efd(0x1f6)+'da':_0x373efd(0x3af)+'cia\x20salida';if(_0x54b321[_0x373efd(0x29c)]('interes'))return'Intereses\x20'+'bancarios';if(_0x54b321['includes'](_0x373efd(0x112))||_0x54b321[_0x373efd(0x29c)](_0x373efd(0x1d1))||_0x54b321['includes'](_0x373efd(0x181)+'erno'))return _0x373efd(0xe9)+'MF';if(_0x54b321['includes']('comision'))return'Comisión\x20b'+'ancaria';if(_0x54b321[_0x373efd(0x29c)]('cuota\x20mane'+'jo'))return _0x373efd(0x34b)+_0x373efd(0x39c);if(_0x54b321['includes']('retencion')||_0x54b321[_0x373efd(0x29c)](_0x373efd(0x190)))return _0x373efd(0x380);if(_0x54b321[_0x373efd(0x29c)]('cheque'))return'Cheque';return _0x21ae37?'Ingreso\x20po'+_0x373efd(0x1df)+'car':'Egreso\x20por'+'\x20identific'+'ar';}function accionSugerida(_0x102ea7,_0x1ca214){const _0x1c3086=_0x5087be,_0x5b8667=(_0x102ea7||'')['toLowerCas'+'e']();if(_0x5b8667['includes']('bold')||_0x5b8667[_0x1c3086(0x29c)](_0x1c3086(0x228))||_0x5b8667['includes']('interbanc\x20'+'bold'))return _0x1ca214?'Registrar\x20'+_0x1c3086(0x366)+'r\x20ventas\x20T'+'C':'Verificar\x20'+'cobro\x20datá'+_0x1c3086(0xe7);if(_0x5b8667[_0x1c3086(0x29c)](_0x1c3086(0x32c))||_0x5b8667[_0x1c3086(0x29c)](_0x1c3086(0x1af)))return _0x1ca214?_0x1c3086(0x194)+_0x1c3086(0x366)+'r\x20transfer'+_0x1c3086(0x301):'Verificar\x20'+'pago\x20plata'+_0x1c3086(0x108);if(_0x5b8667[_0x1c3086(0x29c)]('pse'))return _0x1ca214?_0x1c3086(0x25f)+_0x1c3086(0xe1)+'\x20registrar'+'\x20RC':_0x1c3086(0x25f)+_0x1c3086(0x18f)+'r\x20y\x20regist'+_0x1c3086(0x2fb);if(_0x5b8667['includes']('consignaci'+'on'))return _0x1c3086(0x25f)+'r\x20origen\x20y'+'\x20registrar'+_0x1c3086(0x221);if(_0x5b8667[_0x1c3086(0x29c)](_0x1c3086(0x274)+'cia'))return _0x1ca214?_0x1c3086(0x25f)+_0x1c3086(0xe1)+'\x20registrar'+_0x1c3086(0x221):_0x1c3086(0x25f)+'r\x20benefici'+'ario\x20y\x20reg'+'istrar\x20RP';if(_0x5b8667['includes'](_0x1c3086(0x109)))return'Registrar\x20'+_0x1c3086(0x366)+_0x1c3086(0x2b3)+_0x1c3086(0x27b)+'s';if(_0x5b8667['includes'](_0x1c3086(0x112))||_0x5b8667[_0x1c3086(0x29c)](_0x1c3086(0x1d1))||_0x5b8667['includes']('impto\x20gobi'+_0x1c3086(0x389)))return'Registrar\x20'+_0x1c3086(0x2e4)+'—\x20Cuenta\x205'+'305';if(_0x5b8667['includes'](_0x1c3086(0x2fe))||_0x5b8667['includes'](_0x1c3086(0x1dc)+'jo'))return _0x1c3086(0x194)+_0x1c3086(0xbf)+_0x1c3086(0x184)+'nta\x205305';if(_0x5b8667[_0x1c3086(0x29c)]('retefuente')||_0x5b8667[_0x1c3086(0x29c)]('retencion'))return _0x1c3086(0x1f7)+_0x1c3086(0xda)+_0x1c3086(0x35a)+'ención';return _0x1ca214?_0x1c3086(0x25f)+_0x1c3086(0xe1)+_0x1c3086(0x214):_0x1c3086(0x25f)+_0x1c3086(0x36c)+_0x1c3086(0x143)+'istrar';}async function exportXls(){const _0xc21ac1=_0x5087be;if(!resultados)return;const {matched:_0x17ec71,soloE:_0x30b26c,soloA:_0x1fb63a,ext:_0x3742c7,aux:_0xacc1e7,sE:_0x66ea54,sA:_0x137fab,ssE:_0x122f59,ssA:_0x596853,catsE:_0x2815cb}=resultados,_0xb4e36f=_0x66ea54['d']-_0x66ea54['c'],_0x6b44ba=_0x137fab['d']-_0x137fab['c'],_0x25e153=extractMeta('E'),_0x12cde2=extractMeta('A'),_0x306146=_0x12cde2[_0xc21ac1(0x336)]||_0x25e153[_0xc21ac1(0x336)]||'',_0xd9518c=_0x12cde2['nit']||_0x25e153['nit']||'',_0x6bd564=_0x25e153['cuenta']||'',_0x3a6638=_0x30b26c[_0xc21ac1(0x1c5)](_0x3ca3fb=>_0x3ca3fb[_0xc21ac1(0x3ae)]>0x0),_0x40f030=_0x30b26c['filter'](_0x57662c=>_0x57662c['cre']>0x0),_0x150de6=_0x3a6638['reduce']((_0x39d0a3,_0x24e04f)=>_0x39d0a3+_0x24e04f['deb'],0x0),_0x412b3b=_0x40f030['reduce']((_0x2c798e,_0x457550)=>_0x2c798e+_0x457550['cre'],0x0),_0xb8fd92=_0x1fb63a[_0xc21ac1(0x1c5)](_0x286769=>_0x286769['deb']>0x0),_0x92a7cb=_0x1fb63a['filter'](_0x5ca3fd=>_0x5ca3fd[_0xc21ac1(0x1f0)]>0x0),_0x3a06ed=_0xb8fd92[_0xc21ac1(0x2f7)]((_0x2ce2cc,_0xcf793b)=>_0x2ce2cc+_0xcf793b[_0xc21ac1(0x3ae)],0x0),_0x26ecc6=_0x92a7cb['reduce']((_0x4aad43,_0x23cb36)=>_0x4aad43+_0x23cb36[_0xc21ac1(0x1f0)],0x0),_0x5ef04f=new ExcelJS[(_0xc21ac1(0x13a))]();_0x5ef04f['creator']='ExógenaDIA'+'N';const _0x3328f4={'hdrBg':'1B3A5C','hdrFg':'FFFFFF','secBg':'2E75B6','secFg':_0xc21ac1(0x2bc),'subBg':'D6E4F0','subFg':'1B3A5C','tblHdr':_0xc21ac1(0xc2),'tblHdrFg':_0xc21ac1(0x2bc),'altRow':_0xc21ac1(0x375),'greenBg':_0xc21ac1(0x189),'greenHdr':_0xc21ac1(0x237),'warnBg':'FFF2CC','redFg':'CC0000','border':'B4C6E7','totBg':'D6E4F0'},_0x42a1c7={'style':'thin','color':{'argb':_0x3328f4[_0xc21ac1(0x14d)]}},_0x509e3b={'top':_0x42a1c7,'bottom':_0x42a1c7,'left':_0x42a1c7,'right':_0x42a1c7},_0x11a0d1='#,##0.00',_0x5071f1=_0xc21ac1(0x2ad),_0x392086={'name':'Arial','size':0xa},_0x4289d3={'name':_0xc21ac1(0x10e),'size':0xa,'bold':!![]},_0x32fbbc={'name':'Arial','size':0xa,'bold':!![],'color':{'argb':_0x3328f4['hdrFg']}},_0x4416b4={'name':'Arial','size':0xe,'bold':!![],'color':{'argb':_0x3328f4[_0xc21ac1(0x39f)]}},_0x56330a={'name':_0xc21ac1(0x10e),'size':0xb,'bold':!![],'color':{'argb':_0x3328f4[_0xc21ac1(0x39f)]}};function _0x47399f(_0x4d3820){const _0x6f5e2d=_0xc21ac1;return{'type':'pattern','pattern':_0x6f5e2d(0x2a3),'fgColor':{'argb':_0x4d3820}};}function _0x4173a8(_0x4e1831,_0x533d25,_0x14562a,_0x3e40a0,_0x25eeac,_0x486f8e,_0x458dd6){const _0x575cdb=_0xc21ac1;_0x533d25[_0x575cdb(0xdf)]({'includeEmpty':!![]},_0x5879ac=>{const _0x2ec962=_0x575cdb;if(_0x14562a)_0x5879ac[_0x2ec962(0x124)]=_0x14562a;if(_0x3e40a0)_0x5879ac['fill']=_0x3e40a0;if(_0x25eeac)_0x5879ac['alignment']=_0x25eeac;if(_0x458dd6)_0x5879ac[_0x2ec962(0x14d)]=_0x458dd6;if(_0x486f8e&&typeof _0x5879ac['value']===_0x2ec962(0x367))_0x5879ac[_0x2ec962(0x198)]=_0x486f8e;});}function _0x368bee(_0x1cd6ac,_0x4c0e8d,_0x9dbc6a,_0x5bb96b){_0x9dbc6a['forEach'](_0x178270=>{const _0x264995=_0x4b81,_0x2546b2=_0x1cd6ac[_0x264995(0x1ee)](_0x4c0e8d,_0x178270);if(typeof _0x2546b2[_0x264995(0x2d5)]===_0x264995(0x367))_0x2546b2['numFmt']=_0x5bb96b;});}const _0x59699d=_0x5ef04f[_0xc21ac1(0x3a1)+'et']('Conciliaci'+_0xc21ac1(0x1d6)+'a');_0x59699d[_0xc21ac1(0x15e)]=[{'width':0x30},{'width':0x16},{'width':0x16},{'width':0x12},{'width':0x3},{'width':0x20}];let _0x5331f8=0x1;_0x59699d[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x6);const _0x172d1a=_0x59699d['getCell'](_0x5331f8,0x1);_0x172d1a['value']=_0xc21ac1(0x15c)+_0xc21ac1(0x135)+'A',_0x172d1a[_0xc21ac1(0x124)]=_0x4416b4,_0x172d1a[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4[_0xc21ac1(0x2df)]),_0x172d1a['alignment']={'horizontal':_0xc21ac1(0x38f),'vertical':'middle'},_0x59699d['getRow'](_0x5331f8)['height']=0x1e;for(let _0x5bb0c5=0x2;_0x5bb0c5<=0x6;_0x5bb0c5++){_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,_0x5bb0c5)['fill']=_0x47399f(_0x3328f4[_0xc21ac1(0x2df)]);}_0x5331f8++;if(_0x306146){_0x59699d[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x6);const _0x4eaa83=_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1);_0x4eaa83[_0xc21ac1(0x2d5)]=_0x306146+(_0xd9518c?_0xc21ac1(0x32d)+_0xd9518c:''),_0x4eaa83[_0xc21ac1(0x124)]={..._0x4289d3,'size':0xb,'color':{'argb':_0x3328f4[_0xc21ac1(0x39f)]}},_0x4eaa83['fill']=_0x47399f(_0x3328f4['hdrBg']),_0x4eaa83['alignment']={'horizontal':'center'};for(let _0x19d9ff=0x2;_0x19d9ff<=0x6;_0x19d9ff++){_0x59699d['getCell'](_0x5331f8,_0x19d9ff)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4['hdrBg']);}_0x5331f8++;}if(_0x6bd564){_0x59699d[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x6);const _0x3c9a20=_0x59699d['getCell'](_0x5331f8,0x1);_0x3c9a20[_0xc21ac1(0x2d5)]='Cuenta\x20No.'+'\x20'+_0x6bd564,_0x3c9a20['font']={..._0x392086,'color':{'argb':'D6E4F0'}},_0x3c9a20[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4[_0xc21ac1(0x2df)]),_0x3c9a20['alignment']={'horizontal':_0xc21ac1(0x38f)};for(let _0x2c1803=0x2;_0x2c1803<=0x6;_0x2c1803++){_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,_0x2c1803)['fill']=_0x47399f(_0x3328f4[_0xc21ac1(0x2df)]);}_0x5331f8++;}_0x59699d[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x6);const _0x597e9f=_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1);_0x597e9f['value']='Generado:\x20'+new Date()[_0xc21ac1(0x2d8)+_0xc21ac1(0x347)]('es-CO',{'day':_0xc21ac1(0x1ed),'month':'long','year':_0xc21ac1(0xf2)})+(_0xc21ac1(0xef)+'DIAN'),_0x597e9f['font']={..._0x392086,'italic':!![],'color':{'argb':_0xc21ac1(0x1b6)}},_0x597e9f[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4[_0xc21ac1(0x2df)]),_0x597e9f[_0xc21ac1(0x38c)]={'horizontal':_0xc21ac1(0x38f)};for(let _0x357a17=0x2;_0x357a17<=0x6;_0x357a17++){_0x59699d['getCell'](_0x5331f8,_0x357a17)['fill']=_0x47399f(_0x3328f4['hdrBg']);}_0x5331f8++,_0x5331f8++,_0x59699d['mergeCells'](_0x5331f8,0x1,_0x5331f8,0x6),_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['value']='RESUMEN\x20DE'+'\x20SALDOS',_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['font']=_0x56330a,_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4['secBg']),_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['alignment']={'horizontal':_0xc21ac1(0x38f)};for(let _0x16c1f1=0x2;_0x16c1f1<=0x6;_0x16c1f1++){_0x59699d['getCell'](_0x5331f8,_0x16c1f1)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4['secBg']);}_0x5331f8++;const _0x42d6d5=_0x59699d['addRow'](['Concepto','Extracto\x20B'+'ancario',_0xc21ac1(0x3a5)+_0xc21ac1(0x1c1),_0xc21ac1(0x288),'',_0xc21ac1(0x1b2)+'n']);_0x4173a8(_0x59699d,_0x42d6d5,{..._0x4289d3,'color':{'argb':_0x3328f4[_0xc21ac1(0x335)]}},_0x47399f(_0x3328f4['tblHdr']),null,null,_0x509e3b),_0x5331f8++;let _0x560dc6;_0x560dc6=_0x59699d['addRow'](['Total\x20Ingr'+_0xc21ac1(0x21f)+_0xc21ac1(0x2ae),_0x66ea54['d'],_0x137fab['d'],_0x66ea54['d']-_0x137fab['d'],'','']),_0x4173a8(_0x59699d,_0x560dc6,_0x392086,null,null,_0x11a0d1,_0x509e3b),_0x5331f8++,_0x560dc6=_0x59699d[_0xc21ac1(0x219)](['Total\x20Egre'+'sos\x20/\x20Créd'+_0xc21ac1(0x2ae),_0x66ea54['c'],_0x137fab['c'],_0x66ea54['c']-_0x137fab['c'],'','']),_0x4173a8(_0x59699d,_0x560dc6,_0x392086,null,null,_0x11a0d1,_0x509e3b),_0x5331f8++,_0x560dc6=_0x59699d[_0xc21ac1(0x219)]([_0xc21ac1(0x2a5)+'\x20Neto\x20del\x20'+'Período',_0xb4e36f,_0x6b44ba,_0xb4e36f-_0x6b44ba,'','']),_0x4173a8(_0x59699d,_0x560dc6,_0x4289d3,_0x47399f(_0x3328f4['totBg']),null,_0x11a0d1,_0x509e3b),_0x5331f8++;for(let _0x22d532=_0x5331f8-0x3;_0x22d532<=_0x5331f8-0x1;_0x22d532++){const _0x58d182=_0x59699d['getCell'](_0x22d532,0x4);if(typeof _0x58d182[_0xc21ac1(0x2d5)]==='number'&&_0x58d182['value']<0x0)_0x58d182[_0xc21ac1(0x124)]={..._0x392086,'color':{'argb':_0x3328f4['redFg']}};}_0x5331f8++,_0x59699d['mergeCells'](_0x5331f8,0x1,_0x5331f8,0x6),_0x59699d['getCell'](_0x5331f8,0x1)['value']='PARTIDAS\x20C'+'ONCILIATOR'+_0xc21ac1(0x15f),_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x124)]=_0x56330a,_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['fill']=_0x47399f(_0x3328f4['secBg']),_0x59699d['getCell'](_0x5331f8,0x1)['alignment']={'horizontal':_0xc21ac1(0x38f)};for(let _0x1ad175=0x2;_0x1ad175<=0x6;_0x1ad175++){_0x59699d['getCell'](_0x5331f8,_0x1ad175)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4[_0xc21ac1(0x354)]);}_0x5331f8++,_0x59699d['mergeCells'](_0x5331f8,0x1,_0x5331f8,0x6),_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x2d5)]=_0xc21ac1(0x167)+_0xc21ac1(0x287)+'\x20NO\x20REGIST'+_0xc21ac1(0x236)+'IBROS',_0x59699d['getCell'](_0x5331f8,0x1)['font']={..._0x4289d3,'color':{'argb':_0x3328f4['subFg']}},_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['fill']=_0x47399f(_0x3328f4[_0xc21ac1(0x291)]);for(let _0x1baebd=0x2;_0x1baebd<=0x6;_0x1baebd++){_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,_0x1baebd)['fill']=_0x47399f(_0x3328f4['subBg']);}_0x5331f8++,_0x560dc6=_0x59699d[_0xc21ac1(0x219)]([_0xc21ac1(0x1cb)+_0xc21ac1(0x39e)+'tracto\x20sin'+_0xc21ac1(0x252)+_0xc21ac1(0x23a),_0x150de6,_0x3a6638[_0xc21ac1(0x361)]+_0xc21ac1(0x1ff),'','','']),_0x4173a8(_0x59699d,_0x560dc6,_0x392086,null,null,_0x11a0d1,null),_0x5331f8++,_0x560dc6=_0x59699d[_0xc21ac1(0x219)]([_0xc21ac1(0x164)+_0xc21ac1(0x1e5)+'racto\x20sin\x20'+_0xc21ac1(0xe6)+'ontable',-_0x412b3b,_0x40f030['length']+_0xc21ac1(0x1ff),'','','']),_0x4173a8(_0x59699d,_0x560dc6,_0x392086,null,null,_0x11a0d1,null),_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x2)['font']={..._0x392086,'color':{'argb':_0x3328f4['redFg']}},_0x5331f8++,_0x560dc6=_0x59699d[_0xc21ac1(0x219)](['\x20\x20Subtotal'+'\x20partidas\x20'+_0xc21ac1(0x234)+_0xc21ac1(0x323),_0x150de6-_0x412b3b,'','','','']),_0x4173a8(_0x59699d,_0x560dc6,_0x4289d3,_0x47399f(_0x3328f4['totBg']),null,_0x11a0d1,null),_0x5331f8++,_0x5331f8++,_0x59699d['mergeCells'](_0x5331f8,0x1,_0x5331f8,0x6),_0x59699d['getCell'](_0x5331f8,0x1)[_0xc21ac1(0x2d5)]='PARTIDAS\x20E'+'N\x20LIBROS\x20N'+_0xc21ac1(0x292)+_0xc21ac1(0x368)+'ACTO',_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x124)]={..._0x4289d3,'color':{'argb':_0x3328f4[_0xc21ac1(0x2a1)]}},_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4['subBg']);for(let _0x401bd7=0x2;_0x401bd7<=0x6;_0x401bd7++){_0x59699d['getCell'](_0x5331f8,_0x401bd7)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4[_0xc21ac1(0x291)]);}_0x5331f8++,_0x560dc6=_0x59699d[_0xc21ac1(0x219)]([_0xc21ac1(0x210)+'tos\x20contab'+'les\x20sin\x20mo'+_0xc21ac1(0x39a)+'ancario',_0x3a06ed,_0xb8fd92[_0xc21ac1(0x361)]+'\x20partidas','','','']),_0x4173a8(_0x59699d,_0x560dc6,_0x392086,null,null,_0x11a0d1,null),_0x5331f8++,_0x560dc6=_0x59699d[_0xc21ac1(0x219)]([_0xc21ac1(0x325)+'itos\x20conta'+'bles\x20sin\x20m'+'ovimiento\x20'+'bancario',_0x26ecc6,_0x92a7cb[_0xc21ac1(0x361)]+'\x20partidas','','','']),_0x4173a8(_0x59699d,_0x560dc6,_0x392086,null,null,_0x11a0d1,null),_0x5331f8++,_0x560dc6=_0x59699d['addRow'](['\x20\x20Subtotal'+'\x20partidas\x20'+'solo\x20en\x20li'+'bros',_0x3a06ed-_0x26ecc6,'','','','']),_0x4173a8(_0x59699d,_0x560dc6,_0x4289d3,_0x47399f(_0x3328f4['totBg']),null,_0x11a0d1,null),_0x5331f8++,_0x5331f8++,_0x59699d['mergeCells'](_0x5331f8,0x1,_0x5331f8,0x6),_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x2d5)]=_0xc21ac1(0x3b0)+'E\x20GASTOS\x20E'+_0xc21ac1(0x1a0)+'BANCARIOS',_0x59699d['getCell'](_0x5331f8,0x1)['font']=_0x56330a,_0x59699d['getCell'](_0x5331f8,0x1)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4['secBg']),_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['alignment']={'horizontal':'center'};for(let _0x469ac1=0x2;_0x469ac1<=0x6;_0x469ac1++){_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,_0x469ac1)['fill']=_0x47399f(_0x3328f4[_0xc21ac1(0x354)]);}_0x5331f8++,_0x560dc6=_0x59699d[_0xc21ac1(0x219)]([_0xc21ac1(0x258),'Movimiento'+'s','Valor','','','']),_0x4173a8(_0x59699d,_0x560dc6,{..._0x4289d3,'color':{'argb':_0x3328f4[_0xc21ac1(0x335)]}},_0x47399f(_0x3328f4[_0xc21ac1(0x2eb)]),null,null,_0x509e3b),_0x5331f8++;const _0x25b94c=['gmf',_0xc21ac1(0x2fe),_0xc21ac1(0x242),_0xc21ac1(0xc8),'reteiva','reteica'];let _0x3395c7=0x0;for(const _0x3934af of _0x25b94c){const _0x14aa67=_0x2815cb[_0x3934af];if(!_0x14aa67||!_0x14aa67['items']['length'])continue;_0x3395c7+=_0x14aa67[_0xc21ac1(0x20d)],_0x560dc6=_0x59699d['addRow']([_0x14aa67['def']['name'],_0x14aa67[_0xc21ac1(0x11c)]['length'],_0x14aa67['totalCre'],'','','']),_0x4173a8(_0x59699d,_0x560dc6,_0x392086,null,null,_0x11a0d1,_0x509e3b),_0x5331f8++;}_0x560dc6=_0x59699d['addRow'](['Total\x20gast'+'os\x20bancari'+'os','',_0x3395c7,'','','']),_0x4173a8(_0x59699d,_0x560dc6,_0x4289d3,_0x47399f(_0x3328f4['totBg']),null,_0x11a0d1,_0x509e3b),_0x5331f8++,_0x5331f8++;const _0x5d3d80=_0x2815cb['interes'];_0x5d3d80&&_0x5d3d80['items']['length']&&(_0x560dc6=_0x59699d['addRow'](['Intereses\x20'+_0xc21ac1(0x360),_0x5d3d80[_0xc21ac1(0x11c)][_0xc21ac1(0x361)],_0x5d3d80['totalDeb'],'','','']),_0x4173a8(_0x59699d,_0x560dc6,_0x392086,null,null,_0x11a0d1,_0x509e3b),_0x5331f8++);_0x5331f8++,_0x59699d[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x6),_0x59699d['getCell'](_0x5331f8,0x1)['value']='ESTADÍSTIC'+'AS',_0x59699d['getCell'](_0x5331f8,0x1)[_0xc21ac1(0x124)]=_0x56330a,_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['fill']=_0x47399f(_0x3328f4['secBg']),_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x38c)]={'horizontal':_0xc21ac1(0x38f)};for(let _0x483d8f=0x2;_0x483d8f<=0x6;_0x483d8f++){_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,_0x483d8f)['fill']=_0x47399f(_0x3328f4['secBg']);}_0x5331f8++,[['Movimiento'+_0xc21ac1(0x185),_0x3742c7[_0xc21ac1(0x361)]],['Movimiento'+'s\x20auxiliar',_0xacc1e7[_0xc21ac1(0x361)]],[_0xc21ac1(0x2de)+_0xc21ac1(0xe5),_0x17ec71['length']],[_0xc21ac1(0x2a0)+'tracto',_0x30b26c['length']],[_0xc21ac1(0x2af)+'xiliar',_0x1fb63a['length']],[_0xc21ac1(0x27d)+_0xc21ac1(0x3a7),Math['round'](_0x17ec71['length']/Math[_0xc21ac1(0x21a)](_0x3742c7['length'],_0xacc1e7[_0xc21ac1(0x361)])*0x64)+'%']]['forEach'](_0x14efe3=>{_0x560dc6=_0x59699d['addRow']([_0x14efe3[0x0],_0x14efe3[0x1],'','','','']),_0x4173a8(_0x59699d,_0x560dc6,_0x392086,null,null,null,null),_0x5331f8++;}),_0x5331f8++,_0x59699d[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x6),_0x59699d[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['value']=_0xc21ac1(0xce)+'100%\x20en\x20na'+_0xc21ac1(0x10f)+'xógenaDIAN'+_0xc21ac1(0x2be)+_0xc21ac1(0x282)+_0xc21ac1(0x33a),_0x59699d['getCell'](_0x5331f8,0x1)[_0xc21ac1(0x124)]={..._0x392086,'italic':!![],'size':0x8,'color':{'argb':_0xc21ac1(0x114)}},_0x59699d['getCell'](_0x5331f8,0x1)['alignment']={'horizontal':'center'};const _0x4cf901=_0x5ef04f['addWorkshe'+'et']('Extracto\x20s'+_0xc21ac1(0xe4)+'lizar');_0x4cf901[_0xc21ac1(0x15e)]=[{'width':0x6},{'width':0xd},{'width':0x2c},{'width':0x12},{'width':0x1c},{'width':0x28},{'width':0x18}],_0x5331f8=0x1,_0x4cf901[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x7),_0x4cf901['getCell'](_0x5331f8,0x1)['value']=_0xc21ac1(0x167)+'N\x20EXTRACTO'+'\x20BANCARIO\x20'+'NO\x20REGISTR'+_0xc21ac1(0x10d)+_0xc21ac1(0x147)+_0xc21ac1(0x298),_0x4cf901[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x124)]=_0x4416b4,_0x4cf901['getCell'](_0x5331f8,0x1)['fill']=_0x47399f(_0x3328f4['hdrBg']),_0x4cf901[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['alignment']={'horizontal':'center','vertical':_0xc21ac1(0x161)},_0x4cf901[_0xc21ac1(0x267)](_0x5331f8)[_0xc21ac1(0x121)]=0x1c;for(let _0xe25d1e=0x2;_0xe25d1e<=0x7;_0xe25d1e++){_0x4cf901['getCell'](_0x5331f8,_0xe25d1e)['fill']=_0x47399f(_0x3328f4[_0xc21ac1(0x2df)]);}_0x5331f8++,_0x4cf901[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x7),_0x4cf901[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x2d5)]=_0x30b26c['length']+('\x20movimient'+_0xc21ac1(0x262)+'os\x20sin\x20reg'+'istro\x20cont'+'able\x20—\x20Rev'+'isar\x20con\x20s'+_0xc21ac1(0x22d)),_0x4cf901[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['font']={..._0x392086,'italic':!![],'color':{'argb':_0x3328f4[_0xc21ac1(0x39f)]}},_0x4cf901[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4[_0xc21ac1(0x2df)]),_0x4cf901['getCell'](_0x5331f8,0x1)[_0xc21ac1(0x38c)]={'horizontal':'center'};for(let _0x152f1c=0x2;_0x152f1c<=0x7;_0x152f1c++){_0x4cf901['getCell'](_0x5331f8,_0x152f1c)['fill']=_0x47399f(_0x3328f4['hdrBg']);}_0x5331f8++,_0x5331f8++,_0x4cf901[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x7),_0x4cf901['getCell'](_0x5331f8,0x1)['value']='INGRESOS\x20E'+_0xc21ac1(0x287)+'\x20SIN\x20REGIS'+'TRO\x20CONTAB'+'LE',_0x4cf901[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['font']={..._0x4289d3,'color':{'argb':_0x3328f4['subFg']}},_0x4cf901[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4['subBg']);for(let _0x3dfe6e=0x2;_0x3dfe6e<=0x7;_0x3dfe6e++){_0x4cf901['getCell'](_0x5331f8,_0x3dfe6e)['fill']=_0x47399f(_0x3328f4['subBg']);}_0x5331f8++,_0x560dc6=_0x4cf901[_0xc21ac1(0x219)](['#','Fecha','Descripció'+'n',_0xc21ac1(0x1cd),'Tipo\x20Proba'+_0xc21ac1(0x391),'Acción\x20Sug'+'erida',_0xc21ac1(0xf6)]),_0x4173a8(_0x4cf901,_0x560dc6,{..._0x4289d3,'color':{'argb':_0x3328f4[_0xc21ac1(0x335)]}},_0x47399f(_0x3328f4[_0xc21ac1(0x2eb)]),null,null,_0x509e3b),_0x5331f8++,_0x3a6638['forEach']((_0x2342f9,_0x316f7f)=>{const _0x450f09=_0xc21ac1;_0x560dc6=_0x4cf901['addRow']([_0x316f7f+0x1,fD(_0x2342f9['fecha']),_0x2342f9[_0x450f09(0x280)],_0x2342f9['deb'],tipoProbable(_0x2342f9['desc'],!![]),accionSugerida(_0x2342f9['desc'],!![]),'']);const _0x297791=_0x316f7f%0x2===0x0?null:_0x47399f(_0x3328f4[_0x450f09(0x175)]);_0x4173a8(_0x4cf901,_0x560dc6,_0x392086,_0x297791,null,null,_0x509e3b),_0x4cf901['getCell'](_0x5331f8,0x4)['numFmt']=_0x11a0d1,_0x5331f8++;}),_0x560dc6=_0x4cf901['addRow'](['','','SUBTOTAL\x20I'+'NGRESOS\x20('+_0x3a6638[_0xc21ac1(0x361)]+_0xc21ac1(0x101),_0x150de6,'','','']),_0x4173a8(_0x4cf901,_0x560dc6,_0x4289d3,_0x47399f(_0x3328f4['totBg']),null,_0x11a0d1,_0x509e3b),_0x5331f8++,_0x5331f8++,_0x4cf901[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x7),_0x4cf901[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x2d5)]=_0xc21ac1(0x33b)+'\x20EXTRACTO\x20'+'SIN\x20REGIST'+'RO\x20CONTABL'+'E',_0x4cf901[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x124)]={..._0x4289d3,'color':{'argb':_0x3328f4['subFg']}},_0x4cf901['getCell'](_0x5331f8,0x1)['fill']=_0x47399f(_0x3328f4['subBg']);for(let _0x45d36e=0x2;_0x45d36e<=0x7;_0x45d36e++){_0x4cf901[_0xc21ac1(0x1ee)](_0x5331f8,_0x45d36e)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4[_0xc21ac1(0x291)]);}_0x5331f8++,_0x560dc6=_0x4cf901['addRow'](['#',_0xc21ac1(0x2b5),'Descripció'+'n',_0xc21ac1(0x1cd),_0xc21ac1(0x2cf)+'ble',_0xc21ac1(0x2e8)+_0xc21ac1(0x3a4),_0xc21ac1(0xf6)]),_0x4173a8(_0x4cf901,_0x560dc6,{..._0x4289d3,'color':{'argb':_0x3328f4[_0xc21ac1(0x335)]}},_0x47399f(_0x3328f4[_0xc21ac1(0x2eb)]),null,null,_0x509e3b),_0x5331f8++,_0x40f030[_0xc21ac1(0x28c)]((_0x202aa9,_0xb79d5)=>{const _0x27add7=_0xc21ac1;_0x560dc6=_0x4cf901[_0x27add7(0x219)]([_0xb79d5+0x1,fD(_0x202aa9['fecha']),_0x202aa9['desc'],-_0x202aa9['cre'],tipoProbable(_0x202aa9[_0x27add7(0x280)],![]),accionSugerida(_0x202aa9[_0x27add7(0x280)],![]),'']);const _0x5133ea=_0xb79d5%0x2===0x0?null:_0x47399f(_0x3328f4[_0x27add7(0x175)]);_0x4173a8(_0x4cf901,_0x560dc6,_0x392086,_0x5133ea,null,null,_0x509e3b),_0x4cf901['getCell'](_0x5331f8,0x4)['numFmt']=_0x11a0d1,_0x4cf901['getCell'](_0x5331f8,0x4)['font']={..._0x392086,'color':{'argb':_0x3328f4[_0x27add7(0x1ef)]}},_0x5331f8++;}),_0x560dc6=_0x4cf901[_0xc21ac1(0x219)](['','','SUBTOTAL\x20E'+_0xc21ac1(0x21c)+_0x40f030['length']+_0xc21ac1(0x101),-_0x412b3b,'','','']),_0x4173a8(_0x4cf901,_0x560dc6,_0x4289d3,_0x47399f(_0x3328f4[_0xc21ac1(0x2d6)]),null,_0x11a0d1,_0x509e3b),_0x4cf901[_0xc21ac1(0x1ee)](_0x5331f8,0x4)['font']={..._0x4289d3,'color':{'argb':_0x3328f4[_0xc21ac1(0x1ef)]}},_0x5331f8++,_0x5331f8++,_0x560dc6=_0x4cf901[_0xc21ac1(0x219)](['','',_0xc21ac1(0x2fa)+_0xc21ac1(0x370)+_0xc21ac1(0x306),_0x150de6-_0x412b3b,'','','']),_0x4173a8(_0x4cf901,_0x560dc6,{..._0x4289d3,'size':0xb},_0x47399f(_0x3328f4['subBg']),null,_0x11a0d1,{'top':{'style':'double','color':{'argb':_0x3328f4[_0xc21ac1(0x2df)]}},'bottom':{'style':_0xc21ac1(0x12c),'color':{'argb':_0x3328f4['hdrBg']}},'left':_0x42a1c7,'right':_0x42a1c7});const _0x590761=_0x5ef04f['addWorkshe'+'et']('Libros\x20sin'+'\x20Extracto');_0x590761['columns']=[{'width':0x6},{'width':0xd},{'width':0xf},{'width':0x28},{'width':0x20},{'width':0x12},{'width':0x12},{'width':0x2c},{'width':0x18}],_0x5331f8=0x1,_0x590761[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x9),_0x590761[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['value']=_0xc21ac1(0x167)+'N\x20LIBROS\x20C'+_0xc21ac1(0x340)+_0xc21ac1(0x292)+_0xc21ac1(0x368)+_0xc21ac1(0x269)+_0xc21ac1(0x217),_0x590761[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x124)]=_0x4416b4,_0x590761[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4['hdrBg']),_0x590761[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['alignment']={'horizontal':_0xc21ac1(0x38f),'vertical':'middle'},_0x590761['getRow'](_0x5331f8)['height']=0x1c;for(let _0x154e14=0x2;_0x154e14<=0x9;_0x154e14++){_0x590761[_0xc21ac1(0x1ee)](_0x5331f8,_0x154e14)['fill']=_0x47399f(_0x3328f4['hdrBg']);}_0x5331f8++,_0x590761[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0x9),_0x590761[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['value']=_0x1fb63a['length']+('\x20registros'+'\x20contables'+_0xc21ac1(0x2e0)+_0xc21ac1(0x275)+_0xc21ac1(0x1bf)+'spondiente'),_0x590761['getCell'](_0x5331f8,0x1)['font']={..._0x392086,'italic':!![],'color':{'argb':_0x3328f4[_0xc21ac1(0x39f)]}},_0x590761['getCell'](_0x5331f8,0x1)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4['hdrBg']),_0x590761[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x38c)]={'horizontal':_0xc21ac1(0x38f)};for(let _0x1d082b=0x2;_0x1d082b<=0x9;_0x1d082b++){_0x590761['getCell'](_0x5331f8,_0x1d082b)['fill']=_0x47399f(_0x3328f4['hdrBg']);}_0x5331f8++,_0x5331f8++,_0x560dc6=_0x590761[_0xc21ac1(0x219)](['#','Fecha',_0xc21ac1(0x279)+'e','Tercero',_0xc21ac1(0x373)+'n',_0xc21ac1(0x37b),'Crédito',_0xc21ac1(0x1ba)+'usa',_0xc21ac1(0xf6)]),_0x4173a8(_0x590761,_0x560dc6,{..._0x4289d3,'color':{'argb':_0x3328f4[_0xc21ac1(0x335)]}},_0x47399f(_0x3328f4['tblHdr']),null,null,_0x509e3b),_0x5331f8++,_0x1fb63a['forEach']((_0x417366,_0x33e1f0)=>{const _0x545c39=_0xc21ac1,_0x10addf=_0x417366[_0x545c39(0x3ae)]>0x0?_0x545c39(0x1f7)+'si\x20tiene\x20m'+'ovimiento\x20'+_0x545c39(0x3bc)+_0x545c39(0x132):_0x545c39(0x1f7)+'si\x20pago\x20fu'+_0x545c39(0x2ef)+_0x545c39(0x2b4)+_0x545c39(0x315);_0x560dc6=_0x590761['addRow']([_0x33e1f0+0x1,fD(_0x417366['fecha']),_0x417366[_0x545c39(0x171)],_0x417366[_0x545c39(0x30c)],_0x417366[_0x545c39(0x280)],_0x417366[_0x545c39(0x3ae)]||'',_0x417366['cre']||'',_0x10addf,'']);const _0x25d41d=_0x33e1f0%0x2===0x0?null:_0x47399f(_0x3328f4['altRow']);_0x4173a8(_0x590761,_0x560dc6,_0x392086,_0x25d41d,null,null,_0x509e3b);if(_0x417366[_0x545c39(0x3ae)])_0x590761['getCell'](_0x5331f8,0x6)[_0x545c39(0x198)]=_0x11a0d1;if(_0x417366[_0x545c39(0x1f0)])_0x590761[_0x545c39(0x1ee)](_0x5331f8,0x7)[_0x545c39(0x198)]=_0x11a0d1;_0x5331f8++;}),_0x560dc6=_0x590761[_0xc21ac1(0x219)](['','','',_0xc21ac1(0x1bb),'',_0x3a06ed,_0x26ecc6,'','']),_0x4173a8(_0x590761,_0x560dc6,_0x4289d3,_0x47399f(_0x3328f4[_0xc21ac1(0x2d6)]),null,_0x11a0d1,{'top':{'style':'medium','color':{'argb':_0x3328f4['hdrBg']}},'bottom':{'style':_0xc21ac1(0x12c),'color':{'argb':_0x3328f4[_0xc21ac1(0x2df)]}},'left':_0x42a1c7,'right':_0x42a1c7});const _0x5db168=_0x5ef04f[_0xc21ac1(0x3a1)+'et'](_0xc21ac1(0x12e)+'onciliadas');_0x5db168['columns']=[{'width':0xd},{'width':0x28},{'width':0x12},{'width':0xd},{'width':0xf},{'width':0x26},{'width':0x12},{'width':0x12},{'width':0xa},{'width':0x18}],_0x5331f8=0x1,_0x5db168['mergeCells'](_0x5331f8,0x1,_0x5331f8,0xa),_0x5db168[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['value']=_0xc21ac1(0x2ca)+'ONCILIADAS'+_0xc21ac1(0x1d4)+'TRACTO\x20↔\x20L'+'IBROS)',_0x5db168[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['font']={..._0x4416b4,'color':{'argb':'FFFFFF'}},_0x5db168[_0xc21ac1(0x1ee)](_0x5331f8,0x1)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4['greenHdr']),_0x5db168[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['alignment']={'horizontal':'center','vertical':_0xc21ac1(0x161)},_0x5db168['getRow'](_0x5331f8)['height']=0x1c;for(let _0x5d301d=0x2;_0x5d301d<=0xa;_0x5d301d++){_0x5db168[_0xc21ac1(0x1ee)](_0x5331f8,_0x5d301d)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4[_0xc21ac1(0x154)]);}_0x5331f8++,_0x5db168[_0xc21ac1(0x22f)](_0x5331f8,0x1,_0x5331f8,0xa),_0x5db168['getCell'](_0x5331f8,0x1)[_0xc21ac1(0x2d5)]=_0x17ec71[_0xc21ac1(0x361)]+(_0xc21ac1(0x33e)+_0xc21ac1(0x388)+'ados\x20exito'+'samente'),_0x5db168[_0xc21ac1(0x1ee)](_0x5331f8,0x1)['font']={..._0x392086,'italic':!![],'color':{'argb':'FFFFFF'}},_0x5db168['getCell'](_0x5331f8,0x1)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4['greenHdr']),_0x5db168['getCell'](_0x5331f8,0x1)['alignment']={'horizontal':_0xc21ac1(0x38f)};for(let _0x37c1a4=0x2;_0x37c1a4<=0xa;_0x37c1a4++){_0x5db168['getCell'](_0x5331f8,_0x37c1a4)[_0xc21ac1(0x106)]=_0x47399f(_0x3328f4[_0xc21ac1(0x154)]);}_0x5331f8++,_0x5331f8++,_0x560dc6=_0x5db168[_0xc21ac1(0x219)](['Fecha\x20Ext.','Descripció'+'n\x20Extracto',_0xc21ac1(0x35c)+'acto',_0xc21ac1(0x104),'Comprobant'+'e',_0xc21ac1(0x1e6),'Débito',_0xc21ac1(0x156),'Estado',_0xc21ac1(0xf6)]),_0x4173a8(_0x5db168,_0x560dc6,{..._0x4289d3,'color':{'argb':'FFFFFF'}},_0x47399f(_0x3328f4['greenHdr']),null,null,_0x509e3b),_0x5331f8++,_0x17ec71[_0xc21ac1(0x28c)]((_0x4d6a55,_0x4d0131)=>{const _0x1d4005=_0xc21ac1,_0x280a48=_0x3742c7[_0x4d6a55['ei']],_0x4a515c=_0xacc1e7[_0x4d6a55['ai']],_0x555ffb=_0x280a48['deb']>0x0?_0x280a48['deb']:-_0x280a48['cre'];_0x560dc6=_0x5db168['addRow']([fD(_0x280a48[_0x1d4005(0x17f)]),_0x280a48['desc'],_0x555ffb,fD(_0x4a515c[_0x1d4005(0x17f)]),_0x4a515c[_0x1d4005(0x171)],_0x4a515c['tercero'],_0x4a515c[_0x1d4005(0x3ae)]||'',_0x4a515c['cre']||'','✓\x20OK','']);const _0x4782d7=_0x4d0131%0x2===0x0?null:_0x47399f(_0x3328f4[_0x1d4005(0x32b)]);_0x4173a8(_0x5db168,_0x560dc6,_0x392086,_0x4782d7,null,null,_0x509e3b),_0x5db168[_0x1d4005(0x1ee)](_0x5331f8,0x3)[_0x1d4005(0x198)]=_0x11a0d1;if(_0x4a515c['deb'])_0x5db168[_0x1d4005(0x1ee)](_0x5331f8,0x7)['numFmt']=_0x11a0d1;if(_0x4a515c[_0x1d4005(0x1f0)])_0x5db168[_0x1d4005(0x1ee)](_0x5331f8,0x8)['numFmt']=_0x11a0d1;_0x555ffb<0x0&&(_0x5db168[_0x1d4005(0x1ee)](_0x5331f8,0x3)['font']={..._0x392086,'color':{'argb':_0x3328f4['redFg']}}),_0x5db168[_0x1d4005(0x1ee)](_0x5331f8,0x9)['font']={..._0x392086,'bold':!![],'color':{'argb':_0x3328f4['greenHdr']}},_0x5331f8++;});const _0x2bdefb=await _0x5ef04f[_0xc21ac1(0x243)]['writeBuffe'+'r'](),_0xc00a6a=new Blob([_0x2bdefb],{'type':'applicatio'+_0xc21ac1(0x311)+_0xc21ac1(0xec)+'-officedoc'+'ument.spre'+'adsheetml.'+'sheet'}),_0x1a306e=URL[_0xc21ac1(0x29d)+'ctURL'](_0xc00a6a),_0x3372d9=document[_0xc21ac1(0x230)+_0xc21ac1(0x182)]('a');_0x3372d9['href']=_0x1a306e,_0x3372d9['download']=_0xc21ac1(0x1b8)+'on_'+new Date()[_0xc21ac1(0x2c6)+'g']()[_0xc21ac1(0x215)](0x0,0xa)+'.xlsx',_0x3372d9[_0xc21ac1(0x31d)](),URL[_0xc21ac1(0x16d)+_0xc21ac1(0x2d0)](_0x1a306e);}function show(_0x447502){const _0x5c7b53=_0x5087be;document['getElement'+_0x5c7b53(0x2ab)](_0x447502)[_0x5c7b53(0x10a)][_0x5c7b53(0x383)](_0x5c7b53(0x3b4));}function hide(_0x2f93a5){const _0x24f5df=_0x5087be;document[_0x24f5df(0x386)+_0x24f5df(0x2ab)](_0x2f93a5)[_0x24f5df(0x10a)]['add'](_0x24f5df(0x3b4));}function setSI(_0x21a921){const _0x196a19=_0x5087be;for(let _0x378acf=0x1;_0x378acf<=0x3;_0x378acf++){const _0x230507=document['getElement'+'ById']('si'+_0x378acf);_0x230507['classList']['remove']('active',_0x196a19(0x34f));if(_0x378acf<_0x21a921)_0x230507['classList'][_0x196a19(0x19e)](_0x196a19(0x34f));if(_0x378acf===_0x21a921)_0x230507[_0x196a19(0x10a)][_0x196a19(0x19e)]('active');}}function swTab(_0xfcb757,_0x37ac44){const _0x11a18a=_0x5087be;document[_0x11a18a(0x239)+_0x11a18a(0x19c)]('.results-t'+'ab')[_0x11a18a(0x28c)](_0x9a4952=>_0x9a4952[_0x11a18a(0x10a)][_0x11a18a(0x383)]('active')),document[_0x11a18a(0x239)+_0x11a18a(0x19c)]('.results-p'+'anel')[_0x11a18a(0x28c)](_0x2a5dcc=>_0x2a5dcc['classList'][_0x11a18a(0x383)](_0x11a18a(0x393))),_0x37ac44[_0x11a18a(0x10a)]['add'](_0x11a18a(0x393)),document[_0x11a18a(0x386)+_0x11a18a(0x2ab)]('panel-'+_0xfcb757)[_0x11a18a(0x10a)]['add']('active');}function fmtN(_0x42acd6){const _0x4a6f5f=_0x5087be;if(typeof _0x42acd6==='string')return _0x42acd6;if(typeof _0x42acd6!=='number'||isNaN(_0x42acd6))return'—';return Math['round'](Math[_0x4a6f5f(0x1a8)](_0x42acd6))[_0x4a6f5f(0x3a8)+'ring'](_0x4a6f5f(0x1e8));}function fD(_0x298027){const _0x3b8785=_0x5087be;if(!_0x298027)return'—';return _0x298027[_0x3b8785(0x2d8)+'teString'](_0x3b8785(0x1e8),{'day':_0x3b8785(0x1ed),'month':'short'});}function esc(_0x51b86b){const _0x5eebc5=_0x5087be;return(_0x51b86b||'')[_0x5eebc5(0x162)](/&/g,_0x5eebc5(0x1e3))[_0x5eebc5(0x162)](/</g,'&lt;')['replace'](/>/g,'&gt;')['replace'](/"/g,_0x5eebc5(0x320));}function sc(_0x196802,_0x4af8cd,_0x24b132){const _0x3fb59a=_0x5087be;return _0x3fb59a(0x2ed)+_0x3fb59a(0x36a)+_0x3fb59a(0x23d)+_0x196802+('\x22><div\x20cla'+'ss=\x22sc-val'+'\x22>')+_0x4af8cd+('</div><div'+'\x20class=\x22sc'+'-label\x22>')+_0x24b132+(_0x3fb59a(0x1a9)+'v>');}function descargarEjemploConciliacion(){const _0x507296=_0x5087be,_0x488a12=[[_0x507296(0x2b5),_0x507296(0x373)+'n',_0x507296(0x37b),'Crédito',_0x507296(0xf4)],['2026-01-05','Consignaci'+'ón\x20cliente'+'\x20ABC',0x4c4b40,0x0,0x2aea540],['2026-01-08',_0x507296(0x187)+_0x507296(0xfe),0x0,0xb71b00,0x1f78a40],['2026-01-10',_0x507296(0x3af)+'cia\x20provee'+'dor\x20XYZ',0x0,0x3567e0,0x1c22260],['2026-01-15','Consignaci'+'ón\x20cliente'+_0x507296(0x18d),0x7d1f40,0x0,0x23f41a0],[_0x507296(0x204),'Pago\x20arrie'+'ndo\x20oficin'+'a',0x0,0x2ab980,0x2148820],[_0x507296(0x2bd),'Intereses\x20'+_0x507296(0x273),0x0,0xafc8,0x213d858],['2026-01-25',_0x507296(0x11a)+'ón\x20cliente'+'\x20GHI',0x2f4d60,0x0,0x24325b8],['2026-01-28',_0x507296(0x387)+'cios\x20públi'+_0x507296(0x16f),0x0,0x9eb10,0x2393aa8],[_0x507296(0x3b7),'GMF\x20(4x100'+'0)',0x0,0x7d00,0x238bda8]],_0x33ff00=[[_0x507296(0x2b5),_0x507296(0x260),'Descripció'+'n',_0x507296(0x37b),_0x507296(0x156)],[_0x507296(0x1e2),_0x507296(0x17a),'Recibo\x20caj'+'a\x20cliente\x20'+_0x507296(0x24c),0x4c4b40,0x0],['2026-01-08',_0x507296(0x377),'Comprobant'+_0x507296(0xd4)+_0x507296(0xca),0x0,0xb71b00],[_0x507296(0x26e),'CE-016','Pago\x20prove'+'edor\x20XYZ',0x0,0x3567e0],['2026-01-15',_0x507296(0x2ec),_0x507296(0x349)+_0x507296(0x238)+_0x507296(0x37a),0x7d1f40,0x0],[_0x507296(0x204),'CE-017','Pago\x20arrie'+'ndo\x20oficin'+'a',0x0,0x2ab980],[_0x507296(0xff),'RC-003','Recibo\x20caj'+'a\x20cliente\x20'+_0x507296(0x3c0),0x2f4d60,0x0],['2026-01-28',_0x507296(0x314),_0x507296(0x387)+'cios\x20públi'+_0x507296(0x16f),0x0,0x9eb10]],_0xd348f2=XLSX[_0x507296(0x199)]['book_new'](),_0x55d691=XLSX[_0x507296(0x199)][_0x507296(0x2ea)+'et'](_0x488a12);_0x55d691['!cols']=[{'wch':0xc},{'wch':0x1e},{'wch':0xe},{'wch':0xe},{'wch':0xe}],XLSX['utils']['book_appen'+_0x507296(0x218)](_0xd348f2,_0x55d691,_0x507296(0x348)+'ancario');const _0x350c1a=XLSX['utils'][_0x507296(0x2ea)+'et'](_0x33ff00);_0x350c1a[_0x507296(0x2b6)]=[{'wch':0xc},{'wch':0xa},{'wch':0x1e},{'wch':0xe},{'wch':0xe}],XLSX[_0x507296(0x199)]['book_appen'+_0x507296(0x218)](_0xd348f2,_0x350c1a,'Auxiliar\x20C'+_0x507296(0x1dd)),XLSX[_0x507296(0x3b8)](_0xd348f2,_0x507296(0x376)+_0x507296(0x1aa)+_0x507296(0x1d7)+_0x507296(0x2ac));}</script>
+<script>
+/* ========================================================================
+   CONCILIACIÓN BANCARIA v3 — FINAL BULLETPROOF
+   ======================================================================== */
+const FREE_LIMIT = 500;
+const PRICING = [{max:50,price:0},{max:200,price:3000,label:'$3.000'},{max:500,price:5000,label:'$5.000'},{max:999999,price:10000,label:'$10.000'}];
+
+const F = {
+  E: {raw:null,display:null,headerRow:0,noHeader:false,numFmt:'auto',map:{},name:''},
+  A: {raw:null,display:null,headerRow:0,noHeader:false,numFmt:'auto',map:{},name:''}
+};
+let resultados = null;
+
+/* ── 1. FILE READING ── */
+['E','A'].forEach(k => {
+  const dz = document.getElementById('dz'+k);
+  const inp = document.getElementById('f'+k);
+  ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => {e.preventDefault();dz.classList.add('dragover')}));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => {e.preventDefault();dz.classList.remove('dragover')}));
+  dz.addEventListener('drop', e => {if(e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0], k)});
+  inp.addEventListener('change', e => {if(e.target.files[0]) readFile(e.target.files[0], k)});
+});
+
+function readFile(file, k) {
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const wb = XLSX.read(ev.target.result, {type:'array', cellDates:true});
+      let best = null, bestN = 0;
+      for (const sn of wb.SheetNames) {
+        const raw = XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:'', raw:true});
+        const disp = XLSX.utils.sheet_to_json(wb.Sheets[sn], {header:1, defval:'', raw:false});
+        const n = raw.filter(r => r.some(c => c !== '' && c != null)).length;
+        if (n > bestN) { best = {sn, raw, disp}; bestN = n; }
+      }
+      if (!best || bestN < 2) { alert('El archivo parece vacío o no tiene datos suficientes.'); return; }
+      const rawClean = [], dispClean = [];
+      for (let i = 0; i < best.raw.length; i++) {
+        if (best.raw[i].some(c => c !== '' && c != null)) {
+          rawClean.push(best.raw[i]);
+          dispClean.push(best.disp[i] || best.raw[i]);
+        }
+      }
+      F[k].raw = rawClean;
+      F[k].display = dispClean;
+      F[k].name = file.name;
+      F[k].headerRow = findBestHeaderRow(rawClean);
+      F[k].noHeader = false;
+      F[k].numFmt = 'auto';
+      document.getElementById('n'+k).textContent = file.name;
+      document.getElementById('r'+k).textContent = rawClean.length + ' filas · hoja: ' + best.sn;
+      document.getElementById('dz'+k).classList.add('loaded');
+      checkReady();
+    } catch(err) {
+      alert('Error al leer el archivo: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function clearFile(k) {
+  F[k].raw = null; F[k].display = null;
+  document.getElementById('f'+k).value = '';
+  document.getElementById('n'+k).textContent = '';
+  document.getElementById('r'+k).textContent = '';
+  document.getElementById('dz'+k).classList.remove('loaded');
+  checkReady();
+}
+
+function checkReady() {
+  document.getElementById('btnNext').disabled = !(F.E.raw && F.A.raw);
+}
+
+/* ── 2. HEADER ROW DETECTION ── */
+const HEADER_KEYWORDS = /^(fecha|descripci|detalle|concepto|valor|monto|saldo|d[eé]bito|cr[eé]dito|referencia|documento|comprobante|cuenta|tercero|nombre|sucursal|dcto|c[oó]digo|tipo|abono|cargo|retiro|identificaci|movimiento|secuencia|centro|cheque|nro|desde|hasta)/i;
+
+function findBestHeaderRow(rows) {
+  let bestI = 0, bestScore = -Infinity;
+  const limit = Math.min(rows.length, 30);
+  for (let i = 0; i < limit; i++) {
+    const r = rows[i];
+    if (!r || r.length < 2) continue;
+    let score = 0, filled = 0;
+    for (const c of r) {
+      if (c == null || c === '') continue;
+      filled++;
+      const s = String(c).trim();
+      if (HEADER_KEYWORDS.test(s)) score += 10;
+      else if (typeof c === 'string' && isNaN(Number(s.replace(/[,$.\-\s]/g,'')))) score += 1;
+      else score -= 1;
+    }
+    score += filled * 0.5;
+    if (i + 1 < rows.length) {
+      const next = rows[i+1];
+      if (next) {
+        const nums = next.filter(c => typeof c === 'number' || (c && !isNaN(Number(String(c).replace(/[,$.\-\s]/g,''))))).length;
+        if (nums >= 2) score += 5;
+      }
+    }
+    if (score > bestScore) { bestScore = score; bestI = i; }
+  }
+  return bestI;
+}
+
+/* ── 3. NUMBER FORMAT DETECTION & PARSING ── */
+function detectNumFormat(rows, colIdx) {
+  let patCOL = 0, patUS = 0, patPlain = 0;
+  for (let i = 0; i < Math.min(rows.length, 50); i++) {
+    const c = rows[i][colIdx];
+    if (c == null || c === '' || typeof c === 'number') { patPlain++; continue; }
+    const s = String(c).trim().replace(/[$\s\-()]/g,'');
+    if (!s || !/\d/.test(s)) continue;
+    if (/^\d{1,3}(\.\d{3})+(,\d{1,2})?$/.test(s)) { patCOL++; continue; }
+    if (/^\d{1,3}(,\d{3})+(\.\d{1,2})?$/.test(s)) { patUS++; continue; }
+    if (/,\d{1,2}$/.test(s) && !s.includes('.')) { patCOL++; continue; }
+    if (/\.\d{1,2}$/.test(s) && !s.includes(',')) { patUS++; continue; }
+    patPlain++;
+  }
+  if (patCOL > patUS && patCOL > patPlain) return 'col';
+  if (patUS > patCOL) return 'us';
+  return 'plain';
+}
+
+function toNum(v, fmt) {
+  if (typeof v === 'number') return v;
+  if (v == null || v === '') return 0;
+  let s = String(v).trim();
+  if (/^[-–—]+$/.test(s)) return 0;
+  s = s.replace(/[$COP\s]/gi, '');
+  let neg = false;
+  if (s.startsWith('(') && s.endsWith(')')) { neg = true; s = s.slice(1,-1); }
+  if (s.startsWith('-')) { neg = true; s = s.substring(1); }
+  s = s.trim();
+  if (!s || !/\d/.test(s)) return 0;
+  if (fmt === 'col') { s = s.replace(/\./g, '').replace(',', '.'); }
+  else if (fmt === 'us') { s = s.replace(/,/g, ''); }
+  else {
+    if (s.includes('.') && s.includes(',')) {
+      const lastDot = s.lastIndexOf('.'), lastComma = s.lastIndexOf(',');
+      if (lastComma > lastDot) s = s.replace(/\./g,'').replace(',','.');
+      else s = s.replace(/,/g,'');
+    } else if (s.includes(',')) {
+      const afterComma = s.split(',').pop();
+      if (afterComma.length <= 2) s = s.replace(',','.');
+      else s = s.replace(/,/g,'');
+    } else if (s.includes('.')) {
+      const parts = s.split('.');
+      if (parts.length > 2) s = s.replace(/\./g,'');
+    }
+  }
+  s = s.replace(/[^\d.]/g, '');
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : (neg ? -n : n);
+}
+
+/* ── 4. DATE PARSING ── */
+function guessYearFromTransactions(rows, colIdx, dataStart) {
+  const yearCounts = {};
+  for (let i = dataStart; i < Math.min(rows.length, dataStart + 100); i++) {
+    const c = rows[i] ? rows[i][colIdx] : null;
+    if (!c) continue;
+    if (c instanceof Date && !isNaN(c)) { const y = c.getFullYear(); if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5; else { const uy = c.getUTCFullYear(); if (uy >= 2020 && uy <= 2035) yearCounts[uy] = (yearCounts[uy]||0) + 5; } continue; }
+    const s = String(c);
+    const matches = s.match(/20[2-3]\d/g);
+    if (matches) matches.forEach(y => yearCounts[y] = (yearCounts[y]||0) + 1);
+    if (typeof c === 'number' && c > 40000 && c < 55000) { const utc = new Date((c - 25569) * 86400000); const y = utc.getUTCFullYear(); if (y >= 2020 && y <= 2035) yearCounts[y] = (yearCounts[y]||0) + 5; }
+  }
+  const years = Object.keys(yearCounts);
+  if (years.length === 0) return null;
+  years.sort((a,b) => yearCounts[b] - yearCounts[a] || (+b) - (+a));
+  return +years[0];
+}
+
+const MONTHS_ES = {ene:0,feb:1,mar:2,abr:3,may:4,jun:5,jul:6,ago:7,sep:8,oct:9,nov:10,dic:11,enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7,septiembre:8,octubre:9,noviembre:10,diciembre:11};
+
+function parseDate(v, yearHint) {
+  if (!v) return null;
+  if (v instanceof Date && !isNaN(v)) { const d = new Date(v.getFullYear(), v.getMonth(), v.getDate()); return isNaN(d) ? null : d; }
+  if (typeof v === 'number') { if (v > 40000 && v < 55000) { const utc = new Date((v - 25569) * 86400000); return new Date(utc.getUTCFullYear(), utc.getUTCMonth(), utc.getUTCDate()); } return null; }
+  let s = String(v).trim();
+  s = s.replace(/\s+\d{1,2}:\d{2}(:\d{2})?.*$/, '');
+  let d, m, y, match;
+  match = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if (match) { d=+match[1]; m=+match[2]; y=+match[3]; return new Date(y, m-1, d); }
+  match = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+  if (match) { y=+match[1]; m=+match[2]; d=+match[3]; return new Date(y, m-1, d); }
+  match = s.match(/^(\d{1,2})[\/\-](\d{1,2})$/);
+  if (match) { d=+match[1]; m=+match[2]; return new Date(yearHint||2026, m-1, d); }
+  match = s.toLowerCase().match(/(\d{1,2})\s+de\s+(\w+)(?:\s+(?:de\s+)?(\d{4}))?/);
+  if (match && MONTHS_ES[match[2]] !== undefined) { d=+match[1]; m=MONTHS_ES[match[2]]; y=match[3]?+match[3]:yearHint; return new Date(y, m, d); }
+  match = s.toLowerCase().match(/(\w{3,})\s+(\d{1,2})/);
+  if (match && MONTHS_ES[match[1]] !== undefined) return new Date(yearHint, MONTHS_ES[match[1]], +match[2]);
+  match = s.toLowerCase().match(/(\d{1,2})\s+(\w{3,})/);
+  if (match && MONTHS_ES[match[2]] !== undefined) return new Date(yearHint, MONTHS_ES[match[2]], +match[1]);
+  return null;
+}
+
+/* ── 5. COLUMN AUTO-DETECTION ── */
+const BLACKLIST = /saldo|identificaci|nit|codigo|cuenta|secuencia|centro|sucursal|consecutivo|c[oó]digo/i;
+
+function detectColumns(headers, dataRows, isExtracto) {
+  const h = headers.map(x => norm(x));
+  const map = {fecha:-1, desc:-1, ref:-1, debito:-1, credito:-1, valor:-1, tercero:-1};
+  const rules = [
+    ['fecha',   ['fecha','date','fec','fch']],
+    ['desc',    ['descripcion','detalle','concepto','observacion','movimiento']],
+    ['ref',     ['referencia','dcto','dcto.','comprobante','nro','cheque','transaccion']],
+    ['debito',  ['debito','cargo','retiro','salida','egreso']],
+    ['credito', ['credito','abono','deposito','entrada','consignacion']],
+    ['valor',   ['valor','monto','importe','amount','vlr']],
+    ['tercero', ['nombre tercero','tercero','razon social','beneficiario']],
+  ];
+  for (const [field, kws] of rules) {
+    for (let i = 0; i < h.length; i++) {
+      if (Object.values(map).includes(i)) continue;
+      if (kws.some(k => h[i].includes(k))) {
+        if (['debito','credito','valor'].includes(field) && BLACKLIST.test(headers[i])) continue;
+        if (field === 'valor' && h[i].includes('saldo')) continue;
+        if (field === 'desc' && (h[i].includes('tercero') || h[i].includes('cuenta'))) continue;
+        map[field] = i; break;
+      }
+    }
+  }
+  if (isExtracto && map.valor === -1 && map.debito === -1 && map.credito === -1) {
+    for (let i = 0; i < headers.length; i++) {
+      if (Object.values(map).includes(i)) continue;
+      if (BLACKLIST.test(headers[i]) || h[i].includes('saldo')) continue;
+      let pos = 0, neg = 0;
+      for (let r = 0; r < Math.min(50, dataRows.length); r++) {
+        const v = typeof dataRows[r][i] === 'number' ? dataRows[r][i] : toNum(dataRows[r][i], 'auto');
+        if (v > 0) pos++; if (v < 0) neg++;
+      }
+      if (pos >= 3 && neg >= 2) { map.valor = i; break; }
+    }
+  }
+  if (!isExtracto && map.debito === -1 && map.credito === -1 && map.valor === -1) {
+    const numCols = [];
+    for (let i = 0; i < headers.length; i++) {
+      if (Object.values(map).includes(i)) continue;
+      if (BLACKLIST.test(headers[i]) || h[i].includes('saldo') || h[i].includes('inicial') || h[i].includes('total')) continue;
+      let cnt = 0;
+      for (let r = 0; r < Math.min(20, dataRows.length); r++) {
+        const v = dataRows[r][i];
+        if (typeof v === 'number') cnt++;
+        else if (v && !isNaN(Number(String(v).replace(/[,$.\-\s()]/g,'')))) cnt++;
+      }
+      if (cnt >= 5) numCols.push(i);
+    }
+    if (numCols.length >= 2) { map.debito = numCols[0]; map.credito = numCols[1]; }
+    else if (numCols.length === 1) { map.valor = numCols[0]; }
+  }
+  if (map.fecha === -1) {
+    for (let i = 0; i < headers.length; i++) {
+      if (Object.values(map).includes(i)) continue;
+      let dc = 0;
+      for (let r = 0; r < Math.min(15, dataRows.length); r++) {
+        const v = dataRows[r][i];
+        if (v instanceof Date) dc++;
+        else if (typeof v === 'number' && v > 40000 && v < 55000) dc++;
+        else if (typeof v === 'string' && /\d{1,2}[\/\-]\d{1,2}/.test(v)) dc++;
+      }
+      if (dc >= 5) { map.fecha = i; break; }
+    }
+  }
+  if (map.desc === -1) {
+    let best = 0, bestI = -1;
+    for (let i = 0; i < headers.length; i++) {
+      if (Object.values(map).includes(i)) continue;
+      const avg = dataRows.slice(0,20).reduce((s,r) => s + String(r[i]||'').length, 0) / Math.min(20, dataRows.length);
+      if (avg > best) { best = avg; bestI = i; }
+    }
+    if (bestI >= 0) map.desc = bestI;
+  }
+  return map;
+}
+
+function norm(s) { return (s||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim(); }
+
+/* ── 6. STEP 2: RENDER FILE CARDS ── */
+function goStep1() { show('step1'); hide('step2'); hide('step3'); setSI(1); }
+function goStep2() {
+  for (const k of ['E','A']) {
+    const f = F[k];
+    const hdr = f.headerRow;
+    const headers = f.noHeader ? f.raw[0].map((_,i) => 'Col_' + String.fromCharCode(65+i)) : (f.raw[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
+    const dataStart = f.noHeader ? 0 : hdr + 1;
+    const dataRows = cleanRows(f.raw.slice(dataStart));
+    f.map = detectColumns(headers, dataRows, k === 'E');
+    const valCol = f.map.valor >= 0 ? f.map.valor : (f.map.debito >= 0 ? f.map.debito : -1);
+    if (valCol >= 0 && f.numFmt === 'auto') { f.numFmt = detectNumFormat(f.display.slice(dataStart), valCol); }
+  }
+  renderFileCard('E'); renderFileCard('A');
+  hide('step1'); show('step2'); hide('step3'); setSI(2);
+}
+
+function renderFileCard(k) {
+  const f = F[k];
+  const isE = k === 'E';
+  const label = isE ? '🏦 Extracto Bancario' : '📒 Libro Auxiliar';
+  const rows = f.raw;
+  const hdr = f.headerRow;
+  const noH = f.noHeader;
+  const dataStart = noH ? 0 : hdr + 1;
+  const headers = noH ? rows[0].map((_,i) => 'Col_' + String.fromCharCode(65 + (i % 26))) : (rows[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
+  const dataRows = cleanRows(rows.slice(dataStart));
+  let html = `<div class="card-title">${label} — ${esc(f.name)}</div>`;
+  html += `<div class="ctrl-row">
+    <div class="ctrl-item"><label>Fila encabezado</label><input type="number" min="1" max="${rows.length}" value="${hdr+1}" onchange="changeHeader('${k}',+this.value-1)" id="hdrIn${k}" ${noH?'disabled':''}></div>
+    <div class="ctrl-item" style="flex-direction:row;align-items:center;gap:6px;align-self:end"><input type="checkbox" ${noH?'checked':''} onchange="toggleNoHeader('${k}',this.checked)"><label style="text-transform:none;cursor:pointer">Sin encabezado</label></div>
+    <div class="ctrl-item"><label>Formato numérico</label><select onchange="changeNumFmt('${k}',this.value)" id="fmtSel${k}">
+      <option value="auto" ${f.numFmt==='auto'?'selected':''}>Auto-detectar</option>
+      <option value="plain" ${f.numFmt==='plain'?'selected':''}>Sin separador (1234.56)</option>
+      <option value="us" ${f.numFmt==='us'?'selected':''}>Americano (1,234.56)</option>
+      <option value="col" ${f.numFmt==='col'?'selected':''}>Colombiano (1.234,56)</option>
+    </select></div>
+  </div>`;
+  const valMode = f.map.valor >= 0 ? 'valor único con signo' : (f.map.debito >= 0 ? 'débito/crédito separados' : '⚠ no se detectaron columnas de valor');
+  html += `<div class="card-info">${dataRows.length} movimientos · ${valMode} · formato: ${f.numFmt}</div>`;
+  const showN = Math.min(rows.length, 25);
+  html += `<div class="raw-preview"><table><tr><th style="width:30px">#</th>`;
+  const maxCols = Math.max(...rows.slice(0, showN).map(r => r.length));
+  for (let c = 0; c < Math.min(maxCols, 12); c++) html += `<th>Col ${c+1}</th>`;
+  html += '</tr>';
+  for (let i = 0; i < showN; i++) {
+    const cls = (i === hdr && !noH) ? 'rHead' : (i < dataStart ? 'rSkip' : 'rData');
+    html += `<tr class="${cls}"><td class="rn">${i+1}</td>`;
+    for (let c = 0; c < Math.min(maxCols, 12); c++) {
+      let v = f.display[i] ? f.display[i][c] : '';
+      if (v instanceof Date) v = v.toLocaleDateString('es-CO');
+      html += `<td title="${esc(String(v||''))}">${esc(String(v||'').substring(0,30))}</td>`;
+    }
+    html += '</tr>';
+  }
+  if (rows.length > showN) html += `<tr class="rSkip"><td class="rn">…</td><td colspan="${Math.min(maxCols,12)}">… ${rows.length - showN} filas más</td></tr>`;
+  html += '</table></div>';
+  html += '<div style="font-size:.68rem;color:var(--f400);margin-bottom:8px">🔵 = encabezado · ⬜ = datos · 🔘 = ignorado</div>';
+  const fields = isE
+    ? [{k:'fecha',l:'📅 Fecha'},{k:'desc',l:'📝 Descripción'},{k:'ref',l:'🔢 Ref/Dcto'},{k:'valor',l:'💰 Valor (±signo)'},{k:'debito',l:'➖ Débito'},{k:'credito',l:'➕ Crédito'}]
+    : [{k:'fecha',l:'📅 Fecha'},{k:'desc',l:'📝 Descripción'},{k:'ref',l:'🔢 Comprobante'},{k:'tercero',l:'👤 Tercero'},{k:'debito',l:'➖ Débito'},{k:'credito',l:'➕ Crédito'},{k:'valor',l:'💰 Valor único'}];
+  html += '<div class="col-map">';
+  for (const fld of fields) {
+    const opts = headers.map((h,i) => `<option value="${i}" ${f.map[fld.k]===i?'selected':''}>${esc(h)}</option>`).join('');
+    html += `<div class="map-item"><label>${fld.l}</label><select class="${f.map[fld.k]>=0?'mapped':''}" onchange="changeMap('${k}','${fld.k}',+this.value);this.className=this.value>=0?'mapped':''"><option value="-1">— No aplica —</option>${opts}</select></div>`;
+  }
+  html += '</div>';
+  const ownYear = f.map.fecha >= 0 ? guessYearFromTransactions(rows, f.map.fecha, dataStart) : null;
+  const otherK = k === 'E' ? 'A' : 'E';
+  const otherYear = F[otherK].raw ? getTransactionYear(otherK) : null;
+  const yearHint = ownYear || otherYear || new Date().getFullYear();
+  html += '<div style="font-size:.78rem;font-weight:700;color:var(--f600);margin:12px 0 4px">Vista previa interpretada (verifica que los valores se lean bien):</div>';
+  html += '<div class="parsed-preview"><table><tr><th>Fecha</th><th>Descripción</th>';
+  if (!isE) html += '<th>Tercero</th>';
+  html += '<th>Ref</th>';
+  if (f.map.valor >= 0) html += '<th>Valor</th>';
+  else { html += '<th>Débito</th><th>Crédito</th>'; }
+  html += '</tr>';
+  const previewRows = dataRows.slice(0, 5);
+  for (const r of previewRows) {
+    const fecha = f.map.fecha >= 0 ? parseDate(r[f.map.fecha], yearHint) : null;
+    const desc = f.map.desc >= 0 ? String(r[f.map.desc]||'') : '';
+    const ref = f.map.ref >= 0 ? String(r[f.map.ref]||'') : '';
+    const tercero = f.map.tercero >= 0 ? String(r[f.map.tercero]||'') : '';
+    let valHtml = '';
+    if (f.map.valor >= 0) {
+      const raw = r[f.map.valor];
+      const parsed = toNum(raw, f.numFmt);
+      const cls = parsed === 0 && raw !== 0 && raw !== '' && raw != null ? 'warn' : 'ok';
+      valHtml = `<td class="num ${cls}" title="Original: ${esc(String(raw))}">${fmtN(parsed)}</td>`;
+    } else {
+      const rawD = f.map.debito >= 0 ? r[f.map.debito] : '';
+      const rawC = f.map.credito >= 0 ? r[f.map.credito] : '';
+      const pD = toNum(rawD, f.numFmt), pC = toNum(rawC, f.numFmt);
+      valHtml = `<td class="num" title="Original: ${esc(String(rawD))}">${fmtN(pD)}</td><td class="num" title="Original: ${esc(String(rawC))}">${fmtN(pC)}</td>`;
+    }
+    html += `<tr><td class="${fecha?'ok':'warn'}">${fecha ? fecha.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'}) : '⚠ ?'}</td>`;
+    html += `<td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(desc.substring(0,40))}</td>`;
+    if (!isE) html += `<td>${esc(tercero.substring(0,25))}</td>`;
+    html += `<td>${esc(ref.substring(0,20))}</td>${valHtml}</tr>`;
+  }
+  html += '</table></div>';
+  if (previewRows.length === 0) html += '<div class="card-info" style="border-left-color:var(--amber)">⚠ No se encontraron filas de datos. Verifica la fila del encabezado.</div>';
+  document.getElementById('card'+k).innerHTML = html;
+}
+
+function changeHeader(k, row) { F[k].headerRow = Math.max(0, Math.min(row, F[k].raw.length - 2)); refreshDetection(k); }
+function toggleNoHeader(k, val) { F[k].noHeader = val; const inp = document.getElementById('hdrIn'+k); if (inp) inp.disabled = val; refreshDetection(k); }
+function changeNumFmt(k, fmt) { F[k].numFmt = fmt; renderFileCard(k); }
+function changeMap(k, field, val) { F[k].map[field] = val; renderFileCard(k); }
+function refreshDetection(k) {
+  const f = F[k];
+  const hdr = f.noHeader ? 0 : f.headerRow;
+  const headers = f.noHeader ? f.raw[0].map((_,i) => 'Col_' + String.fromCharCode(65+i)) : (f.raw[hdr]||[]).map((h,i) => h ? String(h).trim() : 'Col_'+(i+1));
+  const dataStart = f.noHeader ? 0 : hdr + 1;
+  const dataRows = cleanRows(f.raw.slice(dataStart));
+  f.map = detectColumns(headers, dataRows, k === 'E');
+  const valCol = f.map.valor >= 0 ? f.map.valor : (f.map.debito >= 0 ? f.map.debito : -1);
+  if (valCol >= 0) f.numFmt = detectNumFormat(f.display.slice(dataStart), valCol);
+  renderFileCard(k);
+}
+
+function cleanRows(rows) {
+  return rows.filter(r => {
+    if (!r || r.every(c => c == null || c === '')) return false;
+    const fc = norm(String(r[0]||''));
+    if (fc.startsWith('total') || fc.includes('fin estado') || fc.includes('procesado en') || fc.startsWith('saldo anterior') || fc.startsWith('subtotal') || fc.includes('resumen')) return false;
+    return true;
+  });
+}
+
+/* ── 7. MATCHING ALGORITHM ── */
+function ejecutar() {
+  const tol = +(document.getElementById('optTol').value || 1);
+  const yearE = getTransactionYear('E');
+  const yearA = getTransactionYear('A');
+  // If years differ, prefer auxiliar year (accounting software is more reliable)
+  // Also use current year as better fallback
+  const curYear = new Date().getFullYear();
+  let finalYearE, finalYearA;
+  if (yearE && yearA && yearE !== yearA) {
+    // Years conflict — use the auxiliar year for both (accounting is authoritative)
+    console.log('⚠ Años difieren: extracto=' + yearE + ' auxiliar=' + yearA + '. Usando año del auxiliar.');
+    finalYearA = yearA;
+    finalYearE = yearA; // override extracto year with auxiliar year
+  } else {
+    finalYearE = yearE || yearA || curYear;
+    finalYearA = yearA || yearE || curYear;
+  }
+  console.log('DEBUG yearE=', yearE, 'yearA=', yearA, 'finalE=', finalYearE, 'finalA=', finalYearA);
+  console.log('DEBUG E map=', JSON.stringify(F.E.map), 'numFmt=', F.E.numFmt, 'hdr=', F.E.headerRow);
+  console.log('DEBUG A map=', JSON.stringify(F.A.map), 'numFmt=', F.A.numFmt, 'hdr=', F.A.headerRow);
+  const ext = buildRecords('E', finalYearE);
+  const aux = buildRecords('A', finalYearA);
+  if (ext.length === 0) { alert('No se encontraron movimientos en el extracto.'); return; }
+  if (aux.length === 0) { alert('No se encontraron movimientos en el auxiliar.'); return; }
+  console.log('DEBUG ext[0]=', JSON.stringify(ext[0], (k,v) => v instanceof Date ? v.toISOString() : v));
+  console.log('DEBUG ext[1]=', JSON.stringify(ext[1], (k,v) => v instanceof Date ? v.toISOString() : v));
+  console.log('DEBUG aux[0]=', JSON.stringify(aux[0], (k,v) => v instanceof Date ? v.toISOString() : v));
+  console.log('DEBUG aux[1]=', JSON.stringify(aux[1], (k,v) => v instanceof Date ? v.toISOString() : v));
+  // Debug: test one specific match manually
+  let dbgMatchCount = 0;
+  for (let di = 0; di < Math.min(5, ext.length); di++) {
+    for (let dj = 0; dj < Math.min(5, aux.length); dj++) {
+      const am = amtMatch(ext[di], aux[dj], tol, true);
+      const dc = dateClose(ext[di].fecha, aux[dj].fecha, 0);
+      if (am || (ext[di].deb > 0 && aux[dj].deb > 0 && Math.abs(ext[di].deb - aux[dj].deb) < 100)) {
+        console.log(`DEBUG match test E[${di}] vs A[${dj}]: amt=${am} date=${dc}`,
+          `E.deb=${ext[di].deb} E.cre=${ext[di].cre} E.fecha=${ext[di].fecha}`,
+          `A.deb=${aux[dj].deb} A.cre=${aux[dj].cre} A.fecha=${aux[dj].fecha}`);
+        dbgMatchCount++;
+      }
+    }
+  }
+  console.log('DEBUG manual match checks found:', dbgMatchCount);
+  const matched = [];
+  const uE = new Set(), uA = new Set();
+  doPass(ext, aux, uE, uA, matched, tol, 0, true, 'alta', 'Monto, fecha y tipo exactos');
+  console.log('DEBUG after pass1 (exact):', matched.length, 'matches');
+  doPass(ext, aux, uE, uA, matched, tol, 2, true, 'alta', 'Monto y tipo, fecha ±2 días');
+  console.log('DEBUG after pass2 (±2d):', matched.length, 'matches');
+  doPass(ext, aux, uE, uA, matched, tol, 5, true, 'media', 'Monto y tipo, fecha ±5 días');
+  doPassRef(ext, aux, uE, uA, matched, tol, 'media', 'Monto y referencia');
+  doPass(ext, aux, uE, uA, matched, tol, 15, true, 'baja', 'Monto y tipo, ±15 días');
+  doPass(ext, aux, uE, uA, matched, tol, 31, false, 'baja', 'Solo monto (±31 días)');
+  console.log('DEBUG TOTAL matches:', matched.length);
+  // === DIAGNÓSTICO VISUAL ===
+  if (matched.length === 0 && ext.length > 0 && aux.length > 0) {
+    let diag = '=== DIAGNÓSTICO (0 conciliadas) ===\n\n';
+    diag += 'Extracto: ' + ext.length + ' registros\n';
+    for (let i = 0; i < Math.min(3, ext.length); i++) {
+      const e = ext[i];
+      diag += `  E[${i}]: fecha=${e.fecha ? e.fecha.toLocaleDateString('es-CO') : 'NULL'} deb=${e.deb} cre=${e.cre} desc=${(e.desc||'').substring(0,35)}\n`;
+    }
+    diag += '\nAuxiliar: ' + aux.length + ' registros\n';
+    for (let i = 0; i < Math.min(3, aux.length); i++) {
+      const a = aux[i];
+      diag += `  A[${i}]: fecha=${a.fecha ? a.fecha.toLocaleDateString('es-CO') : 'NULL'} deb=${a.deb} cre=${a.cre} desc=${(a.desc||'').substring(0,35)} ref=${a.ref}\n`;
+    }
+    // Test manual match
+    diag += '\n--- Test de cruce manual ---\n';
+    let found = false;
+    for (let i = 0; i < Math.min(10, ext.length) && !found; i++) {
+      for (let j = 0; j < Math.min(10, aux.length) && !found; j++) {
+        const e = ext[i], a = aux[j];
+        const sameDeb = e.deb > 0 && a.deb > 0 && Math.abs(e.deb - a.deb) < 2;
+        const sameCre = e.cre > 0 && a.cre > 0 && Math.abs(e.cre - a.cre) < 2;
+        if (sameDeb || sameCre) {
+          diag += `MATCH POSIBLE E[${i}] vs A[${j}]:\n`;
+          diag += `  E: deb=${e.deb} cre=${e.cre} fecha=${e.fecha?.toLocaleDateString('es-CO')}\n`;
+          diag += `  A: deb=${a.deb} cre=${a.cre} fecha=${a.fecha?.toLocaleDateString('es-CO')}\n`;
+          diag += `  amtMatch(tol=${tol},chkSign=true)=${amtMatch(e,a,tol,true)}\n`;
+          diag += `  dateClose(dayTol=0)=${dateClose(e.fecha,a.fecha,0)}\n`;
+          diag += `  dateClose(dayTol=31)=${dateClose(e.fecha,a.fecha,31)}\n`;
+          found = true;
+        }
+      }
+    }
+    if (!found) {
+      diag += 'NO se encontró ningún par con monto similar en primeros 10 registros.\n';
+      diag += 'Posible problema: extracto y auxiliar tienen deb/cre invertidos.\n';
+      // Check cross-match (e.deb vs a.cre)
+      for (let i = 0; i < Math.min(5, ext.length); i++) {
+        for (let j = 0; j < Math.min(5, aux.length); j++) {
+          const e = ext[i], a = aux[j];
+          if (e.deb > 0 && a.cre > 0 && Math.abs(e.deb - a.cre) < 2) {
+            diag += `  CRUCE INVERTIDO E[${i}].deb=${e.deb} == A[${j}].cre=${a.cre}\n`;
+            found = true; break;
+          }
+          if (e.cre > 0 && a.deb > 0 && Math.abs(e.cre - a.deb) < 2) {
+            diag += `  CRUCE INVERTIDO E[${i}].cre=${e.cre} == A[${j}].deb=${a.deb}\n`;
+            found = true; break;
+          }
+        }
+        if (found) break;
+      }
+    }
+    diag += '\nE map=' + JSON.stringify(F.E.map) + '\nA map=' + JSON.stringify(F.A.map);
+    diag += '\nE numFmt=' + F.E.numFmt + ' A numFmt=' + F.A.numFmt;
+    alert(diag);
+  }
+  const soloE = ext.filter((_,i) => !uE.has(i));
+  const soloA = aux.filter((_,i) => !uA.has(i));
+  const sE = {d: sum(ext,'deb'), c: sum(ext,'cre')};
+  const sA = {d: sum(aux,'deb'), c: sum(aux,'cre')};
+  const ssE = {d: sum(soloE,'deb'), c: sum(soloE,'cre')};
+  const ssA = {d: sum(soloA,'deb'), c: sum(soloA,'cre')};
+  resultados = {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, tol};
+  renderResults();
+  hide('step2'); show('step3'); setSI(3);
+}
+
+function getTransactionYear(k) {
+  const f = F[k];
+  if (!f.raw || f.map.fecha < 0) return null;
+  const dataStart = f.noHeader ? 0 : f.headerRow + 1;
+  return guessYearFromTransactions(f.raw, f.map.fecha, dataStart);
+}
+
+function buildRecords(k, yearHint) {
+  const f = F[k];
+  const hdr = f.noHeader ? 0 : f.headerRow;
+  const dataStart = f.noHeader ? 0 : hdr + 1;
+  const dataRows = cleanRows(f.raw.slice(dataStart));
+  const fmt = f.numFmt;
+  const recs = [];
+  for (const r of dataRows) {
+    const fecha = f.map.fecha >= 0 ? parseDate(r[f.map.fecha], yearHint) : null;
+    const desc = f.map.desc >= 0 ? String(r[f.map.desc]||'').trim() : '';
+    const ref = f.map.ref >= 0 ? String(r[f.map.ref]||'').trim() : '';
+    const tercero = f.map.tercero >= 0 ? String(r[f.map.tercero]||'').trim() : '';
+    let deb = 0, cre = 0;
+    if (f.map.valor >= 0 && f.map.debito < 0 && f.map.credito < 0) {
+      const v = toNum(r[f.map.valor], fmt);
+      if (v > 0) deb = v; else if (v < 0) cre = Math.abs(v);
+    } else {
+      deb = f.map.debito >= 0 ? Math.abs(toNum(r[f.map.debito], fmt)) : 0;
+      cre = f.map.credito >= 0 ? Math.abs(toNum(r[f.map.credito], fmt)) : 0;
+    }
+    if (deb === 0 && cre === 0) continue;
+    recs.push({fecha, desc, ref, tercero, deb, cre});
+  }
+  return recs;
+}
+
+function doPass(ext, aux, uE, uA, matched, tol, dayTol, chkSign, conf, reason) {
+  for (let i = 0; i < ext.length; i++) {
+    if (uE.has(i)) continue;
+    for (let j = 0; j < aux.length; j++) {
+      if (uA.has(j)) continue;
+      if (!amtMatch(ext[i], aux[j], tol, chkSign)) continue;
+      if (!dateClose(ext[i].fecha, aux[j].fecha, dayTol)) continue;
+      matched.push({ei:i, ai:j, conf, reason});
+      uE.add(i); uA.add(j); break;
+    }
+  }
+}
+
+function doPassRef(ext, aux, uE, uA, matched, tol, conf, reason) {
+  for (let i = 0; i < ext.length; i++) {
+    if (uE.has(i)) continue;
+    for (let j = 0; j < aux.length; j++) {
+      if (uA.has(j)) continue;
+      if (!amtMatch(ext[i], aux[j], tol, true)) continue;
+      if (!refMatch(ext[i], aux[j])) continue;
+      matched.push({ei:i, ai:j, conf, reason});
+      uE.add(i); uA.add(j); break;
+    }
+  }
+}
+
+function amtMatch(e, a, tol, chkSign) {
+  if (chkSign) {
+    if (e.deb > 0 && a.deb > 0) return Math.abs(Math.round(e.deb*100) - Math.round(a.deb*100)) <= tol*100;
+    if (e.cre > 0 && a.cre > 0) return Math.abs(Math.round(e.cre*100) - Math.round(a.cre*100)) <= tol*100;
+    return false;
+  }
+  const ve = e.deb||e.cre, va = a.deb||a.cre;
+  return Math.abs(Math.round(ve*100) - Math.round(va*100)) <= tol*100;
+}
+
+function dateClose(d1, d2, tol) {
+  if (!d1 || !d2) return tol >= 15;
+  const t1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
+  const t2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
+  const diffDays = Math.abs(t1 - t2) / 864e5;
+  if (diffDays <= tol) return true;
+  // If years differ (possible parsing error), compare only month+day
+  if (d1.getFullYear() !== d2.getFullYear()) {
+    const sameYear1 = Date.UTC(2000, d1.getMonth(), d1.getDate());
+    const sameYear2 = Date.UTC(2000, d2.getMonth(), d2.getDate());
+    return Math.abs(sameYear1 - sameYear2) / 864e5 <= tol;
+  }
+  return false;
+}
+
+function refMatch(e, a) {
+  const ne = (e.ref + ' ' + e.desc).match(/\d{4,}/g) || [];
+  const na = (a.ref + ' ' + a.desc).match(/\d{4,}/g) || [];
+  for (const n of ne) if (na.some(m => m.includes(n) || n.includes(m))) return true;
+  return false;
+}
+
+function sum(arr, field) { return arr.reduce((s, r) => s + (r[field]||0), 0); }
+
+/* ── 8. CATEGORIZATION ── */
+const CATEGORIES = [
+  {id:'gmf',name:'GMF / 4×1000',icon:'🏛️',color:'#DC2626',bg:'#FEF2F2',test:d=>d.includes('4x1000')||d.includes('impto gobierno')||d.includes('gmf')||d.includes('4 x 1000')||d.includes('gravamen')},
+  {id:'interes',name:'Intereses recibidos',icon:'📈',color:'#059669',bg:'#ECFDF5',test:d=>(d.includes('interes')||d.includes('interés'))&&(d.includes('ahorro')||d.includes('bancario')||d.includes('cdt')||d.includes('rendimiento'))},
+  {id:'comision',name:'Comisiones bancarias',icon:'🏦',color:'#D97706',bg:'#FFFBEB',test:d=>d.includes('comision')||d.includes('comisión')||d.includes('cobro servicio')},
+  {id:'cuota',name:'Cuota de manejo',icon:'💳',color:'#9333EA',bg:'#F5F3FF',test:d=>d.includes('cuota manejo')||d.includes('cuota de manejo')||d.includes('cobro cuota')},
+  {id:'retefte',name:'Retención en la fuente',icon:'📋',color:'#BE185D',bg:'#FDF2F8',test:d=>d.includes('retefuente')||d.includes('retefte')||(d.includes('retencion')&&d.includes('fuente'))||(d.includes('retención')&&d.includes('fuente'))},
+  {id:'reteiva',name:'Retención de IVA',icon:'📑',color:'#0369A1',bg:'#F0F9FF',test:d=>(d.includes('retencion')||d.includes('retención'))&&(d.includes('iva')||d.includes('i.v.a'))},
+  {id:'reteica',name:'Retención de ICA',icon:'🏢',color:'#4338CA',bg:'#EEF2FF',test:d=>(d.includes('retencion')||d.includes('retención'))&&d.includes('ica')},
+  {id:'plataforma',name:'Plataformas digitales',icon:'📱',color:'#0891B2',bg:'#ECFEFF',test:d=>d.includes('bold')||d.includes('nequi')||d.includes('daviplata')||d.includes('pse')||d.includes('rappipay')||d.includes('wompi')},
+  {id:'cheque',name:'Cheques',icon:'📝',color:'#64748B',bg:'#F8FAFC',test:d=>d.includes('cheque')||d.includes('chq')},
+  {id:'otro',name:'Otros sin clasificar',icon:'❓',color:'#6B7280',bg:'#F9FAFB',test:()=>true},
+];
+
+function categorize(items) {
+  const cats = {};
+  CATEGORIES.forEach(c => cats[c.id] = {def:c, items:[], totalDeb:0, totalCre:0});
+  for (const item of items) {
+    const d = (item.desc||'').toLowerCase();
+    for (const c of CATEGORIES) {
+      if (c.test(d)) { cats[c.id].items.push(item); cats[c.id].totalDeb += item.deb || 0; cats[c.id].totalCre += item.cre || 0; break; }
+    }
+  }
+  return cats;
+}
+
+function guessCausa(desc) {
+  const d = (desc||'').toLowerCase();
+  for (const c of CATEGORIES) { if (c.id !== 'otro' && c.test(d)) return c.name; }
+  return 'Pendiente de clasificar';
+}
+
+/* ── 9. RENDER RESULTS ── */
+function renderResults() {
+  const {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, tol} = resultados;
+  const total = Math.max(ext.length, aux.length);
+  const needsPay = total > FREE_LIMIT;
+  const lim = needsPay ? FREE_LIMIT : 999999;
+  const pctConc = ext.length > 0 ? Math.round(matched.length / Math.max(ext.length, aux.length) * 100) : 0;
+  document.getElementById('sumCards').innerHTML =
+    sc('sc-green', matched.length, 'Conciliadas') +
+    sc('sc-blue', soloE.length, 'Solo extracto') +
+    sc('sc-amber', soloA.length, 'Solo auxiliar') +
+    `<div class="summary-card" style="border-color:${pctConc>=90?'var(--g400)':pctConc>=70?'var(--amber)':'var(--red)'}"><div class="sc-val" style="color:${pctConc>=90?'var(--g600)':pctConc>=70?'var(--amber)':'var(--red)'}">${pctConc}%</div><div class="sc-label">Conciliación</div></div>`;
+  const saldoE = sE.d - sE.c;
+  const saldoA = sA.d - sA.c;
+  let bh = '<div class="bridge"><h3>🔗 Puente de Conciliación</h3>';
+  bh += br('br-start', 'Saldo neto según extracto bancario', fmtS(saldoE));
+  bh += br('br-sep', 'Partidas registradas en extracto, NO en libros', '');
+  if (ssE.d > 0) bh += br('br-add', '(+) Débitos en extracto no registrados en libros', '+ ' + fmtS(ssE.d));
+  if (ssE.c > 0) bh += br('br-sub', '(−) Créditos en extracto no registrados en libros', '− ' + fmtS(ssE.c));
+  bh += br('br-sep', 'Partidas registradas en libros, NO en extracto', '');
+  if (ssA.d > 0) bh += br('br-sub', '(−) Débitos en libros no reflejados en extracto', '− ' + fmtS(ssA.d));
+  if (ssA.c > 0) bh += br('br-add', '(+) Créditos en libros no reflejados en extracto', '+ ' + fmtS(ssA.c));
+  bh += br('br-end', 'Saldo neto según libro auxiliar', fmtS(saldoA));
+  const checkVal = saldoE + ssE.d - ssE.c - ssA.d + ssA.c;
+  const checkOk = Math.abs(checkVal - saldoA) < 2;
+  bh += `<div class="bridge-check ${checkOk ? 'ok' : 'diff'}">${checkOk ? '✓ El puente cuadra correctamente' : '⚠ Diferencia de $ ' + fmtN(Math.abs(checkVal - saldoA)) + ' — revise partidas pendientes'}</div>`;
+  bh += '</div>';
+  document.getElementById('reconBox').innerHTML = bh;
+  const catsE = categorize(soloE);
+  const catsA = categorize(soloA);
+  let ah = '<div class="analysis-grid">';
+  ah += '<div class="analysis-card"><h3>🏦 Partidas solo en extracto</h3>';
+  ah += renderCatList(catsE, soloE);
+  ah += '</div>';
+  ah += '<div class="analysis-card"><h3>📒 Partidas solo en libros</h3>';
+  ah += renderCatList(catsA, soloA);
+  ah += '</div>';
+  ah += '</div>';
+  const bankCharges = [{id:'gmf',label:'GMF / 4×1000'},{id:'comision',label:'Comisiones bancarias'},{id:'cuota',label:'Cuota de manejo'},{id:'retefte',label:'Retención en la fuente'},{id:'reteiva',label:'Retención de IVA'},{id:'reteica',label:'Retención de ICA'}];
+  const hasCharges = bankCharges.some(bc => catsE[bc.id] && catsE[bc.id].items.length > 0);
+  const interestItems = catsE.interes ? catsE.interes.items : [];
+  if (hasCharges || interestItems.length > 0) {
+    ah += '<div class="analysis-card" style="grid-column:1/-1"><h3>💰 Resumen contable — Movimientos bancarios pendientes de registro</h3>';
+    ah += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
+    if (hasCharges) {
+      ah += '<div><div style="font-size:.78rem;font-weight:700;color:var(--red);margin-bottom:8px">Gastos bancarios por registrar</div><ul class="cat-list">';
+      let totalGastos = 0;
+      for (const bc of bankCharges) { const cat = catsE[bc.id]; if (!cat || cat.items.length === 0) continue; const val = cat.totalCre; totalGastos += val; ah += `<li class="cat-item"><div class="cat-left"><div class="cat-icon" style="background:${cat.def.bg}">${cat.def.icon}</div><div><div class="cat-name">${bc.label}</div><div class="cat-count">${cat.items.length} movimiento${cat.items.length>1?'s':''}</div></div></div><div class="cat-val val-red">$ ${fmtN(val)}</div></li>`; }
+      ah += `</ul><div class="cat-total"><span>Total gastos bancarios</span><span class="cat-val val-red">$ ${fmtN(totalGastos)}</span></div></div>`;
+    }
+    ah += '<div><div style="font-size:.78rem;font-weight:700;color:var(--g600);margin-bottom:8px">Ingresos bancarios por registrar</div><ul class="cat-list">';
+    if (interestItems.length > 0) {
+      const intTotal = catsE.interes.totalDeb;
+      ah += `<li class="cat-item"><div class="cat-left"><div class="cat-icon" style="background:${catsE.interes.def.bg}">${catsE.interes.def.icon}</div><div><div class="cat-name">Intereses recibidos</div><div class="cat-count">${interestItems.length} movimiento${interestItems.length>1?'s':''}</div></div></div><div class="cat-val val-green">$ ${fmtN(intTotal)}</div></li>`;
+      ah += `</ul><div class="cat-total"><span>Total ingresos bancarios</span><span class="cat-val val-green">$ ${fmtN(intTotal)}</span></div>`;
+    } else {
+      ah += '<li class="cat-item" style="color:var(--f400)">No se detectaron ingresos bancarios pendientes</li></ul>';
+    }
+    ah += '</div></div></div>';
+  }
+  resultados.catsE = catsE;
+  resultados.catsA = catsA;
+  document.getElementById('analysisBox').innerHTML = ah;
+  const tabs = [{id:'conc',l:'✓ Conciliadas',n:matched.length},{id:'ext',l:'🏦 Solo Extracto',n:soloE.length},{id:'aux',l:'📒 Solo Auxiliar',n:soloA.length}];
+  document.getElementById('rTabs').innerHTML = tabs.map((t,i) => `<button class="results-tab ${i===0?'active':''}" onclick="swTab('${t.id}',this)">${t.l}<span class="tab-count">${t.n}</span></button>`).join('');
+  let p = '';
+  p += '<div class="results-panel active" id="panel-conc"><div class="results-scroll"><table class="rtable"><tr><th>#</th><th>Fecha Ext</th><th>Desc Extracto</th><th>Tipo</th><th>Valor Ext</th><th>Fecha Aux</th><th>Tercero/Desc Aux</th><th>Valor Aux</th>';
+  if (tol > 0) p += '<th>Dif</th>';
+  p += '<th>Conf</th></tr>';
+  matched.slice(0,lim).forEach((m,idx) => {
+    const e = ext[m.ei], a = aux[m.ai];
+    const tipo = e.deb > 0 ? 'Entrada' : 'Salida';
+    const tc = e.deb > 0 ? 'tipo-in' : 'tipo-out';
+    const ve = e.deb || e.cre, va = a.deb || a.cre;
+    const diff = Math.abs(ve - va);
+    const cl = 'conf-'+m.conf, lb = m.conf==='alta'?'✓ Alta':m.conf==='media'?'~ Media':'? Baja';
+    const ad = a.tercero || a.desc;
+    p += `<tr><td>${idx+1}</td><td>${fD(e.fecha)}</td><td class="desc-cell" title="${esc(e.desc)}">${esc(e.desc)}</td><td class="${tc}">${tipo}</td><td class="num">${fmtN(ve)}</td><td>${fD(a.fecha)}</td><td class="desc-cell" title="${esc(ad)}">${esc(ad)}</td><td class="num">${fmtN(va)}</td>`;
+    if (tol > 0) p += `<td class="num" style="color:${diff>0?'var(--amber)':'var(--f300)'}">${diff > 0 ? fmtN(diff) : '—'}</td>`;
+    p += `<td><span class="conf ${cl}" title="${m.reason}">${lb}</span></td></tr>`;
+  });
+  p += '</table></div></div>';
+  p += '<div class="results-panel" id="panel-ext"><div class="results-scroll"><table class="rtable"><tr><th>#</th><th>Fecha</th><th>Descripción</th><th>Tipo</th><th>Valor</th><th>Categoría</th></tr>';
+  soloE.slice(0,lim).forEach((e,i) => {
+    const tipo = e.deb > 0 ? 'Entrada' : 'Salida';
+    const tc = e.deb > 0 ? 'tipo-in' : 'tipo-out';
+    const cat = guessCausa(e.desc);
+    p += `<tr><td>${i+1}</td><td>${fD(e.fecha)}</td><td class="desc-cell" title="${esc(e.desc)}">${esc(e.desc)}</td><td class="${tc}">${tipo}</td><td class="num">${fmtN(e.deb||e.cre)}</td><td style="font-size:.7rem;color:var(--f500)">${cat}</td></tr>`;
+  });
+  p += '</table></div></div>';
+  p += '<div class="results-panel" id="panel-aux"><div class="results-scroll"><table class="rtable"><tr><th>#</th><th>Fecha</th><th>Tercero</th><th>Descripción</th><th>Ref</th><th>Tipo</th><th>Valor</th></tr>';
+  soloA.slice(0,lim).forEach((a,i) => {
+    const tipo = a.deb > 0 ? 'Débito' : 'Crédito';
+    const tc = a.deb > 0 ? 'tipo-in' : 'tipo-out';
+    p += `<tr><td>${i+1}</td><td>${fD(a.fecha)}</td><td class="desc-cell" title="${esc(a.tercero)}">${esc(a.tercero)}</td><td class="desc-cell" title="${esc(a.desc)}">${esc(a.desc)}</td><td>${esc(a.ref)}</td><td class="${tc}">${tipo}</td><td class="num">${fmtN(a.deb||a.cre)}</td></tr>`;
+  });
+  p += '</table></div></div>';
+  document.getElementById('rPanels').innerHTML = p;
+  if (needsPay) {
+    document.getElementById('payZone').innerHTML = `<div class="paywall"><h3>🔒 Tu archivo tiene ${total} filas (gratis: ${FREE_LIMIT})</h3><p>Se muestran ${FREE_LIMIT} partidas. Para todo + Excel:</p><div class="pricing-mini">${PRICING.filter(p=>p.price>0).map(pr=>`<div class="pm-opt ${total<=pr.max?'selected':''}"><div class="pm-rows">Hasta ${pr.max}</div><div class="pm-price">${pr.label}</div><div class="pm-unit">COP</div></div>`).join('')}</div><button class="btn btn-primary" onclick="alert('Integración Wompi próximamente.')">Desbloquear</button></div>`;
+    document.getElementById('btnXls').style.display = 'none';
+  } else {
+    document.getElementById('payZone').innerHTML = '';
+    document.getElementById('btnXls').style.display = '';
+  }
+}
+
+function renderCatList(cats, all) {
+  let h = '<ul class="cat-list">';
+  let totalNet = 0;
+  for (const c of CATEGORIES) {
+    const cat = cats[c.id];
+    if (!cat || cat.items.length === 0) continue;
+    const net = cat.totalDeb - cat.totalCre;
+    totalNet += cat.totalDeb + cat.totalCre;
+    const valClass = net > 0 ? 'val-green' : net < 0 ? 'val-red' : '';
+    h += `<li class="cat-item"><div class="cat-left"><div class="cat-icon" style="background:${c.bg}">${c.icon}</div><div><div class="cat-name">${c.name}</div><div class="cat-count">${cat.items.length} · Déb $${fmtN(cat.totalDeb)} · Cré $${fmtN(cat.totalCre)}</div></div></div><div class="cat-val ${valClass}">$ ${fmtN(cat.totalDeb + cat.totalCre)}</div></li>`;
+  }
+  h += '</ul>';
+  h += `<div class="cat-total"><span>Total ${all.length} partidas</span><span>$ ${fmtN(totalNet)}</span></div>`;
+  return h;
+}
+
+function br(cls, label, val) { return `<div class="bridge-row ${cls}"><span class="br-label">${label}</span><span class="br-val">${val}</span></div>`; }
+function fmtS(n) { return (n < 0 ? '−' : '') + '$ ' + fmtN(Math.abs(n)); }
+
+/* ── 10. EXPORT EXCEL ── */
+function extractMeta(k) {
+  const f = F[k];
+  if (!f.raw) return {};
+  const meta = {}, hdr = f.noHeader ? 0 : f.headerRow;
+  for (let i = 0; i < hdr; i++) {
+    const row = f.raw[i]; if (!row) continue;
+    for (let j = 0; j < row.length; j++) {
+      const v = String(row[j]||'').trim(); if (!v) continue;
+      const vl = v.toLowerCase();
+      if (!meta.empresa && v.length > 8 && !/desde|hasta|tipo|cuenta|nro|sucursal|informaci|movimiento|auxiliar/i.test(v) && /[A-Z]/.test(v) && !/^\d/.test(v) && i < 5) meta.empresa = v;
+      const nit = v.match(/(\d{3,}[\.\d]*\s*-\s*\d)/);
+      if (nit && !meta.nit) meta.nit = nit[0].replace(/\./g,'');
+      if (/^\d{8,}$/.test(v) && !meta.cuenta) meta.cuenta = v;
+    }
+  }
+  return meta;
+}
+
+function tipoProbable(desc, isDeb) {
+  const d = (desc||'').toLowerCase();
+  if (d.includes('bold')||d.includes('datafono')) return 'Datáfono/Tarjeta Crédito';
+  if (d.includes('pse')) return isDeb?'Pago PSE recibido':'Pago PSE';
+  if (d.includes('nequi')) return 'Transferencia Nequi';
+  if (d.includes('daviplata')) return 'Transferencia Daviplata';
+  if (d.includes('consignacion')) return 'Consignación';
+  if (d.includes('transferencia')) return isDeb?'Transferencia recibida':'Transferencia salida';
+  if (d.includes('interes')) return 'Intereses bancarios';
+  if (d.includes('4x1000')||d.includes('gmf')||d.includes('impto gobierno')) return 'Impuesto GMF';
+  if (d.includes('comision')) return 'Comisión bancaria';
+  if (d.includes('cuota manejo')) return 'Cuota de manejo';
+  if (d.includes('retencion')||d.includes('retefuente')) return 'Retención';
+  if (d.includes('cheque')) return 'Cheque';
+  return isDeb?'Ingreso por identificar':'Egreso por identificar';
+}
+
+function accionSugerida(desc, isDeb) {
+  const d = (desc||'').toLowerCase();
+  if (d.includes('bold')||d.includes('datafono')||d.includes('interbanc bold')) return isDeb?'Registrar ingreso por ventas TC':'Verificar cobro datáfono';
+  if (d.includes('nequi')||d.includes('daviplata')) return isDeb?'Registrar ingreso por transferencia':'Verificar pago plataforma';
+  if (d.includes('pse')) return isDeb?'Identificar origen y registrar RC':'Identificar proveedor y registrar RP';
+  if (d.includes('consignacion')) return 'Identificar origen y registrar RC';
+  if (d.includes('transferencia')) return isDeb?'Identificar origen y registrar RC':'Identificar beneficiario y registrar RP';
+  if (d.includes('interes')) return 'Registrar ingreso por intereses bancarios';
+  if (d.includes('4x1000')||d.includes('gmf')||d.includes('impto gobierno')) return 'Registrar gasto GMF — Cuenta 5305';
+  if (d.includes('comision')||d.includes('cuota manejo')) return 'Registrar gasto bancario — Cuenta 5305';
+  if (d.includes('retefuente')||d.includes('retencion')) return 'Verificar contrapartida de retención';
+  return isDeb?'Identificar origen y registrar':'Identificar beneficiario y registrar';
+}
+
+async function exportXls() {
+  if (!resultados) return;
+  const {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, catsE} = resultados;
+  const saldoE = sE.d - sE.c, saldoA = sA.d - sA.c;
+  const metaE = extractMeta('E'), metaA = extractMeta('A');
+  const empresa = metaA.empresa || metaE.empresa || '';
+  const nit = metaA.nit || metaE.nit || '';
+  const cuenta = metaE.cuenta || '';
+  const soloE_in = soloE.filter(e => e.deb > 0), soloE_out = soloE.filter(e => e.cre > 0);
+  const totEIn = soloE_in.reduce((s,e) => s+e.deb, 0), totEOut = soloE_out.reduce((s,e) => s+e.cre, 0);
+  const soloA_deb = soloA.filter(a => a.deb > 0), soloA_cre = soloA.filter(a => a.cre > 0);
+  const totADeb = soloA_deb.reduce((s,a) => s+a.deb, 0), totACre = soloA_cre.reduce((s,a) => s+a.cre, 0);
+
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'ExógenaDIAN';
+
+  // ── Paleta de colores ──
+  const C = {
+    hdrBg: '1B3A5C',    // azul oscuro
+    hdrFg: 'FFFFFF',     // blanco
+    secBg: '2E75B6',    // azul medio
+    secFg: 'FFFFFF',
+    subBg: 'D6E4F0',    // azul claro
+    subFg: '1B3A5C',
+    tblHdr: '2E75B6',   // encabezado tabla
+    tblHdrFg: 'FFFFFF',
+    altRow: 'F2F7FB',   // fila alterna
+    greenBg: 'E2EFDA',  // verde claro para conciliadas
+    greenHdr: '548235',  // verde oscuro
+    warnBg: 'FFF2CC',   // amarillo para alertas
+    redFg: 'CC0000',    // rojo para negativos
+    border: 'B4C6E7',   // borde suave
+    totBg: 'D6E4F0',    // fondo totales
+  };
+
+  const thinBorder = {style:'thin', color:{argb:C.border}};
+  const borders = {top:thinBorder, bottom:thinBorder, left:thinBorder, right:thinBorder};
+  const numFmt = '#,##0.00';
+  const numFmtInt = '#,##0';
+  const fontBase = {name:'Arial', size:10};
+  const fontBold = {name:'Arial', size:10, bold:true};
+  const fontHdr = {name:'Arial', size:10, bold:true, color:{argb:C.hdrFg}};
+  const fontTitle = {name:'Arial', size:14, bold:true, color:{argb:C.hdrFg}};
+  const fontSub = {name:'Arial', size:11, bold:true, color:{argb:C.hdrFg}};
+
+  function fillSolid(argb) { return {type:'pattern', pattern:'solid', fgColor:{argb}}; }
+  function styleRow(ws, row, font, fill, align, numF, bord) {
+    row.eachCell({includeEmpty:true}, (cell) => {
+      if (font) cell.font = font;
+      if (fill) cell.fill = fill;
+      if (align) cell.alignment = align;
+      if (bord) cell.border = bord;
+      if (numF && typeof cell.value === 'number') cell.numFmt = numF;
+    });
+  }
+  function applyNumFmt(ws, rowNum, cols, fmt) {
+    cols.forEach(c => { const cell = ws.getCell(rowNum, c); if (typeof cell.value === 'number') cell.numFmt = fmt; });
+  }
+
+  /* ══════════════════════════════════════════════════════
+     SHEET 1: Conciliación Bancaria
+     ══════════════════════════════════════════════════════ */
+  const ws1 = wb.addWorksheet('Conciliación Bancaria');
+  ws1.columns = [{width:48},{width:22},{width:22},{width:18},{width:3},{width:32}];
+
+  // Header
+  let r = 1;
+  ws1.mergeCells(r,1,r,6);
+  const titleCell = ws1.getCell(r,1); titleCell.value = 'CONCILIACIÓN BANCARIA'; titleCell.font = fontTitle; titleCell.fill = fillSolid(C.hdrBg); titleCell.alignment = {horizontal:'center', vertical:'middle'}; ws1.getRow(r).height = 30;
+  for(let c=2;c<=6;c++){ws1.getCell(r,c).fill=fillSolid(C.hdrBg);}
+  r++;
+  if (empresa) { ws1.mergeCells(r,1,r,6); const c=ws1.getCell(r,1); c.value=empresa+(nit?' — NIT '+nit:''); c.font={...fontBold,size:11,color:{argb:C.hdrFg}}; c.fill=fillSolid(C.hdrBg); c.alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++; }
+  if (cuenta) { ws1.mergeCells(r,1,r,6); const c=ws1.getCell(r,1); c.value='Cuenta No. '+cuenta; c.font={...fontBase,color:{argb:'D6E4F0'}}; c.fill=fillSolid(C.hdrBg); c.alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++; }
+  ws1.mergeCells(r,1,r,6); const genCell=ws1.getCell(r,1); genCell.value='Generado: '+new Date().toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'})+' — ExógenaDIAN'; genCell.font={...fontBase,italic:true,color:{argb:'D6E4F0'}}; genCell.fill=fillSolid(C.hdrBg); genCell.alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++;
+  r++; // blank
+
+  // Resumen de saldos
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='RESUMEN DE SALDOS'; ws1.getCell(r,1).font=fontSub; ws1.getCell(r,1).fill=fillSolid(C.secBg); ws1.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.secBg);} r++;
+  const hdrRow1 = ws1.addRow(['Concepto','Extracto Bancario','Libros Contables','Diferencia','','Explicación']); styleRow(ws1, hdrRow1, {...fontBold,color:{argb:C.tblHdrFg}}, fillSolid(C.tblHdr), null, null, borders); r++;
+  let dr;
+  dr = ws1.addRow(['Total Ingresos / Débitos', sE.d, sA.d, sE.d-sA.d, '', '']); styleRow(ws1,dr,fontBase,null,null,numFmt,borders); r++;
+  dr = ws1.addRow(['Total Egresos / Créditos', sE.c, sA.c, sE.c-sA.c, '', '']); styleRow(ws1,dr,fontBase,null,null,numFmt,borders); r++;
+  dr = ws1.addRow(['Movimiento Neto del Período', saldoE, saldoA, saldoE-saldoA, '', '']); styleRow(ws1,dr,fontBold,fillSolid(C.totBg),null,numFmt,borders); r++;
+  // Color negative diffs red
+  for(let rr=r-3;rr<=r-1;rr++){const c=ws1.getCell(rr,4);if(typeof c.value==='number'&&c.value<0)c.font={...fontBase,color:{argb:C.redFg}};}
+  r++; // blank
+
+  // Partidas conciliatorias
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='PARTIDAS CONCILIATORIAS'; ws1.getCell(r,1).font=fontSub; ws1.getCell(r,1).fill=fillSolid(C.secBg); ws1.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.secBg);} r++;
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='PARTIDAS EN EXTRACTO NO REGISTRADAS EN LIBROS'; ws1.getCell(r,1).font={...fontBold,color:{argb:C.subFg}}; ws1.getCell(r,1).fill=fillSolid(C.subBg); for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.subBg);} r++;
+  dr=ws1.addRow(['  (+) Ingresos en extracto sin registro contable', totEIn, soloE_in.length+' partidas','','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,null); r++;
+  dr=ws1.addRow(['  (−) Egresos en extracto sin registro contable', -totEOut, soloE_out.length+' partidas','','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,null); ws1.getCell(r,2).font={...fontBase,color:{argb:C.redFg}}; r++;
+  dr=ws1.addRow(['  Subtotal partidas solo en extracto', totEIn-totEOut,'','','','']); styleRow(ws1,dr,fontBold,fillSolid(C.totBg),null,numFmt,null); r++;
+  r++;
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='PARTIDAS EN LIBROS NO REFLEJADAS EN EXTRACTO'; ws1.getCell(r,1).font={...fontBold,color:{argb:C.subFg}}; ws1.getCell(r,1).fill=fillSolid(C.subBg); for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.subBg);} r++;
+  dr=ws1.addRow(['  (+) Débitos contables sin movimiento bancario', totADeb, soloA_deb.length+' partidas','','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,null); r++;
+  dr=ws1.addRow(['  (−) Créditos contables sin movimiento bancario', totACre, soloA_cre.length+' partidas','','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,null); r++;
+  dr=ws1.addRow(['  Subtotal partidas solo en libros', totADeb-totACre,'','','','']); styleRow(ws1,dr,fontBold,fillSolid(C.totBg),null,numFmt,null); r++;
+  r++;
+
+  // Gastos bancarios
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='ANÁLISIS DE GASTOS E INGRESOS BANCARIOS'; ws1.getCell(r,1).font=fontSub; ws1.getCell(r,1).fill=fillSolid(C.secBg); ws1.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.secBg);} r++;
+  dr=ws1.addRow(['Concepto','Movimientos','Valor','','','']); styleRow(ws1,dr,{...fontBold,color:{argb:C.tblHdrFg}},fillSolid(C.tblHdr),null,null,borders); r++;
+  const bkIds = ['gmf','comision','cuota','retefte','reteiva','reteica'];
+  let tG = 0;
+  for (const id of bkIds) { const c = catsE[id]; if(!c||!c.items.length) continue; tG+=c.totalCre; dr=ws1.addRow([c.def.name, c.items.length, c.totalCre,'','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,borders); r++; }
+  dr=ws1.addRow(['Total gastos bancarios','',tG,'','','']); styleRow(ws1,dr,fontBold,fillSolid(C.totBg),null,numFmt,borders); r++;
+  r++;
+  const cI = catsE.interes;
+  if (cI && cI.items.length) { dr=ws1.addRow(['Intereses recibidos', cI.items.length, cI.totalDeb,'','','']); styleRow(ws1,dr,fontBase,null,null,numFmt,borders); r++; }
+  r++;
+
+  // Estadísticas
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='ESTADÍSTICAS'; ws1.getCell(r,1).font=fontSub; ws1.getCell(r,1).fill=fillSolid(C.secBg); ws1.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=6;cc++){ws1.getCell(r,cc).fill=fillSolid(C.secBg);} r++;
+  [['Movimientos extracto',ext.length],['Movimientos auxiliar',aux.length],['Partidas conciliadas',matched.length],['Solo en extracto',soloE.length],['Solo en auxiliar',soloA.length],['% Conciliación',Math.round(matched.length/Math.max(ext.length,aux.length)*100)+'%']].forEach(d=>{
+    dr=ws1.addRow([d[0],d[1],'','','','']); styleRow(ws1,dr,fontBase,null,null,null,null); r++;
+  });
+  r++;
+  ws1.mergeCells(r,1,r,6); ws1.getCell(r,1).value='Procesado 100% en navegador. ExógenaDIAN no accedió a los datos.'; ws1.getCell(r,1).font={...fontBase,italic:true,size:8,color:{argb:'888888'}}; ws1.getCell(r,1).alignment={horizontal:'center'};
+
+  /* ══════════════════════════════════════════════════════
+     SHEET 2: Extracto sin Contabilizar
+     ══════════════════════════════════════════════════════ */
+  const ws2 = wb.addWorksheet('Extracto sin Contabilizar');
+  ws2.columns = [{width:6},{width:13},{width:44},{width:18},{width:28},{width:40},{width:24}];
+  r = 1;
+  ws2.mergeCells(r,1,r,7); ws2.getCell(r,1).value='PARTIDAS EN EXTRACTO BANCARIO NO REGISTRADAS EN LIBROS CONTABLES'; ws2.getCell(r,1).font=fontTitle; ws2.getCell(r,1).fill=fillSolid(C.hdrBg); ws2.getCell(r,1).alignment={horizontal:'center',vertical:'middle'}; ws2.getRow(r).height=28; for(let cc=2;cc<=7;cc++){ws2.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++;
+  ws2.mergeCells(r,1,r,7); ws2.getCell(r,1).value=soloE.length+' movimientos bancarios sin registro contable — Revisar con soportes'; ws2.getCell(r,1).font={...fontBase,italic:true,color:{argb:C.hdrFg}}; ws2.getCell(r,1).fill=fillSolid(C.hdrBg); ws2.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=7;cc++){ws2.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++;
+  r++;
+
+  // Ingresos
+  ws2.mergeCells(r,1,r,7); ws2.getCell(r,1).value='INGRESOS EN EXTRACTO SIN REGISTRO CONTABLE'; ws2.getCell(r,1).font={...fontBold,color:{argb:C.subFg}}; ws2.getCell(r,1).fill=fillSolid(C.subBg); for(let cc=2;cc<=7;cc++){ws2.getCell(r,cc).fill=fillSolid(C.subBg);} r++;
+  dr=ws2.addRow(['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida','Notas']); styleRow(ws2,dr,{...fontBold,color:{argb:C.tblHdrFg}},fillSolid(C.tblHdr),null,null,borders); r++;
+  soloE_in.forEach((e,i) => {
+    dr=ws2.addRow([i+1, fD(e.fecha), e.desc, e.deb, tipoProbable(e.desc,true), accionSugerida(e.desc,true), '']);
+    const bg = i%2===0 ? null : fillSolid(C.altRow);
+    styleRow(ws2,dr,fontBase,bg,null,null,borders);
+    ws2.getCell(r,4).numFmt=numFmt;
+    r++;
+  });
+  dr=ws2.addRow(['','','SUBTOTAL INGRESOS ('+soloE_in.length+' partidas)', totEIn,'','','']); styleRow(ws2,dr,fontBold,fillSolid(C.totBg),null,numFmt,borders); r++;
+  r++;
+
+  // Egresos
+  ws2.mergeCells(r,1,r,7); ws2.getCell(r,1).value='EGRESOS EN EXTRACTO SIN REGISTRO CONTABLE'; ws2.getCell(r,1).font={...fontBold,color:{argb:C.subFg}}; ws2.getCell(r,1).fill=fillSolid(C.subBg); for(let cc=2;cc<=7;cc++){ws2.getCell(r,cc).fill=fillSolid(C.subBg);} r++;
+  dr=ws2.addRow(['#','Fecha','Descripción','Valor','Tipo Probable','Acción Sugerida','Notas']); styleRow(ws2,dr,{...fontBold,color:{argb:C.tblHdrFg}},fillSolid(C.tblHdr),null,null,borders); r++;
+  soloE_out.forEach((e,i) => {
+    dr=ws2.addRow([i+1, fD(e.fecha), e.desc, -e.cre, tipoProbable(e.desc,false), accionSugerida(e.desc,false), '']);
+    const bg = i%2===0 ? null : fillSolid(C.altRow);
+    styleRow(ws2,dr,fontBase,bg,null,null,borders);
+    ws2.getCell(r,4).numFmt=numFmt; ws2.getCell(r,4).font={...fontBase,color:{argb:C.redFg}};
+    r++;
+  });
+  dr=ws2.addRow(['','','SUBTOTAL EGRESOS ('+soloE_out.length+' partidas)', -totEOut,'','','']); styleRow(ws2,dr,fontBold,fillSolid(C.totBg),null,numFmt,borders); ws2.getCell(r,4).font={...fontBold,color:{argb:C.redFg}}; r++;
+  r++;
+  dr=ws2.addRow(['','','TOTAL NETO SIN CONTABILIZAR', totEIn-totEOut,'','','']); styleRow(ws2,dr,{...fontBold,size:11},fillSolid(C.subBg),null,numFmt,{top:{style:'double',color:{argb:C.hdrBg}},bottom:{style:'double',color:{argb:C.hdrBg}},left:thinBorder,right:thinBorder});
+
+  /* ══════════════════════════════════════════════════════
+     SHEET 3: Libros sin Extracto
+     ══════════════════════════════════════════════════════ */
+  const ws3 = wb.addWorksheet('Libros sin Extracto');
+  ws3.columns = [{width:6},{width:13},{width:15},{width:40},{width:32},{width:18},{width:18},{width:44},{width:24}];
+  r = 1;
+  ws3.mergeCells(r,1,r,9); ws3.getCell(r,1).value='PARTIDAS EN LIBROS CONTABLES NO REFLEJADAS EN EXTRACTO BANCARIO'; ws3.getCell(r,1).font=fontTitle; ws3.getCell(r,1).fill=fillSolid(C.hdrBg); ws3.getCell(r,1).alignment={horizontal:'center',vertical:'middle'}; ws3.getRow(r).height=28; for(let cc=2;cc<=9;cc++){ws3.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++;
+  ws3.mergeCells(r,1,r,9); ws3.getCell(r,1).value=soloA.length+' registros contables sin movimiento bancario correspondiente'; ws3.getCell(r,1).font={...fontBase,italic:true,color:{argb:C.hdrFg}}; ws3.getCell(r,1).fill=fillSolid(C.hdrBg); ws3.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=9;cc++){ws3.getCell(r,cc).fill=fillSolid(C.hdrBg);} r++;
+  r++;
+  dr=ws3.addRow(['#','Fecha','Comprobante','Tercero','Descripción','Débito','Crédito','Posible Causa','Notas']); styleRow(ws3,dr,{...fontBold,color:{argb:C.tblHdrFg}},fillSolid(C.tblHdr),null,null,borders); r++;
+  soloA.forEach((a,i) => {
+    const causa = a.deb>0 ? 'Verificar si tiene movimiento bancario asociado' : 'Verificar si pago fue procesado por el banco';
+    dr=ws3.addRow([i+1, fD(a.fecha), a.ref, a.tercero, a.desc, a.deb||'', a.cre||'', causa, '']);
+    const bg = i%2===0 ? null : fillSolid(C.altRow);
+    styleRow(ws3,dr,fontBase,bg,null,null,borders);
+    if(a.deb)ws3.getCell(r,6).numFmt=numFmt;
+    if(a.cre)ws3.getCell(r,7).numFmt=numFmt;
+    r++;
+  });
+  dr=ws3.addRow(['','','','TOTAL','', totADeb, totACre,'','']); styleRow(ws3,dr,fontBold,fillSolid(C.totBg),null,numFmt,{top:{style:'medium',color:{argb:C.hdrBg}},bottom:{style:'double',color:{argb:C.hdrBg}},left:thinBorder,right:thinBorder});
+
+  /* ══════════════════════════════════════════════════════
+     SHEET 4: Partidas Conciliadas
+     ══════════════════════════════════════════════════════ */
+  const ws4 = wb.addWorksheet('Partidas Conciliadas');
+  ws4.columns = [{width:13},{width:40},{width:18},{width:13},{width:15},{width:38},{width:18},{width:18},{width:10},{width:24}];
+  r = 1;
+  ws4.mergeCells(r,1,r,10); ws4.getCell(r,1).value='PARTIDAS CONCILIADAS (MATCH EXTRACTO ↔ LIBROS)'; ws4.getCell(r,1).font={...fontTitle,color:{argb:'FFFFFF'}}; ws4.getCell(r,1).fill=fillSolid(C.greenHdr); ws4.getCell(r,1).alignment={horizontal:'center',vertical:'middle'}; ws4.getRow(r).height=28; for(let cc=2;cc<=10;cc++){ws4.getCell(r,cc).fill=fillSolid(C.greenHdr);} r++;
+  ws4.mergeCells(r,1,r,10); ws4.getCell(r,1).value=matched.length+' movimientos conciliados exitosamente'; ws4.getCell(r,1).font={...fontBase,italic:true,color:{argb:'FFFFFF'}}; ws4.getCell(r,1).fill=fillSolid(C.greenHdr); ws4.getCell(r,1).alignment={horizontal:'center'}; for(let cc=2;cc<=10;cc++){ws4.getCell(r,cc).fill=fillSolid(C.greenHdr);} r++;
+  r++;
+  dr=ws4.addRow(['Fecha Ext.','Descripción Extracto','Valor Extracto','Fecha Aux.','Comprobante','Tercero','Débito','Crédito','Estado','Notas']); styleRow(ws4,dr,{...fontBold,color:{argb:'FFFFFF'}},fillSolid(C.greenHdr),null,null,borders); r++;
+  matched.forEach((m,i) => {
+    const e = ext[m.ei], a = aux[m.ai];
+    const vE = e.deb>0 ? e.deb : -e.cre;
+    dr=ws4.addRow([fD(e.fecha), e.desc, vE, fD(a.fecha), a.ref, a.tercero, a.deb||'', a.cre||'', '✓ OK', '']);
+    const bg = i%2===0 ? null : fillSolid(C.greenBg);
+    styleRow(ws4,dr,fontBase,bg,null,null,borders);
+    ws4.getCell(r,3).numFmt=numFmt;
+    if(a.deb)ws4.getCell(r,7).numFmt=numFmt;
+    if(a.cre)ws4.getCell(r,8).numFmt=numFmt;
+    if(vE<0){ws4.getCell(r,3).font={...fontBase,color:{argb:C.redFg}};}
+    ws4.getCell(r,9).font={...fontBase,bold:true,color:{argb:C.greenHdr}};
+    r++;
+  });
+
+  // ── Download ──
+  const buf = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'Conciliacion_'+new Date().toISOString().slice(0,10)+'.xlsx';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+/* ── UTILITIES ── */
+function show(id){document.getElementById(id).classList.remove('hidden')}
+function hide(id){document.getElementById(id).classList.add('hidden')}
+function setSI(n){for(let i=1;i<=3;i++){const e=document.getElementById('si'+i);e.classList.remove('active','done');if(i<n)e.classList.add('done');if(i===n)e.classList.add('active')}}
+function swTab(id,btn){document.querySelectorAll('.results-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.results-panel').forEach(p=>p.classList.remove('active'));btn.classList.add('active');document.getElementById('panel-'+id).classList.add('active')}
+function fmtN(n){if(typeof n==='string')return n;if(typeof n!=='number'||isNaN(n))return'—';return Math.round(Math.abs(n)).toLocaleString('es-CO')}
+function fD(d){if(!d)return'—';return d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'})}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function sc(cls,val,lab){return`<div class="summary-card ${cls}"><div class="sc-val">${val}</div><div class="sc-label">${lab}</div></div>`}
+
+function descargarEjemploConciliacion(){
+  const extracto=[
+    ['Fecha','Descripción','Débito','Crédito','Saldo'],
+    ['2026-01-05','Consignación cliente ABC',5000000,0,45000000],
+    ['2026-01-08','Pago nómina enero',0,12000000,33000000],
+    ['2026-01-10','Transferencia proveedor XYZ',0,3500000,29500000],
+    ['2026-01-15','Consignación cliente DEF',8200000,0,37700000],
+    ['2026-01-18','Pago arriendo oficina',0,2800000,34900000],
+    ['2026-01-22','Intereses bancarios',0,45000,34855000],
+    ['2026-01-25','Consignación cliente GHI',3100000,0,37955000],
+    ['2026-01-28','Pago servicios públicos',0,650000,37305000],
+    ['2026-01-30','GMF (4x1000)',0,32000,37273000],
+  ];
+  const auxiliar=[
+    ['Fecha','Documento','Descripción','Débito','Crédito'],
+    ['2026-01-05','RC-001','Recibo caja cliente ABC',5000000,0],
+    ['2026-01-08','CE-015','Comprobante egreso nómina',0,12000000],
+    ['2026-01-10','CE-016','Pago proveedor XYZ',0,3500000],
+    ['2026-01-15','RC-002','Recibo caja cliente DEF',8200000,0],
+    ['2026-01-18','CE-017','Pago arriendo oficina',0,2800000],
+    ['2026-01-25','RC-003','Recibo caja cliente GHI',3100000,0],
+    ['2026-01-28','CE-018','Pago servicios públicos',0,650000],
+  ];
+  const wb=XLSX.utils.book_new();
+  const ws1=XLSX.utils.aoa_to_sheet(extracto);
+  ws1['!cols']=[{wch:12},{wch:30},{wch:14},{wch:14},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,ws1,'Extracto Bancario');
+  const ws2=XLSX.utils.aoa_to_sheet(auxiliar);
+  ws2['!cols']=[{wch:12},{wch:10},{wch:30},{wch:14},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Auxiliar Contable');
+  XLSX.writeFile(wb,'Ejemplo_Conciliacion_ExogenaDIAN.xlsx');
+}
+</script>
 </body>
 </html>

@@ -12,6 +12,11 @@
 <meta property="og:url" content="https://exogenadian.com/exogena.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="ExógenaDIAN">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Generador de Información Exógena DIAN 2025","url":"https://exogenadian.com/exogena.html","description":"Genera automáticamente los 10 formatos de información exógena DIAN (F1001 a F2276) desde tu balance de prueba. Excel + XML listos para el prevalidador MUISCA.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <style>
@@ -116,6 +121,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <h1><span>EXOGENA</span> Informacion Exogena DIAN</h1>
     <p>Generador automatico de los 10 formatos · AG 2025 · Res. 000227</p>
   </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
+
+  <!-- PRO bar -->
   <div style="display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;margin-bottom:16px">
     <div style="display:flex;align-items:center;gap:12px">
       <span id="proBadge"></span>
@@ -127,6 +134,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <a href="https://exogenadian.com/#planes" target="_blank" style="font-size:.78rem;color:var(--pri2);text-decoration:none">Suscribirse →</a>
     </div>
   </div>
+
   <div class="steps">
     <div class="step-pill active" id="sp1"><span class="num">1</span> Inicio</div>
     <div class="step-pill" id="sp2"><span class="num">2</span> Columnas</div>
@@ -134,6 +142,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div class="step-pill" id="sp4"><span class="num">4</span> Formatos</div>
     <div class="step-pill" id="sp5"><span class="num">5</span> Descargar</div>
   </div>
+
+  <!-- ═══ STEP 1: INICIO ═══ -->
   <div id="step1">
     <div class="card">
       <div class="card-title"><span>📊</span> Balance de Prueba por Terceros</div>
@@ -153,6 +163,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <button onclick="descargarEjemplo()" style="padding:8px 16px;background:#f0f2f5;border:1px solid #e2e8f0;border-radius:8px;font-size:.78rem;font-weight:600;color:#1B3A5C;cursor:pointer;white-space:nowrap;font-family:inherit">📥 Descargar ejemplo</button>
       </div>
     </div>
+
     <div class="card">
       <div class="card-title"><span>🏢</span> Datos del Declarante</div>
       <div class="config-grid" style="margin-bottom:16px">
@@ -179,6 +190,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
     </div>
   </div>
+
+  <!-- ═══ STEP 2: COLUMNAS ═══ -->
   <div id="step2" class="hidden">
     <div class="card">
       <div class="card-title"><span>🔧</span> Verificar Columnas del Archivo</div>
@@ -205,6 +218,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div class="actions"><button class="btn btn-primary" onclick="irAClasificacion()">Continuar a Clasificacion →</button></div>
     </div>
   </div>
+
+  <!-- ═══ STEP 3: CLASIFICACION ═══ -->
   <div id="step3" class="hidden">
     <div class="card">
       <div class="card-title"><span>📋</span> Clasificacion por Formato</div>
@@ -242,6 +257,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <button class="btn btn-primary" onclick="irAFormatos()">Generar Formatos →</button>
     </div>
   </div>
+
+  <!-- ═══ STEP 4: FORMATOS ═══ -->
   <div id="step4" class="hidden">
     <div class="card">
       <div class="card-title"><span>📑</span> Formatos Generados</div>
@@ -260,6 +277,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <button class="btn btn-primary" onclick="irADescargar()">Descargar Excel →</button>
     </div>
   </div>
+
+  <!-- ═══ STEP 5: DESCARGAR ═══ -->
   <div id="step5" class="hidden">
     <div class="card">
       <div class="card-title"><span>📥</span> Descargar Formatos</div>
@@ -282,11 +301,1462 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <button class="btn btn-outline" onclick="goStep(4)">← Volver a Formatos</button>
     </div>
   </div>
+
 </div>
+
 <div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
   <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExogenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>
   🔒 Informacion tratada con total confidencialidad · 100% procesado en tu navegador
 </div>
-<script>const _0x5a454e=_0x10df;(function(_0x522627,_0x15ab4b){const _0x560ef9=_0x10df,_0x63aeef=_0x522627();while(!![]){try{const _0x127baa=parseInt(_0x560ef9(0x400))/0x1*(-parseInt(_0x560ef9(0x399))/0x2)+-parseInt(_0x560ef9(0x54c))/0x3*(-parseInt(_0x560ef9(0x3be))/0x4)+-parseInt(_0x560ef9(0x4fe))/0x5*(-parseInt(_0x560ef9(0x261))/0x6)+parseInt(_0x560ef9(0x301))/0x7+-parseInt(_0x560ef9(0x350))/0x8*(-parseInt(_0x560ef9(0x430))/0x9)+-parseInt(_0x560ef9(0x33b))/0xa*(-parseInt(_0x560ef9(0x546))/0xb)+-parseInt(_0x560ef9(0x3e7))/0xc*(parseInt(_0x560ef9(0x481))/0xd);if(_0x127baa===_0x15ab4b)break;else _0x63aeef['push'](_0x63aeef['shift']());}catch(_0x4b0574){_0x63aeef['push'](_0x63aeef['shift']());}}}(_0x25ed,0x81232));const UVT=0xc287,C3UVT=0x24795,C12UVT=0x91e54,NM=_0x5a454e(0x247),TDM='43',ANO_GRAVABLE=_0x5a454e(0x41e),DPTOS={'05':'Antioquia','08':'Atlantico','11':'Bogota\x20D.C'+'.','13':_0x5a454e(0x576),'15':'Boyaca','17':_0x5a454e(0x3a7),'18':'Caqueta','19':_0x5a454e(0x440),'20':'Cesar','23':_0x5a454e(0x4dd),'25':_0x5a454e(0x450)+'ca','27':'Choco','41':'Huila','44':'La\x20Guajira','47':'Magdalena','50':'Meta','52':_0x5a454e(0x1e8),'54':'Norte\x20de\x20S'+'antander','63':_0x5a454e(0x3ac),'66':'Risaralda','68':'Santander','70':'Sucre','73':_0x5a454e(0x245),'76':_0x5a454e(0x287)+_0x5a454e(0x440),'81':'Arauca','85':'Casanare','86':'Putumayo','88':_0x5a454e(0x325),'91':'Amazonas','94':'Guainia','95':'Guaviare','97':_0x5a454e(0x4cb),'99':_0x5a454e(0x340)},MPIOS_PRINCIPALES={'11':{'001':'Bogota\x20D.C'+'.'},'05':{'001':'Medellin','045':'Apartado','088':'Bello','148':'Carmen\x20de\x20'+'Viboral','212':_0x5a454e(0x369),'266':_0x5a454e(0x1e6),'360':'Itagui','615':_0x5a454e(0x48f)},'08':{'001':'Barranquil'+'la','758':'Soledad','573':'Puerto\x20Col'+_0x5a454e(0x3db)},'13':{'001':_0x5a454e(0x53b)},'15':{'001':'Tunja','238':_0x5a454e(0x27c),'759':_0x5a454e(0x4fc)},'17':{'001':'Manizales'},'19':{'001':'Popayan'},'20':{'001':_0x5a454e(0x1fc)},'23':{'001':_0x5a454e(0x463)},'25':{'126':'Cajica','175':_0x5a454e(0x3b2),'269':_0x5a454e(0x490)+'ta','286':_0x5a454e(0x50d),'473':_0x5a454e(0x454),'754':'Soacha','799':'Zipaquira','307':_0x5a454e(0x5a3),'290':_0x5a454e(0x21a),'377':_0x5a454e(0x501),'430':'Madrid'},'41':{'001':_0x5a454e(0x49a)},'44':{'001':'Riohacha','430':_0x5a454e(0x224)},'47':{'001':_0x5a454e(0x32e)+'a'},'50':{'001':'Villavicen'+_0x5a454e(0x3ee)},'52':{'001':_0x5a454e(0x3bf)},'54':{'001':'Cucuta'},'63':{'001':_0x5a454e(0x3ce)},'66':{'001':_0x5a454e(0x42d),'170':_0x5a454e(0x48d)+'as'},'68':{'001':_0x5a454e(0x476)+'a','081':_0x5a454e(0x308)+'rmeja','276':_0x5a454e(0x382)+'nca','307':'Giron','547':_0x5a454e(0x309)+'a'},'70':{'001':'Sincelejo'},'73':{'001':'Ibague'},'76':{'001':'Cali','109':'Buenaventu'+'ra','111':_0x5a454e(0x23c)+_0x5a454e(0x45f),'147':'Cartago','520':'Palmira','834':_0x5a454e(0x26b)},'81':{'001':_0x5a454e(0x2c8)},'85':{'001':'Yopal'},'86':{'001':_0x5a454e(0x3ca)},'88':{'001':_0x5a454e(0x325)},'91':{'001':'Leticia'},'94':{'001':_0x5a454e(0x502)},'95':{'001':_0x5a454e(0x2ef)+'el\x20Guaviar'+'e'},'97':{'001':_0x5a454e(0x528)},'99':{'001':'Puerto\x20Car'+'reno'},'18':{'001':'Florencia'},'27':{'001':_0x5a454e(0x331)}},BANCOS_COLOMBIANOS={'bancolombia':['890903938',_0x5a454e(0x41d)+_0x5a454e(0x5ce)],'davivienda':[_0x5a454e(0x298),_0x5a454e(0x49b)+_0x5a454e(0x2d4)+'.'],'bogota':[_0x5a454e(0x22a),'BANCO\x20DE\x20B'+'OGOTA\x20S.A.'],'occidente':[_0x5a454e(0x1db),_0x5a454e(0x46d)+'CCIDENTE\x20S'+_0x5a454e(0x2e5)],'popular':['860007738','BANCO\x20POPU'+'LAR\x20S.A.'],'bbva':['860003020',_0x5a454e(0x37d)+'BIA\x20S.A.'],'scotiabank':[_0x5a454e(0x507),'SCOTIABANK'+_0x5a454e(0x276)+'\x20S.A.'],'av\x20villas':['860035827',_0x5a454e(0x33e)+'ILLAS\x20S.A.'],'caja\x20social':['860007335',_0x5a454e(0x418)+_0x5a454e(0x4af)+'A.'],'agrario':[_0x5a454e(0x58c),_0x5a454e(0x23d)+_0x5a454e(0x4fa)+'OMBIA\x20S.A.'],'bancamia':[_0x5a454e(0x58f),'BANCAMIA\x20S'+'.A.'],'nequi':['901237657','NEQUI'],'nu\x20colombia':[_0x5a454e(0x2f9),_0x5a454e(0x248)+'A\x20S.A.'],'daviplata':[_0x5a454e(0x298),_0x5a454e(0x2bf)],'gnb\x20sudameris':['860050750','BANCO\x20GNB\x20'+_0x5a454e(0x2a5)+'S.A.'],'pichincha':['890200756',_0x5a454e(0x27a)+'INCHA\x20S.A.'],'falabella':[_0x5a454e(0x452),_0x5a454e(0x4d3)+'BELLA\x20S.A.'],'serfinanza':['860043186','BANCO\x20SERF'+'INANZA\x20S.A'+'.'],'itau':['890903937','ITAU\x20CORPB'+_0x5a454e(0x3e6)+'BIA\x20S.A.'],'citibank':[_0x5a454e(0x5b5),'CITIBANK\x20C'+'OLOMBIA\x20S.'+'A.'],'jp\x20morgan':[_0x5a454e(0x3c3),'JP\x20MORGAN\x20'+_0x5a454e(0x1fd)+'N\x20FINANCIE'+'RA'],'lulo\x20bank':['901352782','LULO\x20BANK\x20'+_0x5a454e(0x1e0)]},DIRECTORIO={'890903938':{'rs':_0x5a454e(0x41d)+'A\x20S.A.','cat':'Banco'},'860034313':{'rs':'BANCO\x20DAVI'+'VIENDA\x20S.A'+'.','cat':_0x5a454e(0x56b)},'860002964':{'rs':'BANCO\x20DE\x20B'+'OGOTA\x20S.A.','cat':'Banco'},'890300279':{'rs':'BANCO\x20DE\x20O'+'CCIDENTE\x20S'+'.A.','cat':_0x5a454e(0x56b)},'860007738':{'rs':_0x5a454e(0x2ec)+_0x5a454e(0x201),'cat':_0x5a454e(0x56b)},'860003020':{'rs':'BBVA\x20COLOM'+_0x5a454e(0x39f),'cat':_0x5a454e(0x56b)},'890903937':{'rs':'SCOTIABANK'+'\x20COLPATRIA'+'\x20S.A.','cat':'Banco'},'860035827':{'rs':'BANCO\x20AV\x20V'+_0x5a454e(0x401),'cat':_0x5a454e(0x56b)},'860007335':{'rs':'BANCO\x20CAJA'+_0x5a454e(0x4af)+'A.','cat':'Banco'},'800037800':{'rs':'BANCO\x20AGRA'+'RIO\x20DE\x20COL'+_0x5a454e(0x2f3),'cat':_0x5a454e(0x56b)},'900215071':{'rs':_0x5a454e(0x494)+_0x5a454e(0x2e5),'cat':'Banco'},'860050750':{'rs':_0x5a454e(0x48b)+'RIS\x20S.A.','cat':_0x5a454e(0x56b)},'890200756':{'rs':_0x5a454e(0x27a)+'INCHA\x20S.A.','cat':_0x5a454e(0x56b)},'900047981':{'rs':_0x5a454e(0x4d3)+'BELLA\x20S.A.','cat':_0x5a454e(0x56b)},'860043186':{'rs':_0x5a454e(0x257)+'INANZA\x20S.A'+'.','cat':'Banco'},'860051135':{'rs':_0x5a454e(0x31d)+'OLOMBIA\x20S.'+'A.','cat':_0x5a454e(0x56b)},'900378212':{'rs':'BANCO\x20W\x20S.'+'A.','cat':_0x5a454e(0x56b)},'860051894':{'rs':'BANCO\x20FINA'+'NDINA\x20S.A.','cat':'Banco'},'890203088':{'rs':'BANCO\x20COOP'+'CENTRAL','cat':'Banco'},'900156264':{'rs':'NUEVA\x20EPS\x20'+_0x5a454e(0x1e0),'cat':'EPS'},'800088702':{'rs':_0x5a454e(0x28f),'cat':_0x5a454e(0x35d)},'800251440':{'rs':_0x5a454e(0x5b1)+_0x5a454e(0x4ea),'cat':'EPS'},'830003564':{'rs':'FAMISANAR\x20'+'LTDA.\x20EPS','cat':'EPS'},'900226715':{'rs':_0x5a454e(0x289)+'EPS','cat':_0x5a454e(0x35d)},'800130907':{'rs':'SALUD\x20TOTA'+'L\x20S.A.\x20EPS','cat':_0x5a454e(0x35d)},'900226846':{'rs':'COOSALUD\x20E'+_0x5a454e(0x3b5),'cat':_0x5a454e(0x35d)},'806008394':{'rs':_0x5a454e(0x4c1)+_0x5a454e(0x231),'cat':'EPS'},'830113831':{'rs':_0x5a454e(0x595)+'\x20EPS\x20S.A.','cat':'EPS'},'890399010':{'rs':_0x5a454e(0x2ce)+'\x20VALLE\x20EPS','cat':'EPS'},'900298372':{'rs':_0x5a454e(0x2a4)+'LUD\x20EPS\x20S.'+_0x5a454e(0x2e9),'cat':'EPS'},'800144331':{'rs':'PORVENIR\x20S'+_0x5a454e(0x2e5),'cat':_0x5a454e(0x57f)},'800138188':{'rs':'PROTECCION'+'\x20S.A.','cat':'AFP'},'800144467':{'rs':_0x5a454e(0x4c9)+'S.A.','cat':_0x5a454e(0x57f)},'800224808':{'rs':'OLD\x20MUTUAL'+_0x5a454e(0x3e0),'cat':'AFP'},'900336004':{'rs':'COLPENSION'+'ES','cat':'AFP'},'890903790':{'rs':'ARL\x20SURA','cat':'ARL'},'860011153':{'rs':_0x5a454e(0x5b8)+'OMPANIA\x20DE'+'\x20SEGUROS\x20S'+_0x5a454e(0x2e5),'cat':_0x5a454e(0x47a)},'860002503':{'rs':_0x5a454e(0x1d5)+_0x5a454e(0x583)+_0x5a454e(0x5a6),'cat':_0x5a454e(0x47a)},'890903037':{'rs':_0x5a454e(0x41a)+'LIVAR\x20S.A.','cat':_0x5a454e(0x39a)+'a'},'860524654':{'rs':'ALFA\x20S.A.\x20'+_0x5a454e(0x47a),'cat':'ARL'},'860066942':{'rs':'COMPENSAR','cat':_0x5a454e(0x57a)},'860007336':{'rs':_0x5a454e(0x530)+'O','cat':'Caja'},'860013570':{'rs':_0x5a454e(0x487),'cat':'Caja'},'890900842':{'rs':_0x5a454e(0x2d3),'cat':'Caja'},'890300466':{'rs':'COMFANDI','cat':'Caja'},'890900650':{'rs':'COMFENALCO'+_0x5a454e(0x285),'cat':_0x5a454e(0x57a)},'890102044':{'rs':'COMBARRANQ'+_0x5a454e(0x4b2),'cat':'Caja'},'860025639':{'rs':_0x5a454e(0x2ee)+_0x5a454e(0x361),'cat':'Asegurador'+'a'},'860024414':{'rs':'SEGUROS\x20DE'+_0x5a454e(0x5ad)+'.A.','cat':_0x5a454e(0x39a)+'a'},'860002183':{'rs':_0x5a454e(0x335)+'RIA\x20SEGURO'+'S\x20S.A.','cat':'Asegurador'+'a'},'860009578':{'rs':_0x5a454e(0x256)+'\x20SEGUROS\x20S'+'.A.','cat':_0x5a454e(0x39a)+'a'},'860037013':{'rs':'PREVISORA\x20'+'S.A.\x20COMPA'+'NIA\x20DE\x20SEG'+'UROS','cat':_0x5a454e(0x39a)+'a'},'800149923':{'rs':_0x5a454e(0x22b)+'S\x20S.A.','cat':'Asegurador'+'a'},'800150280':{'rs':'FIDUCIARIA'+_0x5a454e(0x395)+_0x5a454e(0x291),'cat':'Fiduciaria'},'800142383':{'rs':'FIDUCIARIA'+'\x20BOGOTA\x20S.'+'A.','cat':'Fiduciaria'},'800171372':{'rs':_0x5a454e(0x524)+_0x5a454e(0x242)+'A\x20S.A.','cat':_0x5a454e(0x549)},'830053105':{'rs':'FIDUCIARIA'+_0x5a454e(0x276)+_0x5a454e(0x28a),'cat':_0x5a454e(0x549)},'800182281':{'rs':_0x5a454e(0x524)+_0x5a454e(0x1dd)+_0x5a454e(0x411)+'.','cat':_0x5a454e(0x549)},'800197268':{'rs':'DIAN','cat':'Estado'},'900373788':{'rs':'UGPP','cat':_0x5a454e(0x22e)},'899999090':{'rs':_0x5a454e(0x254)+'\x20DE\x20HACIEN'+_0x5a454e(0x578)+'TO\x20PUBLICO','cat':_0x5a454e(0x22e)},'899999067':{'rs':'CONTRALORI'+'A\x20GENERAL\x20'+'DE\x20LA\x20REPU'+_0x5a454e(0x429),'cat':_0x5a454e(0x22e)},'899999034':{'rs':'ICBF','cat':_0x5a454e(0x22e)},'899999239':{'rs':'SENA','cat':'Estado'},'899999001':{'rs':'MINISTERIO'+'\x20DE\x20TRABAJ'+'O','cat':_0x5a454e(0x22e)},'899999053':{'rs':_0x5a454e(0x3af)+'DENCIA\x20DE\x20'+_0x5a454e(0x37f),'cat':_0x5a454e(0x22e)},'899999007':{'rs':_0x5a454e(0x3af)+'DENCIA\x20DE\x20'+_0x5a454e(0x216)+_0x5a454e(0x46e),'cat':_0x5a454e(0x22e)},'899999063':{'rs':'SECRETARIA'+'\x20DISTRITAL'+_0x5a454e(0x575)+_0x5a454e(0x51c),'cat':'Estado'},'860007386':{'rs':_0x5a454e(0x3ea)+'COMERCIO\x20D'+'E\x20BOGOTA','cat':_0x5a454e(0x38b)},'890904713':{'rs':'CAMARA\x20DE\x20'+_0x5a454e(0x3c9)+_0x5a454e(0x1f4),'cat':'Camara'},'890399011':{'rs':'CAMARA\x20DE\x20'+_0x5a454e(0x3c9)+'E\x20CALI','cat':_0x5a454e(0x38b)},'890102018':{'rs':_0x5a454e(0x3ea)+'COMERCIO\x20D'+_0x5a454e(0x434)+'ILLA','cat':_0x5a454e(0x38b)},'830095213':{'rs':'ENEL\x20COLOM'+_0x5a454e(0x4ef)+_0x5a454e(0x4cf)+'ENSA)','cat':'Servicios'},'890904996':{'rs':_0x5a454e(0x445)+_0x5a454e(0x47e)+_0x5a454e(0x550)+_0x5a454e(0x4dc),'cat':_0x5a454e(0x4fd)},'890399003':{'rs':_0x5a454e(0x565)+_0x5a454e(0x522)+'P.','cat':'Servicios'},'900582006':{'rs':_0x5a454e(0x55e)+_0x5a454e(0x39b),'cat':'Servicios'},'900464562':{'rs':'VANTI\x20S.A.'+_0x5a454e(0x485),'cat':_0x5a454e(0x4fd)},'899999094':{'rs':_0x5a454e(0x557)+'DE\x20BOGOTA\x20'+'E.S.P.','cat':'Servicios'},'830037248':{'rs':_0x5a454e(0x330)+_0x5a454e(0x3d2)+_0x5a454e(0x273)+'.A.\x20E.S.P.','cat':'Servicios'},'800130625':{'rs':'ISAGEN\x20S.A'+'.\x20E.S.P.','cat':_0x5a454e(0x4fd)},'800199498':{'rs':_0x5a454e(0x4e4)+'.\x20E.S.P.','cat':_0x5a454e(0x4fd)},'890903180':{'rs':_0x5a454e(0x43e)+'CCIDENTE\x20S'+'.A.\x20E.S.P.','cat':_0x5a454e(0x4fd)},'899999115':{'rs':_0x5a454e(0x2a8)+_0x5a454e(0x329),'cat':'Telecom'},'830122566':{'rs':'COLOMBIA\x20T'+'ELECOMUNIC'+'ACIONES\x20S.'+_0x5a454e(0x3cc)+_0x5a454e(0x38c),'cat':'Telecom'},'900092385':{'rs':_0x5a454e(0x24c)+_0x5a454e(0x513)+'E.S.P.\x20(TI'+'GO)','cat':'Telecom'},'800092200':{'rs':_0x5a454e(0x451)+_0x5a454e(0x2f0),'cat':'Telecom'},'805003209':{'rs':'DIRECTV\x20CO'+_0x5a454e(0x4f9)+'A.','cat':_0x5a454e(0x547)},'890100813':{'rs':'AVIANCA\x20S.'+'A.','cat':_0x5a454e(0x32b)},'900918936':{'rs':'LATAM\x20AIRL'+'INES\x20COLOM'+'BIA\x20S.A.S.','cat':'Transporte'},'860512330':{'rs':_0x5a454e(0x459)+_0x5a454e(0x2cd),'cat':'Logistica'},'890301884':{'rs':_0x5a454e(0x1d8)+'RA\x20MERCANT'+'IL\x20S.A.','cat':'Logistica'},'890300225':{'rs':'TCC\x20S.A.S.','cat':'Logistica'},'890900608':{'rs':_0x5a454e(0x1d4)+'EXITO\x20S.A.','cat':_0x5a454e(0x456)},'900017447':{'rs':_0x5a454e(0x5ac)+_0x5a454e(0x4be)+_0x5a454e(0x5ce),'cat':'Comercio'},'800242106':{'rs':_0x5a454e(0x33f)+'LOMBIA\x20S.A'+'.\x20(HOMECEN'+'TER)','cat':'Comercio'},'890900943':{'rs':'COLOMBIANA'+'\x20DE\x20COMERC'+'IO\x20S.A.\x20(A'+'LKOSTO)','cat':'Comercio'},'900059238':{'rs':'MAKRO\x20SUPE'+'RMAYORISTA'+_0x5a454e(0x376),'cat':'Comercio'},'890900266':{'rs':_0x5a454e(0x223)+'ESA\x20S.A.','cat':'Industria'},'890101815':{'rs':'ECOPETROL\x20'+_0x5a454e(0x1e0),'cat':'Energia'},'890900148':{'rs':'GRUPO\x20ARGO'+'S\x20S.A.','cat':_0x5a454e(0x39e)},'890101998':{'rs':_0x5a454e(0x29f)+'ION\x20ELECTR'+_0x5a454e(0x2de)+'SA','cat':_0x5a454e(0x2e6)},'860075557':{'rs':_0x5a454e(0x3f1)+_0x5a454e(0x43a),'cat':_0x5a454e(0x39e)},'890300406':{'rs':'TECNOQUIMI'+_0x5a454e(0x3d3),'cat':_0x5a454e(0x39e)},'860001022':{'rs':'BAVARIA\x20S.'+'A.','cat':_0x5a454e(0x39e)},'860037648':{'rs':_0x5a454e(0x470)+_0x5a454e(0x4aa)+_0x5a454e(0x1e0),'cat':'Combustibl'+'es'},'890900159':{'rs':_0x5a454e(0x4f1)+'ACIONAL\x20DE'+'\x20CHOCOLATE'+_0x5a454e(0x4ea),'cat':'Industria'},'860000656':{'rs':'ALPINA\x20PRO'+'DUCTOS\x20ALI'+_0x5a454e(0x54a)+'S.A.','cat':'Industria'},'860003216':{'rs':'COLGATE\x20PA'+_0x5a454e(0x55a)+'MPANIA\x20S.A'+'.','cat':'Industria'},'860007759':{'rs':'BAYER\x20S.A.','cat':'Industria'},'860002554':{'rs':'NESTLE\x20DE\x20'+'COLOMBIA\x20S'+_0x5a454e(0x2e5),'cat':_0x5a454e(0x39e)},'860035992':{'rs':'JOHNSON\x20&\x20'+'JOHNSON\x20DE'+_0x5a454e(0x1d9)+'S.A.','cat':'Industria'},'900459739':{'rs':_0x5a454e(0x3d4)+'S.','cat':'Tecnologia'},'900418656':{'rs':_0x5a454e(0x3f3)+'OMBIA\x20S.A.'+'S.','cat':_0x5a454e(0x348)},'830073623':{'rs':_0x5a454e(0x364)+_0x5a454e(0x47b)+'NC','cat':'Tecnologia'},'900347473':{'rs':'AMAZON\x20WEB'+'\x20SERVICES\x20'+_0x5a454e(0x449)+_0x5a454e(0x311),'cat':_0x5a454e(0x348)},'900503795':{'rs':_0x5a454e(0x457)+_0x5a454e(0x267)+'BIA\x20S.A.S.','cat':_0x5a454e(0x348)},'800058016':{'rs':'HEWLETT\x20PA'+'CKARD\x20COLO'+_0x5a454e(0x535),'cat':_0x5a454e(0x348)},'900116795':{'rs':'ORACLE\x20COL'+'OMBIA\x20LTDA'+'.','cat':'Tecnologia'},'860012357':{'rs':_0x5a454e(0x482)+'D\x20NACIONAL'+_0x5a454e(0x259)+'IA','cat':'Universida'+'d'},'860351894':{'rs':_0x5a454e(0x482)+_0x5a454e(0x35f)+'NDES','cat':_0x5a454e(0x38f)+'d'},'860013720':{'rs':_0x5a454e(0x34d)+'\x20UNIVERSID'+_0x5a454e(0x4b4)+'NA','cat':'Universida'+'d'},'890901389':{'rs':'UNIVERSIDA'+_0x5a454e(0x370),'cat':'Universida'+'d'},'890980040':{'rs':'UNIVERSIDA'+'D\x20DE\x20ANTIO'+'QUIA','cat':_0x5a454e(0x38f)+'d'},'860007590':{'rs':'UNIVERSIDA'+'D\x20EXTERNAD'+'O\x20DE\x20COLOM'+_0x5a454e(0x2fa),'cat':'Universida'+'d'},'899999061':{'rs':_0x5a454e(0x3a5)+'.','cat':_0x5a454e(0x35b)},'890905211':{'rs':'MUNICIPIO\x20'+_0x5a454e(0x238)+'N','cat':_0x5a454e(0x35b)},'890399029':{'rs':'MUNICIPIO\x20'+'DE\x20CALI','cat':_0x5a454e(0x35b)},'800094164':{'rs':_0x5a454e(0x508)+'DE\x20BARRANQ'+_0x5a454e(0x4b2),'cat':_0x5a454e(0x35b)},'890480184':{'rs':_0x5a454e(0x508)+_0x5a454e(0x551)+'NA','cat':_0x5a454e(0x35b)},'890201213':{'rs':'MUNICIPIO\x20'+'DE\x20BUCARAM'+_0x5a454e(0x334),'cat':'Municipio'},'891480000':{'rs':_0x5a454e(0x508)+_0x5a454e(0x297),'cat':'Municipio'},'890801052':{'rs':_0x5a454e(0x508)+_0x5a454e(0x573)+'ES','cat':_0x5a454e(0x35b)},'800099141':{'rs':'MUNICIPIO\x20'+_0x5a454e(0x536),'cat':_0x5a454e(0x35b)},'891180091':{'rs':'MUNICIPIO\x20'+_0x5a454e(0x2bd),'cat':_0x5a454e(0x35b)},'890500622':{'rs':_0x5a454e(0x508)+_0x5a454e(0x5d0),'cat':_0x5a454e(0x35b)},'891190346':{'rs':_0x5a454e(0x508)+_0x5a454e(0x378)+_0x5a454e(0x3de),'cat':'Municipio'},'800099095':{'rs':'MUNICIPIO\x20'+'DE\x20SANTA\x20M'+'ARTA','cat':'Municipio'},'800096809':{'rs':'MUNICIPIO\x20'+'DE\x20ARMENIA','cat':'Municipio'},'891780009':{'rs':_0x5a454e(0x508)+'DE\x20VALLEDU'+_0x5a454e(0x31e),'cat':_0x5a454e(0x35b)},'800096734':{'rs':_0x5a454e(0x508)+'DE\x20MONTERI'+'A','cat':_0x5a454e(0x35b)},'800100134':{'rs':_0x5a454e(0x508)+'DE\x20PASTO','cat':_0x5a454e(0x35b)},'800096547':{'rs':'MUNICIPIO\x20'+'DE\x20SINCELE'+'JO','cat':'Municipio'},'891800498':{'rs':_0x5a454e(0x508)+_0x5a454e(0x24a),'cat':_0x5a454e(0x35b)},'892115024':{'rs':_0x5a454e(0x508)+'DE\x20RIOHACH'+'A','cat':'Municipio'},'800112806':{'rs':'MUNICIPIO\x20'+_0x5a454e(0x238)+_0x5a454e(0x1e7)+'DA','cat':'Municipio'},'890980093':{'rs':'MUNICIPIO\x20'+'DE\x20ENVIGAD'+'O','cat':'Municipio'},'890980066':{'rs':_0x5a454e(0x508)+_0x5a454e(0x336),'cat':'Municipio'},'890980013':{'rs':_0x5a454e(0x508)+_0x5a454e(0x56a),'cat':_0x5a454e(0x35b)},'890980757':{'rs':_0x5a454e(0x508)+_0x5a454e(0x312)+'O','cat':'Municipio'},'890981848':{'rs':'MUNICIPIO\x20'+'DE\x20APARTAD'+'O','cat':'Municipio'},'890115018':{'rs':_0x5a454e(0x508)+_0x5a454e(0x2cf),'cat':_0x5a454e(0x35b)},'899999721':{'rs':_0x5a454e(0x508)+'DE\x20SOACHA','cat':_0x5a454e(0x35b)},'899999316':{'rs':_0x5a454e(0x508)+_0x5a454e(0x53f)+'RA','cat':_0x5a454e(0x35b)},'899999414':{'rs':'MUNICIPIO\x20'+'DE\x20FACATAT'+'IVA','cat':_0x5a454e(0x35b)},'899999707':{'rs':_0x5a454e(0x508)+'DE\x20CHIA','cat':_0x5a454e(0x35b)},'890680027':{'rs':_0x5a454e(0x508)+_0x5a454e(0x3ff)+_0x5a454e(0x2ba),'cat':'Municipio'},'899999318':{'rs':'MUNICIPIO\x20'+_0x5a454e(0x1f5)+'A','cat':'Municipio'},'890201235':{'rs':_0x5a454e(0x508)+_0x5a454e(0x324)+_0x5a454e(0x448),'cat':_0x5a454e(0x35b)},'890204895':{'rs':'MUNICIPIO\x20'+_0x5a454e(0x3aa)+'BLANCA','cat':'Municipio'},'890205176':{'rs':'MUNICIPIO\x20'+_0x5a454e(0x2ad)+'ESTA','cat':'Municipio'},'890204802':{'rs':_0x5a454e(0x508)+_0x5a454e(0x519),'cat':_0x5a454e(0x35b)},'891408747':{'rs':'MUNICIPIO\x20'+'DE\x20DOSQUEB'+'RADAS','cat':_0x5a454e(0x35b)},'890399047':{'rs':'MUNICIPIO\x20'+'DE\x20PALMIRA','cat':'Municipio'},'890301430':{'rs':'MUNICIPIO\x20'+'DE\x20BUENAVE'+_0x5a454e(0x492),'cat':_0x5a454e(0x35b)},'890399048':{'rs':'MUNICIPIO\x20'+'DE\x20TULUA','cat':_0x5a454e(0x35b)},'890399049':{'rs':'MUNICIPIO\x20'+_0x5a454e(0x4d7),'cat':_0x5a454e(0x35b)},'890399052':{'rs':_0x5a454e(0x508)+'DE\x20BUGA','cat':'Municipio'},'891180008':{'rs':_0x5a454e(0x508)+_0x5a454e(0x2cb)+'IA','cat':_0x5a454e(0x35b)},'891680010':{'rs':'MUNICIPIO\x20'+'DE\x20YOPAL','cat':_0x5a454e(0x35b)},'800094552':{'rs':'MUNICIPIO\x20'+'DE\x20QUIBDO','cat':'Municipio'},'891855039':{'rs':'MUNICIPIO\x20'+'DE\x20SOGAMOS'+'O','cat':_0x5a454e(0x35b)},'891855024':{'rs':'MUNICIPIO\x20'+'DE\x20DUITAMA','cat':_0x5a454e(0x35b)},'899999317':{'rs':'MUNICIPIO\x20'+'DE\x20GIRARDO'+'T','cat':'Municipio'},'800095978':{'rs':_0x5a454e(0x508)+'DE\x20POPAYAN','cat':'Municipio'},'890980040':{'rs':'DEPARTAMEN'+'TO\x20DE\x20ANTI'+'OQUIA','cat':'Gobernacio'+'n'},'890102006':{'rs':'DEPARTAMEN'+'TO\x20DEL\x20ATL'+_0x5a454e(0x2e0),'cat':'Gobernacio'+'n'},'899999114':{'rs':'DEPARTAMEN'+'TO\x20DE\x20CUND'+'INAMARCA','cat':_0x5a454e(0x29c)+'n'},'890399002':{'rs':_0x5a454e(0x59b)+'TO\x20DEL\x20VAL'+_0x5a454e(0x2bb)+'CA','cat':_0x5a454e(0x29c)+'n'},'890200106':{'rs':'DEPARTAMEN'+'TO\x20DE\x20SANT'+_0x5a454e(0x1ff),'cat':'Gobernacio'+'n'},'891480085':{'rs':'DEPARTAMEN'+_0x5a454e(0x1de)+'RALDA','cat':_0x5a454e(0x29c)+'n'},'890801063':{'rs':'DEPARTAMEN'+'TO\x20DE\x20CALD'+'AS','cat':'Gobernacio'+'n'},'800094164':{'rs':'DEPARTAMEN'+'TO\x20DEL\x20ATL'+_0x5a454e(0x2e0),'cat':'Gobernacio'+'n'},'890480027':{'rs':_0x5a454e(0x59b)+_0x5a454e(0x41c)+_0x5a454e(0x344),'cat':_0x5a454e(0x29c)+'n'},'891855048':{'rs':_0x5a454e(0x59b)+'TO\x20DE\x20BOYA'+'CA','cat':_0x5a454e(0x29c)+'n'},'800094113':{'rs':_0x5a454e(0x59b)+_0x5a454e(0x42f)+'AR','cat':'Gobernacio'+'n'},'800094076':{'rs':_0x5a454e(0x59b)+_0x5a454e(0x229)+_0x5a454e(0x43f),'cat':_0x5a454e(0x29c)+'n'},'891180009':{'rs':'DEPARTAMEN'+_0x5a454e(0x447)+'LA','cat':'Gobernacio'+'n'},'892115007':{'rs':_0x5a454e(0x59b)+_0x5a454e(0x2d0)+_0x5a454e(0x27e),'cat':_0x5a454e(0x29c)+'n'},'800094089':{'rs':_0x5a454e(0x59b)+'TO\x20DEL\x20MAG'+'DALENA','cat':'Gobernacio'+'n'},'891190001':{'rs':'DEPARTAMEN'+_0x5a454e(0x52c)+'A','cat':'Gobernacio'+'n'},'800094024':{'rs':'DEPARTAMEN'+'TO\x20DE\x20NARI'+'NO','cat':'Gobernacio'+'n'},'890500622':{'rs':'DEPARTAMEN'+_0x5a454e(0x564)+_0x5a454e(0x3cd)+'R','cat':_0x5a454e(0x29c)+'n'},'890001639':{'rs':'DEPARTAMEN'+'TO\x20DEL\x20QUI'+_0x5a454e(0x28b),'cat':'Gobernacio'+'n'},'800094164':{'rs':'DEPARTAMEN'+_0x5a454e(0x2ae)+'E','cat':'Gobernacio'+'n'},'800099106':{'rs':'DEPARTAMEN'+'TO\x20DEL\x20TOL'+'IMA','cat':_0x5a454e(0x29c)+'n'},'891780003':{'rs':'DEPARTAMEN'+'TO\x20DEL\x20CAQ'+_0x5a454e(0x2aa),'cat':_0x5a454e(0x29c)+'n'},'800094170':{'rs':_0x5a454e(0x59b)+'TO\x20DEL\x20CAU'+'CA','cat':'Gobernacio'+'n'},'891680011':{'rs':'DEPARTAMEN'+'TO\x20DE\x20CASA'+_0x5a454e(0x385),'cat':'Gobernacio'+'n'},'800094357':{'rs':_0x5a454e(0x59b)+'TO\x20DE\x20ARAU'+'CA','cat':_0x5a454e(0x29c)+'n'},'800094509':{'rs':_0x5a454e(0x59b)+'TO\x20DEL\x20PUT'+_0x5a454e(0x2b4),'cat':'Gobernacio'+'n'},'890981395':{'rs':_0x5a454e(0x34a)+'OPERATIVA\x20'+_0x5a454e(0x338),'cat':'Cooperativ'+'a'},'890300653':{'rs':_0x5a454e(0x34b)+'OPERATIVA','cat':_0x5a454e(0x207)+'a'},'890900841':{'rs':_0x5a454e(0x275)+'OPERATIVA\x20'+_0x5a454e(0x338),'cat':_0x5a454e(0x207)+'a'},'860025971':{'rs':'COOPERATIV'+_0x5a454e(0x2c5)+_0x5a454e(0x3d8),'cat':'Cooperativ'+'a'},'890300466':{'rs':'COOMULTRAS'+_0x5a454e(0x29e)+_0x5a454e(0x3df),'cat':_0x5a454e(0x207)+'a'},'899999284':{'rs':'FONDO\x20NACI'+_0x5a454e(0x521)+_0x5a454e(0x515),'cat':'Fondo'},'800198644':{'rs':'FONDO\x20DE\x20G'+_0x5a454e(0x439)+'E\x20INSTITUC'+_0x5a454e(0x4c6)+_0x5a454e(0x4ce)+_0x5a454e(0x377),'cat':_0x5a454e(0x353)},'860018560':{'rs':_0x5a454e(0x322)+'ARANTIAS\x20D'+'E\x20ENTIDADE'+'S\x20COOPERAT'+'IVAS\x20FOGAC'+'OOP','cat':_0x5a454e(0x353)},'860002400':{'rs':'LA\x20EQUIDAD'+'\x20SEGUROS','cat':'Asegurador'+'a'},'860003020':{'rs':_0x5a454e(0x366)+'OS\x20COLOMBI'+_0x5a454e(0x5ce),'cat':_0x5a454e(0x39a)+'a'},'860524654':{'rs':'ASEGURADOR'+'A\x20SOLIDARI'+'A\x20DE\x20COLOM'+'BIA','cat':'Asegurador'+'a'},'860011153':{'rs':_0x5a454e(0x5b8)+_0x5a454e(0x284)+_0x5a454e(0x270)+'.A.','cat':_0x5a454e(0x39a)+'a'},'860045904':{'rs':'COMPANIA\x20D'+_0x5a454e(0x306)+'DE\x20VIDA\x20AU'+'RORA\x20S.A.','cat':_0x5a454e(0x39a)+'a'},'860028415':{'rs':'GLOBAL\x20SEG'+_0x5a454e(0x44c),'cat':'Asegurador'+'a'},'890200474':{'rs':'ELECTRIFIC'+_0x5a454e(0x53e)+_0x5a454e(0x24f)+'SSA','cat':_0x5a454e(0x4fd)},'890801137':{'rs':_0x5a454e(0x4b9)+'DROELECTRI'+'CA\x20DE\x20CALD'+_0x5a454e(0x2ea),'cat':'Servicios'},'891180052':{'rs':'ELECTROHUI'+_0x5a454e(0x24b)+_0x5a454e(0x471),'cat':'Servicios'},'800094164':{'rs':'CEDENAR\x20S.'+_0x5a454e(0x212),'cat':'Servicios'},'890300279':{'rs':_0x5a454e(0x4e1),'cat':_0x5a454e(0x4fd)},'830007355':{'rs':'EMPRESA\x20DE'+'\x20ENERGIA\x20D'+'EL\x20QUINDIO'+'\x20EDEQ','cat':_0x5a454e(0x4fd)},'891580006':{'rs':'EMPRESA\x20DE'+_0x5a454e(0x3d2)+'E\x20PEREIRA\x20'+_0x5a454e(0x3f5)+'.','cat':'Servicios'},'800251164':{'rs':_0x5a454e(0x443)+_0x5a454e(0x44e),'cat':'Mineria'},'860051843':{'rs':'CARBONES\x20D'+'EL\x20CERREJO'+_0x5a454e(0x3e5),'cat':'Mineria'},'900250713':{'rs':'FRONTERA\x20E'+_0x5a454e(0x2ff)+_0x5a454e(0x58e),'cat':_0x5a454e(0x2ca)},'830053669':{'rs':'PAREX\x20RESO'+'URCES\x20COLO'+_0x5a454e(0x3fc),'cat':_0x5a454e(0x2ca)},'800198591':{'rs':'GRAN\x20TIERR'+'A\x20ENERGY\x20C'+'OLOMBIA\x20LT'+'D','cat':'Petrolera'},'900464585':{'rs':_0x5a454e(0x362)+'.A.S.','cat':_0x5a454e(0x1f2)},'899999143':{'rs':'SATENA','cat':'Aerolinea'},'830046498':{'rs':'EASYFLY\x20S.'+'A.','cat':_0x5a454e(0x1f2)},'830077633':{'rs':'SAP\x20COLOMB'+'IA\x20S.A.S.','cat':'Tecnologia'},'900379789':{'rs':_0x5a454e(0x59d)+'.COM\x20COLOM'+'BIA\x20S.A.S.','cat':_0x5a454e(0x348)},'830084541':{'rs':'CISCO\x20SYST'+_0x5a454e(0x202)+'IA\x20S.A.','cat':_0x5a454e(0x348)},'800052487':{'rs':'DELL\x20COLOM'+_0x5a454e(0x278),'cat':_0x5a454e(0x348)},'830095498':{'rs':_0x5a454e(0x2e2)+'EMS\x20COLOMB'+_0x5a454e(0x3c7),'cat':_0x5a454e(0x348)},'899999734':{'rs':_0x5a454e(0x3af)+_0x5a454e(0x2b2)+'ANCIERA\x20DE'+'\x20COLOMBIA','cat':'Estado'},'860016627':{'rs':'SUPERINTEN'+_0x5a454e(0x29d)+_0x5a454e(0x243)+_0x5a454e(0x388),'cat':_0x5a454e(0x22e)},'800247281':{'rs':_0x5a454e(0x3af)+_0x5a454e(0x371)+'IONAL\x20DE\x20S'+_0x5a454e(0x569),'cat':_0x5a454e(0x22e)},'860015536':{'rs':_0x5a454e(0x3eb)+'\x20GENERAL\x20D'+'E\x20LA\x20NACIO'+'N','cat':_0x5a454e(0x22e)},'899999027':{'rs':'MINISTERIO'+_0x5a454e(0x392)+'IO\x20INDUSTR'+_0x5a454e(0x520)+'MO','cat':'Estado'},'899999054':{'rs':_0x5a454e(0x537)+_0x5a454e(0x32f)+_0x5a454e(0x4c2)+'ION','cat':'Estado'},'899999092':{'rs':'DEFENSORIA'+_0x5a454e(0x4f8)+'O','cat':'Estado'},'899999003':{'rs':_0x5a454e(0x1df),'cat':_0x5a454e(0x22e)},'860002527':{'rs':_0x5a454e(0x3f4)+'.A.','cat':'Industria'},'890900160':{'rs':_0x5a454e(0x2d1),'cat':'Industria'},'890300279':{'rs':'CARVAJAL\x20S'+_0x5a454e(0x2e5),'cat':_0x5a454e(0x39e)},'890903803':{'rs':_0x5a454e(0x43b)+_0x5a454e(0x1f0)+'A.','cat':'Industria'},'860025900':{'rs':_0x5a454e(0x49e)+_0x5a454e(0x3b7),'cat':_0x5a454e(0x39e)},'860002175':{'rs':'MONDELEZ\x20C'+'OLOMBIA\x20S.'+_0x5a454e(0x2e9),'cat':_0x5a454e(0x39e)},'830001338':{'rs':'COCA\x20COLA\x20'+_0x5a454e(0x552)+'OLOMBIA\x20S.'+'A.','cat':'Industria'},'860070301':{'rs':_0x5a454e(0x473)+_0x5a454e(0x3b0)+_0x5a454e(0x44a)+'.','cat':_0x5a454e(0x39e)},'890900050':{'rs':_0x5a454e(0x1f9)+'.','cat':'Industria'},'860005224':{'rs':'UNILEVER\x20A'+'NDINA\x20COLO'+'MBIA\x20LTDA.','cat':_0x5a454e(0x39e)}},DV_PESOS=[0x47,0x43,0x3b,0x35,0x2f,0x2b,0x29,0x25,0x1d,0x17,0x13,0x11,0xd,0x7,0x3];function calcDv(_0x18ffa9){const _0x88da92=_0x5a454e;_0x18ffa9=String(_0x18ffa9)[_0x88da92(0x28d)](/[.\-\s]/g,'')[_0x88da92(0x304)]();if(!_0x18ffa9||!/^\d+$/['test'](_0x18ffa9)||_0x18ffa9===NM)return'';const _0x178eca=_0x18ffa9['padStart'](0xf,'0');let _0x1f9f07=0x0;for(let _0x10787a=0x0;_0x10787a<0xf;_0x10787a++)_0x1f9f07+=parseInt(_0x178eca[_0x10787a])*DV_PESOS[_0x10787a];const _0x40860a=_0x1f9f07%0xb;return _0x40860a>=0x2?String(0xb-_0x40860a):String(_0x40860a);}function norm(_0x2c4b4f){const _0x342937=_0x5a454e;return(_0x2c4b4f||'')[_0x342937(0x3b3)]()[_0x342937(0x304)]();}function toNum(_0x4a1fb7){const _0x8c703e=_0x5a454e;if(typeof _0x4a1fb7==='number')return _0x4a1fb7;const _0x43b037=norm(_0x4a1fb7)[_0x8c703e(0x28d)](/[,$\s]/g,'')[_0x8c703e(0x28d)](/\./g,''),_0xbd50f9=parseFloat(_0x43b037);return isNaN(_0xbd50f9)?0x0:_0xbd50f9;}function fN(_0x1932d4){const _0x1d2eef=_0x5a454e;return typeof _0x1932d4==='number'?Math['round'](_0x1932d4)[_0x1d2eef(0x570)+_0x1d2eef(0x433)]('es-CO'):'0';}function sanitizarNit(_0xd6a13e){const _0x3443e2=_0x5a454e;return norm(_0xd6a13e)[_0x3443e2(0x28d)](/[.\-\s]/g,'')[_0x3443e2(0x28d)](/\-\d$/,'');}let rawData=[],rawDisplay=[],headerRow=0x0,colMap={},parsedData=[];function goStep(_0x139660){const _0x13c631=_0x5a454e;for(let _0x3f7de9=0x1;_0x3f7de9<=0x5;_0x3f7de9++)document[_0x13c631(0x4c7)+'ById']('step'+_0x3f7de9)['classList']['toggle'](_0x13c631(0x3b8),_0x3f7de9!==_0x139660);document[_0x13c631(0x4a3)+'torAll']('.step-pill')[_0x13c631(0x2b3)]((_0x329021,_0x2d742b)=>{const _0x4ec40d=_0x13c631;_0x329021[_0x4ec40d(0x56f)][_0x4ec40d(0x55c)](_0x4ec40d(0x4d2),_0x4ec40d(0x582));if(_0x2d742b+0x1<_0x139660)_0x329021['classList'][_0x4ec40d(0x347)](_0x4ec40d(0x582));if(_0x2d742b+0x1===_0x139660)_0x329021[_0x4ec40d(0x56f)]['add']('active');}),window[_0x13c631(0x512)]({'top':0x0,'behavior':'smooth'});}function populateDptos(){const _0xce48ed=_0x5a454e,_0x535be6=document['getElement'+_0xce48ed(0x52d)]('cfgDpto');Object[_0xce48ed(0x541)](DPTOS)[_0xce48ed(0x2c0)]((_0x245a49,_0x4c020b)=>_0x245a49[0x1][_0xce48ed(0x53c)+'are'](_0x4c020b[0x1]))[_0xce48ed(0x2b3)](([_0x19eef1,_0x8735f1])=>{const _0x32e9fb=_0xce48ed;_0x535be6['innerHTML']+=_0x32e9fb(0x234)+_0x32e9fb(0x4c4)+_0x19eef1+'\x22>'+_0x19eef1+'\x20-\x20'+_0x8735f1+'</option>';});}function onDptoChange(){const _0x34c854=_0x5a454e,_0x15d503=document[_0x34c854(0x4c7)+'ById'](_0x34c854(0x50b))['value'],_0x324269=document['getElement'+_0x34c854(0x52d)](_0x34c854(0x3ba));_0x324269[_0x34c854(0x585)]=_0x34c854(0x234)+'lue=\x22\x22>—\x20S'+_0x34c854(0x1f8)+_0x34c854(0x4ed)+'>';const _0x2d6aa4=MPIOS_PRINCIPALES[_0x15d503]||{};Object['entries'](_0x2d6aa4)[_0x34c854(0x2c0)]((_0x1e62a5,_0x4c0579)=>_0x1e62a5[0x1][_0x34c854(0x53c)+'are'](_0x4c0579[0x1]))[_0x34c854(0x2b3)](([_0x164789,_0x3646fe])=>{const _0x4bdfd0=_0x34c854;_0x324269[_0x4bdfd0(0x585)]+='<option\x20va'+'lue=\x22'+_0x164789+'\x22>'+_0x164789+_0x4bdfd0(0x203)+_0x3646fe+_0x4bdfd0(0x2e1);});}function onTipoPersonaChange(){const _0x5bc2bc=_0x5a454e;document[_0x5bc2bc(0x4c7)+_0x5bc2bc(0x52d)](_0x5bc2bc(0x4f7)+'x')['style'][_0x5bc2bc(0x432)]=document[_0x5bc2bc(0x4c7)+_0x5bc2bc(0x52d)]('cfgTipoPer'+_0x5bc2bc(0x3ef))['value']==='31'?'block':'none';}const HEADER_HINTS={'code':[/^c[oó]d/i,/^cuenta$/i,/^cta/i,/^puc/i,/^cod.*cta/i,/^codigo/i],'name':[/^nombre.*cuenta/i,/^descripci/i,/^detalle.*cta/i,/^nom.*cta/i],'nit':[/^nit/i,/^identif/i,/^documento.*terc/i,/^c[eé]dula/i,/^nro.*doc/i,/^no.*id/i],'razon':[/^nombre.*terc/i,/^raz[oó]n/i,/^tercero$/i,/^beneficiario/i,/^proveedor/i],'deb':[/^d[eé]bito/i,/^cargo/i,/^debe$/i,/^mov.*d[eé]b/i],'cre':[/^cr[eé]dito/i,/^abono/i,/^haber$/i,/^mov.*cr[eé]/i]},COL_FIELDS=[{'key':_0x5a454e(0x3c4),'label':'Codigo\x20Cue'+'nta','required':!![]},{'key':_0x5a454e(0x499),'label':_0x5a454e(0x55d)+'nta','required':!![]},{'key':'nit','label':'NIT\x20Tercer'+'o','required':!![]},{'key':_0x5a454e(0x29b),'label':'Nombre\x20Ter'+'cero','required':![]},{'key':'deb','label':_0x5a454e(0x3e1),'required':!![]},{'key':_0x5a454e(0x3f9),'label':'Creditos','required':!![]}];document['getElement'+'ById']('fileInput')['addEventLi'+'stener']('change',_0x79ee22=>{const _0x951939=_0x5a454e;if(_0x79ee22['target']['files'][0x0])loadFile(_0x79ee22['target'][_0x951939(0x5d1)][0x0]);});const dz=document['getElement'+_0x5a454e(0x52d)]('dz');['dragover',_0x5a454e(0x30f)][_0x5a454e(0x2b3)](_0x527e4c=>dz[_0x5a454e(0x4bf)+'stener'](_0x527e4c,_0x3382b0=>{const _0x364f0e=_0x5a454e;_0x3382b0[_0x364f0e(0x50e)+_0x364f0e(0x56d)](),dz['classList'][_0x364f0e(0x347)]('drag');})),[_0x5a454e(0x2dc),'drop'][_0x5a454e(0x2b3)](_0x10c890=>dz[_0x5a454e(0x4bf)+'stener'](_0x10c890,_0x20027b=>{const _0x4c91cf=_0x5a454e;_0x20027b[_0x4c91cf(0x50e)+'ault'](),dz[_0x4c91cf(0x56f)]['remove'](_0x4c91cf(0x5bf));})),dz[_0x5a454e(0x4bf)+'stener']('drop',_0x113073=>{const _0x137aa3=_0x5a454e;if(_0x113073[_0x137aa3(0x4c3)+'er'][_0x137aa3(0x5d1)][0x0])loadFile(_0x113073['dataTransf'+'er'][_0x137aa3(0x5d1)][0x0]);});function loadFile(_0x486420){const _0x100b19=_0x5a454e,_0x49dace=new FileReader();_0x49dace[_0x100b19(0x420)]=_0x2450f0=>{const _0x5d1d1f=_0x100b19;try{const _0x1feb26=XLSX['read'](_0x2450f0[_0x5d1d1f(0x475)][_0x5d1d1f(0x22f)],{'type':'array','cellDates':!![]});let _0x27b437=null,_0x5567b4=0x0;for(const _0x423b3a of _0x1feb26[_0x5d1d1f(0x55b)]){const _0x120182=XLSX[_0x5d1d1f(0x2ed)]['sheet_to_j'+'son'](_0x1feb26[_0x5d1d1f(0x412)][_0x423b3a],{'header':0x1,'defval':'','raw':!![]}),_0x53e7d2=XLSX[_0x5d1d1f(0x2ed)]['sheet_to_j'+_0x5d1d1f(0x1dc)](_0x1feb26[_0x5d1d1f(0x412)][_0x423b3a],{'header':0x1,'defval':'','raw':![]}),_0x4cb297=_0x120182['filter'](_0x27b804=>_0x27b804[_0x5d1d1f(0x525)](_0x4cd5e6=>_0x4cd5e6!==''&&_0x4cd5e6!=null))['length'];_0x4cb297>_0x5567b4&&(_0x27b437={'sn':_0x423b3a,'raw':_0x120182,'disp':_0x53e7d2},_0x5567b4=_0x4cb297);}if(!_0x27b437||_0x5567b4<0x3){alert('El\x20archivo'+_0x5d1d1f(0x2d8)+_0x5d1d1f(0x5a4));return;}rawData=_0x27b437['raw'][_0x5d1d1f(0x59f)](_0x3381c9=>_0x3381c9[_0x5d1d1f(0x525)](_0x2e0c31=>_0x2e0c31!==''&&_0x2e0c31!=null)),rawDisplay=_0x27b437['disp'][_0x5d1d1f(0x59f)](_0x582564=>_0x582564[_0x5d1d1f(0x525)](_0x451b11=>_0x451b11!==''&&_0x451b11!=null)),document['getElement'+_0x5d1d1f(0x52d)]('fileName')[_0x5d1d1f(0x55f)+'t']=_0x486420[_0x5d1d1f(0x499)]+'\x20·\x20'+rawData[_0x5d1d1f(0x5b2)]+('\x20filas\x20·\x20h'+'oja:\x20')+_0x27b437['sn'],headerRow=autoDetectHeaderRow(),goStep(0x2),renderStep2();}catch(_0x2e3b9e){alert(_0x5d1d1f(0x517)+_0x5d1d1f(0x5c2)+_0x2e3b9e['message']);}},_0x49dace['readAsArra'+'yBuffer'](_0x486420);}function autoDetectHeaderRow(){const _0x17b74b=_0x5a454e,_0x3f9883=/^(c[oó]d|cuenta|nombre|descripci|nit|tercero|d[eé]bito|cr[eé]dito|saldo|identif|puc|cargo|abono|debe|haber|documento|beneficiario|proveedor)/i;let _0x2adcc9=0x0,_0x4b5a4d=-Infinity;for(let _0x407de1=0x0;_0x407de1<Math[_0x17b74b(0x5a1)](rawData[_0x17b74b(0x5b2)],0x19);_0x407de1++){const _0x55bd3f=rawData[_0x407de1];if(!_0x55bd3f||_0x55bd3f['length']<0x3)continue;let _0x14940c=0x0,_0x2cd558=0x0;for(const _0xd66876 of _0x55bd3f){if(_0xd66876==null||_0xd66876==='')continue;_0x2cd558++;const _0x1924a5=norm(_0xd66876);if(_0x3f9883[_0x17b74b(0x215)](_0x1924a5))_0x14940c+=0xa;else{if(typeof _0xd66876===_0x17b74b(0x27b)&&isNaN(Number(_0x1924a5['replace'](/[,$.\-\s]/g,''))))_0x14940c+=0x1;else _0x14940c-=0x1;}}_0x14940c+=_0x2cd558*0.5;if(_0x407de1+0x1<rawData[_0x17b74b(0x5b2)]){const _0x4bd5f8=rawData[_0x407de1+0x1];if(_0x4bd5f8){const _0x70e2ae=_0x4bd5f8['filter'](_0x1d0a54=>typeof _0x1d0a54===_0x17b74b(0x381)||_0x1d0a54&&!isNaN(Number(String(_0x1d0a54)[_0x17b74b(0x28d)](/[,$.\-\s]/g,''))))['length'];if(_0x70e2ae>=0x2)_0x14940c+=0x5;}}_0x14940c>_0x4b5a4d&&(_0x4b5a4d=_0x14940c,_0x2adcc9=_0x407de1);}return _0x2adcc9;}function renderStep2(){const _0x182e6b=_0x5a454e,_0x32db94=document[_0x182e6b(0x4c7)+_0x182e6b(0x52d)]('hdrRowSele'+'ct');_0x32db94['innerHTML']='';for(let _0xfd94d2=0x0;_0xfd94d2<Math['min'](rawData[_0x182e6b(0x5b2)],0x14);_0xfd94d2++){const _0x31a1b2=rawData[_0xfd94d2][_0x182e6b(0x5a8)](0x0,0x4)[_0x182e6b(0x22c)](_0x4eb47a=>norm(_0x4eb47a)[_0x182e6b(0x2d7)](0x0,0xf))[_0x182e6b(0x4c5)](_0x182e6b(0x51e));_0x32db94[_0x182e6b(0x585)]+='<option\x20va'+_0x182e6b(0x4c4)+_0xfd94d2+'\x22\x20'+(_0xfd94d2===headerRow?'selected':'')+_0x182e6b(0x531)+(_0xfd94d2+0x1)+':\x20'+_0x31a1b2+'</option>';}renderRawPreview(),autoDetectColumns(),renderColMapper();}function onHeaderRowChange(){const _0x3a196=_0x5a454e;headerRow=parseInt(document['getElement'+_0x3a196(0x52d)](_0x3a196(0x3d1)+'ct')[_0x3a196(0x20e)]),renderRawPreview(),autoDetectColumns(),renderColMapper();}function renderRawPreview(){const _0xfc19ec=_0x5a454e,_0x492d41=Math[_0xfc19ec(0x5a1)](rawData[_0xfc19ec(0x5b2)],0xf);let _0x4a4205='<table>';for(let _0x2aecb6=0x0;_0x2aecb6<_0x492d41;_0x2aecb6++){const _0x268d44=_0x2aecb6===headerRow?_0xfc19ec(0x37a):'';_0x4a4205+='<tr\x20class='+'\x22'+_0x268d44+'\x22>'+(rawDisplay[_0x2aecb6]||rawData[_0x2aecb6])['map'](_0x87ed64=>'<td>'+norm(_0x87ed64)[_0xfc19ec(0x2d7)](0x0,0x1e)+_0xfc19ec(0x555))[_0xfc19ec(0x4c5)]('')+_0xfc19ec(0x1ed);}_0x4a4205+='</table>',document['getElement'+'ById']('rawPreview')[_0xfc19ec(0x585)]=_0x4a4205;}function autoDetectColumns(){const _0x4761ca=_0x5a454e;colMap={};const _0xbe5040=rawData[headerRow]||[];for(const _0x3f6266 of COL_FIELDS){for(let _0x28742b=0x0;_0x28742b<_0xbe5040['length'];_0x28742b++){const _0x367afb=norm(_0xbe5040[_0x28742b])['toLowerCas'+'e']()['substring'](0x0,0x32);if(!_0x367afb)continue;if(_0x3f6266[_0x4761ca(0x2fb)]in colMap)continue;if(Object['values'](colMap)['includes'](_0x28742b))continue;for(const _0x4199aa of HEADER_HINTS[_0x3f6266['key']]){if(_0x4199aa[_0x4761ca(0x215)](_0x367afb)){colMap[_0x3f6266['key']]=_0x28742b;break;}}}}}function renderColMapper(){const _0x10246f=_0x5a454e,_0x59cc8a=rawData[headerRow]||[],_0x10e2c2=rawData[headerRow+0x1]||[];let _0x3f3333='';for(const _0x128d20 of COL_FIELDS){const _0x4f6e0d=_0x128d20[_0x10246f(0x2fb)]in colMap,_0x35cd01=_0x4f6e0d?_0x10246f(0x2df):_0x128d20[_0x10246f(0x2d6)]?_0x10246f(0x2d6):'';let _0x58349a=_0x10246f(0x234)+'lue=\x22\x22>—\x20N'+_0x10246f(0x4f0)+_0x10246f(0x4ed)+'>';for(let _0x49dfed=0x0;_0x49dfed<_0x59cc8a['length'];_0x49dfed++){const _0xf2daf4=colMap[_0x128d20[_0x10246f(0x2fb)]]===_0x49dfed?_0x10246f(0x52e):'';_0x58349a+=_0x10246f(0x234)+_0x10246f(0x4c4)+_0x49dfed+'\x22\x20'+_0xf2daf4+'>'+(norm(_0x59cc8a[_0x49dfed])['substring'](0x0,0x19)||_0x10246f(0x235)+(_0x49dfed+0x1))+'</option>';}const _0xc13ac6=_0x4f6e0d&&_0x10e2c2[colMap[_0x128d20['key']]]!=null?norm(_0x10e2c2[colMap[_0x128d20[_0x10246f(0x2fb)]]])['substring'](0x0,0x1e):'';_0x3f3333+=_0x10246f(0x233)+_0x10246f(0x31a)+_0x10246f(0x461)+_0x35cd01+('\x22>\x0a\x20\x20\x20\x20\x20\x20<'+_0x10246f(0x4d1)+'\x22cml\x22>')+(_0x128d20[_0x10246f(0x2d6)]?_0x10246f(0x251)+_0x10246f(0x30e)+_0x10246f(0x34f):'')+_0x128d20[_0x10246f(0x2f4)]+(_0x10246f(0x42c)+_0x10246f(0x342)+_0x10246f(0x222)+_0x10246f(0x52b)+'ge(\x27')+_0x128d20[_0x10246f(0x2fb)]+('\x27,this.val'+_0x10246f(0x533))+_0x58349a+('</select>\x0a'+'\x20\x20\x20\x20\x20\x20<div'+_0x10246f(0x44f)+_0x10246f(0x5c3))+(_0xc13ac6?_0x10246f(0x4a8)+'g>'+_0xc13ac6+_0x10246f(0x5b0):'Sin\x20datos')+(_0x10246f(0x42c)+'\x20</div>');}document[_0x10246f(0x4c7)+_0x10246f(0x52d)](_0x10246f(0x2a0))['innerHTML']=_0x3f3333;}function _0x25ed(){const _0x141adc=['uY5blIbflLmUua','B24GzMfTAwXPyq','ywrZAgvLDg1SlG','AwvUzg8','y3jL','rJeWmdy','zg9ZlJWVC3rYBW','tujjqsbmveq','rJeWmdu','AgfZ','reuGrLvtquDbuW','mwvKqMPOtG','suXmqvmGuY5blG','rM9YBwf0BW','mtm0ma','mtm1nte1otu','B25NpG','y3rvuKW','ChvZAa','ignSyxnZpsj2yq','mtm1nte1otq','ugfNBYboBYbezq','CM9Kyw1Pzw50BW','Bwf0zxjPywW','yw4Uy29T','tM8Gsuq','phrKignSyxnZpq','ntaXnG','tujjqu5bifmUqq','u2HLzxrZ','CMv2B2TLt2jQzq','zM9YBwf0BW','ig1VBM8','uMvUDgfZigrLia','zgLTAwvUDg8','qKfoq08Gq0fkqq','ntaWnq','u0vhvvjpuYbctW','Cgf0DgvYBG','ve8GreuGqK9msq','qKfoq09mt01csq','mJaYnq','Bci+uMvNlIbgmq','B25SB2fK','C2vYDMLJAw8','ywWIpG','l2rPDJ48l2rPDG','u2fSzg8Gq3Hqia','yMfSyw5JzsbVia','yxbVCNrLihnHBa','yvrLEhq','odKWotaZotm4','qKXjq0e','yw51ywXTzw50zq','y2XHC3m9iNrLEa','pc9KAxy+cIaGia','ugvYzwLYyq','ndaWmq','ve8GrevmienfuW','odfAzgDxEe4','iNn3AxrJAezTDa','zgLZCgXHEq','CMLUzW','rsbcqvjsqu5rvq','Ad48DgG+rgvZyW','ysb1BIbIywXHBG','lxjPz2H0ig1VBG','svzbierLC2nVBG','qvjbtLrjqvmGra','uKDpuYbtlKeU','ufjprfvdve9tia','z3jHDMfTzw4','mtm1nte1mZu','r0ftrvmGreuGtW','t0jb','q2f1y2e','zxj0lxDHCM4Iia','C2vNDxjV','rfjvtu1ptKqGta','yxbWBgLJyxrPBW','ru1quKvtqvmGua','uMv0iez0zsbszq','ve8GrevmieHvsq','qujfuK1fsKe','q09mt01csueGuW','t01csueGtfreqq','yM9KEt4','vvjpuYbtlKeU','pc9ZCgfUpG','veqU','ignSyxnZpsjZyq','q3vUzgLUyw1HCG','rvrcifmUqs4Grq','otaWmdq3otGX','C3m9iM1HCc10yq','tw9ZCxvLCMe','zsbUBYbHCgXPyW','q29TzxjJAw8','tuvuqsbqtefurG','zM9YBwf0u3vTBq','u0vsvKLftLrsrq','iIbVBMnSAwnRpq','A2v5pq','Bwf0zxjPysbWCG','mtm1nte1mtq','BgfZCZ0IDgv4Da','ysbKzsbcDwDH','BgfZCZ0IBw9UBW','AxrLBsa','pc90zd48DgqGyW','tw9UDgvYAwe','odaWntu1ndq0','CMv0zw5JAw9Uia','qxjPywW','t0Tltg5cBhDinG','yxr1AxrHiokaLcbb','yw9Hx3rVx3nOzq','C2fS','u3vLBgrVCW','mtm1nte1mZa','qKfoq08GreuGtW','wsbdt01fuKnjtW','Aw5ZDw1V','t1jhqu5jwKfdsq','uY5qlG','nteZnq','ufjpq1rfuIaMia','yM9VA19HChbLBG','DgfYz2v0','qNvJyxjHBwfUzW','rgLJmZe','zgL2pGOGicaGpa','CZ0IzM10lwjHza','qvjm','q09mt01csueGsq','CMv0zNrLigHVBG','q29KAwDV','vujmsunbuYberq','phrHyMXLignSyq','y29UC3vSDg9YAq','mJzHtvvws0u','vu5jvKvsu0Leqq','vgfIkhrOAxmSjW','Aw52zw50yxjPBW','ieuUuY5qlG','CMvUzgLTAwvUDa','q0fgqu0','BNrV','ihjLz2LZDhjVCW','Bci+rM9YBwf0BW','r05cifnvrefnrq','nteWnq','rg9ZCxvLyNjHza','y2XHC2LMt2Tuzq','uMLVBMvNCM8','rMfJyxrHDgL2yq','BM8Iihn0EwXLpq','tLrvuKe','Aw5KzxHpzG','qKfoq0fnsueGuW','AwnHy2LVBG','BgfZCZ0IDMfSiG','BMnLigfWBgLJyq','odaWmtK3mJy4','BMfTzq','tMvPDMe','qKfoq08Grefwsq','ignSyxnZpsjSyG','pc90yM9KEt48lW','q0vnrvGGq09mtW','y2uGzguGChj1zq','zsi+pgrPDIbJBa','odmWmW','AxvZoJiWChG7zG','CxvLCNLtzwXLyW','y2zNrw1WCMvZyq','Bci+u2LUignSyq','AwnIzG','mJm2nW','rwO6idXZDhjVBG','y2XHC2LMvgfIBa','t04Gvevsuevmia','Dhi+','rJeWmdm','ntaYmW','ztWVDgG+phrOpG','ifnpq0LbtcbtlG','BYi+','phrYpJX0zd4','vuLmtee','ntaWmG','quqGsKfwrvjjqq','rJeWmde','ugfNBYbezwr1yW','CMvWyxjHy2LVBG','nteZma','q0vovfjbtcbisq','sw5NCMvZB3m','CMLWy2LVBJWVDa','DgLXDwv0zq','y2XHC2LMv2fYBG','reuGq09mt01csq','ywrKrxzLBNrmAq','C3rHDc1JyxjKia','tvvuvufmifnfuG','ierfieXbie5bqW','zgf0yvrYyw5ZzG','BhvLpsi','AM9PBG','su9orvmGrKLoqq','z2v0rwXLBwvUDa','zw4IpJXKAxyGyW','q09mrK9ore9tia','yxnZpsj2ywWIpG','vMf1CgvZ','BNnPB24','CMv2AxnLigvSia','tKnjrvjbuYbgtW','lLmUuc4Gkenpra','Axy+cIaGica8za','zgL2ignSyxnZpq','ywn0AxzL','qKfoq08GrKfmqq','Dg90ywW','CgfWzwXLCMLH','Aw1WDwvZDg8','reuGq0fsvefhtW','zw4G','C2vUyq','BMC+ifzLCMLMAq','zwfJAenLBgW','rs5tlLaU','q29Yzg9Iyq','t3rYB3mGugfN','mtqZnq','Dw5KoImWntK2nG','ru1dquXj','zNvUy2LVBMvZia','DwLLCMvUifbstW','q0vmu0LbifmUqq','zM10vgfICW','CMvHC29U','zgvK','q29TzxjJAw8Gyq','mJiXma','uYbtlKeU','C3r5Bgu9iNrLEa','icHosvqG','iokaLdWVB3b0Aw9U','yw1VCNrPEMfJAq','qKLbifmUqs4Grq','BYbHC2LNBMfKyq','q09nuefosueGtG','mJqWna','rKzgmKy3rKi','BYbMAw5HBMnPzq','mJiWnq','mtm1nte1mZK','CMvWtgvNywXcBW','ierftcbqvuvcta','te9nqKLbieXura','uKLpierfienpta','vhjHyMfQBW','u29Nyw1VC28','u2vYDMLJAw9Z','mtG1ntG1vgztBMnJ','AgvHzd48DgjVza','zguGphn0CM9UzW','tgeGq2fSzxjH','sw5PCMLKyq','ntaWnG','Ag9ZCgvKywPL','y2LVBG','DMfSiJ4Ypc9KAq','odKWotaZnZeX','tvvosunjueLpia','q1vbtLrjqvmGtq','ntaXmq','y2zNrhb0BW','DMLJAw8','rNvUEMe','ChjLDMvUDerLzG','mJqWoa','reLtvfjjqLvjra','C3rHCNrZv2L0Aa','C2nYB2XSvg8','t1zjtcbtlKeUia','mtm1nte1otK','se9suK8GrK5b','yxjS','rxjYB3iGywWGBa','yw4GCgfYysbLEa','reuGr0Lst04','uMvNAxn0CM9Z','B3m8l2rPDJ48lW','reeGqK9ht1rb','yxjPBW','ihWG','mtuWna','sueGwsbuvvjjuW','t05btcberuWGqq','lKmUrs4Grs5tlG','Bci+q3vLBNrHCW','rKLevunjqvjjqq','C29Tzq','CYbKzwWGyMfSyq','ihnVy2LHBcdIGjqG','twL0Dq','DIbJBgfZCZ0IDG','zxHWAxj5','iM9Uq29Sq2HHBG','ve8Grevmie1fva','qNLjza','C2vSzwn0zwq','BhnWyw49iJCIia','q09mu1vcu0Lesq','pKzPBgeG','mtm5oq','DwuPiJ4','pc9ZDhjVBMC+ia','tujjqsbmverblG','reuGsujbr1vf','ufjpq1vsqurvuG','DgHPBG','lxDLAwDODdO3ma','kc0TBxv0zwqPiG','q2fYDgfNzw5H','Bg9JywXLq29TCa','mJu5oq','qurpuKeGreuGuW','reuGwKLqqvfvsq','rM9YBwf0BZWVDa','zw50CMLLCW','zgfUzg8GufjpoG','zt0Iy29SB3i6DG','BYiGC3r5Bgu9iG','tuKGru1quKvtqq','mtfes3riELC','vgvSzwnVBq','zxb0BZWVDgG+pa','rMLKDwnPyxjPyq','tuvoveLdsu9tia','qxbVCNrLifbLBG','mZiZmdrKrNLMyvO','C3m9iNnJCM9SBa','DgG+q3jLzgL0BW','odK5otK5mdyZ','ie1frevmteLoia','reuGq0fsvefhrq','rKvnu0eGreuGqW','Dg9vChbLCKnHCW','rxHVz2vUyv9brW','pc90zd4','yxj5','qunvrurvq1rpia','igfTyMvYiJ48za','CYbqCMfJDgLJyq','te1pteLwrsbdtW','u2HLzxroyw1LCW','CMvTB3zL','tM9TyNjLien1zq','quLsluuGuY5blG','Dgv4DenVBNrLBG','rgv2B2X1y2LVBG','svzbigDLBMvYyq','zf9ZAgvLDa','mJm5oq','ve8GtK9sveuGra','ru1dquXjieuUsq','BwfWlxrHyMXLiG','y29SB3i6DMfYka','ChjLDMLLD0nHCG','quXvra','reuGqKvmte8','qMfUy28','ndeWmq','yxvSDa','ChjPBweGzguGCW','y2XHC3nmAxn0','Dg9mB2nHBgvtDa','BNrH','mdWVDgq+phrKia','reuGtufosvPbta','q3Hd','ierfieHbq0LftG','qM9SAxzHCG','y2XPy2S','reeGwsbduKvesq','otaWmtiZndu2','q2fQyq','mtm1nte1mJu','zwqPo3bHzgrPBG','CM9UidXZDhjVBG','yM9KEq','quzq','y2zNtML0','yMeGCg9YihrLCG','zg9Uzq','vvjpuYaOq09mtq','lNrHyG','Aw5Uzxjive1m','y2XHC3m9iNn0yq','zw5LCMDPyq','BNrLCJTJB2XVCG','y2vZyw50Awe','AxyGy2XHC3m9iG','zgf5C0XLzNq','odaWmdm3odaW','B25VCW','tujjqsbdt1jq','otaWmJe1mdCX','BwjYztWVDgG+pa','mJiWoa','iwnVBhm','mtm1nq','oJWVC3rYB25NpG','quXjqu5tquXvra','yxbVCNrLigvWCW','C3bSAxq','mtmWna','cIaGica8zgL2ia','mtmXnW','revqqvjuqu1ftG','yM9YzgvYlxjHza','u0fmrvngt1jdrq','CgfYCxvLywrLCG','zMLSDgvY','l3rOpJX0Ad5oBW','BwLU','pc90zd48l3rYpG','r2LYyxjKB3q','y2LVlG','y3jLyxrLrwXLBq','ru5biefstcK','ChvIBgLJAwrHza','C2XPy2u','BL9KzxzPy2vFAq','BxbLBNnHy2LVBG','zw4Gphn0CM9UzW','rKfmqujfteXbia','tcbfu1rbre8GuW','q29Uy2vWDg8','yxjKigDYzwvUiG','pc9ZDhjVBMC+','rvbtifnbtKLuqq','BgvUz3rO','y2vYBW','mtmXmq','odyWmduXmtm1','zs5JB20VBwfJCG','yM9YywXLCW','ue9tsvrjvKeGqW','psj0ywiG','zgfZ','y2nPB25PC3rHCW','pgrPDIbPzd0ICa','zxHVz2vUywrPyq','mJm2oa','zhjHzW','DxrPBgvZ','D3jPDgvcDwzMzq','zwvYoIa','BxbSzsi+','yw5LBf8','pJXKAxyGy2XHCW','yxjYAwvUzg8','uMf6B24Gu29JAq','ihnLigvUy29UDa','AxzVpc9ZCgfUpG','mtmXnG','pc9KAxy+pgrPDG','yNj1Dg8','ywrVoG','qsbtlKeU','mtm1ntK5','reuGq1vdvvrb','zMLSzxm','qMfUy29Z','CJ48DgG+iZWVDa','DMfJywnPB24','yxnZAwDU','rJeWmdK','ywXPz25Tzw50','quXnqunftKvtia','tufqrLjfifnfrW','Ad48DgG+uMvNAq','y2vZyw50AwfZ','q09puKrjtKfetW','ienpte9nqKLbia','ndi5oq','odKWmZaWmJC5','C29U','ienpuKzjq09mtW','ve8GreuGuKLtqq','reforq','uY5blG','ugfNB3m','pc90AgvHzd48Da','yw1IzxiIpJXKAq','AwnH','q09ou1vmve9sia','rw52AwDHzg8','tIaTieHbq0LftG','tMfYAw5V','BNvTrM10','mtm2nq','mty5oq','BIbZzxiGy2XHCW','pc90CJ4','zgvI','zM9UDa','rKfnsuXjqsbtlG','mti2nq','qwvYB2XPBMvH','CMv0zNrLignVBq','rsbnrurfteXjtG','reuGtu9tuvvfuG','DwvUDgfZigrLia','y2vZ','zwXLy2nPB25HCG','uevmrefsifmUqq','mtm1nte1nda','mJm2nta1','vMfSBgvKDxbHCG','q09sue9squnjtW','mci+ufjpigfJDa','qu5ervi','mJiWnG','tefsifmUqs4','ru1tienpte9nqG','ic0G','CgfYzw50rwXLBq','AwzPy2fKB3mGka','rJeWmti','q29VCgvYyxrPDG','mteXma','mJC5oq','CMv0sxzH','CIbdB2jYyxi','mtm1nte1mZq','jYKIpG','DMfSDwu','uMv0zw5JAw9Uia','zd48Dhi+phrOpG','Aw5NCMvZBYbUBW','qs4Grs5tlLaU','ChjVs2v5sw5WDq','CZWVzgL2pJWVza','DgvZDa','su5evvnuuKLbia','l3rYpG','phrYpJX0zcbZDa','rJiYnZy','rNvZywDHC3vNyq','y29TCgvUC2fJAq','q3jLzgL0BZWVDa','l3rOpJX0Ad5ezq','DMvUDge','q3vLBNrHCYbWBW','mtmWnq','lIb5ia','ig9Uy2HHBMDLpq','r1jvue8GtLvuuG','twfPy2fV','DIbJBgfZCZ0ICW','nte0ma','mtmWoa','ndeZnq','ve8GreuGq09sra','odyWmdaYoty0','uujfifnfr1vstW','BwfW','Bci+uMvNlIbgmG','rxn0ywrV','CMvZDwX0','ntaYna','ievquW','yM9VA19UzxC','pgrPDIbJBgfZCW','pg9WDgLVBIb2yq','q29Sia','mJC2ie5VBwLUyq','y2LHieqTqZWVza','reuGtuveruXmsq','ntiXma','Aw5JyxbHy2LKyq','ntaWmq','r3vHzgfSywPHCG','qKfoq08GquDsqq','wIbmverb','mtmWmq','BZWVDgG+phrOpG','Bci+uMvNAxn0CG','ierbvKLwsuvora','u0vsvKLdsu9tia','CMvWDwvZDg8','vg9SAw1H','y2vYB3mGy29Uia','mJiYmJiYmJiY','tLuGq09mt01csq','DJ48zgL2ignSyq','reuGvfvosKe','teeGuY5blIbflG','q09mt01csueGtq','Aw4GBw92Aw1Pzq','CIbqywDHCG','qu5uqu5erviGrq','ntaYnq','phnWyw4Gy2XHCW','ntiZnq','ywrKuM93','tuLosvnurvjjtW','ywn1zwr1y3rV','tvvoreLbtcberq','qKfoq08Gu0vsrG','mJKWnq','ierfienpte9nqG','tM9TyNjLifrLCG','q2XHDMuGAw52W6e','yMfZAwnV','mtm1nte1mdK','ndaWmW','w29Uy2XPy2TD','mteWnq','otbLq0PNDLO','Dw1LBNqUC3bYzq','ntaYnW','zxj2AwnPBW','y2zNtM9TmG','C3m9iNzHBci+','t1jnuYbdt0Xptq','Ag9UB3jHCMLVCW','u2fSyxjPB3m','ufjpihjLy2HHEG','vhvSDwe','mtiWnq','iJ48zgL2ignSyq','DMfSDwvZ','BL9WCM9FA2v5','ifnfr1vst1mGuW','y29TAxnPB24','Bgf2zsbVihn1CW','rsbct0DpveeGuW','nteYnq','q09uuKfgqsbdtW','ienptfbbvfjjqq','Bgu9iMzVBNqTCW','qKLbieLoqW','y2LHBa','qKfoq08GueLdsa','C3rYAw5N','rhvPDgfTyq','ywjZ','vufksvjb','BML0','mtiYnq','EwvHCG','B2DLBMePlG','DMLNAwXHBMnPyq','t01qqu5jqsberq','iefoveLpuvvjqq','Ad48l3rYpJWVDa','vMfSBguGzgvSia','yMXLiJ48DgHLyq','q09nuevou0fsia','ifmUqs4','tKrjtW','zhvJAwjSzq','CMvWBgfJzq','C29SAwq','rvbtifnvuKe','ntiZma','sueGuY5blG','ywiTy29UDgvUDa','nte5oq','BJ7IMQdVUi88l3nWyw4+','Ahr0Chm6lY9ZyW','BgLKysbVigLUyq','reuGuevsruLsqq','odyWmdm0mZeZ','BM8GChvKAwvYBW','q2vZyw50AwfZ','CMf6B24','r29IzxjUywnPBW','revoq0Lbierfia','qvaGq09puevsqq','su5urvjdt05fwa','y29StwfWCgvY','nta1nq','ovHfv2vjr1L5Cq','yxv4AwXPBYb0CG','q0fqsvrbtcbtqq','u1vequ1fuKLtia','Aw5JBhvKzxm','nti5nq','q09nq0vmifmUqq','z3jLzw4','vuvuqq','pc9KAxy+pc9KAq','C2HLzxq','reuGueLfrevdvq','ve8GreuGu1vduG','ig9WzxjHy2LVBG','DMfJ','Dc1JyxjKigDYzq','revoq0LbiezjtG','zM9YrwfJAa','vu1bwu8','rJeWmdG','qxbVCNrLifnHBa','lw9MzMLJzwrVyW','Ag9UB3jHCMLV','y2XHC2uGmYbWyq','vuDb','teuGrevmienbvq','BgfZCZ0IC3rHDa','reuGtKvjvKe','pJX0Ad5oB21ICG','refwsvbmqvrb','C29YDa','mJqWodeW','C3m9iNn0yxqTyW','B3i6DMfYkc0TBq','C2LVBG','qsbgsu5btKnjrq','yw1LBNrL','tKLuifrLCMnLCG','qxjHDwnH','rJeWmta','ugv0CM9SzxjH','reuGrKXpuKvoqW','mtq5oq','r0eGuY5blG','q09nrKvoquXdtW','reuGu09mrurbra','ve8GreuGteeGrW','tK9ftcbtlKeU','odmWna','q09nrKfnqq','vKLftKrbifmUqq','nti0oq','CMvXDwLYzwq','C3vIC3rYAw5N','ihbHCMvJzsb2yq','DhjHBNnWB3j0zq','Dgf0lwnHCMqGyq','BIi+pgrPDIbJBa','zhjHz2XLyxzL','B3mGBM9TAw5Hpa','sunbifmUqs4Gsq','BwfWCgvK','qu5usunp','pc9VChrPB24+','qurpqKuGu1Ltva','BM9ezwq','yMfJA2DYB3vUza','lKeU','rw5LCMDPyq','sw5NCMvZysb0Dq','Dg9gAxHLza','qs5tlG','qvmGq0HfqW','DMLHDgLJBW','qKfoq08Gue9qvq','DxrPBhm','quXmsufowIbtrq','u2fUiePVC2uGza','lLmUuc4','CMLWDc5NB29NBa','Aw1H','t01csueGuY5blG','BgfIzwW','ndiXma','Ad48DgG+q29UyW','iZWVDgG+phrOpG','svzbieDLBMvYyq','otaXnJu4nty2','qKLb','A2v5','uMvZDw1LBG','igtdRweOCYKG4Ocuia','Dc1JyxjKigjSDq','tKvsr1KGq09mtW','ChjPBweGC2vYDG','nZmZnJK5ne5Twe1qAq','mtmWmW','mJCWnq','DhjPBq','y2fUB24','rsbtruDvuK9tia','yxbWzw5Kq2HPBa','qMfYCMfUy2fIzq','ugLLzgvJDwvZDa','zgXtDgf0CW','Ag9YysbLEhrYyq','nteXma','zwD1CM8','CZ0ICMvXiJ4Qpa','zhjHz2vUDgvY','z2LUlwjVDhrVBq','lKeUuY4','reuGuKLptKvhuG','mtm1ntK1','C2vYDMLJAw8GCa','vgv4Da','BwvUC2fQzxjPyq','ls1TDxrLzcKIpG','CM91BMq','t1jbie5bq0LptG','psjJB2WTBwfWlq','BYbKzsb2zxjPzG','ig1HCZWVDgq+pa','q0LusujbtKSGqW','uefs','BM8GzNvLCM9Uia','AwzPy2eGDhuGyW','ywXLCNroB0rHDa','rK9ore8GreuGrW','yxbVCNrLCYbWzq','reuGqKfsuKfoqW','u2fUiefUzhjLCW','igv4B2DLBMfKAq','z3jLzw4IpJXKAq','BgD1BMfZigz1BG','lIaOq0XbuK8P','zZOXmNb4iJ4UlG','vhjHBNnWB3j0zq','mJm2oq','AwjSzq','u2fUDgeGtwfYDa','sueGr0vorvjbta','ru1quKvtqsberq','uxvPyMrV','pc90zd48Dgq+','Dc1HBgLNBJPJzq','qu5hqq','qvHbienptfbbva','reuGsvrbr1vj','y3ldRwjLDguGzw4','rKLoqu5dsuvsqq','icaGidXKAxyGyW','DgvYy2vYB3mU','nZy4ntqZmeD0ueXzta','Axy+','y29TAxnPB25LCW','qKfoq08GqvyGvG','u09esu1bqYbdtW','vMLJAgfKyq','CMvTB3zLsxrLBq','icaGphnLBgvJDa','y2XHC2LMu3rHDa','vKfs','y2XHC2LMrMLSDa','zMLSBa','ywrK','vgvJBM9SB2DPyq','qMfZzsbszxrLBG','q09orKLbuIbdtW','q09ptuvwqsbdtW','Bwf4','ue9oveLgsunjqq','DMfS','l3nWyw4+','nJy3mZuYrfPiweDK','zci+pgrPDIbJBa','CMv0rNrL','rM9Uzg8','ru5puKvt','pUkaLdWVDgq+pc90','iIbJBgfZCZ0IDa','vgLWBYbeB2m','zg93BMXVywq','mYK7CgfKzgLUzW','Dg9mB3DLCKnHCW','txvUAwnPCgLV','DgfIBgu+','rvbt','BgLJzw5JAwe','rcbersbmt1mGqq','y29TChjHigrL','r1vst1mGuY5blG','vKLwqsbbsviGuW','sw52zxjZAw9Uzq','tuLduK9tt0zuia','sLvbtIbqrvjfwG','qKjwqsbtruDvuG','rgvIAxrV','y29TChjH','q29WywnHyMfUyq','zMLSzvn0yxrZ','lcbosvqSigrLyG','Axy+pc9KAxy+','mJy5oq','CMvKDwnL','pJWVDhi+','rcbfquzjva','revoq0Lbie5bqW','DgfIBgu','ntaXmW','ntaXma','odeXmJiYmZmZ','ifmUqs5tlG','r0fgsu4','reuGvKLmtefwsq','CMvNAxn0CM9Zia','AgrYlxjVDW','zM9YBwf0B3mU','zgvZyMXVCxvLyq','qKjwqsbdt0Xptq','mtiXma','u09dsuvequrfuW','phn0CM9UzZ4','BNvTyMvY','rMXVCMLKywjSyq','odmWnG','y2fMzxrLCMLH','tKfsrq','iYWJiZa','phrYpJX0zcbJBW','ufvcteLdt1m','Aw5NCMvZBYbVCa','idXZCgfUihn0Eq','q2fTyxjH','ke1pvKLtvefskq','mtmWmG','y2LVBMvZihjLCq','vw5PDMvYC2LKyq','zw1WBg8','BgLKyxrLs2v5jG','ierfienptuvsqW','AxPLoI43CMvToW','svzbierLC2mU','iejbtKnpte9nqG','AhjLzG','EgXZEa','CMvJDxbLCMfJAq','otm5mdm4AuTPB2fy','qxnLz3vYywrVCG','uY4Grs5tlLaU','yxjJAgL2BYbZzq','i2zTDfbHBMvSCW','sw5KDxn0CMLH','qKLbifmUqs4','y2zNwwvHCG','C2v0qxr0CMLIDq','ica8zgL2ignSyq','zwvUksi+4PYtieXP','rJeWmdC','qK9ht1rbieqUqW','z2v0sxrLBq','q2fSzgfZ','yxbVCNrLihbLBG','rKy4mdGWoda','reuGrKXpuKLeqq','mJiWoq','uxvPBMrPBW','B3rYB3m','ChjVqMfKz2u','u1vqrvjjtLrftG','r0fnqKXfienpta','mZeWnq','q2HPyq','Dg9tDhjPBMC','yM9UAwzPy2fJAq','ufmGuY5blG','Dgv4Dc1YAwDODa','tujjqsbtlKeU','AgLKzgvU','ig5VihrVzgfZia','y2zNtxbPBW','Bg9N','CMLLC2DVCYbSyq','pc90Ad48l3rYpG','mty0r1DtBxrR','ugfZDg8','zg8Gy29YCMvJDa','y29Uy2vWDg8','y29KAwDVifbvqW','otaWmde3ntKX','y29Kzq','rKyXrJrfnZK','zt0IyMfJA2DYBW','sueGuY5blLmU','mtm1nte1mtu','q09nrvjdsu8Gra','tw9JB2e','sg9UB3jHCMLVCW','qs4Grs5tlLaUia','rsbtqu5uqu5erq','qxjTzw5Pyq','Dg9Y','BhnWyw49iJGIia','AgrYuM93u2vSzq','ievorvjhsueGra','q0ftifmUqs4','uKfqueKGuY5blG','ntaWna','ywq+phrIB2r5pG','ic50ywiTy29UDa','uKeGsKzl','phnWyw4GC3r5Ba','CMvTB3zLq2HPBa','B21IAwe','mJiWmG','qMfSyw5JzsbfAG','q0voq0Lp','veLwqq','ifnlqu5esue','rgvIAxrVCW','igrHDg9Zpc90za','DgLTyNjL','ugfNB3mGEsbbyG','tIbmsu1jveve','qu5dqsbdt0Xptq','mtu0mdm0mdryExbYDum','yM9YzgvY','oNzHCIGTlw11Da','q0fnqvjbierfia','q09ovefevvjjqq','nteYma','DhjPBw9UAw8Gza','y2LV','C29Uyq','yxbtywX1za','q0vnru5ut1mGqq','nteXnq','r09pr0Xfienpta','ue9tve9ct04GuW'];_0x25ed=function(){return _0x141adc;};return _0x25ed();}function onColChange(_0x504798,_0x40dad0){if(_0x40dad0==='')delete colMap[_0x504798];else colMap[_0x504798]=parseInt(_0x40dad0);renderColMapper();}function confirmColumns(){const _0x197a08=_0x5a454e;for(const _0x477131 of COL_FIELDS){if(_0x477131[_0x197a08(0x2d6)]&&!(_0x477131[_0x197a08(0x2fb)]in colMap)){alert('Falta\x20asig'+'nar\x20la\x20col'+'umna:\x20'+_0x477131[_0x197a08(0x2f4)]);return;}}processData();}function processData(){const _0xb6e6fa=_0x5a454e;parsedData=[];const _0x3c3e5a=rawData[_0xb6e6fa(0x5a8)](headerRow+0x1);let _0x1718d4=0x0;for(const _0x2070b4 of _0x3c3e5a){const _0x29d2db=norm(_0x2070b4[colMap['code']])['replace'](/[.\-\s]/g,'');if(!_0x29d2db||!/^\d{4,}/['test'](_0x29d2db)){_0x1718d4++;continue;}const _0x807400=toNum(_0x2070b4[colMap['deb']]),_0xa815ae=toNum(_0x2070b4[colMap[_0xb6e6fa(0x3f9)]]);if(_0x807400===0x0&&_0xa815ae===0x0){_0x1718d4++;continue;}const _0x369823=sanitizarNit(norm(_0x2070b4[colMap['nit']]));let _0x443b91=_0xb6e6fa(0x29b)in colMap?norm(_0x2070b4[colMap[_0xb6e6fa(0x29b)]]):'';if(!_0x443b91&&_0x369823&&DIRECTORIO[_0x369823])_0x443b91=DIRECTORIO[_0x369823]['rs'];parsedData[_0xb6e6fa(0x407)]({'code':_0x29d2db,'name':norm(_0x2070b4[colMap['name']]),'nit':_0x369823,'razon':_0x443b91,'deb':_0x807400,'cre':_0xa815ae,'neto':_0x807400-_0xa815ae});}showPreview(_0x1718d4);}function showPreview(_0x291fb8){const _0x556597=_0x5a454e;document['getElement'+_0x556597(0x52d)](_0x556597(0x568)+'d')['classList'][_0x556597(0x55c)]('hidden');const _0xe53f8e=parsedData['length'],_0x15db68=new Set(parsedData[_0x556597(0x22c)](_0x276d9d=>_0x276d9d['nit']))['size'],_0x55f1f0=new Set(parsedData[_0x556597(0x22c)](_0x489bd7=>_0x489bd7[_0x556597(0x3c4)]['substring'](0x0,0x4)))['size'],_0x1c7efd=parsedData[_0x556597(0x36e)]((_0x6b20e0,_0x3df7f4)=>_0x6b20e0+_0x3df7f4['deb'],0x0),_0x59479a=parsedData['reduce']((_0x1d9aaf,_0x55eb5c)=>_0x1d9aaf+_0x55eb5c[_0x556597(0x3f9)],0x0);document['getElement'+'ById'](_0x556597(0x36a))['innerHTML']='\x0a\x20\x20\x20\x20<div\x20'+_0x556597(0x586)+_0x556597(0x2fe)+'e\x22><div\x20cl'+_0x556597(0x4ca)+_0xe53f8e[_0x556597(0x570)+_0x556597(0x433)]()+(_0x556597(0x5cb)+'\x20class=\x22lb'+'l\x22>Registr'+_0x556597(0x51b)+_0x556597(0x478)+_0x556597(0x4d1)+'\x22stat-card'+'\x20green\x22><d'+_0x556597(0x58a)+'val\x22>')+_0x15db68[_0x556597(0x570)+_0x556597(0x433)]()+('</div><div'+'\x20class=\x22lb'+'l\x22>Tercero'+_0x556597(0x214)+_0x556597(0x4d0)+_0x556597(0x58a)+'stat-card\x20'+_0x556597(0x1e3)+'v\x20class=\x22v'+'al\x22>')+_0x55f1f0+('</div><div'+'\x20class=\x22lb'+_0x556597(0x523)+'</div></di'+'v>\x0a\x20\x20\x20\x20<di'+'v\x20class=\x22s'+'tat-card\x20')+(Math['abs'](_0x1c7efd-_0x59479a)<0x1?_0x556597(0x2a9):'red')+(_0x556597(0x26d)+_0x556597(0x266))+fN(_0x1c7efd-_0x59479a)+('</div><div'+'\x20class=\x22lb'+'l\x22>Diferen'+_0x556597(0x237)+_0x556597(0x36c));_0xe53f8e===0x0?(document['getElement'+'ById'](_0x556597(0x321)+'a')['classList'][_0x556597(0x55c)]('hidden'),document['getElement'+_0x556597(0x52d)]('alertNoDat'+_0x556597(0x427))[_0x556597(0x585)]='<strong>No'+_0x556597(0x5c8)+'raron\x20regi'+'stros\x20vali'+_0x556597(0x3fb)+_0x556597(0x4da)+'ca\x20que\x20el\x20'+_0x556597(0x39c)+_0x556597(0x436)+_0x556597(0x49f)+_0x556597(0x581)+_0x556597(0x246)+_0x556597(0x3c2)+_0x556597(0x36b)+'itos\x20y\x20cre'+'ditos.'):(document['getElement'+'ById']('alertOk')['classList'][_0x556597(0x55c)](_0x556597(0x3b8)),document[_0x556597(0x4c7)+'ById']('alertOkTex'+'t')[_0x556597(0x585)]='Se\x20procesa'+_0x556597(0x57d)+'g>'+_0xe53f8e[_0x556597(0x570)+'ring']()+('</strong>\x20'+_0x556597(0x379)+_0x556597(0x500)+'>')+_0x15db68['toLocaleSt'+'ring']()+('</strong>\x20'+_0x556597(0x33a))+(_0x291fb8>0x0?'\x20('+_0x291fb8+('\x20filas\x20omi'+'tidas\x20sin\x20'+'codigo\x20o\x20s'+_0x556597(0x24d)+'nto)'):''));let _0x5df9ca=_0x556597(0x47f)+_0x556597(0x453)+'ble\x22><thea'+_0x556597(0x210)+'#</th><th>'+'Cuenta</th'+_0x556597(0x2be)+_0x556597(0x4ae)+'NIT</th><t'+'h>Tercero<'+_0x556597(0x21d)+'bito</th><'+_0x556597(0x54e)+'</th></tr>'+_0x556597(0x1e2)+_0x556597(0x44b);for(let _0x3932c0=0x0;_0x3932c0<Math['min'](parsedData['length'],0x32);_0x3932c0++){const _0x332070=parsedData[_0x3932c0];_0x5df9ca+='<tr><td>'+(_0x3932c0+0x1)+(_0x556597(0x462)+'lass=\x22mono'+'\x22>')+_0x332070['code']+_0x556597(0x332)+_0x332070[_0x556597(0x499)]['substring'](0x0,0x1e)+(_0x556597(0x462)+'lass=\x22mono'+'\x22>')+_0x332070[_0x556597(0x27f)]+'</td><td>'+_0x332070[_0x556597(0x29b)][_0x556597(0x2d7)](0x0,0x19)+('</td><td\x20c'+'lass=\x22text'+'-right\x20mon'+_0x556597(0x4b0))+fN(_0x332070[_0x556597(0x1ee)])+(_0x556597(0x462)+'lass=\x22text'+'-right\x20mon'+_0x556597(0x4b0))+fN(_0x332070['cre'])+_0x556597(0x5a2);}if(parsedData['length']>0x32)_0x5df9ca+=_0x556597(0x387)+_0x556597(0x52f)+'style=\x22tex'+_0x556597(0x333)+'nter;color'+_0x556597(0x3e9)+_0x556597(0x57c)+_0x556597(0x32a)+'.\x20y\x20'+(parsedData['length']-0x32)+('\x20registros'+'\x20mas</td><'+_0x556597(0x217));_0x5df9ca+='</tbody></'+_0x556597(0x35c),document[_0x556597(0x4c7)+_0x556597(0x52d)]('previewTab'+'le')['innerHTML']=_0x5df9ca;}const NIT_DIAN=_0x5a454e(0x498),CUENTAS_IMP_DIAN=['2365',_0x5a454e(0x4a7),_0x5a454e(0x4f2),'2408','2412'],NITS_EXCLUIR_1003=new Set([NIT_DIAN,'899999090',_0x5a454e(0x54f)]),PARAM_1001_RANGOS=[[_0x5a454e(0x419),_0x5a454e(0x3ec),'5120'],['5005','5220','5220'],['5011',_0x5a454e(0x290),'5230'],['5011','5130',_0x5a454e(0x4b8)],['5055',_0x5a454e(0x3f2),_0x5a454e(0x3f2)],[_0x5a454e(0x3d5),_0x5a454e(0x30c),'5110'],[_0x5a454e(0x410),'5125',_0x5a454e(0x274)],['5016','5135','5139'],['5016',_0x5a454e(0x226),_0x5a454e(0x293)],[_0x5a454e(0x410),_0x5a454e(0x239),'5219'],[_0x5a454e(0x410),_0x5a454e(0x252),_0x5a454e(0x2d5)],[_0x5a454e(0x410),_0x5a454e(0x2a7),'5299'],['5006','5305','5305'],['5101','530515','530515'],['5007',_0x5a454e(0x4df),_0x5a454e(0x2cc)],['5010',_0x5a454e(0x51f),_0x5a454e(0x1eb)],[_0x5a454e(0x374),'1520','1540']],PARAM_1001_NOMINA_SUB={'5001':['06','07','08','09','10','15','27','30','33','36','39','42','45'],'5002':['01','03','05'],'5024':['02'],'5025':['03'],'5027':['04'],'5023':['68','72','75']},PARAM_1003=[['1301','13551505',_0x5a454e(0x25d)],['1301','13551510',_0x5a454e(0x45d)],[_0x5a454e(0x38d),_0x5a454e(0x3c8),'13551519'],[_0x5a454e(0x302),'13551520','13551524'],['1305',_0x5a454e(0x57b),'13551529'],[_0x5a454e(0x598),_0x5a454e(0x46c),_0x5a454e(0x20c)],['1306',_0x5a454e(0x43d),_0x5a454e(0x4f6)],[_0x5a454e(0x227),_0x5a454e(0x1fa),_0x5a454e(0x409)],['1308',_0x5a454e(0x404),_0x5a454e(0x514)],['1307','135518','135518'],[_0x5a454e(0x5b4),'135599',_0x5a454e(0x5cf)]],PARAM_1007=[['4003',_0x5a454e(0x2f5),_0x5a454e(0x2f5)],['4001',_0x5a454e(0x56c),'4199'],[_0x5a454e(0x42e),'4135',_0x5a454e(0x228)],['4002','4201',_0x5a454e(0x1da)]],PARAM_1008=[['1315',_0x5a454e(0x220),_0x5a454e(0x220)],[_0x5a454e(0x5ca),'1380',_0x5a454e(0x532)],['1317','1330',_0x5a454e(0x403)],[_0x5a454e(0x59a),_0x5a454e(0x1ea),'1365']],PARAM_1009=[[_0x5a454e(0x3dc),'2105','2199'],['2201',_0x5a454e(0x4f5),'2295'],['2204','2305','2334'],['2210','2335','2364'],['2206','2365',_0x5a454e(0x32c)],['2207','2380',_0x5a454e(0x563)],[_0x5a454e(0x591),_0x5a454e(0x4f2),'2499'],[_0x5a454e(0x3ab),'2505',_0x5a454e(0x53d)],['2210','2605',_0x5a454e(0x36d)],[_0x5a454e(0x4e9),_0x5a454e(0x303),_0x5a454e(0x209)],['2210','2805','2899'],[_0x5a454e(0x4e9),_0x5a454e(0x258),'2999']],MAPEO_1012=[['8302',_0x5a454e(0x260),_0x5a454e(0x260)],['8301','1110','1110'],['8305','1201','1204'],[_0x5a454e(0x4a1),_0x5a454e(0x26c),'1205'],[_0x5a454e(0x2d2),'1210',_0x5a454e(0x37e)],[_0x5a454e(0x383),'1225',_0x5a454e(0x280)],['8309','1265',_0x5a454e(0x1f1)]],KW_1001=[['5001',['sueldo','salario',_0x5a454e(0x25c),'jornal',_0x5a454e(0x30b),'recargo',_0x5a454e(0x2a3)+'ansporte',_0x5a454e(0x40b)]],[_0x5a454e(0x4b3),[_0x5a454e(0x2b8),_0x5a454e(0x268),'comision',_0x5a454e(0x33d)]],[_0x5a454e(0x230),[_0x5a454e(0x426)+'ud',_0x5a454e(0x596),'aportes\x20ep'+'s']],[_0x5a454e(0x250),[_0x5a454e(0x3a8)+_0x5a454e(0x2c4),_0x5a454e(0x323)+_0x5a454e(0x4cc),'fondo\x20pens'+'ion']],['5027',[_0x5a454e(0x516),'riesgo\x20lab'+'oral',_0x5a454e(0x3bc)+_0x5a454e(0x5b7)]],['5023',['parafiscal','parafiscal'+'es',_0x5a454e(0x4a6),_0x5a454e(0x4d9),'caja\x20de\x20co'+_0x5a454e(0x5aa),_0x5a454e(0x21b)+_0x5a454e(0x3f6)+'r']],[_0x5a454e(0x23b),[_0x5a454e(0x5d4),'vacaciones',_0x5a454e(0x589),_0x5a454e(0x1d7),_0x5a454e(0x56e)+_0x5a454e(0x264),_0x5a454e(0x300)+'icio','dotacion',_0x5a454e(0x23a)+'d',_0x5a454e(0x3b4)+'on']],[_0x5a454e(0x50a),[_0x5a454e(0x442),'poliza',_0x5a454e(0x56e)+_0x5a454e(0x30d),'todo\x20riesg'+'o']],['5005',[_0x5a454e(0x5c6),'arrendamie'+'nto',_0x5a454e(0x305),'alquiler']],[_0x5a454e(0x3d5),[_0x5a454e(0x255),_0x5a454e(0x587),'telefono','internet','gas',_0x5a454e(0x314)+'ublico',_0x5a454e(0x283),_0x5a454e(0x2d9),'flete','acarreo',_0x5a454e(0x316)]],[_0x5a454e(0x2a1),[_0x5a454e(0x4d6),_0x5a454e(0x1e4),'industria\x20'+'y\x20comercio','predial','vehiculo',_0x5a454e(0x3e3),'estampilla']],[_0x5a454e(0x503),['interes\x20ba'+'ncario','gmf','4x1000','comision\x20b'+'ancaria','gasto\x20fina'+'nciero',_0x5a454e(0x43c),'diferencia'+'\x20en\x20cambio']],['5010',['gastos\x20de\x20'+'personal','bienestar','medicina\x20p'+'repagada']],[_0x5a454e(0x410),['viaje',_0x5a454e(0x2eb),'pasaje',_0x5a454e(0x4bc),_0x5a454e(0x504),'mantenimie'+_0x5a454e(0x488),_0x5a454e(0x4b7),'legal','notarial','registro',_0x5a454e(0x35e),'depreciaci'+'on',_0x5a454e(0x4ee)+'on','provision','aseo',_0x5a454e(0x384),_0x5a454e(0x4d5),_0x5a454e(0x5c0),'fotocopia',_0x5a454e(0x59e)+'o',_0x5a454e(0x5a7),'propaganda','suscripcio'+'n','diversos']],['5007',[_0x5a454e(0x484),_0x5a454e(0x360),'mercancia',_0x5a454e(0x45c)+_0x5a454e(0x2f2),_0x5a454e(0x40c),_0x5a454e(0x46f),_0x5a454e(0x244)]]],KW_1007=[[_0x5a454e(0x42e),[_0x5a454e(0x389)+'eracional',_0x5a454e(0x480)+'a','asesoria','outsourcin'+'g',_0x5a454e(0x421),_0x5a454e(0x21e),'comercio','producto']],['4002',[_0x5a454e(0x211)+_0x5a454e(0x2af)+'al','extraordin'+_0x5a454e(0x51d),_0x5a454e(0x398)+'on']],[_0x5a454e(0x25e),['arrendamie'+'nto\x20recibi'+'do','arriendo\x20r'+'ecibido',_0x5a454e(0x486)+'o\x20financie'+'ro']]],KW_1003=[[_0x5a454e(0x23f),['retencion\x20'+'honorario',_0x5a454e(0x47c)+'orario']],['1302',[_0x5a454e(0x465)+_0x5a454e(0x271),_0x5a454e(0x1f3)+'ision']],[_0x5a454e(0x302),[_0x5a454e(0x465)+'servicio','retfte\x20ser'+_0x5a454e(0x50c)]],['1304',['retencion\x20'+_0x5a454e(0x5c6),'retfte\x20arr'+_0x5a454e(0x3f8),'retencion\x20'+'arrendamie'+'nto']],[_0x5a454e(0x220),[_0x5a454e(0x465)+_0x5a454e(0x486)+'o','retfte\x20ren'+_0x5a454e(0x417),'rendimient'+_0x5a454e(0x4f4)+'ro']],['1306',['retencion\x20'+_0x5a454e(0x368),'retfte\x20com'+'pra']],['1307',[_0x5a454e(0x465)+'ica','rete\x20ica','reteica']],[_0x5a454e(0x227),['otras\x20rete'+'ncion','retencion\x20'+_0x5a454e(0x3ad)]],[_0x5a454e(0x5b4),['autorreten'+_0x5a454e(0x505),'auto\x20reten'+'cion','autoreteft'+'e']]],CONCEPTOS_NOMINA=new Set(['5001','5024',_0x5a454e(0x250),_0x5a454e(0x263),'5023']),CONCEPTOS_SOLO_ENTIDADES=new Set([_0x5a454e(0x50a),'5012',_0x5a454e(0x373),_0x5a454e(0x4ad),_0x5a454e(0x230),_0x5a454e(0x250),_0x5a454e(0x263)]);function _0x10df(_0x1b02b0,_0x3aac75){_0x1b02b0=_0x1b02b0-0x1d1;const _0x25eda3=_0x25ed();let _0x10dfec=_0x25eda3[_0x1b02b0];if(_0x10df['pEGsGl']===undefined){var _0x374a63=function(_0x5ae2ca){const _0x4e909c='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x18ffa9='',_0x178eca='';for(let _0x1f9f07=0x0,_0x40860a,_0x10787a,_0x2c4b4f=0x0;_0x10787a=_0x5ae2ca['charAt'](_0x2c4b4f++);~_0x10787a&&(_0x40860a=_0x1f9f07%0x4?_0x40860a*0x40+_0x10787a:_0x10787a,_0x1f9f07++%0x4)?_0x18ffa9+=String['fromCharCode'](0xff&_0x40860a>>(-0x2*_0x1f9f07&0x6)):0x0){_0x10787a=_0x4e909c['indexOf'](_0x10787a);}for(let _0x4a1fb7=0x0,_0x43b037=_0x18ffa9['length'];_0x4a1fb7<_0x43b037;_0x4a1fb7++){_0x178eca+='%'+('00'+_0x18ffa9['charCodeAt'](_0x4a1fb7)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x178eca);};_0x10df['gatHSI']=_0x374a63,_0x10df['haIVrt']={},_0x10df['pEGsGl']=!![];}const _0xfbbbad=_0x25eda3[0x0],_0x34017d=_0x1b02b0+_0xfbbbad,_0x582dc3=_0x10df['haIVrt'][_0x34017d];return!_0x582dc3?(_0x10dfec=_0x10df['gatHSI'](_0x10dfec),_0x10df['haIVrt'][_0x34017d]=_0x10dfec):_0x10dfec=_0x582dc3,_0x10dfec;}function enRango(_0x1787b8,_0x901ed1,_0x2839ca){const _0x450d27=_0x5a454e,_0x50ac17=_0x901ed1['length'];return _0x1787b8['substring'](0x0,_0x50ac17)>=_0x901ed1&&_0x1787b8[_0x450d27(0x2d7)](0x0,_0x50ac17)<=_0x2839ca;}function normNombre(_0x41263f){const _0x1c3e65=_0x5a454e;if(!_0x41263f)return'';return _0x41263f[_0x1c3e65(0x35a)+'e']()['normalize']('NFD')['replace'](/[\u0300-\u036f]/g,'')[_0x1c3e65(0x28d)](/[.,;:\-_/\\()[\]{}#"'&$%@!¿?]/g,'\x20')['replace'](/\s+/g,'\x20')[_0x1c3e65(0x304)]();}function clasificarPorNombre(_0x1e0209,_0x4416b5){const _0x31ccba=_0x5a454e,_0x292ecf=normNombre(_0x1e0209);if(!_0x292ecf)return null;for(const [_0x2658d1,_0x247832]of _0x4416b5){for(const _0x9fdb8b of _0x247832){if(_0x9fdb8b[_0x31ccba(0x2a6)]('\x20')&&_0x292ecf['includes'](_0x9fdb8b))return _0x2658d1;}}const _0x23c89f=new Set(_0x292ecf['split']('\x20'));for(const [_0x33c0c5,_0x5596ed]of _0x4416b5){for(const _0xf44ef6 of _0x5596ed){if(!_0xf44ef6[_0x31ccba(0x2a6)]('\x20')&&_0x23c89f['has'](_0xf44ef6))return _0x33c0c5;}}return null;}function concepto1001(_0x4a0e67,_0x5c19cb){const _0x6259ec=_0x5a454e;if(_0x4a0e67[_0x6259ec(0x511)]('5105')){const _0x2b03b3=clasificarPorNombre(_0x5c19cb,KW_1001);if(_0x2b03b3)return _0x2b03b3;const _0x3d5b29=_0x4a0e67[_0x6259ec(0x5b2)]>=0x6?_0x4a0e67[_0x6259ec(0x2d7)](0x4,0x6):_0x4a0e67['substring'](0x4);for(const [_0x4c0a43,_0x2a349b]of Object['entries'](PARAM_1001_NOMINA_SUB)){if(_0x2a349b['includes'](_0x3d5b29))return _0x4c0a43;}return'5001';}if(['51','52','53'][_0x6259ec(0x2a6)](_0x4a0e67['substring'](0x0,0x2))){const _0x214ede=clasificarPorNombre(_0x5c19cb,KW_1001);if(_0x214ede)return _0x214ede;for(const [_0x10b1a8,_0x523f41,_0x224d96]of PARAM_1001_RANGOS){if(enRango(_0x4a0e67,_0x523f41,_0x224d96))return _0x10b1a8;}return _0x6259ec(0x410);}if(_0x4a0e67['startsWith']('14')){for(const [_0x49d84a,_0x386898,_0x2062a0]of PARAM_1001_RANGOS){if(enRango(_0x4a0e67,_0x386898,_0x2062a0))return _0x49d84a;}const _0xa13761=clasificarPorNombre(_0x5c19cb,KW_1001);if(_0xa13761)return _0xa13761;}return null;}function buscarConcepto(_0x572111,_0x2b29d0,_0x57ae5d,_0x4c9e33){for(const [_0x187550,_0x947d9e,_0x3fa289]of _0x2b29d0){if(enRango(_0x572111,_0x947d9e,_0x3fa289))return _0x187550;}if(_0x4c9e33&&_0x57ae5d)return clasificarPorNombre(_0x57ae5d,_0x4c9e33)||'';return'';}function detectarTipoDoc(_0xb6fa1e){const _0x4f36ef=_0x5a454e;if(!_0xb6fa1e||_0xb6fa1e===NM)return TDM;_0xb6fa1e=String(_0xb6fa1e)['replace'](/[.\-\s]/g,'');if(!/^\d+$/[_0x4f36ef(0x215)](_0xb6fa1e))return _0xb6fa1e[_0x4f36ef(0x28d)](/[^a-zA-Z]/g,'')['length']<=0x3?'41':'42';if(_0xb6fa1e[_0x4f36ef(0x5b2)]===0x9&&(_0xb6fa1e[0x0]==='8'||_0xb6fa1e[0x0]==='9'))return'31';if(_0xb6fa1e['length']>=0x9&&(_0xb6fa1e[0x0]==='8'||_0xb6fa1e[0x0]==='9'))return'31';return'13';}let clasificacion=[];function clasificarCuentas(){const _0x48fe43=_0x5a454e;clasificacion=[];let _0x3d6f0a=0x0;for(const _0x4e0d47 of parsedData){const _0x34369b=_0x4e0d47[_0x48fe43(0x3c4)],_0x1e34d1=_0x4e0d47['name'],_0x3e42f8=_0x4e0d47['nit'],_0x419a14=Math[_0x48fe43(0x27d)](_0x4e0d47['deb']-_0x4e0d47['cre'])||Math[_0x48fe43(0x34c)](_0x4e0d47['deb'],_0x4e0d47['cre']);let _0xd40c95='',_0x1d3667='',_0x5f36d3='';if(_0x34369b['startsWith']('5105')){const _0x37ef9e=concepto1001(_0x34369b,_0x1e34d1);if(_0x37ef9e&&CONCEPTOS_NOMINA[_0x48fe43(0x3fe)](_0x37ef9e)){_0xd40c95='F2276',_0x1d3667=_0x37ef9e,_0x5f36d3='Rentas\x20de\x20'+_0x48fe43(0x4fb),clasificacion['push']({..._0x4e0d47,'formato':_0xd40c95,'concepto':_0x1d3667,'descripcion':_0x5f36d3,'val':_0x419a14});continue;}}const _0x49112a=concepto1001(_0x34369b,_0x1e34d1);if(_0x49112a&&!CONCEPTOS_NOMINA['has'](_0x49112a)){_0xd40c95='F1001',_0x1d3667=_0x49112a,_0x5f36d3=_0x48fe43(0x3e4)+_0x48fe43(0x58d),clasificacion['push']({..._0x4e0d47,'formato':_0xd40c95,'concepto':_0x1d3667,'descripcion':_0x5f36d3,'val':_0x419a14});continue;}if(_0x34369b['startsWith'](_0x48fe43(0x593))&&_0x34369b['length']>=0x6&&!_0x34369b[_0x48fe43(0x511)]('135518')&&!_0x34369b[_0x48fe43(0x511)](_0x48fe43(0x313))&&!_0x34369b['startsWith']('135599')){if(!NITS_EXCLUIR_1003['has'](_0x3e42f8)){const _0x55e0dd=buscarConcepto(_0x34369b,PARAM_1003,_0x1e34d1,KW_1003);_0xd40c95=_0x48fe43(0x4ac),_0x1d3667=_0x55e0dd||'1308',_0x5f36d3='Retencione'+'s\x20Practica'+'das',clasificacion[_0x48fe43(0x407)]({..._0x4e0d47,'formato':_0xd40c95,'concepto':_0x1d3667,'descripcion':_0x5f36d3,'val':_0x419a14});continue;}}if(_0x34369b[_0x48fe43(0x511)](_0x48fe43(0x50f))&&_0x4e0d47[_0x48fe43(0x1ee)]>_0x4e0d47['cre']){_0xd40c95='F1005',_0x1d3667='',_0x5f36d3=_0x48fe43(0x438)+_0x48fe43(0x372),clasificacion['push']({..._0x4e0d47,'formato':_0xd40c95,'concepto':_0x1d3667,'descripcion':_0x5f36d3,'val':_0x4e0d47[_0x48fe43(0x1ee)]});continue;}if(_0x34369b['startsWith'](_0x48fe43(0x50f))&&_0x4e0d47['cre']>_0x4e0d47[_0x48fe43(0x1ee)]){_0xd40c95='F1006',_0x1d3667='',_0x5f36d3='IVA\x20Genera'+'do',clasificacion['push']({..._0x4e0d47,'formato':_0xd40c95,'concepto':_0x1d3667,'descripcion':_0x5f36d3,'val':_0x4e0d47['cre']});continue;}if(_0x34369b[0x0]==='4'){const _0x1cc00e=buscarConcepto(_0x34369b,PARAM_1007,_0x1e34d1,KW_1007);if(_0x1cc00e){_0xd40c95=_0x48fe43(0x3a4),_0x1d3667=_0x1cc00e,_0x5f36d3='Ingresos',clasificacion[_0x48fe43(0x407)]({..._0x4e0d47,'formato':_0xd40c95,'concepto':_0x1d3667,'descripcion':_0x5f36d3,'val':_0x419a14});continue;}}if(_0x34369b[0x0]==='1'&&!_0x34369b['startsWith']('1355')&&!_0x34369b[_0x48fe43(0x511)]('1105')&&!_0x34369b['startsWith']('1110')&&!_0x34369b[_0x48fe43(0x511)]('12')){const _0x313976=buscarConcepto(_0x34369b,PARAM_1008,_0x1e34d1,null);if(_0x313976){_0xd40c95='F1008',_0x1d3667=_0x313976,_0x5f36d3=_0x48fe43(0x21f)+_0x48fe43(0x20b),clasificacion['push']({..._0x4e0d47,'formato':_0xd40c95,'concepto':_0x1d3667,'descripcion':_0x5f36d3,'val':_0x419a14});continue;}}if(_0x34369b[0x0]==='2'&&!_0x34369b['startsWith']('2408')){const _0x11dd49=buscarConcepto(_0x34369b,PARAM_1009,_0x1e34d1,null);if(_0x11dd49){_0xd40c95=_0x48fe43(0x1d2),_0x1d3667=_0x11dd49,_0x5f36d3='Cuentas\x20po'+_0x48fe43(0x24e),clasificacion[_0x48fe43(0x407)]({..._0x4e0d47,'formato':_0xd40c95,'concepto':_0x1d3667,'descripcion':_0x5f36d3,'val':_0x419a14});continue;}}if(_0x34369b[_0x48fe43(0x511)]('31')){_0xd40c95='F1010',_0x1d3667='',_0x5f36d3='Socios\x20y\x20A'+'ccionistas',clasificacion['push']({..._0x4e0d47,'formato':_0xd40c95,'concepto':_0x1d3667,'descripcion':_0x5f36d3,'val':_0x419a14});continue;}if(_0x34369b['startsWith'](_0x48fe43(0x260))||_0x34369b['startsWith'](_0x48fe43(0x208))||_0x34369b['startsWith']('12')){const _0x4cc9b1=buscarConcepto(_0x34369b,MAPEO_1012,_0x1e34d1,null);if(_0x4cc9b1){_0xd40c95=_0x48fe43(0x206),_0x1d3667=_0x4cc9b1,_0x5f36d3=_0x48fe43(0x363)+'s\x20y\x20Bancos',clasificacion['push']({..._0x4e0d47,'formato':_0xd40c95,'concepto':_0x1d3667,'descripcion':_0x5f36d3,'val':_0x419a14});continue;}}_0x3d6f0a++,clasificacion[_0x48fe43(0x407)]({..._0x4e0d47,'formato':'—','concepto':'','descripcion':'Sin\x20clasif'+'icar','val':_0x419a14});}renderClasificacion(_0x3d6f0a);}function renderClasificacion(_0x871115){const _0x1454c1=_0x5a454e,_0x2080fb={};for(const _0x5dc80b of clasificacion){if(_0x5dc80b['formato']==='—')continue;if(!_0x2080fb[_0x5dc80b['formato']])_0x2080fb[_0x5dc80b['formato']]={'count':0x0,'total':0x0};_0x2080fb[_0x5dc80b['formato']]['count']++,_0x2080fb[_0x5dc80b[_0x1454c1(0x414)]]['total']+=_0x5dc80b['val'];}const _0x1c25eb=Object['keys'](_0x2080fb)[_0x1454c1(0x5b2)],_0x35a875=clasificacion['filter'](_0x59c8c3=>_0x59c8c3[_0x1454c1(0x414)]!=='—')['length'];document[_0x1454c1(0x4c7)+'ById'](_0x1454c1(0x343)+'s')[_0x1454c1(0x585)]=_0x1454c1(0x599)+_0x1454c1(0x586)+'t-card\x20blu'+_0x1454c1(0x4a0)+_0x1454c1(0x4ca)+_0x35a875['toLocaleSt'+'ring']()+(_0x1454c1(0x5cb)+_0x1454c1(0x49c)+_0x1454c1(0x241)+'os\x20clasifi'+'cados</div'+'></div>\x0a\x20\x20'+_0x1454c1(0x3a2)+_0x1454c1(0x2c2)+_0x1454c1(0x5af)+_0x1454c1(0x5c5)+'s=\x22val\x22>')+_0x1c25eb+('</div><div'+'\x20class=\x22lb'+'l\x22>Formato'+'s\x20con\x20dato'+'s</div></d'+_0x1454c1(0x4d0)+'iv\x20class=\x22'+_0x1454c1(0x4c0)+'amber\x22><di'+_0x1454c1(0x529)+_0x1454c1(0x422))+_0x871115+('</div><div'+_0x1454c1(0x49c)+_0x1454c1(0x4a5)+'sificar</d'+'iv></div>\x0a'+_0x1454c1(0x339)+_0x1454c1(0x2bc)+'-card\x20red\x22'+'><div\x20clas'+'s=\x22val\x22>')+clasificacion[_0x1454c1(0x59f)](_0x78eb84=>CONCEPTOS_NOMINA['has'](_0x78eb84[_0x1454c1(0x3c1)]))[_0x1454c1(0x5b2)]+(_0x1454c1(0x5cb)+_0x1454c1(0x49c)+'l\x22>Registr'+_0x1454c1(0x2dd)+'/div></div'+'>');_0x35a875>0x0&&(document[_0x1454c1(0x4c7)+_0x1454c1(0x52d)]('clasifOk')['classList']['remove']('hidden'),document[_0x1454c1(0x4c7)+_0x1454c1(0x52d)](_0x1454c1(0x48e)+'xt')['innerHTML']='Se\x20clasifi'+'caron\x20<str'+_0x1454c1(0x405)+_0x35a875['toLocaleSt'+_0x1454c1(0x433)]()+('</strong>\x20'+'registros\x20'+_0x1454c1(0x5ab)+'>')+_0x1c25eb+('</strong>\x20'+_0x1454c1(0x37b))+(_0x871115>0x0?'\x20<strong>'+_0x871115+('</strong>\x20'+'registros\x20'+_0x1454c1(0x299)+_0x1454c1(0x1ec)+_0x1454c1(0x205)+'cuentas\x20qu'+_0x1454c1(0x455)+_0x1454c1(0x518)+_0x1454c1(0x282)):''));_0x871115>0x0&&(document['getElement'+_0x1454c1(0x52d)](_0x1454c1(0x4bd))['classList'][_0x1454c1(0x55c)]('hidden'),document['getElement'+'ById'](_0x1454c1(0x4bd)+_0x1454c1(0x315))[_0x1454c1(0x585)]=_0x1454c1(0x380)+_0x871115+(_0x1454c1(0x489)+_0x1454c1(0x534)+_0x1454c1(0x31f)+'clasificad'+'os.\x20Esto\x20e'+'s\x20normal\x20—'+_0x1454c1(0x3b9)+'las\x20cuenta'+_0x1454c1(0x526)+_0x1454c1(0x497)+'n\x20para\x20exo'+'gena\x20(ej:\x20'+_0x1454c1(0x2b9)+_0x1454c1(0x3ed)+'istinto\x20de'+'\x20socios,\x20c'+_0x1454c1(0x1f6)+'orden,\x20etc'+'.)'));const _0x4cad6b={'F1001':'Pagos\x20y\x20Ab'+'onos','F1003':'Retencione'+_0x1454c1(0x559)+_0x1454c1(0x5ba),'F1005':'IVA\x20Descon'+_0x1454c1(0x372),'F1006':_0x1454c1(0x2f8)+'do','F1007':_0x1454c1(0x4ba),'F1008':_0x1454c1(0x21f)+_0x1454c1(0x20b),'F1009':_0x1454c1(0x21f)+'r\x20Pagar','F1010':'Socios\x20y\x20A'+_0x1454c1(0x5bb),'F1012':'Inversione'+'s\x20y\x20Bancos','F2276':_0x1454c1(0x416)+_0x1454c1(0x4fb)},_0x4e5ad3=['F1001',_0x1454c1(0x4ac),_0x1454c1(0x3fd),_0x1454c1(0x3fa),_0x1454c1(0x3a4),'F1008',_0x1454c1(0x1d2),_0x1454c1(0x2c9),_0x1454c1(0x206),'F2276'];let _0x275e25='<table\x20cla'+'ss=\x22map-ta'+_0x1454c1(0x288)+'d><tr><th>'+'Formato</t'+_0x1454c1(0x435)+_0x1454c1(0x4bb)+_0x1454c1(0x1d6)+'stros</th>'+'<th>Valor\x20'+'Total</th>'+'</tr></the'+_0x1454c1(0x3d6);for(const _0x5d41af of _0x4e5ad3){const _0x4c7496=_0x2080fb[_0x5d41af],_0x388d95=_0x1454c1(0x251)+_0x1454c1(0x479)+'ge\x20fmt-'+_0x5d41af[_0x1454c1(0x2d7)](0x1)+'\x22>'+_0x5d41af+_0x1454c1(0x44d);_0x4c7496?_0x275e25+=_0x1454c1(0x4b1)+_0x388d95+_0x1454c1(0x332)+(_0x4cad6b[_0x5d41af]||_0x5d41af)+(_0x1454c1(0x462)+_0x1454c1(0x45e)+'-right\x20mon'+'o\x22>')+_0x4c7496['count'][_0x1454c1(0x570)+'ring']()+(_0x1454c1(0x462)+_0x1454c1(0x45e)+_0x1454c1(0x437)+'o\x22>')+fN(_0x4c7496['total'])+_0x1454c1(0x5a2):_0x275e25+='<tr><td>'+_0x388d95+('</td><td\x20s'+'tyle=\x22colo'+'r:var(--mu'+'ted)\x22>')+(_0x4cad6b[_0x5d41af]||_0x5d41af)+('</td><td\x20c'+_0x1454c1(0x45e)+'-right\x20mon'+_0x1454c1(0x544)+_0x1454c1(0x567)+_0x1454c1(0x317)+_0x1454c1(0x572)+_0x1454c1(0x42b)+'t-right\x20mo'+_0x1454c1(0x491)+'\x22color:var'+_0x1454c1(0x53a)+_0x1454c1(0x355)+'r>');}_0x275e25+='</tbody></'+'table>',document[_0x1454c1(0x4c7)+'ById'](_0x1454c1(0x458)+_0x1454c1(0x556))[_0x1454c1(0x585)]=_0x275e25;let _0x431987=_0x1454c1(0x47f)+_0x1454c1(0x453)+_0x1454c1(0x288)+'d><tr><th>'+_0x1454c1(0x2f7)+_0x1454c1(0x540)+_0x1454c1(0x2f6)+_0x1454c1(0x548)+'th>Cuenta<'+_0x1454c1(0x5a0)+_0x1454c1(0x590)+'th>NIT</th'+'><th>Debit'+_0x1454c1(0x240)+_0x1454c1(0x21c)+'h></tr></t'+_0x1454c1(0x4ff)+'y>';const _0x1bd3d8=clasificacion['slice'](0x0,0x64);for(let _0x4bd52e=0x0;_0x4bd52e<_0x1bd3d8['length'];_0x4bd52e++){const _0x140570=_0x1bd3d8[_0x4bd52e],_0x2d519a=_0x140570['formato']!=='—'?_0x1454c1(0x251)+_0x1454c1(0x479)+'ge\x20fmt-'+_0x140570['formato']['substring'](0x1)+'\x22>'+_0x140570[_0x1454c1(0x414)]+'</span>':_0x1454c1(0x3d9)+'e=\x22color:v'+'ar(--muted'+')\x22>—</span'+'>';_0x431987+=_0x1454c1(0x4b1)+(_0x4bd52e+0x1)+_0x1454c1(0x332)+_0x2d519a+(_0x1454c1(0x462)+'lass=\x22mono'+'\x22>')+_0x140570[_0x1454c1(0x3c1)]+('</td><td\x20c'+_0x1454c1(0x460)+'\x22>')+_0x140570[_0x1454c1(0x3c4)]+'</td><td>'+_0x140570['name'][_0x1454c1(0x2d7)](0x0,0x19)+('</td><td\x20c'+'lass=\x22mono'+'\x22>')+_0x140570[_0x1454c1(0x27f)]+('</td><td\x20c'+_0x1454c1(0x45e)+_0x1454c1(0x437)+'o\x22>')+fN(_0x140570[_0x1454c1(0x1ee)])+('</td><td\x20c'+_0x1454c1(0x45e)+_0x1454c1(0x437)+'o\x22>')+fN(_0x140570[_0x1454c1(0x3f9)])+_0x1454c1(0x5a2);}if(clasificacion['length']>0x64)_0x431987+='<tr><td\x20co'+'lspan=\x228\x22\x20'+'style=\x22tex'+'t-align:ce'+_0x1454c1(0x588)+':var(--mut'+'ed);paddin'+'g:12px\x22>..'+_0x1454c1(0x221)+(clasificacion[_0x1454c1(0x5b2)]-0x64)+(_0x1454c1(0x489)+_0x1454c1(0x31c)+'/tr>');_0x431987+='</tbody></'+'table>',document['getElement'+_0x1454c1(0x52d)](_0x1454c1(0x4a9)+'e')[_0x1454c1(0x585)]=_0x431987;}function filtrarClasificacion(){const _0x1761ae=_0x5a454e,_0x5ca2d9=document[_0x1761ae(0x4c7)+'ById'](_0x1761ae(0x345)+'er')['value'],_0x555aa2=_0x5ca2d9?clasificacion[_0x1761ae(0x59f)](_0x1a4832=>_0x1a4832[_0x1761ae(0x414)]===_0x5ca2d9):clasificacion;document[_0x1761ae(0x4c7)+'ById']('clasifCoun'+'t')['textConten'+'t']=_0x555aa2['length']+_0x1761ae(0x489);const _0x5405a4=_0x555aa2[_0x1761ae(0x5a8)](0x0,0xc8);let _0x204461='<table\x20cla'+'ss=\x22map-ta'+_0x1761ae(0x288)+_0x1761ae(0x210)+'#</th><th>'+'Formato</t'+'h><th>Conc'+'epto</th><'+'th>Cuenta<'+'/th><th>No'+'mbre</th><'+'th>NIT</th'+'><th>Debit'+_0x1761ae(0x240)+'Credito</t'+_0x1761ae(0x286)+'head><tbod'+'y>';for(let _0x263737=0x0;_0x263737<_0x5405a4['length'];_0x263737++){const _0x4a82ee=_0x5405a4[_0x263737],_0x571f23=_0x4a82ee[_0x1761ae(0x414)]!=='—'?'<span\x20clas'+'s=\x22fmt-bad'+'ge\x20fmt-'+_0x4a82ee[_0x1761ae(0x414)]['substring'](0x1)+'\x22>'+_0x4a82ee[_0x1761ae(0x414)]+'</span>':'<span\x20styl'+_0x1761ae(0x543)+'ar(--muted'+')\x22>—</span'+'>';_0x204461+=_0x1761ae(0x4b1)+(_0x263737+0x1)+_0x1761ae(0x332)+_0x571f23+('</td><td\x20c'+'lass=\x22mono'+'\x22>')+_0x4a82ee[_0x1761ae(0x3c1)]+('</td><td\x20c'+_0x1761ae(0x460)+'\x22>')+_0x4a82ee['code']+_0x1761ae(0x332)+_0x4a82ee['name'][_0x1761ae(0x2d7)](0x0,0x19)+('</td><td\x20c'+'lass=\x22mono'+'\x22>')+_0x4a82ee['nit']+(_0x1761ae(0x462)+_0x1761ae(0x45e)+'-right\x20mon'+_0x1761ae(0x4b0))+fN(_0x4a82ee['deb'])+(_0x1761ae(0x462)+'lass=\x22text'+'-right\x20mon'+'o\x22>')+fN(_0x4a82ee['cre'])+'</td></tr>';}if(_0x555aa2['length']>0xc8)_0x204461+=_0x1761ae(0x387)+_0x1761ae(0x3d0)+_0x1761ae(0x4eb)+'t-align:ce'+_0x1761ae(0x588)+':var(--mut'+_0x1761ae(0x57c)+'g:12px\x22>..'+'.\x20y\x20'+(_0x555aa2['length']-0xc8)+('\x20registros'+_0x1761ae(0x31c)+'/tr>');_0x204461+='</tbody></'+_0x1761ae(0x35c),document[_0x1761ae(0x4c7)+'ById'](_0x1761ae(0x4a9)+'e')['innerHTML']=_0x204461;}function irAClasificacion(){clasificarCuentas(),goStep(0x3);}const PREFIJOS_DIAN_F1009=['2365',_0x5a454e(0x4a7),_0x5a454e(0x5be),'2370','2404','2408','2412'];let formatos={};const FMT_HEADERS={'F1001':['Concepto',_0x5a454e(0x357),_0x5a454e(0x40e),'DV','Razon\x20Soci'+'al',_0x5a454e(0x4b6)+_0x5a454e(0x32d),_0x5a454e(0x40a)+_0x5a454e(0x28c),_0x5a454e(0x446)+_0x5a454e(0x571),'Ret\x20IVA'],'F1003':[_0x5a454e(0x5ae),_0x5a454e(0x357),'No\x20ID','DV',_0x5a454e(0x5c7)+'al',_0x5a454e(0x349)+_0x5a454e(0x505),_0x5a454e(0x20f)+'Acumulada'],'F1005':[_0x5a454e(0x357),_0x5a454e(0x40e),'DV',_0x5a454e(0x5c7)+'al',_0x5a454e(0x438)+'table'],'F1006':['Tipo\x20Doc','No\x20ID','DV',_0x5a454e(0x5c7)+'al',_0x5a454e(0x2f8)+'do'],'F1007':['Concepto','Tipo\x20Doc','No\x20ID','DV',_0x5a454e(0x5c7)+'al','Ingresos\x20B'+'rutos',_0x5a454e(0x560)+'es'],'F1008':[_0x5a454e(0x5ae),_0x5a454e(0x357),'No\x20ID','DV','Razon\x20Soci'+'al','Saldo\x20CxC\x20'+_0x5a454e(0x477)],'F1009':[_0x5a454e(0x5ae),_0x5a454e(0x357),_0x5a454e(0x40e),'DV','Razon\x20Soci'+'al',_0x5a454e(0x424)+'Dic31'],'F1010':[_0x5a454e(0x357),'No\x20ID','DV','Razon\x20Soci'+'al','Valor\x20Patr'+'imonial','%\x20Particip'+'acion'],'F1012':['Concepto','Tipo\x20Doc',_0x5a454e(0x40e),'DV','Razon\x20Soci'+'al','Saldo\x20Dic3'+'1'],'F2276':[_0x5a454e(0x357),_0x5a454e(0x40e),'DV','Razon\x20Soci'+'al',_0x5a454e(0x269),_0x5a454e(0x3cb),'Vacaciones',_0x5a454e(0x29a),_0x5a454e(0x4de),'Total\x20Brut'+'o',_0x5a454e(0x2b6)+'ud',_0x5a454e(0x54b)+_0x5a454e(0x2c4),'Ret\x20Fte']};function generarFormatos(){const _0xded809=_0x5a454e;formatos={};const _0x2a193f={},_0x31f2dc={},_0x4890e8={};for(const _0x56e0c7 of parsedData){if(!_0x56e0c7['nit'])continue;enRango(_0x56e0c7['code'],'236505','236530')&&(_0x2a193f[_0x56e0c7[_0xded809(0x27f)]]=(_0x2a193f[_0x56e0c7['nit']]||0x0)+Math[_0xded809(0x34c)](_0x56e0c7['cre']-_0x56e0c7[_0xded809(0x1ee)],0x0)),_0x56e0c7['code'][_0xded809(0x511)](_0xded809(0x4a7))&&(_0x31f2dc[_0x56e0c7[_0xded809(0x27f)]]=(_0x31f2dc[_0x56e0c7[_0xded809(0x27f)]]||0x0)+Math['max'](_0x56e0c7['cre']-_0x56e0c7['deb'],0x0)),['51','52','53'][_0xded809(0x2a6)](_0x56e0c7['code'][_0xded809(0x2d7)](0x0,0x2))&&(_0x4890e8[_0x56e0c7[_0xded809(0x27f)]]=(_0x4890e8[_0x56e0c7['nit']]||0x0)+Math['abs'](_0x56e0c7['deb']-_0x56e0c7[_0xded809(0x3f9)]));}const _0x4d0747={};for(const _0x2a36b8 of clasificacion){if(_0x2a36b8[_0xded809(0x414)]!=='F1001')continue;const _0x13dd7a=_0x2a36b8[_0xded809(0x3c1)]+'|'+_0x2a36b8[_0xded809(0x27f)];if(!_0x4d0747[_0x13dd7a])_0x4d0747[_0x13dd7a]={'concepto':_0x2a36b8[_0xded809(0x3c1)],'nit':_0x2a36b8['nit'],'razon':_0x2a36b8[_0xded809(0x29b)],'ded':0x0,'noDed':0x0,'retFte':0x0,'retIva':0x0};_0x4d0747[_0x13dd7a]['ded']+=_0x2a36b8['val'];}const _0x131d9e={};for(const [_0x46ac0a,_0x184f03]of Object['entries'](_0x4d0747)){if(!_0x131d9e[_0x184f03['nit']])_0x131d9e[_0x184f03[_0xded809(0x27f)]]=[];_0x131d9e[_0x184f03[_0xded809(0x27f)]]['push']({'key':_0x46ac0a,'total':_0x184f03['ded']+_0x184f03['noDed']});}for(const [_0x47f0e2,_0x25dde3]of Object['entries'](_0x131d9e)){const _0x2e8cb1=_0x2a193f[_0x47f0e2]||0x0,_0x2d4e15=_0x31f2dc[_0x47f0e2]||0x0;if(_0x2e8cb1===0x0&&_0x2d4e15===0x0)continue;const _0x12e81f=_0x25dde3[_0xded809(0x36e)]((_0xe44683,_0x9e20f7)=>_0xe44683+_0x9e20f7[_0xded809(0x4d4)],0x0);if(_0x12e81f===0x0)continue;for(const _0x55b03c of _0x25dde3){const _0x3683d5=_0x55b03c[_0xded809(0x4d4)]/_0x12e81f;_0x4d0747[_0x55b03c[_0xded809(0x2fb)]]['retFte']+=Math['round'](_0x2e8cb1*_0x3683d5),_0x4d0747[_0x55b03c['key']][_0xded809(0x20a)]+=Math[_0xded809(0x318)](_0x2d4e15*_0x3683d5);}}const _0x14ea03={},_0x200a4e={};for(const [_0x3c4d10,_0x92da55]of Object['entries'](_0x4d0747)){const _0x14b34b=_0x92da55['ded']+_0x92da55[_0xded809(0x2e3)],_0x3c5a6d=_0x92da55[_0xded809(0x352)]>0x0||_0x92da55[_0xded809(0x20a)]>0x0;if(_0x14b34b<C3UVT&&!_0x3c5a6d){const _0x4ee20e=_0x92da55[_0xded809(0x3c1)]+'|'+NM;if(!_0x200a4e[_0x4ee20e])_0x200a4e[_0x4ee20e]={'concepto':_0x92da55['concepto'],'nit':NM,'razon':'CUANTIAS\x20M'+_0xded809(0x354),'ded':0x0,'noDed':0x0,'retFte':0x0,'retIva':0x0};_0x200a4e[_0x4ee20e]['ded']+=_0x92da55[_0xded809(0x4e7)],_0x200a4e[_0x4ee20e][_0xded809(0x2e3)]+=_0x92da55[_0xded809(0x2e3)];}else _0x14ea03[_0x3c4d10]=_0x92da55;}Object['assign'](_0x14ea03,_0x200a4e),formatos[_0xded809(0x4b5)]=Object['values'](_0x14ea03)['map'](_0x7d4428=>[_0x7d4428[_0xded809(0x3c1)],detectarTipoDoc(_0x7d4428['nit']),_0x7d4428['nit'],calcDv(_0x7d4428[_0xded809(0x27f)]),_0x7d4428[_0xded809(0x29b)],Math[_0xded809(0x318)](_0x7d4428[_0xded809(0x4e7)]),Math[_0xded809(0x318)](_0x7d4428[_0xded809(0x2e3)]),Math[_0xded809(0x318)](_0x7d4428[_0xded809(0x352)]),Math['round'](_0x7d4428[_0xded809(0x20a)])]);const _0x3a79cd={};for(const _0x401ae8 of clasificacion){if(_0x401ae8[_0xded809(0x414)]!=='F1003')continue;const _0xf84c51=_0x401ae8['concepto']+'|'+_0x401ae8[_0xded809(0x27f)];if(!_0x3a79cd[_0xf84c51])_0x3a79cd[_0xf84c51]={'concepto':_0x401ae8[_0xded809(0x3c1)],'nit':_0x401ae8[_0xded809(0x27f)],'razon':_0x401ae8['razon'],'base':0x0,'ret':0x0};_0x3a79cd[_0xf84c51]['ret']+=_0x401ae8[_0xded809(0x3f9)]>0x0?_0x401ae8['cre']:_0x401ae8['deb'];}formatos[_0xded809(0x4ac)]=Object[_0xded809(0x26e)](_0x3a79cd)[_0xded809(0x22c)](_0xb028ff=>[_0xb028ff['concepto'],detectarTipoDoc(_0xb028ff['nit']),_0xb028ff[_0xded809(0x27f)],calcDv(_0xb028ff['nit']),_0xb028ff['razon'],0x0,Math[_0xded809(0x318)](_0xb028ff['ret'])]);const _0x11467c={};for(const _0x566723 of clasificacion){if(_0x566723['formato']!==_0xded809(0x3fd))continue;if(!_0x11467c[_0x566723['nit']])_0x11467c[_0x566723[_0xded809(0x27f)]]={'nit':_0x566723['nit'],'razon':_0x566723['razon'],'val':0x0};_0x11467c[_0x566723['nit']]['val']+=_0x566723['deb'];}formatos['F1005']=Object[_0xded809(0x26e)](_0x11467c)[_0xded809(0x22c)](_0x31accf=>[detectarTipoDoc(_0x31accf['nit']),_0x31accf[_0xded809(0x27f)],calcDv(_0x31accf[_0xded809(0x27f)]),_0x31accf[_0xded809(0x29b)],Math['round'](_0x31accf['val'])]);const _0x1ccf90={};for(const _0x2d7462 of clasificacion){if(_0x2d7462[_0xded809(0x414)]!=='F1006')continue;if(!_0x1ccf90[_0x2d7462['nit']])_0x1ccf90[_0x2d7462['nit']]={'nit':_0x2d7462['nit'],'razon':_0x2d7462['razon'],'val':0x0};_0x1ccf90[_0x2d7462[_0xded809(0x27f)]][_0xded809(0x34e)]+=_0x2d7462[_0xded809(0x3f9)];}formatos['F1006']=Object[_0xded809(0x26e)](_0x1ccf90)['map'](_0x203bae=>[detectarTipoDoc(_0x203bae[_0xded809(0x27f)]),_0x203bae[_0xded809(0x27f)],calcDv(_0x203bae[_0xded809(0x27f)]),_0x203bae[_0xded809(0x29b)],Math['round'](_0x203bae[_0xded809(0x34e)])]);const _0x4c16f0={};for(const _0x37f02c of clasificacion){if(_0x37f02c['formato']!==_0xded809(0x3a4))continue;const _0xa760a4=_0x37f02c['concepto']+'|'+_0x37f02c[_0xded809(0x27f)];if(!_0x4c16f0[_0xa760a4])_0x4c16f0[_0xa760a4]={'concepto':_0x37f02c[_0xded809(0x3c1)],'nit':_0x37f02c[_0xded809(0x27f)],'razon':_0x37f02c['razon'],'val':0x0};_0x4c16f0[_0xa760a4][_0xded809(0x34e)]+=_0x37f02c[_0xded809(0x34e)];}const _0x100cbc={},_0x5a4ae0={};for(const [_0x1d230b,_0x4a101a]of Object[_0xded809(0x541)](_0x4c16f0)){if(_0x4a101a[_0xded809(0x34e)]<C3UVT){const _0x494a6f=_0x4a101a[_0xded809(0x3c1)]+'|'+NM;if(!_0x5a4ae0[_0x494a6f])_0x5a4ae0[_0x494a6f]={..._0x4a101a,'nit':NM,'razon':_0xded809(0x509)+'ENORES'};else _0x5a4ae0[_0x494a6f][_0xded809(0x34e)]+=_0x4a101a['val'];}else _0x100cbc[_0x1d230b]=_0x4a101a;}Object[_0xded809(0x1d1)](_0x100cbc,_0x5a4ae0),formatos[_0xded809(0x3a4)]=Object['values'](_0x100cbc)[_0xded809(0x22c)](_0x1b7df5=>[_0x1b7df5[_0xded809(0x3c1)],detectarTipoDoc(_0x1b7df5['nit']),_0x1b7df5[_0xded809(0x27f)],calcDv(_0x1b7df5[_0xded809(0x27f)]),_0x1b7df5[_0xded809(0x29b)],Math['round'](_0x1b7df5['val']),0x0]);const _0x1dc479={};for(const _0x5d79f0 of clasificacion){if(_0x5d79f0['formato']!=='F1008')continue;const _0x234f3d=_0x5d79f0['concepto']+'|'+_0x5d79f0[_0xded809(0x27f)];if(!_0x1dc479[_0x234f3d])_0x1dc479[_0x234f3d]={'concepto':_0x5d79f0['concepto'],'nit':_0x5d79f0[_0xded809(0x27f)],'razon':_0x5d79f0['razon'],'val':0x0};_0x1dc479[_0x234f3d]['val']+=_0x5d79f0['val'];}const _0x217ad3={},_0x4f9235={};for(const [_0x4c5f59,_0x1254f8]of Object['entries'](_0x1dc479)){if(_0x1254f8['val']<C12UVT){const _0x344420=_0x1254f8['concepto']+'|'+NM;if(!_0x4f9235[_0x344420])_0x4f9235[_0x344420]={..._0x1254f8,'nit':NM,'razon':'CUANTIAS\x20M'+_0xded809(0x354)};else _0x4f9235[_0x344420][_0xded809(0x34e)]+=_0x1254f8['val'];}else _0x217ad3[_0x4c5f59]=_0x1254f8;}Object[_0xded809(0x1d1)](_0x217ad3,_0x4f9235),formatos['F1008']=Object[_0xded809(0x26e)](_0x217ad3)[_0xded809(0x22c)](_0x3f0e70=>[_0x3f0e70[_0xded809(0x3c1)],detectarTipoDoc(_0x3f0e70[_0xded809(0x27f)]),_0x3f0e70['nit'],calcDv(_0x3f0e70['nit']),_0x3f0e70['razon'],Math['round'](_0x3f0e70[_0xded809(0x34e)])]);const _0x5008e2={};for(const _0x5dc1d1 of clasificacion){if(_0x5dc1d1['formato']!==_0xded809(0x1d2))continue;const _0x5e8450=PREFIJOS_DIAN_F1009[_0xded809(0x525)](_0x51db9b=>_0x5dc1d1['code'][_0xded809(0x511)](_0x51db9b));if(_0x5e8450){const _0x9fcd65='2206|'+NIT_DIAN;if(!_0x5008e2[_0x9fcd65])_0x5008e2[_0x9fcd65]={'concepto':_0xded809(0x200),'nit':NIT_DIAN,'razon':'DIAN','val':0x0};_0x5008e2[_0x9fcd65][_0xded809(0x34e)]+=Math[_0xded809(0x34c)](_0x5dc1d1['cre']-_0x5dc1d1['deb'],0x0);}else{const _0x4e5469=_0x5dc1d1[_0xded809(0x3c1)]+'|'+_0x5dc1d1['nit'];if(!_0x5008e2[_0x4e5469])_0x5008e2[_0x4e5469]={'concepto':_0x5dc1d1['concepto'],'nit':_0x5dc1d1['nit'],'razon':_0x5dc1d1['razon'],'val':0x0};_0x5008e2[_0x4e5469]['val']+=Math['max'](_0x5dc1d1['cre']-_0x5dc1d1[_0xded809(0x1ee)],0x0);}}const _0x341d26={},_0x2c0204={};for(const [_0xfdcecd,_0x5a5cf1]of Object[_0xded809(0x541)](_0x5008e2)){if(_0x5a5cf1['val']<=0x0)continue;if(_0x5a5cf1[_0xded809(0x27f)]===NIT_DIAN)_0x341d26[_0xfdcecd]=_0x5a5cf1;else{if(_0x5a5cf1['val']<C12UVT){const _0x31872b=_0x5a5cf1['concepto']+'|'+NM;if(!_0x2c0204[_0x31872b])_0x2c0204[_0x31872b]={..._0x5a5cf1,'nit':NM,'razon':'CUANTIAS\x20M'+'ENORES'};else _0x2c0204[_0x31872b][_0xded809(0x34e)]+=_0x5a5cf1[_0xded809(0x34e)];}else _0x341d26[_0xfdcecd]=_0x5a5cf1;}}Object['assign'](_0x341d26,_0x2c0204),formatos['F1009']=Object['values'](_0x341d26)['map'](_0xc70cd5=>[_0xc70cd5['concepto'],detectarTipoDoc(_0xc70cd5[_0xded809(0x27f)]),_0xc70cd5[_0xded809(0x27f)],calcDv(_0xc70cd5['nit']),_0xc70cd5[_0xded809(0x29b)],Math[_0xded809(0x318)](_0xc70cd5[_0xded809(0x34e)])]);const _0x179298={};for(const _0x5aff3a of clasificacion){if(_0x5aff3a['formato']!=='F1010')continue;if(!_0x179298[_0x5aff3a['nit']])_0x179298[_0x5aff3a[_0xded809(0x27f)]]={'nit':_0x5aff3a['nit'],'razon':_0x5aff3a[_0xded809(0x29b)],'val':0x0};_0x179298[_0x5aff3a[_0xded809(0x27f)]]['val']+=_0x5aff3a['val'];}const _0xc3f5=Object[_0xded809(0x26e)](_0x179298)['reduce']((_0x4a4535,_0x3fde3f)=>_0x4a4535+_0x3fde3f['val'],0x0);formatos[_0xded809(0x2c9)]=Object['values'](_0x179298)[_0xded809(0x22c)](_0x274f87=>[detectarTipoDoc(_0x274f87['nit']),_0x274f87['nit'],calcDv(_0x274f87['nit']),_0x274f87['razon'],Math['round'](_0x274f87['val']),_0xc3f5>0x0?(_0x274f87[_0xded809(0x34e)]/_0xc3f5*0x64)[_0xded809(0x2e8)](0x2)+'%':'0%']);const _0x4259ab={};for(const _0x461fa7 of clasificacion){if(_0x461fa7[_0xded809(0x414)]!=='F1012')continue;let _0x15ac17=_0x461fa7['nit'];if((!_0x15ac17||_0x15ac17==='')&&_0x461fa7[_0xded809(0x3c4)]['startsWith']('1110')){const _0x398863=normNombre(_0x461fa7['name']);for(const [_0x3443bc,[_0x3422b3,_0x28afc7]]of Object[_0xded809(0x541)](BANCOS_COLOMBIANOS)){if(_0x398863['includes'](_0x3443bc)){_0x15ac17=_0x3422b3;break;}}if(!_0x15ac17)_0x15ac17=NM;}if(!_0x15ac17)_0x15ac17=NM;const _0x3083aa=_0x461fa7[_0xded809(0x3c1)]+'|'+_0x15ac17;if(!_0x4259ab[_0x3083aa])_0x4259ab[_0x3083aa]={'concepto':_0x461fa7['concepto'],'nit':_0x15ac17,'razon':_0x461fa7['razon'],'val':0x0};_0x4259ab[_0x3083aa][_0xded809(0x34e)]+=_0x461fa7[_0xded809(0x34e)];}formatos['F1012']=Object['values'](_0x4259ab)['map'](_0x48acc5=>[_0x48acc5[_0xded809(0x3c1)],detectarTipoDoc(_0x48acc5['nit']),_0x48acc5['nit'],calcDv(_0x48acc5[_0xded809(0x27f)]),_0x48acc5[_0xded809(0x29b)],Math['round'](_0x48acc5[_0xded809(0x34e)])]);const _0x486431={};for(const _0x436f1d of clasificacion){if(_0x436f1d['formato']!=='F2276')continue;if(!_0x486431[_0x436f1d[_0xded809(0x27f)]])_0x486431[_0x436f1d['nit']]={'nit':_0x436f1d['nit'],'razon':_0x436f1d[_0xded809(0x29b)],'sal':0x0,'hon':0x0,'vac':0x0,'ces':0x0,'otros':0x0,'bruto':0x0,'apSalud':0x0,'apPension':0x0,'retFte':0x0};const _0x451c69=_0x436f1d[_0xded809(0x3c1)];if(_0x451c69===_0xded809(0x23b))_0x486431[_0x436f1d['nit']][_0xded809(0x46a)]+=_0x436f1d['val'];else{if(_0x451c69==='5002')_0x486431[_0x436f1d[_0xded809(0x27f)]]['hon']+=_0x436f1d[_0xded809(0x34e)];else{if(_0x451c69===_0xded809(0x230))_0x486431[_0x436f1d['nit']][_0xded809(0x3f0)]+=_0x436f1d[_0xded809(0x34e)];else{if(_0x451c69==='5025')_0x486431[_0x436f1d[_0xded809(0x27f)]]['apPension']+=_0x436f1d[_0xded809(0x34e)];else _0x486431[_0x436f1d['nit']][_0xded809(0x3ad)]+=_0x436f1d[_0xded809(0x34e)];}}}}for(const _0x3a3529 of parsedData){_0x3a3529[_0xded809(0x3c4)]['startsWith'](_0xded809(0x1fb))&&_0x3a3529[_0xded809(0x27f)]&&_0x486431[_0x3a3529[_0xded809(0x27f)]]&&(_0x486431[_0x3a3529['nit']]['retFte']+=Math[_0xded809(0x34c)](_0x3a3529[_0xded809(0x3f9)]-_0x3a3529['deb'],0x0));}for(const _0x3537cc of Object[_0xded809(0x26e)](_0x486431)){_0x3537cc['bruto']=_0x3537cc['sal']+_0x3537cc['hon']+_0x3537cc[_0xded809(0x2b0)]+_0x3537cc[_0xded809(0x1f7)]+_0x3537cc['otros'];}formatos[_0xded809(0x219)]=Object['values'](_0x486431)[_0xded809(0x22c)](_0x43aa62=>[detectarTipoDoc(_0x43aa62['nit']),_0x43aa62[_0xded809(0x27f)],calcDv(_0x43aa62['nit']),_0x43aa62[_0xded809(0x29b)],Math[_0xded809(0x318)](_0x43aa62[_0xded809(0x46a)]),Math[_0xded809(0x318)](_0x43aa62['hon']),Math[_0xded809(0x318)](_0x43aa62[_0xded809(0x2b0)]),Math[_0xded809(0x318)](_0x43aa62['ces']),Math['round'](_0x43aa62[_0xded809(0x3ad)]),Math[_0xded809(0x318)](_0x43aa62[_0xded809(0x5cc)]),Math['round'](_0x43aa62[_0xded809(0x3f0)]),Math[_0xded809(0x318)](_0x43aa62['apPension']),Math[_0xded809(0x318)](_0x43aa62[_0xded809(0x352)])]),renderFormatos();}function renderFormatos(){const _0x12d956=_0x5a454e,_0x4a16f2=['F1001','F1003',_0x12d956(0x3fd),'F1006','F1007',_0x12d956(0x2b5),_0x12d956(0x1d2),_0x12d956(0x2c9),_0x12d956(0x206),_0x12d956(0x219)],_0xa5e38d={'F1001':_0x12d956(0x1e1),'F1003':'Retencione'+'s','F1005':_0x12d956(0x394),'F1006':'IVA\x20Gen.','F1007':_0x12d956(0x4ba),'F1008':_0x12d956(0x574),'F1009':'CxP','F1010':'Socios','F1012':'Inversione'+'s','F2276':'Nomina'};let _0x38edc8=0x0,_0x6696c8=0x0;for(const _0x17d56c of _0x4a16f2){formatos[_0x17d56c]&&formatos[_0x17d56c][_0x12d956(0x5b2)]>0x0&&(_0x38edc8+=formatos[_0x17d56c]['length'],_0x6696c8++);}document['getElement'+_0x12d956(0x52d)]('fmtStats')[_0x12d956(0x585)]=_0x12d956(0x599)+'class=\x22sta'+'t-card\x20blu'+_0x12d956(0x4a0)+'ass=\x22val\x22>'+_0x6696c8+(_0x12d956(0x5cb)+_0x12d956(0x49c)+_0x12d956(0x48a)+'s\x20generado'+_0x12d956(0x214)+'iv>\x0a\x20\x20\x20\x20<d'+_0x12d956(0x58a)+'stat-card\x20'+_0x12d956(0x327)+'v\x20class=\x22v'+'al\x22>')+_0x38edc8['toLocaleSt'+'ring']()+(_0x12d956(0x5cb)+'\x20class=\x22lb'+'l\x22>Registr'+'os\x20totales'+_0x12d956(0x2ab)+'v>\x0a\x20\x20\x20\x20<di'+_0x12d956(0x225)+_0x12d956(0x2da)+'mber\x22><div'+'\x20class=\x22va'+'l\x22>')+(formatos['F1001']||[])[_0x12d956(0x5b2)]+('</div><div'+_0x12d956(0x49c)+_0x12d956(0x41f)+'001\x20Pagos<'+_0x12d956(0x423)+'>\x0a\x20\x20\x20\x20<div'+'\x20class=\x22st'+'at-card\x20re'+_0x12d956(0x351)+_0x12d956(0x4ca))+(formatos[_0x12d956(0x219)]||[])[_0x12d956(0x5b2)]+('</div><div'+_0x12d956(0x49c)+_0x12d956(0x22d)+_0x12d956(0x236)+_0x12d956(0x2ab)+'v>');let _0x58b731='',_0x4cd6de='',_0x3b1f48=!![];for(const _0x5dd32c of _0x4a16f2){const _0x305c39=formatos[_0x5dd32c]||[];if(_0x305c39[_0x12d956(0x5b2)]===0x0)continue;const _0x51858d=_0x3b1f48?'active':'';_0x58b731+=_0x12d956(0x233)+_0x12d956(0x5b9)+_0x51858d+(_0x12d956(0x45a)+_0x12d956(0x431)+_0x12d956(0x483)+'panel_')+_0x5dd32c+_0x12d956(0x20d)+_0x5dd32c[_0x12d956(0x2d7)](0x1)+'\x20'+_0xa5e38d[_0x5dd32c]+(_0x12d956(0x38a)+_0x12d956(0x277)+_0x12d956(0x393)+_0x12d956(0x2e4)+':var(--pri'+_0x12d956(0x359)+':1px\x206px;b'+'order-radi'+'us:4px;mar'+'gin-left:4'+'px\x22>')+_0x305c39[_0x12d956(0x5b2)]+('</span></d'+_0x12d956(0x33c));const _0x9c6526=FMT_HEADERS[_0x5dd32c]||[];let _0xc7a117=_0x12d956(0x5bc)+_0x12d956(0x5c4)+_0x5dd32c+(_0x12d956(0x356)+_0x12d956(0x292)+'\x20')+_0x51858d+('\x22><div\x20cla'+_0x12d956(0x54d)+'-box\x22><tab'+'le\x20class=\x22'+_0x12d956(0x566)+'><thead><t'+_0x12d956(0x5d3)+'h>');for(const _0x463f0c of _0x9c6526)_0xc7a117+='<th>'+_0x463f0c+'</th>';_0xc7a117+='</tr></the'+'ad><tbody>';for(let _0x2d1dc9=0x0;_0x2d1dc9<_0x305c39[_0x12d956(0x5b2)];_0x2d1dc9++){_0xc7a117+='<tr><td>'+(_0x2d1dc9+0x1)+'</td>';for(let _0x2f9ba4=0x0;_0x2f9ba4<_0x305c39[_0x2d1dc9]['length'];_0x2f9ba4++){const _0x40fac2=_0x305c39[_0x2d1dc9][_0x2f9ba4],_0x1659fe=typeof _0x40fac2==='number'?_0x12d956(0x3b6)+_0x12d956(0x415):'';_0xc7a117+=_0x12d956(0x40f)+'\x22'+_0x1659fe+'\x22>'+(typeof _0x40fac2===_0x12d956(0x381)?fN(_0x40fac2):_0x40fac2)+'</td>';}_0xc7a117+=_0x12d956(0x1ed);}_0xc7a117+='</tbody></'+'table></di'+'v></div>',_0x4cd6de+=_0xc7a117,_0x3b1f48=![];}document['getElement'+'ById'](_0x12d956(0x4e5))[_0x12d956(0x585)]=_0x58b731,document[_0x12d956(0x4c7)+'ById']('fmtPanels')[_0x12d956(0x585)]=_0x4cd6de;const _0x44c033=[],_0x39ad00=['F1001',_0x12d956(0x4ac),'F1005','F1006',_0x12d956(0x3a4),_0x12d956(0x2b5),'F1009',_0x12d956(0x2c9),_0x12d956(0x206),_0x12d956(0x219)];for(const _0x589f74 of _0x39ad00){const _0x1bdb8e=formatos[_0x589f74];if(!_0x1bdb8e||_0x1bdb8e['length']===0x0)continue;let _0x430ed3=0x0,_0xf0065c=0x0,_0x2fbebf=0x0;for(const _0x4f25e1 of _0x1bdb8e){const _0x37c323=_0x4f25e1[_0x12d956(0x493)]('31')!==-0x1||_0x4f25e1[_0x12d956(0x493)]('13')!==-0x1?0x0:-0x1;for(let _0xfad04b=0x0;_0xfad04b<_0x4f25e1['length'];_0xfad04b++){if(String(_0x4f25e1[_0xfad04b])===NM)_0x2fbebf++;}const _0x59b547=_0x589f74==='F1001'||_0x589f74===_0x12d956(0x4ac)||_0x589f74===_0x12d956(0x3a4)||_0x589f74==='F1008'||_0x589f74===_0x12d956(0x1d2)?0x4:0x3;if(_0x59b547<_0x4f25e1[_0x12d956(0x5b2)]&&(!_0x4f25e1[_0x59b547]||_0x4f25e1[_0x59b547]===''))_0x430ed3++;const _0x5423a9=_0x589f74===_0x12d956(0x4b5)||_0x589f74==='F1003'||_0x589f74==='F1007'||_0x589f74==='F1008'||_0x589f74===_0x12d956(0x1d2)?0x3:0x2;if(_0x5423a9<_0x4f25e1[_0x12d956(0x5b2)]&&(!_0x4f25e1[_0x5423a9]||_0x4f25e1[_0x5423a9]===''))_0xf0065c++;}if(_0x430ed3>0x0)_0x44c033['push'](_0x12d956(0x380)+_0x589f74+(_0x12d956(0x594)+'\x20')+_0x430ed3+('\x20registros'+'\x20sin\x20razon'+_0x12d956(0x527)+_0x12d956(0x4cd)+_0x12d956(0x425)+'complete\x20m'+_0x12d956(0x42a)));if(_0xf0065c>0x0)_0x44c033[_0x12d956(0x407)](_0x12d956(0x380)+_0x589f74+(':</strong>'+'\x20')+_0xf0065c+('\x20registros'+'\x20sin\x20digit'+_0x12d956(0x31b)+_0x12d956(0x495)));if(_0x2fbebf>0x0)_0x44c033[_0x12d956(0x407)](_0x12d956(0x380)+_0x589f74+(':</strong>'+'\x20')+_0x2fbebf+(_0x12d956(0x489)+'\x20agrupados'+'\x20en\x20cuanti'+'as\x20menores'+_0x12d956(0x4ec))+NM+')');}_0x44c033[_0x12d956(0x5b2)]>0x0&&(document[_0x12d956(0x4c7)+_0x12d956(0x52d)]('fmtWarning'+'s')['classList'][_0x12d956(0x55c)](_0x12d956(0x3b8)),document[_0x12d956(0x4c7)+_0x12d956(0x52d)]('fmtWarning'+'sList')[_0x12d956(0x585)]=_0x44c033['map'](_0xa24f7b=>_0x12d956(0x233)+'=\x22alert\x20al'+_0x12d956(0x441)+'style=\x22mar'+_0x12d956(0x310)+':8px\x22><spa'+_0x12d956(0x294)+'<div>'+_0xa24f7b+('</div></di'+'v>'))[_0x12d956(0x4c5)](''));}function switchFmtTab(_0x2e5a32,_0xd96cc9){const _0x144e7a=_0x5a454e;_0x2e5a32[_0x144e7a(0x204)+'ent']['querySelec'+'torAll'](_0x144e7a(0x584))['forEach'](_0x1f4595=>_0x1f4595[_0x144e7a(0x56f)][_0x144e7a(0x55c)]('active')),_0x2e5a32[_0x144e7a(0x56f)]['add']('active'),document['querySelec'+'torAll'](_0x144e7a(0x39d)+_0x144e7a(0x3d7)+'ent')['forEach'](_0x2a15ac=>_0x2a15ac[_0x144e7a(0x56f)][_0x144e7a(0x55c)]('active')),document[_0x144e7a(0x4c7)+'ById'](_0xd96cc9)['classList'][_0x144e7a(0x347)](_0x144e7a(0x4d2));}function irAFormatos(){generarFormatos(),goStep(0x4);}function irADescargar(){renderDescargar(),goStep(0x5);}function renderDescargar(){const _0x46066b=_0x5a454e,_0x4aad20=[_0x46066b(0x4b5),'F1003','F1005','F1006',_0x46066b(0x3a4),'F1008','F1009',_0x46066b(0x2c9),'F1012',_0x46066b(0x219)],_0x29f083={'F1001':'Pagos','F1003':'Retencione'+'s','F1005':_0x46066b(0x394),'F1006':'IVA\x20Gen.','F1007':'Ingresos','F1008':_0x46066b(0x574),'F1009':'CxP','F1010':'Socios','F1012':_0x46066b(0x363)+'s','F2276':'Nomina'};let _0x299846=0x0,_0x52ca81=0x0;for(const _0x250ee0 of _0x4aad20){formatos[_0x250ee0]&&formatos[_0x250ee0][_0x46066b(0x5b2)]>0x0&&(_0x299846+=formatos[_0x250ee0]['length'],_0x52ca81++);}document['getElement'+'ById'](_0x46066b(0x30a))['innerHTML']='\x0a\x20\x20\x20\x20<div\x20'+'class=\x22sta'+_0x46066b(0x2b1)+_0x46066b(0x4c8)+_0x46066b(0x496)+'>'+_0x52ca81+('</div><div'+_0x46066b(0x49c)+'l\x22>Formato'+_0x46066b(0x214)+_0x46066b(0x4d0)+'iv\x20class=\x22'+_0x46066b(0x4c0)+'blue\x22><div'+_0x46066b(0x408)+'l\x22>')+_0x299846[_0x46066b(0x570)+_0x46066b(0x433)]()+(_0x46066b(0x5cb)+'\x20class=\x22lb'+'l\x22>Registr'+_0x46066b(0x51b)+'div>\x0a\x20\x20\x20\x20<'+'div\x20class='+'\x22stat-card'+_0x46066b(0x558)+_0x46066b(0x58a)+_0x46066b(0x506)+_0x46066b(0x249)+'ss=\x22lbl\x22>A'+'rchivos</d'+'iv></div>\x0a'+_0x46066b(0x339)+'lass=\x22stat'+'-card\x20gree'+_0x46066b(0x2db)+'ass=\x22val\x22>'+'✓</div><di'+'v\x20class=\x22l'+'bl\x22>Listo<'+_0x46066b(0x423)+'>');let _0x26752f='<table\x20cla'+'ss=\x22map-ta'+_0x46066b(0x288)+_0x46066b(0x210)+'Formato</t'+'h><th>Regi'+'stros</th>'+'<th>Estado'+_0x46066b(0x3bd)+'</thead><t'+'body>';for(const _0x50bf82 of _0x4aad20){const _0x14d87d=formatos[_0x50bf82]||[],_0x31e390=_0x46066b(0x251)+_0x46066b(0x479)+'ge\x20fmt-'+_0x50bf82['substring'](0x1)+'\x22>'+_0x50bf82+_0x46066b(0x44d);if(_0x14d87d[_0x46066b(0x5b2)]>0x0)_0x26752f+='<tr><td>'+_0x31e390+'\x20'+_0x29f083[_0x50bf82]+('</td><td\x20c'+'lass=\x22text'+'-right\x20mon'+_0x46066b(0x4b0))+_0x14d87d['length']+('</td><td\x20s'+'tyle=\x22colo'+'r:var(--gr'+_0x46066b(0x3a3)+'sto</td></'+_0x46066b(0x4ab));else _0x26752f+=_0x46066b(0x218)+'yle=\x22color'+_0x46066b(0x3e9)+'ed)\x22>'+_0x31e390+'\x20'+_0x29f083[_0x50bf82]+(_0x46066b(0x462)+_0x46066b(0x45e)+_0x46066b(0x437)+'o\x22\x20style=\x22'+_0x46066b(0x567)+_0x46066b(0x317)+'0</td><td\x20'+'style=\x22col'+_0x46066b(0x2c3)+'uted)\x22>Sin'+_0x46066b(0x3e2)+_0x46066b(0x36f));}_0x26752f+=_0x46066b(0x49d)+_0x46066b(0x35c),document[_0x46066b(0x4c7)+'ById']('dlSummary')['innerHTML']=_0x26752f;}function getCompanyConfig(){const _0x4b4ed5=_0x5a454e;return{'nit':sanitizarNit(document[_0x4b4ed5(0x4c7)+_0x4b4ed5(0x52d)](_0x4b4ed5(0x580))[_0x4b4ed5(0x20e)]),'rs':document[_0x4b4ed5(0x4c7)+_0x4b4ed5(0x52d)](_0x4b4ed5(0x4a4))['value']['trim']()[_0x4b4ed5(0x553)+'e'](),'td':document[_0x4b4ed5(0x4c7)+'ById']('cfgTipoPer'+_0x4b4ed5(0x3ef))['value'],'dv':calcDv(sanitizarNit(document['getElement'+'ById'](_0x4b4ed5(0x580))[_0x4b4ed5(0x20e)])),'dir':document[_0x4b4ed5(0x4c7)+'ById']('cfgDir')[_0x4b4ed5(0x20e)][_0x4b4ed5(0x304)](),'dp':document['getElement'+'ById']('cfgDpto')[_0x4b4ed5(0x20e)],'mp':document[_0x4b4ed5(0x4c7)+_0x4b4ed5(0x52d)]('cfgMpio')['value'],'a1':document['getElement'+_0x4b4ed5(0x52d)]('cfgApe1')['value'][_0x4b4ed5(0x304)]()[_0x4b4ed5(0x553)+'e'](),'a2':document['getElement'+_0x4b4ed5(0x52d)]('cfgApe2')['value']['trim']()[_0x4b4ed5(0x553)+'e'](),'n1':document[_0x4b4ed5(0x4c7)+'ById']('cfgNom1')['value'][_0x4b4ed5(0x304)]()[_0x4b4ed5(0x553)+'e'](),'n2':document[_0x4b4ed5(0x4c7)+'ById'](_0x4b4ed5(0x265))['value']['trim']()[_0x4b4ed5(0x553)+'e'](),'year':document['getElement'+'ById'](_0x4b4ed5(0x3a0))[_0x4b4ed5(0x20e)]};}async function exportExcel(){const _0x49d1b7=_0x5a454e,_0x4d1e65=new ExcelJS['Workbook'](),_0x42514e={'type':_0x49d1b7(0x41b),'pattern':'solid','fgColor':{'argb':_0x49d1b7(0x3c5)}},_0x4fa449={'bold':!![],'color':{'argb':'FFFFFFFF'},'size':0xa,'name':_0x49d1b7(0x466)},_0x407d7c={'type':_0x49d1b7(0x41b),'pattern':_0x49d1b7(0x28e),'fgColor':{'argb':_0x49d1b7(0x4f3)}},_0x3dd796={'top':{'style':_0x49d1b7(0x538),'color':{'argb':_0x49d1b7(0x3a9)}},'bottom':{'style':'thin','color':{'argb':_0x49d1b7(0x3a9)}},'left':{'style':_0x49d1b7(0x538),'color':{'argb':_0x49d1b7(0x3a9)}},'right':{'style':'thin','color':{'argb':_0x49d1b7(0x3a9)}}},_0x22416a=[_0x49d1b7(0x4b5),_0x49d1b7(0x4ac),'F1005',_0x49d1b7(0x3fa),_0x49d1b7(0x3a4),'F1008','F1009',_0x49d1b7(0x2c9),_0x49d1b7(0x206),'F2276'];for(const _0x11cfb4 of _0x22416a){const _0x2c1275=formatos[_0x11cfb4];if(!_0x2c1275||_0x2c1275['length']===0x0)continue;const _0x3b169a=FMT_HEADERS[_0x11cfb4],_0x15c537=_0x4d1e65['addWorkshe'+'et'](_0x11cfb4),_0x52a9a4=_0x15c537[_0x49d1b7(0x253)](_0x3b169a);_0x52a9a4['eachCell'](_0x3c658d=>{const _0x8e3f39=_0x49d1b7;_0x3c658d['fill']=_0x42514e,_0x3c658d['font']=_0x4fa449,_0x3c658d[_0x8e3f39(0x1d3)]={'horizontal':'center','wrapText':!![]},_0x3c658d[_0x8e3f39(0x3e8)]=_0x3dd796;});for(let _0x4dd533=0x0;_0x4dd533<_0x2c1275[_0x49d1b7(0x5b2)];_0x4dd533++){const _0xa0e664=_0x15c537['addRow'](_0x2c1275[_0x4dd533]);_0xa0e664[_0x49d1b7(0x4db)]((_0x19e89f,_0x108a76)=>{const _0x524c82=_0x49d1b7;_0x19e89f['font']={'size':0xa,'name':_0x524c82(0x466)},_0x19e89f['border']=_0x3dd796;if(typeof _0x2c1275[_0x4dd533][_0x108a76-0x1]==='number')_0x19e89f['numFmt']=_0x524c82(0x386);else _0x19e89f[_0x524c82(0x1e9)]='@';});if(_0x4dd533%0x2===0x0)_0xa0e664[_0x49d1b7(0x4db)](_0x44175d=>{const _0x360ded=_0x49d1b7;_0x44175d[_0x360ded(0x346)]=_0x407d7c;});}_0x15c537['columns'][_0x49d1b7(0x2b3)]((_0x3a5a5b,_0x38754d)=>{const _0x54b996=_0x49d1b7;_0x3a5a5b['width']=Math['max'](_0x3b169a[_0x38754d][_0x54b996(0x5b2)]+0x2,0xc);});}const _0x377419=_0x4d1e65['addWorkshe'+'et'](_0x49d1b7(0x2fc));_0x377419[_0x49d1b7(0x253)]([_0x49d1b7(0x402),_0x49d1b7(0x51a)])[_0x49d1b7(0x4db)](_0x30151b=>{const _0x3d0300=_0x49d1b7;_0x30151b['fill']=_0x42514e,_0x30151b[_0x3d0300(0x1ef)]=_0x4fa449,_0x30151b[_0x3d0300(0x3e8)]=_0x3dd796;});for(const _0x5798e0 of _0x22416a){const _0x1b918a=(formatos[_0x5798e0]||[])['length'];_0x377419[_0x49d1b7(0x253)]([_0x5798e0,_0x1b918a])['eachCell'](_0x376c4a=>{const _0x122bd1=_0x49d1b7;_0x376c4a['font']={'size':0xa,'name':_0x122bd1(0x466)},_0x376c4a['border']=_0x3dd796;});}_0x377419['columns']=[{'width':0x14},{'width':0xc}];const _0x50528d=await _0x4d1e65[_0x49d1b7(0x397)][_0x49d1b7(0x5c1)+'r'](),_0x30896b=getCompanyConfig();descargarBlob(new Blob([_0x50528d],{'type':_0x49d1b7(0x444)+'n/vnd.open'+'xmlformats'+_0x49d1b7(0x2b7)+_0x49d1b7(0x262)+_0x49d1b7(0x3f7)+_0x49d1b7(0x2ac)}),_0x49d1b7(0x554)+_0x30896b[_0x49d1b7(0x281)]+'_'+(_0x30896b['nit']||'SIN_NIT')+'.xlsx');}function descargarBlob(_0x31e6f9,_0x3e63f8){const _0x43ca58=_0x5a454e,_0x50faed=URL['createObje'+'ctURL'](_0x31e6f9),_0x5c4d4d=document[_0x43ca58(0x5a5)+'ent']('a');_0x5c4d4d[_0x43ca58(0x396)]=_0x50faed,_0x5c4d4d[_0x43ca58(0x358)]=_0x3e63f8,document['body'][_0x43ca58(0x307)+'d'](_0x5c4d4d),_0x5c4d4d[_0x43ca58(0x577)](),document[_0x43ca58(0x57e)][_0x43ca58(0x3da)+'d'](_0x5c4d4d),URL[_0x43ca58(0x413)+_0x43ca58(0x406)](_0x50faed);}function descargarEjemplo(){const _0x3801f4=_0x5a454e,_0x4aecc2=[[_0x3801f4(0x47d),'Nombre\x20Cue'+'nta',_0x3801f4(0x2c7)+'o',_0x3801f4(0x25a)+_0x3801f4(0x5b3),_0x3801f4(0x367),'Credito'],[_0x3801f4(0x472),_0x3801f4(0x4fd),_0x3801f4(0x579),_0x3801f4(0x1e5)+'ABC\x20S.A.S',0x4c4b40,0x0],['236525','Retencion\x20'+'servicios','900123456','CONSULTOR\x20'+'ABC\x20S.A.S',0x0,0x30d40],[_0x3801f4(0x2c1),'IVA\x20descon'+'table','900123456','CONSULTOR\x20'+'ABC\x20S.A.S',0xe7ef0,0x0],[_0x3801f4(0x228),_0x3801f4(0x4e8)+'l\x20por\x20mayo'+'r','800555444','CLIENTE\x20XY'+'Z\x20LTDA',0x0,0x17d7840],['240805',_0x3801f4(0x561)+'do','800555444','CLIENTE\x20XY'+'Z\x20LTDA',0x0,0x487ab0],['1305','Clientes',_0x3801f4(0x464),'CLIENTE\x20XY'+_0x3801f4(0x23e),0x1c5f2f0,0x0],['6135','Compras',_0x3801f4(0x375),'DISTRIBUID'+'ORA\x20NACION'+'AL',0xe4e1c0,0x0],['236540',_0x3801f4(0x20f)+'compras','811222333','DISTRIBUID'+_0x3801f4(0x319)+'AL',0x0,0x5b8d8],[_0x3801f4(0x48c),_0x3801f4(0x46b),'1098765432',_0x3801f4(0x365),0x3567e0,0x0],[_0x3801f4(0x1fb),'Retencion\x20'+'salarios','1098765432','JUAN\x20PEREZ',0x0,0x2ab98],[_0x3801f4(0x208),_0x3801f4(0x5d2),_0x3801f4(0x428),_0x3801f4(0x41d)+'A\x20S.A.',0x0,0x2e96450],[_0x3801f4(0x4f5),'Proveedore'+'s','811222333',_0x3801f4(0x510)+'ORA\x20NACION'+'AL',0x0,0xdf28e8],[_0x3801f4(0x3b1),'Capital\x20so'+_0x3801f4(0x279),'901234567',_0x3801f4(0x545)+'\x20S.A.S',0x0,0x989680]],_0x2801ef=XLSX['utils'][_0x3801f4(0x469)+'et'](_0x4aecc2);_0x2801ef[_0x3801f4(0x592)]=[{'wch':0xa},{'wch':0x1c},{'wch':0xe},{'wch':0x1c},{'wch':0x10},{'wch':0x10}];const _0x401cb4=XLSX['utils'][_0x3801f4(0x232)]();XLSX['utils'][_0x3801f4(0x474)+_0x3801f4(0x562)](_0x401cb4,_0x2801ef,_0x3801f4(0x3dd)+_0x3801f4(0x390)),XLSX['writeFile'](_0x401cb4,'Ejemplo_Ex'+'ogena_Exog'+'enaDIAN.xl'+'sx');}const APPS_SCRIPT_URL=_0x5a454e(0x295)+_0x5a454e(0x2f1)+_0x5a454e(0x5b6)+'os/s/AKfyc'+'bwT5ofExiw'+_0x5a454e(0x467)+'Uqhs4cdDpa'+'ieSiLn2dYf'+'5D-6yPIdJ_'+_0x5a454e(0x2a2)+'1ViNKiasQ/'+'exec';let proUnlocked=![];function getDeviceFingerprint(){const _0x4101f0=_0x5a454e;let _0x51b71b=localStorage[_0x4101f0(0x3a6)](_0x4101f0(0x5bd)+_0x4101f0(0x5a9)+'d');return!_0x51b71b&&(_0x51b71b='D-'+crypto['randomUUID']()[_0x4101f0(0x597)]('-')['slice'](0x0,0x2)['join'](''),localStorage['setItem']('exogenadia'+_0x4101f0(0x5a9)+'d',_0x51b71b)),_0x51b71b;}async function validarClavePro(_0x57e083){const _0x4f0ea2=_0x5a454e;try{const _0x1e80a1=getDeviceFingerprint(),_0xc9b361=APPS_SCRIPT_URL+('?action=va'+_0x4f0ea2(0x391)+_0x4f0ea2(0x45b))+encodeURIComponent(_0x57e083)+'&device='+encodeURIComponent(_0x1e80a1),_0x1f7c2d=await fetch(_0xc9b361),_0x557e82=await _0x1f7c2d['json']();if(_0x557e82['valid'])return _0x557e82['daysLeft']&&_0x557e82['daysLeft']<=0x3&&console[_0x4f0ea2(0x3bb)]('PRO\x20vence\x20'+_0x4f0ea2(0x4d8)+_0x557e82[_0x4f0ea2(0x58b)]+_0x4f0ea2(0x2fd)+_0x557e82[_0x4f0ea2(0x52a)]),!![];if(_0x557e82[_0x4f0ea2(0x4e6)])console['warn'](_0x4f0ea2(0x26a)+_0x4f0ea2(0x5cd),_0x557e82[_0x4f0ea2(0x4e6)]);}catch(_0x4ce3f6){console['error']('Error\x20vali'+_0x4f0ea2(0x542),_0x4ce3f6);}return![];}async function initPro(){const _0x468a3c=_0x5a454e,_0x4f1e22=localStorage[_0x468a3c(0x3a6)](_0x468a3c(0x5bd)+'n_pro_key');if(_0x4f1e22){const _0x212376=await validarClavePro(_0x4f1e22);if(_0x212376){proUnlocked=!![],updateProUI();return;}else localStorage[_0x468a3c(0x341)]('exogenadia'+_0x468a3c(0x26f));}}function updateProUI(){const _0x4986d9=_0x5a454e,_0x23dc2d=document[_0x4986d9(0x4c7)+'ById'](_0x4986d9(0x3ae));if(_0x23dc2d)_0x23dc2d['innerHTML']=proUnlocked?'<span\x20styl'+_0x4986d9(0x3c6)+_0x4986d9(0x4e0)+'9;color:#f'+'ff;padding'+':4px\x2012px;'+_0x4986d9(0x59c)+_0x4986d9(0x4a2)+'ont-size:.'+'75rem;font'+_0x4986d9(0x539)+_0x4986d9(0x1fe)+_0x4986d9(0x5c9):'';const _0x35e503=document['getElement'+_0x4986d9(0x52d)]('proStatus');if(_0x35e503)_0x35e503['textConten'+'t']=proUnlocked?'Todas\x20las\x20'+_0x4986d9(0x4e2)+_0x4986d9(0x37c)+_0x4986d9(0x5ba):'Versión\x20gr'+_0x4986d9(0x468)+_0x4986d9(0x328)+_0x4986d9(0x38e)+_0x4986d9(0x4e3);const _0xb77c9c=document['getElement'+_0x4986d9(0x52d)](_0x4986d9(0x213)+'t');if(_0xb77c9c&&proUnlocked)_0xb77c9c['closest']('.card')?.['querySelec'+_0x4986d9(0x3cf)](_0x4986d9(0x25f))?.[_0x4986d9(0x3a1)+'te']('disabled','true');}async function activarPro(){const _0x3639cb=_0x5a454e,_0x26f7c0=document['getElement'+'ById']('proKeyInpu'+'t')?.[_0x3639cb(0x20e)]?.['trim']();if(!_0x26f7c0){alert(_0x3639cb(0x2e7)+'\x20clave\x20PRO');return;}const _0x4aeb34=await validarClavePro(_0x26f7c0);_0x4aeb34?(proUnlocked=!![],localStorage['setItem']('exogenadia'+'n_pro_key',_0x26f7c0),updateProUI(),alert('PRO\x20activa'+_0x3639cb(0x3c0)+_0x3639cb(0x2c6))):alert(_0x3639cb(0x25b)+_0x3639cb(0x296)+'ctiva.\x20Ver'+_0x3639cb(0x320)+_0x3639cb(0x272)+_0x3639cb(0x337)+_0x3639cb(0x326)+_0x3639cb(0x40d));}initPro(),populateDptos(),onTipoPersonaChange();</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   EXOGENA DIAN — GENERADOR DE 10 FORMATOS
+   Fase A: Carga de archivo + Deteccion de columnas
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── CONSTANTES ── */
+const UVT=49799, C3UVT=149397, C12UVT=597588;
+const NM='222222222', TDM='43';
+const ANO_GRAVABLE='2025';
+
+const DPTOS={
+  '05':'Antioquia','08':'Atlantico','11':'Bogota D.C.','13':'Bolivar','15':'Boyaca',
+  '17':'Caldas','18':'Caqueta','19':'Cauca','20':'Cesar','23':'Cordoba',
+  '25':'Cundinamarca','27':'Choco','41':'Huila','44':'La Guajira','47':'Magdalena',
+  '50':'Meta','52':'Narino','54':'Norte de Santander','63':'Quindio','66':'Risaralda',
+  '68':'Santander','70':'Sucre','73':'Tolima','76':'Valle del Cauca','81':'Arauca',
+  '85':'Casanare','86':'Putumayo','88':'San Andres','91':'Amazonas','94':'Guainia',
+  '95':'Guaviare','97':'Vaupes','99':'Vichada'
+};
+
+const MPIOS_PRINCIPALES={
+  '11':{'001':'Bogota D.C.'},
+  '05':{'001':'Medellin','045':'Apartado','088':'Bello','148':'Carmen de Viboral','212':'Copacabana','266':'Envigado','360':'Itagui','615':'Rionegro'},
+  '08':{'001':'Barranquilla','758':'Soledad','573':'Puerto Colombia'},
+  '13':{'001':'Cartagena'},
+  '15':{'001':'Tunja','238':'Duitama','759':'Sogamoso'},
+  '17':{'001':'Manizales'},
+  '19':{'001':'Popayan'},
+  '20':{'001':'Valledupar'},
+  '23':{'001':'Monteria'},
+  '25':{'126':'Cajica','175':'Chia','269':'Facatativata','286':'Funza','473':'Mosquera','754':'Soacha','799':'Zipaquira','307':'Girardot','290':'Fusagasuga','377':'La Calera','430':'Madrid'},
+  '41':{'001':'Neiva'},
+  '44':{'001':'Riohacha','430':'Maicao'},
+  '47':{'001':'Santa Marta'},
+  '50':{'001':'Villavicencio'},
+  '52':{'001':'Pasto'},
+  '54':{'001':'Cucuta'},
+  '63':{'001':'Armenia'},
+  '66':{'001':'Pereira','170':'Dosquebradas'},
+  '68':{'001':'Bucaramanga','081':'Barrancabermeja','276':'Floridablanca','307':'Giron','547':'Piedecuesta'},
+  '70':{'001':'Sincelejo'},
+  '73':{'001':'Ibague'},
+  '76':{'001':'Cali','109':'Buenaventura','111':'Guadalajara de Buga','147':'Cartago','520':'Palmira','834':'Tulua'},
+  '81':{'001':'Arauca'},
+  '85':{'001':'Yopal'},
+  '86':{'001':'Mocoa'},
+  '88':{'001':'San Andres'},
+  '91':{'001':'Leticia'},
+  '94':{'001':'Inirida'},
+  '95':{'001':'San Jose del Guaviare'},
+  '97':{'001':'Mitu'},
+  '99':{'001':'Puerto Carreno'},
+  '18':{'001':'Florencia'},
+  '27':{'001':'Quibdo'}
+};
+
+const BANCOS_COLOMBIANOS={
+  'bancolombia':['890903938','BANCOLOMBIA S.A.'],
+  'davivienda':['860034313','BANCO DAVIVIENDA S.A.'],
+  'bogota':['860002964','BANCO DE BOGOTA S.A.'],
+  'occidente':['890300279','BANCO DE OCCIDENTE S.A.'],
+  'popular':['860007738','BANCO POPULAR S.A.'],
+  'bbva':['860003020','BBVA COLOMBIA S.A.'],
+  'scotiabank':['890903711','SCOTIABANK COLPATRIA S.A.'],
+  'av villas':['860035827','BANCO AV VILLAS S.A.'],
+  'caja social':['860007335','BANCO CAJA SOCIAL S.A.'],
+  'agrario':['800037800','BANCO AGRARIO DE COLOMBIA S.A.'],
+  'bancamia':['900215071','BANCAMIA S.A.'],
+  'nequi':['901237657','NEQUI'],
+  'nu colombia':['901658566','NU COLOMBIA S.A.'],
+  'daviplata':['860034313','DAVIPLATA'],
+  'gnb sudameris':['860050750','BANCO GNB SUDAMERIS S.A.'],
+  'pichincha':['890200756','BANCO PICHINCHA S.A.'],
+  'falabella':['900047981','BANCO FALABELLA S.A.'],
+  'serfinanza':['860043186','BANCO SERFINANZA S.A.'],
+  'itau':['890903937','ITAU CORPBANCA COLOMBIA S.A.'],
+  'citibank':['860051135','CITIBANK COLOMBIA S.A.'],
+  'jp morgan':['900017591','JP MORGAN CORPORACION FINANCIERA'],
+  'lulo bank':['901352782','LULO BANK S.A.'],
+};
+
+/* ── DIRECTORIO DE TERCEROS: 150+ entidades colombianas (sin duplicados) ── */
+const DIRECTORIO={
+  // ── Bancos (19) ──
+  '890903938':{rs:'BANCOLOMBIA S.A.',cat:'Banco'},
+  '860034313':{rs:'BANCO DAVIVIENDA S.A.',cat:'Banco'},
+  '860002964':{rs:'BANCO DE BOGOTA S.A.',cat:'Banco'},
+  '890300279':{rs:'BANCO DE OCCIDENTE S.A.',cat:'Banco'},
+  '860007738':{rs:'BANCO POPULAR S.A.',cat:'Banco'},
+  '860003020':{rs:'BBVA COLOMBIA S.A.',cat:'Banco'},
+  '890903937':{rs:'SCOTIABANK COLPATRIA S.A.',cat:'Banco'},
+  '860035827':{rs:'BANCO AV VILLAS S.A.',cat:'Banco'},
+  '860007335':{rs:'BANCO CAJA SOCIAL S.A.',cat:'Banco'},
+  '800037800':{rs:'BANCO AGRARIO DE COLOMBIA S.A.',cat:'Banco'},
+  '900215071':{rs:'BANCAMIA S.A.',cat:'Banco'},
+  '860050750':{rs:'GNB SUDAMERIS S.A.',cat:'Banco'},
+  '890200756':{rs:'BANCO PICHINCHA S.A.',cat:'Banco'},
+  '900047981':{rs:'BANCO FALABELLA S.A.',cat:'Banco'},
+  '860043186':{rs:'BANCO SERFINANZA S.A.',cat:'Banco'},
+  '860051135':{rs:'CITIBANK COLOMBIA S.A.',cat:'Banco'},
+  '900378212':{rs:'BANCO W S.A.',cat:'Banco'},
+  '860051894':{rs:'BANCO FINANDINA S.A.',cat:'Banco'},
+  '890203088':{rs:'BANCO COOPCENTRAL',cat:'Banco'},
+  // ── EPS (11) ──
+  '900156264':{rs:'NUEVA EPS S.A.',cat:'EPS'},
+  '800088702':{rs:'EPS SURA',cat:'EPS'},
+  '800251440':{rs:'EPS SANITAS S.A.',cat:'EPS'},
+  '830003564':{rs:'FAMISANAR LTDA. EPS',cat:'EPS'},
+  '900226715':{rs:'COMPENSAR EPS',cat:'EPS'},
+  '800130907':{rs:'SALUD TOTAL S.A. EPS',cat:'EPS'},
+  '900226846':{rs:'COOSALUD EPS S.A.',cat:'EPS'},
+  '806008394':{rs:'MUTUAL SER EPS',cat:'EPS'},
+  '830113831':{rs:'ALIANSALUD EPS S.A.',cat:'EPS'},
+  '890399010':{rs:'COMFENALCO VALLE EPS',cat:'EPS'},
+  '900298372':{rs:'CAPITAL SALUD EPS S.A.S.',cat:'EPS'},
+  // ── AFP (5) ──
+  '800144331':{rs:'PORVENIR S.A.',cat:'AFP'},
+  '800138188':{rs:'PROTECCION S.A.',cat:'AFP'},
+  '800144467':{rs:'COLFONDOS S.A.',cat:'AFP'},
+  '800224808':{rs:'OLD MUTUAL SKANDIA',cat:'AFP'},
+  '900336004':{rs:'COLPENSIONES',cat:'AFP'},
+  // ── ARL (5) ──
+  '890903790':{rs:'ARL SURA',cat:'ARL'},
+  '860011153':{rs:'POSITIVA COMPANIA DE SEGUROS S.A.',cat:'ARL'},
+  '860002503':{rs:'MAPFRE SEGUROS (COLMENA ARL)',cat:'ARL'},
+  '890903037':{rs:'SEGUROS BOLIVAR S.A.',cat:'Aseguradora'},
+  '860524654':{rs:'ALFA S.A. ARL',cat:'ARL'},
+  // ── Cajas de Compensacion (7) ──
+  '860066942':{rs:'COMPENSAR',cat:'Caja'},
+  '860007336':{rs:'COLSUBSIDIO',cat:'Caja'},
+  '860013570':{rs:'CAFAM',cat:'Caja'},
+  '890900842':{rs:'COMFAMA',cat:'Caja'},
+  '890300466':{rs:'COMFANDI',cat:'Caja'},
+  '890900650':{rs:'COMFENALCO ANTIOQUIA',cat:'Caja'},
+  '890102044':{rs:'COMBARRANQUILLA',cat:'Caja'},
+  // ── Aseguradoras (7) ──
+  '860025639':{rs:'ALLIANZ SEGUROS S.A.',cat:'Aseguradora'},
+  '860024414':{rs:'SEGUROS DEL ESTADO S.A.',cat:'Aseguradora'},
+  '860002183':{rs:'AXA COLPATRIA SEGUROS S.A.',cat:'Aseguradora'},
+  '860009578':{rs:'MUNDIAL DE SEGUROS S.A.',cat:'Aseguradora'},
+  '860037013':{rs:'PREVISORA S.A. COMPANIA DE SEGUROS',cat:'Aseguradora'},
+  '800149923':{rs:'QBE SEGUROS S.A.',cat:'Aseguradora'},
+  // ── Fiduciarias (5) ──
+  '800150280':{rs:'FIDUCIARIA BANCOLOMBIA S.A.',cat:'Fiduciaria'},
+  '800142383':{rs:'FIDUCIARIA BOGOTA S.A.',cat:'Fiduciaria'},
+  '800171372':{rs:'FIDUCIARIA DAVIVIENDA S.A.',cat:'Fiduciaria'},
+  '830053105':{rs:'FIDUCIARIA COLPATRIA S.A.',cat:'Fiduciaria'},
+  '800182281':{rs:'FIDUCIARIA CORFICOLOMBIANA S.A.',cat:'Fiduciaria'},
+  // ── Entidades del Estado (10) ──
+  '800197268':{rs:'DIAN',cat:'Estado'},
+  '900373788':{rs:'UGPP',cat:'Estado'},
+  '899999090':{rs:'MINISTERIO DE HACIENDA Y CREDITO PUBLICO',cat:'Estado'},
+  '899999067':{rs:'CONTRALORIA GENERAL DE LA REPUBLICA',cat:'Estado'},
+  '899999034':{rs:'ICBF',cat:'Estado'},
+  '899999239':{rs:'SENA',cat:'Estado'},
+  '899999001':{rs:'MINISTERIO DE TRABAJO',cat:'Estado'},
+  '899999053':{rs:'SUPERINTENDENCIA DE SOCIEDADES',cat:'Estado'},
+  '899999007':{rs:'SUPERINTENDENCIA DE INDUSTRIA Y COMERCIO',cat:'Estado'},
+  '899999063':{rs:'SECRETARIA DISTRITAL DE HACIENDA BOGOTA',cat:'Estado'},
+  // ── Camaras de Comercio (4) ──
+  '860007386':{rs:'CAMARA DE COMERCIO DE BOGOTA',cat:'Camara'},
+  '890904713':{rs:'CAMARA DE COMERCIO DE MEDELLIN',cat:'Camara'},
+  '890399011':{rs:'CAMARA DE COMERCIO DE CALI',cat:'Camara'},
+  '890102018':{rs:'CAMARA DE COMERCIO DE BARRANQUILLA',cat:'Camara'},
+  // ── Servicios Publicos (10) ──
+  '830095213':{rs:'ENEL COLOMBIA S.A. E.S.P. (CODENSA)',cat:'Servicios'},
+  '890904996':{rs:'EMPRESAS PUBLICAS DE MEDELLIN E.S.P.',cat:'Servicios'},
+  '890399003':{rs:'EMCALI E.I.C.E. E.S.P.',cat:'Servicios'},
+  '900582006':{rs:'AIR-E S.A.S. E.S.P.',cat:'Servicios'},
+  '900464562':{rs:'VANTI S.A. E.S.P.',cat:'Servicios'},
+  '899999094':{rs:'ACUEDUCTO DE BOGOTA E.S.P.',cat:'Servicios'},
+  '830037248':{rs:'EMPRESA DE ENERGIA DE BOGOTA S.A. E.S.P.',cat:'Servicios'},
+  '800130625':{rs:'ISAGEN S.A. E.S.P.',cat:'Servicios'},
+  '800199498':{rs:'CELSIA S.A. E.S.P.',cat:'Servicios'},
+  '890903180':{rs:'GASES DE OCCIDENTE S.A. E.S.P.',cat:'Servicios'},
+  // ── Telecomunicaciones (5) ──
+  '899999115':{rs:'COMCEL S.A. (CLARO)',cat:'Telecom'},
+  '830122566':{rs:'COLOMBIA TELECOMUNICACIONES S.A. E.S.P. (MOVISTAR)',cat:'Telecom'},
+  '900092385':{rs:'COLOMBIA MOVIL S.A. E.S.P. (TIGO)',cat:'Telecom'},
+  '800092200':{rs:'ETB S.A. E.S.P.',cat:'Telecom'},
+  '805003209':{rs:'DIRECTV COLOMBIA LTDA.',cat:'Telecom'},
+  // ── Transporte y Logistica (5) ──
+  '890100813':{rs:'AVIANCA S.A.',cat:'Transporte'},
+  '900918936':{rs:'LATAM AIRLINES COLOMBIA S.A.S.',cat:'Transporte'},
+  '860512330':{rs:'SERVIENTREGA S.A.',cat:'Logistica'},
+  '890301884':{rs:'COORDINADORA MERCANTIL S.A.',cat:'Logistica'},
+  '890300225':{rs:'TCC S.A.S.',cat:'Logistica'},
+  // ── Comercio (5) ──
+  '890900608':{rs:'ALMACENES EXITO S.A.',cat:'Comercio'},
+  '900017447':{rs:'FALABELLA DE COLOMBIA S.A.',cat:'Comercio'},
+  '800242106':{rs:'SODIMAC COLOMBIA S.A. (HOMECENTER)',cat:'Comercio'},
+  '890900943':{rs:'COLOMBIANA DE COMERCIO S.A. (ALKOSTO)',cat:'Comercio'},
+  '900059238':{rs:'MAKRO SUPERMAYORISTA S.A.S.',cat:'Comercio'},
+  // ── Grandes Empresas / Industria (14) ──
+  '890900266':{rs:'GRUPO NUTRESA S.A.',cat:'Industria'},
+  '890101815':{rs:'ECOPETROL S.A.',cat:'Energia'},
+  '890900148':{rs:'GRUPO ARGOS S.A.',cat:'Industria'},
+  '890101998':{rs:'INTERCONEXION ELECTRICA S.A. ISA',cat:'Energia'},
+  '860075557':{rs:'CEMENTOS ARGOS S.A.',cat:'Industria'},
+  '890300406':{rs:'TECNOQUIMICAS S.A.',cat:'Industria'},
+  '860001022':{rs:'BAVARIA S.A.',cat:'Industria'},
+  '860037648':{rs:'ORGANIZACION TERPEL S.A.',cat:'Combustibles'},
+  '890900159':{rs:'COMPANIA NACIONAL DE CHOCOLATES S.A.',cat:'Industria'},
+  '860000656':{rs:'ALPINA PRODUCTOS ALIMENTICIOS S.A.',cat:'Industria'},
+  '860003216':{rs:'COLGATE PALMOLIVE COMPANIA S.A.',cat:'Industria'},
+  '860007759':{rs:'BAYER S.A.',cat:'Industria'},
+  '860002554':{rs:'NESTLE DE COLOMBIA S.A.',cat:'Industria'},
+  '860035992':{rs:'JOHNSON & JOHNSON DE COLOMBIA S.A.',cat:'Industria'},
+  // ── Tecnologia (7) ──
+  '900459739':{rs:'RAPPI S.A.S.',cat:'Tecnologia'},
+  '900418656':{rs:'GOOGLE COLOMBIA S.A.S.',cat:'Tecnologia'},
+  '830073623':{rs:'MICROSOFT COLOMBIA INC',cat:'Tecnologia'},
+  '900347473':{rs:'AMAZON WEB SERVICES COLOMBIA S.A.S.',cat:'Tecnologia'},
+  '900503795':{rs:'META PLATFORMS COLOMBIA S.A.S.',cat:'Tecnologia'},
+  '800058016':{rs:'HEWLETT PACKARD COLOMBIA LTDA.',cat:'Tecnologia'},
+  '900116795':{rs:'ORACLE COLOMBIA LTDA.',cat:'Tecnologia'},
+  // ── Universidades (6) ──
+  '860012357':{rs:'UNIVERSIDAD NACIONAL DE COLOMBIA',cat:'Universidad'},
+  '860351894':{rs:'UNIVERSIDAD DE LOS ANDES',cat:'Universidad'},
+  '860013720':{rs:'PONTIFICIA UNIVERSIDAD JAVERIANA',cat:'Universidad'},
+  '890901389':{rs:'UNIVERSIDAD EAFIT',cat:'Universidad'},
+  '890980040':{rs:'UNIVERSIDAD DE ANTIOQUIA',cat:'Universidad'},
+  '860007590':{rs:'UNIVERSIDAD EXTERNADO DE COLOMBIA',cat:'Universidad'},
+  // ── Municipios principales para ICA (20) ──
+  '899999061':{rs:'BOGOTA D.C.',cat:'Municipio'},
+  '890905211':{rs:'MUNICIPIO DE MEDELLIN',cat:'Municipio'},
+  '890399029':{rs:'MUNICIPIO DE CALI',cat:'Municipio'},
+  '800094164':{rs:'MUNICIPIO DE BARRANQUILLA',cat:'Municipio'},
+  '890480184':{rs:'MUNICIPIO DE CARTAGENA',cat:'Municipio'},
+  '890201213':{rs:'MUNICIPIO DE BUCARAMANGA',cat:'Municipio'},
+  '891480000':{rs:'MUNICIPIO DE PEREIRA',cat:'Municipio'},
+  '890801052':{rs:'MUNICIPIO DE MANIZALES',cat:'Municipio'},
+  '800099141':{rs:'MUNICIPIO DE IBAGUE',cat:'Municipio'},
+  '891180091':{rs:'MUNICIPIO DE NEIVA',cat:'Municipio'},
+  '890500622':{rs:'MUNICIPIO DE CUCUTA',cat:'Municipio'},
+  '891190346':{rs:'MUNICIPIO DE VILLAVICENCIO',cat:'Municipio'},
+  '800099095':{rs:'MUNICIPIO DE SANTA MARTA',cat:'Municipio'},
+  '800096809':{rs:'MUNICIPIO DE ARMENIA',cat:'Municipio'},
+  '891780009':{rs:'MUNICIPIO DE VALLEDUPAR',cat:'Municipio'},
+  '800096734':{rs:'MUNICIPIO DE MONTERIA',cat:'Municipio'},
+  '800100134':{rs:'MUNICIPIO DE PASTO',cat:'Municipio'},
+  '800096547':{rs:'MUNICIPIO DE SINCELEJO',cat:'Municipio'},
+  '891800498':{rs:'MUNICIPIO DE TUNJA',cat:'Municipio'},
+  '892115024':{rs:'MUNICIPIO DE RIOHACHA',cat:'Municipio'},
+  '800112806':{rs:'MUNICIPIO DE MEDELLIN - HACIENDA',cat:'Municipio'},
+  // ── Municipios adicionales (30+) ──
+  '890980093':{rs:'MUNICIPIO DE ENVIGADO',cat:'Municipio'},
+  '890980066':{rs:'MUNICIPIO DE ITAGUI',cat:'Municipio'},
+  '890980013':{rs:'MUNICIPIO DE BELLO',cat:'Municipio'},
+  '890980757':{rs:'MUNICIPIO DE RIONEGRO',cat:'Municipio'},
+  '890981848':{rs:'MUNICIPIO DE APARTADO',cat:'Municipio'},
+  '890115018':{rs:'MUNICIPIO DE SOLEDAD',cat:'Municipio'},
+  '899999721':{rs:'MUNICIPIO DE SOACHA',cat:'Municipio'},
+  '899999316':{rs:'MUNICIPIO DE ZIPAQUIRA',cat:'Municipio'},
+  '899999414':{rs:'MUNICIPIO DE FACATATIVA',cat:'Municipio'},
+  '899999707':{rs:'MUNICIPIO DE CHIA',cat:'Municipio'},
+  '890680027':{rs:'MUNICIPIO DE FUSAGASUGA',cat:'Municipio'},
+  '899999318':{rs:'MUNICIPIO DE MOSQUERA',cat:'Municipio'},
+  '890201235':{rs:'MUNICIPIO DE BARRANCABERMEJA',cat:'Municipio'},
+  '890204895':{rs:'MUNICIPIO DE FLORIDABLANCA',cat:'Municipio'},
+  '890205176':{rs:'MUNICIPIO DE PIEDECUESTA',cat:'Municipio'},
+  '890204802':{rs:'MUNICIPIO DE GIRON',cat:'Municipio'},
+  '891408747':{rs:'MUNICIPIO DE DOSQUEBRADAS',cat:'Municipio'},
+  '890399047':{rs:'MUNICIPIO DE PALMIRA',cat:'Municipio'},
+  '890301430':{rs:'MUNICIPIO DE BUENAVENTURA',cat:'Municipio'},
+  '890399048':{rs:'MUNICIPIO DE TULUA',cat:'Municipio'},
+  '890399049':{rs:'MUNICIPIO DE CARTAGO',cat:'Municipio'},
+  '890399052':{rs:'MUNICIPIO DE BUGA',cat:'Municipio'},
+  '891180008':{rs:'MUNICIPIO DE FLORENCIA',cat:'Municipio'},
+  '891680010':{rs:'MUNICIPIO DE YOPAL',cat:'Municipio'},
+  '800094552':{rs:'MUNICIPIO DE QUIBDO',cat:'Municipio'},
+  '891855039':{rs:'MUNICIPIO DE SOGAMOSO',cat:'Municipio'},
+  '891855024':{rs:'MUNICIPIO DE DUITAMA',cat:'Municipio'},
+  '899999317':{rs:'MUNICIPIO DE GIRARDOT',cat:'Municipio'},
+  '800095978':{rs:'MUNICIPIO DE POPAYAN',cat:'Municipio'},
+  // ── Gobernaciones (32) ──
+  '890980040':{rs:'DEPARTAMENTO DE ANTIOQUIA',cat:'Gobernacion'},
+  '890102006':{rs:'DEPARTAMENTO DEL ATLANTICO',cat:'Gobernacion'},
+  '899999114':{rs:'DEPARTAMENTO DE CUNDINAMARCA',cat:'Gobernacion'},
+  '890399002':{rs:'DEPARTAMENTO DEL VALLE DEL CAUCA',cat:'Gobernacion'},
+  '890200106':{rs:'DEPARTAMENTO DE SANTANDER',cat:'Gobernacion'},
+  '891480085':{rs:'DEPARTAMENTO DE RISARALDA',cat:'Gobernacion'},
+  '890801063':{rs:'DEPARTAMENTO DE CALDAS',cat:'Gobernacion'},
+  '800094164':{rs:'DEPARTAMENTO DEL ATLANTICO',cat:'Gobernacion'},
+  '890480027':{rs:'DEPARTAMENTO DE BOLIVAR',cat:'Gobernacion'},
+  '891855048':{rs:'DEPARTAMENTO DE BOYACA',cat:'Gobernacion'},
+  '800094113':{rs:'DEPARTAMENTO DEL CESAR',cat:'Gobernacion'},
+  '800094076':{rs:'DEPARTAMENTO DE CORDOBA',cat:'Gobernacion'},
+  '891180009':{rs:'DEPARTAMENTO DEL HUILA',cat:'Gobernacion'},
+  '892115007':{rs:'DEPARTAMENTO DE LA GUAJIRA',cat:'Gobernacion'},
+  '800094089':{rs:'DEPARTAMENTO DEL MAGDALENA',cat:'Gobernacion'},
+  '891190001':{rs:'DEPARTAMENTO DEL META',cat:'Gobernacion'},
+  '800094024':{rs:'DEPARTAMENTO DE NARINO',cat:'Gobernacion'},
+  '890500622':{rs:'DEPARTAMENTO NORTE DE SANTANDER',cat:'Gobernacion'},
+  '890001639':{rs:'DEPARTAMENTO DEL QUINDIO',cat:'Gobernacion'},
+  '800094164':{rs:'DEPARTAMENTO DE SUCRE',cat:'Gobernacion'},
+  '800099106':{rs:'DEPARTAMENTO DEL TOLIMA',cat:'Gobernacion'},
+  '891780003':{rs:'DEPARTAMENTO DEL CAQUETA',cat:'Gobernacion'},
+  '800094170':{rs:'DEPARTAMENTO DEL CAUCA',cat:'Gobernacion'},
+  '891680011':{rs:'DEPARTAMENTO DE CASANARE',cat:'Gobernacion'},
+  '800094357':{rs:'DEPARTAMENTO DE ARAUCA',cat:'Gobernacion'},
+  '800094509':{rs:'DEPARTAMENTO DEL PUTUMAYO',cat:'Gobernacion'},
+  // ── Cooperativas financieras ──
+  '890981395':{rs:'CONFIAR COOPERATIVA FINANCIERA',cat:'Cooperativa'},
+  '890300653':{rs:'COOMEVA COOPERATIVA',cat:'Cooperativa'},
+  '890900841':{rs:'COTRAFA COOPERATIVA FINANCIERA',cat:'Cooperativa'},
+  '860025971':{rs:'COOPERATIVA FINANCIERA JFK',cat:'Cooperativa'},
+  '890300466':{rs:'COOMULTRASAP COOPERATIVA',cat:'Cooperativa'},
+  // ── FNA y fondos ──
+  '899999284':{rs:'FONDO NACIONAL DEL AHORRO FNA',cat:'Fondo'},
+  '800198644':{rs:'FONDO DE GARANTIAS DE INSTITUCIONES FINANCIERAS FOGAFIN',cat:'Fondo'},
+  '860018560':{rs:'FONDO DE GARANTIAS DE ENTIDADES COOPERATIVAS FOGACOOP',cat:'Fondo'},
+  // ── Más aseguradoras ──
+  '860002400':{rs:'LA EQUIDAD SEGUROS',cat:'Aseguradora'},
+  '860003020':{rs:'BBVA SEGUROS COLOMBIA S.A.',cat:'Aseguradora'},
+  '860524654':{rs:'ASEGURADORA SOLIDARIA DE COLOMBIA',cat:'Aseguradora'},
+  '860011153':{rs:'POSITIVA COMPANIA DE SEGUROS S.A.',cat:'Aseguradora'},
+  '860045904':{rs:'COMPANIA DE SEGUROS DE VIDA AURORA S.A.',cat:'Aseguradora'},
+  '860028415':{rs:'GLOBAL SEGUROS S.A.',cat:'Aseguradora'},
+  // ── Servicios publicos regionales ──
+  '890200474':{rs:'ELECTRIFICADORA DE SANTANDER ESSA',cat:'Servicios'},
+  '890801137':{rs:'CENTRAL HIDROELECTRICA DE CALDAS CHEC',cat:'Servicios'},
+  '891180052':{rs:'ELECTROHUILA S.A. E.S.P.',cat:'Servicios'},
+  '800094164':{rs:'CEDENAR S.A. E.S.P.',cat:'Servicios'},
+  '890300279':{rs:'EMCALI',cat:'Servicios'},
+  '830007355':{rs:'EMPRESA DE ENERGIA DEL QUINDIO EDEQ',cat:'Servicios'},
+  '891580006':{rs:'EMPRESA DE ENERGIA DE PEREIRA S.A. E.S.P.',cat:'Servicios'},
+  // ── Petroleras / Mineras ──
+  '800251164':{rs:'DRUMMOND LTD.',cat:'Mineria'},
+  '860051843':{rs:'CARBONES DEL CERREJON LIMITED',cat:'Mineria'},
+  '900250713':{rs:'FRONTERA ENERGY COLOMBIA CORP',cat:'Petrolera'},
+  '830053669':{rs:'PAREX RESOURCES COLOMBIA LTD',cat:'Petrolera'},
+  '800198591':{rs:'GRAN TIERRA ENERGY COLOMBIA LTD',cat:'Petrolera'},
+  // ── Aerolineas ──
+  '900464585':{rs:'VIVA AIR S.A.S.',cat:'Aerolinea'},
+  '899999143':{rs:'SATENA',cat:'Aerolinea'},
+  '830046498':{rs:'EASYFLY S.A.',cat:'Aerolinea'},
+  // ── Tecnologicas adicionales ──
+  '830077633':{rs:'SAP COLOMBIA S.A.S.',cat:'Tecnologia'},
+  '900379789':{rs:'SALESFORCE.COM COLOMBIA S.A.S.',cat:'Tecnologia'},
+  '830084541':{rs:'CISCO SYSTEMS COLOMBIA S.A.',cat:'Tecnologia'},
+  '800052487':{rs:'DELL COLOMBIA INC',cat:'Tecnologia'},
+  '830095498':{rs:'ADOBE SYSTEMS COLOMBIA S.A.S.',cat:'Tecnologia'},
+  // ── Mas entidades del Estado ──
+  '899999734':{rs:'SUPERINTENDENCIA FINANCIERA DE COLOMBIA',cat:'Estado'},
+  '860016627':{rs:'SUPERINTENDENCIA DE SERVICIOS PUBLICOS',cat:'Estado'},
+  '800247281':{rs:'SUPERINTENDENCIA NACIONAL DE SALUD',cat:'Estado'},
+  '860015536':{rs:'CONTADURIA GENERAL DE LA NACION',cat:'Estado'},
+  '899999027':{rs:'MINISTERIO DE COMERCIO INDUSTRIA Y TURISMO',cat:'Estado'},
+  '899999054':{rs:'PROCURADURIA GENERAL DE LA NACION',cat:'Estado'},
+  '899999092':{rs:'DEFENSORIA DEL PUEBLO',cat:'Estado'},
+  '899999003':{rs:'DANE',cat:'Estado'},
+  // ── Otras empresas relevantes ──
+  '860002527':{rs:'POSTOBON S.A.',cat:'Industria'},
+  '890900160':{rs:'NOEL S.A.',cat:'Industria'},
+  '890300279':{rs:'CARVAJAL S.A.',cat:'Industria'},
+  '890903803':{rs:'PRODUCTOS FAMILIA S.A.',cat:'Industria'},
+  '860025900':{rs:'CEMEX COLOMBIA S.A.',cat:'Industria'},
+  '860002175':{rs:'MONDELEZ COLOMBIA S.A.S.',cat:'Industria'},
+  '830001338':{rs:'COCA COLA FEMSA DE COLOMBIA S.A.',cat:'Industria'},
+  '860070301':{rs:'PROCTER & GAMBLE COLOMBIA LTDA.',cat:'Industria'},
+  '890900050':{rs:'PELDAR S.A.',cat:'Industria'},
+  '860005224':{rs:'UNILEVER ANDINA COLOMBIA LTDA.',cat:'Industria'},
+};
+
+const DV_PESOS=[71,67,59,53,47,43,41,37,29,23,19,17,13,7,3];
+
+/* ── UTILIDADES ── */
+function calcDv(n){
+  n=String(n).replace(/[.\-\s]/g,'').trim();
+  if(!n||!/^\d+$/.test(n)||n===NM)return'';
+  const np=n.padStart(15,'0');
+  let s=0;for(let i=0;i<15;i++)s+=parseInt(np[i])*DV_PESOS[i];
+  const r=s%11;
+  return r>=2?String(11-r):String(r);
+}
+
+function norm(s){return(s||'').toString().trim()}
+function toNum(v){if(typeof v==='number')return v;const s=norm(v).replace(/[,$\s]/g,'').replace(/\./g,'');const n=parseFloat(s);return isNaN(n)?0:n}
+function fN(n){return typeof n==='number'?Math.round(n).toLocaleString('es-CO'):'0'}
+function sanitizarNit(v){return norm(v).replace(/[.\-\s]/g,'').replace(/\-\d$/,'')}
+
+/* ── ESTADO GLOBAL ── */
+let rawData=[], rawDisplay=[], headerRow=0, colMap={}, parsedData=[];
+
+/* ── STEP NAVIGATION ── */
+function goStep(n){
+  for(let i=1;i<=5;i++)document.getElementById('step'+i).classList.toggle('hidden',i!==n);
+  document.querySelectorAll('.step-pill').forEach((el,i)=>{
+    el.classList.remove('active','done');
+    if(i+1<n)el.classList.add('done');
+    if(i+1===n)el.classList.add('active');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ── DEPARTAMENTO / MUNICIPIO ── */
+function populateDptos(){
+  const sel=document.getElementById('cfgDpto');
+  Object.entries(DPTOS).sort((a,b)=>a[1].localeCompare(b[1])).forEach(([c,n])=>{
+    sel.innerHTML+=`<option value="${c}">${c} - ${n}</option>`;
+  });
+}
+function onDptoChange(){
+  const d=document.getElementById('cfgDpto').value;
+  const sel=document.getElementById('cfgMpio');
+  sel.innerHTML='<option value="">— Seleccionar —</option>';
+  const mpios=MPIOS_PRINCIPALES[d]||{};
+  Object.entries(mpios).sort((a,b)=>a[1].localeCompare(b[1])).forEach(([c,n])=>{
+    sel.innerHTML+=`<option value="${c}">${c} - ${n}</option>`;
+  });
+}
+function onTipoPersonaChange(){
+  document.getElementById('repLegalBox').style.display=document.getElementById('cfgTipoPersona').value==='31'?'block':'none';
+}
+
+/* ── FILE LOADING ── */
+const HEADER_HINTS={
+  code:[/^c[oó]d/i,/^cuenta$/i,/^cta/i,/^puc/i,/^cod.*cta/i,/^codigo/i],
+  name:[/^nombre.*cuenta/i,/^descripci/i,/^detalle.*cta/i,/^nom.*cta/i],
+  nit:[/^nit/i,/^identif/i,/^documento.*terc/i,/^c[eé]dula/i,/^nro.*doc/i,/^no.*id/i],
+  razon:[/^nombre.*terc/i,/^raz[oó]n/i,/^tercero$/i,/^beneficiario/i,/^proveedor/i],
+  deb:[/^d[eé]bito/i,/^cargo/i,/^debe$/i,/^mov.*d[eé]b/i],
+  cre:[/^cr[eé]dito/i,/^abono/i,/^haber$/i,/^mov.*cr[eé]/i]
+};
+const COL_FIELDS=[
+  {key:'code',label:'Codigo Cuenta',required:true},
+  {key:'name',label:'Nombre Cuenta',required:true},
+  {key:'nit',label:'NIT Tercero',required:true},
+  {key:'razon',label:'Nombre Tercero',required:false},
+  {key:'deb',label:'Debitos',required:true},
+  {key:'cre',label:'Creditos',required:true}
+];
+
+document.getElementById('fileInput').addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0])});
+const dz=document.getElementById('dz');
+['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove('drag')}));
+dz.addEventListener('drop',e=>{if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0])});
+
+function loadFile(file){
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'array',cellDates:true});
+      let best=null,bestN=0;
+      for(const sn of wb.SheetNames){
+        const raw=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:true});
+        const disp=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',raw:false});
+        const n=raw.filter(r=>r.some(c=>c!==''&&c!=null)).length;
+        if(n>bestN){best={sn,raw,disp};bestN=n}
+      }
+      if(!best||bestN<3){alert('El archivo parece vacio.');return}
+      rawData=best.raw.filter(r=>r.some(c=>c!==''&&c!=null));
+      rawDisplay=best.disp.filter(r=>r.some(c=>c!==''&&c!=null));
+      document.getElementById('fileName').textContent=`${file.name} · ${rawData.length} filas · hoja: ${best.sn}`;
+      headerRow=autoDetectHeaderRow();
+      goStep(2);
+      renderStep2();
+    }catch(err){alert('Error al leer: '+err.message)}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function autoDetectHeaderRow(){
+  const KW=/^(c[oó]d|cuenta|nombre|descripci|nit|tercero|d[eé]bito|cr[eé]dito|saldo|identif|puc|cargo|abono|debe|haber|documento|beneficiario|proveedor)/i;
+  let bestI=0,bestScore=-Infinity;
+  for(let i=0;i<Math.min(rawData.length,25);i++){
+    const r=rawData[i];if(!r||r.length<3)continue;
+    let score=0,filled=0;
+    for(const c of r){if(c==null||c==='')continue;filled++;const s=norm(c);if(KW.test(s))score+=10;else if(typeof c==='string'&&isNaN(Number(s.replace(/[,$.\-\s]/g,''))))score+=1;else score-=1}
+    score+=filled*0.5;
+    if(i+1<rawData.length){const next=rawData[i+1];if(next){const nums=next.filter(c=>typeof c==='number'||(c&&!isNaN(Number(String(c).replace(/[,$.\-\s]/g,''))))).length;if(nums>=2)score+=5}}
+    if(score>bestScore){bestScore=score;bestI=i}
+  }
+  return bestI;
+}
+
+function renderStep2(){
+  // Header row selector
+  const sel=document.getElementById('hdrRowSelect');
+  sel.innerHTML='';
+  for(let i=0;i<Math.min(rawData.length,20);i++){
+    const preview=rawData[i].slice(0,4).map(c=>norm(c).substring(0,15)).join(' | ');
+    sel.innerHTML+=`<option value="${i}" ${i===headerRow?'selected':''}>Fila ${i+1}: ${preview}</option>`;
+  }
+  // Raw preview
+  renderRawPreview();
+  // Column mapper
+  autoDetectColumns();
+  renderColMapper();
+}
+
+function onHeaderRowChange(){
+  headerRow=parseInt(document.getElementById('hdrRowSelect').value);
+  renderRawPreview();
+  autoDetectColumns();
+  renderColMapper();
+}
+
+function renderRawPreview(){
+  const limit=Math.min(rawData.length,15);
+  let h='<table>';
+  for(let i=0;i<limit;i++){
+    const cls=i===headerRow?'hdr-row':'';
+    h+=`<tr class="${cls}">${(rawDisplay[i]||rawData[i]).map(c=>`<td>${norm(c).substring(0,30)}</td>`).join('')}</tr>`;
+  }
+  h+='</table>';
+  document.getElementById('rawPreview').innerHTML=h;
+}
+
+function autoDetectColumns(){
+  colMap={};
+  const hdrs=rawData[headerRow]||[];
+  for(const f of COL_FIELDS){
+    for(let ci=0;ci<hdrs.length;ci++){
+      const cell=norm(hdrs[ci]).toLowerCase().substring(0,50);
+      if(!cell)continue;
+      if(f.key in colMap)continue;
+      if(Object.values(colMap).includes(ci))continue;
+      for(const rx of HEADER_HINTS[f.key]){
+        if(rx.test(cell)){colMap[f.key]=ci;break}
+      }
+    }
+  }
+}
+
+function renderColMapper(){
+  const hdrs=rawData[headerRow]||[];
+  const firstDataRow=rawData[headerRow+1]||[];
+  let h='';
+  for(const f of COL_FIELDS){
+    const mapped=f.key in colMap;
+    const cls=mapped?'mapped':f.required?'required':'';
+    let opts='<option value="">— No asignada —</option>';
+    for(let ci=0;ci<hdrs.length;ci++){
+      const sel=colMap[f.key]===ci?'selected':'';
+      opts+=`<option value="${ci}" ${sel}>${norm(hdrs[ci]).substring(0,25)||'Col '+(ci+1)}</option>`;
+    }
+    const sampleVal=mapped&&firstDataRow[colMap[f.key]]!=null?norm(firstDataRow[colMap[f.key]]).substring(0,30):'';
+    h+=`<div class="col-map-item ${cls}">
+      <div class="cml">${f.required?'<span class="req">*</span>':''}${f.label}</div>
+      <select onchange="onColChange('${f.key}',this.value)">${opts}</select>
+      <div class="sample">${sampleVal?'Ej: <strong>'+sampleVal+'</strong>':'Sin datos'}</div>
+    </div>`;
+  }
+  document.getElementById('colMapper').innerHTML=h;
+}
+
+function onColChange(key,val){
+  if(val==='')delete colMap[key];else colMap[key]=parseInt(val);
+  renderColMapper();
+}
+
+function confirmColumns(){
+  // Validate required columns
+  for(const f of COL_FIELDS){
+    if(f.required&&!(f.key in colMap)){alert('Falta asignar la columna: '+f.label);return}
+  }
+  processData();
+}
+
+function processData(){
+  parsedData=[];
+  const dataRows=rawData.slice(headerRow+1);
+  let skipped=0;
+  for(const row of dataRows){
+    const code=norm(row[colMap.code]).replace(/[.\-\s]/g,'');
+    if(!code||!/^\d{4,}/.test(code)){skipped++;continue}
+    const deb=toNum(row[colMap.deb]);
+    const cre=toNum(row[colMap.cre]);
+    if(deb===0&&cre===0){skipped++;continue}
+    const nit=sanitizarNit(norm(row[colMap.nit]));
+    let razon='razon' in colMap?norm(row[colMap.razon]):'';
+    // Auto-completar razon social desde directorio si el balance no la trae
+    if(!razon&&nit&&DIRECTORIO[nit])razon=DIRECTORIO[nit].rs;
+    parsedData.push({
+      code,
+      name:norm(row[colMap.name]),
+      nit,
+      razon,
+      deb,cre,
+      neto:deb-cre
+    });
+  }
+  showPreview(skipped);
+}
+
+function showPreview(skipped){
+  document.getElementById('previewCard').classList.remove('hidden');
+  const total=parsedData.length;
+  const terceros=new Set(parsedData.map(r=>r.nit)).size;
+  const ctas=new Set(parsedData.map(r=>r.code.substring(0,4))).size;
+  const totalDeb=parsedData.reduce((s,r)=>s+r.deb,0);
+  const totalCre=parsedData.reduce((s,r)=>s+r.cre,0);
+
+  document.getElementById('fileStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${total.toLocaleString()}</div><div class="lbl">Registros</div></div>
+    <div class="stat-card green"><div class="val">${terceros.toLocaleString()}</div><div class="lbl">Terceros</div></div>
+    <div class="stat-card amber"><div class="val">${ctas}</div><div class="lbl">Cuentas</div></div>
+    <div class="stat-card ${Math.abs(totalDeb-totalCre)<1?'green':'red'}"><div class="val">${fN(totalDeb-totalCre)}</div><div class="lbl">Diferencia D-C</div></div>`;
+
+  if(total===0){
+    document.getElementById('alertNoData').classList.remove('hidden');
+    document.getElementById('alertNoDataText').innerHTML='<strong>No se encontraron registros validos.</strong> Verifica que el archivo sea un balance de prueba por terceros con codigo PUC, NIT, debitos y creditos.';
+  }else{
+    document.getElementById('alertOk').classList.remove('hidden');
+    document.getElementById('alertOkText').innerHTML=`Se procesaron <strong>${total.toLocaleString()}</strong> registros de <strong>${terceros.toLocaleString()}</strong> terceros.${skipped>0?' ('+skipped+' filas omitidas sin codigo o sin movimiento)':''}`;
+  }
+
+  // Preview table (first 50 rows)
+  let h='<table class="map-table"><thead><tr><th>#</th><th>Cuenta</th><th>Nombre</th><th>NIT</th><th>Tercero</th><th>Debito</th><th>Credito</th></tr></thead><tbody>';
+  for(let i=0;i<Math.min(parsedData.length,50);i++){
+    const r=parsedData[i];
+    h+=`<tr><td>${i+1}</td><td class="mono">${r.code}</td><td>${r.name.substring(0,30)}</td><td class="mono">${r.nit}</td><td>${r.razon.substring(0,25)}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
+  }
+  if(parsedData.length>50)h+=`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:12px">... y ${parsedData.length-50} registros mas</td></tr>`;
+  h+='</tbody></table>';
+  document.getElementById('previewTable').innerHTML=h;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FASE B: CLASIFICACION DE CUENTAS EN 10 FORMATOS DIAN
+   ═══════════════════════════════════════════════════════════ */
+
+const NIT_DIAN='800197268';
+const CUENTAS_IMP_DIAN=['2365','2367','2404','2408','2412'];
+const NITS_EXCLUIR_1003=new Set([NIT_DIAN,'899999090','899999063']);
+
+/* ── RANGOS PUC → CONCEPTO (portados del Python) ── */
+const PARAM_1001_RANGOS=[
+  ['5005','5120','5120'],['5005','5220','5220'],
+  ['5011','5230','5230'],['5011','5130','5130'],
+  ['5055','5115','5115'],['5004','5110','5110'],
+  ['5016','5125','5125'],['5016','5135','5139'],
+  ['5016','5140','5199'],['5016','5210','5219'],
+  ['5016','5235','5249'],['5016','5295','5299'],
+  ['5006','5305','5305'],['5101','530515','530515'],
+  ['5007','1435','1499'],['5010','1504','1699'],['5010','1520','1540'],
+];
+const PARAM_1001_NOMINA_SUB={
+  '5001':['06','07','08','09','10','15','27','30','33','36','39','42','45'],
+  '5002':['01','03','05'],'5024':['02'],'5025':['03'],'5027':['04'],
+  '5023':['68','72','75'],
+};
+const PARAM_1003=[
+  ['1301','13551505','13551509'],['1301','13551510','13551514'],
+  ['1302','13551515','13551519'],['1303','13551520','13551524'],
+  ['1305','13551525','13551529'],['1304','13551530','13551534'],
+  ['1306','13551535','13551539'],['1308','13551540','13551594'],
+  ['1308','13551595','13551599'],['1307','135518','135518'],
+  ['1311','135599','135599'],
+];
+const PARAM_1007=[
+  ['4003','4210','4210'],['4001','4101','4199'],['4001','4135','4135'],['4002','4201','4299'],
+];
+const PARAM_1008=[
+  ['1315','1305','1305'],['1316','1380','1399'],['1317','1330','1340'],['1317','1365','1365'],
+];
+const PARAM_1009=[
+  ['2202','2105','2199'],['2201','2205','2295'],['2204','2305','2334'],
+  ['2210','2335','2364'],['2206','2365','2369'],['2207','2380','2399'],
+  ['2208','2404','2499'],['2209','2505','2599'],['2210','2605','2699'],
+  ['2210','2705','2799'],['2210','2805','2899'],['2210','2905','2999'],
+];
+const MAPEO_1012=[
+  ['8302','1105','1105'],['8301','1110','1110'],
+  ['8305','1201','1204'],['8303','1205','1205'],
+  ['8304','1210','1210'],['8306','1225','1225'],['8309','1265','1265'],
+];
+
+/* ── KEYWORDS POR NOMBRE DE CUENTA ── */
+const KW_1001=[
+  ['5001',['sueldo','salario','basico','jornal','hora extra','recargo','auxilio transporte','rodamiento']],
+  ['5002',['honorario','honorarios','comision','comisiones']],
+  ['5024',['aporte salud','aporte eps','aportes eps']],
+  ['5025',['aporte pension','aportes pension','fondo pension']],
+  ['5027',['arl','riesgo laboral','riesgos laborales']],
+  ['5023',['parafiscal','parafiscales','icbf','sena','caja de compensacion','compensacion familiar']],
+  ['5001',['vacacion','vacaciones','cesantia','cesantias','prima de servicio','prima servicio',
+           'dotacion','incapacidad','bonificacion']],
+  ['5011',['seguro','poliza','prima de seguro','todo riesgo']],
+  ['5005',['arriendo','arrendamiento','canon','alquiler']],
+  ['5004',['acueducto','energia','telefono','internet','gas','servicio publico','vigilancia',
+           'transporte','flete','acarreo','mensajeria']],
+  ['5055',['impuesto','ica','industria y comercio','predial','vehiculo','timbre','estampilla']],
+  ['5006',['interes bancario','gmf','4x1000','comision bancaria','gasto financiero','gravamen',
+           'diferencia en cambio']],
+  ['5010',['gastos de personal','bienestar','medicina prepagada']],
+  ['5016',['viaje','viatico','pasaje','tiquete','hospedaje','mantenimiento','reparacion',
+           'legal','notarial','registro','licencia','depreciacion','amortizacion','provision',
+           'aseo','cafeteria','papeleria','utiles','fotocopia','parqueadero','publicidad',
+           'propaganda','suscripcion','diversos']],
+  ['5007',['inventario','compra de','mercancia','materia prima','material','insumo','repuesto']],
+];
+const KW_1007=[
+  ['4001',['ingreso operacional','consultoria','asesoria','outsourcing','servicio','venta','comercio','producto']],
+  ['4002',['ingreso no operacional','extraordinario','recuperacion']],
+  ['4003',['arrendamiento recibido','arriendo recibido','rendimiento financiero']],
+];
+const KW_1003=[
+  ['1301',['retencion honorario','retfte honorario']],
+  ['1302',['retencion comision','retfte comision']],
+  ['1303',['retencion servicio','retfte servicio']],
+  ['1304',['retencion arriendo','retfte arriendo','retencion arrendamiento']],
+  ['1305',['retencion rendimiento','retfte rendimiento','rendimiento financiero']],
+  ['1306',['retencion compra','retfte compra']],
+  ['1307',['retencion ica','rete ica','reteica']],
+  ['1308',['otras retencion','retencion otros']],
+  ['1311',['autorretencion','auto retencion','autoretefte']],
+];
+
+const CONCEPTOS_NOMINA=new Set(['5001','5024','5025','5027','5023']);
+const CONCEPTOS_SOLO_ENTIDADES=new Set(['5011','5012','5013','5023','5024','5025','5027']);
+
+/* ── FUNCIONES DE CLASIFICACION ── */
+function enRango(cta,d,h){const n=d.length;return cta.substring(0,n)>=d&&cta.substring(0,n)<=h}
+
+function normNombre(nom){
+  if(!nom)return'';
+  return nom.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,;:\-_/\\()[\]{}#"'&$%@!¿?]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+function clasificarPorNombre(nom,tabla){
+  const nn=normNombre(nom);if(!nn)return null;
+  // Multi-word first
+  for(const[conc,kws] of tabla){
+    for(const kw of kws){
+      if(kw.includes(' ')&&nn.includes(kw))return conc;
+    }
+  }
+  // Single word
+  const words=new Set(nn.split(' '));
+  for(const[conc,kws] of tabla){
+    for(const kw of kws){
+      if(!kw.includes(' ')&&words.has(kw))return conc;
+    }
+  }
+  return null;
+}
+
+function concepto1001(cta,nom){
+  // 5105 = Gastos de personal → subcuenta de nómina
+  if(cta.startsWith('5105')){
+    const r=clasificarPorNombre(nom,KW_1001);if(r)return r;
+    const sc=cta.length>=6?cta.substring(4,6):cta.substring(4);
+    for(const[conc,subs] of Object.entries(PARAM_1001_NOMINA_SUB)){
+      if(subs.includes(sc))return conc;
+    }
+    return'5001';
+  }
+  // Clases 51, 52, 53 = Gastos/Costos
+  if(['51','52','53'].includes(cta.substring(0,2))){
+    const r=clasificarPorNombre(nom,KW_1001);if(r)return r;
+    for(const[conc,d,h] of PARAM_1001_RANGOS){if(enRango(cta,d,h))return conc}
+    return'5016';
+  }
+  // Clase 14 = Anticipos (activos deducibles)
+  if(cta.startsWith('14')){
+    for(const[conc,d,h] of PARAM_1001_RANGOS){if(enRango(cta,d,h))return conc}
+    const r=clasificarPorNombre(nom,KW_1001);if(r)return r;
+  }
+  return null;
+}
+
+function buscarConcepto(cta,params,nom,kwTable){
+  for(const[c,d,h] of params){if(enRango(cta,d,h))return c}
+  if(kwTable&&nom){return clasificarPorNombre(nom,kwTable)||''}
+  return'';
+}
+
+function detectarTipoDoc(nit){
+  if(!nit||nit===NM)return TDM;
+  nit=String(nit).replace(/[.\-\s]/g,'');
+  if(!/^\d+$/.test(nit))return nit.replace(/[^a-zA-Z]/g,'').length<=3?'41':'42';
+  if(nit.length===9&&(nit[0]==='8'||nit[0]==='9'))return'31';
+  if(nit.length>=9&&(nit[0]==='8'||nit[0]==='9'))return'31';
+  return'13';
+}
+
+/* ── CLASIFICADOR PRINCIPAL ── */
+let clasificacion=[];
+
+function clasificarCuentas(){
+  clasificacion=[];
+  let sinClasificar=0;
+
+  for(const r of parsedData){
+    const cta=r.code, nom=r.name, nit=r.nit;
+    const val=Math.abs(r.deb-r.cre)||Math.max(r.deb,r.cre);
+    let formato='',concepto='',descripcion='';
+
+    // F2276 — Nómina (5105 con subcuentas de salarios)
+    if(cta.startsWith('5105')){
+      const c=concepto1001(cta,nom);
+      if(c&&CONCEPTOS_NOMINA.has(c)){
+        formato='F2276';concepto=c;descripcion='Rentas de Trabajo';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;
+      }
+    }
+
+    // F1001 — Pagos (Clases 5, 6, 14 con rangos específicos)
+    const c1001=concepto1001(cta,nom);
+    if(c1001&&!CONCEPTOS_NOMINA.has(c1001)){
+      formato='F1001';concepto=c1001;descripcion='Pagos y Abonos';
+      clasificacion.push({...r,formato,concepto,descripcion,val});continue;
+    }
+
+    // F1003 — Retenciones que le practicaron (1355xx)
+    if(cta.startsWith('1355')&&cta.length>=6&&!cta.startsWith('135518')&&!cta.startsWith('135595')&&!cta.startsWith('135599')){
+      if(!NITS_EXCLUIR_1003.has(nit)){
+        const c=buscarConcepto(cta,PARAM_1003,nom,KW_1003);
+        formato='F1003';concepto=c||'1308';descripcion='Retenciones Practicadas';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;
+      }
+    }
+
+    // F1005 — IVA Descontable (2408 con débito > crédito)
+    if(cta.startsWith('2408')&&r.deb>r.cre){
+      formato='F1005';concepto='';descripcion='IVA Descontable';
+      clasificacion.push({...r,formato,concepto,descripcion,val:r.deb});continue;
+    }
+
+    // F1006 — IVA Generado (2408 con crédito > débito)
+    if(cta.startsWith('2408')&&r.cre>r.deb){
+      formato='F1006';concepto='';descripcion='IVA Generado';
+      clasificacion.push({...r,formato,concepto,descripcion,val:r.cre});continue;
+    }
+
+    // F1007 — Ingresos (Clase 4)
+    if(cta[0]==='4'){
+      const c=buscarConcepto(cta,PARAM_1007,nom,KW_1007);
+      if(c){formato='F1007';concepto=c;descripcion='Ingresos';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;}
+    }
+
+    // F1008 — CxC (Clase 1, excepto 1355)
+    if(cta[0]==='1'&&!cta.startsWith('1355')&&!cta.startsWith('1105')&&!cta.startsWith('1110')&&!cta.startsWith('12')){
+      const c=buscarConcepto(cta,PARAM_1008,nom,null);
+      if(c){formato='F1008';concepto=c;descripcion='Cuentas por Cobrar';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;}
+    }
+
+    // F1009 — CxP (Clase 2)
+    if(cta[0]==='2'&&!cta.startsWith('2408')){
+      const c=buscarConcepto(cta,PARAM_1009,nom,null);
+      if(c){formato='F1009';concepto=c;descripcion='Cuentas por Pagar';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;}
+    }
+
+    // F1010 — Socios (Clase 3, 31xx)
+    if(cta.startsWith('31')){
+      formato='F1010';concepto='';descripcion='Socios y Accionistas';
+      clasificacion.push({...r,formato,concepto,descripcion,val});continue;
+    }
+
+    // F1012 — Inversiones y Bancos (1105, 1110, 12xx)
+    if(cta.startsWith('1105')||cta.startsWith('1110')||cta.startsWith('12')){
+      const c=buscarConcepto(cta,MAPEO_1012,nom,null);
+      if(c){formato='F1012';concepto=c;descripcion='Inversiones y Bancos';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;}
+    }
+
+    // No clasificado
+    sinClasificar++;
+    clasificacion.push({...r,formato:'—',concepto:'',descripcion:'Sin clasificar',val});
+  }
+
+  renderClasificacion(sinClasificar);
+}
+
+function renderClasificacion(sinClasificar){
+  // Stats
+  const formatos={};
+  for(const r of clasificacion){
+    if(r.formato==='—')continue;
+    if(!formatos[r.formato])formatos[r.formato]={count:0,total:0};
+    formatos[r.formato].count++;
+    formatos[r.formato].total+=r.val;
+  }
+  const nFormatos=Object.keys(formatos).length;
+  const totalReg=clasificacion.filter(r=>r.formato!=='—').length;
+
+  document.getElementById('clasifStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${totalReg.toLocaleString()}</div><div class="lbl">Registros clasificados</div></div>
+    <div class="stat-card green"><div class="val">${nFormatos}</div><div class="lbl">Formatos con datos</div></div>
+    <div class="stat-card amber"><div class="val">${sinClasificar}</div><div class="lbl">Sin clasificar</div></div>
+    <div class="stat-card red"><div class="val">${clasificacion.filter(r=>CONCEPTOS_NOMINA.has(r.concepto)).length}</div><div class="lbl">Registros nomina</div></div>`;
+
+  if(totalReg>0){
+    document.getElementById('clasifOk').classList.remove('hidden');
+    document.getElementById('clasifOkText').innerHTML=`Se clasificaron <strong>${totalReg.toLocaleString()}</strong> registros en <strong>${nFormatos}</strong> formatos.${sinClasificar>0?' <strong>'+sinClasificar+'</strong> registros no pudieron ser clasificados (cuentas que no aplican para exogena).':''}`;
+  }
+  if(sinClasificar>0){
+    document.getElementById('clasifWarn').classList.remove('hidden');
+    document.getElementById('clasifWarnText').innerHTML=`<strong>${sinClasificar} registros</strong> no fueron clasificados. Esto es normal — no todas las cuentas del balance aplican para exogena (ej: clase 3 patrimonio distinto de socios, cuentas de orden, etc.)`;
+  }
+
+  // Format summary table
+  const fmtNames={'F1001':'Pagos y Abonos','F1003':'Retenciones Practicadas','F1005':'IVA Descontable',
+    'F1006':'IVA Generado','F1007':'Ingresos','F1008':'Cuentas por Cobrar','F1009':'Cuentas por Pagar',
+    'F1010':'Socios y Accionistas','F1012':'Inversiones y Bancos','F2276':'Rentas de Trabajo'};
+  const fmtOrder=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  let sh='<table class="map-table"><thead><tr><th>Formato</th><th>Descripcion</th><th>Registros</th><th>Valor Total</th></tr></thead><tbody>';
+  for(const f of fmtOrder){
+    const d=formatos[f];
+    const badge=`<span class="fmt-badge fmt-${f.substring(1)}">${f}</span>`;
+    if(d){
+      sh+=`<tr><td>${badge}</td><td>${fmtNames[f]||f}</td><td class="text-right mono">${d.count.toLocaleString()}</td><td class="text-right mono">${fN(d.total)}</td></tr>`;
+    }else{
+      sh+=`<tr><td>${badge}</td><td style="color:var(--muted)">${fmtNames[f]||f}</td><td class="text-right mono" style="color:var(--muted)">0</td><td class="text-right mono" style="color:var(--muted)">—</td></tr>`;
+    }
+  }
+  sh+='</tbody></table>';
+  document.getElementById('formatSummary').innerHTML=sh;
+
+  // Detail table (first 100)
+  let h='<table class="map-table"><thead><tr><th>#</th><th>Formato</th><th>Concepto</th><th>Cuenta</th><th>Nombre</th><th>NIT</th><th>Debito</th><th>Credito</th></tr></thead><tbody>';
+  const show=clasificacion.slice(0,100);
+  for(let i=0;i<show.length;i++){
+    const r=show[i];
+    const badge=r.formato!=='—'?`<span class="fmt-badge fmt-${r.formato.substring(1)}">${r.formato}</span>`:'<span style="color:var(--muted)">—</span>';
+    h+=`<tr><td>${i+1}</td><td>${badge}</td><td class="mono">${r.concepto}</td><td class="mono">${r.code}</td><td>${r.name.substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
+  }
+  if(clasificacion.length>100)h+=`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">... y ${clasificacion.length-100} registros mas</td></tr>`;
+  h+='</tbody></table>';
+  document.getElementById('clasifTable').innerHTML=h;
+}
+
+function filtrarClasificacion(){
+  const filtro=document.getElementById('clasifFilter').value;
+  const datos=filtro?clasificacion.filter(r=>r.formato===filtro):clasificacion;
+  document.getElementById('clasifCount').textContent=datos.length+' registros';
+  const show=datos.slice(0,200);
+  let h='<table class="map-table"><thead><tr><th>#</th><th>Formato</th><th>Concepto</th><th>Cuenta</th><th>Nombre</th><th>NIT</th><th>Debito</th><th>Credito</th></tr></thead><tbody>';
+  for(let i=0;i<show.length;i++){
+    const r=show[i];
+    const badge=r.formato!=='—'?`<span class="fmt-badge fmt-${r.formato.substring(1)}">${r.formato}</span>`:'<span style="color:var(--muted)">—</span>';
+    h+=`<tr><td>${i+1}</td><td>${badge}</td><td class="mono">${r.concepto}</td><td class="mono">${r.code}</td><td>${r.name.substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
+  }
+  if(datos.length>200)h+=`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">... y ${datos.length-200} registros mas</td></tr>`;
+  h+='</tbody></table>';
+  document.getElementById('clasifTable').innerHTML=h;
+}
+
+/* ── Conectar Step 2 → Step 3 ── */
+function irAClasificacion(){
+  clasificarCuentas();
+  goStep(3);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FASE C: GENERACION DE FORMATOS (STEP 4)
+   Agrega por NIT+concepto, aplica cuantias menores, tabs
+   ═══════════════════════════════════════════════════════════ */
+
+const PREFIJOS_DIAN_F1009=['2365','2367','2368','2370','2404','2408','2412'];
+let formatos={};
+
+const FMT_HEADERS={
+  'F1001':['Concepto','Tipo Doc','No ID','DV','Razon Social','Pago Deducible','Pago No Deducible','Ret Fte Renta','Ret IVA'],
+  'F1003':['Concepto','Tipo Doc','No ID','DV','Razon Social','Base Retencion','Retencion Acumulada'],
+  'F1005':['Tipo Doc','No ID','DV','Razon Social','IVA Descontable'],
+  'F1006':['Tipo Doc','No ID','DV','Razon Social','IVA Generado'],
+  'F1007':['Concepto','Tipo Doc','No ID','DV','Razon Social','Ingresos Brutos','Devoluciones'],
+  'F1008':['Concepto','Tipo Doc','No ID','DV','Razon Social','Saldo CxC Dic31'],
+  'F1009':['Concepto','Tipo Doc','No ID','DV','Razon Social','Saldo CxP Dic31'],
+  'F1010':['Tipo Doc','No ID','DV','Razon Social','Valor Patrimonial','% Participacion'],
+  'F1012':['Concepto','Tipo Doc','No ID','DV','Razon Social','Saldo Dic31'],
+  'F2276':['Tipo Doc','No ID','DV','Razon Social','Salarios','Honorarios','Vacaciones','Cesantias','Otros Pag','Total Bruto','Aporte Salud','Aporte Pension','Ret Fte'],
+};
+
+function generarFormatos(){
+  formatos={};
+
+  // Pre-calcular retenciones por NIT para F1001
+  const retFtePorNit={}, retIvaPorNit={}, gastosPorNit={};
+  for(const r of parsedData){
+    if(!r.nit)continue;
+    if(enRango(r.code,'236505','236530')){
+      retFtePorNit[r.nit]=(retFtePorNit[r.nit]||0)+Math.max(r.cre-r.deb,0);
+    }
+    if(r.code.startsWith('2367')){
+      retIvaPorNit[r.nit]=(retIvaPorNit[r.nit]||0)+Math.max(r.cre-r.deb,0);
+    }
+    if(['51','52','53'].includes(r.code.substring(0,2))){
+      gastosPorNit[r.nit]=(gastosPorNit[r.nit]||0)+Math.abs(r.deb-r.cre);
+    }
+  }
+
+  // ── F1001: Pagos ──
+  const dic1={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1001')continue;
+    const k=r.concepto+'|'+r.nit;
+    if(!dic1[k])dic1[k]={concepto:r.concepto,nit:r.nit,razon:r.razon,ded:0,noDed:0,retFte:0,retIva:0};
+    dic1[k].ded+=r.val;
+  }
+  // Distribuir retenciones proporcionalmente
+  const nitConceptos={};
+  for(const[k,v] of Object.entries(dic1)){
+    if(!nitConceptos[v.nit])nitConceptos[v.nit]=[];
+    nitConceptos[v.nit].push({key:k,total:v.ded+v.noDed});
+  }
+  for(const[nit,items] of Object.entries(nitConceptos)){
+    const retT=retFtePorNit[nit]||0, retI=retIvaPorNit[nit]||0;
+    if(retT===0&&retI===0)continue;
+    const totalPagado=items.reduce((s,i)=>s+i.total,0);
+    if(totalPagado===0)continue;
+    for(const item of items){
+      const prop=item.total/totalPagado;
+      dic1[item.key].retFte+=Math.round(retT*prop);
+      dic1[item.key].retIva+=Math.round(retI*prop);
+    }
+  }
+  // Cuantias menores F1001
+  const final1={},men1={};
+  for(const[k,v] of Object.entries(dic1)){
+    const total=v.ded+v.noDed;
+    const tieneRet=v.retFte>0||v.retIva>0;
+    if(total<C3UVT&&!tieneRet){
+      const mk=v.concepto+'|'+NM;
+      if(!men1[mk])men1[mk]={concepto:v.concepto,nit:NM,razon:'CUANTIAS MENORES',ded:0,noDed:0,retFte:0,retIva:0};
+      men1[mk].ded+=v.ded;men1[mk].noDed+=v.noDed;
+    }else{final1[k]=v}
+  }
+  Object.assign(final1,men1);
+  formatos['F1001']=Object.values(final1).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.ded),Math.round(v.noDed),Math.round(v.retFte),Math.round(v.retIva)]);
+
+  // ── F1003: Retenciones ──
+  const dic3={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1003')continue;
+    const k=r.concepto+'|'+r.nit;
+    if(!dic3[k])dic3[k]={concepto:r.concepto,nit:r.nit,razon:r.razon,base:0,ret:0};
+    // Valor retención: crédito del balance (o débito si ya se cruzó)
+    dic3[k].ret+=r.cre>0?r.cre:r.deb;
+  }
+  formatos['F1003']=Object.values(dic3).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,0,Math.round(v.ret)]);
+
+  // ── F1005: IVA Descontable ──
+  const dic5={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1005')continue;
+    if(!dic5[r.nit])dic5[r.nit]={nit:r.nit,razon:r.razon,val:0};
+    dic5[r.nit].val+=r.deb;
+  }
+  formatos['F1005']=Object.values(dic5).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+
+  // ── F1006: IVA Generado ──
+  const dic6={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1006')continue;
+    if(!dic6[r.nit])dic6[r.nit]={nit:r.nit,razon:r.razon,val:0};
+    dic6[r.nit].val+=r.cre;
+  }
+  formatos['F1006']=Object.values(dic6).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+
+  // ── F1007: Ingresos ──
+  const dic7={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1007')continue;
+    const k=r.concepto+'|'+r.nit;
+    if(!dic7[k])dic7[k]={concepto:r.concepto,nit:r.nit,razon:r.razon,val:0};
+    dic7[k].val+=r.val;
+  }
+  const final7={},men7={};
+  for(const[k,v] of Object.entries(dic7)){
+    if(v.val<C3UVT){const mk=v.concepto+'|'+NM;if(!men7[mk])men7[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men7[mk].val+=v.val}
+    else final7[k]=v;
+  }
+  Object.assign(final7,men7);
+  formatos['F1007']=Object.values(final7).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val),0]);
+
+  // ── F1008: CxC ──
+  const dic8={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1008')continue;
+    const k=r.concepto+'|'+r.nit;
+    if(!dic8[k])dic8[k]={concepto:r.concepto,nit:r.nit,razon:r.razon,val:0};
+    dic8[k].val+=r.val;
+  }
+  const final8={},men8={};
+  for(const[k,v] of Object.entries(dic8)){
+    if(v.val<C12UVT){const mk=v.concepto+'|'+NM;if(!men8[mk])men8[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men8[mk].val+=v.val}
+    else final8[k]=v;
+  }
+  Object.assign(final8,men8);
+  formatos['F1008']=Object.values(final8).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+
+  // ── F1009: CxP ──
+  const dic9={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1009')continue;
+    const esDian=PREFIJOS_DIAN_F1009.some(p=>r.code.startsWith(p));
+    if(esDian){
+      const k='2206|'+NIT_DIAN;
+      if(!dic9[k])dic9[k]={concepto:'2206',nit:NIT_DIAN,razon:'DIAN',val:0};
+      dic9[k].val+=Math.max(r.cre-r.deb,0);
+    }else{
+      const k=r.concepto+'|'+r.nit;
+      if(!dic9[k])dic9[k]={concepto:r.concepto,nit:r.nit,razon:r.razon,val:0};
+      dic9[k].val+=Math.max(r.cre-r.deb,0);
+    }
+  }
+  // Solo saldos credito y cuantias menores
+  const final9={},men9={};
+  for(const[k,v] of Object.entries(dic9)){
+    if(v.val<=0)continue;
+    if(v.nit===NIT_DIAN){final9[k]=v}
+    else if(v.val<C12UVT){const mk=v.concepto+'|'+NM;if(!men9[mk])men9[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men9[mk].val+=v.val}
+    else final9[k]=v;
+  }
+  Object.assign(final9,men9);
+  formatos['F1009']=Object.values(final9).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+
+  // ── F1010: Socios ──
+  const dic10={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1010')continue;
+    if(!dic10[r.nit])dic10[r.nit]={nit:r.nit,razon:r.razon,val:0};
+    dic10[r.nit].val+=r.val;
+  }
+  const capTotal=Object.values(dic10).reduce((s,v)=>s+v.val,0);
+  formatos['F1010']=Object.values(dic10).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val),capTotal>0?(v.val/capTotal*100).toFixed(2)+'%':'0%']);
+
+  // ── F1012: Inversiones y Bancos ──
+  const dic12={};
+  for(const r of clasificacion){
+    if(r.formato!=='F1012')continue;
+    let nit=r.nit;
+    // Bancos sin NIT: detectar por nombre
+    if((!nit||nit==='')&&r.code.startsWith('1110')){
+      const nn=normNombre(r.name);
+      for(const[kw,[nitB,rsB]] of Object.entries(BANCOS_COLOMBIANOS)){
+        if(nn.includes(kw)){nit=nitB;break}
+      }
+      if(!nit)nit=NM;
+    }
+    if(!nit)nit=NM;
+    const k=r.concepto+'|'+nit;
+    if(!dic12[k])dic12[k]={concepto:r.concepto,nit,razon:r.razon,val:0};
+    dic12[k].val+=r.val;
+  }
+  formatos['F1012']=Object.values(dic12).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+
+  // ── F2276: Nomina ──
+  const dic26={};
+  for(const r of clasificacion){
+    if(r.formato!=='F2276')continue;
+    if(!dic26[r.nit])dic26[r.nit]={nit:r.nit,razon:r.razon,sal:0,hon:0,vac:0,ces:0,otros:0,bruto:0,apSalud:0,apPension:0,retFte:0};
+    const c=r.concepto;
+    if(c==='5001')dic26[r.nit].sal+=r.val;
+    else if(c==='5002')dic26[r.nit].hon+=r.val;
+    else if(c==='5024')dic26[r.nit].apSalud+=r.val;
+    else if(c==='5025')dic26[r.nit].apPension+=r.val;
+    else dic26[r.nit].otros+=r.val;
+  }
+  // Retenciones laborales
+  for(const r of parsedData){
+    if(r.code.startsWith('236505')&&r.nit&&dic26[r.nit]){
+      dic26[r.nit].retFte+=Math.max(r.cre-r.deb,0);
+    }
+  }
+  for(const v of Object.values(dic26)){v.bruto=v.sal+v.hon+v.vac+v.ces+v.otros}
+  formatos['F2276']=Object.values(dic26).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,
+    Math.round(v.sal),Math.round(v.hon),Math.round(v.vac),Math.round(v.ces),Math.round(v.otros),
+    Math.round(v.bruto),Math.round(v.apSalud),Math.round(v.apPension),Math.round(v.retFte)]);
+
+  renderFormatos();
+}
+
+function renderFormatos(){
+  const fmtOrder=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  const fmtNames={'F1001':'Pagos','F1003':'Retenciones','F1005':'IVA Desc.','F1006':'IVA Gen.',
+    'F1007':'Ingresos','F1008':'CxC','F1009':'CxP','F1010':'Socios','F1012':'Inversiones','F2276':'Nomina'};
+
+  let totalReg=0,totalFmt=0;
+  for(const f of fmtOrder){if(formatos[f]&&formatos[f].length>0){totalReg+=formatos[f].length;totalFmt++}}
+
+  document.getElementById('fmtStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${totalFmt}</div><div class="lbl">Formatos generados</div></div>
+    <div class="stat-card green"><div class="val">${totalReg.toLocaleString()}</div><div class="lbl">Registros totales</div></div>
+    <div class="stat-card amber"><div class="val">${(formatos['F1001']||[]).length}</div><div class="lbl">Reg. F1001 Pagos</div></div>
+    <div class="stat-card red"><div class="val">${(formatos['F2276']||[]).length}</div><div class="lbl">Reg. F2276 Nomina</div></div>`;
+
+  // Tabs
+  let tabs='',panels='';
+  let first=true;
+  for(const f of fmtOrder){
+    const rows=formatos[f]||[];
+    if(rows.length===0)continue;
+    const active=first?'active':'';
+    tabs+=`<div class="tab ${active}" onclick="switchFmtTab(this,'panel_${f}')">${f.substring(1)} ${fmtNames[f]} <span style="font-size:.7rem;background:var(--pri3);padding:1px 6px;border-radius:4px;margin-left:4px">${rows.length}</span></div>`;
+
+    const hdrs=FMT_HEADERS[f]||[];
+    let tbl=`<div id="panel_${f}" class="tab-content ${active}"><div class="scroll-box"><table class="map-table"><thead><tr><th>#</th>`;
+    for(const h of hdrs)tbl+=`<th>${h}</th>`;
+    tbl+='</tr></thead><tbody>';
+    for(let i=0;i<rows.length;i++){
+      tbl+='<tr><td>'+(i+1)+'</td>';
+      for(let j=0;j<rows[i].length;j++){
+        const v=rows[i][j];
+        const cls=typeof v==='number'?'text-right mono':'';
+        tbl+=`<td class="${cls}">${typeof v==='number'?fN(v):v}</td>`;
+      }
+      tbl+='</tr>';
+    }
+    tbl+='</tbody></table></div></div>';
+    panels+=tbl;
+    first=false;
+  }
+  document.getElementById('fmtTabs').innerHTML=tabs;
+  document.getElementById('fmtPanels').innerHTML=panels;
+
+  // Validaciones
+  const warnings=[];
+  const fmtOrder2=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  for(const f of fmtOrder2){
+    const rows=formatos[f];if(!rows||rows.length===0)continue;
+    let sinRazon=0,sinDv=0,nitNM=0;
+    for(const row of rows){
+      const tdIdx=row.indexOf('31')!==-1||row.indexOf('13')!==-1?0:-1;
+      // Buscar NIT y razon social en la fila
+      for(let i=0;i<row.length;i++){
+        if(String(row[i])===NM)nitNM++;
+      }
+      // Razon social vacia (buscar string vacio en posiciones tipicas)
+      const rsIdx=f==='F1001'||f==='F1003'||f==='F1007'||f==='F1008'||f==='F1009'?4:3;
+      if(rsIdx<row.length&&(!row[rsIdx]||row[rsIdx]===''))sinRazon++;
+      // DV vacio
+      const dvIdx=f==='F1001'||f==='F1003'||f==='F1007'||f==='F1008'||f==='F1009'?3:2;
+      if(dvIdx<row.length&&(!row[dvIdx]||row[dvIdx]===''))sinDv++;
+    }
+    if(sinRazon>0)warnings.push(`<strong>${f}:</strong> ${sinRazon} registros sin razon social — revise el balance o complete manualmente`);
+    if(sinDv>0)warnings.push(`<strong>${f}:</strong> ${sinDv} registros sin digito de verificacion`);
+    if(nitNM>0)warnings.push(`<strong>${f}:</strong> ${nitNM} registros agrupados en cuantias menores (NIT ${NM})`);
+  }
+  if(warnings.length>0){
+    document.getElementById('fmtWarnings').classList.remove('hidden');
+    document.getElementById('fmtWarningsList').innerHTML=warnings.map(w=>`<div class="alert alert-warn" style="margin-bottom:8px"><span>⚠️</span><div>${w}</div></div>`).join('');
+  }
+}
+
+function switchFmtTab(el,panelId){
+  el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#fmtPanels .tab-content').forEach(p=>p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+}
+
+/* ── Conectar Step 3 → Step 4 ── */
+function irAFormatos(){
+  generarFormatos();
+  goStep(4);
+}
+
+function irADescargar(){
+  renderDescargar();
+  goStep(5);
+}
+
+function renderDescargar(){
+  const fmtOrder=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  const fmtNames={'F1001':'Pagos','F1003':'Retenciones','F1005':'IVA Desc.','F1006':'IVA Gen.',
+    'F1007':'Ingresos','F1008':'CxC','F1009':'CxP','F1010':'Socios','F1012':'Inversiones','F2276':'Nomina'};
+  let totalReg=0,totalFmt=0;
+  for(const f of fmtOrder){if(formatos[f]&&formatos[f].length>0){totalReg+=formatos[f].length;totalFmt++}}
+  document.getElementById('dlStats').innerHTML=`
+    <div class="stat-card green"><div class="val">${totalFmt}</div><div class="lbl">Formatos</div></div>
+    <div class="stat-card blue"><div class="val">${totalReg.toLocaleString()}</div><div class="lbl">Registros</div></div>
+    <div class="stat-card amber"><div class="val">2</div><div class="lbl">Archivos</div></div>
+    <div class="stat-card green"><div class="val">✓</div><div class="lbl">Listo</div></div>`;
+  let s='<table class="map-table"><thead><tr><th>Formato</th><th>Registros</th><th>Estado</th></tr></thead><tbody>';
+  for(const f of fmtOrder){
+    const rows=formatos[f]||[];
+    const badge=`<span class="fmt-badge fmt-${f.substring(1)}">${f}</span>`;
+    if(rows.length>0)s+=`<tr><td>${badge} ${fmtNames[f]}</td><td class="text-right mono">${rows.length}</td><td style="color:var(--green)">✓ Listo</td></tr>`;
+    else s+=`<tr><td style="color:var(--muted)">${badge} ${fmtNames[f]}</td><td class="text-right mono" style="color:var(--muted)">0</td><td style="color:var(--muted)">Sin datos</td></tr>`;
+  }
+  s+='</tbody></table>';
+  document.getElementById('dlSummary').innerHTML=s;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FASE D: EXPORTAR EXCEL + XML
+   ═══════════════════════════════════════════════════════════ */
+
+function getCompanyConfig(){
+  return{
+    nit:sanitizarNit(document.getElementById('cfgNit').value),
+    rs:document.getElementById('cfgEmpresa').value.trim().toUpperCase(),
+    td:document.getElementById('cfgTipoPersona').value,
+    dv:calcDv(sanitizarNit(document.getElementById('cfgNit').value)),
+    dir:document.getElementById('cfgDir').value.trim(),
+    dp:document.getElementById('cfgDpto').value,
+    mp:document.getElementById('cfgMpio').value,
+    a1:document.getElementById('cfgApe1').value.trim().toUpperCase(),
+    a2:document.getElementById('cfgApe2').value.trim().toUpperCase(),
+    n1:document.getElementById('cfgNom1').value.trim().toUpperCase(),
+    n2:document.getElementById('cfgNom2').value.trim().toUpperCase(),
+    year:document.getElementById('cfgYear').value,
+  };
+}
+
+async function exportExcel(){
+  const wb=new ExcelJS.Workbook();
+  const hdrFill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1F4E79'}};
+  const hdrFont={bold:true,color:{argb:'FFFFFFFF'},size:10,name:'Arial'};
+  const zebraFill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF2F7FB'}};
+  const thinBorder={top:{style:'thin',color:{argb:'FF808080'}},bottom:{style:'thin',color:{argb:'FF808080'}},left:{style:'thin',color:{argb:'FF808080'}},right:{style:'thin',color:{argb:'FF808080'}}};
+
+  const fmtOrder=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  for(const f of fmtOrder){
+    const rows=formatos[f];if(!rows||rows.length===0)continue;
+    const hdrs=FMT_HEADERS[f];
+    const ws=wb.addWorksheet(f);
+    // Headers
+    const hdrRow=ws.addRow(hdrs);
+    hdrRow.eachCell(c=>{c.fill=hdrFill;c.font=hdrFont;c.alignment={horizontal:'center',wrapText:true};c.border=thinBorder});
+    // Data
+    for(let i=0;i<rows.length;i++){
+      const r=ws.addRow(rows[i]);
+      r.eachCell((c,ci)=>{
+        c.font={size:10,name:'Arial'};c.border=thinBorder;
+        if(typeof rows[i][ci-1]==='number')c.numFmt='#,##0';
+        else c.numFmt='@';
+      });
+      if(i%2===0)r.eachCell(c=>{c.fill=zebraFill});
+    }
+    // Auto-width
+    ws.columns.forEach((col,i)=>{col.width=Math.max(hdrs[i].length+2,12)});
+  }
+
+  // Resumen sheet
+  const wsR=wb.addWorksheet('Resumen');
+  wsR.addRow(['Formato','Registros']).eachCell(c=>{c.fill=hdrFill;c.font=hdrFont;c.border=thinBorder});
+  for(const f of fmtOrder){
+    const n=(formatos[f]||[]).length;
+    wsR.addRow([f,n]).eachCell(c=>{c.font={size:10,name:'Arial'};c.border=thinBorder});
+  }
+  wsR.columns=[{width:20},{width:12}];
+
+  const buf=await wb.xlsx.writeBuffer();
+  const cfg=getCompanyConfig();
+  descargarBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),
+    `Exogena_AG${cfg.year}_${cfg.nit||'SIN_NIT'}.xlsx`);
+}
+
+function descargarBlob(blob,filename){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ── EJEMPLO DESCARGABLE ── */
+function descargarEjemplo(){
+  const data=[
+    ['Codigo','Nombre Cuenta','NIT Tercero','Nombre Tercero','Debito','Credito'],
+    ['5135','Servicios','900123456','CONSULTOR ABC S.A.S',5000000,0],
+    ['236525','Retencion servicios','900123456','CONSULTOR ABC S.A.S',0,200000],
+    ['240810','IVA descontable','900123456','CONSULTOR ABC S.A.S',950000,0],
+    ['4135','Comercio al por mayor','800555444','CLIENTE XYZ LTDA',0,25000000],
+    ['240805','IVA generado','800555444','CLIENTE XYZ LTDA',0,4750000],
+    ['1305','Clientes','800555444','CLIENTE XYZ LTDA',29750000,0],
+    ['6135','Compras','811222333','DISTRIBUIDORA NACIONAL',15000000,0],
+    ['236540','Retencion compras','811222333','DISTRIBUIDORA NACIONAL',0,375000],
+    ['5105','Sueldos','1098765432','JUAN PEREZ',3500000,0],
+    ['236505','Retencion salarios','1098765432','JUAN PEREZ',0,175000],
+    ['1110','Bancos','890903938','BANCOLOMBIA S.A.',0,48850000],
+    ['2205','Proveedores','811222333','DISTRIBUIDORA NACIONAL',0,14625000],
+    ['3105','Capital social','901234567','MI EMPRESA S.A.S',0,10000000],
+  ];
+  const ws=XLSX.utils.aoa_to_sheet(data);
+  ws['!cols']=[{wch:10},{wch:28},{wch:14},{wch:28},{wch:16},{wch:16}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Balance Ejemplo');
+  XLSX.writeFile(wb,'Ejemplo_Exogena_ExogenaDIAN.xlsx');
+}
+
+/* ═══ PRO VALIDATION ═══ */
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
+let proUnlocked=false;
+
+function getDeviceFingerprint(){
+  let uid=localStorage.getItem('exogenadian_device_id');
+  if(!uid){uid='D-'+crypto.randomUUID().split('-').slice(0,2).join('');localStorage.setItem('exogenadian_device_id',uid)}
+  return uid;
+}
+
+async function validarClavePro(clave){
+  try{
+    const fp=getDeviceFingerprint();
+    const url=APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(clave)+'&device='+encodeURIComponent(fp);
+    const resp=await fetch(url);
+    const data=await resp.json();
+    if(data.valid){
+      if(data.daysLeft&&data.daysLeft<=3){
+        console.log('PRO vence en '+data.daysLeft+' día(s) — '+data.expiry);
+      }
+      return true;
+    }
+    if(data.reason)console.warn('PRO rechazado:',data.reason);
+  }catch(e){console.error('Error validando PRO:',e)}
+  return false;
+}
+
+async function initPro(){
+  const savedKey=localStorage.getItem('exogenadian_pro_key');
+  if(savedKey){
+    const valid=await validarClavePro(savedKey);
+    if(valid){proUnlocked=true;updateProUI();return}
+    else{localStorage.removeItem('exogenadian_pro_key')}
+  }
+}
+
+function updateProUI(){
+  const badge=document.getElementById('proBadge');
+  if(badge) badge.innerHTML=proUnlocked?'<span style="background:#059669;color:#fff;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700">PRO activo</span>':'';
+  const status=document.getElementById('proStatus');
+  if(status) status.textContent=proUnlocked?'Todas las funciones desbloqueadas':'Versión gratuita — Algunas funciones requieren PRO';
+  const input=document.getElementById('proKeyInput');
+  if(input&&proUnlocked) input.closest('.card')?.querySelector('[onclick]')?.setAttribute('disabled','true');
+}
+
+async function activarPro(){
+  const clave=document.getElementById('proKeyInput')?.value?.trim();
+  if(!clave){alert('Ingresa tu clave PRO');return}
+  const valid=await validarClavePro(clave);
+  if(valid){
+    proUnlocked=true;
+    localStorage.setItem('exogenadian_pro_key',clave);
+    updateProUI();
+    alert('PRO activado correctamente');
+  }else{
+    alert('Clave inválida o inactiva. Verifica tu clave o suscríbete en exogenadian.com');
+  }
+}
+
+initPro();
+
+/* ── INIT ── */
+populateDptos();
+onTipoPersonaChange();
+</script>
 </body>
 </html>

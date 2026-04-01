@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cruces de Información DIAN: Cómo Evitar Inconsistencias entre IVA, Renta y Exógena | ExógenaDIAN</title>
+<meta name="description" content="Aprenda cómo la DIAN cruza información entre IVA (F300), renta (F110), retención (F350) y exógena. Guía práctica para contadores colombianos con ejemplos y tips para evitar requerimientos.">
+<meta name="keywords" content="cruces de información DIAN, inconsistencias IVA renta exógena, cruce IVA exógena, F1006 vs F300, F1007 vs renta, requerimiento DIAN, conciliación tributaria, facturación electrónica DIAN, exógena DIAN 2025, información exógena Colombia">
+<meta name="author" content="ExógenaDIAN">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://exogenadian.com/blog/cruces-informacion-dian.html">
+<!-- Open Graph -->
+<meta property="og:title" content="Cruces de Información DIAN: Cómo Evitar Inconsistencias entre IVA, Renta y Exógena">
+<meta property="og:description" content="Guía práctica para contadores colombianos. Aprenda qué cruza la DIAN, dónde surgen las inconsistencias y cómo prevenirlas antes de presentar.">
+<meta property="og:url" content="https://exogenadian.com/blog/cruces-informacion-dian.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="ExógenaDIAN">
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cruces de Información DIAN: Cómo Evitar Inconsistencias entre IVA, Renta y Exógena">
+<meta name="twitter:description" content="Guía práctica para contadores colombianos. Qué cruza la DIAN, dónde surgen inconsistencias y cómo prevenirlas.">
+<!-- Schema.org Article -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Cruces de Información DIAN: Cómo Evitar Inconsistencias entre IVA, Renta y Exógena",
+  "description": "Guía práctica para contadores colombianos sobre los cruces de información que realiza la DIAN entre declaraciones de IVA, renta, retención y exógena. Ejemplos concretos y tips para evitar requerimientos.",
+  "author": {
+    "@type": "Organization",
+    "name": "ExógenaDIAN",
+    "url": "https://exogenadian.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "ExógenaDIAN",
+    "url": "https://exogenadian.com"
+  },
+  "datePublished": "2026-03-31",
+  "dateModified": "2026-03-31",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://exogenadian.com/blog/cruces-informacion-dian.html"
+  },
+  "inLanguage": "es-CO",
+  "keywords": ["cruces de información DIAN", "inconsistencias IVA renta exógena", "requerimiento DIAN", "F1006", "F1007", "F1003", "facturación electrónica"]
+}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-900: #064E3B; --green-800: #065F46; --green-700: #047857;
+  --green-600: #059669; --green-500: #10B981; --green-400: #34D399;
+  --green-300: #6EE7B7; --green-200: #A7F3D0; --green-100: #D1FAE5;
+  --green-50: #ECFDF5; --mint: #F0FFF4;
+  --white: #FFF; --gray-50: #F9FAFB; --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB; --gray-300: #D1D5DB; --gray-400: #9CA3AF;
+  --gray-500: #6B7280; --gray-600: #4B5563; --gray-700: #374151;
+  --gray-800: #1F2937; --gray-900: #111827;
+  --amber-50: #FFFBEB; --amber-100: #FEF3C7; --amber-500: #F59E0B; --amber-700: #92400E;
+  --rose-50: #FFF1F2; --rose-500: #F43F5E; --rose-700: #BE123C;
+  --radius: 16px; --radius-sm: 10px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.05);
+  --shadow: 0 4px 6px -1px rgba(0,0,0,.07), 0 2px 4px -2px rgba(0,0,0,.05);
+  --shadow-lg: 0 20px 50px -12px rgba(0,0,0,.12);
+  --shadow-xl: 0 25px 60px -12px rgba(5,150,105,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--white);color:var(--gray-900);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.04);transition:all .3s}
+nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--gray-900);font-weight:800;font-size:1.2rem;letter-spacing:-.02em}
+.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--green-600),var(--green-400));border-radius:10px;display:grid;place-items:center;color:#fff;font-size:.85rem;font-weight:900}
+.logo small{font-weight:400;font-size:.65rem;color:var(--gray-400);display:block;margin-top:-2px;letter-spacing:.04em}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{text-decoration:none;color:var(--gray-500);font-size:.88rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--gray-900)}
+.hamburger{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:8px;color:var(--gray-700)}
+@media(max-width:900px){
+  nav{padding:14px 20px}
+  .hamburger{display:block}
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:var(--white);padding:16px 20px;flex-direction:column;gap:12px;border-top:1px solid var(--gray-200);box-shadow:0 8px 20px rgba(0,0,0,.08)}
+  .nav-links.open{display:flex}
+}
+
+/* ARTICLE LAYOUT */
+.article-header{padding:120px 24px 48px;background:linear-gradient(170deg,var(--white) 0%,var(--green-50) 40%,var(--mint) 100%);text-align:center}
+.article-header .breadcrumb{font-size:.85rem;color:var(--gray-400);margin-bottom:20px}
+.article-header .breadcrumb a{color:var(--green-600);text-decoration:none}
+.article-header .breadcrumb a:hover{text-decoration:underline}
+.article-header h1{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(2rem,4.5vw,3rem);line-height:1.1;color:var(--gray-900);max-width:800px;margin:0 auto 16px;letter-spacing:-.02em}
+.article-header .subtitle{font-size:1.15rem;color:var(--gray-500);max-width:650px;margin:0 auto 20px;line-height:1.6}
+.article-meta{display:flex;align-items:center;justify-content:center;gap:20px;font-size:.85rem;color:var(--gray-400);flex-wrap:wrap}
+.article-meta span{display:flex;align-items:center;gap:5px}
+
+.article-body{max-width:780px;margin:0 auto;padding:48px 24px 80px}
+.article-body h2{font-family:'Fraunces',serif;font-weight:700;font-size:1.65rem;color:var(--green-800);margin:48px 0 16px;padding-bottom:10px;border-bottom:2px solid var(--green-100);letter-spacing:-.01em}
+.article-body h3{font-family:'Outfit',sans-serif;font-weight:700;font-size:1.2rem;color:var(--gray-800);margin:32px 0 12px}
+.article-body p{font-size:1.05rem;line-height:1.8;color:var(--gray-600);margin-bottom:18px}
+.article-body ul,.article-body ol{margin:0 0 20px 24px;color:var(--gray-600)}
+.article-body li{font-size:1.02rem;line-height:1.75;margin-bottom:8px}
+.article-body strong{color:var(--gray-800)}
+.article-body a{color:var(--green-600);text-decoration:underline;text-decoration-color:var(--green-200);text-underline-offset:3px;transition:all .2s}
+.article-body a:hover{color:var(--green-700);text-decoration-color:var(--green-400)}
+
+/* CALLOUT BOXES */
+.callout{border-radius:var(--radius);padding:24px 28px;margin:28px 0;border-left:4px solid}
+.callout-warning{background:var(--amber-50);border-color:var(--amber-500)}
+.callout-warning .callout-title{color:var(--amber-700)}
+.callout-danger{background:var(--rose-50);border-color:var(--rose-500)}
+.callout-danger .callout-title{color:var(--rose-700)}
+.callout-info{background:var(--green-50);border-color:var(--green-500)}
+.callout-info .callout-title{color:var(--green-700)}
+.callout-title{font-weight:700;font-size:1rem;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.callout p{font-size:.95rem;margin-bottom:8px;color:var(--gray-700)}
+.callout p:last-child{margin-bottom:0}
+
+/* COMPARISON TABLE */
+.table-wrapper{overflow-x:auto;margin:24px 0;border-radius:var(--radius);border:1px solid var(--gray-200);box-shadow:var(--shadow-sm)}
+.table-wrapper table{width:100%;border-collapse:collapse;font-size:.92rem}
+.table-wrapper th{background:var(--green-700);color:#fff;padding:14px 16px;text-align:left;font-weight:600;white-space:nowrap}
+.table-wrapper td{padding:12px 16px;border-bottom:1px solid var(--gray-100);color:var(--gray-600)}
+.table-wrapper tr:last-child td{border-bottom:none}
+.table-wrapper tr:hover td{background:var(--green-50)}
+
+/* EXAMPLE BOX */
+.example-box{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:24px 28px;margin:24px 0}
+.example-box .example-label{font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--green-600);margin-bottom:10px}
+.example-box p{font-size:.95rem;color:var(--gray-700);margin-bottom:8px}
+.example-box p:last-child{margin-bottom:0}
+
+/* CTA */
+.cta-box{background:linear-gradient(135deg,var(--green-700),var(--green-600));border-radius:var(--radius);padding:40px 36px;margin:48px 0;text-align:center;color:#fff}
+.cta-box h3{font-family:'Fraunces',serif;font-size:1.5rem;font-weight:700;margin-bottom:12px}
+.cta-box p{font-size:1.05rem;opacity:.9;margin-bottom:24px;line-height:1.6}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:12px;background:#fff;color:var(--green-700);font-weight:700;font-size:1rem;text-decoration:none;transition:all .2s;font-family:'Outfit',sans-serif}
+.cta-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.2)}
+
+/* CHECKLIST */
+.checklist{list-style:none;margin:0 0 24px 0;padding:0}
+.checklist li{padding:10px 0 10px 36px;position:relative;font-size:1rem;color:var(--gray-600);border-bottom:1px solid var(--gray-100)}
+.checklist li:last-child{border-bottom:none}
+.checklist li::before{content:"\2713";position:absolute;left:6px;top:10px;width:22px;height:22px;background:var(--green-100);color:var(--green-700);border-radius:6px;display:grid;place-items:center;font-size:.75rem;font-weight:700}
+
+/* FOOTER */
+footer{background:var(--gray-900);color:var(--gray-400);padding:40px 24px;text-align:center}
+footer a{color:var(--green-400);text-decoration:none}
+footer a:hover{text-decoration:underline}
+footer .footer-links{display:flex;justify-content:center;gap:24px;margin-bottom:16px;flex-wrap:wrap;font-size:.9rem}
+footer .footer-copy{font-size:.82rem;color:var(--gray-500)}
+
+/* TOC */
+.toc{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:24px 28px;margin:0 0 40px}
+.toc-title{font-weight:700;font-size:1rem;color:var(--gray-800);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.toc ol{margin:0 0 0 20px;padding:0}
+.toc li{font-size:.92rem;color:var(--gray-500);margin-bottom:6px;line-height:1.5}
+.toc a{color:var(--green-600);text-decoration:none}
+.toc a:hover{text-decoration:underline}
+
+@media(max-width:640px){
+  .article-header{padding:100px 16px 36px}
+  .article-body{padding:32px 16px 60px}
+  .callout{padding:18px 20px}
+  .cta-box{padding:28px 20px}
+  .table-wrapper th,.table-wrapper td{padding:10px 12px;font-size:.85rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <a href="https://exogenadian.com" class="logo">
+    <div class="logo-mark">ED</div>
+    <div>ExogenaDIAN<small>Herramientas Contables</small></div>
+  </a>
+  <button class="hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+  <div class="nav-links">
+    <a href="https://exogenadian.com/exogena.html">Exogena</a>
+    <a href="https://exogenadian.com/iva300.html">IVA 300</a>
+    <a href="https://exogenadian.com/renta110.html">Renta 110</a>
+    <a href="https://exogenadian.com/retencion350.html">Retencion 350</a>
+    <a href="https://exogenadian.com/blog/">Blog</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header class="article-header">
+  <div class="breadcrumb">
+    <a href="https://exogenadian.com">Inicio</a> &rsaquo; <a href="https://exogenadian.com/blog/">Blog</a> &rsaquo; Cruces de informacion DIAN
+  </div>
+  <h1>Cruces de informacion DIAN: como evitar inconsistencias entre IVA, renta y exogena</h1>
+  <p class="subtitle">Guia practica para contadores colombianos. Entienda que cruza la DIAN, donde surgen las diferencias y como prevenirlas antes de que llegue el requerimiento.</p>
+  <div class="article-meta">
+    <span>&#128197; 31 de marzo de 2026</span>
+    <span>&#128336; 12 min de lectura</span>
+    <span>&#128100; Equipo ExogenaDIAN</span>
+  </div>
+</header>
+
+<!-- ARTICLE -->
+<article class="article-body">
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">&#128209; Contenido del articulo</div>
+    <ol>
+      <li><a href="#que-son">Que son los cruces de informacion de la DIAN</a></li>
+      <li><a href="#iva-exogena">Cruce IVA (F300) vs Exogena (F1005/F1006)</a></li>
+      <li><a href="#renta-exogena">Cruce Renta (F110) vs Exogena (F1007/F1001)</a></li>
+      <li><a href="#retencion-exogena">Cruce Retencion (F350) vs Exogena (F1003)</a></li>
+      <li><a href="#facturacion-iva">Cruce Facturacion Electronica vs IVA</a></li>
+      <li><a href="#tips">Tips practicos para evitar inconsistencias</a></li>
+      <li><a href="#herramienta">Como ExogenaDIAN le ayuda a mantener la consistencia</a></li>
+    </ol>
+  </div>
+
+  <!-- SECTION 1 -->
+  <h2 id="que-son">1. Que son los cruces de informacion de la DIAN</h2>
+  <p>La DIAN no revisa sus declaraciones de forma aislada. A traves de su sistema de gestion de riesgos, <strong>cruza automaticamente la informacion reportada en diferentes obligaciones tributarias</strong> para detectar inconsistencias. Esto significa que los valores declarados en IVA, renta, retencion en la fuente, informacion exogena y facturacion electronica deben ser coherentes entre si.</p>
+  <p>Cuando el sistema detecta diferencias que superan ciertos umbrales, se genera un <strong>requerimiento ordinario</strong> o, en el peor de los casos, un <strong>pliego de cargos</strong>. Para el contador, esto implica tiempo, desgaste y posibles sanciones para su cliente.</p>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">&#9888;&#65039; Dato clave</div>
+    <p>Segun la DIAN, mas del <strong>60% de los requerimientos</strong> que emite en fiscalizacion masiva provienen de cruces automatizados de informacion. No es un auditor revisando manualmente: es un algoritmo comparando bases de datos.</p>
+  </div>
+
+  <p>Los cruces mas frecuentes que realiza la DIAN son:</p>
+  <ul>
+    <li><strong>Declaracion de IVA (F300)</strong> vs informacion exogena (F1005 y F1006)</li>
+    <li><strong>Declaracion de renta (F110)</strong> vs exogena (F1007 ingresos, F1001 pagos)</li>
+    <li><strong>Declaracion de retencion (F350)</strong> vs exogena (F1003 retenciones practicadas)</li>
+    <li><strong>Facturacion electronica</strong> vs declaracion de IVA</li>
+    <li><strong>Informacion de terceros</strong>: lo que otros reportan de usted vs lo que usted reporta</li>
+  </ul>
+
+  <p>A continuacion, desglosamos cada cruce con ejemplos concretos para que usted sepa exactamente donde buscar las diferencias.</p>
+
+  <!-- SECTION 2 -->
+  <h2 id="iva-exogena">2. Cruce IVA (F300) vs Exogena (F1005/F1006)</h2>
+  <p>Este es uno de los cruces mas comunes y donde se presentan mas inconsistencias. La DIAN compara lo declarado en el <strong>Formulario 300 de IVA</strong> con lo reportado en dos formatos de exogena:</p>
+
+  <div class="table-wrapper">
+    <table>
+      <tr>
+        <th>Declaracion de IVA (F300)</th>
+        <th>Formato Exogena</th>
+        <th>Que se compara</th>
+      </tr>
+      <tr>
+        <td>Casilla 59 - IVA generado en operaciones gravadas</td>
+        <td>F1006 - IVA generado y/o descontable en ventas</td>
+        <td>El IVA generado total del periodo bimestral/cuatrimestral</td>
+      </tr>
+      <tr>
+        <td>Casilla 84 - IVA descontable por compras</td>
+        <td>F1005 - IVA descontable en compras</td>
+        <td>El IVA descontable declarado vs el reportado por tercero y formato</td>
+      </tr>
+      <tr>
+        <td>Base gravable de ventas (casillas 47-54)</td>
+        <td>F1007 - Ingresos recibidos</td>
+        <td>La base gravable debe ser consistente con los ingresos</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>Donde surgen las diferencias</h3>
+  <p>Las inconsistencias mas frecuentes en este cruce ocurren por:</p>
+  <ul>
+    <li><strong>Diferencias de periodo:</strong> la exogena se reporta con corte anual, pero el IVA se declara bimestral o cuatrimestralmente. Si al sumar los 6 bimestres (o 3 cuatrimestres) no coincide con el acumulado anual de la exogena, hay inconsistencia.</li>
+    <li><strong>Notas credito no ajustadas:</strong> se registra la nota credito en IVA pero no se descuenta en exogena, o viceversa.</li>
+    <li><strong>IVA en importaciones:</strong> se declara en el F300 pero se omite en el F1005 porque se maneja por cuenta diferente.</li>
+    <li><strong>Cuantias menores:</strong> en exogena se consolidan terceros con montos inferiores a la cuantia minima en "cuantias menores". Esto hace que el detalle de terceros no sume igual al total del IVA, pero el <strong>gran total si debe coincidir</strong>.</li>
+  </ul>
+
+  <div class="example-box">
+    <div class="example-label">Ejemplo practico</div>
+    <p>La empresa ABC SAS declaro en sus 6 bimestres de IVA un total de <strong>$48.000.000</strong> de IVA generado (19%). Sin embargo, en el formato F1006 de exogena reporto un IVA generado de <strong>$45.500.000</strong>.</p>
+    <p>Diferencia: $2.500.000. Al revisar, el contador descubre que en noviembre se hizo una nota credito por $13.157.895 (base) cuyo IVA de $2.500.000 se resto en la declaracion bimestral de nov-dic, pero en exogena no se ajusto el registro original. <strong>Solucion:</strong> corregir el F1006 incluyendo el valor neto (despues de notas credito).</p>
+  </div>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">&#128161; Regla de oro</div>
+    <p>La sumatoria de IVA generado en los 6 bimestres del F300 debe ser <strong>igual</strong> al total de IVA generado reportado en el formato F1006 de exogena. Si hay devoluciones o notas credito, asegurese de netearlas en ambos reportes.</p>
+  </div>
+
+  <!-- SECTION 3 -->
+  <h2 id="renta-exogena">3. Cruce Renta (F110) vs Exogena (F1007/F1001)</h2>
+  <p>La declaracion de renta es la gran foto anual de la empresa, y la DIAN la cruza con multiples formatos de exogena. Los cruces principales son:</p>
+
+  <h3>3.1 Ingresos: Renta vs F1007</h3>
+  <p>La casilla de <strong>ingresos brutos operacionales</strong> del Formulario 110 se compara con el total reportado en el <strong>Formato 1007 (Ingresos recibidos)</strong> de exogena.</p>
+  <p>Aqui es donde mas requerimientos se generan, porque:</p>
+  <ul>
+    <li>En renta se incluyen ingresos que en exogena van por conceptos diferentes (por ejemplo, rendimientos financieros pueden ir en un concepto separado).</li>
+    <li>Los <strong>ingresos no constitutivos de renta</strong> se restan en el F110 pero igual deben reportarse en el F1007.</li>
+    <li>Los ingresos por diferencia en cambio o ajustes de periodos anteriores a veces se omiten en uno u otro reporte.</li>
+  </ul>
+
+  <div class="example-box">
+    <div class="example-label">Ejemplo practico</div>
+    <p>En el F110, la empresa reporto ingresos brutos de <strong>$1.200.000.000</strong>. En el F1007 de exogena reporto <strong>$1.150.000.000</strong>. La diferencia de $50.000.000 correspondia a rendimientos financieros que el contador incluyo en renta pero olvido reportar en exogena con el concepto 4020. <strong>Solucion:</strong> agregar los rendimientos financieros en el F1007 con NIT de la entidad financiera y concepto 4020.</p>
+  </div>
+
+  <h3>3.2 Patrimonio y pagos: Renta vs F1001</h3>
+  <p>La DIAN tambien cruza:</p>
+  <ul>
+    <li><strong>Costos y deducciones</strong> del F110 con el <strong>F1001 de pagos</strong> a terceros. Si usted declaro $800 millones en costos pero solo reporto $600 millones en pagos a terceros, la DIAN preguntara por los $200 millones faltantes.</li>
+    <li><strong>Patrimonio bruto</strong> con los formatos F1008 (cuentas por cobrar), F1009 (cuentas por pagar), F1010 (socios) y F1012 (inversiones).</li>
+    <li><strong>Pasivos</strong> declarados en renta vs lo reportado en F1009: si los pasivos no coinciden, se puede presumir un patrimonio oculto o pasivos inexistentes.</li>
+  </ul>
+
+  <div class="callout callout-danger">
+    <div class="callout-title">&#9888;&#65039; Riesgo alto</div>
+    <p>La diferencia entre costos declarados en renta y pagos reportados en F1001 es uno de los indicadores que mas utiliza la DIAN para detectar <strong>costos ficticios o proveedores fantasma</strong>. Si existe una diferencia, tenga la conciliacion documentada: depreciaciones, amortizaciones y provisiones no implican pagos a terceros y explican diferencias validas.</p>
+  </div>
+
+  <!-- SECTION 4 -->
+  <h2 id="retencion-exogena">4. Cruce Retencion (F350) vs Exogena (F1003)</h2>
+  <p>Las retenciones practicadas durante el ano, declaradas mes a mes en el <strong>Formulario 350</strong>, se cruzan con el <strong>Formato 1003 (Retenciones en la fuente practicadas)</strong> de exogena.</p>
+
+  <div class="table-wrapper">
+    <table>
+      <tr>
+        <th>F350 (mensual)</th>
+        <th>F1003 (exogena anual)</th>
+        <th>Que se compara</th>
+      </tr>
+      <tr>
+        <td>Retencion por honorarios (casilla 47)</td>
+        <td>Concepto 5002 - Honorarios</td>
+        <td>Sumatoria de 12 meses vs acumulado anual</td>
+      </tr>
+      <tr>
+        <td>Retencion por servicios (casilla 48)</td>
+        <td>Concepto 5003 - Servicios</td>
+        <td>Sumatoria de 12 meses vs acumulado anual</td>
+      </tr>
+      <tr>
+        <td>Retencion por compras (casilla 50)</td>
+        <td>Concepto 5004 - Compras</td>
+        <td>Sumatoria de 12 meses vs acumulado anual</td>
+      </tr>
+      <tr>
+        <td>Rete-IVA (casilla 75)</td>
+        <td>Concepto 5005 - IVA</td>
+        <td>Sumatoria de 12 meses vs acumulado anual</td>
+      </tr>
+      <tr>
+        <td>Rete-ICA (casilla 77)</td>
+        <td>Concepto 5011 - ICA</td>
+        <td>Sumatoria de 12 meses vs acumulado anual</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>Errores frecuentes</h3>
+  <ul>
+    <li><strong>Concepto incorrecto:</strong> se reporta una retencion por servicios en el concepto de honorarios, o se mezclan las bases.</li>
+    <li><strong>Retenciones asumidas:</strong> cuando la empresa asume la retencion (por ejemplo, en pagos al exterior), a veces se declara en el F350 pero se omite en el F1003.</li>
+    <li><strong>Diferencias de causacion vs pago:</strong> el F350 se declara sobre base de causacion, pero si en exogena se reporto sobre base de caja, los montos no coincidiran.</li>
+    <li><strong>Autorretenciones:</strong> deben reportarse en un concepto separado en la exogena y no mezclarse con retenciones practicadas a terceros.</li>
+  </ul>
+
+  <div class="example-box">
+    <div class="example-label">Ejemplo practico</div>
+    <p>La empresa reporto en sus 12 declaraciones mensuales de retencion un total de <strong>$36.000.000</strong> por concepto de retencion en servicios (casilla 48). En el F1003 de exogena, la sumatoria del concepto 5003 solo arroja <strong>$33.200.000</strong>.</p>
+    <p>Al conciliar, se descubre que $2.800.000 corresponden a retenciones a <strong>no residentes</strong> que se declararon en el F350 como servicios, pero en exogena se reportaron (correctamente) en el concepto 5015. En este caso, la exogena esta bien pero el comparativo directo entre casillas genera una aparente inconsistencia. <strong>Solucion:</strong> documentar la conciliacion y, de ser posible, usar los mismos agrupamientos en ambos reportes.</p>
+  </div>
+
+  <!-- SECTION 5 -->
+  <h2 id="facturacion-iva">5. Cruce Facturacion Electronica vs IVA</h2>
+  <p>Con la implementacion masiva de la <strong>facturacion electronica</strong>, la DIAN tiene acceso en tiempo real a cada factura emitida. Este es quizas el cruce mas preciso que realiza, porque la informacion viene directamente del sistema de facturacion.</p>
+
+  <h3>Que cruza la DIAN</h3>
+  <ul>
+    <li><strong>Total de ingresos facturados electronicamente</strong> vs base gravable declarada en el F300 de IVA.</li>
+    <li><strong>IVA facturado</strong> (discriminado en cada factura electronica) vs IVA generado declarado.</li>
+    <li><strong>Notas credito electronicas</strong> vs ajustes en la declaracion de IVA.</li>
+    <li><strong>Facturas recibidas</strong> (como comprador) vs IVA descontable que usted se esta tomando.</li>
+  </ul>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">&#128161; Atencion</div>
+    <p>Si usted se toma un <strong>IVA descontable</strong> por una compra, pero el proveedor <strong>no reporto esa factura electronica</strong> o la anulo, la DIAN lo detectara. Antes de declarar, verifique en el sistema de facturacion electronica que todas las facturas que soportan su IVA descontable estan vigentes y validadas.</p>
+  </div>
+
+  <h3>Diferencias comunes</h3>
+  <ul>
+    <li><strong>Facturas de periodos anteriores:</strong> una factura emitida en diciembre pero causada contablemente en enero genera diferencias entre el acumulado de facturacion y la declaracion de IVA del periodo.</li>
+    <li><strong>Facturas POS sin factura electronica:</strong> si la empresa emite documentos POS que no tienen factura electronica, esos ingresos no aparecen en el cruce de facturacion pero si deben incluirse en la declaracion de IVA.</li>
+    <li><strong>Exportaciones y operaciones excluidas:</strong> se facturan electronicamente pero con IVA 0% o sin IVA. Si el sistema no las categoriza correctamente, puede parecer que hay ingresos sin IVA generado.</li>
+  </ul>
+
+  <!-- SECTION 6 -->
+  <h2 id="tips">6. Tips practicos para evitar inconsistencias</h2>
+  <p>Prevenir es mucho mas facil que corregir. Estos son los pasos concretos que usted puede implementar en su firma o en el cierre de cada cliente:</p>
+
+  <h3>6.1 Concilie antes de presentar</h3>
+  <p>Antes de presentar cualquier declaracion o informacion exogena, elabore una <strong>matriz de conciliacion tributaria</strong> que cruce:</p>
+  <ul class="checklist">
+    <li>Sumatoria de IVA generado (6 bimestres F300) vs total F1006 de exogena</li>
+    <li>Sumatoria de IVA descontable (6 bimestres F300) vs total F1005 de exogena</li>
+    <li>Sumatoria de retenciones (12 meses F350) vs total F1003 de exogena</li>
+    <li>Ingresos brutos F110 vs total F1007 de exogena</li>
+    <li>Costos y deducciones F110 vs total F1001 de exogena + depreciaciones y amortizaciones</li>
+    <li>Patrimonio bruto F110 vs sumas de F1008 + F1009 + F1010 + F1012</li>
+    <li>Total facturado electronicamente vs base gravable declarada en IVA</li>
+  </ul>
+
+  <h3>6.2 Use la misma base de datos</h3>
+  <p>Una causa frecuente de inconsistencias es que <strong>cada reporte se genera de una fuente diferente</strong>: el IVA se hace desde un modulo, la exogena desde otro, la renta desde un Excel aparte. Cuando la fuente no es la misma, las diferencias son casi inevitables.</p>
+  <p>La solucion es generar todos los reportes desde el <strong>mismo balance de prueba auditado</strong>. Si el balance de prueba es la unica fuente, las cifras seran consistentes por definicion.</p>
+
+  <div class="callout callout-info">
+    <div class="callout-title">&#9989; Buena practica</div>
+    <p>Cierre su contabilidad completamente antes de generar cualquier reporte tributario. Una vez cerrado el periodo, genere el balance de prueba definitivo y desde ahi produzca <strong>todos</strong> los informes: IVA, renta, retencion y exogena. Asi la consistencia esta garantizada desde el origen.</p>
+  </div>
+
+  <h3>6.3 Revise las cuantias menores</h3>
+  <p>En informacion exogena, los terceros cuyos montos no superan la cuantia minima establecida por la DIAN se agrupan en un registro de <strong>"cuantias menores"</strong> (con NIT 222222222). Este registro es una fuente constante de errores:</p>
+  <ul>
+    <li>Se omite incluir cuantias menores, y el total de la exogena queda por debajo del total real.</li>
+    <li>Se incluyen en cuantias menores terceros que si superan la cuantia y deberian ir individualizados.</li>
+    <li>Se calculan las cuantias menores "a ojo" en lugar de derivarlas del balance.</li>
+  </ul>
+  <p>La regla es simple: <strong>la suma de los registros individualizados + cuantias menores debe ser igual al total del concepto en la contabilidad</strong>.</p>
+
+  <h3>6.4 Documente las diferencias validas</h3>
+  <p>No todas las diferencias son errores. Existen diferencias validas como:</p>
+  <ul>
+    <li><strong>Depreciaciones y amortizaciones:</strong> son costos/gastos en renta pero no implican pagos a terceros (F1001).</li>
+    <li><strong>Provisiones y deterioros:</strong> afectan el estado de resultados pero no generan retencion en la fuente.</li>
+    <li><strong>Ingresos por metodo de participacion:</strong> se declaran en renta pero no se reportan en exogena como ingreso recibido de un tercero.</li>
+  </ul>
+  <p>Tenga un <strong>papel de trabajo de conciliacion</strong> donde documente estas diferencias. Si la DIAN le envia un requerimiento, esta conciliacion sera su mejor defensa.</p>
+
+  <h3>6.5 Resumen de cruces criticos</h3>
+  <div class="table-wrapper">
+    <table>
+      <tr>
+        <th>Cruce</th>
+        <th>Fuente A</th>
+        <th>Fuente B</th>
+        <th>Riesgo</th>
+      </tr>
+      <tr>
+        <td>IVA generado</td>
+        <td>F300 (sum. bimestral)</td>
+        <td>F1006 exogena</td>
+        <td style="color:var(--rose-700);font-weight:600">Alto</td>
+      </tr>
+      <tr>
+        <td>IVA descontable</td>
+        <td>F300 (sum. bimestral)</td>
+        <td>F1005 exogena</td>
+        <td style="color:var(--rose-700);font-weight:600">Alto</td>
+      </tr>
+      <tr>
+        <td>Retenciones practicadas</td>
+        <td>F350 (sum. mensual)</td>
+        <td>F1003 exogena</td>
+        <td style="color:var(--rose-700);font-weight:600">Alto</td>
+      </tr>
+      <tr>
+        <td>Ingresos brutos</td>
+        <td>F110 renta</td>
+        <td>F1007 exogena</td>
+        <td style="color:var(--rose-700);font-weight:600">Alto</td>
+      </tr>
+      <tr>
+        <td>Costos vs pagos</td>
+        <td>F110 renta</td>
+        <td>F1001 exogena</td>
+        <td style="color:var(--amber-700);font-weight:600">Medio</td>
+      </tr>
+      <tr>
+        <td>Facturacion vs IVA</td>
+        <td>Fact. electronica</td>
+        <td>F300 IVA</td>
+        <td style="color:var(--rose-700);font-weight:600">Alto</td>
+      </tr>
+      <tr>
+        <td>Patrimonio</td>
+        <td>F110 renta</td>
+        <td>F1008/F1009/F1010</td>
+        <td style="color:var(--amber-700);font-weight:600">Medio</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- SECTION 7 -->
+  <h2 id="herramienta">7. Como ExogenaDIAN le ayuda a mantener la consistencia</h2>
+  <p>El mayor riesgo de inconsistencia surge cuando cada reporte se genera por separado, desde fuentes distintas o con criterios diferentes. <strong><a href="https://exogenadian.com">ExogenaDIAN</a></strong> resuelve este problema de raiz.</p>
+
+  <p>Con ExogenaDIAN, usted sube un unico balance de prueba y desde ahi se generan automaticamente:</p>
+  <ul>
+    <li><strong>Los 10 formatos de informacion exogena</strong> (F1001, F1003, F1005, F1006, F1007, F1008, F1009, F1010, F1012, F2276)</li>
+    <li><strong>El borrador del Formulario 300 de IVA</strong></li>
+    <li><strong>El borrador del Formulario 350 de Retencion</strong></li>
+    <li><strong>Los estados financieros bajo NIIF</strong></li>
+  </ul>
+
+  <p>Al generar todos los reportes desde la misma fuente, <strong>las cifras son consistentes por construccion</strong>. El IVA generado que aparece en su borrador de F300 es exactamente el mismo que va al F1006. Las retenciones del F350 coinciden con el F1003. Los ingresos del F110 cuadran con el F1007.</p>
+
+  <div class="callout callout-info">
+    <div class="callout-title">&#9989; Beneficio clave</div>
+    <p>No necesita hacer una conciliacion posterior entre reportes porque <strong>todos salen del mismo balance de prueba</strong>. Esto elimina la principal causa de inconsistencias: las fuentes multiples.</p>
+  </div>
+
+  <div class="cta-box">
+    <h3>Genere su exogena sin inconsistencias</h3>
+    <p>Suba su balance de prueba y obtenga todos los formatos de exogena, IVA, retencion y estados financieros desde una sola fuente. Consistencia garantizada.</p>
+    <a href="https://exogenadian.com" class="cta-btn">Ir a ExogenaDIAN.com &rarr;</a>
+  </div>
+
+  <h2>Conclusion</h2>
+  <p>Los cruces de informacion de la DIAN no son un secreto: usted sabe que se van a hacer. La clave esta en <strong>anticiparse</strong>, conciliar antes de presentar y, sobre todo, usar una sola fuente de informacion para generar todos los reportes tributarios.</p>
+  <p>Si implementa las practicas descritas en este articulo, reducira drasticamente el riesgo de recibir requerimientos y, lo mas importante, tendra la tranquilidad de que las cifras de su cliente son defendibles ante cualquier revision.</p>
+
+</article>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="https://exogenadian.com">Inicio</a>
+    <a href="https://exogenadian.com/blog/">Blog</a>
+    <a href="https://exogenadian.com/exogena.html">Exogena DIAN</a>
+    <a href="https://exogenadian.com/iva300.html">IVA 300</a>
+    <a href="https://exogenadian.com/renta110.html">Renta 110</a>
+    <a href="https://exogenadian.com/terminos.html">Terminos</a>
+  </div>
+  <div class="footer-copy">&copy; 2026 ExogenaDIAN.com &mdash; Herramientas contables para contadores colombianos.</div>
+</footer>
+
+<script>
+window.addEventListener('scroll',()=>{document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>20)});
+</script>
+</body>
+</html>

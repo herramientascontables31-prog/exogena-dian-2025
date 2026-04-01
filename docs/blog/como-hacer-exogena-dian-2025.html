@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cómo hacer la información exógena DIAN 2025 — Guía paso a paso | ExógenaDIAN</title>
+    <meta name="description" content="Aprenda cómo hacer la información exógena DIAN 2025 paso a paso. Quiénes están obligados, los 10 formatos principales, cuantías mínimas, prevalidador y carga al MUISCA.">
+    <meta name="keywords" content="como hacer exogena dian 2025, información exógena DIAN, formatos exógena, prevalidador DIAN, MUISCA, exógena Colombia, medios magnéticos 2025">
+    <meta name="author" content="ExógenaDIAN">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://exogenadian.com/blog/como-hacer-exogena-dian-2025.html">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Cómo hacer la información exógena DIAN 2025 — Guía paso a paso">
+    <meta property="og:description" content="Guía completa para preparar y presentar la información exógena DIAN 2025. Los 10 formatos, obligados, cuantías mínimas y cómo automatizar el proceso.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://exogenadian.com/blog/como-hacer-exogena-dian-2025.html">
+    <meta property="og:site_name" content="ExógenaDIAN">
+    <meta property="og:locale" content="es_CO">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cómo hacer la información exógena DIAN 2025 — Guía paso a paso">
+    <meta name="twitter:description" content="Guía completa para preparar la exógena DIAN 2025. Formatos, obligados, pasos y herramientas.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- Schema.org Article -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Cómo hacer la información exógena DIAN 2025 — Guía paso a paso",
+        "description": "Guía completa para preparar y presentar la información exógena DIAN 2025. Los 10 formatos principales, quiénes están obligados, cuantías mínimas y automatización.",
+        "author": {
+            "@type": "Organization",
+            "name": "ExógenaDIAN",
+            "url": "https://exogenadian.com"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "ExógenaDIAN",
+            "url": "https://exogenadian.com"
+        },
+        "datePublished": "2025-03-15",
+        "dateModified": "2025-03-31",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://exogenadian.com/blog/como-hacer-exogena-dian-2025.html"
+        },
+        "inLanguage": "es-CO"
+    }
+    </script>
+
+    <!-- Schema.org HowTo -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": "Cómo hacer la información exógena DIAN 2025",
+        "description": "Pasos para preparar y presentar la información exógena ante la DIAN para el año gravable 2024, a reportar en 2025.",
+        "totalTime": "PT2H",
+        "tool": [
+            {"@type": "HowToTool", "name": "Software contable con balance de prueba por terceros"},
+            {"@type": "HowToTool", "name": "Prevalidador DIAN o ExógenaDIAN"},
+            {"@type": "HowToTool", "name": "Firma electrónica DIAN (si aplica)"}
+        ],
+        "step": [
+            {
+                "@type": "HowToStep",
+                "position": 1,
+                "name": "Obtener el balance de prueba por terceros",
+                "text": "Exporte desde su software contable el balance de prueba a nivel de terceros con corte a diciembre 31 del año a reportar."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 2,
+                "name": "Clasificar las cuentas por concepto DIAN",
+                "text": "Asocie cada cuenta contable con el concepto DIAN correspondiente según la resolución vigente para cada formato de exógena."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 3,
+                "name": "Aplicar cuantías mínimas",
+                "text": "Aplique los topes en UVT para determinar qué terceros reportar individualmente y cuáles acumular como cuantías menores."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 4,
+                "name": "Validar con el prevalidador DIAN",
+                "text": "Pase los archivos generados por el prevalidador de la DIAN para detectar errores de estructura, NITs inválidos o inconsistencias."
+            },
+            {
+                "@type": "HowToStep",
+                "position": 5,
+                "name": "Generar XML y cargar al MUISCA",
+                "text": "Genere los archivos XML definitivos y cárguelos a la plataforma MUISCA de la DIAN dentro de los plazos establecidos."
+            }
+        ]
+    }
+    </script>
+
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green-600: #059669;
+            --green-700: #047857;
+            --green-800: #065f46;
+            --green-50: #ecfdf5;
+            --green-100: #d1fae5;
+            --green-200: #a7f3d0;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: var(--gray-800);
+            line-height: 1.7;
+            background: #ffffff;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Fraunces', serif;
+            line-height: 1.3;
+        }
+
+        /* NAV */
+        nav {
+            background: #ffffff;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0.875rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 1.35rem;
+            color: var(--green-700);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-logo span {
+            color: var(--gray-800);
+        }
+
+        .nav-cta {
+            background: var(--green-600);
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .nav-cta:hover {
+            background: var(--green-700);
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, var(--green-50) 0%, #ffffff 60%);
+            padding: 3.5rem 1.5rem 2.5rem;
+            border-bottom: 1px solid var(--green-100);
+        }
+
+        .hero-inner {
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--green-100);
+            color: var(--green-700);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 0.3rem 0.85rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .hero h1 {
+            font-size: 2.25rem;
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 em {
+            color: var(--green-600);
+            font-style: normal;
+        }
+
+        .hero-meta {
+            font-size: 0.9rem;
+            color: var(--gray-500);
+        }
+
+        .hero-meta time {
+            font-weight: 500;
+        }
+
+        /* ARTICLE */
+        .article-wrap {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 4rem;
+        }
+
+        .article-wrap p {
+            margin-bottom: 1.25rem;
+            font-size: 1.05rem;
+            color: var(--gray-700);
+        }
+
+        .article-wrap h2 {
+            font-size: 1.65rem;
+            color: var(--gray-900);
+            margin: 2.75rem 0 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--green-100);
+        }
+
+        .article-wrap h3 {
+            font-size: 1.25rem;
+            color: var(--green-800);
+            margin: 2rem 0 0.75rem;
+        }
+
+        /* TOC */
+        .toc {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem 1.75rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .toc-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 0.75rem;
+        }
+
+        .toc ol {
+            padding-left: 1.25rem;
+        }
+
+        .toc li {
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
+        }
+
+        .toc a {
+            color: var(--green-700);
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        /* FORMATS TABLE */
+        .formats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.25rem 0 1.75rem;
+            font-size: 0.95rem;
+        }
+
+        .formats-table thead {
+            background: var(--green-700);
+            color: #fff;
+        }
+
+        .formats-table th {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .formats-table td {
+            padding: 0.65rem 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            vertical-align: top;
+        }
+
+        .formats-table tr:nth-child(even) {
+            background: var(--gray-50);
+        }
+
+        .formats-table .format-code {
+            font-weight: 600;
+            color: var(--green-700);
+            white-space: nowrap;
+        }
+
+        /* STEP CARDS */
+        .step-card {
+            background: #ffffff;
+            border: 1px solid var(--gray-200);
+            border-left: 4px solid var(--green-600);
+            border-radius: 0 12px 12px 0;
+            padding: 1.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: var(--green-600);
+            color: #fff;
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 50%;
+            margin-bottom: 0.75rem;
+        }
+
+        .step-card h3 {
+            margin-top: 0;
+            color: var(--gray-900);
+        }
+
+        .step-card p {
+            color: var(--gray-600);
+            font-size: 1rem;
+        }
+
+        .step-card ul {
+            margin: 0.5rem 0 0.75rem 1.25rem;
+            color: var(--gray-600);
+        }
+
+        .step-card li {
+            margin-bottom: 0.35rem;
+        }
+
+        /* COMPARISON TABLE */
+        .comparison {
+            margin: 2rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .comparison table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison thead th {
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .comparison thead th:first-child {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .comparison thead th:nth-child(2) {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .comparison thead th:last-child {
+            background: var(--green-600);
+            color: #fff;
+        }
+
+        .comparison td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--gray-100);
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        .comparison td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .comparison .icon-bad {
+            color: #dc2626;
+        }
+
+        .comparison .icon-good {
+            color: var(--green-600);
+            font-weight: 700;
+        }
+
+        /* CTA BOX */
+        .cta-box {
+            background: linear-gradient(135deg, var(--green-700) 0%, var(--green-600) 100%);
+            color: #fff;
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            margin: 3rem 0 1rem;
+        }
+
+        .cta-box h2 {
+            color: #fff;
+            border: none;
+            margin: 0 0 0.75rem;
+            padding: 0;
+            font-size: 1.75rem;
+        }
+
+        .cta-box p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.05rem;
+            max-width: 520px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: #fff;
+            color: var(--green-700);
+            font-weight: 700;
+            font-size: 1.05rem;
+            padding: 0.85rem 2.25rem;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        /* ALERT / TIP */
+        .tip-box {
+            background: var(--green-50);
+            border: 1px solid var(--green-200);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin: 1.25rem 0;
+            font-size: 0.95rem;
+            color: var(--green-800);
+        }
+
+        .tip-box strong {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+        footer a {
+            color: var(--green-600);
+            text-decoration: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 1.65rem;
+            }
+
+            .article-wrap h2 {
+                font-size: 1.35rem;
+            }
+
+            .formats-table {
+                font-size: 0.85rem;
+            }
+
+            .formats-table th,
+            .formats-table td {
+                padding: 0.5rem 0.65rem;
+            }
+
+            .cta-box {
+                padding: 1.75rem 1.25rem;
+            }
+
+            .cta-box h2 {
+                font-size: 1.4rem;
+            }
+
+            .comparison td,
+            .comparison th {
+                padding: 0.6rem 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .step-card {
+                padding: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <a href="https://exogenadian.com" class="nav-logo">
+                Exógena<span>DIAN</span>
+            </a>
+            <a href="https://exogenadian.com" class="nav-cta">Probar gratis</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <div class="hero-inner">
+            <span class="hero-badge">Guia completa 2025</span>
+            <h1>Cómo hacer la información <em>exógena DIAN 2025</em>: guía paso a paso</h1>
+            <p class="hero-meta">
+                Por el equipo de <strong>ExógenaDIAN</strong> &middot; Actualizado <time datetime="2025-03-31">marzo 31, 2025</time> &middot; Lectura: 12 min
+            </p>
+        </div>
+    </header>
+
+    <!-- ARTICLE -->
+    <article class="article-wrap">
+
+        <p>
+            Cada año, miles de contadores y empresas en Colombia enfrentan la misma tarea: preparar y presentar la <strong>información exógena ante la DIAN</strong>. Si usted es uno de ellos, sabe que el proceso puede tomar días enteros de trabajo manual en Excel. Pero no tiene que ser así.
+        </p>
+        <p>
+            En esta guía le explicamos <strong>todo lo que necesita saber para hacer la exógena 2025</strong> (año gravable 2024): quiénes están obligados, qué formatos debe presentar, cómo preparar la información paso a paso y cómo puede automatizar el proceso para terminarlo en minutos en lugar de días.
+        </p>
+
+        <!-- TABLE OF CONTENTS -->
+        <div class="toc">
+            <div class="toc-title">Contenido de esta guía</div>
+            <ol>
+                <li><a href="#obligados">Quiénes están obligados a presentar exógena</a></li>
+                <li><a href="#formatos">Los 10 formatos principales de información exógena</a></li>
+                <li><a href="#paso1">Paso 1: Obtener el balance de prueba por terceros</a></li>
+                <li><a href="#paso2">Paso 2: Clasificar las cuentas por concepto DIAN</a></li>
+                <li><a href="#paso3">Paso 3: Aplicar cuantías mínimas</a></li>
+                <li><a href="#paso4">Paso 4: Validar con el prevalidador DIAN</a></li>
+                <li><a href="#paso5">Paso 5: Generar XML y cargar al MUISCA</a></li>
+                <li><a href="#comparacion">Método tradicional vs. ExógenaDIAN</a></li>
+            </ol>
+        </div>
+
+        <!-- SECTION 1: OBLIGADOS -->
+        <h2 id="obligados">1. Quiénes están obligados a presentar información exógena</h2>
+
+        <p>
+            La obligación de reportar información exógena está establecida en el <strong>Artículo 631 del Estatuto Tributario</strong> y reglamentada cada año mediante resolución de la DIAN. Para el año gravable 2024 (a reportar en 2025), están obligados, entre otros:
+        </p>
+
+        <ul style="margin: 0 0 1.25rem 1.5rem; color: var(--gray-700);">
+            <li><strong>Personas jurídicas</strong> y sus asimiladas que hayan obtenido ingresos brutos superiores a <strong>100.000.000 de pesos</strong> en el año gravable 2022.</li>
+            <li><strong>Personas naturales</strong> que hayan obtenido ingresos brutos superiores a <strong>500.000.000 de pesos</strong> en el año gravable 2022.</li>
+            <li><strong>Entidades del sector público</strong>, cámaras de comercio, bolsas de valores, comisionistas de bolsa y demás entidades enumeradas en la resolución vigente.</li>
+            <li><strong>Consorcios y uniones temporales</strong> que hayan facturado durante el año gravable.</li>
+            <li><strong>Mandatarios o contratistas</strong> en contratos de mandato o administración delegada.</li>
+            <li>Entes que celebren <strong>contratos de colaboración empresarial</strong> (cuentas en participación, joint ventures).</li>
+        </ul>
+
+        <div class="tip-box">
+            <strong>Importante:</strong>
+            Verifique siempre la resolución vigente de la DIAN para el año correspondiente, ya que los topes de ingresos y los obligados pueden cambiar cada periodo. Para el reporte 2025 (AG 2024), la resolución de referencia es la Resolución 000162 de 2023 y sus modificaciones.
+        </div>
+
+        <!-- SECTION 2: FORMATOS -->
+        <h2 id="formatos">2. Los 10 formatos principales de información exógena</h2>
+
+        <p>
+            La exógena se compone de múltiples formatos, cada uno diseñado para reportar un tipo específico de operación. Estos son los <strong>10 formatos que la mayoría de contribuyentes deben presentar</strong>:
+        </p>
+
+        <div style="overflow-x: auto;">
+            <table class="formats-table">
+                <thead>
+                    <tr>
+                        <th>Formato</th>
+                        <th>Nombre / Concepto</th>
+                        <th>Qué reporta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="format-code">F1001</td>
+                        <td>Pagos y abonos en cuenta</td>
+                        <td>Pagos a proveedores, gastos operacionales y no operacionales, costos de producción y venta, compras de activos, entre otros.</td>
+                    </tr>
+                    <tr>
+                        <td class="format-code">F1003</td>
+                        <td>Retenciones en la fuente practicadas</td>
+                        <td>Detalle de las retenciones en la fuente, IVA e ICA practicadas a terceros durante el periodo.</td>
+                    </tr>
+                    <tr>
+                        <td class="format-code">F1005</td>
+                        <td>IVA descontable</td>
+                        <td>IVA pagado en compras y gastos que fue llevado como descontable en las declaraciones de IVA.</td>
+                    </tr>
+                    <tr>
+                        <td class="format-code">F1006</td>
+                        <td>IVA generado</td>
+                        <td>IVA cobrado en ventas y servicios prestados, discriminado por tercero.</td>
+                    </tr>
+                    <tr>
+                        <td class="format-code">F1007</td>
+                        <td>Ingresos recibidos</td>
+                        <td>Ingresos operacionales y no operacionales recibidos, clasificados por concepto y tercero.</td>
+                    </tr>
+                    <tr>
+                        <td class="format-code">F1008</td>
+                        <td>Cuentas por cobrar</td>
+                        <td>Saldo de deudores y cuentas por cobrar a diciembre 31, detallado por tercero.</td>
+                    </tr>
+                    <tr>
+                        <td class="format-code">F1009</td>
+                        <td>Cuentas por pagar</td>
+                        <td>Saldo de obligaciones y cuentas por pagar a diciembre 31, detallado por tercero.</td>
+                    </tr>
+                    <tr>
+                        <td class="format-code">F1010</td>
+                        <td>Socios y accionistas</td>
+                        <td>Identificación de socios, accionistas o cooperados con su porcentaje de participación y valor patrimonial.</td>
+                    </tr>
+                    <tr>
+                        <td class="format-code">F1012</td>
+                        <td>Inversiones y cuentas bancarias</td>
+                        <td>Saldos de inversiones, cuentas de ahorro y corrientes a diciembre 31 con identificación de la entidad financiera.</td>
+                    </tr>
+                    <tr>
+                        <td class="format-code">F2276</td>
+                        <td>Rentas de trabajo (nómina)</td>
+                        <td>Pagos por salarios, honorarios y demás rentas de trabajo, con detalle de aportes, deducciones y retenciones por empleado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            Dependiendo de su actividad económica, es posible que deba presentar formatos adicionales (F1004 para retenciones que le practicaron, F1011 para declaraciones tributarias, entre otros). Sin embargo, los 10 formatos de la tabla anterior cubren la gran mayoría de las obligaciones.
+        </p>
+
+        <!-- PASOS -->
+        <h2 id="pasos">Cómo preparar la exógena paso a paso</h2>
+
+        <p>
+            Ahora que conoce los formatos, veamos el proceso práctico para preparar y presentar la información. Son 5 pasos fundamentales:
+        </p>
+
+        <!-- PASO 1 -->
+        <div class="step-card" id="paso1">
+            <div class="step-number">1</div>
+            <h3>Obtener el balance de prueba por terceros</h3>
+            <p>
+                El insumo principal para preparar la exógena es el <strong>balance de prueba (o libro mayor) a nivel de terceros</strong> con corte a diciembre 31 del año gravable. Este reporte debe incluir:
+            </p>
+            <ul>
+                <li>Código y nombre de cada cuenta contable utilizada.</li>
+                <li>NIT o cédula del tercero asociado a cada movimiento.</li>
+                <li>Saldos iniciales, débitos, créditos y saldos finales del periodo.</li>
+            </ul>
+            <p>
+                Todos los softwares contables (Siigo, World Office, Helisa, TNS, Alegra, entre otros) permiten generar este reporte. Expórtelo en formato Excel o CSV.
+            </p>
+            <div class="tip-box">
+                <strong>Consejo:</strong>
+                Antes de exportar, asegúrese de que la contabilidad esté conciliada y cerrada. Cualquier ajuste posterior al corte cambiará los valores de la exógena.
+            </div>
+        </div>
+
+        <!-- PASO 2 -->
+        <div class="step-card" id="paso2">
+            <div class="step-number">2</div>
+            <h3>Clasificar las cuentas por concepto DIAN</h3>
+            <p>
+                Cada formato de exógena utiliza <strong>conceptos DIAN</strong> que agrupan tipos de operaciones. Por ejemplo, en el Formato 1001 existen conceptos como:
+            </p>
+            <ul>
+                <li><strong>5001:</strong> Salarios y prestaciones sociales.</li>
+                <li><strong>5002:</strong> Honorarios.</li>
+                <li><strong>5003:</strong> Comisiones.</li>
+                <li><strong>5004:</strong> Servicios.</li>
+                <li><strong>5005:</strong> Arrendamientos.</li>
+                <li><strong>5010:</strong> Compras a personas naturales y/o jurídicas.</li>
+            </ul>
+            <p>
+                Usted debe <strong>mapear cada cuenta contable de su PUC al concepto DIAN correspondiente</strong>. Este es uno de los pasos más laboriosos en el método manual, ya que implica revisar cuenta por cuenta.
+            </p>
+        </div>
+
+        <!-- PASO 3 -->
+        <div class="step-card" id="paso3">
+            <div class="step-number">3</div>
+            <h3>Aplicar cuantías mínimas (topes UVT)</h3>
+            <p>
+                No todos los terceros se reportan individualmente. La resolución establece <strong>cuantías mínimas en UVT</strong> por debajo de las cuales los terceros se acumulan en un solo registro denominado "cuantías menores" (NIT 222222222).
+            </p>
+            <p>
+                Los topes varían por formato y concepto. Por ejemplo, para el Formato 1001 el tope general de pagos a terceros puede ser de <strong>100 UVT</strong> (alrededor de $4.700.000 para AG 2024). Los terceros cuyos pagos acumulados del año sean inferiores a ese monto se suman en un solo registro.
+            </p>
+            <div class="tip-box">
+                <strong>Ojo:</strong>
+                Los topes se aplican sobre el <em>valor acumulado del año por tercero</em>, no sobre cada factura individual. Verifique los topes específicos en la resolución vigente, ya que cambian cada periodo.
+            </div>
+        </div>
+
+        <!-- PASO 4 -->
+        <div class="step-card" id="paso4">
+            <div class="step-number">4</div>
+            <h3>Validar con el prevalidador DIAN</h3>
+            <p>
+                La DIAN pone a disposición <strong>prevalidadores</strong> (archivos de Excel con macros) para cada formato. Estos prevalidadores permiten:
+            </p>
+            <ul>
+                <li>Verificar que la estructura del archivo cumpla con las especificaciones técnicas.</li>
+                <li>Detectar NITs inválidos o con dígito de verificación incorrecto.</li>
+                <li>Identificar inconsistencias numéricas (valores negativos, campos vacíos obligatorios).</li>
+                <li>Generar el archivo XML listo para cargar al MUISCA.</li>
+            </ul>
+            <p>
+                Descargue los prevalidadores actualizados desde el portal de la DIAN: <a href="https://www.dian.gov.co" target="_blank" rel="noopener noreferrer" style="color: var(--green-600);">www.dian.gov.co</a>
+            </p>
+        </div>
+
+        <!-- PASO 5 -->
+        <div class="step-card" id="paso5">
+            <div class="step-number">5</div>
+            <h3>Generar XML y cargar al MUISCA</h3>
+            <p>
+                Una vez validados los formatos, genere los archivos <strong>XML</strong> definitivos y proceda a cargarlos en la plataforma MUISCA de la DIAN:
+            </p>
+            <ul>
+                <li>Ingrese al portal <a href="https://muisca.dian.gov.co" target="_blank" rel="noopener noreferrer" style="color: var(--green-600);">muisca.dian.gov.co</a> con su firma electrónica.</li>
+                <li>Vaya al servicio de <strong>"Presentación de información por envío de archivos"</strong>.</li>
+                <li>Seleccione el formato y cargue el archivo XML.</li>
+                <li>Espere la respuesta del sistema: si el archivo es aceptado, descargue el acuse de recibo.</li>
+                <li>Si el archivo presenta errores, el sistema le indicará la fila y columna del problema para que lo corrija.</li>
+            </ul>
+            <p>
+                Repita el proceso para cada uno de los formatos que deba presentar. Recuerde cumplir con los <strong>plazos del calendario tributario</strong> para evitar sanciones.
+            </p>
+        </div>
+
+        <!-- SECTION: COMPARACION -->
+        <h2 id="comparacion">Método tradicional vs. ExógenaDIAN</h2>
+
+        <p>
+            Si ya ha preparado exógena de la forma convencional, sabe lo que implica: días enteros cruzando datos en Excel, mapear cuentas a conceptos manualmente, calcular cuantías menores celda por celda, y rezar para que el prevalidador no arroje errores. Es un proceso agotador, propenso a errores y que se repite cada año.
+        </p>
+        <p>
+            <strong>ExógenaDIAN</strong> fue creado precisamente para eliminar ese dolor. Veamos la comparación:
+        </p>
+
+        <div class="comparison">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspecto</th>
+                        <th>Metodo tradicional</th>
+                        <th>ExógenaDIAN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tiempo de preparación</td>
+                        <td class="icon-bad">2 - 5 días por empresa</td>
+                        <td class="icon-good">60 segundos</td>
+                    </tr>
+                    <tr>
+                        <td>Mapeo de cuentas a conceptos DIAN</td>
+                        <td class="icon-bad">Manual, cuenta por cuenta</td>
+                        <td class="icon-good">Automático con IA</td>
+                    </tr>
+                    <tr>
+                        <td>Cuantías mínimas</td>
+                        <td class="icon-bad">Cálculo manual en Excel</td>
+                        <td class="icon-good">Aplicadas automáticamente</td>
+                    </tr>
+                    <tr>
+                        <td>Formatos generados</td>
+                        <td class="icon-bad">Uno por uno</td>
+                        <td class="icon-good">Los 10 formatos de una vez</td>
+                    </tr>
+                    <tr>
+                        <td>Riesgo de errores</td>
+                        <td class="icon-bad">Alto (fórmulas, NITs, conceptos)</td>
+                        <td class="icon-good">Mínimo (validación integrada)</td>
+                    </tr>
+                    <tr>
+                        <td>Costo</td>
+                        <td class="icon-bad">Horas de trabajo profesional</td>
+                        <td class="icon-good">Desde $0 (plan gratuito)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>
+            Con ExógenaDIAN, usted <strong>sube su balance de prueba por terceros</strong> y la herramienta se encarga de clasificar las cuentas, aplicar cuantías mínimas y generar los 10 formatos principales listos para cargar al MUISCA. Lo que antes le tomaba días, ahora lo hace en <strong>60 segundos</strong>.
+        </p>
+
+        <!-- CTA -->
+        <div class="cta-box">
+            <h2>Deje de sufrir con la exógena</h2>
+            <p>
+                Suba su balance de prueba y obtenga los 10 formatos de exógena listos para el MUISCA. Sin fórmulas, sin macros, sin estrés.
+            </p>
+            <a href="https://exogenadian.com" class="cta-btn">Probar gratis en exogenadian.com</a>
+        </div>
+
+        <!-- FAQ / CIERRE -->
+        <h2>Preguntas frecuentes</h2>
+
+        <h3>Qué pasa si no presento la información exógena?</h3>
+        <p>
+            La DIAN puede imponer sanciones que van desde <strong>multas económicas</strong> (hasta 15.000 UVT, aproximadamente $700 millones) hasta el <strong>desconocimiento de costos, deducciones y pasivos</strong> reportados en la declaración de renta. Además, puede generar requerimientos, pliegos de cargos y procesos de fiscalización.
+        </p>
+
+        <h3>Cuándo vence el plazo para presentar la exógena 2025?</h3>
+        <p>
+            Los plazos se definen según los <strong>dos últimos dígitos del NIT</strong> del informante. Generalmente, los vencimientos se distribuyen entre <strong>abril y mayo</strong> del año de reporte. Consulte el calendario tributario de la DIAN para conocer su fecha exacta.
+        </p>
+
+        <h3>Puedo corregir la exógena después de presentarla?</h3>
+        <p>
+            Sí. La DIAN permite realizar <strong>correcciones</strong> a la información exógena ya presentada. Para ello, debe generar nuevamente el formato con los datos corregidos y cargarlo al MUISCA indicando que es una corrección. Sin embargo, si la corrección se hace fuera de los plazos o por requerimiento de la DIAN, puede generar sanción.
+        </p>
+
+        <h3>ExógenaDIAN funciona con cualquier software contable?</h3>
+        <p>
+            Sí. ExógenaDIAN trabaja con el <strong>balance de prueba por terceros en Excel</strong>, que es un reporte estándar que cualquier software contable puede generar (Siigo, World Office, Helisa, TNS, Alegra, Loggro, Contai, entre otros). No importa cuál use: si puede exportar el balance, puede usar ExógenaDIAN.
+        </p>
+
+        <!-- FINAL CTA -->
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem 0;">
+            <p style="font-size: 1.15rem; font-weight: 500; color: var(--gray-700); margin-bottom: 1rem;">
+                Listo para preparar su exógena 2025 en minutos?
+            </p>
+            <a href="https://exogenadian.com" class="cta-btn" style="background: var(--green-600); color: #fff; font-size: 1.1rem; padding: 1rem 2.5rem;">
+                Comenzar gratis en exogenadian.com
+            </a>
+        </div>
+
+    </article>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>
+            &copy; 2025 <a href="https://exogenadian.com">ExógenaDIAN</a>. Herramientas contables para Colombia.
+        </p>
+        <p style="margin-top: 0.5rem;">
+            La información contenida en este artículo es de carácter orientativo. Consulte siempre la normativa vigente y a un profesional contable.
+        </p>
+    </footer>
+
+</body>
+</html>

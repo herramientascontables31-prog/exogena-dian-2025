@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metadatos DIAN: qué son, para qué sirven y ejemplos prácticos | ExógenaDIAN</title>
+    <meta name="description" content="Aprenda qué son los metadatos en la información exógena DIAN, su estructura en archivos XML, los campos obligatorios y los errores más comunes que causan rechazo. Guía práctica con ejemplos.">
+    <meta name="keywords" content="metadatos DIAN, información exógena, XML exógena DIAN, encabezado XML DIAN, errores exógena DIAN, prevalidador DIAN, formato 1001, formato 1003, formato 1005">
+    <meta name="author" content="ExógenaDIAN">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://exogenadian.com/blog/metadatos-dian.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Metadatos DIAN: qué son, para qué sirven y ejemplos prácticos">
+    <meta property="og:description" content="Guía completa sobre metadatos en la información exógena DIAN. Estructura XML, campos obligatorios, errores comunes y cómo evitar rechazos del prevalidador.">
+    <meta property="og:url" content="https://exogenadian.com/blog/metadatos-dian.html">
+    <meta property="og:site_name" content="ExógenaDIAN">
+    <meta property="og:locale" content="es_CO">
+    <meta property="article:published_time" content="2026-03-31">
+    <meta property="article:author" content="ExógenaDIAN">
+    <meta property="article:section" content="Guías">
+    <meta property="article:tag" content="metadatos DIAN">
+    <meta property="article:tag" content="información exógena">
+    <meta property="article:tag" content="XML DIAN">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Metadatos DIAN: qué son, para qué sirven y ejemplos prácticos">
+    <meta name="twitter:description" content="Guía completa sobre metadatos en la información exógena DIAN. Estructura XML, campos obligatorios y errores comunes.">
+
+    <!-- Schema.org Article -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Metadatos DIAN: qué son, para qué sirven y ejemplos prácticos",
+        "description": "Guía completa sobre metadatos en la información exógena DIAN. Estructura XML, campos obligatorios, errores comunes y cómo evitar rechazos del prevalidador.",
+        "author": {
+            "@type": "Organization",
+            "name": "ExógenaDIAN",
+            "url": "https://exogenadian.com"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "ExógenaDIAN",
+            "url": "https://exogenadian.com"
+        },
+        "datePublished": "2026-03-31",
+        "dateModified": "2026-03-31",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://exogenadian.com/blog/metadatos-dian.html"
+        },
+        "articleSection": "Guías",
+        "keywords": ["metadatos DIAN", "información exógena", "XML exógena DIAN", "prevalidador DIAN", "formato 1001", "formato 1003"]
+    }
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --green-600: #059669;
+            --green-700: #047857;
+            --green-800: #065f46;
+            --green-900: #064e3b;
+            --green-50: #ecfdf5;
+            --green-100: #d1fae5;
+            --green-200: #a7f3d0;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            color: var(--gray-800);
+            line-height: 1.7;
+            background-color: #fff;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* NAV */
+        nav {
+            background: var(--green-700);
+            padding: 0.85rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        nav .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        nav .logo {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 1.35rem;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        nav .logo span {
+            color: var(--green-200);
+        }
+
+        nav .nav-link {
+            color: var(--green-100);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav .nav-link:hover {
+            color: #fff;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, var(--green-800) 0%, var(--green-700) 50%, var(--green-600) 100%);
+            padding: 3.5rem 1.5rem 3rem;
+            text-align: center;
+        }
+
+        .hero .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--green-200);
+            margin-bottom: 1.25rem;
+        }
+
+        .hero .breadcrumb a {
+            color: var(--green-200);
+            text-decoration: none;
+        }
+
+        .hero .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+            font-size: 2.4rem;
+            color: #fff;
+            max-width: 750px;
+            margin: 0 auto 1rem;
+            line-height: 1.2;
+        }
+
+        .hero .subtitle {
+            color: var(--green-100);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .hero .meta-info {
+            margin-top: 1.5rem;
+            color: var(--green-200);
+            font-size: 0.85rem;
+        }
+
+        /* ARTICLE */
+        .article-wrapper {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 4rem;
+        }
+
+        .article-wrapper h2 {
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            font-size: 1.65rem;
+            color: var(--green-800);
+            margin: 2.5rem 0 1rem;
+            line-height: 1.3;
+        }
+
+        .article-wrapper h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: var(--gray-800);
+            margin: 1.8rem 0 0.6rem;
+        }
+
+        .article-wrapper p {
+            margin-bottom: 1.1rem;
+            color: var(--gray-700);
+        }
+
+        .article-wrapper ul, .article-wrapper ol {
+            margin: 0.5rem 0 1.2rem 1.5rem;
+            color: var(--gray-700);
+        }
+
+        .article-wrapper li {
+            margin-bottom: 0.5rem;
+        }
+
+        .article-wrapper strong {
+            color: var(--gray-900);
+        }
+
+        /* CODE BLOCK */
+        .code-block {
+            background: var(--gray-900);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1.5rem 0 2rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .code-block .code-header {
+            background: var(--gray-800);
+            padding: 0.6rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .code-block .code-header .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .code-block .code-header .dot.r { background: #ef4444; }
+        .code-block .code-header .dot.y { background: #eab308; }
+        .code-block .code-header .dot.g { background: #22c55e; }
+
+        .code-block .code-header span.file-name {
+            color: var(--gray-500);
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .code-block pre {
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.65;
+        }
+
+        .code-block code {
+            font-family: 'Courier New', Courier, monospace;
+            color: #e2e8f0;
+        }
+
+        .code-block code .tag { color: #7dd3fc; }
+        .code-block code .attr { color: #a5f3fc; }
+        .code-block code .val { color: #86efac; }
+        .code-block code .comment { color: #6b7280; font-style: italic; }
+
+        /* CALLOUT */
+        .callout {
+            background: var(--green-50);
+            border-left: 4px solid var(--green-600);
+            border-radius: 0 8px 8px 0;
+            padding: 1.2rem 1.5rem;
+            margin: 1.8rem 0;
+        }
+
+        .callout.warning {
+            background: #fffbeb;
+            border-left-color: #f59e0b;
+        }
+
+        .callout.tip {
+            background: var(--green-50);
+            border-left-color: var(--green-600);
+        }
+
+        .callout .callout-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+            color: var(--gray-900);
+        }
+
+        .callout p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        /* TABLE */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        .table-wrapper table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+        }
+
+        .table-wrapper th {
+            background: var(--green-700);
+            color: #fff;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .table-wrapper td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .table-wrapper tr:nth-child(even) td {
+            background: var(--gray-50);
+        }
+
+        /* ERROR LIST */
+        .error-card {
+            background: #fff;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1rem;
+            transition: box-shadow 0.2s;
+        }
+
+        .error-card:hover {
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .error-card .error-title {
+            font-weight: 600;
+            color: #dc2626;
+            margin-bottom: 0.35rem;
+            font-size: 0.95rem;
+        }
+
+        .error-card p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        /* CTA */
+        .cta-box {
+            background: linear-gradient(135deg, var(--green-700) 0%, var(--green-600) 100%);
+            border-radius: 12px;
+            padding: 2rem 2rem;
+            margin: 2.5rem 0;
+            text-align: center;
+            color: #fff;
+        }
+
+        .cta-box h3 {
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            font-size: 1.35rem;
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-box p {
+            color: var(--green-100);
+            margin-bottom: 1.25rem;
+            font-size: 0.95rem;
+        }
+
+        .cta-box .btn {
+            display: inline-block;
+            background: #fff;
+            color: var(--green-700);
+            padding: 0.7rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cta-box .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--gray-900);
+            color: var(--gray-500);
+            text-align: center;
+            padding: 2rem 1.5rem;
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--green-200);
+            text-decoration: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 1.7rem;
+            }
+
+            .hero {
+                padding: 2.5rem 1.25rem 2rem;
+            }
+
+            .article-wrapper {
+                padding: 2rem 1.25rem 3rem;
+            }
+
+            .article-wrapper h2 {
+                font-size: 1.35rem;
+            }
+
+            .code-block pre {
+                font-size: 0.75rem;
+                padding: 1rem;
+            }
+
+            .cta-box {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <a href="https://exogenadian.com" class="logo">Exógena<span>DIAN</span></a>
+            <a href="https://exogenadian.com" class="nav-link">Volver al inicio</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+        <div class="breadcrumb">
+            <a href="https://exogenadian.com">Inicio</a> / <a href="https://exogenadian.com/blog">Blog</a> / Metadatos DIAN
+        </div>
+        <h1>Metadatos DIAN: qué son, para qué sirven y ejemplos prácticos</h1>
+        <p class="subtitle">Entienda la estructura del encabezado XML de la información exógena y evite rechazos del prevalidador DIAN.</p>
+        <p class="meta-info">Publicado el 31 de marzo de 2026 &middot; Lectura: 8 min</p>
+    </header>
+
+    <!-- ARTICLE -->
+    <article class="article-wrapper">
+
+        <h2>Qué son los metadatos en la información exógena DIAN</h2>
+        <p>Cuando usted prepara la información exógena para reportar a la DIAN, cada archivo XML que genera contiene dos partes fundamentales: el <strong>encabezado</strong> y los <strong>registros</strong>. El encabezado es, precisamente, el conjunto de <strong>metadatos</strong> del archivo.</p>
+        <p>Los metadatos son datos sobre los datos. En el contexto de la exógena DIAN, son los campos que identifican <em>quién</em> reporta, <em>qué</em> formato se está presentando, <em>para qué año</em> gravable y <em>en qué versión</em> del esquema. Sin metadatos correctos, la DIAN no puede procesar su información, así el contenido de los registros sea perfecto.</p>
+        <p>Piense en los metadatos como la carátula de un informe: si la carátula dice &ldquo;Formato 1001 &ndash; Año 2024&rdquo; pero el contenido corresponde al 2025, el archivo será rechazado.</p>
+
+        <h2>Estructura de un archivo XML de exógena: encabezado vs. contenido</h2>
+        <p>Todo archivo XML de información exógena sigue una estructura jerárquica definida por los esquemas XSD que publica la DIAN. A grandes rasgos, la estructura es:</p>
+        <ol>
+            <li><strong>Encabezado (metadatos):</strong> contiene la información de identificación del archivo: año gravable, concepto, formato, NIT del informante, dígito de verificación, tipo de documento y versión del formato.</li>
+            <li><strong>Contenido (registros):</strong> contiene cada uno de los registros individuales que se reportan, como pagos a terceros (formato 1001), retenciones practicadas (formato 1003), IVA descontable (formato 1005), entre otros.</li>
+        </ol>
+        <p>La DIAN valida <strong>primero los metadatos</strong> y luego los registros. Si el encabezado tiene errores, el prevalidador rechaza el archivo completo sin siquiera revisar el contenido.</p>
+
+        <h2>Metadatos principales que exige la DIAN</h2>
+        <p>A continuación se detallan los campos de metadatos que debe incluir todo archivo XML de exógena:</p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metadato</th>
+                        <th>Descripción</th>
+                        <th>Ejemplo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Año gravable</strong></td>
+                        <td>Período fiscal al que corresponde la información reportada.</td>
+                        <td>2025</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Concepto</strong></td>
+                        <td>Código del formato de información exógena (1001, 1003, 1005, 1006, 1007, 1008, 1009, 1010, etc.).</td>
+                        <td>1001</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Número de formato</strong></td>
+                        <td>Identificador numérico del formato según la resolución DIAN vigente.</td>
+                        <td>1001</td>
+                    </tr>
+                    <tr>
+                        <td><strong>NIT del informante</strong></td>
+                        <td>Número de Identificación Tributaria de la persona natural o jurídica que reporta.</td>
+                        <td>900123456</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dígito de verificación</strong></td>
+                        <td>Dígito de control calculado a partir del NIT, indispensable para la validación.</td>
+                        <td>7</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tipo de documento</strong></td>
+                        <td>Código del tipo de documento del informante (NIT = 31, CC = 13, CE = 22, etc.).</td>
+                        <td>31</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Versión del formato</strong></td>
+                        <td>Versión del esquema XSD vigente para el año gravable reportado.</td>
+                        <td>10</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="callout">
+            <div class="callout-title">Dato clave</div>
+            <p>El concepto y el número de formato suelen coincidir (por ejemplo, concepto 1001 y formato 1001), pero no siempre es así. Verifique siempre la resolución vigente para el año gravable que está reportando.</p>
+        </div>
+
+        <h2>Ejemplo práctico: encabezado XML de exógena</h2>
+        <p>A continuación puede ver cómo luce un encabezado típico de un archivo XML para el formato 1001 (pagos y abonos en cuenta a terceros):</p>
+
+        <div class="code-block">
+            <div class="code-header">
+                <span class="dot r"></span>
+                <span class="dot y"></span>
+                <span class="dot g"></span>
+                <span class="file-name">formato_1001_2025.xml</span>
+            </div>
+            <pre><code><span class="comment">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tag">&lt;mas</span> <span class="attr">xmlns</span>=<span class="val">"http://www.dian.gov.co/muisca/esquemas"</span><span class="tag">&gt;</span>
+
+  <span class="comment">&lt;!-- ENCABEZADO: Metadatos del archivo --&gt;</span>
+  <span class="tag">&lt;Cab&gt;</span>
+    <span class="tag">&lt;Ano&gt;</span><span class="val">2025</span><span class="tag">&lt;/Ano&gt;</span>
+    <span class="tag">&lt;CodCpt&gt;</span><span class="val">1001</span><span class="tag">&lt;/CodCpt&gt;</span>
+    <span class="tag">&lt;Formato&gt;</span><span class="val">1001</span><span class="tag">&lt;/Formato&gt;</span>
+    <span class="tag">&lt;Version&gt;</span><span class="val">10</span><span class="tag">&lt;/Version&gt;</span>
+    <span class="tag">&lt;NumNit&gt;</span><span class="val">900123456</span><span class="tag">&lt;/NumNit&gt;</span>
+    <span class="tag">&lt;DV&gt;</span><span class="val">7</span><span class="tag">&lt;/DV&gt;</span>
+    <span class="tag">&lt;TipoDoc&gt;</span><span class="val">31</span><span class="tag">&lt;/TipoDoc&gt;</span>
+  <span class="tag">&lt;/Cab&gt;</span>
+
+  <span class="comment">&lt;!-- CONTENIDO: Registros individuales --&gt;</span>
+  <span class="tag">&lt;Reg&gt;</span>
+    <span class="comment">&lt;!-- Aquí van los registros de cada tercero --&gt;</span>
+    <span class="tag">&lt;TipoDocInf&gt;</span><span class="val">13</span><span class="tag">&lt;/TipoDocInf&gt;</span>
+    <span class="tag">&lt;NumDocInf&gt;</span><span class="val">1098765432</span><span class="tag">&lt;/NumDocInf&gt;</span>
+    <span class="tag">&lt;PagAbon&gt;</span><span class="val">15000000.00</span><span class="tag">&lt;/PagAbon&gt;</span>
+    <span class="comment">&lt;!-- ... más campos según el formato --&gt;</span>
+  <span class="tag">&lt;/Reg&gt;</span>
+
+<span class="tag">&lt;/mas&gt;</span></code></pre>
+        </div>
+
+        <p>Observe cómo la sección <code>&lt;Cab&gt;</code> agrupa todos los metadatos, mientras que cada <code>&lt;Reg&gt;</code> contiene la información de un registro individual. Esta separación es fundamental: la DIAN procesa el encabezado primero para saber qué tipo de información está recibiendo y de quién.</p>
+
+        <h2>Errores comunes en metadatos que causan rechazo</h2>
+        <p>Estos son los errores que con mayor frecuencia generan rechazo en el prevalidador de la DIAN. Conózcalos para evitarlos:</p>
+
+        <div class="error-card">
+            <div class="error-title">1. Año gravable incorrecto</div>
+            <p>Usted prepara la exógena del año 2025 pero en el encabezado queda escrito 2024. Esto ocurre frecuentemente al reutilizar archivos del año anterior sin actualizar el metadato <code>&lt;Ano&gt;</code>. El prevalidador rechaza el archivo de inmediato.</p>
+        </div>
+
+        <div class="error-card">
+            <div class="error-title">2. NIT sin dígito de verificación</div>
+            <p>Omitir el campo <code>&lt;DV&gt;</code> o incluir un dígito de verificación incorrecto es una de las causas más comunes de rechazo. Recuerde que el dígito se calcula con un algoritmo específico a partir del NIT; no es un dato que usted pueda poner a criterio propio.</p>
+        </div>
+
+        <div class="error-card">
+            <div class="error-title">3. Versión de formato incorrecta</div>
+            <p>Cada año gravable puede tener una versión distinta del formato. Si usted usa la versión del año anterior (por ejemplo, versión 9 en lugar de versión 10), el archivo no pasará la validación del esquema XSD.</p>
+        </div>
+
+        <div class="error-card">
+            <div class="error-title">4. Concepto que no corresponde al formato</div>
+            <p>Si el metadato <code>&lt;CodCpt&gt;</code> dice 1003 pero el contenido del archivo corresponde al formato 1001, el prevalidador detecta la inconsistencia y rechaza el archivo. Concepto y contenido deben ser coherentes.</p>
+        </div>
+
+        <div class="callout warning">
+            <div class="callout-title">Importante</div>
+            <p>Un solo metadato erróneo invalida <strong>todo</strong> el archivo. No importa si usted tiene 10.000 registros perfectamente preparados: si el encabezado falla, ningún registro será procesado por la DIAN.</p>
+        </div>
+
+        <h2>Cómo el prevalidador DIAN valida los metadatos</h2>
+        <p>El prevalidador de la DIAN es la herramienta oficial que verifica la estructura y el contenido de los archivos XML antes de su presentación. La validación de metadatos sigue este orden:</p>
+        <ol>
+            <li><strong>Validación estructural (XSD):</strong> el prevalidador verifica que el archivo XML cumple con el esquema XSD correspondiente al formato y versión declarados. Si la estructura no coincide, se rechaza.</li>
+            <li><strong>Validación del año gravable:</strong> confirma que el año gravable indicado corresponda al período de reporte habilitado.</li>
+            <li><strong>Validación del NIT:</strong> verifica que el NIT del informante exista en el RUT y que el dígito de verificación sea correcto.</li>
+            <li><strong>Validación de concepto y formato:</strong> cruza el código de concepto con el número de formato para asegurar coherencia.</li>
+            <li><strong>Validación de versión:</strong> confirma que la versión del formato sea la vigente para el año gravable reportado.</li>
+        </ol>
+        <p>Solo cuando todos los metadatos pasan estas cinco validaciones, el prevalidador procede a revisar los registros individuales.</p>
+
+        <h3>Recomendaciones para evitar rechazos</h3>
+        <ul>
+            <li>Verifique siempre la resolución DIAN vigente para conocer las versiones actualizadas de cada formato.</li>
+            <li>Calcule el dígito de verificación con el algoritmo oficial; no lo ingrese manualmente.</li>
+            <li>No reutilice archivos XML de años anteriores sin actualizar todos los metadatos del encabezado.</li>
+            <li>Antes de enviar a la DIAN, pase siempre el archivo por el prevalidador para detectar errores a tiempo.</li>
+        </ul>
+
+        <!-- CTA -->
+        <div class="cta-box">
+            <h3>Olvídese de los errores en metadatos</h3>
+            <p>ExógenaDIAN genera automáticamente los metadatos correctos para cada formato: año gravable, concepto, versión, NIT y dígito de verificación. Usted solo sube su información contable y la herramienta se encarga del encabezado XML.</p>
+            <a href="https://exogenadian.com" class="btn">Probar ExógenaDIAN gratis</a>
+        </div>
+
+        <h2>Resumen</h2>
+        <p>Los metadatos son la primera línea de validación que aplica la DIAN sobre cualquier archivo XML de información exógena. Incluyen campos como el año gravable, el concepto, el formato, el NIT con dígito de verificación, el tipo de documento y la versión del esquema. Un error en cualquiera de estos campos significa el rechazo total del archivo.</p>
+        <p>Comprender la función de cada metadato, conocer los errores más frecuentes y utilizar herramientas que automaticen su generación le ahorrará tiempo, reprocesos y posibles sanciones por extemporaneidad ante la DIAN.</p>
+
+    </article>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 <a href="https://exogenadian.com">ExógenaDIAN</a> &mdash; Herramientas contables para la información exógena DIAN en Colombia.</p>
+    </footer>
+
+</body>
+</html>
