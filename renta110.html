@@ -1235,317 +1235,89 @@ async function descargarPro(){
 const _cL=n=>{let s='';while(n>0){s=String.fromCharCode(65+(n-1)%26)+s;n=Math.floor((n-1)/26)}return s};
 
 async function exportExcel(){
+  // Cargar plantilla DIAN preconstruida y poblar valores
+  const tplRes=await fetch('template_110.xlsx');
+  if(!tplRes.ok)throw new Error('No se pudo cargar la plantilla.');
   const wb=new ExcelJS.Workbook();
+  await wb.xlsx.load(await tplRes.arrayBuffer());
 
   const nit=document.getElementById('cfgNit').value||'';
   const razon=document.getElementById('cfgRazon').value||'';
   const year=document.getElementById('cfgYear').value||'2025';
   const actividad=document.getElementById('cfgActividad').value||'';
-  const tarifa=getTarifaRenta();
-  const tarifaPct=(tarifa*100).toFixed(1)+'%';
 
-  // Estilos comunes
-  const NAVY='FF2B2D45',DBLUE='FF1A3C6E',LBLUE='FFE1F0F7',WHITE='FFFFFFFF';
-  const tn={style:'thin',color:{argb:NAVY}};
-  const bd={top:tn,bottom:tn,left:tn,right:tn};
-  const noBd={};
-  const fA={name:'Arial',size:10},fAB={...fA,bold:true},fAN={name:'Arial Narrow',size:10};
-  const fANB={...fAN,bold:true};
-  const fillBlue={type:'pattern',pattern:'solid',fgColor:{argb:LBLUE}};
-  const fillDark={type:'pattern',pattern:'solid',fgColor:{argb:DBLUE}};
-  const fillWhite={type:'pattern',pattern:'solid',fgColor:{argb:WHITE}};
-  const fillGreen={type:'pattern',pattern:'solid',fgColor:{argb:'FFE2EFDA'}};
-  const fillGray={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F2F5'}};
-  const fillRed={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFEBEE'}};
-  const nF='#,##0';
-  const alC={horizontal:'center',vertical:'middle'};
-  const alL={horizontal:'left',vertical:'middle',wrapText:true};
-  const alR={horizontal:'right',vertical:'middle'};
+  const ws=wb.getWorksheet('110');
 
-  const acctsByCas=cas=>cuentasBalance.filter(c=>c.casilla===cas).sort((a,b)=>a.code.localeCompare(b.code));
+  // Datos generales
+  ws.getCell('D6').value=parseInt(year);
+  ws.getCell('B16').value=nit;
+  ws.getCell('B18').value='  '+razon;
 
-  // ══════════════════════════════════════════════════════════
-  //  HOJA 1: FORMULARIO 110 — Replica exacta formato DIAN
-  //  Cols: A(sec izq), B-J(concepto izq), K(cas izq), L-Q(valor izq)
-  //        R(sec der), S-AA(concepto der), AB(cas der), AC-AH(valor der)
-  // ══════════════════════════════════════════════════════════
-  const ws=wb.addWorksheet('110');
-  ws.properties.showGridLines=false;
+  // Poblar casillas del 110 con valores del formulario
+  // LEFT side (column L merged L:Q)
+  const leftMap={36:'L22',37:'L23',38:'L24',39:'L25',40:'L26',41:'L27',42:'L28',43:'L29',45:'L31',47:'L33',48:'L34',49:'L35',50:'L36',51:'L37',52:'L38',53:'L39',54:'L40',57:'L42',59:'L44',60:'L45',62:'L47',63:'L48',64:'L49',65:'L50',66:'L51',70:'L55',71:'L56'};
+  // RIGHT side (column AC merged AC:AH)
+  const rightMap={74:'AC22',76:'AC24',77:'AC25',78:'AC26',80:'AC28',81:'AC29',82:'AC30',87:'AC35',92:'AC37',95:'AC38',99:'AC44',100:'AC45',101:'AC46',102:'AC47'};
+  for(const[cas,cell] of Object.entries(leftMap)){const val=v('c'+cas);if(val)ws.getCell(cell).value=val}
+  for(const[cas,cell] of Object.entries(rightMap)){const val=v('c'+cas);if(val)ws.getCell(cell).value=val}
 
-  // Column widths (replica del borrador)
-  const cw={1:5.3,2:8.4,3:8.4,4:8.4,5:8.4,6:6.7,7:5.3,8:6.3,9:5.3,10:8.4,11:4.7,12:3,13:8.4,14:8.4,15:8.4,16:8.4,17:8.4,18:4.7,19:8.4,20:5,21:8.4,22:8.4,23:8.4,24:8.4,25:8.4,26:9.4,27:8.4,28:5,29:3,30:8.4,31:8.4,32:8.4,33:8.4,34:8.4};
-  for(const[c,w] of Object.entries(cw))ws.getColumn(+c).width=w;
-
-  // Helper: aplicar borde y fill a rango
-  function fillRange(r,c1,c2,fill,border){
-    for(let c=c1;c<=c2;c++){
-      if(fill)ws.getCell(r,c).fill=fill;
-      if(border)ws.getCell(r,c).border=border;
-    }
-  }
-  // Helper: merge y escribir celda
-  function mc(range,val,font,fill,align,border){
-    ws.mergeCells(range);
-    const c=ws.getCell(range.split(':')[0]);
-    if(val!==undefined)c.value=val;
-    if(font)c.font=font;
-    if(fill)c.fill=fill;
-    if(align)c.alignment=align;
-    if(border)c.border=border;
-    return c;
+  // Impuesto Minimo: poblar inputs
+  const wsT=wb.getWorksheet('Impuesto minimo')||wb.getWorksheet('Impuesto mínimo');
+  if(wsT){
+    wsT.getCell('D14').value=vTTD('ttdUtilidad');
+    wsT.getCell('D15').value=vTTD('ttdDifPerm');
+    wsT.getCell('D16').value=vTTD('ttdINCRNGO');
+    wsT.getCell('D19').value=vTTD('ttdExentas');
   }
 
-  // ── HEADER DIAN (rows 1-4) ──
-  mc('A1:F4','DIAN',{...fANB,size:12,color:{argb:WHITE}},fillDark,alC,bd);
-  mc('G1:W4','Declaracion de Renta y Complementarios\nPersonas Juridicas y Asimiladas',fANB,fillWhite,{...alC,wrapText:true},bd);
-  mc('X1:AC4','Privada',{...fAB,size:12,color:{argb:NAVY}},fillBlue,alC,bd);
-  mc('AD1:AH4','110',{...fANB,size:16,color:{argb:WHITE}},fillDark,alC,bd);
-  for(let r=1;r<=4;r++)ws.getRow(r).height=10.5;
+  // Anticipo: poblar inputs
+  const wsA=wb.getWorksheet('ANT');
+  if(wsA){wsA.getCell('D11').value=vTTD('antImpNeto')||0}
 
-  // ── YEAR ROW (row 6) ──
-  for(let r=5;r<=7;r++)ws.getRow(r).height=10.5;
-  mc('B6:C6','1. Ano',fA,fillWhite,alL);
-  mc('D6:F6',parseInt(year),fAB,fillWhite,alC,bd);
-  mc('P6:T6','4. Numero de formulario',fA,fillWhite,alL);
-
-  // ── ROWS 8-14: reserved + note ──
-  for(let r=8;r<=14;r++)ws.getRow(r).height=3;
-  mc('A8:O9','Espacio reservado para la DIAN',{...fA,color:{argb:'FF999999'}},null,{horizontal:'left',vertical:'center'},bd);
-  mc('P9:AH14','Generado por ExogenaDIAN\nexogenadian.com',{...fAB,color:{argb:'FF999999'}},null,{...alC,wrapText:true});
-
-  // ── DATOS GENERALES (rows 15-19) ──
-  for(let r=15;r<=19;r++)ws.getRow(r).height=13.8;
-  mc('A15:A19','Datos\nGenerales',fAB,null,{...alC,wrapText:true},bd);
-  mc('B15:G15','5. NIT',fA,null,alL,bd);
-  mc('B16:G16',nit,fAB,null,alL,bd);
-  mc('I15:O15','Primer apellido / Razon social',fA,null,alL,bd);
-  mc('B17:AE17','12. Razon social',fA,null,alL,bd);
-  mc('B18:AE18','  '+razon,fAB,null,alL,bd);
-  mc('B19:G19','24. Actividad economica',fA,null,alL,bd);
-  mc('H19:L19',actividad,fAB,null,alC,bd);
-  mc('M19:T19','Tarifa: '+tarifaPct,fAB,null,alL,bd);
-
-  // ── ROW 21: Datos Informativos ──
-  ws.getRow(21).height=33;
-  mc('A21:B21','Datos\nInformativos',{...fA,size:8},null,{...alC,wrapText:true},bd);
-
-  // ── MAIN DATA AREA (rows 22-59) ──
-  // Row height
-  for(let r=22;r<=59;r++)ws.getRow(r).height=13.8;
-
-  // Define left and right casillas with their positions
-  // LEFT: concept B-J, casilla K, value L-Q
-  // RIGHT: concept S-AA, casilla AB, value AC-AH
-  const leftData=[
-    // [row, casilla, description, formula_or_null, isTotal]
-    [22,36,'Efectivo y equivalentes al efectivo'],
-    [23,37,'Inversiones e instrumentos financieros derivados'],
-    [24,38,'Cuentas, documentos y arrendamientos financ. por cobrar'],
-    [25,39,'Inventarios'],
-    [26,40,'Activos intangibles'],
-    [27,41,'Activos biologicos'],
-    [28,42,'Propiedades, planta y equipo, prop. de inversion y ANCMV'],
-    [29,43,'Otros activos'],
-    [30,44,'Total patrimonio bruto (Suma 36 a 43)',null,true],
-    [31,45,'Pasivos'],
-    [32,46,'Total patrimonio liquido (44 - 45)',null,true],
-    // Ingresos
-    [33,47,'Ingresos brutos de actividades ordinarias'],
-    [34,48,'Ingresos financieros'],
-    [35,49,'Dividendos y/o participaciones no constit. de renta ni GO'],
-    [36,50,'Dividendos y/o participaciones recibidas por CHC - exentos'],
-    [37,51,'Dividendos y/o participaciones gravadas recibidas'],
-    [38,52,'Dividendos y/o participaciones gravadas recibidas (exterior)'],
-    [39,53,'Dividendos y/o participaciones gravadas al 7,5%'],
-    [40,54,'Dividendos y/o participaciones gravadas a tarifa general'],
-    [42,57,'Otros ingresos'],
-    [43,58,'Total ingresos brutos (Suma 47 a 54 + 57)',null,true],
-    [44,59,'Devoluciones, rebajas y descuentos en ventas'],
-    [45,60,'Ingresos no constitutivos de renta ni ganancia ocasional'],
-    [46,61,'Total ingresos netos (58 - 59 - 60)',null,true],
-    // Costos y Deducciones
-    [47,62,'Costos'],
-    [48,63,'Gastos de administracion'],
-    [49,64,'Gastos de distribucion y ventas'],
-    [50,65,'Gastos financieros'],
-    [51,66,'Otros gastos y deducciones'],
-    [52,67,'Total costos y gastos deducibles (Suma 62 a 66)',null,true],
-    // Renta inicio
-    [55,70,'Renta por recuperacion de deducciones'],
-    [56,71,'Renta Pasiva - ECE sin residencia fiscal en Colombia'],
-    [57,72,'Renta liquida ordinaria del ejercicio (61-67+70+71)',null,true],
-    [58,73,'Perdida liquida del ejercicio',null,true],
-  ];
-
-  const rightData=[
-    [22,74,'Compensaciones'],
-    [23,75,'Renta liquida (72 - 74)',null,true],
-    [24,76,'Renta presuntiva'],
-    [25,77,'Renta exenta'],
-    [26,78,'Rentas gravables'],
-    [27,79,'Renta liquida gravable',null,true],
-    // GO
-    [28,80,'Ingresos por ganancias ocasionales'],
-    [29,81,'Costos por ganancias ocasionales'],
-    [30,82,'Ganancias ocasionales no gravadas y exentas'],
-    [31,83,'Ganancias ocasionales gravables',null,true],
-    // Liquidacion privada
-    [32,84,'Impuesto sobre la renta liquida gravable',null,true],
-    [33,85,'Impuesto sobre dividendos gravados al 7,5%'],
-    [34,86,'Impuesto sobre dividendos a tarifa general'],
-    [35,87,'Impuesto sobre dividendos recibidos del exterior'],
-    [36,91,'Total impuesto sobre las rentas liquidas gravables',null,true],
-    [37,92,'Descuentos tributarios'],
-    [38,95,'Impuesto a adicionar (IA) - Tasa minima tributacion',null,true],
-    [39,93,'Impuesto neto de renta (91 - 92)',null,true],
-    [40,94,'Impuesto de ganancias ocasionales'],
-    [41,96,'Total impuesto a cargo (93 + 94 + 95)',null,true],
-    // Pagos
-    [42,97,'Anticipo renta liquidado ano gravable anterior'],
-    [43,98,'Saldo a favor del periodo fiscal anterior'],
-    [44,99,'Anticipo renta ano anterior (cas. 104 F110 anterior)'],
-    [45,100,'Saldo a favor ano anterior sin solicitud devolucion'],
-    [46,101,'Autorretenciones'],
-    [47,102,'Otras retenciones'],
-    [48,103,'Total retenciones ano gravable (101+102)',null,true],
-    [49,104,'Anticipo renta para el ano gravable siguiente'],
-    // Saldo
-    [54,110,'Total saldo a pagar',null,true],
-    [55,111,'o Total saldo a favor',null,true],
-  ];
-
-  // Section labels (vertical merges)
-  mc('A22:A32','Patrimonio',{...fA,size:8},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
-  mc('A33:A46','Ingresos',{...fA,size:8},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
-  mc('A47:A52','Costos y\nDeducciones',{...fA,size:8},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
-  mc('A53:A54','ESAL',{...fA,size:7},null,{...alC,wrapText:true,textRotation:90},bd);
-  mc('A55:A58','Renta',{...fA,size:8},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
-
-  mc('R22:R27','Continuacion\nRenta',{...fA,size:7},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
-  mc('R28:R31','Ganancias\nOcasionales',{...fA,size:7},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
-  mc('R32:R55','Liquidacion\nPrivada',{...fA,size:7},fillBlue,{...alC,wrapText:true,textRotation:90},bd);
-
-  // Cell references for formulas
-  const cellRef={};
-
-  // Render LEFT side
-  for(const item of leftData){
-    const[row,cas,desc,,isTot]=item;
-    mc(`B${row}:J${row}`,desc,isTot?fAB:fA,null,alL,bd);
-    ws.getCell(`K${row}`).value=cas;ws.getCell(`K${row}`).font={...fA,size:8,color:{argb:'FF666666'}};
-    ws.getCell(`K${row}`).alignment=alC;ws.getCell(`K${row}`).border=bd;
-    mc(`L${row}:Q${row}`,v('c'+cas)||0,isTot?fAB:fA,null,alR,bd);
-    ws.getCell(`L${row}`).numFmt=nF;
-    cellRef[cas]='L'+row;
-    // Zebra
-    if(row%2===0){fillRange(row,2,17,fillBlue)}
-  }
-
-  // Render RIGHT side
-  for(const item of rightData){
-    const[row,cas,desc,,isTot]=item;
-    mc(`S${row}:AA${row}`,desc,isTot?fAB:fA,null,alL,bd);
-    ws.getCell(`AB${row}`).value=cas;ws.getCell(`AB${row}`).font={...fA,size:8,color:{argb:'FF666666'}};
-    ws.getCell(`AB${row}`).alignment=alC;ws.getCell(`AB${row}`).border=bd;
-    mc(`AC${row}:AH${row}`,v('c'+cas)||0,isTot?fAB:fA,null,alR,bd);
-    ws.getCell(`AC${row}`).numFmt=nF;
-    cellRef[cas]='AC'+row;
-    // Zebra (same row as left)
-    if(row%2===0){fillRange(row,19,34,fillBlue)}
-  }
-
-  // ── FORMULAS del 110 ──
-  const F={
-    44:`SUM(${cellRef[36]}:${cellRef[43]})`,
-    46:`${cellRef[44]}-${cellRef[45]}`,
-    58:`SUM(${cellRef[47]}:${cellRef[54]})+${cellRef[57]}`,
-    61:`${cellRef[58]}-${cellRef[59]}-${cellRef[60]}`,
-    67:`SUM(${cellRef[62]}:${cellRef[66]})`,
-    72:`MAX(${cellRef[61]}-${cellRef[67]}+${cellRef[70]}+${cellRef[71]},0)`,
-    73:`MAX(-(${cellRef[61]}-${cellRef[67]}+${cellRef[70]}+${cellRef[71]}),0)`,
-    75:`MAX(${cellRef[72]}-${cellRef[74]},0)`,
-    79:`MAX(MAX(${cellRef[75]},${cellRef[76]})-${cellRef[77]}+${cellRef[78]},0)`,
-    83:`MAX(${cellRef[80]}-${cellRef[81]}-${cellRef[82]},0)`,
-    84:`ROUND(${cellRef[79]}*${tarifa},-3)`,
-    85:`ROUND(${cellRef[53]}*0.075,-3)`,
-    86:`ROUND(${cellRef[54]}*${tarifa},-3)`,
-    91:`${cellRef[84]}+${cellRef[85]}+${cellRef[86]}+${cellRef[87]}`,
-    93:`MAX(${cellRef[91]}-${cellRef[92]},0)`,
-    94:`ROUND(${cellRef[83]}*0.15,-3)`,
-    96:`${cellRef[93]}+${cellRef[94]}+${cellRef[95]}`,
-    103:`${cellRef[101]}+${cellRef[102]}`,
-    110:`MAX(${cellRef[96]}+${cellRef[104]}-${cellRef[99]}-${cellRef[100]}-${cellRef[103]},0)`,
-    111:`MAX(${cellRef[99]}+${cellRef[100]}+${cellRef[103]}-${cellRef[96]}-${cellRef[104]},0)`,
-  };
-  for(const[cas,formula] of Object.entries(F)){
-    const ref=cellRef[cas];if(!ref)continue;
-    ws.getCell(ref).value={formula};
-  }
-
-  // Highlight key results
-  const greenCells=[cellRef[79],cellRef[96]];
-  greenCells.forEach(ref=>{if(ref){const r=parseInt(ref.replace(/\D/g,''));fillRange(r,19,34,fillGreen)}});
-  const redCells=[cellRef[110],cellRef[111]];
-  redCells.forEach(ref=>{if(ref){ws.getCell(ref).font={...fAB,color:{argb:'FFFF0000'}}}});
-
-  // ── FOOTER (rows 59-65) ──
-  ws.getRow(60).height=30;
-  mc('A59:H59','106. No. Identificacion signatario',fA,null,alL,bd);
-  mc('J60:T60','997. Espacio exclusivo para uso de la DIAN',{...fA,size:8,color:{argb:'FF999999'}},null,alL);
-  mc('A61:I61','Firma del declarante o apoderado',{...fA,size:8},null,alL);
-  mc('A65:D65','982. Codigo Contador',fA,null,alL);
-  mc('A66:E66','Firma Contador o Revisor Fiscal',{...fA,size:8},null,alL);
-  mc('A69:D69','983. No. Tarjeta profesional',fA,null,alL);
-
-  ws.pageSetup={orientation:'landscape',fitToPage:true,fitToWidth:1};
-
-  // ══════════════════════════════════════════════════════════
-  //  HOJA 2: GASTOS NO DEDUCIBLES (si hay datos)
-  // ══════════════════════════════════════════════════════════
-
-  const noDedCuentas=cuentasBalance.filter(c=>c.ded==='no_ded'||c.ded==='gmf');
-  if(noDedCuentas.length>0){
+  // Gastos No Deducibles (hoja nueva)
+  const noDed=cuentasBalance.filter(c=>c.ded==='no_ded'||c.ded==='gmf');
+  if(noDed.length>0){
     const wsG=wb.addWorksheet('Gastos No Deducibles');
+    const fB={name:'Arial',size:10,bold:true},fN={name:'Arial',size:10};
+    const DB='FF1A3C6E',W='FFFFFFFF';
+    const b={top:{style:'thin'},bottom:{style:'thin'},left:{style:'thin'},right:{style:'thin'}};
     wsG.getColumn(1).width=13;wsG.getColumn(2).width=45;wsG.getColumn(3).width=18;
     wsG.getColumn(4).width=10;wsG.getColumn(5).width=35;wsG.getColumn(6).width=12;
-    let rg=1;
-    wsG.mergeCells('A1:F1');wsG.getCell('A1').value='GASTOS NO DEDUCIBLES FISCALMENTE';
-    wsG.getCell('A1').font={...fAB,size:14,color:{argb:DBLUE}};wsG.getCell('A1').alignment={horizontal:'center'};
-    rg=3;
-    ['Cuenta','Nombre','Valor Contable','Tipo','Regla Aplicada','Articulo ET'].forEach((h,i)=>{
-      wsG.getCell(rg,i+1).value=h;wsG.getCell(rg,i+1).font={...fAB,color:{argb:WHITE}};
-      wsG.getCell(rg,i+1).fill=fillDark;wsG.getCell(rg,i+1).border=bd;
+    wsG.mergeCells('A1:F1');wsG.getCell('A1').value='GASTOS NO DEDUCIBLES';
+    wsG.getCell('A1').font={...fB,size:14,color:{argb:DB}};wsG.getCell('A1').alignment={horizontal:'center'};
+    let rg=3;
+    ['Cuenta','Nombre','Valor Contable','Tipo','Regla','Articulo'].forEach((h,i)=>{
+      wsG.getCell(rg,i+1).value=h;wsG.getCell(rg,i+1).font={...fB,color:{argb:W}};
+      wsG.getCell(rg,i+1).fill={type:'pattern',pattern:'solid',fgColor:{argb:DB}};wsG.getCell(rg,i+1).border=b;
     });rg++;
-    for(const d of noDedCuentas.sort((a,b)=>b.val-a.val)){
-      wsG.getCell(rg,1).value=d.code;wsG.getCell(rg,1).font={...fA,name:'Consolas',size:9};wsG.getCell(rg,1).border=bd;
-      wsG.getCell(rg,2).value=d.name;wsG.getCell(rg,2).font=fA;wsG.getCell(rg,2).border=bd;
-      wsG.getCell(rg,3).value=d.val;wsG.getCell(rg,3).numFmt=nF;wsG.getCell(rg,3).font=fAB;wsG.getCell(rg,3).border=bd;
+    for(const d of noDed.sort((a,b)=>b.val-a.val)){
+      wsG.getCell(rg,1).value=d.code;wsG.getCell(rg,1).font={...fN,name:'Consolas',size:9};wsG.getCell(rg,1).border=b;
+      wsG.getCell(rg,2).value=d.name;wsG.getCell(rg,2).font=fN;wsG.getCell(rg,2).border=b;
+      wsG.getCell(rg,3).value=d.val;wsG.getCell(rg,3).numFmt='#,##0';wsG.getCell(rg,3).font=fB;wsG.getCell(rg,3).border=b;
       wsG.getCell(rg,4).value=d.ded==='gmf'?'50% DED':'NO DED';
-      wsG.getCell(rg,4).font={...fAB,size:9,color:{argb:d.ded==='gmf'?'FFD97706':'FFC62828'}};wsG.getCell(rg,4).border=bd;
-      wsG.getCell(rg,5).value=d.regla?d.regla.nom:'Manual';wsG.getCell(rg,5).font={...fA,size:9};wsG.getCell(rg,5).border=bd;
-      wsG.getCell(rg,6).value=d.regla?'Art. '+d.regla.art:'';wsG.getCell(rg,6).font={...fA,size:9};wsG.getCell(rg,6).border=bd;
+      wsG.getCell(rg,4).font={...fB,size:9,color:{argb:d.ded==='gmf'?'FFD97706':'FFC62828'}};wsG.getCell(rg,4).border=b;
+      wsG.getCell(rg,5).value=d.regla?d.regla.nom:'Manual';wsG.getCell(rg,5).font={...fN,size:9};wsG.getCell(rg,5).border=b;
+      wsG.getCell(rg,6).value=d.regla?'Art. '+d.regla.art:'';wsG.getCell(rg,6).font={...fN,size:9};wsG.getCell(rg,6).border=b;
       rg++;
     }
     rg++;
-    const totalND=noDedCuentas.filter(c=>c.ded==='no_ded').reduce((s,c)=>s+c.val,0);
-    const totalGmf=noDedCuentas.filter(c=>c.ded==='gmf').reduce((s,c)=>s+c.val,0);
-    wsG.getCell(`B${rg}`).value='100% No deducible:';wsG.getCell(`B${rg}`).font=fAB;
-    wsG.getCell(`C${rg}`).value=totalND;wsG.getCell(`C${rg}`).numFmt=nF;wsG.getCell(`C${rg}`).font=fAB;rg++;
-    wsG.getCell(`B${rg}`).value='GMF (50% no deducible):';wsG.getCell(`B${rg}`).font=fAB;
-    wsG.getCell(`C${rg}`).value=Math.round(totalGmf*0.5);wsG.getCell(`C${rg}`).numFmt=nF;wsG.getCell(`C${rg}`).font=fAB;rg++;
-    wsG.getCell(`B${rg}`).value='TOTAL NO DEDUCIBLE:';wsG.getCell(`B${rg}`).font={...fAB,size:11,color:{argb:'FFC62828'}};
-    wsG.getCell(`C${rg}`).value=totalND+Math.round(totalGmf*0.5);wsG.getCell(`C${rg}`).numFmt=nF;
-    wsG.getCell(`C${rg}`).font={...fAB,size:11,color:{argb:'FFC62828'}};wsG.getCell(`C${rg}`).fill=fillRed;
+    const tND=noDed.filter(c=>c.ded==='no_ded').reduce((s,c)=>s+c.val,0);
+    const tGmf=noDed.filter(c=>c.ded==='gmf').reduce((s,c)=>s+c.val,0);
+    wsG.getCell('B'+rg).value='100% No deducible:';wsG.getCell('B'+rg).font=fB;
+    wsG.getCell('C'+rg).value=tND;wsG.getCell('C'+rg).numFmt='#,##0';wsG.getCell('C'+rg).font=fB;rg++;
+    wsG.getCell('B'+rg).value='GMF (50% no ded):';wsG.getCell('B'+rg).font=fB;
+    wsG.getCell('C'+rg).value=Math.round(tGmf*0.5);wsG.getCell('C'+rg).numFmt='#,##0';wsG.getCell('C'+rg).font=fB;rg++;
+    wsG.getCell('B'+rg).value='TOTAL NO DEDUCIBLE:';wsG.getCell('B'+rg).font={...fB,size:11,color:{argb:'FFC62828'}};
+    wsG.getCell('C'+rg).value=tND+Math.round(tGmf*0.5);wsG.getCell('C'+rg).numFmt='#,##0';
+    wsG.getCell('C'+rg).font={...fB,size:11,color:{argb:'FFC62828'}};
   }
 
-  // ══════════════════════════════════════════════════════════
-  //  DESCARGAR
-  // ══════════════════════════════════════════════════════════
+  // Descargar
   const buf=await wb.xlsx.writeBuffer();
   const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url;a.download=`F110_AG${year}_${nit||'SIN_NIT'}.xlsx`;
+  a.href=url;a.download='F110_AG'+year+'_'+(nit||'SIN_NIT')+'.xlsx';
   document.body.appendChild(a);a.click();document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
