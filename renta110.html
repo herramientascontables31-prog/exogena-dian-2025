@@ -109,7 +109,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <div class="header" style="padding:20px 28px"><div>
     <h1><span>110</span> Declaracion de Renta</h1>
     <p>Personas Juridicas · AG 2025 · Casillas <strong style="color:#fff">blancas</strong> = editables · <strong style="color:#81C784">verdes</strong> = automaticas</p>
-  </div><div class="header-right">100% en navegador</div></div>
+  </div><div class="header-right"><span id="proBadgeHeader" style="display:none;background:rgba(255,255,255,.2);padding:3px 10px;border-radius:12px;font-size:.75rem;font-weight:700">PRO</span><br>100% en navegador</div></div>
 
   <!-- UPLOAD BALANCE -->
   <div class="card" style="padding:16px">
@@ -316,10 +316,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div id="excelProLock" style="display:inline-block;padding:16px 28px;background:#f8fafc;border:2px dashed var(--border);border-radius:12px">
       <div style="font-size:.85rem;font-weight:600;color:var(--muted);margin-bottom:6px">📊 Descargar Excel con Fórmulas</div>
       <div style="font-size:.78rem;color:var(--muted);margin-bottom:10px">7 hojas: ESF 2516, ERI 2516, F110 formulado, Impuesto Minimo, Anticipo, Resumen Contable vs Fiscal, Gastos No Deducibles</div>
-      <input type="text" id="proKey" placeholder="Ingresa tu clave PRO" style="padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;width:220px;text-align:center">
-      <button onclick="validarPro()" class="btn btn-success" style="padding:8px 20px;margin-left:6px">Descargar</button>
+      <!-- Estado PRO activo (oculto por defecto) -->
+      <div id="proActive" style="display:none;margin-bottom:8px">
+        <span style="background:#E8F5E9;color:#2E7D32;padding:4px 12px;border-radius:20px;font-size:.8rem;font-weight:700">PRO activo</span>
+      </div>
+      <!-- Input clave (visible cuando no hay sesion PRO) -->
+      <div id="proKeyBox">
+        <input type="text" id="proKey" placeholder="Ingresa tu clave PRO" style="padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;width:220px;text-align:center">
+      </div>
+      <button id="btnDescargar" onclick="descargarPro()" class="btn btn-success" style="padding:8px 20px;margin-top:8px">Descargar Excel</button>
       <div id="proError" style="margin-top:6px;font-size:.75rem;color:var(--red)"></div>
-      <div style="margin-top:8px"><a href="index.html#planes" style="font-size:.78rem;color:#059669;font-weight:600;text-decoration:none">¿No tienes clave? Suscríbete PRO →</a></div>
+      <div id="proSubscribeLink" style="margin-top:8px"><a href="index.html#planes" style="font-size:.78rem;color:#059669;font-weight:600;text-decoration:none">¿No tienes clave? Suscríbete PRO →</a></div>
     </div>
   </div>
 </div>
@@ -1122,38 +1129,101 @@ function getDeviceFingerprint(){
   return uid;
 }
 
-async function validarPro(){
-  const key=document.getElementById('proKey').value.trim();
-  const errEl=document.getElementById('proError');
-  if(!key){errEl.textContent='Ingresa tu clave PRO';return}
-  errEl.textContent='Verificando...';errEl.style.color='var(--muted)';
+let proUnlocked=false;
+
+// Mostrar UI de PRO activo
+function showProActive(){
+  proUnlocked=true;
+  document.getElementById('proActive').style.display='';
+  document.getElementById('proKeyBox').style.display='none';
+  document.getElementById('proSubscribeLink').innerHTML='<a href="#" onclick="cerrarSesionPro();return false" style="font-size:.72rem;color:var(--muted);text-decoration:none">Cambiar clave PRO</a>';
+  document.getElementById('proError').textContent='';
+  const badge=document.getElementById('proBadgeHeader');if(badge)badge.style.display='';
+}
+
+// Cerrar sesion PRO
+function cerrarSesionPro(){
+  localStorage.removeItem('exogenadian_pro_key');
+  proUnlocked=false;
+  document.getElementById('proActive').style.display='none';
+  document.getElementById('proKeyBox').style.display='';
+  document.getElementById('proKey').value='';
+  document.getElementById('proSubscribeLink').innerHTML='<a href="index.html#planes" style="font-size:.78rem;color:#059669;font-weight:600;text-decoration:none">¿No tienes clave? Suscríbete PRO →</a>';
+}
+
+// Validar clave contra el servidor
+async function validarClaveServidor(key){
+  const fp=getDeviceFingerprint();
+  const url=APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(key)+'&device='+encodeURIComponent(fp);
+  const res=await fetch(url);
+  return await res.json();
+}
+
+// Auto-validar al cargar si hay clave guardada
+async function autoValidarPro(){
+  const saved=localStorage.getItem('exogenadian_pro_key');
+  if(!saved)return;
   try{
-    const fp=getDeviceFingerprint();
-    const url=APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(key)+'&device='+encodeURIComponent(fp);
-    const res=await fetch(url);
-    const data=await res.json();
+    const data=await validarClaveServidor(saved);
     if(data.valid){
+      document.getElementById('proKey').value=saved;
+      showProActive();
+    }else{
+      localStorage.removeItem('exogenadian_pro_key');
+    }
+  }catch(e){
+    // Si falla la conexion, confiar en la clave guardada por 24h
+    const lastCheck=localStorage.getItem('exogenadian_pro_lastcheck');
+    if(lastCheck&&Date.now()-parseInt(lastCheck)<86400000){
+      document.getElementById('proKey').value=saved;
+      showProActive();
+    }
+  }
+}
+
+// Boton principal: descargar (valida si es necesario, luego genera Excel)
+async function descargarPro(){
+  const errEl=document.getElementById('proError');
+
+  if(proUnlocked){
+    // Ya validado — generar directo
+    errEl.textContent='Generando Excel...';errEl.style.color='var(--green)';
+    try{
+      await exportExcel();
+      errEl.textContent='Excel descargado.';errEl.style.color='var(--green)';
+    }catch(ex){
+      errEl.style.color='var(--red)';errEl.textContent='Error: '+ex.message;console.error(ex);
+    }
+    return;
+  }
+
+  // Primera vez: validar clave
+  const key=document.getElementById('proKey').value.trim();
+  if(!key){errEl.textContent='Ingresa tu clave PRO';errEl.style.color='var(--red)';return}
+  errEl.textContent='Verificando...';errEl.style.color='var(--muted)';
+
+  try{
+    const data=await validarClaveServidor(key);
+    if(data.valid){
+      // Guardar sesion
+      localStorage.setItem('exogenadian_pro_key',key);
+      localStorage.setItem('exogenadian_pro_lastcheck',Date.now().toString());
+      showProActive();
+      // Generar Excel
       errEl.textContent='Generando Excel...';errEl.style.color='var(--green)';
       try{
         await exportExcel();
-        errEl.textContent='Excel descargado correctamente.';errEl.style.color='var(--green)';
+        errEl.textContent='Excel descargado.';errEl.style.color='var(--green)';
       }catch(ex){
-        errEl.style.color='var(--red)';
-        errEl.textContent='Error generando Excel: '+ex.message;
-        console.error('exportExcel error:',ex);
+        errEl.style.color='var(--red)';errEl.textContent='Error: '+ex.message;console.error(ex);
       }
       return;
     }
     errEl.style.color='var(--red)';
-    if(data.reason==='Clave expirada'){
-      errEl.textContent='Tu suscripción expiró el '+data.expiry+'. Renueva en exogenadian.com';
-    }else if(data.reason==='Clave cancelada'){
-      errEl.textContent='Tu suscripción fue cancelada. Contacta al administrador.';
-    }else if(data.reason&&data.reason.includes('dispositivos')){
-      errEl.textContent='Límite de dispositivos alcanzado. Contacta soporte.';
-    }else{
-      errEl.textContent='Clave no encontrada. Verifica o suscríbete en exogenadian.com';
-    }
+    if(data.reason==='Clave expirada')errEl.textContent='Suscripcion expirada ('+data.expiry+'). Renueva en exogenadian.com';
+    else if(data.reason==='Clave cancelada')errEl.textContent='Suscripcion cancelada. Contacta soporte.';
+    else if(data.reason&&data.reason.includes('dispositivos'))errEl.textContent='Limite de dispositivos. Contacta soporte.';
+    else errEl.textContent='Clave no encontrada. Verifica o suscribete.';
   }catch(e){errEl.style.color='var(--red)';errEl.textContent='Error de conexion: '+e.message;console.error(e);}
 }
 
@@ -1927,6 +1997,7 @@ async function exportExcel(){
 // Init
 recalcular();
 recalcularTTD();
+autoValidarPro();
 
 // Format inputs on blur
 document.querySelectorAll('.f110-row .f-val input:not([readonly])').forEach(inp=>{
