@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S7SM6ST4CC');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulta de NIT Gratis — Validador Masivo de Terceros DIAN | ExógenaDIAN</title>
+<meta name="description" content="Consulta y valida NITs GRATIS contra listas oficiales DIAN: Gran Contribuyente, Autorretenedor, Proveedor Ficticio, Agente Retenedor IVA. Consulta masiva, cálculo DV, exporta a Excel.">
+<meta name="keywords" content="consulta NIT DIAN, validar NIT Colombia, consulta terceros DIAN gratis, gran contribuyente, autorretenedor, proveedor ficticio, verificar NIT, consulta masiva NIT, dígito verificación NIT">
+<meta name="author" content="ExógenaDIAN">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://exogenadian.com/consultanit.html">
+<meta property="og:title" content="Consulta de NIT Gratis — Validador Masivo Terceros DIAN | ExógenaDIAN">
+<meta property="og:description" content="Valida NITs GRATIS contra listas DIAN: Gran Contribuyente, Autorretenedor, Proveedor Ficticio. Consulta masiva + Excel.">
+<meta property="og:url" content="https://exogenadian.com/consultanit.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="ExógenaDIAN">
+<meta property="og:image" content="https://exogenadian.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Consulta de NIT — Validador de Terceros DIAN","url":"https://exogenadian.com/consultanit.html","description":"Consulta y valida NITs GRATIS contra listas oficiales DIAN. Consulta masiva, cálculo de dígito de verificación, exporta a Excel.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo consultar un NIT en la DIAN?","acceptedAnswer":{"@type":"Answer","text":"Ingresa el NIT en nuestra herramienta gratuita y obtén al instante: razón social, dígito de verificación, y si es Gran Contribuyente, Autorretenedor, Proveedor Ficticio o Agente Retenedor de IVA."}},{"@type":"Question","name":"¿Se puede consultar NITs masivamente?","acceptedAnswer":{"@type":"Answer","text":"Sí. Puedes pegar una lista de NITs o subir un archivo Excel/CSV con hasta 500 NITs para validar todos simultáneamente contra las listas oficiales de la DIAN."}},{"@type":"Question","name":"¿Qué es el dígito de verificación del NIT?","acceptedAnswer":{"@type":"Answer","text":"El dígito de verificación (DV) es un número de control que la DIAN asigna a cada NIT usando un algoritmo de módulo 11. Nuestra herramienta lo calcula automáticamente."}}]}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<style>
+:root{--g700:#047857;--g600:#059669;--g500:#10B981;--g400:#34D399;--g200:#A7F3D0;--g100:#D1FAE5;--g50:#ECFDF5;--w:#FFF;--f50:#F9FAFB;--f100:#F3F4F6;--f200:#E5E7EB;--f300:#D1D5DB;--f400:#9CA3AF;--f500:#6B7280;--f600:#4B5563;--f700:#374151;--f800:#1F2937;--f900:#111827;--blue:#3B82F6;--amber:#F59E0B;--red:#EF4444;--r:14px}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Outfit',sans-serif;background:var(--f50);color:var(--f900);min-height:100vh}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:var(--w);border-bottom:1px solid var(--f200)}.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--f900);font-weight:800;font-size:1.1rem}.nav-mark{width:30px;height:30px;background:linear-gradient(135deg,var(--g600),var(--g400));border-radius:8px;display:grid;place-items:center;color:#fff;font-size:.75rem;font-weight:900}.nav-logo small{font-weight:400;font-size:.6rem;color:var(--f400);display:block}
+.container{max-width:1180px;margin:0 auto;padding:32px 24px}.page-header{margin-bottom:28px}.page-header h1{font-family:'Fraunces',serif;font-size:1.8rem;font-weight:700;margin-bottom:6px}.page-header p{color:var(--f500);font-size:.95rem;line-height:1.55}
+.page-badge{display:inline-flex;align-items:center;gap:6px;background:var(--g50);border:1px solid var(--g200);padding:4px 12px;border-radius:8px;font-size:.75rem;font-weight:600;color:var(--g700);margin-bottom:12px}.page-badge::before{content:'🔍';font-size:.85rem}
+.security{display:flex;align-items:flex-start;gap:14px;padding:18px 20px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FDE68A;border-radius:14px;margin-bottom:24px}.sec-icon{font-size:1.6rem;flex-shrink:0;margin-top:2px}.sec-content strong{font-size:.9rem;color:#78350F;display:block;margin-bottom:4px}.sec-content p{font-size:.8rem;color:#92400E;line-height:1.55;margin:0}
+.card{background:var(--w);border-radius:var(--r);border:1px solid var(--f200);padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.03)}.card-title{font-size:1rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-info{font-size:.78rem;color:var(--g700);background:var(--g50);padding:8px 12px;border-radius:8px;margin-bottom:12px;border-left:3px solid var(--g400)}
+
+/* Input area */
+.input-mode-tabs{display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid var(--f200)}.mode-tab{padding:10px 20px;font-size:.85rem;font-weight:600;cursor:pointer;border:none;background:none;color:var(--f400);border-bottom:2px solid transparent;margin-bottom:-2px;font-family:'Outfit',sans-serif;transition:all .2s}.mode-tab.active{color:var(--g700);border-bottom-color:var(--g500)}.mode-tab:hover{color:var(--f700)}
+
+/* Single NIT input */
+.nit-single-row{display:flex;gap:12px;align-items:end;flex-wrap:wrap}
+.nit-input-wrap{flex:1;min-width:200px}
+.nit-input-wrap label{display:block;font-size:.78rem;font-weight:700;color:var(--f500);margin-bottom:4px;text-transform:uppercase;letter-spacing:.3px}
+.nit-input{width:100%;padding:12px 16px;border:2px solid var(--f200);border-radius:12px;font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:600;letter-spacing:1px;transition:all .2s;outline:none}
+.nit-input:focus{border-color:var(--g400);box-shadow:0 0 0 3px rgba(16,185,129,.12)}
+.nit-input::placeholder{color:var(--f300);font-weight:400;letter-spacing:0}
+
+/* Bulk textarea */
+.bulk-area{width:100%;min-height:160px;padding:14px 16px;border:2px solid var(--f200);border-radius:12px;font-family:'Outfit',sans-serif;font-size:.88rem;line-height:1.7;resize:vertical;outline:none;transition:all .2s}
+.bulk-area:focus{border-color:var(--g400);box-shadow:0 0 0 3px rgba(16,185,129,.12)}
+.bulk-area::placeholder{color:var(--f300)}
+.bulk-hint{font-size:.72rem;color:var(--f400);margin-top:6px;display:flex;align-items:center;gap:4px}
+
+/* File upload */
+.drop-zone{border:2px dashed var(--f300);border-radius:var(--r);padding:30px 20px;text-align:center;cursor:pointer;transition:all .25s;position:relative;background:var(--w)}.drop-zone:hover,.drop-zone.dragover{border-color:var(--g400);background:var(--g50)}.drop-zone.loaded{border-color:var(--g500);border-style:solid;background:var(--g50)}.drop-zone .dz-icon{font-size:2rem;margin-bottom:6px;display:block}.drop-zone .dz-title{font-size:.88rem;font-weight:700;margin-bottom:4px}.drop-zone .dz-hint{font-size:.74rem;color:var(--f400)}.drop-zone .dz-file{font-size:.8rem;color:var(--g700);font-weight:600;margin-top:8px}.drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer}.drop-zone .dz-clear{position:absolute;top:8px;right:8px;background:var(--f100);border:none;border-radius:6px;padding:4px 8px;font-size:.7rem;font-weight:600;color:var(--f500);cursor:pointer;display:none;z-index:2}.drop-zone.loaded .dz-clear{display:block}
+
+/* DV result inline */
+.dv-result{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:var(--g50);border:1px solid var(--g200);border-radius:10px;font-size:.9rem;font-weight:700;color:var(--g700);margin-top:10px}
+.dv-result .dv-num{font-size:1.3rem;font-weight:800;color:var(--g600)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:600;font-size:.9rem;transition:all .2s;cursor:pointer;border:none;text-decoration:none}.btn-primary{background:var(--g600);color:#fff}.btn-primary:hover{background:var(--g700);transform:translateY(-1px);box-shadow:0 4px 14px rgba(5,150,105,.25)}.btn-primary:disabled{background:var(--f300);cursor:not-allowed;transform:none;box-shadow:none}.btn-outline{background:transparent;color:var(--f700);border:1.5px solid var(--f200)}.btn-outline:hover{border-color:var(--g400);color:var(--g700)}.btn-danger{background:#FEF2F2;color:#991B1B;border:1px solid #FECACA}.btn-danger:hover{background:#FEE2E2}.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+
+/* Summary cards */
+.summary{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}.summary-card{background:var(--w);border-radius:12px;padding:16px 14px;border:1px solid var(--f200);text-align:center}.sc-val{font-size:1.4rem;font-weight:800;line-height:1;margin-bottom:3px}.sc-label{font-size:.68rem;color:var(--f400);font-weight:500;line-height:1.3}.sc-green .sc-val{color:var(--g600)}.sc-blue .sc-val{color:var(--blue)}.sc-amber .sc-val{color:var(--amber)}.sc-red .sc-val{color:var(--red)}.sc-purple .sc-val{color:#7C3AED}
+
+/* Results table */
+.results-scroll{max-height:600px;overflow-y:auto;overflow-x:auto;border:1px solid var(--f200);border-radius:0 0 12px 12px}
+.rtable{width:100%;border-collapse:collapse;font-size:.76rem;min-width:900px}.rtable th{background:var(--f50);padding:10px 10px;text-align:left;font-weight:700;color:var(--f500);border-bottom:2px solid var(--f200);position:sticky;top:0;white-space:nowrap;z-index:1}.rtable td{padding:7px 10px;border-bottom:1px solid var(--f100);color:var(--f700)}.rtable tr:hover td{background:#F0FFF4}
+.rtable .nit-col{font-family:'JetBrains Mono','Courier New',monospace;font-weight:600;font-size:.78rem;white-space:nowrap}
+.rtable .rs-col{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+
+/* Status badges */
+.badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:.67rem;font-weight:700;white-space:nowrap}
+.badge-si{background:var(--g100);color:var(--g700)}
+.badge-no{background:var(--f100);color:var(--f400)}
+.badge-alert{background:#FEF2F2;color:#991B1B;border:1px solid #FECACA;animation:pulseAlert 2s infinite}
+.badge-warn{background:#FEF3C7;color:#92400E}
+.badge-info{background:#DBEAFE;color:#1E40AF}
+
+@keyframes pulseAlert{0%,100%{opacity:1}50%{opacity:.7}}
+
+/* Loading spinner */
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--f200);border-top-color:var(--g500);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Progress bar */
+.progress-wrap{width:100%;height:6px;background:var(--f100);border-radius:3px;margin:12px 0;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--g500),var(--g400));border-radius:3px;transition:width .3s}
+
+/* Lists status */
+.lists-status{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.list-chip{background:var(--w);border:1px solid var(--f200);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px;font-size:.78rem}
+.list-chip .lc-icon{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
+.list-chip .lc-name{font-weight:600;color:var(--f700);line-height:1.2}
+.list-chip .lc-count{font-size:.68rem;color:var(--f400);font-weight:500}
+.lc-gc .lc-icon{background:#EDE9FE;color:#7C3AED}
+.lc-ar .lc-icon{background:#DBEAFE;color:#1D4ED8}
+.lc-pf .lc-icon{background:#FEF2F2;color:#DC2626}
+.lc-iv .lc-icon{background:#FEF3C7;color:#D97706}
+
+/* Single result card */
+.single-result{margin-top:20px}
+.sr-header{display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--f200)}
+.sr-nit{font-size:1.6rem;font-weight:800;font-family:'JetBrains Mono','Courier New',monospace;color:var(--f900);letter-spacing:1px}
+.sr-dv{font-size:1.1rem;font-weight:800;color:var(--g600);background:var(--g50);padding:4px 12px;border-radius:8px;border:1px solid var(--g200)}
+.sr-rs{font-size:1.1rem;font-weight:600;color:var(--f700)}
+.sr-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.sr-item{padding:14px 16px;border-radius:12px;border:1px solid var(--f200);display:flex;align-items:center;gap:12px}
+.sr-item-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:1.1rem;flex-shrink:0}
+.sr-item-text{flex:1}
+.sr-item-label{font-size:.72rem;color:var(--f400);font-weight:600;text-transform:uppercase;letter-spacing:.3px}
+.sr-item-value{font-size:.92rem;font-weight:700;margin-top:2px}
+.sr-ok .sr-item-icon{background:var(--g50)}
+.sr-ok .sr-item-value{color:var(--g700)}
+.sr-alert .sr-item-icon{background:#FEF2F2}
+.sr-alert .sr-item-value{color:#DC2626}
+.sr-alert{border-color:#FECACA;background:#FFFBFB}
+.sr-neutral .sr-item-icon{background:var(--f50)}
+.sr-neutral .sr-item-value{color:var(--f500)}
+.sr-info .sr-item-icon{background:#EFF6FF}
+.sr-info .sr-item-value{color:#1D4ED8}
+
+/* Footer */
+.disclaimer-footer{margin-top:20px;padding:14px 18px;background:var(--f50);border:1px solid var(--f200);border-radius:10px;text-align:center}.disclaimer-footer p{font-size:.76rem;color:var(--f400);margin:0;line-height:1.5}
+.footer{padding:36px 32px;background:var(--f900);color:var(--f400);margin-top:40px}
+.footer-inner{max-width:1200px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:30px}
+.footer-brand h4{color:var(--w);font-size:1.1rem;margin-bottom:6px;font-family:'Fraunces',serif}
+.footer-brand p{font-size:.85rem;line-height:1.6;color:var(--f500)}
+.footer-col h5{color:var(--f300);font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.footer-col a{display:block;color:var(--f500);font-size:.85rem;text-decoration:none;padding:3px 0;transition:color .2s}
+.footer-col a:hover{color:var(--g400)}
+.footer-bottom{padding-top:20px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:.78rem;color:var(--f600);line-height:1.8}
+
+.hidden{display:none}
+
+/* Paywall */
+.paywall{text-align:center;padding:40px 20px;background:linear-gradient(180deg,var(--w),var(--f50));border-radius:var(--r);border:1.5px dashed var(--f300);margin-top:16px}
+.paywall h3{font-size:1rem;font-weight:700;margin-bottom:6px}
+.paywall p{font-size:.85rem;color:var(--f500);margin-bottom:16px}
+
+/* Responsive */
+@media(max-width:900px){
+  .summary{grid-template-columns:repeat(3,1fr)}
+  .lists-status{grid-template-columns:1fr 1fr}
+  .sr-grid{grid-template-columns:1fr}
+  .rtable{min-width:700px}
+}
+@media(max-width:768px){
+  .container{padding:20px 16px}
+  .summary{grid-template-columns:1fr 1fr}
+  .lists-status{grid-template-columns:1fr}
+  .nit-single-row{flex-direction:column}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:24px}
+  .page-header h1{font-size:1.4rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-logo"><div class="nav-mark">E</div><div>ExógenaDIAN<small>Portal Contable</small></div></a>
+  <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    <a href="exogena.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Exógena</a>
+    <a href="renta110.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Renta</a>
+    <a href="consultanit.html" style="font-size:.82rem;color:#059669;text-decoration:none;font-weight:700">Consulta NIT</a>
+    <a href="conciliacion.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Conciliaciones</a>
+    <a href="iva300.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">IVA 300</a>
+    <a href="retencion350.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Ret 350</a>
+    <a href="estadosfinancieros.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">EEFF</a>
+    <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">← Inicio</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="page-header">
+  <div class="page-badge">Consulta de NIT — Validador de Terceros DIAN</div>
+  <h1>Valida NITs contra las listas oficiales de la DIAN</h1>
+  <p>Consulta individual o masiva. Verifica al instante si un tercero es Gran Contribuyente, Autorretenedor, Proveedor Ficticio o Agente Retenedor de IVA. Calcula el dígito de verificación automáticamente.</p>
+</div>
+
+<!-- SECURITY -->
+<div class="security">
+  <div class="sec-icon">🔒</div>
+  <div class="sec-content">
+    <strong>100% privado — Funciona en tu navegador</strong>
+    <p>Los NITs que consultas <u>nunca salen de tu computador</u>. Las listas DIAN se cargan una vez y toda la validación ocurre localmente. No almacenamos ni transmitimos tu información.</p>
+  </div>
+</div>
+
+<!-- STATUS LISTAS CARGADAS -->
+<div class="lists-status" id="listsStatus">
+  <div class="list-chip lc-gc"><div class="lc-icon">👑</div><div><div class="lc-name">Gran Contribuyentes</div><div class="lc-count" id="countGC">Cargando...</div></div></div>
+  <div class="list-chip lc-ar"><div class="lc-icon">🔄</div><div><div class="lc-name">Autorretenedores</div><div class="lc-count" id="countAR">Cargando...</div></div></div>
+  <div class="list-chip lc-pf"><div class="lc-icon">⛔</div><div><div class="lc-name">Proveedores Ficticios</div><div class="lc-count" id="countPF">Cargando...</div></div></div>
+  <div class="list-chip lc-iv"><div class="lc-icon">📋</div><div><div class="lc-name">Agentes Ret. IVA</div><div class="lc-count" id="countIV">Cargando...</div></div></div>
+</div>
+
+<!-- INPUT CARD -->
+<div class="card" id="inputCard">
+  <div class="card-title" style="justify-content:space-between"><div style="display:flex;align-items:center;gap:8px"><span>🔍</span> Consultar NIT</div><span id="backendBadge" style="font-size:.72rem;font-weight:600;color:var(--f400)">Verificando DIAN...</span></div>
+
+  <div class="input-mode-tabs">
+    <button class="mode-tab active" onclick="switchMode('single')" id="tabSingle">Individual</button>
+    <button class="mode-tab" onclick="switchMode('bulk')" id="tabBulk">Masivo (pegar lista)</button>
+    <button class="mode-tab" onclick="switchMode('file')" id="tabFile">Subir archivo</button>
+  </div>
+
+  <!-- Mode: Single -->
+  <div id="modeSingle">
+    <div class="nit-single-row">
+      <div class="nit-input-wrap" style="max-width:340px">
+        <label>NIT (sin dígito de verificación)</label>
+        <input type="text" class="nit-input" id="nitSingle" placeholder="Ej: 890903938" maxlength="15" autocomplete="off" onkeydown="if(event.key==='Enter')consultarSingle()">
+      </div>
+      <button class="btn btn-primary" onclick="consultarSingle()" id="btnSingle">Consultar</button>
+    </div>
+    <div id="singleResult"></div>
+  </div>
+
+  <!-- Contador de consultas gratis -->
+  <div id="freeCounter" style="margin-bottom:14px;padding:10px 16px;background:var(--f50);border:1px solid var(--f200);border-radius:10px;display:flex;justify-content:space-between;align-items:center;font-size:.8rem">
+    <div><span style="font-weight:700;color:var(--f700)">Consultas DIAN hoy:</span> <span id="freeUsed">0</span> / <span id="freeLimit">3</span> <span style="color:var(--f400)">gratis</span></div>
+    <div id="proStatus"></div>
+  </div>
+
+  <!-- Mode: Bulk -->
+  <div id="modeBulk" class="hidden">
+    <div id="bulkFreeNotice" style="margin-bottom:12px;padding:12px 16px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;font-size:.82rem;color:#1E40AF">
+      Plan gratuito: máximo <strong>10 NITs</strong> (solo listas offline). <a href="#" onclick="showProPaywall();return false" style="color:#1D4ED8;font-weight:700">Activa PRO</a> para consultar hasta 2,000 NITs con estado RUT en vivo + exportar a Excel.
+    </div>
+    <textarea class="bulk-area" id="bulkText" placeholder="Pega los NITs aquí, uno por línea:&#10;&#10;890903938&#10;899999068&#10;860002964&#10;860034313&#10;..."></textarea>
+    <div class="bulk-hint">💡 Acepta NITs separados por salto de línea, coma, punto y coma, tabulación o espacio.</div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="consultarBulk()">🔍 Consultar todos</button>
+      <button class="btn btn-outline" onclick="document.getElementById('bulkText').value='';document.getElementById('bulkText').focus()">Limpiar</button>
+    </div>
+  </div>
+
+  <!-- Mode: File -->
+  <div id="modeFile" class="hidden">
+    <div id="fileFreeNotice" style="margin-bottom:12px;padding:12px 16px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;font-size:.82rem;color:#92400E;display:none">
+      Subir archivo es una función <strong>PRO</strong>. <a href="#" onclick="showProPaywall();return false" style="color:#92400E;font-weight:700;text-decoration:underline">Activa PRO ($19,900/mes)</a> para desbloquear.
+    </div>
+    <div class="drop-zone" id="dzNit">
+      <input type="file" accept=".xlsx,.xls,.csv" id="fileNit">
+      <button class="dz-clear" onclick="clearFileNit();event.stopPropagation()">✕</button>
+      <span class="dz-icon">📊</span>
+      <div class="dz-title">Arrastra tu archivo Excel o CSV</div>
+      <div class="dz-hint">La primera columna con números de 6-15 dígitos se detecta como NIT automáticamente</div>
+      <div class="dz-file" id="fileNitName"></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="consultarFile()" id="btnFile" disabled>🔍 Consultar NITs del archivo</button>
+    </div>
+  </div>
+
+  <!-- PRO Paywall Modal -->
+  <div id="proPaywall" class="hidden" style="margin-top:16px">
+    <div class="paywall">
+      <div style="font-size:2rem;margin-bottom:8px">🚀</div>
+      <h3>Desbloquea Consulta NIT PRO</h3>
+      <p>Con tu suscripción PRO de ExógenaDIAN obtienes:</p>
+      <div style="text-align:left;max-width:400px;margin:0 auto 16px;font-size:.85rem;line-height:2">
+        ✅ Consulta masiva hasta <strong>2,000 NITs</strong> por vez<br>
+        ✅ Estado RUT en vivo (ACTIVO/CANCELADO) ilimitado<br>
+        ✅ Subir Excel con columna de NITs<br>
+        ✅ Exportar resultados a Excel formateado<br>
+        ✅ + Todas las herramientas PRO (Exógena, EEFF, IVA 300, Renta 110)
+      </div>
+      <div style="font-size:1.4rem;font-weight:800;color:var(--g700);margin-bottom:4px">$19,900 <span style="font-size:.8rem;font-weight:500;color:var(--f400)">/mes</span></div>
+      <div style="font-size:.75rem;color:var(--f400);margin-bottom:16px">30 días · Sin recurrencia · Cancela cuando quieras</div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <a href="index.html#planes" class="btn btn-primary" style="font-size:.9rem">Ver planes PRO →</a>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="text" id="proKeyInput" placeholder="¿Ya tienes clave PRO?" style="padding:8px 12px;border:1.5px solid var(--f200);border-radius:10px;font-family:inherit;font-size:.82rem;width:180px;text-align:center">
+          <button onclick="activarPro()" class="btn btn-outline" style="font-size:.82rem;padding:8px 14px">Activar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div id="progressSection" class="hidden">
+  <div class="card">
+    <div class="card-title"><span class="spinner"></span> Validando NITs...</div>
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+    <div style="font-size:.8rem;color:var(--f500)" id="progressText">0 de 0</div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="resultsSection" class="hidden">
+  <div class="summary" id="summaryCards"></div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <div style="padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--f200);flex-wrap:wrap;gap:10px">
+      <div style="font-weight:700;font-size:.95rem">Resultados de la consulta</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline" style="font-size:.78rem;padding:6px 14px" onclick="copiarResultados()">📋 Copiar</button>
+        <button class="btn btn-primary" style="font-size:.78rem;padding:6px 14px" onclick="exportarExcel()">📥 Exportar Excel</button>
+      </div>
+    </div>
+    <div class="results-scroll" id="resultsTable"></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn btn-outline" onclick="nuevaConsulta()">← Nueva consulta</button>
+  </div>
+</div>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer-footer">
+  <p>⚠️ Herramienta de asistencia. Las listas se actualizan periódicamente desde los PDF oficiales publicados por la DIAN.<br>
+  El contador debe verificar directamente en <a href="https://muisca.dian.gov.co/WebRutMuisca/DefConsultaEstadoRUT.faces" target="_blank" rel="noopener" style="color:var(--g600)">MUISCA</a> para confirmar el estado actual del RUT.<br>
+  🔒 Ley 1581/2012 · Hecho con 💚 para contadores colombianos</p>
+</div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>ExógenaDIAN</h4>
+        <p>Portal contable y tributario para contadores colombianos. Herramientas profesionales que simplifican el cierre fiscal.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Herramientas</h5>
+        <a href="exogena.html">Exógena DIAN</a>
+        <a href="renta110.html">Declaración de Renta</a>
+        <a href="retencion350.html">Retención en la Fuente</a>
+        <a href="iva300.html">Declaración de IVA</a>
+        <a href="estadosfinancieros.html">Estados Financieros</a>
+        <a href="conciliacion.html">Conciliación Bancaria</a>
+        <a href="consultanit.html">Consulta de NIT</a>
+        <a href="blog.html">Blog — Recursos</a>
+      </div>
+      <div class="footer-col">
+        <h5>Contacto</h5>
+        <a href="mailto:soporte@exogenadian.com">soporte@exogenadian.com</a>
+        <a href="https://wa.me/573156178610">WhatsApp</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      Exógena DIAN AG 2025 · Resolución 000227/2025 · UVT $52.374<br>
+      🔒 Información tratada con total confidencialidad — Ley 1581/2012 · Hecho con 💚 para contadores colombianos<br>
+      <a href="terminos.html" style="color:var(--f500)">Términos y condiciones · Política de privacidad</a> · Aziendale S.A.S. · Medellín
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ===================================================================
+   CONSULTOR DE NIT — ExógenaDIAN
+   Valida NITs contra listas oficiales DIAN (100% client-side)
+   =================================================================== */
+
+// ─── Config ───
+// URL del backend proxy. Cambiar cuando se despliegue en Cloud Run.
+const API_URL = 'https://dian-proxy-exogenadian.run.app'; // TODO: actualizar con URL real
+let BACKEND_AVAILABLE = false;
+
+// ─── State ───
+let LISTAS = { gc: {}, ar: {}, pf: {}, iv: {} };
+let fileNits = [];
+let allResults = [];
+
+// ─── DV Calculation (DIAN algorithm: módulo 11, pesos 15 dígitos) ───
+function calcDV(nit) {
+  const s = String(nit).replace(/\D/g, '');
+  if (!s || s.length < 1 || s.length > 15) return null;
+  const pesos = [71, 67, 59, 53, 47, 43, 41, 37, 29, 23, 17, 13, 7, 3, 1];
+  const padded = s.padStart(15, '0');
+  let sum = 0;
+  for (let i = 0; i < 15; i++) {
+    sum += parseInt(padded[i]) * pesos[i];
+  }
+  const mod = sum % 11;
+  if (mod >= 2) return 11 - mod;
+  return mod;
+}
+
+// ─── Parse NITs from text ───
+function parseNITs(text) {
+  if (!text || !text.trim()) return [];
+  // Split by any common separator
+  const parts = text.split(/[\n\r,;\t]+/).map(s => s.trim()).filter(Boolean);
+  const nits = [];
+  const seen = new Set();
+  for (const part of parts) {
+    // Extract numbers that look like NITs (6-15 digits), ignore DV suffix
+    const matches = part.match(/\b(\d{6,15})\b/g);
+    if (matches) {
+      for (const m of matches) {
+        const clean = m.replace(/^0+/, '') || '0';
+        if (!seen.has(clean)) {
+          seen.add(clean);
+          nits.push(clean);
+        }
+      }
+    }
+  }
+  return nits;
+}
+
+// ─── Load DIAN lists ───
+async function loadLists() {
+  const files = [
+    { key: 'gc', url: 'data/gran_contribuyentes.json', el: 'countGC' },
+    { key: 'ar', url: 'data/autoretenedores.json', el: 'countAR' },
+    { key: 'pf', url: 'data/proveedores_ficticios.json', el: 'countPF' },
+    { key: 'iv', url: 'data/agentes_retenedores_iva.json', el: 'countIV' }
+  ];
+  for (const f of files) {
+    try {
+      const resp = await fetch(f.url);
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const data = await resp.json();
+      LISTAS[f.key] = data.nits || {};
+      const count = Object.keys(LISTAS[f.key]).length;
+      document.getElementById(f.el).textContent = count + ' registros';
+    } catch (e) {
+      LISTAS[f.key] = {};
+      document.getElementById(f.el).textContent = 'Error al cargar';
+      document.getElementById(f.el).style.color = '#DC2626';
+      console.warn('Error cargando ' + f.url, e);
+    }
+  }
+}
+
+// ─── Lookup a single NIT against all lists ───
+function lookupNIT(nit) {
+  const clean = String(nit).replace(/\D/g, '').replace(/^0+/, '') || '0';
+  const dv = calcDV(clean);
+  const gc = LISTAS.gc[clean] || null;
+  const ar = LISTAS.ar[clean] || null;
+  const pf = LISTAS.pf[clean] || null;
+  const iv = LISTAS.iv[clean] || null;
+
+  // Get razon social from whichever list has it
+  let razonSocial = '';
+  let fuente = '';
+  if (gc) { razonSocial = gc.razon_social; fuente = 'Gran Contribuyentes'; }
+  else if (ar) { razonSocial = ar.razon_social; fuente = 'Autorretenedores'; }
+  else if (pf) { razonSocial = pf.razon_social; fuente = 'Proveedores Ficticios'; }
+  else if (iv) { razonSocial = iv.razon_social; fuente = 'Agentes Ret. IVA'; }
+
+  return {
+    nit: clean,
+    dv: dv,
+    nitFormatted: clean + '-' + dv,
+    razonSocial: razonSocial,
+    fuente: fuente,
+    esGranContribuyente: !!gc,
+    gcResolucion: gc ? gc.resolucion : '',
+    esAutorretenedor: !!ar,
+    arResolucion: ar ? ar.resolucion : '',
+    esProveedorFicticio: !!pf,
+    pfResolucion: pf ? pf.resolucion : '',
+    pfFecha: pf ? pf.fecha : '',
+    esAgenteRetenedorIVA: !!iv,
+    ivResolucion: iv ? iv.resolucion : '',
+    encontrado: !!(gc || ar || pf || iv)
+  };
+}
+
+// ─── UI: Switch input mode ───
+function switchMode(mode) {
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('modeSingle').classList.add('hidden');
+  document.getElementById('modeBulk').classList.add('hidden');
+  document.getElementById('modeFile').classList.add('hidden');
+  if (mode === 'single') {
+    document.getElementById('tabSingle').classList.add('active');
+    document.getElementById('modeSingle').classList.remove('hidden');
+  } else if (mode === 'bulk') {
+    document.getElementById('tabBulk').classList.add('active');
+    document.getElementById('modeBulk').classList.remove('hidden');
+  } else {
+    document.getElementById('tabFile').classList.add('active');
+    document.getElementById('modeFile').classList.remove('hidden');
+  }
+}
+
+// ─── Backend API ───
+async function consultarBackend(nit) {
+  if (!BACKEND_AVAILABLE) return null;
+  try {
+    const resp = await fetch(`${API_URL}/api/nit/${nit}`, { signal: AbortSignal.timeout(30000) });
+    if (!resp.ok) return null;
+    return await resp.json();
+  } catch (e) {
+    console.warn('Backend no disponible:', e.message);
+    return null;
+  }
+}
+
+async function consultarBackendBulk(nits) {
+  if (!BACKEND_AVAILABLE) return null;
+  try {
+    const resp = await fetch(`${API_URL}/api/nit/bulk`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nits: nits.slice(0, 50) }),
+      signal: AbortSignal.timeout(120000),
+    });
+    if (!resp.ok) return null;
+    return await resp.json();
+  } catch (e) {
+    console.warn('Backend bulk no disponible:', e.message);
+    return null;
+  }
+}
+
+async function checkBackend() {
+  try {
+    const resp = await fetch(`${API_URL}/api/health`, { signal: AbortSignal.timeout(5000) });
+    BACKEND_AVAILABLE = resp.ok;
+  } catch { BACKEND_AVAILABLE = false; }
+  // Mostrar indicador
+  const badge = document.getElementById('backendBadge');
+  if (badge) {
+    badge.textContent = BACKEND_AVAILABLE ? '🟢 DIAN en vivo' : '🔴 Solo listas offline';
+    badge.style.color = BACKEND_AVAILABLE ? 'var(--g700)' : 'var(--f400)';
+  }
+}
+
+function mergeResults(offline, online) {
+  // Combinar resultado offline (listas) con online (DIAN MUISCA)
+  if (!online || online.error) return offline;
+  return {
+    ...offline,
+    razonSocial: online.razon_social || offline.razonSocial,
+    estadoRut: online.estado_rut || '',
+    tipoPersona: online.tipo_persona || '',
+    responsabilidades: online.responsabilidades || [],
+    direccion: online.direccion || '',
+    departamento: online.departamento || '',
+    municipio: online.municipio || '',
+    fuente: online.fuente || offline.fuente,
+    encontrado: true,
+  };
+}
+
+// ─── UI: Single consultation ───
+async function consultarSingle() {
+  const input = document.getElementById('nitSingle').value.trim();
+  if (!input) return;
+  const nits = parseNITs(input);
+  if (nits.length === 0) {
+    document.getElementById('singleResult').innerHTML = '<div style="margin-top:12px;padding:12px 16px;background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;font-size:.85rem;color:#991B1B">Ingresa un NIT válido (6-15 dígitos).</div>';
+    return;
+  }
+
+  // Tier 1: Resultado offline (instantáneo)
+  let r = lookupNIT(nits[0]);
+  renderSingleResult(r);
+
+  // Tier 2: Consulta al backend DIAN (async)
+  if (BACKEND_AVAILABLE) {
+    const el = document.getElementById('singleResult');
+    el.innerHTML += '<div id="dianLoading" style="margin-top:12px;padding:10px 16px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;font-size:.82rem;color:#1E40AF;display:flex;align-items:center;gap:8px"><span class="spinner"></span> Consultando estado RUT en DIAN MUISCA...</div>';
+    const online = await consultarBackend(nits[0]);
+    const loading = document.getElementById('dianLoading');
+    if (loading) loading.remove();
+    if (online && !online.error) {
+      r = mergeResults(r, online);
+      renderSingleResult(r);
+    } else if (online && online.error) {
+      el.innerHTML += '<div style="margin-top:8px;font-size:.72rem;color:var(--f400)">⚠️ DIAN: ' + esc(online.error) + '</div>';
+    }
+  }
+}
+
+function renderSingleResult(r) {
+  const el = document.getElementById('singleResult');
+  const foundClass = r.encontrado ? '' : ' style="opacity:.6"';
+
+  let html = '<div class="single-result">';
+  html += '<div class="sr-header">';
+  html += '<div><div class="sr-nit">' + r.nit + '</div>';
+  if (r.razonSocial) html += '<div class="sr-rs">' + esc(r.razonSocial) + '</div>';
+  else html += '<div class="sr-rs" style="color:var(--f400);font-style:italic">No encontrado en listas DIAN cargadas</div>';
+  html += '</div>';
+  html += '<div class="sr-dv">DV: ' + r.dv + '</div>';
+  html += '</div>';
+
+  // Estado RUT (solo si viene del backend DIAN)
+  if (r.estadoRut) {
+    const esActivo = r.estadoRut === 'ACTIVO';
+    const cls = esActivo ? 'sr-ok' : 'sr-alert';
+    const icon = esActivo ? '✅' : '⚠️';
+    html += '<div style="margin-bottom:16px;padding:16px 20px;border-radius:12px;border:2px solid ' + (esActivo ? 'var(--g200)' : '#FECACA') + ';background:' + (esActivo ? 'var(--g50)' : '#FEF2F2') + ';display:flex;align-items:center;gap:12px">';
+    html += '<div style="font-size:1.5rem">' + icon + '</div>';
+    html += '<div><div style="font-size:.72rem;color:var(--f400);font-weight:600;text-transform:uppercase">Estado del RUT</div>';
+    html += '<div style="font-size:1.1rem;font-weight:800;color:' + (esActivo ? 'var(--g700)' : '#DC2626') + '">' + esc(r.estadoRut) + '</div></div>';
+    if (r.tipoPersona) html += '<div style="margin-left:auto;font-size:.78rem;padding:4px 12px;background:var(--f100);border-radius:8px;font-weight:600;color:var(--f600)">' + esc(r.tipoPersona) + '</div>';
+    html += '</div>';
+  }
+
+  html += '<div class="sr-grid">';
+
+  // Gran Contribuyente
+  if (r.esGranContribuyente) {
+    html += '<div class="sr-item sr-ok"><div class="sr-item-icon">👑</div><div class="sr-item-text"><div class="sr-item-label">Gran Contribuyente</div><div class="sr-item-value">SÍ — ' + esc(r.gcResolucion) + '</div></div></div>';
+  } else {
+    html += '<div class="sr-item sr-neutral"><div class="sr-item-icon">👑</div><div class="sr-item-text"><div class="sr-item-label">Gran Contribuyente</div><div class="sr-item-value">NO</div></div></div>';
+  }
+
+  // Autorretenedor
+  if (r.esAutorretenedor) {
+    html += '<div class="sr-item sr-info"><div class="sr-item-icon">🔄</div><div class="sr-item-text"><div class="sr-item-label">Autorretenedor de Renta</div><div class="sr-item-value">SÍ — ' + esc(r.arResolucion) + '</div></div></div>';
+  } else {
+    html += '<div class="sr-item sr-neutral"><div class="sr-item-icon">🔄</div><div class="sr-item-text"><div class="sr-item-label">Autorretenedor de Renta</div><div class="sr-item-value">NO</div></div></div>';
+  }
+
+  // Proveedor Ficticio
+  if (r.esProveedorFicticio) {
+    html += '<div class="sr-item sr-alert"><div class="sr-item-icon">⛔</div><div class="sr-item-text"><div class="sr-item-label">Proveedor Ficticio</div><div class="sr-item-value">⚠️ SÍ — ' + esc(r.pfResolucion) + (r.pfFecha ? ' (' + r.pfFecha + ')' : '') + '</div></div></div>';
+  } else {
+    html += '<div class="sr-item sr-ok"><div class="sr-item-icon">✅</div><div class="sr-item-text"><div class="sr-item-label">Proveedor Ficticio</div><div class="sr-item-value">NO (limpio)</div></div></div>';
+  }
+
+  // Agente Retenedor IVA
+  if (r.esAgenteRetenedorIVA) {
+    html += '<div class="sr-item sr-info"><div class="sr-item-icon">📋</div><div class="sr-item-text"><div class="sr-item-label">Agente Retenedor de IVA</div><div class="sr-item-value">SÍ — ' + esc(r.ivResolucion) + '</div></div></div>';
+  } else {
+    html += '<div class="sr-item sr-neutral"><div class="sr-item-icon">📋</div><div class="sr-item-text"><div class="sr-item-label">Agente Retenedor de IVA</div><div class="sr-item-value">NO</div></div></div>';
+  }
+
+  html += '</div>'; // sr-grid
+
+  // Fuente
+  if (r.fuente) {
+    html += '<div style="margin-top:12px;font-size:.72rem;color:var(--f400)">Fuente: ' + esc(r.fuente) + '</div>';
+  }
+
+  html += '</div>'; // single-result
+  el.innerHTML = html;
+}
+
+// ─── UI: Bulk consultation ───
+function consultarBulk() {
+  const text = document.getElementById('bulkText').value;
+  const nits = parseNITs(text);
+  if (nits.length === 0) {
+    alert('No se encontraron NITs válidos en el texto.');
+    return;
+  }
+  const maxAllowed = IS_PRO ? 2000 : 10;
+  if (nits.length > maxAllowed) {
+    if (!IS_PRO) {
+      showProPaywall();
+      alert('Plan gratuito: máximo 10 NITs. Tienes ' + nits.length + ' NITs.\n\nActiva PRO para consultar hasta 2,000 NITs con estado RUT en vivo y exportar a Excel.');
+      return;
+    }
+    alert('Máximo 2,000 NITs por consulta. Encontrados: ' + nits.length);
+    return;
+  }
+  processNITs(nits);
+}
+
+// ─── UI: File consultation ───
+function consultarFile() {
+  if (!IS_PRO) {
+    showProPaywall();
+    return;
+  }
+  if (fileNits.length === 0) return;
+  if (fileNits.length > 2000) {
+    alert('Máximo 2,000 NITs por consulta. El archivo tiene: ' + fileNits.length);
+    return;
+  }
+  processNITs(fileNits);
+}
+
+// ─── Process NITs (with progress) ───
+function processNITs(nits) {
+  document.getElementById('inputCard').classList.add('hidden');
+  document.getElementById('resultsSection').classList.add('hidden');
+  document.getElementById('progressSection').classList.remove('hidden');
+
+  const total = nits.length;
+  allResults = [];
+  let idx = 0;
+
+  function processBatch() {
+    const batchEnd = Math.min(idx + 50, total);
+    for (; idx < batchEnd; idx++) {
+      allResults.push(lookupNIT(nits[idx]));
+    }
+    const pct = Math.round((idx / total) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressText').textContent = idx + ' de ' + total;
+
+    if (idx < total) {
+      requestAnimationFrame(processBatch);
+    } else {
+      setTimeout(showResults, 200);
+    }
+  }
+  processBatch();
+}
+
+// ─── Show results ───
+function showResults() {
+  document.getElementById('progressSection').classList.add('hidden');
+  document.getElementById('resultsSection').classList.remove('hidden');
+
+  const total = allResults.length;
+  const encontrados = allResults.filter(r => r.encontrado).length;
+  const gc = allResults.filter(r => r.esGranContribuyente).length;
+  const ar = allResults.filter(r => r.esAutorretenedor).length;
+  const pf = allResults.filter(r => r.esProveedorFicticio).length;
+
+  // Summary cards
+  let sumHtml = '';
+  sumHtml += '<div class="summary-card sc-green"><div class="sc-val">' + total + '</div><div class="sc-label">NITs consultados</div></div>';
+  sumHtml += '<div class="summary-card sc-blue"><div class="sc-val">' + encontrados + '</div><div class="sc-label">En listas DIAN</div></div>';
+  sumHtml += '<div class="summary-card sc-purple"><div class="sc-val">' + gc + '</div><div class="sc-label">Gran Contribuyente</div></div>';
+  sumHtml += '<div class="summary-card sc-amber"><div class="sc-val">' + ar + '</div><div class="sc-label">Autorretenedor</div></div>';
+  sumHtml += '<div class="summary-card' + (pf > 0 ? ' sc-red' : '') + '"><div class="sc-val">' + pf + '</div><div class="sc-label">Prov. Ficticio' + (pf > 0 ? ' ⚠️' : '') + '</div></div>';
+  document.getElementById('summaryCards').innerHTML = sumHtml;
+
+  // Table
+  let html = '<table class="rtable"><thead><tr>';
+  html += '<th>#</th><th>NIT</th><th>DV</th><th>Razón Social</th>';
+  html += '<th style="text-align:center">Gran Contr.</th>';
+  html += '<th style="text-align:center">Autorret.</th>';
+  html += '<th style="text-align:center">Prov. Ficticio</th>';
+  html += '<th style="text-align:center">Ret. IVA</th>';
+  html += '</tr></thead><tbody>';
+
+  for (let i = 0; i < allResults.length; i++) {
+    const r = allResults[i];
+    const rowClass = r.esProveedorFicticio ? ' style="background:#FEF2F2"' : '';
+    html += '<tr' + rowClass + '>';
+    html += '<td style="color:var(--f400);font-size:.7rem">' + (i + 1) + '</td>';
+    html += '<td class="nit-col">' + r.nit + '</td>';
+    html += '<td class="nit-col" style="text-align:center">' + r.dv + '</td>';
+    html += '<td class="rs-col" title="' + esc(r.razonSocial) + '">' + (r.razonSocial ? esc(r.razonSocial) : '<span style="color:var(--f400);font-style:italic">—</span>') + '</td>';
+    html += '<td style="text-align:center">' + (r.esGranContribuyente ? '<span class="badge badge-si">SÍ</span>' : '<span class="badge badge-no">NO</span>') + '</td>';
+    html += '<td style="text-align:center">' + (r.esAutorretenedor ? '<span class="badge badge-si">SÍ</span>' : '<span class="badge badge-no">NO</span>') + '</td>';
+    html += '<td style="text-align:center">' + (r.esProveedorFicticio ? '<span class="badge badge-alert">⚠️ SÍ</span>' : '<span class="badge badge-no">NO</span>') + '</td>';
+    html += '<td style="text-align:center">' + (r.esAgenteRetenedorIVA ? '<span class="badge badge-si">SÍ</span>' : '<span class="badge badge-no">NO</span>') + '</td>';
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  document.getElementById('resultsTable').innerHTML = html;
+}
+
+// ─── New consultation ───
+function nuevaConsulta() {
+  document.getElementById('resultsSection').classList.add('hidden');
+  document.getElementById('inputCard').classList.remove('hidden');
+  allResults = [];
+}
+
+// ─── Copy results ───
+function copiarResultados() {
+  if (allResults.length === 0) return;
+  let text = 'NIT\tDV\tRazón Social\tGran Contribuyente\tAutorretenedor\tProveedor Ficticio\tAgente Ret. IVA\n';
+  for (const r of allResults) {
+    text += r.nit + '\t' + r.dv + '\t' + r.razonSocial + '\t';
+    text += (r.esGranContribuyente ? 'SÍ' : 'NO') + '\t';
+    text += (r.esAutorretenedor ? 'SÍ' : 'NO') + '\t';
+    text += (r.esProveedorFicticio ? 'SÍ' : 'NO') + '\t';
+    text += (r.esAgenteRetenedorIVA ? 'SÍ' : 'NO') + '\n';
+  }
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('[onclick="copiarResultados()"]');
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copiado';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+
+// ─── Export to Excel ───
+async function exportarExcel() {
+  if (allResults.length === 0) return;
+  if (!IS_PRO) {
+    showProPaywall();
+    alert('Exportar a Excel es una función PRO.\n\nActiva PRO ($19,900/mes) para exportar resultados con formato profesional.');
+    return;
+  }
+
+  const wb = new ExcelJS.Workbook();
+  wb.creator = 'ExógenaDIAN';
+  wb.created = new Date();
+  const ws = wb.addWorksheet('Consulta NIT');
+
+  // Header row
+  const headers = ['#', 'NIT', 'DV', 'NIT Completo', 'Razón Social', 'Gran Contribuyente', 'Autorretenedor Renta', 'Proveedor Ficticio', 'Agente Retenedor IVA', 'Resolución GC', 'Resolución AR', 'Resolución PF', 'Resolución IVA'];
+  const headerRow = ws.addRow(headers);
+  headerRow.eachCell((cell) => {
+    cell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 10, name: 'Calibri' };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF047857' } };
+    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    cell.border = { bottom: { style: 'thin', color: { argb: 'FF065F46' } } };
+  });
+
+  // Data rows
+  for (let i = 0; i < allResults.length; i++) {
+    const r = allResults[i];
+    const row = ws.addRow([
+      i + 1,
+      r.nit,
+      r.dv,
+      r.nitFormatted,
+      r.razonSocial,
+      r.esGranContribuyente ? 'SÍ' : 'NO',
+      r.esAutorretenedor ? 'SÍ' : 'NO',
+      r.esProveedorFicticio ? 'SÍ' : 'NO',
+      r.esAgenteRetenedorIVA ? 'SÍ' : 'NO',
+      r.gcResolucion,
+      r.arResolucion,
+      r.pfResolucion,
+      r.ivResolucion
+    ]);
+
+    row.eachCell((cell, colNumber) => {
+      cell.font = { size: 10, name: 'Calibri' };
+      cell.alignment = { vertical: 'middle' };
+      // Zebra striping
+      if (i % 2 === 1) {
+        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF9FAFB' } };
+      }
+    });
+
+    // Highlight Proveedor Ficticio rows
+    if (r.esProveedorFicticio) {
+      row.eachCell((cell) => {
+        cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF2F2' } };
+        cell.font = { size: 10, name: 'Calibri', color: { argb: 'FF991B1B' } };
+      });
+    }
+
+    // Center SÍ/NO columns
+    for (let c = 6; c <= 9; c++) {
+      row.getCell(c).alignment = { horizontal: 'center', vertical: 'middle' };
+      const val = row.getCell(c).value;
+      if (val === 'SÍ') {
+        row.getCell(c).font = { size: 10, name: 'Calibri', bold: true, color: { argb: r.esProveedorFicticio && c === 8 ? 'FFDC2626' : 'FF047857' } };
+      }
+    }
+  }
+
+  // Column widths
+  ws.columns = [
+    { width: 5 }, { width: 14 }, { width: 5 }, { width: 18 }, { width: 40 },
+    { width: 16 }, { width: 18 }, { width: 16 }, { width: 18 },
+    { width: 18 }, { width: 18 }, { width: 18 }, { width: 18 }
+  ];
+
+  // Autofilter
+  ws.autoFilter = { from: 'A1', to: 'M1' };
+
+  // Freeze header
+  ws.views = [{ state: 'frozen', ySplit: 1 }];
+
+  // Download
+  const buffer = await wb.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const fecha = new Date().toISOString().slice(0, 10);
+  a.download = 'Consulta_NIT_ExogenaDIAN_' + fecha + '.xlsx';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ─── File upload handling ───
+(function() {
+  const dz = document.getElementById('dzNit');
+  const fi = document.getElementById('fileNit');
+
+  fi.addEventListener('change', function() {
+    if (fi.files.length > 0) handleFileUpload(fi.files[0]);
+  });
+
+  dz.addEventListener('dragover', function(e) { e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', function() { dz.classList.remove('dragover'); });
+  dz.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dz.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) handleFileUpload(e.dataTransfer.files[0]);
+  });
+})();
+
+function handleFileUpload(file) {
+  const dz = document.getElementById('dzNit');
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      let nits = [];
+      if (file.name.endsWith('.csv')) {
+        const text = e.target.result;
+        nits = parseNITs(text);
+      } else {
+        const data = new Uint8Array(e.target.result);
+        const wb = XLSX.read(data, { type: 'array' });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        // Find column with NITs (6-15 digit numbers)
+        let nitCol = -1;
+        for (let row = 0; row < Math.min(json.length, 10); row++) {
+          for (let col = 0; col < (json[row] || []).length; col++) {
+            const val = String(json[row][col] || '').replace(/\D/g, '');
+            if (val.length >= 6 && val.length <= 15) {
+              nitCol = col;
+              break;
+            }
+          }
+          if (nitCol >= 0) break;
+        }
+        if (nitCol >= 0) {
+          const allText = json.map(r => String(r[nitCol] || '')).join('\n');
+          nits = parseNITs(allText);
+        }
+      }
+
+      fileNits = nits;
+      document.getElementById('fileNitName').textContent = file.name + ' — ' + nits.length + ' NITs detectados';
+      dz.classList.add('loaded');
+      document.getElementById('btnFile').disabled = nits.length === 0;
+    } catch (err) {
+      alert('Error al leer el archivo: ' + err.message);
+      console.error(err);
+    }
+  };
+  if (file.name.endsWith('.csv')) reader.readAsText(file);
+  else reader.readAsArrayBuffer(file);
+}
+
+function clearFileNit() {
+  fileNits = [];
+  const dz = document.getElementById('dzNit');
+  dz.classList.remove('loaded');
+  document.getElementById('fileNitName').textContent = '';
+  document.getElementById('fileNit').value = '';
+  document.getElementById('btnFile').disabled = true;
+}
+
+// ─── Helpers ───
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ─── PRO / Free tier logic ───
+let IS_PRO = false;
+let PRO_KEY = '';
+let FREE_REMAINING = 3;
+
+function loadProStatus() {
+  // Cargar clave PRO desde localStorage (compartida con otras herramientas del sitio)
+  const key = localStorage.getItem('proKey') || '';
+  if (key) {
+    PRO_KEY = key;
+    IS_PRO = true;
+    updateProUI();
+  }
+  updateFreeCounter();
+  updateFileAccess();
+}
+
+function activarPro() {
+  const key = document.getElementById('proKeyInput').value.trim();
+  if (!key) return;
+  PRO_KEY = key;
+  IS_PRO = true;
+  localStorage.setItem('proKey', key);
+  updateProUI();
+  updateFreeCounter();
+  updateFileAccess();
+  const pw = document.getElementById('proPaywall');
+  if (pw) pw.classList.add('hidden');
+}
+
+function updateProUI() {
+  const el = document.getElementById('proStatus');
+  if (IS_PRO) {
+    el.innerHTML = '<span style="background:var(--g100);color:var(--g700);padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700">PRO activo</span>';
+    document.getElementById('bulkFreeNotice').style.display = 'none';
+  } else {
+    el.innerHTML = '<a href="#" onclick="showProPaywall();return false" style="color:var(--g600);font-weight:700;font-size:.78rem">Activar PRO →</a>';
+  }
+}
+
+function updateFreeCounter() {
+  const used = 3 - FREE_REMAINING;
+  document.getElementById('freeUsed').textContent = Math.max(0, used);
+  if (IS_PRO) {
+    document.getElementById('freeCounter').style.display = 'none';
+  }
+}
+
+function updateFileAccess() {
+  const notice = document.getElementById('fileFreeNotice');
+  const dz = document.getElementById('dzNit');
+  if (!IS_PRO) {
+    notice.style.display = 'block';
+    dz.style.opacity = '0.5';
+    dz.style.pointerEvents = 'none';
+  } else {
+    notice.style.display = 'none';
+    dz.style.opacity = '1';
+    dz.style.pointerEvents = 'auto';
+  }
+}
+
+function showProPaywall() {
+  document.getElementById('proPaywall').classList.remove('hidden');
+  document.getElementById('proPaywall').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function fetchRemaining() {
+  if (IS_PRO || !BACKEND_AVAILABLE) return;
+  try {
+    const resp = await fetch(`${API_URL}/api/remaining`, { signal: AbortSignal.timeout(5000) });
+    if (resp.ok) {
+      const data = await resp.json();
+      FREE_REMAINING = data.remaining;
+      updateFreeCounter();
+    }
+  } catch {}
+}
+
+// ─── Init ───
+document.addEventListener('DOMContentLoaded', function() {
+  loadLists();
+  loadProStatus();
+  checkBackend().then(() => fetchRemaining());
+  document.getElementById('nitSingle').focus();
+});
+</script>
+</body>
+</html>
