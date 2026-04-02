@@ -1255,6 +1255,8 @@ async function exportExcel(){
   if(!tplRes.ok)throw new Error('No se pudo cargar la plantilla.');
   const wb=new ExcelJS.Workbook();
   await wb.xlsx.load(await tplRes.arrayBuffer());
+  // Forzar que Excel recalcule todas las formulas al abrir
+  wb.calcProperties={fullCalcOnLoad:true};
 
   const nit=document.getElementById('cfgNit').value||'';
   const razon=document.getElementById('cfgRazon').value||'';
