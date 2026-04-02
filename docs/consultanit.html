@@ -504,7 +504,6 @@ function switchMode(mode) {
 
 // ─── Backend API ───
 async function consultarBackend(nit) {
-  if (!BACKEND_AVAILABLE) return null;
   try {
     const resp = await fetch(`${API_URL}/api/nit/${nit}`, { signal: AbortSignal.timeout(30000) });
     if (!resp.ok) return null;
@@ -534,14 +533,26 @@ async function consultarBackendBulk(nits) {
 
 async function checkBackend() {
   try {
-    const resp = await fetch(`${API_URL}/api/health`, { signal: AbortSignal.timeout(5000) });
+    const resp = await fetch(`${API_URL}/api/health`, { signal: AbortSignal.timeout(15000) });
     BACKEND_AVAILABLE = resp.ok;
   } catch { BACKEND_AVAILABLE = false; }
-  // Mostrar indicador
   const badge = document.getElementById('backendBadge');
   if (badge) {
-    badge.textContent = BACKEND_AVAILABLE ? '🟢 DIAN en vivo' : '🔴 Solo listas offline';
+    badge.textContent = BACKEND_AVAILABLE ? '🟢 DIAN en vivo' : '🟡 Conectando...';
     badge.style.color = BACKEND_AVAILABLE ? 'var(--g700)' : 'var(--f400)';
+  }
+  // Si falló el health check, reintentar en 10s (Cloud Run cold start)
+  if (!BACKEND_AVAILABLE) {
+    setTimeout(async () => {
+      try {
+        const resp = await fetch(`${API_URL}/api/health`, { signal: AbortSignal.timeout(15000) });
+        BACKEND_AVAILABLE = resp.ok;
+      } catch { BACKEND_AVAILABLE = false; }
+      if (badge) {
+        badge.textContent = BACKEND_AVAILABLE ? '🟢 DIAN en vivo' : '🔴 Solo listas offline';
+        badge.style.color = BACKEND_AVAILABLE ? 'var(--g700)' : 'var(--f400)';
+      }
+    }, 10000);
   }
 }
 
