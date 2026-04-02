@@ -409,7 +409,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
     <div class="card" style="text-align:center;padding:32px">
       <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px">
-        <button onclick="exportExcel()" class="btn btn-success" style="padding:14px 32px;font-size:1rem">📊 Descargar Excel con los 10 Formatos</button>
+        <button onclick="btnLoading(this,exportExcel)" class="btn btn-success" style="padding:14px 32px;font-size:1rem">📊 Descargar Excel con los 10 Formatos</button>
       </div>
       <p style="font-size:.82rem;color:var(--muted)">Un libro Excel con una hoja por formato, formateado profesional.<br>Listo para revisar y subir al prevalidador DIAN para generar los XML.</p>
     </div>
@@ -1879,6 +1879,16 @@ initPro();
 /* ── INIT ── */
 populateDptos();
 onTipoPersonaChange();
+
+// Wrapper: deshabilitar boton mientras genera archivo
+async function btnLoading(btn,fn){
+  if(btn.disabled)return;
+  const orig=btn.innerHTML;
+  btn.disabled=true;btn.style.opacity='.6';
+  btn.innerHTML='Generando...';
+  try{await fn()}catch(e){alert('Error: '+e.message);console.error(e)}
+  finally{btn.disabled=false;btn.style.opacity='';btn.innerHTML=orig}
+}
 </script>
 </body>
 </html>

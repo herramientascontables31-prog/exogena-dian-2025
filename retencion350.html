@@ -268,7 +268,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="card-title" style="margin-bottom:0"><span>📋</span> Borrador Formulario 350</div>
         <div class="flex gap12">
           <button class="btn btn-outline" onclick="goStep(3)">← Ajustar</button>
-          <button class="btn btn-success" onclick="exportXls350()">📥 Descargar Excel</button>
+          <button class="btn btn-success" onclick="btnLoading(this,exportXls350)">📥 Descargar Excel</button>
         </div>
       </div>
       <div id="resultStats" class="stats"></div>
@@ -961,6 +961,16 @@ function descargarEjemplo350(){
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'Balance Ejemplo');
   XLSX.writeFile(wb,'Ejemplo_Retencion350_ExogenaDIAN.xlsx');
+}
+
+// Wrapper: deshabilitar boton mientras genera archivo
+async function btnLoading(btn,fn){
+  if(btn.disabled)return;
+  const orig=btn.innerHTML;
+  btn.disabled=true;btn.style.opacity='.6';
+  btn.innerHTML='Generando...';
+  try{await fn()}catch(e){alert('Error: '+e.message);console.error(e)}
+  finally{btn.disabled=false;btn.style.opacity='';btn.innerHTML=orig}
 }
 </script>
 <div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">

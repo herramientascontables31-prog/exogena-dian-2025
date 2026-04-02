@@ -354,9 +354,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="card-title" style="margin-bottom:0"><span>📋</span> Revelaciones a los Estados Financieros</div>
         <div class="flex gap12" style="flex-wrap:wrap">
           <button class="btn btn-outline" onclick="goStep(3)">← Ajustar clasificación</button>
-          <button class="btn btn-success" onclick="exportRevelacionesWord()">📄 Descargar Word (Revelaciones)</button>
-          <button class="btn btn-primary" onclick="exportExcelEEFF()">📥 Excel EEFF</button>
-          <button class="btn" onclick="exportRevelacionesWordPro()" style="background:#D97706;color:#fff">📄 Word + Notas <span style="font-size:.65rem;background:rgba(255,255,255,.3);padding:1px 6px;border-radius:4px;margin-left:4px">PRO</span></button>
+          <button class="btn btn-success" onclick="btnLoading(this,exportRevelacionesWord)">📄 Descargar Word (Revelaciones)</button>
+          <button class="btn btn-primary" onclick="btnLoading(this,exportExcelEEFF)">📥 Excel EEFF</button>
+          <button class="btn" onclick="btnLoading(this,exportRevelacionesWordPro)" style="background:#D97706;color:#fff">📄 Word + Notas <span style="font-size:.65rem;background:rgba(255,255,255,.3);padding:1px 6px;border-radius:4px;margin-left:4px">PRO</span></button>
         </div>
       </div>
       <div class="alert alert-success"><span>✅</span><div><strong>Revelaciones generadas.</strong> Descarga en Word para revisar y personalizar. Incluye: portada, políticas contables, ESF y Estado de Resultados. La versión PRO agrega notas detalladas por cuenta.</div></div>
@@ -2859,6 +2859,16 @@ function descargarEjemploEEFF(){
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'Balance Ejemplo');
   XLSX.writeFile(wb,'Ejemplo_EEFF_ExogenaDIAN.xlsx');
+}
+
+// Wrapper: deshabilitar boton mientras genera archivo
+async function btnLoading(btn,fn){
+  if(btn.disabled)return;
+  const orig=btn.innerHTML;
+  btn.disabled=true;btn.style.opacity='.6';
+  btn.innerHTML='Generando...';
+  try{await fn()}catch(e){alert('Error: '+e.message);console.error(e)}
+  finally{btn.disabled=false;btn.style.opacity='';btn.innerHTML=orig}
 }
 </script>
 <div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">

@@ -432,7 +432,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <div class="flex gap12">
           <button class="btn btn-outline" onclick="goStep(3)">← Ajustar</button>
           <button class="btn btn-success" onclick="exportPdf300()">📄 Descargar PDF</button>
-          <button class="btn" onclick="exportXls300Pro()" style="background:#D97706;color:#fff">📥 Excel <span style="font-size:.65rem;background:rgba(255,255,255,.3);padding:1px 6px;border-radius:4px;margin-left:4px">PRO</span></button>
+          <button class="btn" onclick="btnLoading(this,exportXls300Pro)" style="background:#D97706;color:#fff">📥 Excel <span style="font-size:.65rem;background:rgba(255,255,255,.3);padding:1px 6px;border-radius:4px;margin-left:4px">PRO</span></button>
           <button class="btn" onclick="goStep(5)" style="background:#D97706;color:#fff">🔍 Cruce DIAN <span style="font-size:.65rem;background:rgba(255,255,255,.3);padding:1px 6px;border-radius:4px;margin-left:4px">PRO</span></button>
         </div>
       </div>
@@ -2754,6 +2754,16 @@ function descargarEjemplo300(){
   XLSX.writeFile(wb,'Ejemplo_IVA300_ExogenaDIAN.xlsx');
 }
 
+
+// Wrapper: deshabilitar boton mientras genera archivo
+async function btnLoading(btn,fn){
+  if(btn.disabled)return;
+  const orig=btn.innerHTML;
+  btn.disabled=true;btn.style.opacity='.6';
+  btn.innerHTML='Generando...';
+  try{await fn()}catch(e){alert('Error: '+e.message);console.error(e)}
+  finally{btn.disabled=false;btn.style.opacity='';btn.innerHTML=orig}
+}
 </script>
 <div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
   <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExógenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>
