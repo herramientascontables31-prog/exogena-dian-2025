@@ -172,7 +172,8 @@ body{font-family:'Outfit',sans-serif;background:var(--f50);color:var(--f900);min
 
 /* CALENDAR */
 .cal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.cal-month{background:var(--w);border-radius:var(--r);border:1px solid var(--f200);overflow:hidden;box-shadow:var(--shadow)}
+.cal-month{background:var(--w);border-radius:var(--r);border:1px solid var(--f200);box-shadow:var(--shadow);position:relative}
+.cal-mh{border-radius:var(--r) var(--r) 0 0}
 .cal-mh{padding:10px 12px;font-weight:700;font-size:.88rem;text-align:center;background:var(--f50);color:var(--f700);border-bottom:1px solid var(--f200)}
 .cal-dow{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:.58rem;font-weight:700;color:var(--f400);padding:6px 6px 2px;text-transform:uppercase}
 .cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:2px 6px 8px}
@@ -313,7 +314,7 @@ body{font-family:'Outfit',sans-serif;background:var(--f50);color:var(--f900);min
     <div class="obl-grid">
       <label class="obl-check checked" onclick="toggleObl(this)" data-obl="renta"><input type="checkbox" checked><div class="obl-dot" style="background:var(--obl-renta)"></div>Renta</label>
       <label class="obl-check checked" onclick="toggleObl(this)" data-obl="exogena"><input type="checkbox" checked><div class="obl-dot" style="background:var(--obl-exogena)"></div>Exógena</label>
-      <label class="obl-check" onclick="toggleObl(this)" data-obl="retencion"><input type="checkbox"><div class="obl-dot" style="background:var(--obl-ret)"></div>Retención Fte</label>
+      <label class="obl-check checked" onclick="toggleObl(this)" data-obl="retencion"><input type="checkbox" checked><div class="obl-dot" style="background:var(--obl-ret)"></div>Retención Fte</label>
       <label class="obl-check" onclick="toggleObl(this)" data-obl="activos"><input type="checkbox"><div class="obl-dot" style="background:var(--obl-activos)"></div>Activos Exterior</label>
       <label class="obl-check" onclick="toggleObl(this)" data-obl="patrimonio"><input type="checkbox"><div class="obl-dot" style="background:var(--obl-patri)"></div>Patrimonio</label>
     </div>
@@ -321,7 +322,7 @@ body{font-family:'Outfit',sans-serif;background:var(--f50);color:var(--f900);min
       <div class="obl-section-title">IVA</div>
       <div class="iva-group">
         <div class="iva-opt" data-iva="none" onclick="setIva(this)">No responsable</div>
-        <div class="iva-opt" data-iva="bim" onclick="setIva(this)">Bimestral</div>
+        <div class="iva-opt selected" data-iva="bim" onclick="setIva(this)">Bimestral</div>
         <div class="iva-opt" data-iva="cuatri" onclick="setIva(this)">Cuatrimestral</div>
       </div>
     </div>
@@ -489,7 +490,7 @@ var DIAS_SEM = ['L','M','X','J','V','S','D'];
 // ===============================================================
 var empresas = [];
 var multiTipo = 'pj';
-var ivaMode = 'none';
+var ivaMode = 'bim';
 var activeFilters = null; // null = all
 
 // ===============================================================
