@@ -2001,330 +2001,57 @@ async function exportXls300Pro(){
 }
 
 async function exportXls300(){
-  const c=result300.cas;
-
-  // Generar Excel con ExcelJS — layout de dos columnas con fórmulas editables
+  const cas=result300.cas;
+  const tplRes=await fetch('template_300.xlsx');
+  if(!tplRes.ok)throw new Error('No se pudo cargar la plantilla del 300.');
   const wb=new ExcelJS.Workbook();
-  const D='1B3A5C',W='FFFFFF',S='2E75B6',LB='D6E4F0',LG='E2EFDA',G='548235',YW='FFF8E1',RD='FFEBEE';
-  const tb={style:'thin',color:{argb:'BFBFBF'}};
-  const brd={top:tb,bottom:tb,left:tb,right:tb};
-  const brd2={top:{style:'medium',color:{argb:D}},bottom:{style:'medium',color:{argb:D}},left:tb,right:tb};
-  function fl(a){return{type:'pattern',pattern:'solid',fgColor:{argb:a}}}
-  function styl(cell,opts){
-    if(opts.font)cell.font=opts.font;
-    if(opts.fill)cell.fill=opts.fill;
-    if(opts.border)cell.border=opts.border;
-    if(opts.alignment)cell.alignment=opts.alignment;
-    if(opts.numFmt)cell.numFmt=opts.numFmt;
+  await wb.xlsx.load(await tplRes.arrayBuffer());
+  wb.calcProperties={fullCalcOnLoad:true};
+
+  const ws=wb.getWorksheet('Formulario');
+  const emp=document.getElementById('cfgEmpresa').value||'';
+  const nit=document.getElementById('cfgNit').value||'';
+  const yr=document.getElementById('cfgYear').value||'';
+
+  // Datos generales (ajustar segun la plantilla)
+  // La plantilla tiene el layout DIAN completo
+
+  // Mapa casilla -> celda en la plantilla (LEFT: col T, RIGHT: col AQ)
+  const leftInputs={27:'T16',28:'T17',29:'T18',30:'T19',31:'T20',32:'T21',33:'T22',34:'T23',35:'T24',36:'T25',37:'T26',38:'T27',39:'T28',40:'T29',42:'T31',44:'T33',45:'T34',46:'T35',47:'T36',48:'T37',49:'T38',50:'T39',51:'T40',52:'T41',53:'T42',54:'T43',56:'T45',58:'T47',59:'T48',60:'T49',61:'T50'};
+  const rightInputs={62:'AQ16',63:'AQ17',65:'AQ19',66:'AQ20',68:'AQ22',69:'AQ23',70:'AQ24',71:'AQ25',72:'AQ26',73:'AQ27',74:'AQ28',75:'AQ29',76:'AQ30',78:'AQ32',79:'AQ33',80:'AQ34',84:'AQ38',85:'AQ39',87:'AQ41',90:'AQ44',91:'AQ45',92:'AQ46'};
+
+  // Casillas calculadas: escribir valor + formula (result)
+  const calcCells={41:'T30',43:'T32',55:'T44',57:'T46',67:'AQ21',77:'AQ31',81:'AQ35',82:'AQ36',83:'AQ37',86:'AQ40',88:'AQ42',89:'AQ43',93:'AQ47'};
+
+  // Escribir valores base
+  for(const[k,cell] of Object.entries(leftInputs)){
+    const val=cas[k]||0;
+    if(val)ws.getCell(cell).value=val;
+  }
+  for(const[k,cell] of Object.entries(rightInputs)){
+    const val=cas[k]||0;
+    if(val)ws.getCell(cell).value=val;
   }
 
-  const emp=document.getElementById('cfgEmpresa').value;
-  const nit=document.getElementById('cfgNit').value;
-  const yr=document.getElementById('cfgYear').value;
-  const perLabel=document.getElementById('cfgPeriodo').selectedOptions[0]?.text||'';
-
-  // === HOJA 1: FORMULARIO 300 — Layout de dos columnas como el real ===
-  const ws=wb.addWorksheet('Formulario 300');
-  // Columnas: A=sec izq, B=cas izq, C=concepto izq, D=valor izq, E=separador, F=sec der, G=cas der, H=concepto der, I=valor der
-  ws.columns=[{width:12},{width:5},{width:38},{width:16},{width:2},{width:12},{width:5},{width:38},{width:16}];
-
-  let rn=0;
-  // ---- ENCABEZADO DIAN ----
-  rn++;let r=ws.getRow(rn);
-  ws.mergeCells(rn,1,rn,2);r.getCell(1).value='DIAN';
-  styl(r.getCell(1),{font:{name:'Arial',size:11,bold:true,color:{argb:W}},fill:fl(D),alignment:{horizontal:'center',vertical:'middle'}});
-  styl(r.getCell(2),{fill:fl(D)});
-  ws.mergeCells(rn,3,rn,7);r.getCell(3).value='Declaración del Impuesto sobre las Ventas - IVA';
-  styl(r.getCell(3),{font:{name:'Arial',size:13,bold:true,color:{argb:D}},alignment:{horizontal:'center',vertical:'middle'}});
-  ws.mergeCells(rn,8,rn,9);r.getCell(8).value='300';
-  styl(r.getCell(8),{font:{name:'Arial',size:22,bold:true,color:{argb:W}},fill:fl(D),alignment:{horizontal:'center',vertical:'middle'}});
-  r.height=32;
-  for(let j=1;j<=9;j++)r.getCell(j).border=brd;
-
-  // Info declarante
-  rn++;r=ws.getRow(rn);
-  ws.mergeCells(rn,1,rn,2);r.getCell(1).value='1. Año';styl(r.getCell(1),{font:{name:'Arial',size:8,color:{argb:'666666'}}});
-  r.getCell(3).value=yr;styl(r.getCell(3),{font:{name:'Arial',size:9,bold:true}});
-  r.getCell(4).value='3. Período';styl(r.getCell(4),{font:{name:'Arial',size:8,color:{argb:'666666'}}});
-  r.getCell(5).value=perLabel;styl(r.getCell(5),{font:{name:'Arial',size:8,bold:true}});
-  ws.mergeCells(rn,6,rn,7);r.getCell(6).value='5. NIT';styl(r.getCell(6),{font:{name:'Arial',size:8,color:{argb:'666666'}}});
-  ws.mergeCells(rn,8,rn,9);r.getCell(8).value=nit;styl(r.getCell(8),{font:{name:'Arial',size:9,bold:true}});
-  for(let j=1;j<=9;j++)r.getCell(j).border=brd;
-
-  rn++;r=ws.getRow(rn);
-  ws.mergeCells(rn,1,rn,2);r.getCell(1).value='11. Razón social';styl(r.getCell(1),{font:{name:'Arial',size:8,color:{argb:'666666'}}});
-  ws.mergeCells(rn,3,rn,9);r.getCell(3).value=emp;styl(r.getCell(3),{font:{name:'Arial',size:10,bold:true}});
-  for(let j=1;j<=9;j++)r.getCell(j).border=brd;
-
-  rn++; // blank separator
-
-  // ---- HELPERS para filas del formulario ----
-  const valCells={}; // casilla -> cell ref para fórmulas
-  // side='L' (cols A-D) o 'R' (cols F-I)
-  function secHeader(label,side){
-    rn++;r=ws.getRow(rn);
-    const startCol=side==='L'?1:6;
-    const endCol=side==='L'?4:9;
-    ws.mergeCells(rn,startCol,rn,endCol);
-    r.getCell(startCol).value=label;
-    styl(r.getCell(startCol),{font:{name:'Arial',size:8,bold:true,color:{argb:D}},fill:fl(LB),border:brd2,alignment:{vertical:'middle'}});
-    for(let j=startCol;j<=endCol;j++)r.getCell(j).border=brd;
-    r.height=16;
-  }
-  function fRowL(sec,cas,label,val,formula){
-    rn++;r=ws.getRow(rn);
-    r.getCell(1).value=sec;styl(r.getCell(1),{font:{name:'Arial',size:7,color:{argb:'999999'},italic:true},alignment:{vertical:'middle',wrapText:true}});
-    r.getCell(2).value=cas;styl(r.getCell(2),{font:{name:'Courier New',size:7,color:{argb:'888888'}},fill:fl('F5F5F5'),alignment:{horizontal:'center',vertical:'middle'}});
-    r.getCell(3).value=label;styl(r.getCell(3),{font:{name:'Arial',size:8},alignment:{vertical:'middle',wrapText:true}});
-    const cellRef='D'+rn;
-    r.getCell(4).value=formula?{formula}:val;
-    styl(r.getCell(4),{font:{name:'Courier New',size:9,bold:!!formula,color:{argb:val||formula?D:'CCCCCC'}},numFmt:'#,##0',alignment:{horizontal:'right',vertical:'middle'}});
-    for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-    valCells[cas]=cellRef;
-    r.height=14;
-    return cellRef;
-  }
-  function fRowR(sec,cas,label,val,formula){
-    // Right-side row — write into cols 6-9 of CURRENT row (same rn as left)
-    r.getCell(6).value=sec;styl(r.getCell(6),{font:{name:'Arial',size:7,color:{argb:'999999'},italic:true},alignment:{vertical:'middle',wrapText:true}});
-    r.getCell(7).value=cas;styl(r.getCell(7),{font:{name:'Courier New',size:7,color:{argb:'888888'}},fill:fl('F5F5F5'),alignment:{horizontal:'center',vertical:'middle'}});
-    r.getCell(8).value=label;styl(r.getCell(8),{font:{name:'Arial',size:8},alignment:{vertical:'middle',wrapText:true}});
-    const cellRef='I'+rn;
-    r.getCell(9).value=formula?{formula}:val;
-    styl(r.getCell(9),{font:{name:'Courier New',size:9,bold:!!formula,color:{argb:val||formula?D:'CCCCCC'}},numFmt:'#,##0',alignment:{horizontal:'right',vertical:'middle'}});
-    for(let j=6;j<=9;j++)r.getCell(j).border=brd;
-    valCells[cas]=cellRef;
-    return cellRef;
-  }
-  function totRowL(sec,cas,label,formula,bg){
-    rn++;r=ws.getRow(rn);
-    r.getCell(1).value=sec;styl(r.getCell(1),{font:{name:'Arial',size:7,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{vertical:'middle'}});
-    r.getCell(2).value=cas;styl(r.getCell(2),{font:{name:'Courier New',size:8,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{horizontal:'center',vertical:'middle'}});
-    r.getCell(3).value=label;styl(r.getCell(3),{font:{name:'Arial',size:8.5,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{vertical:'middle',wrapText:true}});
-    const cellRef='D'+rn;
-    r.getCell(4).value={formula};
-    styl(r.getCell(4),{font:{name:'Courier New',size:10,bold:true,color:{argb:D}},fill:fl(bg||LB),numFmt:'#,##0',alignment:{horizontal:'right',vertical:'middle'}});
-    for(let j=1;j<=4;j++)r.getCell(j).border=brd2;
-    valCells[cas]=cellRef;
-    r.height=16;
-    return cellRef;
-  }
-  function totRowR(sec,cas,label,formula,bg){
-    r.getCell(6).value=sec;styl(r.getCell(6),{font:{name:'Arial',size:7,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{vertical:'middle'}});
-    r.getCell(7).value=cas;styl(r.getCell(7),{font:{name:'Courier New',size:8,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{horizontal:'center',vertical:'middle'}});
-    r.getCell(8).value=label;styl(r.getCell(8),{font:{name:'Arial',size:8.5,bold:true,color:{argb:D}},fill:fl(bg||LB),alignment:{vertical:'middle',wrapText:true}});
-    const cellRef='I'+rn;
-    r.getCell(9).value={formula};
-    styl(r.getCell(9),{font:{name:'Courier New',size:10,bold:true,color:{argb:D}},fill:fl(bg||LB),numFmt:'#,##0',alignment:{horizontal:'right',vertical:'middle'}});
-    for(let j=6;j<=9;j++)r.getCell(j).border=brd2;
-    valCells[cas]=cellRef;
-    return cellRef;
-  }
-  // Left-only row (no right side pair)
-  function rowL(sec,cas,label,val,formula){return fRowL(sec,cas,label,val,formula)}
-  // Right-only row on a NEW row
-  function rowRnew(sec,cas,label,val,formula){
-    rn++;r=ws.getRow(rn);
-    // left side empty
-    for(let j=1;j<=4;j++){r.getCell(j).border=brd;r.getCell(j).value=''}
-    return fRowR(sec,cas,label,val,formula);
+  // Escribir valores calculados con formula+result
+  for(const[k,cell] of Object.entries(calcCells)){
+    const c=ws.getCell(cell);
+    const val=cas[k]||0;
+    if(c.value&&typeof c.value==='object'&&c.value.formula){
+      c.value={formula:c.value.formula,result:val};
+    }else{
+      c.value=val;
+    }
   }
 
-  // ======= COLUMNA IZQUIERDA + DERECHA EN PARALELO =======
-  // Rows: left has ingresos(27-43)+compras(44-57)+imp gen(58-61) = ~40 rows
-  // Right has imp gen(62-67)+descontable(68-81)+liquidación(82-89)+saldos(90-93)+anticipos = ~38 rows
-  // Strategy: write left rows, then go back and fill right side
-
-  const startRow=rn+1;
-
-  // ---- LEFT: INGRESOS (27-43) ----
-  secHeader('Ingresos del período','L');
-  const Lr={};
-  Lr[27]=rowL('Ingresos',27,'Por operaciones gravadas al 5%',c[27]||0);
-  Lr[28]=rowL('',28,'Por operaciones gravadas a la tarifa general',c[28]||0);
-  Lr[29]=rowL('',29,'A.I.U por operaciones gravadas (base gravable especial)',c[29]||0);
-  Lr[30]=rowL('',30,'Por exportación de bienes',c[30]||0);
-  Lr[31]=rowL('',31,'Por exportación de servicios',c[31]||0);
-  Lr[32]=rowL('',32,'Por ventas a soc. de comercialización internacional',c[32]||0);
-  Lr[33]=rowL('',33,'Por ventas a zonas francas',c[33]||0);
-  Lr[34]=rowL('',34,'Por juegos de suerte y azar',c[34]||0);
-  Lr[35]=rowL('',35,'Por operaciones exentas',c[35]||0);
-  Lr[36]=rowL('',36,'Por venta de cerveza de producción nacional o importada',c[36]||0);
-  Lr[37]=rowL('',37,'Por venta de gaseosas y similares',c[37]||0);
-  Lr[38]=rowL('',38,'Por venta de licores, aperitivos, vinos y similares',c[38]||0);
-  Lr[39]=rowL('',39,'Por operaciones excluidas',c[39]||0);
-  Lr[40]=rowL('',40,'Por operaciones no gravadas',c[40]||0);
-  Lr[41]=totRowL('',41,'Total ingresos brutos',`${Lr[27]}+${Lr[28]}+${Lr[29]}+${Lr[30]}+${Lr[31]}+${Lr[32]}+${Lr[33]}+${Lr[34]}+${Lr[35]}+${Lr[36]}+${Lr[37]}+${Lr[38]}+${Lr[39]}+${Lr[40]}`);
-  Lr[42]=rowL('',42,'(-) Devoluciones en ventas anuladas, rescindidas o resueltas',c[42]||0);
-  Lr[43]=totRowL('',43,'Total ingresos netos recibidos durante el período',`${Lr[41]}-${Lr[42]}`,LG);
-
-  // ---- LEFT: COMPRAS IMPORTACIÓN (44-49) ----
-  secHeader('Compras — Importación','L');
-  Lr[44]=rowL('Importación',44,'De bienes gravados a la tarifa del 5%',c[44]||0);
-  Lr[45]=rowL('',45,'De bienes gravados a la tarifa general',c[45]||0);
-  Lr[46]=rowL('',46,'De bienes y servicios gravados provenientes de Zonas Francas',c[46]||0);
-  Lr[47]=rowL('',47,'De bienes no gravados',c[47]||0);
-  Lr[48]=rowL('',48,'De bienes excluidos, exentos y no gravados de Zonas Francas',c[48]||0);
-  Lr[49]=rowL('',49,'De servicios',c[49]||0);
-
-  // ---- LEFT: COMPRAS NACIONALES (50-57) ----
-  secHeader('Compras — Nacionales','L');
-  Lr[50]=rowL('Nacionales',50,'De bienes gravados a la tarifa del 5%',c[50]||0);
-  Lr[51]=rowL('',51,'De bienes gravados a la tarifa general',c[51]||0);
-  Lr[52]=rowL('',52,'De servicios gravados a la tarifa del 5%',c[52]||0);
-  Lr[53]=rowL('',53,'De servicios gravados a la tarifa general',c[53]||0);
-  Lr[54]=rowL('',54,'De bienes y servicios excluidos, exentos y no gravados',c[54]||0);
-  Lr[55]=totRowL('',55,'Total compras e importaciones brutas',`${Lr[44]}+${Lr[45]}+${Lr[46]}+${Lr[47]}+${Lr[48]}+${Lr[49]}+${Lr[50]}+${Lr[51]}+${Lr[52]}+${Lr[53]}+${Lr[54]}`);
-  Lr[56]=rowL('',56,'(-) Devoluciones en compras anuladas, rescindidas o resueltas',c[56]||0);
-  Lr[57]=totRowL('',57,'Total compras netas realizadas durante el período',`${Lr[55]}-${Lr[56]}`,LG);
-
-  // ---- LEFT: IMPUESTO GENERADO izquierdo (58-61) ----
-  secHeader('Liquidación — Impuesto generado','L');
-  Lr[58]=rowL('Impuesto',58,'A la tarifa del 5%',c[58]||0);
-  Lr[59]=rowL('Generado',59,'A la tarifa general',c[59]||0);
-  Lr[60]=rowL('',60,'Sobre A.I.U en operaciones gravadas (base gravable especial)',c[60]||0);
-  Lr[61]=rowL('',61,'En juegos de suerte y azar',c[61]||0);
-
-  const leftEndRow=rn; // last row written on left side
-
-  // ======= NOW FILL RIGHT COLUMN — go back to startRow =======
-  rn=startRow;
-
-  // ---- RIGHT: IMPUESTO GENERADO derecho (62-67) ----
-  // Right section header on same row as left section header
-  r=ws.getRow(rn);
-  ws.mergeCells(rn,6,rn,9);r.getCell(6).value='Impuesto generado (cont.)';
-  styl(r.getCell(6),{font:{name:'Arial',size:8,bold:true,color:{argb:D}},fill:fl(LB),border:brd2});
-  for(let j=6;j<=9;j++)r.getCell(j).border=brd;
-
-  // Row-by-row: left row N already exists, add right data
-  rn++;r=ws.getRow(rn);fRowR('Impuesto',62,'En venta cerveza de producción nacional o importada',c[62]||0);
-  rn++;r=ws.getRow(rn);fRowR('Generado',63,'En venta de gaseosas y similares',c[63]||0);
-  rn++;r=ws.getRow(rn);fRowR('(cont.)',64,'En venta de licores, aperitivos, vinos y similares 5%',c[64]||0);
-  rn++;r=ws.getRow(rn);fRowR('',65,'En retiro de inventario para activos fijos, consumo, muestras o donaciones',c[65]||0);
-  rn++;r=ws.getRow(rn);fRowR('',66,'IVA recuperado en devoluciones en compras anuladas, rescindidas o resueltas',c[66]||0);
-  rn++;r=ws.getRow(rn);totRowR('',67,'Total impuesto generado por operaciones gravadas',`${Lr[58]}+${Lr[59]}+${Lr[60]}+${Lr[61]}+${valCells[62]}+${valCells[63]}+${valCells[64]}+${valCells[65]}+${valCells[66]}`);
-
-  // ---- RIGHT: IMPUESTOS DESCONTABLES (68-81) ----
-  rn++;r=ws.getRow(rn);
-  ws.mergeCells(rn,6,rn,9);r.getCell(6).value='Impuestos descontables';
-  styl(r.getCell(6),{font:{name:'Arial',size:8,bold:true,color:{argb:D}},fill:fl(LB),border:brd2});
-  for(let j=6;j<=9;j++)r.getCell(j).border=brd;
-  // fill left cells as empty
-  for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('Impuesto',68,'Por importaciones gravadas a tarifa del 5%',c[68]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('descontable',69,'Por importaciones gravadas a la tarifa general',c[69]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',70,'De bienes y servicios gravados provenientes de Zonas Francas',c[70]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',71,'Por compras de bienes gravados a la tarifa 5%',c[71]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',72,'Por compras de bienes gravados a tarifa general',c[72]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',73,'Por licores, aperitivos, vinos y similares',c[73]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',74,'Por servicios gravados a la tarifa del 5%',c[74]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',75,'Por servicios gravados a la tarifa general',c[75]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',76,'Descuento IVA exploración hidrocarburos Art. 485-2 ET',c[76]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  totRowR('',77,'Total Impuesto pagado o facturado',`${valCells[68]}+${valCells[69]}+${valCells[70]}+${valCells[71]}+${valCells[72]}+${valCells[73]}+${valCells[74]}+${valCells[75]}+${valCells[76]}`);
-
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',78,'IVA retenido por servicios prestados en Colombia por no domiciliados',c[78]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',79,'IVA resultante por devoluciones en ventas anuladas, rescindidas o resueltas',c[79]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',80,'(-) Ajuste impuestos descontables (pérdidas, hurto o castigo inventarios)',c[80]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  totRowR('',81,'Total impuestos descontables (77+78+79-80)',`${valCells[77]}+${valCells[78]}+${valCells[79]}-${valCells[80]}`,LG);
-
-  // ---- RIGHT: LIQUIDACIÓN PRIVADA (82-89) ----
-  rn++;r=ws.getRow(rn);
-  for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  ws.mergeCells(rn,6,rn,9);r.getCell(6).value='Liquidación privada';
-  styl(r.getCell(6),{font:{name:'Arial',size:8,bold:true,color:{argb:D}},fill:fl(LB),border:brd2});
-  for(let j=6;j<=9;j++)r.getCell(j).border=brd;
-
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  totRowR('Liquidación',82,'Saldo a pagar por el período fiscal',`MAX(0,${valCells[67]}-${valCells[81]})`,YW);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  totRowR('privada',83,'Saldo a favor del período fiscal',`MAX(0,${valCells[81]}-${valCells[67]})`,LG);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',84,'Saldo a favor del período fiscal anterior',c[84]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',85,'Retenciones por IVA que le practicaron',c[85]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  totRowR('',86,'Saldo a pagar por impuesto',`MAX(0,${valCells[82]}-${valCells[84]}-${valCells[85]})`,YW);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  fRowR('',87,'Sanciones',c[87]||0);
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  totRowR('',88,'Total saldo a pagar (86+87)',`${valCells[86]}+${valCells[87]}`,LB);
-  // Style 88 bigger
-  r.getCell(9).font={name:'Courier New',size:12,bold:true,color:{argb:D}};
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  totRowR('',89,'O Total saldo a favor',`IF(${valCells[82]}>0,MAX(0,${valCells[84]}+${valCells[85]}-${valCells[82]}),${valCells[83]}+${valCells[84]}+${valCells[85]})`,LG);
-  r.getCell(9).font={name:'Courier New',size:12,bold:true,color:{argb:G}};
-
-  // ---- RIGHT: PAGO ----
-  rn++;r=ws.getRow(rn);for(let j=1;j<=4;j++)r.getCell(j).border=brd;
-  totRowR('',980,'980. Pago total $',`${valCells[88]}`,LB);
-  r.getCell(9).font={name:'Courier New',size:11,bold:true,color:{argb:D}};
-
-  // Ensure rn is past all rows
-  rn=Math.max(rn,leftEndRow)+2;
-
-  // DISCLAIMER
-  r=ws.getRow(rn);ws.mergeCells(rn,1,rn,9);
-  r.getCell(1).value='BORRADOR — Generado automáticamente por ExógenaDIAN.com. NO es declaración oficial. Verificar antes de presentar a la DIAN vía MUISCA.';
-  r.getCell(1).font={name:'Arial',size:8,italic:true,color:{argb:'999999'}};
-  r.getCell(1).alignment={wrapText:true};
-
-  ws.pageSetup={orientation:'landscape',fitToPage:true,fitToWidth:1};
-
-  // === HOJA 2: CUENTAS DEL BALANCE ===
-  if(mappings.length){
-    const ws2=wb.addWorksheet('Cuentas Balance');
-    ws2.columns=[{width:12},{width:38},{width:12},{width:16},{width:16},{width:16},{width:10}];
-    const fT2={name:'Arial',size:14,bold:true,color:{argb:W}};
-    const fH2={name:'Arial',size:10,bold:true,color:{argb:W}};
-    const fB2={name:'Arial',size:10};
-    const fSec2={name:'Arial',size:9,bold:true,color:{argb:D}};
-    let r2=ws2.addRow(['CUENTAS DEL BALANCE UTILIZADAS','','','','','','']);
-    ws2.mergeCells(r2.number,1,r2.number,7);r2.getCell(1).font=fT2;r2.getCell(1).fill=fl(D);r2.height=26;
-    r2=ws2.addRow([`${emp} — NIT ${nit} — ${perLabel} ${yr}`,'','','','','','']);
-    ws2.mergeCells(r2.number,1,r2.number,7);r2.getCell(1).font={...fB2,color:{argb:W},italic:true};r2.getCell(1).fill=fl(D);
-    ws2.addRow([]);
-    r2=ws2.addRow(['Cuenta','Nombre','Tipo','Débito','Crédito','Neto','Casilla']);
-    r2.eachCell(cl=>{cl.font=fH2;cl.fill=fl(S);cl.border=brd});
-
-    const tipos=['ingreso','dev_venta','compra','dev_compra','generado','descontable','reteiva_favor','reteiva_terc','saldo_favor'];
-    const tipoLabels={ingreso:'INGRESOS',dev_venta:'DEV. VENTAS',compra:'COMPRAS/COSTOS',dev_compra:'DEV. COMPRAS',generado:'IVA GENERADO',descontable:'IVA DESCONTABLE',reteiva_favor:'RETEIVA A FAVOR',reteiva_terc:'RETEIVA PRACTICADA',saldo_favor:'SALDO FAVOR IVA'};
-    tipos.forEach(tipo=>{
-      const items=mappings.filter(m=>m.tipo===tipo&&m.concepto!=='ignorar');
-      if(!items.length)return;
-      r2=ws2.addRow([tipoLabels[tipo]||tipo,'','','','','','']);
-      ws2.mergeCells(r2.number,1,r2.number,7);r2.getCell(1).font=fSec2;r2.getCell(1).fill=fl(LB);
-      items.forEach((m,i)=>{
-        const neto=r1000(m.tipo==='ingreso'||m.tipo==='generado'||m.tipo==='dev_compra'?(m.totalCre-m.totalDeb):
-                         m.tipo==='compra'||m.tipo==='descontable'||m.tipo==='dev_venta'?(m.totalDeb-m.totalCre):
-                         m.tipo==='reteiva_favor'||m.tipo==='saldo_favor'?m.totalDeb:m.totalCre);
-        r2=ws2.addRow([m.code,m.name,m.tipo,r1000(m.totalDeb),r1000(m.totalCre),Math.abs(neto),m.casilla||'']);
-        r2.eachCell(cl=>{cl.font=fB2;cl.border=brd;if(typeof cl.value==='number')cl.numFmt='#,##0'});
-        if(i%2)r2.eachCell(cl=>{cl.fill=fl('F5F8FC')});
-      });
-    });
-  }
-
+  // Descargar
   const buf=await wb.xlsx.writeBuffer();
   const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');
-  a.href=url;a.download=`Borrador_F300_IVA_${yr}_P${document.getElementById('cfgPeriodo').value}.xlsx`;
-  a.click();URL.revokeObjectURL(url);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='F300_IVA_'+yr+'_'+(nit||'SIN_NIT')+'.xlsx';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 /* ═══ CONCILIACIÓN BALANCE vs F300 ═══ */

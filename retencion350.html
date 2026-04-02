@@ -837,37 +837,103 @@ function renderDet(){
 
 /* ═══ EXCEL EXPORT ═══ */
 async function exportXls350(){
-  const c=result350.cas,wb=new ExcelJS.Workbook();
-  const C={h:'1B3A5C',w:'FFFFFF',s:'2E75B6',a:'F2F7FB',g:'E2EFDA',gh:'548235',b:'B4C6E7',t:'D6E4F0'};
-  const tb={style:'thin',color:{argb:C.b}},brd={top:tb,bottom:tb,left:tb,right:tb};
-  const fB={name:'Arial',size:10},fBo={name:'Arial',size:10,bold:true},fH={name:'Arial',size:10,bold:true,color:{argb:C.w}},fT={name:'Arial',size:13,bold:true,color:{argb:C.w}};
-  function fl(a){return{type:'pattern',pattern:'solid',fgColor:{argb:a}}}
-  function sR(ws,r,f,fi,b){r.eachCell({includeEmpty:true},c=>{if(f)c.font=f;if(fi)c.fill=fi;if(b)c.border=b;if(typeof c.value==='number')c.numFmt='#,##0'})}
-  const ws1=wb.addWorksheet('Borrador F350');
-  ws1.columns=[{width:32},{width:18},{width:18},{width:18},{width:18},{width:12}];
-  let r;
-  r=ws1.addRow(['BORRADOR FORMULARIO 350','','','','','']);ws1.mergeCells(r.number,1,r.number,6);sR(ws1,r,fT,fl(C.h),brd);r.height=28;
-  r=ws1.addRow([`${document.getElementById('cfgEmpresa').value} — NIT ${document.getElementById('cfgNit').value} — Período ${document.getElementById('cfgMonth').value}/${document.getElementById('cfgYear').value}`,'','','','','']);ws1.mergeCells(r.number,1,r.number,6);sR(ws1,r,{...fB,color:{argb:C.w},italic:true},fl(C.h),brd);
-  ws1.addRow([]);r=ws1.addRow(['Concepto','Base PJ','Retención PJ','Base PN','Retención PN','Casillas']);sR(ws1,r,fH,fl(C.s),brd);
-  const rows=[['Honorarios',c[29],c[42],c[79],c[95],'29/42/79/95'],['Comisiones',c[30],c[43],c[80],c[96],'30/43/80/96'],['Servicios',c[31],c[44],c[81],c[97],'31/44/81/97'],['Rendimientos',c[32],c[45],c[82],c[98],'32/45/82/98'],['Arrendamientos',c[33],c[46],c[83],c[99],'33/46/83/99'],['Regalías',c[34],c[47],c[84],c[100],'34/47/84/100'],['Dividendos',c[35],c[48],c[85],c[101],'35/48/85/101'],['Compras',c[36],c[49],c[86],c[102],'36/49/86/102'],['Tarjetas',c[37],c[50],c[87],c[103],'37/50/87/103'],['Construcción',c[38],c[51],c[88],c[104],'38/51/88/104'],['Enajenación PN',0,0,c[89],c[105],'89/105'],['Loterías',c[39],c[52],c[90],c[106],'39/52/90/106'],['Hidrocarburos',c[40],c[53],c[91],c[107],'40/53/91/107'],['Otros',c[41],c[54],c[92],c[108],'41/54/92/108'],['Rentas trabajo',0,0,c[77],c[93],'77/93'],['Pensiones',0,0,c[78],c[94],'78/94'],['Exterior sin conv.',c[55],c[57],c[109],c[111],'55/57/109/111'],['Exterior con conv.',c[56],c[58],c[110],c[112],'56/58/110/112'],['Autoret. 114-1',c[59],c[68],0,0,'59/68'],['Autoret. Ventas',c[60],c[69],c[113],c[121],'60/69/113/121'],['Autoret. Servicios',c[63],c[72],c[116],c[124],'63/72/116/124'],['Autoret. Otros',c[67],c[76],c[120],c[128],'67/76/120/128']];
-  rows.forEach((fr,i)=>{r=ws1.addRow(fr);sR(ws1,r,fB,i%2?fl(C.a):null,brd)});
-  ws1.addRow([]);
-  r=ws1.addRow(['Total ret. renta (130)','','','',c[130]||0,'130']);sR(ws1,r,fBo,fl(C.t),brd);
-  r=ws1.addRow(['Total ret. IVA (134)','','','',c[134]||0,'134']);sR(ws1,r,fBo,fl(C.t),brd);
-  r=ws1.addRow(['Timbre (135)','','','',c[135]||0,'135']);sR(ws1,r,fBo,fl(C.t),brd);
-  r=ws1.addRow(['TOTAL RETENCIONES (136)','','','',c[136]||0,'136']);sR(ws1,r,{...fBo,size:11},fl(C.g),brd);
-  r=ws1.addRow(['Sanciones (137)','','','',c[137]||0,'137']);sR(ws1,r,fB,null,brd);
-  r=ws1.addRow(['TOTAL A PAGAR (138)','','','',c[138]||0,'138']);sR(ws1,r,{...fBo,size:12,color:{argb:C.gh}},fl(C.g),brd);
-  const ws2=wb.addWorksheet('Detalle Terceros');
-  ws2.columns=[{width:14},{width:36},{width:8},{width:24},{width:18},{width:18},{width:10},{width:10}];
-  r=ws2.addRow(['DETALLE POR TERCERO','','','','','','','']);ws2.mergeCells(r.number,1,r.number,8);sR(ws2,r,fT,fl(C.h),brd);
-  ws2.addRow([]);r=ws2.addRow(['ID','Tercero','Tipo','Concepto','Base','Retención','Cas.B','Cas.R']);sR(ws2,r,fH,fl(C.s),brd);
-  const ent=Object.values(result350.det).sort((a,b)=>{const tA=Object.values(a.conceptos).reduce((s,cc)=>s+cc.ret,0);const tB=Object.values(b.conceptos).reduce((s,cc)=>s+cc.ret,0);return tB-tA});
-  ent.forEach((e,i)=>{Object.values(e.conceptos).forEach(cc=>{r=ws2.addRow([e.id,e.tercero,e.isPJ?'PJ':'PN',cc.name,cc.base,cc.ret,cc.cb||'',cc.cr||'']);sR(ws2,r,fB,i%2?fl(C.a):null,brd)})});
-  const buf=await wb.xlsx.writeBuffer();const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');
-  a.href=url;a.download=`Borrador_F350_${document.getElementById('cfgYear').value}_${document.getElementById('cfgMonth').value}.xlsx`;
-  a.click();URL.revokeObjectURL(url);
+  const cas=result350.cas;
+  const tplRes=await fetch('template_350.xlsx');
+  if(!tplRes.ok)throw new Error('No se pudo cargar la plantilla del 350.');
+  const wb=new ExcelJS.Workbook();
+  await wb.xlsx.load(await tplRes.arrayBuffer());
+  wb.calcProperties={fullCalcOnLoad:true};
+
+  const ws=wb.getWorksheet('350');
+
+  // Mapa casilla -> celda en la plantilla
+  // PJ Base (col T), PJ Retencion (col AB), PN Base (col AG), PN Retencion (col AV)
+  const map={
+    // PJ Base, PJ Ret, PN Base, PN Ret
+    // Honorarios
+    29:['T19'],42:['AB19'],79:['AG19'],95:['AV19'],
+    // Comisiones
+    30:['T20'],43:['AB20'],80:['AG20'],96:['AV20'],
+    // Servicios
+    31:['T21'],44:['AB21'],81:['AG21'],97:['AV21'],
+    // Rendimientos financieros
+    32:['T22'],45:['AB22'],82:['AG22'],98:['AV22'],
+    // Arrendamientos
+    33:['T23'],46:['AB23'],83:['AG23'],99:['AV23'],
+    // Regalias
+    34:['T24'],47:['AB24'],84:['AG24'],100:['AV24'],
+    // Dividendos
+    35:['T25'],48:['AB25'],85:['AG25'],101:['AV25'],
+    // Compras
+    36:['T26'],49:['AB26'],86:['AG26'],102:['AV26'],
+    // Tarjetas
+    37:['T27'],50:['AB27'],87:['AG27'],103:['AV27'],
+    // Construccion
+    38:['T28'],51:['AB28'],88:['AG28'],104:['AV28'],
+    // Enajenacion activos fijos PN
+    89:['AG29'],105:['AV29'],
+    // Loterias
+    39:['T30'],52:['AB30'],90:['AG30'],106:['AV30'],
+    // Hidrocarburos
+    40:['T31'],53:['AB31'],91:['AG31'],107:['AV31'],
+    // Otros pagos
+    41:['T32'],54:['AB32'],92:['AG32'],108:['AV32'],
+    // Exterior sin convenio
+    55:['T33'],57:['AB33'],109:['AG33'],111:['AV33'],
+    // Exterior con convenio
+    56:['T34'],58:['AB34'],110:['AG34'],112:['AV34'],
+    // Autorretenciones
+    59:['T35'],68:['AB35'],
+    60:['T36'],69:['AB36'],113:['AG36'],121:['AV36'],
+    61:['T37'],70:['AB37'],114:['AG37'],122:['AV37'],
+    62:['T38'],71:['AB38'],115:['AG38'],123:['AV38'],
+    63:['T39'],72:['AB39'],116:['AG39'],124:['AV39'],
+    64:['T40'],73:['AB40'],117:['AG40'],125:['AV40'],
+    65:['T41'],74:['AB41'],118:['AG41'],126:['AV41'],
+    66:['T42'],75:['AB42'],119:['AG42'],127:['AV42'],
+    67:['T43'],76:['AB43'],120:['AG43'],128:['AV43'],
+    // Rentas de trabajo y pensiones PN
+    77:['AG17'],93:['AV17'],
+    78:['AG18'],94:['AV18'],
+    // Resumen
+    129:['AV44'],131:['AV47'],132:['AV48'],133:['AV49'],135:['AV51'],137:['AV53'],
+  };
+
+  // Casillas calculadas (formulas en la plantilla)
+  const calcMap={130:'AV45',134:'AV50',136:'AV52',138:'AV54'};
+
+  // Escribir valores base
+  for(const[k,cells] of Object.entries(map)){
+    const val=cas[k]||0;
+    if(val){
+      for(const cell of cells){
+        ws.getCell(cell).value=val;
+      }
+    }
+  }
+
+  // Escribir valores calculados con formula+result
+  for(const[k,cell] of Object.entries(calcMap)){
+    const c=ws.getCell(cell);
+    const val=cas[k]||0;
+    if(c.value&&typeof c.value==='object'&&c.value.formula){
+      c.value={formula:c.value.formula,result:val};
+    }else{
+      c.value=val;
+    }
+  }
+
+  // Descargar
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const yr=document.getElementById('cfgYear').value;
+  const nit=document.getElementById('cfgNit').value;
+  const mo=document.getElementById('cfgMonth').value;
+  a.href=url;a.download='F350_RTE_'+yr+'_'+mo+'_'+(nit||'SIN_NIT')+'.xlsx';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 /* ═══ NAV ═══ */
