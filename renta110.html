@@ -131,7 +131,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div id="clasifResult" class="hidden" style="margin-top:10px">
       <div id="clasifStats" class="stats" style="margin-bottom:8px"></div>
       <div id="clasifDetail" style="max-height:500px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;font-size:.75rem"></div>
-      <div style="margin-top:8px;text-align:right">
+      <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+        <button onclick="limpiarBalance()" class="btn btn-outline" style="padding:6px 16px;font-size:.8rem;color:var(--red);border-color:var(--red)">Limpiar balance</button>
         <button onclick="aplicarAlFormulario()" class="btn btn-primary" style="padding:8px 20px;font-size:.85rem">Aplicar al Formulario →</button>
       </div>
     </div>
@@ -917,6 +918,21 @@ function mostrarClasificacion(){
 
   h+='</tbody></table>';
   document.getElementById('clasifDetail').innerHTML=h;
+}
+
+function limpiarBalance(){
+  cuentasBalance=[];
+  document.getElementById('clasifResult').classList.add('hidden');
+  document.getElementById('clasifStats').innerHTML='';
+  document.getElementById('clasifDetail').innerHTML='';
+  document.getElementById('balanceCerrado').classList.add('hidden');
+  document.getElementById('fileNameRenta').textContent='';
+  document.getElementById('fileInputRenta').value='';
+  // Limpiar casillas del formulario
+  document.querySelectorAll('.f110-row .f-val input').forEach(inp=>{
+    if(!inp.readOnly){inp.value='';inp.classList.remove('filled')}
+  });
+  recalcular();
 }
 
 function aplicarAlFormulario(){
