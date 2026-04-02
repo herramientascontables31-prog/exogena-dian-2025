@@ -315,7 +315,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <div style="text-align:center;margin-bottom:12px">
     <div id="excelProLock" style="display:inline-block;padding:16px 28px;background:#f8fafc;border:2px dashed var(--border);border-radius:12px">
       <div style="font-size:.85rem;font-weight:600;color:var(--muted);margin-bottom:6px">📊 Descargar Excel con Fórmulas</div>
-      <div style="font-size:.78rem;color:var(--muted);margin-bottom:10px">7 hojas: ESF 2516, ERI 2516, F110 formulado, Impuesto Minimo, Anticipo, Resumen Contable vs Fiscal, Gastos No Deducibles</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-bottom:10px">F110 formato DIAN, Anticipo de Renta, Gastos No Deducibles</div>
       <!-- Estado PRO activo (oculto por defecto) -->
       <div id="proActive" style="display:none;margin-bottom:8px">
         <span style="background:#E8F5E9;color:#2E7D32;padding:4px 12px;border-radius:20px;font-size:.8rem;font-weight:700">PRO activo</span>
@@ -1278,20 +1278,81 @@ async function exportExcel(){
   for(const[cas,cell] of Object.entries(leftMap)){const val=v('c'+cas);if(val)ws.getCell(cell).value=val}
   for(const[cas,cell] of Object.entries(rightMap)){const val=v('c'+cas);if(val)ws.getCell(cell).value=val}
 
-  // Impuesto Minimo: poblar inputs
-  const wsT=wb.getWorksheet('Impuesto minimo')||wb.getWorksheet('Impuesto mínimo');
-  if(wsT){
-    wsT.getCell('D14').value=vTTD('ttdUtilidad');
-    wsT.getCell('D15').value=vTTD('ttdDifPerm');
-    wsT.getCell('D16').value=vTTD('ttdINCRNGO');
-    wsT.getCell('D19').value=vTTD('ttdExentas');
-  }
+  // HOJA 2: ANTICIPO DE RENTA (diseno ExogenaDIAN)
+  const wsAnt=wb.addWorksheet('Anticipo de Renta');
+  wsAnt.properties.showGridLines=false;
+  const fB={name:'Arial',size:10,bold:true},fN={name:'Arial',size:10};
+  const DB='FF1A3C6E',GR='FF059669',WH='FFFFFFFF',GY='FFF3F4F6';
+  const bt={top:{style:'thin',color:{argb:'FFD1D5DB'}},bottom:{style:'thin',color:{argb:'FFD1D5DB'}},left:{style:'thin',color:{argb:'FFD1D5DB'}},right:{style:'thin',color:{argb:'FFD1D5DB'}}};
+  const bk={top:{style:'medium',color:{argb:DB}},bottom:{style:'medium',color:{argb:DB}},left:{style:'medium',color:{argb:DB}},right:{style:'medium',color:{argb:DB}}};
+  const fH={type:'pattern',pattern:'solid',fgColor:{argb:DB}};
+  const fGy={type:'pattern',pattern:'solid',fgColor:{argb:GY}};
+  const fOK={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8F5E9'}};
+  wsAnt.getColumn(1).width=3;wsAnt.getColumn(2).width=48;wsAnt.getColumn(3).width=22;wsAnt.getColumn(4).width=22;wsAnt.getColumn(5).width=22;
 
-  // Anticipo: poblar inputs
-  const wsA=wb.getWorksheet('ANT');
-  if(wsA){wsA.getCell('D11').value=vTTD('antImpNeto')||0}
+  let ra=2;
+  wsAnt.mergeCells('B2:E2');wsAnt.getCell('B2').value='CALCULO DEL ANTICIPO DE RENTA';
+  wsAnt.getCell('B2').font={...fB,size:14,color:{argb:DB}};wsAnt.getCell('B2').alignment={horizontal:'center'};
+  wsAnt.mergeCells('B3:E3');wsAnt.getCell('B3').value='Art. 807-809 ET \u00b7 AG '+year+' \u00b7 '+razon;
+  wsAnt.getCell('B3').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};wsAnt.getCell('B3').alignment={horizontal:'center'};
+  ra=5;
 
-  // Gastos No Deducibles (hoja nueva)
+  wsAnt.getCell('B'+ra).value='DATOS BASE';wsAnt.getCell('B'+ra).font={...fB,color:{argb:WH}};wsAnt.getCell('B'+ra).fill=fH;wsAnt.getCell('B'+ra).border=bt;
+  wsAnt.getCell('C'+ra).value='Valor';wsAnt.getCell('C'+ra).font={...fB,color:{argb:WH}};wsAnt.getCell('C'+ra).fill=fH;wsAnt.getCell('C'+ra).border=bt;wsAnt.getCell('C'+ra).alignment={horizontal:'center'};
+  ra++;
+  const impAct=v('c93')+v('c95');const impAnt=vTTD('antImpNeto')||0;const rets=v('c103');
+  wsAnt.getCell('B'+ra).value='Impuesto neto AG '+year+' (cas. 93+95)';wsAnt.getCell('B'+ra).font=fN;wsAnt.getCell('B'+ra).border=bt;
+  wsAnt.getCell('C'+ra).value=impAct;wsAnt.getCell('C'+ra).numFmt='#,##0';wsAnt.getCell('C'+ra).font=fB;wsAnt.getCell('C'+ra).border=bt;
+  const rIA=ra;ra++;
+  wsAnt.getCell('B'+ra).value='Impuesto neto AG anterior';wsAnt.getCell('B'+ra).font=fN;wsAnt.getCell('B'+ra).border=bt;
+  wsAnt.getCell('C'+ra).value=impAnt;wsAnt.getCell('C'+ra).numFmt='#,##0';wsAnt.getCell('C'+ra).font=fB;wsAnt.getCell('C'+ra).border=bt;
+  const rIB=ra;ra++;
+  wsAnt.getCell('B'+ra).value='Total retenciones AG '+year+' (cas. 103)';wsAnt.getCell('B'+ra).font=fN;wsAnt.getCell('B'+ra).border=bt;
+  wsAnt.getCell('C'+ra).value=rets;wsAnt.getCell('C'+ra).numFmt='#,##0';wsAnt.getCell('C'+ra).font=fB;wsAnt.getCell('C'+ra).border=bt;
+  const rIC=ra;ra+=2;
+
+  ['','Base 75%','(-) Retenciones','Anticipo'].forEach((h,i)=>{
+    wsAnt.getCell(ra,2+i).value=h;wsAnt.getCell(ra,2+i).font={...fB,size:9,color:{argb:WH}};
+    wsAnt.getCell(ra,2+i).fill=fH;wsAnt.getCell(ra,2+i).border=bt;wsAnt.getCell(ra,2+i).alignment={horizontal:'center'};
+  });ra++;
+
+  wsAnt.getCell('B'+ra).value='Opcion 1: 75% imp. neto actual (3er ano+)';wsAnt.getCell('B'+ra).font=fB;wsAnt.getCell('B'+ra).border=bt;wsAnt.getCell('B'+ra).fill=fGy;
+  wsAnt.getCell('C'+ra).value={formula:'ROUND(C'+rIA+'*0.75,-3)'};wsAnt.getCell('C'+ra).numFmt='#,##0';wsAnt.getCell('C'+ra).font=fN;wsAnt.getCell('C'+ra).border=bt;
+  wsAnt.getCell('D'+ra).value={formula:'C'+rIC};wsAnt.getCell('D'+ra).numFmt='#,##0';wsAnt.getCell('D'+ra).font=fN;wsAnt.getCell('D'+ra).border=bt;
+  wsAnt.getCell('E'+ra).value={formula:'MAX(C'+ra+'-D'+ra+',0)'};wsAnt.getCell('E'+ra).numFmt='#,##0';wsAnt.getCell('E'+ra).font=fB;wsAnt.getCell('E'+ra).border=bt;
+  const rO1=ra;ra++;
+
+  wsAnt.getCell('B'+ra).value='Opcion 2: Promedio (2do ano declarando)';wsAnt.getCell('B'+ra).font=fB;wsAnt.getCell('B'+ra).border=bt;
+  wsAnt.getCell('C'+ra).value={formula:'ROUND((C'+rIA+'+C'+rIB+')/2*0.75,-3)'};wsAnt.getCell('C'+ra).numFmt='#,##0';wsAnt.getCell('C'+ra).font=fN;wsAnt.getCell('C'+ra).border=bt;
+  wsAnt.getCell('D'+ra).value={formula:'C'+rIC};wsAnt.getCell('D'+ra).numFmt='#,##0';wsAnt.getCell('D'+ra).font=fN;wsAnt.getCell('D'+ra).border=bt;
+  wsAnt.getCell('E'+ra).value={formula:'MAX(C'+ra+'-D'+ra+',0)'};wsAnt.getCell('E'+ra).numFmt='#,##0';wsAnt.getCell('E'+ra).font=fB;wsAnt.getCell('E'+ra).border=bt;
+  const rO2=ra;ra++;
+
+  wsAnt.getCell('B'+ra).value='Opcion 3: 25% imp. neto actual (1er ano)';wsAnt.getCell('B'+ra).font=fB;wsAnt.getCell('B'+ra).border=bt;wsAnt.getCell('B'+ra).fill=fGy;
+  wsAnt.getCell('C'+ra).value={formula:'ROUND(C'+rIA+'*0.25,-3)'};wsAnt.getCell('C'+ra).numFmt='#,##0';wsAnt.getCell('C'+ra).font=fN;wsAnt.getCell('C'+ra).border=bt;
+  wsAnt.getCell('D'+ra).value={formula:'C'+rIC};wsAnt.getCell('D'+ra).numFmt='#,##0';wsAnt.getCell('D'+ra).font=fN;wsAnt.getCell('D'+ra).border=bt;
+  wsAnt.getCell('E'+ra).value={formula:'MAX(C'+ra+'-D'+ra+',0)'};wsAnt.getCell('E'+ra).numFmt='#,##0';wsAnt.getCell('E'+ra).font=fB;wsAnt.getCell('E'+ra).border=bt;
+  const rO3=ra;ra+=2;
+
+  const met=document.getElementById('antMetodo').value;
+  const mLbl={'75':'Opcion 1 (75%)','promedio':'Opcion 2 (Promedio)','25':'Opcion 3 (25%)','0':'No aplica'};
+  const mRef={'75':'E'+rO1,'promedio':'E'+rO2,'25':'E'+rO3,'0':'0'};
+  wsAnt.mergeCells('B'+ra+':D'+ra);
+  wsAnt.getCell('B'+ra).value='ANTICIPO SELECCIONADO \u2192 Casilla 104';
+  wsAnt.getCell('B'+ra).font={...fB,size:12,color:{argb:WH}};wsAnt.getCell('B'+ra).fill=fH;wsAnt.getCell('B'+ra).border=bk;
+  wsAnt.getCell('E'+ra).fill=fH;wsAnt.getCell('E'+ra).border=bk;
+  ra++;
+  wsAnt.getCell('B'+ra).value='Metodo: '+(mLbl[met]||'75%');wsAnt.getCell('B'+ra).font={...fB,size:11};wsAnt.getCell('B'+ra).border=bk;
+  wsAnt.getCell('E'+ra).value={formula:mRef[met]||'0'};wsAnt.getCell('E'+ra).numFmt='#,##0';
+  wsAnt.getCell('E'+ra).font={...fB,size:14,color:{argb:GR}};wsAnt.getCell('E'+ra).fill=fOK;wsAnt.getCell('E'+ra).border=bk;
+  ra+=2;
+  wsAnt.getCell('B'+ra).value='El contribuyente puede optar por el menor valor (Art. 809 ET)';
+  wsAnt.getCell('B'+ra).font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
+  ra++;
+  wsAnt.getCell('B'+ra).value='ExogenaDIAN \u00b7 exogenadian.com';
+  wsAnt.getCell('B'+ra).font={...fN,size:8,italic:true,color:{argb:'FFD1D5DB'}};
+
+  // HOJA 3: GASTOS NO DEDUCIBLES// Gastos No Deducibles (hoja nueva)
   const noDed=cuentasBalance.filter(c=>c.ded==='no_ded'||c.ded==='gmf');
   if(noDed.length>0){
     const wsG=wb.addWorksheet('Gastos No Deducibles');
