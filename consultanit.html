@@ -382,6 +382,7 @@ let BACKEND_AVAILABLE = false;
 
 // ─── State ───
 let LISTAS = { gc: {}, ar: {}, pf: {}, iv: {} };
+let DIRECTORIO = {}; // Directorio con direcciones
 let fileNits = [];
 let allResults = [];
 
@@ -446,6 +447,15 @@ async function loadLists() {
       console.warn('Error cargando ' + f.url, e);
     }
   }
+  // Cargar directorio con direcciones
+  try {
+    const resp = await fetch('data/directorio.json');
+    if (resp.ok) {
+      const data = await resp.json();
+      DIRECTORIO = data.nits || {};
+      console.log('Directorio cargado: ' + Object.keys(DIRECTORIO).length + ' empresas');
+    }
+  } catch (e) { console.warn('Directorio no disponible', e); }
 }
 
 // ─── Lookup a single NIT against all lists ───
@@ -457,19 +467,36 @@ function lookupNIT(nit) {
   const pf = LISTAS.pf[clean] || null;
   const iv = LISTAS.iv[clean] || null;
 
-  // Get razon social from whichever list has it
+  // Directorio (tiene dirección)
+  const dir = DIRECTORIO[clean] || null;
+
+  // Get razon social: priorizar directorio (tiene dirección), luego listas
   let razonSocial = '';
   let fuente = '';
-  if (gc) { razonSocial = gc.razon_social; fuente = 'Gran Contribuyentes'; }
-  else if (ar) { razonSocial = ar.razon_social; fuente = 'Autorretenedores'; }
-  else if (pf) { razonSocial = pf.razon_social; fuente = 'Proveedores Ficticios'; }
-  else if (iv) { razonSocial = iv.razon_social; fuente = 'Agentes Ret. IVA'; }
+  let direccion = '';
+  let codDepto = '';
+  let codMunicipio = '';
+
+  if (dir) {
+    razonSocial = dir.razon_social;
+    direccion = dir.direccion || '';
+    codDepto = dir.cod_depto || '';
+    codMunicipio = dir.cod_municipio || '';
+    fuente = 'Directorio';
+  }
+  if (!razonSocial && gc) { razonSocial = gc.razon_social; fuente = 'Gran Contribuyentes'; }
+  if (!razonSocial && ar) { razonSocial = ar.razon_social; fuente = 'Autorretenedores'; }
+  if (!razonSocial && pf) { razonSocial = pf.razon_social; fuente = 'Proveedores Ficticios'; }
+  if (!razonSocial && iv) { razonSocial = iv.razon_social; fuente = 'Agentes Ret. IVA'; }
 
   return {
     nit: clean,
     dv: dv,
     nitFormatted: clean + '-' + dv,
     razonSocial: razonSocial,
+    direccion: direccion,
+    codDepto: codDepto,
+    codMunicipio: codMunicipio,
     fuente: fuente,
     esGranContribuyente: !!gc,
     gcResolucion: gc ? gc.resolucion : '',
@@ -480,7 +507,7 @@ function lookupNIT(nit) {
     pfFecha: pf ? pf.fecha : '',
     esAgenteRetenedorIVA: !!iv,
     ivResolucion: iv ? iv.resolucion : '',
-    encontrado: !!(gc || ar || pf || iv)
+    encontrado: !!(gc || ar || pf || iv || dir)
   };
 }
 
@@ -661,6 +688,18 @@ function renderSingleResult(r) {
 
   html += '</div>'; // sr-grid
 
+  // Dirección
+  if (r.direccion) {
+    html += '<div style="margin-top:14px;padding:12px 16px;background:var(--f50);border:1px solid var(--f200);border-radius:10px;display:flex;align-items:flex-start;gap:10px">';
+    html += '<div style="font-size:1.1rem">📍</div>';
+    html += '<div><div style="font-size:.72rem;color:var(--f400);font-weight:600;text-transform:uppercase">Dirección</div>';
+    html += '<div style="font-size:.88rem;font-weight:600;color:var(--f700)">' + esc(r.direccion) + '</div>';
+    if (r.codDepto || r.codMunicipio) {
+      html += '<div style="font-size:.75rem;color:var(--f400);margin-top:2px">Depto: ' + esc(r.codDepto) + ' · Municipio: ' + esc(r.codMunicipio) + '</div>';
+    }
+    html += '</div></div>';
+  }
+
   // Fuente
   if (r.fuente) {
     html += '<div style="margin-top:12px;font-size:.72rem;color:var(--f400)">Fuente: ' + esc(r.fuente) + '</div>';
@@ -755,11 +794,9 @@ function showResults() {
 
   // Table
   let html = '<table class="rtable"><thead><tr>';
-  html += '<th>#</th><th>NIT</th><th>DV</th><th>Razón Social</th>';
+  html += '<th>#</th><th>NIT</th><th>DV</th><th>Razón Social</th><th>Dirección</th>';
   html += '<th style="text-align:center">Gran Contr.</th>';
-  html += '<th style="text-align:center">Autorret.</th>';
   html += '<th style="text-align:center">Prov. Ficticio</th>';
-  html += '<th style="text-align:center">Ret. IVA</th>';
   html += '</tr></thead><tbody>';
 
   for (let i = 0; i < allResults.length; i++) {
@@ -770,10 +807,9 @@ function showResults() {
     html += '<td class="nit-col">' + r.nit + '</td>';
     html += '<td class="nit-col" style="text-align:center">' + r.dv + '</td>';
     html += '<td class="rs-col" title="' + esc(r.razonSocial) + '">' + (r.razonSocial ? esc(r.razonSocial) : '<span style="color:var(--f400);font-style:italic">—</span>') + '</td>';
+    html += '<td class="rs-col" style="font-size:.72rem;color:var(--f500)">' + (r.direccion ? esc(r.direccion) : '—') + '</td>';
     html += '<td style="text-align:center">' + (r.esGranContribuyente ? '<span class="badge badge-si">SÍ</span>' : '<span class="badge badge-no">NO</span>') + '</td>';
-    html += '<td style="text-align:center">' + (r.esAutorretenedor ? '<span class="badge badge-si">SÍ</span>' : '<span class="badge badge-no">NO</span>') + '</td>';
     html += '<td style="text-align:center">' + (r.esProveedorFicticio ? '<span class="badge badge-alert">⚠️ SÍ</span>' : '<span class="badge badge-no">NO</span>') + '</td>';
-    html += '<td style="text-align:center">' + (r.esAgenteRetenedorIVA ? '<span class="badge badge-si">SÍ</span>' : '<span class="badge badge-no">NO</span>') + '</td>';
     html += '</tr>';
   }
   html += '</tbody></table>';
