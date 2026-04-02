@@ -124,15 +124,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <span style="font-size:1.5rem">📊</span>
         <span style="font-weight:600;color:var(--pri);margin-left:8px">Arrastra o haz clic para cargar</span>
         <span style="font-size:.78rem;color:var(--muted);margin-left:8px">Excel o CSV · Alegra, Siigo, WO, Helisa</span>
-        <div id="fileNameRenta" style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--green);font-weight:600"></div>
+        <div id="fileNameRenta" style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--green);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px"></div>
       </div>
     </div>
     <div id="errorBalance" class="hidden" style="margin-top:8px;padding:10px;background:#FFEBEE;border:1px solid #FFCDD2;border-radius:8px;font-size:.82rem;color:#C62828"></div>
     <div id="clasifResult" class="hidden" style="margin-top:10px">
       <div id="clasifStats" class="stats" style="margin-bottom:8px"></div>
       <div id="clasifDetail" style="max-height:500px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;font-size:.75rem"></div>
-      <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
-        <button onclick="limpiarBalance()" class="btn btn-outline" style="padding:6px 16px;font-size:.8rem;color:var(--red);border-color:var(--red)">Limpiar balance</button>
+      <div style="margin-top:8px;text-align:right">
         <button onclick="aplicarAlFormulario()" class="btn btn-primary" style="padding:8px 20px;font-size:.85rem">Aplicar al Formulario →</button>
       </div>
     </div>
@@ -366,7 +365,7 @@ function procesarBalance(file){
       }
       if(!best||bestN<5){alert('Archivo vacio o sin datos suficientes');return}
 
-      document.getElementById('fileNameRenta').textContent=file.name+' · '+bestN+' filas · hoja: '+best.sn;
+      document.getElementById('fileNameRenta').innerHTML=file.name+' · '+bestN+' filas · hoja: '+best.sn+'<button onclick="event.stopPropagation();limpiarBalance()" style="background:none;border:1px solid #EF4444;color:#EF4444;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;margin-left:6px" title="Borrar balance">✕</button>';
 
       // Auto-detect columns
       const data=best.raw.filter(r=>r.some(c=>c!==''&&c!=null));
@@ -926,7 +925,7 @@ function limpiarBalance(){
   document.getElementById('clasifStats').innerHTML='';
   document.getElementById('clasifDetail').innerHTML='';
   document.getElementById('balanceCerrado').classList.add('hidden');
-  document.getElementById('fileNameRenta').textContent='';
+  document.getElementById('fileNameRenta').innerHTML='';
   document.getElementById('fileInputRenta').value='';
   // Limpiar casillas del formulario
   document.querySelectorAll('.f110-row .f-val input').forEach(inp=>{
