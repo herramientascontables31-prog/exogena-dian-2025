@@ -878,17 +878,24 @@ async function activarProNav(){
   const inp=document.getElementById('proNavKey');
   const val=inp?inp.value.trim().toLowerCase():'';
   if(!val){alert('Ingresa tu email PRO');return}
+  // Loading state
+  const btn=inp.nextElementSibling;
+  const btnText=btn?btn.textContent:'';
+  if(btn){btn.textContent='Verificando...';btn.disabled=true}
   inp.style.borderColor='var(--green-400)';
   inp.disabled=true;
+  const t0=Date.now();
   try{
     const fp=getDeviceFingerprint();
-    // Intentar por email primero, si falla intentar por clave (retrocompatibilidad)
     const isEmail=val.includes('@');
     const action=isEmail?'validateEmail':'validateKey';
     const param=isEmail?'email':'key';
     const url=PRO_API+'?action='+action+'&'+param+'='+encodeURIComponent(val)+'&device='+encodeURIComponent(fp);
     const res=await fetch(url);
     const data=await res.json();
+    // Esperar mínimo 1s para dar feedback visual
+    const elapsed=Date.now()-t0;
+    if(elapsed<1000) await new Promise(r=>setTimeout(r,1000-elapsed));
     if(data.valid){
       if(isEmail){localStorage.setItem('exogenadian_pro_email',val)}
       else{localStorage.setItem('exogenadian_pro_key',val)}
@@ -903,7 +910,7 @@ async function activarProNav(){
       alert(msg);
     }
   }catch(e){console.error('[PRO] Error:',e);alert('Error de conexión: '+e.message)}
-  finally{if(inp)inp.disabled=false}
+  finally{if(inp)inp.disabled=false;if(btn){btn.textContent=btnText;btn.disabled=false}}
 }
 
 // Auto-check al cargar

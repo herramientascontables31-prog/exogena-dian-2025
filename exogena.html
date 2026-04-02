@@ -1862,17 +1862,30 @@ function updateProUI(){
 }
 
 async function activarPro(){
-  const val=document.getElementById('proKeyInput')?.value?.trim()?.toLowerCase();
+  const inp=document.getElementById('proKeyInput');
+  const val=inp?.value?.trim()?.toLowerCase();
   if(!val){alert('Ingresa tu email PRO');return}
-  const valid=await validarPro(val);
-  if(valid){
-    proUnlocked=true;
-    if(val.includes('@')){localStorage.setItem('exogenadian_pro_email',val)}
-    else{localStorage.setItem('exogenadian_pro_key',val)}
-    updateProUI();
-    alert('PRO activado correctamente');
-  }else{
-    alert('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com');
+  const btn=inp.closest('div')?.querySelector('button[onclick*="activarPro"]');
+  const btnText=btn?btn.textContent:'';
+  if(btn){btn.textContent='Verificando...';btn.disabled=true}
+  if(inp) inp.disabled=true;
+  const t0=Date.now();
+  try{
+    const valid=await validarPro(val);
+    const elapsed=Date.now()-t0;
+    if(elapsed<1000) await new Promise(r=>setTimeout(r,1000-elapsed));
+    if(valid){
+      proUnlocked=true;
+      if(val.includes('@')){localStorage.setItem('exogenadian_pro_email',val)}
+      else{localStorage.setItem('exogenadian_pro_key',val)}
+      updateProUI();
+      alert('PRO activado correctamente');
+    }else{
+      alert('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com');
+    }
+  }finally{
+    if(inp) inp.disabled=false;
+    if(btn){btn.textContent=btnText;btn.disabled=false}
   }
 }
 

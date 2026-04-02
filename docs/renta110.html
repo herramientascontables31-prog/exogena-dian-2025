@@ -1221,10 +1221,12 @@ async function descargarPro(){
   // Primera vez: validar email/clave
   const key=document.getElementById('proKey').value.trim().toLowerCase();
   if(!key){errEl.textContent='Ingresa tu email PRO';errEl.style.color='var(--red)';return}
-  errEl.textContent='Verificando...';errEl.style.color='var(--muted)';
-
+  errEl.textContent='Verificando suscripción...';errEl.style.color='var(--muted)';
+  const t0=Date.now();
   try{
     const data=await validarClaveServidor(key);
+    const elapsed=Date.now()-t0;
+    if(elapsed<1000) await new Promise(r=>setTimeout(r,1000-elapsed));
     if(data.valid){
       if(key.includes('@')){localStorage.setItem('exogenadian_pro_email',key)}
       else{localStorage.setItem('exogenadian_pro_key',key)}
