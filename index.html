@@ -323,11 +323,12 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
     <a href="retencion350.html">Retención 350</a>
     <a href="estadosfinancieros.html">Estados Financieros</a>
     <a href="conciliacion.html">Conciliación</a>
+    <a href="consultanit.html">Consulta NIT</a>
     <a href="vencimientos.html">Vencimientos</a>
     <a href="sanciones.html">Sanciones</a>
     <!-- PRO: login o badge -->
     <div id="proNavLogin" style="display:flex;align-items:center;gap:6px">
-      <input type="text" id="proNavKey" placeholder="Clave PRO" style="padding:5px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:.78rem;font-family:inherit;width:130px;text-align:center">
+      <input type="email" id="proNavKey" placeholder="Email PRO" style="padding:5px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:.78rem;font-family:inherit;width:170px;text-align:center">
       <button onclick="activarProNav()" style="padding:5px 10px;background:var(--green-600);color:#fff;border:none;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer">Activar</button>
     </div>
     <div id="proNavActive" style="display:none;align-items:center;gap:8px">
@@ -430,6 +431,12 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       <h3 style="font-size:.95rem;font-weight:700">Conciliación Bancaria</h3>
       <p style="font-size:.8rem;color:var(--gray-500);line-height:1.4">Extracto vs libro auxiliar automático</p>
       <span style="font-size:.72rem;font-weight:700;color:#06B6D4">Gratis</span>
+    </a>
+    <a href="consultanit.html" style="text-decoration:none;color:inherit;background:var(--white);border-radius:14px;padding:20px 18px;border:1.5px solid var(--gray-200);transition:all .3s;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px" onmouseover="this.style.borderColor='var(--purple-500)';this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.borderColor='var(--gray-200)';this.style.transform='none';this.style.boxShadow='none'">
+      <div class="tool-icon" style="width:44px;height:44px;font-size:1.2rem;margin-bottom:0;background:var(--purple-50);border-radius:12px;display:grid;place-items:center">🔍</div>
+      <h3 style="font-size:.95rem;font-weight:700">Consulta de NIT</h3>
+      <p style="font-size:.8rem;color:var(--gray-500);line-height:1.4">Valida terceros: Gran Contribuyente, Autorretenedor, Prov. Ficticio</p>
+      <span style="font-size:.72rem;font-weight:700;color:var(--purple-500)">Gratis</span>
     </a>
     <a href="sanciones.html" style="text-decoration:none;color:inherit;background:var(--white);border-radius:14px;padding:20px 18px;border:1.5px solid var(--gray-200);transition:all .3s;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px" onmouseover="this.style.borderColor='var(--amber-500)';this.style.transform='translateY(-3px)';this.style.boxShadow='var(--shadow-lg)'" onmouseout="this.style.borderColor='var(--gray-200)';this.style.transform='none';this.style.boxShadow='none'">
       <div class="tool-icon tmi-amber" style="width:44px;height:44px;font-size:1.2rem;margin-bottom:0">⚖️</div>
@@ -707,6 +714,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
         <a href="iva300.html">Declaración de IVA</a>
         <a href="estadosfinancieros.html">Estados Financieros</a>
         <a href="conciliacion.html">Conciliación Bancaria</a>
+        <a href="consultanit.html">Consulta de NIT</a>
         <a href="sanciones.html">Sanciones Exógena</a>
         <a href="blog.html">Blog — Recursos</a>
       </div>
@@ -859,6 +867,7 @@ function showProNav(){
 }
 
 function cerrarProNav(){
+  localStorage.removeItem('exogenadian_pro_email');
   localStorage.removeItem('exogenadian_pro_key');
   document.getElementById('proNavLogin').style.display='flex';
   document.getElementById('proNavActive').style.display='none';
@@ -867,48 +876,54 @@ function cerrarProNav(){
 
 async function activarProNav(){
   const inp=document.getElementById('proNavKey');
-  const key=inp?inp.value.trim():'';
-  if(!key){alert('Ingresa tu clave PRO');return}
+  const val=inp?inp.value.trim().toLowerCase():'';
+  if(!val){alert('Ingresa tu email PRO');return}
   inp.style.borderColor='var(--green-400)';
   inp.disabled=true;
   try{
     const fp=getDeviceFingerprint();
-    const url=PRO_API+'?action=validateKey&key='+encodeURIComponent(key)+'&device='+encodeURIComponent(fp);
-    console.log('[PRO] Validando clave...');
+    // Intentar por email primero, si falla intentar por clave (retrocompatibilidad)
+    const isEmail=val.includes('@');
+    const action=isEmail?'validateEmail':'validateKey';
+    const param=isEmail?'email':'key';
+    const url=PRO_API+'?action='+action+'&'+param+'='+encodeURIComponent(val)+'&device='+encodeURIComponent(fp);
     const res=await fetch(url);
     const data=await res.json();
-    console.log('[PRO] Respuesta:',data);
     if(data.valid){
-      localStorage.setItem('exogenadian_pro_key',key);
+      if(isEmail){localStorage.setItem('exogenadian_pro_email',val)}
+      else{localStorage.setItem('exogenadian_pro_key',val)}
       localStorage.setItem('exogenadian_pro_lastcheck',Date.now().toString());
       showProNav();
-      console.log('[PRO] Activado OK');
     }else{
       inp.style.borderColor='#EF4444';
-      const msg=data.reason==='Clave expirada'?'Clave expirada ('+data.expiry+')'
-        :data.reason==='Clave cancelada'?'Clave cancelada'
-        :data.reason&&data.reason.includes('dispositivos')?'Limite de dispositivos'
-        :'Clave no encontrada';
-      alert(msg+'. Verifica o suscribete en exogenadian.com');
+      const msg=data.reason==='Clave expirada'||data.reason==='Suscripción expirada'?'Suscripción expirada'
+        :data.reason&&data.reason.includes('dispositivos')?'Límite de dispositivos (máx 2)'
+        :data.reason&&data.reason.includes('No se encontró')?'No hay suscripción activa para este email'
+        :data.reason||'No encontrado';
+      alert(msg);
     }
-  }catch(e){console.error('[PRO] Error:',e);alert('Error de conexion: '+e.message)}
+  }catch(e){console.error('[PRO] Error:',e);alert('Error de conexión: '+e.message)}
   finally{if(inp)inp.disabled=false}
 }
 
-// Auto-check al cargar — con try/catch global para no romper nada
+// Auto-check al cargar
 try{
-  const saved=localStorage.getItem('exogenadian_pro_key');
+  const savedEmail=localStorage.getItem('exogenadian_pro_email');
+  const savedKey=localStorage.getItem('exogenadian_pro_key');
+  const saved=savedEmail||savedKey;
   if(!saved){
     const sub=document.getElementById('proNavSubscribe');if(sub)sub.style.display='';
   }else{
-    const inp=document.getElementById('proNavKey');if(inp)inp.value=saved;
     (async()=>{
       try{
         const fp=getDeviceFingerprint();
-        const res=await fetch(PRO_API+'?action=validateKey&key='+encodeURIComponent(saved)+'&device='+encodeURIComponent(fp));
+        const isEmail=!!savedEmail;
+        const action=isEmail?'validateEmail':'validateKey';
+        const param=isEmail?'email':'key';
+        const res=await fetch(PRO_API+'?action='+action+'&'+param+'='+encodeURIComponent(saved)+'&device='+encodeURIComponent(fp));
         const data=await res.json();
         if(data.valid){showProNav()}
-        else{localStorage.removeItem('exogenadian_pro_key');const s=document.getElementById('proNavSubscribe');if(s)s.style.display=''}
+        else{localStorage.removeItem('exogenadian_pro_email');localStorage.removeItem('exogenadian_pro_key');const s=document.getElementById('proNavSubscribe');if(s)s.style.display=''}
       }catch(e){
         const last=localStorage.getItem('exogenadian_pro_lastcheck');
         if(last&&Date.now()-parseInt(last)<86400000){showProNav()}

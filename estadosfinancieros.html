@@ -170,7 +170,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <span style="font-size:.85rem;color:var(--muted)" id="proStatus">Versión gratuita — Algunas funciones requieren PRO</span>
     </div>
     <div style="display:flex;gap:8px;align-items:center" id="proActivation">
-      <input type="text" id="proKeyInput" placeholder="Clave PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:140px">
+      <input type="text" id="proKeyInput" placeholder="Email PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:140px">
       <button onclick="activarPro()" class="btn btn-primary" style="padding:6px 16px;font-size:.82rem">Activar</button>
       <a href="https://exogenadian.com/#planes" target="_blank" style="font-size:.78rem;color:var(--pri2);text-decoration:none">Suscribirse →</a>
     </div>
@@ -383,7 +383,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <h3 style="font-size:1.1rem;margin-bottom:8px;color:#92400E">Versión PRO</h3>
         <p style="color:#A16207;font-size:.85rem;max-width:500px;margin:0 auto 12px">Desbloquea: <strong>Notas a los Estados Financieros</strong> autogeneradas con detalle por cuenta, estados financieros <strong>comparativos</strong> (año vs año) y descarga Word completa con notas.</p>
         <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:16px">
-          <input type="text" id="proKeyInputPaywall" placeholder="Clave PRO" style="padding:8px 14px;border:1px solid #D97706;border-radius:8px;font-size:.85rem;width:160px">
+          <input type="text" id="proKeyInputPaywall" placeholder="Email PRO" style="padding:8px 14px;border:1px solid #D97706;border-radius:8px;font-size:.85rem;width:160px">
           <button onclick="activarProFromPaywall()" class="btn btn-primary" style="padding:8px 18px;font-size:.85rem;background:#D97706;border-color:#D97706">Activar</button>
         </div>
         <div style="max-width:260px;margin:0 auto">
@@ -413,37 +413,34 @@ function getDeviceFingerprint(){
   return uid;
 }
 
-async function validarClavePro(clave){
+async function validarPro(valor){
   try{
     const fp=getDeviceFingerprint();
-    const url=APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(clave)+'&device='+encodeURIComponent(fp);
+    const isEmail=valor.includes('@');
+    const action=isEmail?'validateEmail':'validateKey';
+    const param=isEmail?'email':'key';
+    const url=APPS_SCRIPT_URL+'?action='+action+'&'+param+'='+encodeURIComponent(valor)+'&device='+encodeURIComponent(fp);
     const resp=await fetch(url);
     const data=await resp.json();
-    if(data.valid){
-      if(data.daysLeft&&data.daysLeft<=3){
-        console.log('PRO vence en '+data.daysLeft+' día(s) — '+data.expiry);
-      }
-      return true;
-    }
+    if(data.valid) return true;
     if(data.reason)console.warn('PRO rechazado:',data.reason);
   }catch(e){console.error('Error validando PRO:',e)}
   return false;
 }
 
 async function revalidarPro(){
-  const k=localStorage.getItem('exogenadian_pro_key');
+  const k=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');
   if(!k||!proUnlocked)return false;
-  return await validarClavePro(k);
+  return await validarPro(k);
 }
 
 async function initPro(){
-  const savedKey=localStorage.getItem('exogenadian_pro_key');
-  if(savedKey){
-    const valid=await validarClavePro(savedKey);
+  const saved=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');
+  if(saved){
+    const valid=await validarPro(saved);
     if(valid){proUnlocked=true;updateProUI();return}
-    else{localStorage.removeItem('exogenadian_pro_key')}
+    else{localStorage.removeItem('exogenadian_pro_email');localStorage.removeItem('exogenadian_pro_key')}
   }
-  /* bypass ?pro=1 eliminado por seguridad */
 }
 
 function updateProUI(){
@@ -463,30 +460,32 @@ function updateProUI(){
 }
 
 async function activarPro(){
-  const clave=document.getElementById('proKeyInput')?.value?.trim();
-  if(!clave){alert('Ingresa tu clave PRO');return}
-  const valid=await validarClavePro(clave);
+  const val=document.getElementById('proKeyInput')?.value?.trim()?.toLowerCase();
+  if(!val){alert('Ingresa tu email PRO');return}
+  const valid=await validarPro(val);
   if(valid){
     proUnlocked=true;
-    localStorage.setItem('exogenadian_pro_key',clave);
+    if(val.includes('@')){localStorage.setItem('exogenadian_pro_email',val)}
+    else{localStorage.setItem('exogenadian_pro_key',val)}
     updateProUI();
-    alert('✅ PRO activado correctamente');
+    alert('PRO activado correctamente');
   }else{
-    alert('❌ Clave inválida o inactiva. Verifica tu clave o suscríbete en exogenadian.com');
+    alert('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com');
   }
 }
 
 async function activarProFromPaywall(){
-  const clave=document.getElementById('proKeyInputPaywall')?.value?.trim();
-  if(!clave){alert('Ingresa tu clave PRO');return}
-  const valid=await validarClavePro(clave);
+  const val=document.getElementById('proKeyInputPaywall')?.value?.trim()?.toLowerCase();
+  if(!val){alert('Ingresa tu email PRO');return}
+  const valid=await validarPro(val);
   if(valid){
     proUnlocked=true;
-    localStorage.setItem('exogenadian_pro_key',clave);
+    if(val.includes('@')){localStorage.setItem('exogenadian_pro_email',val)}
+    else{localStorage.setItem('exogenadian_pro_key',val)}
     updateProUI();
-    alert('✅ PRO activado correctamente');
+    alert('PRO activado correctamente');
   }else{
-    alert('❌ Clave inválida o inactiva. Verifica tu clave o suscríbete en exogenadian.com');
+    alert('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com');
   }
 }
 

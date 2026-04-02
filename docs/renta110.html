@@ -98,10 +98,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 </head>
 <body>
 <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:'DM Sans',sans-serif">
-  <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem"><div style="width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900">E</div>ExogenaDIAN</a>
-  <div style="display:flex;gap:16px;align-items:center">
-    <a href="exogena.html" style="font-size:.82rem;color:#059669;text-decoration:none;font-weight:600">Exogena</a>
+  <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem"><div style="width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900">E</div>ExógenaDIAN</a>
+  <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    <a href="exogena.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Exógena</a>
+    <a href="renta110.html" style="font-size:.82rem;color:#059669;text-decoration:none;font-weight:700">Renta 110</a>
     <a href="iva300.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">IVA 300</a>
+    <a href="retencion350.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Ret 350</a>
+    <a href="estadosfinancieros.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">EEFF</a>
+    <a href="conciliacion.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Conciliación</a>
     <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">← Inicio</a>
   </div>
 </div>
@@ -322,7 +326,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
       <!-- Input clave (visible cuando no hay sesion PRO) -->
       <div id="proKeyBox">
-        <input type="text" id="proKey" placeholder="Ingresa tu clave PRO" style="padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;width:220px;text-align:center">
+        <input type="email" id="proKey" placeholder="Ingresa tu email PRO" style="padding:8px 14px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit;width:240px;text-align:center">
       </div>
       <button id="btnDescargar" onclick="btnLoading(this,descargarPro)" class="btn btn-success" style="padding:8px 20px;margin-top:8px">Descargar Excel</button>
       <div id="proError" style="margin-top:6px;font-size:.75rem;color:var(--red)"></div>
@@ -1151,46 +1155,48 @@ function showProActive(){
   proUnlocked=true;
   document.getElementById('proActive').style.display='';
   document.getElementById('proKeyBox').style.display='none';
-  document.getElementById('proSubscribeLink').innerHTML='<a href="#" onclick="cerrarSesionPro();return false" style="font-size:.72rem;color:var(--muted);text-decoration:none">Cambiar clave PRO</a>';
+  document.getElementById('proSubscribeLink').innerHTML='<a href="#" onclick="cerrarSesionPro();return false" style="font-size:.72rem;color:var(--muted);text-decoration:none">Cambiar email PRO</a>';
   document.getElementById('proError').textContent='';
   const badge=document.getElementById('proBadgeHeader');if(badge)badge.style.display='';
 }
 
 // Cerrar sesion PRO
 function cerrarSesionPro(){
+  localStorage.removeItem('exogenadian_pro_email');
   localStorage.removeItem('exogenadian_pro_key');
   proUnlocked=false;
   document.getElementById('proActive').style.display='none';
   document.getElementById('proKeyBox').style.display='';
   document.getElementById('proKey').value='';
-  document.getElementById('proSubscribeLink').innerHTML='<a href="index.html#planes" style="font-size:.78rem;color:#059669;font-weight:600;text-decoration:none">¿No tienes clave? Suscríbete PRO →</a>';
+  document.getElementById('proSubscribeLink').innerHTML='<a href="index.html#planes" style="font-size:.78rem;color:#059669;font-weight:600;text-decoration:none">¿No tienes cuenta? Suscríbete PRO →</a>';
 }
 
-// Validar clave contra el servidor
-async function validarClaveServidor(key){
+// Validar contra el servidor (email o clave)
+async function validarClaveServidor(valor){
   const fp=getDeviceFingerprint();
-  const url=APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(key)+'&device='+encodeURIComponent(fp);
+  const isEmail=valor.includes('@');
+  const action=isEmail?'validateEmail':'validateKey';
+  const param=isEmail?'email':'key';
+  const url=APPS_SCRIPT_URL+'?action='+action+'&'+param+'='+encodeURIComponent(valor)+'&device='+encodeURIComponent(fp);
   const res=await fetch(url);
   return await res.json();
 }
 
-// Auto-validar al cargar si hay clave guardada
+// Auto-validar al cargar
 async function autoValidarPro(){
-  const saved=localStorage.getItem('exogenadian_pro_key');
+  const saved=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');
   if(!saved)return;
   try{
     const data=await validarClaveServidor(saved);
     if(data.valid){
-      document.getElementById('proKey').value=saved;
       showProActive();
     }else{
+      localStorage.removeItem('exogenadian_pro_email');
       localStorage.removeItem('exogenadian_pro_key');
     }
   }catch(e){
-    // Si falla la conexion, confiar en la clave guardada por 24h
     const lastCheck=localStorage.getItem('exogenadian_pro_lastcheck');
     if(lastCheck&&Date.now()-parseInt(lastCheck)<86400000){
-      document.getElementById('proKey').value=saved;
       showProActive();
     }
   }
@@ -1212,16 +1218,16 @@ async function descargarPro(){
     return;
   }
 
-  // Primera vez: validar clave
-  const key=document.getElementById('proKey').value.trim();
-  if(!key){errEl.textContent='Ingresa tu clave PRO';errEl.style.color='var(--red)';return}
+  // Primera vez: validar email/clave
+  const key=document.getElementById('proKey').value.trim().toLowerCase();
+  if(!key){errEl.textContent='Ingresa tu email PRO';errEl.style.color='var(--red)';return}
   errEl.textContent='Verificando...';errEl.style.color='var(--muted)';
 
   try{
     const data=await validarClaveServidor(key);
     if(data.valid){
-      // Guardar sesion
-      localStorage.setItem('exogenadian_pro_key',key);
+      if(key.includes('@')){localStorage.setItem('exogenadian_pro_email',key)}
+      else{localStorage.setItem('exogenadian_pro_key',key)}
       localStorage.setItem('exogenadian_pro_lastcheck',Date.now().toString());
       showProActive();
       // Generar Excel

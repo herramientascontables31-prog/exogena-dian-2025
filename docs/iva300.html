@@ -165,9 +165,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <body>
 <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:'DM Sans',sans-serif">
   <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem"><div style="width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900">E</div>ExógenaDIAN</a>
-  <div style="display:flex;gap:16px;align-items:center">
-    <a href="exogena.html" style="font-size:.82rem;color:#059669;text-decoration:none;font-weight:600">Exógena</a>
+  <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    <a href="exogena.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Exógena</a>
+    <a href="renta110.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Renta 110</a>
+    <a href="iva300.html" style="font-size:.82rem;color:#059669;text-decoration:none;font-weight:700">IVA 300</a>
     <a href="retencion350.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Ret 350</a>
+    <a href="estadosfinancieros.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">EEFF</a>
+    <a href="conciliacion.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Conciliación</a>
     <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">← Inicio</a>
   </div>
 </div>
@@ -184,7 +188,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <span style="font-size:.85rem;color:var(--muted)" id="proStatus">Versión gratuita — Algunas funciones requieren PRO</span>
     </div>
     <div style="display:flex;gap:8px;align-items:center" id="proActivation">
-      <input type="text" id="proKeyInput" placeholder="Clave PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:140px">
+      <input type="email" id="proKeyInput" placeholder="Email PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:180px">
       <button onclick="activarPro()" class="btn btn-primary" style="padding:6px 16px;font-size:.82rem">Activar</button>
       <a href="https://exogenadian.com/#planes" target="_blank" style="font-size:.78rem;color:var(--pri2);text-decoration:none">Suscribirse →</a>
     </div>
@@ -231,7 +235,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <h3 style="font-size:1.1rem;margin-bottom:8px;color:#92400E">Función PRO</h3>
         <p style="color:#A16207;font-size:.85rem;max-width:400px;margin:0 auto 16px">Accede al análisis con facturación electrónica DIAN. Paga y se activa automáticamente, o ingresa tu clave PRO.</p>
         <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:16px">
-          <input type="text" id="proKeyInputPaywall" placeholder="Clave PRO" style="padding:8px 14px;border:1px solid #D97706;border-radius:8px;font-size:.85rem;width:160px">
+          <input type="email" id="proKeyInputPaywall" placeholder="Email PRO" style="padding:8px 14px;border:1px solid #D97706;border-radius:8px;font-size:.85rem;width:200px">
           <button onclick="activarProFromPaywall()" class="btn btn-primary" style="padding:8px 18px;font-size:.85rem;background:#D97706;border-color:#D97706">Activar</button>
         </div>
         <div style="max-width:260px;margin:0 auto">
@@ -648,43 +652,40 @@ function getDeviceFingerprint(){
   return uid;
 }
 
-async function validarClavePro(clave){
+async function validarPro(valor){
   try{
     const fp=getDeviceFingerprint();
-    const url=APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(clave)+'&device='+encodeURIComponent(fp);
+    const isEmail=valor.includes('@');
+    const action=isEmail?'validateEmail':'validateKey';
+    const param=isEmail?'email':'key';
+    const url=APPS_SCRIPT_URL+'?action='+action+'&'+param+'='+encodeURIComponent(valor)+'&device='+encodeURIComponent(fp);
     const resp=await fetch(url,{redirect:'follow',mode:'cors'});
     const txt=await resp.text();
     const data=JSON.parse(txt);
-    if(data.valid){
-      if(data.daysLeft&&data.daysLeft<=3){
-        console.log('PRO vence en '+data.daysLeft+' día(s) — '+data.expiry);
-      }
-      return true;
-    }
+    if(data.valid) return true;
     if(data.reason)console.warn('PRO rechazado:',data.reason);
   }catch(e){console.error('Error validando PRO:',e)}
   return false;
 }
 
 async function revalidarPro(){
-  const k=localStorage.getItem('exogenadian_pro_key');
+  const k=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');
   if(!k||!proUnlocked)return false;
-  return await validarClavePro(k);
+  return await validarPro(k);
 }
 
 async function initPro(){
-  const savedKey=localStorage.getItem('exogenadian_pro_key');
-  if(savedKey){
-    const valid=await validarClavePro(savedKey);
+  const saved=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');
+  if(saved){
+    const valid=await validarPro(saved);
     if(valid){proUnlocked=true;updateProUI();return}
-    else{localStorage.removeItem('exogenadian_pro_key')}
+    else{localStorage.removeItem('exogenadian_pro_email');localStorage.removeItem('exogenadian_pro_key')}
   }
-  /* bypass ?pro=1 eliminado por seguridad */
 }
 
 function updateProUI(){
   const badge=document.getElementById('proBadge');
-  if(badge) badge.innerHTML=proUnlocked?'<span style="background:#059669;color:#fff;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700">✅ PRO activo</span>':'';
+  if(badge) badge.innerHTML=proUnlocked?'<span style="background:#059669;color:#fff;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700">PRO activo</span>':'';
   const status=document.getElementById('proStatus');
   if(status) status.textContent=proUnlocked?'Todas las funciones desbloqueadas':'Versión gratuita — Algunas funciones requieren PRO';
   const activation=document.getElementById('proActivation');
@@ -694,30 +695,32 @@ function updateProUI(){
 }
 
 async function activarPro(){
-  const clave=document.getElementById('proKeyInput')?.value?.trim();
-  if(!clave){alert('Ingresa tu clave PRO');return}
-  const valid=await validarClavePro(clave);
+  const val=document.getElementById('proKeyInput')?.value?.trim()?.toLowerCase();
+  if(!val){alert('Ingresa tu email PRO');return}
+  const valid=await validarPro(val);
   if(valid){
     proUnlocked=true;
-    localStorage.setItem('exogenadian_pro_key',clave);
+    if(val.includes('@')){localStorage.setItem('exogenadian_pro_email',val)}
+    else{localStorage.setItem('exogenadian_pro_key',val)}
     updateProUI();
-    alert('✅ PRO activado correctamente');
+    alert('PRO activado correctamente');
   }else{
-    alert('❌ Clave inválida o inactiva. Verifica tu clave o suscríbete en exogenadian.com');
+    alert('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com');
   }
 }
 
 async function activarProFromPaywall(){
-  const clave=document.getElementById('proKeyInputPaywall')?.value?.trim();
-  if(!clave){alert('Ingresa tu clave PRO');return}
-  const valid=await validarClavePro(clave);
+  const val=document.getElementById('proKeyInputPaywall')?.value?.trim()?.toLowerCase();
+  if(!val){alert('Ingresa tu email PRO');return}
+  const valid=await validarPro(val);
   if(valid){
     proUnlocked=true;
-    localStorage.setItem('exogenadian_pro_key',clave);
+    if(val.includes('@')){localStorage.setItem('exogenadian_pro_email',val)}
+    else{localStorage.setItem('exogenadian_pro_key',val)}
     updateProUI();
-    alert('✅ PRO activado correctamente');
+    alert('PRO activado correctamente');
   }else{
-    alert('❌ Clave inválida o inactiva. Verifica tu clave o suscríbete en exogenadian.com');
+    alert('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com');
   }
 }
 

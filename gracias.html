@@ -178,35 +178,35 @@ gtag('config', 'G-S7SM6ST4CC');
     🧾 Referencia: <strong id="refId"></strong>
   </div>
 
-  <!-- Clave PRO generada -->
+  <!-- PRO activado -->
   <div id="proKeyBox" style="display:none;background:#fff;border:3px solid var(--green-400);border-radius:16px;padding:28px;margin-bottom:24px;animation:fadeUp .6s .2s ease-out both">
-    <p style="font-size:.82rem;color:var(--gray-500);margin-bottom:8px;text-transform:uppercase;letter-spacing:2px;font-weight:700">Tu clave PRO</p>
-    <div style="background:var(--green-50);border:2px dashed var(--green-300);border-radius:12px;padding:16px;margin-bottom:16px">
-      <p id="proKeyDisplay" style="font-family:monospace;font-size:1.8rem;font-weight:900;color:var(--green-700);letter-spacing:3px;text-align:center"></p>
+    <p style="font-size:.82rem;color:var(--gray-500);margin-bottom:8px;text-transform:uppercase;letter-spacing:2px;font-weight:700">Suscripción PRO activa</p>
+    <div style="background:var(--green-50);border:2px solid var(--green-300);border-radius:12px;padding:20px;margin-bottom:16px;text-align:center">
+      <p style="font-size:2.5rem;margin-bottom:8px">✅</p>
+      <p style="font-size:1.1rem;font-weight:700;color:var(--green-700);margin-bottom:4px">PRO activado con tu email</p>
+      <p id="proEmailDisplay" style="font-family:monospace;font-size:1rem;font-weight:600;color:var(--gray-600)"></p>
     </div>
-    <button onclick="navigator.clipboard.writeText(document.getElementById('proKeyDisplay').textContent);this.textContent='✅ Copiada!';setTimeout(()=>this.textContent='📋 Copiar clave',2000)" style="background:var(--green-600);color:#fff;border:none;padding:10px 24px;border-radius:10px;font-family:'Outfit',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;width:100%;transition:all .2s">📋 Copiar clave</button>
-    <p style="font-size:.82rem;color:var(--gray-400);margin-top:12px;line-height:1.5">Guarda esta clave. Ingrésala en cualquier herramienta de ExógenaDIAN para activar las funciones PRO.</p>
+    <p style="font-size:.88rem;color:var(--gray-500);line-height:1.6;text-align:center">Para activar PRO en cualquier herramienta, solo ingresa tu email. No necesitas guardar ninguna clave.</p>
   </div>
 
   <!-- Loading state -->
   <div id="proLoading" style="background:#fff;border:1.5px solid var(--gray-200);border-radius:16px;padding:28px;margin-bottom:24px">
-    <p style="font-size:1rem;color:var(--gray-500)">⏳ Generando tu clave PRO...</p>
+    <p style="font-size:1rem;color:var(--gray-500)">⏳ Activando tu suscripción PRO...</p>
   </div>
 
   <!-- Error state -->
   <div id="proError" style="display:none;background:#FFF1F2;border:1.5px solid #FFE4E6;border-radius:16px;padding:28px;margin-bottom:24px">
-    <p style="font-size:.95rem;color:#BE123C;margin-bottom:12px;font-weight:700">La clave no se generó automáticamente</p>
-    <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:8px">Esto puede pasar por una conexión lenta o un error temporal. Tu pago ya fue procesado y tu clave está lista.</p>
+    <p style="font-size:.95rem;color:#BE123C;margin-bottom:12px;font-weight:700">No se pudo activar automáticamente</p>
+    <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:8px">Tu pago ya fue procesado. Puedes activar PRO ingresando tu email en cualquier herramienta.</p>
     <p style="font-size:.85rem;color:var(--gray-500);margin-bottom:4px"><strong>1.</strong> Intenta <a href="javascript:location.reload()" style="color:#059669;font-weight:700">recargar esta página</a></p>
-    <p style="font-size:.85rem;color:var(--gray-500)"><strong>2.</strong> Si persiste, escríbenos con tu referencia de pago a <a href="https://wa.me/573156178610" style="color:#059669;font-weight:700">WhatsApp</a> y te enviamos la clave en minutos</p>
+    <p style="font-size:.85rem;color:var(--gray-500)"><strong>2.</strong> Si persiste, escríbenos a <a href="https://wa.me/573156178610" style="color:#059669;font-weight:700">WhatsApp</a></p>
   </div>
 
   <div class="steps-box">
-    <p class="steps-title">¿Cómo uso mi clave PRO?</p>
-    <div class="step-item"><div class="step-num">1</div> Copia tu clave PRO de arriba</div>
-    <div class="step-item"><div class="step-num">2</div> Abre cualquier herramienta (IVA 300, Exógena, Estados Financieros)</div>
-    <div class="step-item"><div class="step-num">3</div> Ingresa tu clave en el campo "Clave PRO" y dale Activar</div>
-    <div class="step-item"><div class="step-num">4</div> ¡Listo! PRO se activa en todas las herramientas automáticamente</div>
+    <p class="steps-title">¿Cómo uso PRO?</p>
+    <div class="step-item"><div class="step-num">1</div> Abre cualquier herramienta (IVA 300, Exógena, Estados Financieros)</div>
+    <div class="step-item"><div class="step-num">2</div> Ingresa tu email en el campo "Email PRO" y dale Activar</div>
+    <div class="step-item"><div class="step-num">3</div> ¡Listo! Si cambias de navegador o dispositivo, solo vuelve a ingresar tu email</div>
   </div>
 
   <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;animation:fadeUp .6s .5s ease-out both">
@@ -233,8 +233,8 @@ gtag('config', 'G-S7SM6ST4CC');
     document.getElementById('refId').textContent = referencia;
   }
 
-  // Generar clave PRO verificando el pago con Wompi
-  async function generarClavePro(){
+  // Activar PRO verificando el pago con Wompi
+  async function activarPro(){
     try{
       if(!transactionId){
         throw new Error('No transaction ID from Wompi');
@@ -246,20 +246,39 @@ gtag('config', 'G-S7SM6ST4CC');
       const resp=await fetch(url);
       const data=await resp.json();
       if(data.success && data.clave){
+        // Obtener el email de la transacción para mostrarlo
+        // El email se guardó en el Sheet al generar la clave
+        // Intentamos obtenerlo validando la clave recién creada
+        try{
+          const valResp=await fetch(APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(data.clave));
+          const valData=await valResp.json();
+        }catch(e){}
+        // Buscar email del pago Wompi
+        let email='';
+        try{
+          const txResp=await fetch('https://production.wompi.co/v1/transactions/'+transactionId);
+          const txData=await txResp.json();
+          email=txData.data?.customer_email||'';
+        }catch(e){}
         document.getElementById('proLoading').style.display='none';
         document.getElementById('proKeyBox').style.display='block';
-        document.getElementById('proKeyDisplay').textContent=data.clave;
-        localStorage.setItem('exogenadian_pro_key',data.clave);
+        document.getElementById('proEmailDisplay').textContent=email||'(revisa tu correo de pago)';
+        // Guardar email si lo tenemos, sino la clave como fallback
+        if(email){
+          localStorage.setItem('exogenadian_pro_email',email.toLowerCase());
+        }else{
+          localStorage.setItem('exogenadian_pro_key',data.clave);
+        }
       }else{
         throw new Error(data.error || 'No key returned');
       }
     }catch(e){
-      console.error('Error generando clave:',e);
+      console.error('Error activando PRO:',e);
       document.getElementById('proLoading').style.display='none';
       document.getElementById('proError').style.display='block';
     }
   }
-  generarClavePro();
+  activarPro();
 </script>
 </body>
 </html>
