@@ -1,0 +1,13 @@
+{
+  "_meta": {
+    "fuente": "DIAN - Listado Proveedores Ficticios (Art. 671 E.T.)",
+    "url_base": "https://www.dian.gov.co/Proveedores_Ficticios/",
+    "ultima_actualizacion": "2025-03-21",
+    "total_aproximado": 364,
+    "nota": "Listado parcial de muestra. Poblar desde PDF oficial. URL patrón: Proveedores-Ficticios-DD-MM-YYYY.pdf"
+  },
+  "nits": {
+    "800555111": { "razon_social": "EJEMPLO PROVEEDOR FICTICIO S.A.S. (DATO DE PRUEBA)", "resolucion": "Res. 001234-2023", "fecha": "2023-05-15", "direccion_seccional": "Bogotá" },
+    "900111222": { "razon_social": "EJEMPLO EMPRESA FICTICIA LTDA (DATO DE PRUEBA)", "resolucion": "Res. 005678-2022", "fecha": "2022-11-20", "direccion_seccional": "Medellín" }
+  }
+}

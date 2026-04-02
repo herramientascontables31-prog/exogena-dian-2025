@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "fuente": "DIAN - Resolución 000200 del 27-12-2024",
+    "vigencia": "2025-2026",
+    "total_registros": 2659,
+    "ultima_actualizacion": "2025-01-15",
+    "nota": "Listado parcial de muestra. Poblar desde PDF oficial: https://www.dian.gov.co/impuestos/sociedades/Paginas/Grandes-Contribuyentes.aspx"
+  },
+  "nits": {
+    "899999068": { "razon_social": "ECOPETROL S.A.", "resolucion": "000200-2024" },
+    "890903938": { "razon_social": "BANCOLOMBIA S.A.", "resolucion": "000200-2024" },
+    "860002964": { "razon_social": "BANCO DE BOGOTA S.A.", "resolucion": "000200-2024" },
+    "890300279": { "razon_social": "BANCO DE OCCIDENTE S.A.", "resolucion": "000200-2024" },
+    "860034313": { "razon_social": "BANCO DAVIVIENDA S.A.", "resolucion": "000200-2024" },
+    "860007335": { "razon_social": "BBVA COLOMBIA S.A.", "resolucion": "000200-2024" },
+    "890900050": { "razon_social": "GRUPO NUTRESA S.A.", "resolucion": "000200-2024" },
+    "860016610": { "razon_social": "INTERCONEXION ELECTRICA S.A. E.S.P. - ISA", "resolucion": "000200-2024" },
+    "890904996": { "razon_social": "EMPRESAS PUBLICAS DE MEDELLIN E.S.P.", "resolucion": "000200-2024" },
+    "830037946": { "razon_social": "ALMACENES EXITO S.A.", "resolucion": "000200-2024" },
+    "860025971": { "razon_social": "ALPINA PRODUCTOS ALIMENTICIOS S.A.", "resolucion": "000200-2024" },
+    "860002538": { "razon_social": "BAVARIA S.A.", "resolucion": "000200-2024" },
+    "860007336": { "razon_social": "CEMENTOS ARGOS S.A.", "resolucion": "000200-2024" },
+    "891300238": { "razon_social": "CARVAJAL S.A.", "resolucion": "000200-2024" },
+    "800197268": { "razon_social": "DIRECCION DE IMPUESTOS Y ADUANAS NACIONALES - DIAN", "resolucion": "000200-2024" },
+    "899999063": { "razon_social": "EMPRESA DE TELECOMUNICACIONES DE BOGOTA S.A. E.S.P. - ETB", "resolucion": "000200-2024" },
+    "830122566": { "razon_social": "COLOMBIA TELECOMUNICACIONES S.A. E.S.P.", "resolucion": "000200-2024" },
+    "900156264": { "razon_social": "COMUNICACION CELULAR S.A. - COMCEL (CLARO)", "resolucion": "000200-2024" },
+    "860001022": { "razon_social": "COLGATE PALMOLIVE COMPANIA", "resolucion": "000200-2024" },
+    "860003020": { "razon_social": "COLTABACO (PHILIP MORRIS)", "resolucion": "000200-2024" },
+    "860028669": { "razon_social": "ORGANIZACION TERPEL S.A.", "resolucion": "000200-2024" },
+    "900459737": { "razon_social": "DRUMMOND ENERGY INC", "resolucion": "000200-2024" },
+    "860035827": { "razon_social": "PROCTER & GAMBLE COLOMBIA LTDA", "resolucion": "000200-2024" },
+    "860002400": { "razon_social": "SEGUROS BOLIVAR S.A.", "resolucion": "000200-2024" },
+    "860000170": { "razon_social": "SURAMERICANA S.A.", "resolucion": "000200-2024" },
+    "800099106": { "razon_social": "AVIANCA S.A.", "resolucion": "000200-2024" },
+    "891800335": { "razon_social": "EMPRESA DE ENERGIA DE BOYACA S.A. E.S.P.", "resolucion": "000200-2024" },
+    "830063830": { "razon_social": "PACIFIC STRATUS ENERGY CORP", "resolucion": "000200-2024" },
+    "860090032": { "razon_social": "JOHNSON & JOHNSON DE COLOMBIA S.A.", "resolucion": "000200-2024" },
+    "860050750": { "razon_social": "NESTLE DE COLOMBIA S.A.", "resolucion": "000200-2024" }
+  }
+}

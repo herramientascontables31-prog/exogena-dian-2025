@@ -1,0 +1,30 @@
+{
+  "_meta": {
+    "fuente": "DIAN - Listado Actualizado Autorretenedores de Renta",
+    "url_pdf": "https://www.dian.gov.co/impuestos/Autorretenedores/Documents/LISTADO%20ACTUALIZADO%20RENTA.pdf",
+    "ultima_actualizacion": "2025-01-15",
+    "nota": "Listado parcial de muestra. Poblar desde PDF oficial."
+  },
+  "nits": {
+    "899999068": { "razon_social": "ECOPETROL S.A.", "resolucion": "Res. 0049-2019" },
+    "890903938": { "razon_social": "BANCOLOMBIA S.A.", "resolucion": "Res. 0049-2019" },
+    "860002964": { "razon_social": "BANCO DE BOGOTA S.A.", "resolucion": "Res. 0049-2019" },
+    "860034313": { "razon_social": "BANCO DAVIVIENDA S.A.", "resolucion": "Res. 0049-2019" },
+    "860007335": { "razon_social": "BBVA COLOMBIA S.A.", "resolucion": "Res. 0049-2019" },
+    "890900050": { "razon_social": "GRUPO NUTRESA S.A.", "resolucion": "Res. 0049-2019" },
+    "860016610": { "razon_social": "INTERCONEXION ELECTRICA S.A. E.S.P. - ISA", "resolucion": "Res. 0049-2019" },
+    "890904996": { "razon_social": "EMPRESAS PUBLICAS DE MEDELLIN E.S.P.", "resolucion": "Res. 0049-2019" },
+    "830037946": { "razon_social": "ALMACENES EXITO S.A.", "resolucion": "Res. 0049-2019" },
+    "860025971": { "razon_social": "ALPINA PRODUCTOS ALIMENTICIOS S.A.", "resolucion": "Res. 0049-2019" },
+    "860002538": { "razon_social": "BAVARIA S.A.", "resolucion": "Res. 0049-2019" },
+    "860007336": { "razon_social": "CEMENTOS ARGOS S.A.", "resolucion": "Res. 0049-2019" },
+    "830122566": { "razon_social": "COLOMBIA TELECOMUNICACIONES S.A. E.S.P.", "resolucion": "Res. 0049-2019" },
+    "900156264": { "razon_social": "COMUNICACION CELULAR S.A. - COMCEL (CLARO)", "resolucion": "Res. 0049-2019" },
+    "860028669": { "razon_social": "ORGANIZACION TERPEL S.A.", "resolucion": "Res. 0049-2019" },
+    "800099106": { "razon_social": "AVIANCA S.A.", "resolucion": "Res. 0049-2019" },
+    "860000170": { "razon_social": "SURAMERICANA S.A.", "resolucion": "Res. 0049-2019" },
+    "860050750": { "razon_social": "NESTLE DE COLOMBIA S.A.", "resolucion": "Res. 0049-2019" },
+    "860035827": { "razon_social": "PROCTER & GAMBLE COLOMBIA LTDA", "resolucion": "Res. 0049-2019" },
+    "860090032": { "razon_social": "JOHNSON & JOHNSON DE COLOMBIA S.A.", "resolucion": "Res. 0049-2019" }
+  }
+}

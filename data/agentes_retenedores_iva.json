@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "fuente": "DIAN - Listado Agentes de Retención del Impuesto sobre las Ventas",
+    "url_pdf": "https://www.dian.gov.co/impuestos/Autorretenedores/Documents/Listado-actualizado-IVA-14012025.pdf",
+    "ultima_actualizacion": "2025-01-14",
+    "nota": "Listado parcial de muestra. Poblar desde PDF oficial."
+  },
+  "nits": {
+    "899999068": { "razon_social": "ECOPETROL S.A.", "resolucion": "Res. IVA-2024" },
+    "890903938": { "razon_social": "BANCOLOMBIA S.A.", "resolucion": "Res. IVA-2024" },
+    "860002964": { "razon_social": "BANCO DE BOGOTA S.A.", "resolucion": "Res. IVA-2024" },
+    "860034313": { "razon_social": "BANCO DAVIVIENDA S.A.", "resolucion": "Res. IVA-2024" },
+    "860007335": { "razon_social": "BBVA COLOMBIA S.A.", "resolucion": "Res. IVA-2024" },
+    "830037946": { "razon_social": "ALMACENES EXITO S.A.", "resolucion": "Res. IVA-2024" },
+    "860016610": { "razon_social": "INTERCONEXION ELECTRICA S.A. E.S.P. - ISA", "resolucion": "Res. IVA-2024" },
+    "890904996": { "razon_social": "EMPRESAS PUBLICAS DE MEDELLIN E.S.P.", "resolucion": "Res. IVA-2024" },
+    "860028669": { "razon_social": "ORGANIZACION TERPEL S.A.", "resolucion": "Res. IVA-2024" },
+    "800099106": { "razon_social": "AVIANCA S.A.", "resolucion": "Res. IVA-2024" }
+  }
+}
