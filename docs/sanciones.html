@@ -242,19 +242,19 @@ body{font-family:'Outfit',sans-serif;background:var(--f50);color:var(--f900);min
     <!-- Valor UVT y año -->
     <div class="row2">
       <div class="field">
-        <label>Año gravable</label>
-        <select id="anioGravable" onchange="actualizarUVT()">
-          <option value="2025" selected>2025</option>
+        <label>Año de pago de la sanción</label>
+        <select id="anioPago" onchange="actualizarUVT()">
+          <option value="2026" selected>2026</option>
+          <option value="2025">2025</option>
           <option value="2024">2024</option>
           <option value="2023">2023</option>
-          <option value="2022">2022</option>
         </select>
-        <div class="hint">Año al que corresponde la información exógena</div>
+        <div class="hint">La UVT que aplica es la vigente al momento de pagar, sin importar el año gravable de la falta</div>
       </div>
       <div class="field">
-        <label>Valor UVT vigente (año de pago)</label>
-        <input type="text" id="uvtValor" value="52.374" readonly style="background:var(--f50);color:var(--f500)">
-        <div class="hint" id="uvtHint">UVT 2026 — Resolución DIAN 000187/2025</div>
+        <label>Valor UVT vigente</label>
+        <input type="text" id="uvtValor" value="49.799" readonly style="background:var(--f50);color:var(--f500)">
+        <div class="hint" id="uvtHint">UVT 2026 — $49.799</div>
       </div>
     </div>
 
@@ -527,11 +527,10 @@ function selA640(el) {
 
 /* ===== UVT ===== */
 function actualizarUVT() {
-  const anio = parseInt(document.getElementById('anioGravable').value);
-  const anioPago = anio + 1;
+  const anioPago = parseInt(document.getElementById('anioPago').value);
   const uvt = UVT_VALORES[anioPago] || UVT_VALORES[2026];
   document.getElementById('uvtValor').value = formatNum(uvt);
-  document.getElementById('uvtHint').textContent = `UVT ${anioPago} — Valor vigente para liquidación`;
+  document.getElementById('uvtHint').textContent = `UVT ${anioPago} — $${formatNum(uvt)}`;
 }
 
 /* ===== FORMAT ===== */
@@ -591,8 +590,7 @@ function calcular() {
   const tarifa = TARIFAS[tipoSel];
   const par1 = RED_PAR1[redSel];
   const a640 = RED_A640[a640Sel];
-  const anio = parseInt(document.getElementById('anioGravable').value);
-  const anioPago = anio + 1;
+  const anioPago = parseInt(document.getElementById('anioPago').value);
   const uvt = UVT_VALORES[anioPago] || UVT_VALORES[2026];
 
   let meses = 1;
