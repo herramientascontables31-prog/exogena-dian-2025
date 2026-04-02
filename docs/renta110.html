@@ -1278,6 +1278,24 @@ async function exportExcel(){
   for(const[cas,cell] of Object.entries(leftMap)){const val=v('c'+cas);if(val)ws.getCell(cell).value=val}
   for(const[cas,cell] of Object.entries(rightMap)){const val=v('c'+cas);if(val)ws.getCell(cell).value=val}
 
+  // Casillas calculadas: escribir el valor Y la formula (asi Excel muestra el numero sin recalcular)
+  const calcLeft={44:'L30',46:'L32',58:'L43',61:'L46',67:'L52',72:'L57',73:'L58'};
+  const calcRight={75:'AC23',79:'AC27',83:'AC31',84:'AC32',85:'AC33',86:'AC34',91:'AC36',93:'AC39',94:'AC40',96:'AC42',103:'AC49',104:'AC50',110:'AC54',111:'AC57'};
+  for(const[cas,cell] of Object.entries(calcLeft)){
+    const c=ws.getCell(cell);
+    const val=v('c'+cas);
+    if(c.value&&typeof c.value==='object'&&c.value.formula){
+      c.value={formula:c.value.formula,result:val||0};
+    }else{c.value=val||0}
+  }
+  for(const[cas,cell] of Object.entries(calcRight)){
+    const c=ws.getCell(cell);
+    const val=v('c'+cas);
+    if(c.value&&typeof c.value==='object'&&c.value.formula){
+      c.value={formula:c.value.formula,result:val||0};
+    }else{c.value=val||0}
+  }
+
   // HOJA 2: ANTICIPO DE RENTA (diseno ExogenaDIAN)
   const wsAnt=wb.addWorksheet('Anticipo de Renta');
   wsAnt.properties.showGridLines=false;
