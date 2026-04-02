@@ -206,12 +206,13 @@ gtag('config', 'G-S7SM6ST4CC');
 </div>
 
 <!-- STATUS LISTAS CARGADAS -->
-<div class="lists-status" id="listsStatus">
+<div class="lists-status" id="listsStatus" style="grid-template-columns:repeat(3,1fr)">
   <div class="list-chip lc-gc"><div class="lc-icon">👑</div><div><div class="lc-name">Gran Contribuyentes</div><div class="lc-count" id="countGC">Cargando...</div></div></div>
-  <div class="list-chip lc-ar"><div class="lc-icon">🔄</div><div><div class="lc-name">Autorretenedores</div><div class="lc-count" id="countAR">Cargando...</div></div></div>
   <div class="list-chip lc-pf"><div class="lc-icon">⛔</div><div><div class="lc-name">Proveedores Ficticios</div><div class="lc-count" id="countPF">Cargando...</div></div></div>
-  <div class="list-chip lc-iv"><div class="lc-icon">📋</div><div><div class="lc-name">Agentes Ret. IVA</div><div class="lc-count" id="countIV">Cargando...</div></div></div>
+  <div class="list-chip lc-gc"><div class="lc-icon">📍</div><div><div class="lc-name">Directorio</div><div class="lc-count" id="countDir">Cargando...</div></div></div>
 </div>
+<!-- Hidden counters for lists still loaded but not shown -->
+<span id="countAR" class="hidden"></span><span id="countIV" class="hidden"></span>
 
 <!-- INPUT CARD -->
 <div class="card" id="inputCard">
@@ -453,7 +454,9 @@ async function loadLists() {
     if (resp.ok) {
       const data = await resp.json();
       DIRECTORIO = data.nits || {};
-      console.log('Directorio cargado: ' + Object.keys(DIRECTORIO).length + ' empresas');
+      const dirCount = Object.keys(DIRECTORIO).length;
+      const dirEl = document.getElementById('countDir');
+      if (dirEl) dirEl.textContent = dirCount + ' con dirección';
     }
   } catch (e) { console.warn('Directorio no disponible', e); }
 }
@@ -665,25 +668,11 @@ function renderSingleResult(r) {
     html += '<div class="sr-item sr-neutral"><div class="sr-item-icon">👑</div><div class="sr-item-text"><div class="sr-item-label">Gran Contribuyente</div><div class="sr-item-value">NO</div></div></div>';
   }
 
-  // Autorretenedor
-  if (r.esAutorretenedor) {
-    html += '<div class="sr-item sr-info"><div class="sr-item-icon">🔄</div><div class="sr-item-text"><div class="sr-item-label">Autorretenedor de Renta</div><div class="sr-item-value">SÍ — ' + esc(r.arResolucion) + '</div></div></div>';
-  } else {
-    html += '<div class="sr-item sr-neutral"><div class="sr-item-icon">🔄</div><div class="sr-item-text"><div class="sr-item-label">Autorretenedor de Renta</div><div class="sr-item-value">NO</div></div></div>';
-  }
-
   // Proveedor Ficticio
   if (r.esProveedorFicticio) {
     html += '<div class="sr-item sr-alert"><div class="sr-item-icon">⛔</div><div class="sr-item-text"><div class="sr-item-label">Proveedor Ficticio</div><div class="sr-item-value">⚠️ SÍ — ' + esc(r.pfResolucion) + (r.pfFecha ? ' (' + r.pfFecha + ')' : '') + '</div></div></div>';
   } else {
     html += '<div class="sr-item sr-ok"><div class="sr-item-icon">✅</div><div class="sr-item-text"><div class="sr-item-label">Proveedor Ficticio</div><div class="sr-item-value">NO (limpio)</div></div></div>';
-  }
-
-  // Agente Retenedor IVA
-  if (r.esAgenteRetenedorIVA) {
-    html += '<div class="sr-item sr-info"><div class="sr-item-icon">📋</div><div class="sr-item-text"><div class="sr-item-label">Agente Retenedor de IVA</div><div class="sr-item-value">SÍ — ' + esc(r.ivResolucion) + '</div></div></div>';
-  } else {
-    html += '<div class="sr-item sr-neutral"><div class="sr-item-icon">📋</div><div class="sr-item-text"><div class="sr-item-label">Agente Retenedor de IVA</div><div class="sr-item-value">NO</div></div></div>';
   }
 
   html += '</div>'; // sr-grid
