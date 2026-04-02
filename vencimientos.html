@@ -402,7 +402,7 @@ body{font-family:'Outfit',sans-serif;background:var(--f50);color:var(--f900);min
     <div style="margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
       <button class="btn btn-outline btn-sm" onclick="goStep(2)">← Ver calendario</button>
       <button class="btn btn-outline btn-sm" onclick="goStep(1)">Editar empresas</button>
-      <a href="exogena.html" class="btn btn-outline btn-sm">Generar exógena →</a>
+      <a href="index.html" class="btn btn-outline btn-sm">Ir al inicio</a>
     </div>
   </div>
 </div>
@@ -462,7 +462,7 @@ function gcalUrl(name, iso) {
   return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' +
     encodeURIComponent('Vencimiento Exógena – ' + name) +
     '&dates=' + d + '/' + d +
-    '&details=' + encodeURIComponent('Fecha límite para presentar información exógena DIAN AG 2025. Genera tus formatos en https://exogenadian.com/exogena.html');
+    '&details=' + encodeURIComponent('Fecha límite para presentar información exógena DIAN AG 2025.');
 }
 
 // ===== MODE =====
