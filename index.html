@@ -258,23 +258,29 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 
 
 
-/* ===== NEWS ===== */
-.news{padding:80px 48px;background:var(--gray-50)}
-.news-inner{max-width:1200px;margin:0 auto}
-.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
-.news-card{background:var(--white);border-radius:14px;padding:22px;border:1px solid var(--gray-200);transition:all .25s;display:flex;flex-direction:column}
-.news-card:hover{border-color:var(--green-300);box-shadow:var(--shadow)}
-.news-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.news-card-source{font-size:.7rem;font-weight:600;color:var(--gray-400);display:flex;align-items:center;gap:6px}
-.news-card-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.ncd-blue{background:#1a73e8}.ncd-red{background:#c41230}.ncd-green{background:var(--green-600)}.ncd-purple{background:#472580}.ncd-ai{background:#FF6B35}
-.news-card-date{font-size:.68rem;color:var(--gray-400)}
-.news-card h3{font-size:.88rem;font-weight:600;line-height:1.45;color:var(--gray-800);flex:1}
-.news-card h3 a{color:inherit;text-decoration:none;transition:color .2s}
-.news-card h3 a:hover{color:var(--green-600)}
-.news-fuentes{text-align:center;margin-top:24px;font-size:.74rem;color:var(--gray-400)}
-.news-fuentes a{color:var(--gray-500);text-decoration:none;margin:0 4px}
-.news-fuentes a:hover{color:var(--green-600)}
+/* ===== AUTOMATIZACIONES IA ===== */
+.ai-services{padding:80px 48px;background:var(--gray-50)}
+.ai-services-inner{max-width:1200px;margin:0 auto}
+.ai-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.ai-card{background:var(--white);border-radius:16px;padding:28px 24px;border:1px solid var(--gray-200);transition:all .3s;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.ai-card:hover{border-color:var(--green-400);box-shadow:var(--shadow-lg);transform:translateY(-4px)}
+.ai-card-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:16px}
+.ai-card-icon.dash{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);color:#2e7d32}
+.ai-card-icon.bot{background:linear-gradient(135deg,#e3f2fd,#bbdefb);color:#1565c0}
+.ai-card-icon.doc{background:linear-gradient(135deg,#fff3e0,#ffe0b2);color:#e65100}
+.ai-card-icon.data{background:linear-gradient(135deg,#f3e5f5,#e1bee7);color:#7b1fa2}
+.ai-card-icon.report{background:linear-gradient(135deg,#fce4ec,#f8bbd0);color:#c62828}
+.ai-card-icon.flow{background:linear-gradient(135deg,#e0f7fa,#b2ebf2);color:#00838f}
+.ai-card h3{font-size:1rem;font-weight:700;color:var(--gray-800);margin-bottom:8px;line-height:1.35}
+.ai-card p{font-size:.84rem;color:var(--gray-500);line-height:1.55;flex:1}
+.ai-card-tag{display:inline-block;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:4px 10px;border-radius:6px;margin-top:14px;width:fit-content}
+.ai-card-tag.popular{background:#e8f5e9;color:#2e7d32}
+.ai-card-tag.nuevo{background:#e3f2fd;color:#1565c0}
+.ai-card-tag.pronto{background:#fff3e0;color:#e65100}
+.ai-cta-row{text-align:center;margin-top:40px}
+.ai-cta-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--green-600);color:#fff;border-radius:12px;font-weight:600;font-size:.95rem;text-decoration:none;transition:all .3s;border:none;cursor:pointer}
+.ai-cta-btn:hover{background:var(--green-700);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,128,0,.2)}
+.ai-cta-sub{margin-top:12px;font-size:.78rem;color:var(--gray-400)}
 
 /* ===== CTA ===== */
 .cta{padding:80px 48px;text-align:center;background:var(--white)}
@@ -314,7 +320,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
   .steps{padding:50px 20px}.steps-row{grid-template-columns:1fr 1fr;gap:16px}.steps-row::before{display:none}
   .pricing{padding:50px 20px}.price-grid{grid-template-columns:1fr!important;max-width:400px!important;margin:0 auto}
   .price-card.pop{transform:scale(1);order:-1}.price-card.pop:hover{transform:translateY(-5px)}
-  .news{padding:50px 20px}.news-grid{grid-template-columns:1fr}
+  .ai-services{padding:50px 20px}.ai-grid{grid-template-columns:1fr}
   .cta{padding:50px 20px}.cta-card{padding:40px 22px}
   footer{padding:32px 20px 24px}.footer-grid{grid-template-columns:1fr 1fr;gap:24px}
   .tools-main{grid-template-columns:1fr!important}
@@ -368,7 +374,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
     <div class="hero-text">
       <div class="hero-pill"><div class="pill-dot"></div> AG 2025 · Resolución 000227 · UVT $52.374</div>
       <h1>Todas tus herramientas <em>contables</em> en un solo lugar</h1>
-      <p class="hero-desc">Exógena DIAN, calculadoras tributarias, estados financieros y noticias. Todo lo que un contador colombiano necesita para el cierre fiscal.</p>
+      <p class="hero-desc">Exógena DIAN, calculadoras tributarias, estados financieros y automatizaciones con IA. Todo lo que un contador colombiano necesita para el cierre fiscal.</p>
       <div class="hero-btns">
         <a href="#planes" class="btn btn-green">Suscribirse PRO →</a>
         <a href="#herramientas" class="btn btn-ghost">Herramientas gratis</a>
@@ -677,26 +683,60 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
   </div>
 </section>
 
-<!-- ===== ACTUALIDAD ===== -->
-<section class="news fade-in" id="noticias">
-  <div class="news-inner">
-    <div class="section-tag">Actualidad</div>
-    <h2 class="section-title">Noticias tributarias y económicas</h2>
-    <p class="section-desc">Lo último de los principales medios económicos de Colombia.</p>
+<!-- ===== AUTOMATIZACIONES IA ===== -->
+<section class="ai-services fade-in" id="automatizaciones">
+  <div class="ai-services-inner">
+    <div class="section-tag">Servicios IA</div>
+    <h2 class="section-title">Automatizaciones con inteligencia artificial</h2>
+    <p class="section-desc">Potencia tu empresa con soluciones a medida. Dashboards, bots y flujos inteligentes que ahorran tiempo y reducen errores.</p>
 
-    <div class="news-grid" id="newsGrid">
-      <div class="news-card" style="grid-column:span 3;text-align:center;padding:40px;color:var(--gray-400)" id="newsLoading">
-        <div style="display:inline-block;width:20px;height:20px;border:2px solid var(--gray-200);border-top-color:var(--green-500);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:8px"></div>
-        <div style="font-size:.85rem">Consultando medios...</div>
+    <div class="ai-grid">
+      <div class="ai-card">
+        <div class="ai-card-icon dash">📊</div>
+        <h3>Dashboards financieros</h3>
+        <p>Visualiza en tiempo real tus indicadores clave: ingresos, gastos, cartera, impuestos. Conectados a tu software contable con actualización automática.</p>
+        <span class="ai-card-tag popular">Popular</span>
+      </div>
+
+      <div class="ai-card">
+        <div class="ai-card-icon bot">🤖</div>
+        <h3>Chatbots contables</h3>
+        <p>Asistentes IA que responden dudas tributarias, consultan saldos y generan reportes por WhatsApp o tu canal preferido. 24/7 sin intervención humana.</p>
+        <span class="ai-card-tag popular">Popular</span>
+      </div>
+
+      <div class="ai-card">
+        <div class="ai-card-icon doc">📄</div>
+        <h3>Extracción de documentos</h3>
+        <p>Procesamiento automático de facturas, certificados de retención, extractos bancarios. La IA lee, clasifica y organiza la información por ti.</p>
+        <span class="ai-card-tag nuevo">Nuevo</span>
+      </div>
+
+      <div class="ai-card">
+        <div class="ai-card-icon data">🔗</div>
+        <h3>Integraciones a medida</h3>
+        <p>Conectamos tu ERP, software contable (Siigo, Alegra, World Office) con cualquier plataforma: DIAN, bancos, CRM, Google Sheets y más.</p>
+        <span class="ai-card-tag nuevo">Nuevo</span>
+      </div>
+
+      <div class="ai-card">
+        <div class="ai-card-icon report">📈</div>
+        <h3>Reportes automáticos</h3>
+        <p>Informes financieros, conciliaciones y análisis de cartera generados automáticamente con IA. Recíbelos por correo en el horario que prefieras.</p>
+        <span class="ai-card-tag popular">Popular</span>
+      </div>
+
+      <div class="ai-card">
+        <div class="ai-card-icon flow">⚡</div>
+        <h3>Flujos de trabajo inteligentes</h3>
+        <p>Automatiza procesos repetitivos: alertas de vencimientos, notificaciones a clientes, seguimiento de pagos, conciliaciones bancarias automáticas.</p>
+        <span class="ai-card-tag pronto">Próximamente</span>
       </div>
     </div>
 
-    <div class="news-fuentes">
-      Fuentes: <a href="https://www.portafolio.co" target="_blank">Portafolio</a> ·
-      <a href="https://www.larepublica.co" target="_blank">La República</a> ·
-      <a href="https://www.bloomberglinea.com" target="_blank">Bloomberg Línea</a> ·
-      <a href="https://www.eltiempo.com/economia" target="_blank">El Tiempo</a> ·
-      <a href="https://www.semana.com/economia" target="_blank">Semana</a>
+    <div class="ai-cta-row">
+      <a href="https://wa.me/573001234567?text=Hola%2C%20me%20interesan%20los%20servicios%20de%20automatizaci%C3%B3n%20con%20IA" target="_blank" class="ai-cta-btn">💬 Solicitar cotización por WhatsApp</a>
+      <p class="ai-cta-sub">Soluciones personalizadas para contadores, empresas y firmas de auditoría</p>
     </div>
   </div>
 </section>
@@ -802,92 +842,7 @@ document.addEventListener('DOMContentLoaded',function(){
   }, 5000);
 });
 
-/* === NEWS FEED === */
-async function cargarNoticias(){
-  const grid=document.getElementById('newsGrid');
-  const API='https://api.rss2json.com/v1/api.json?rss_url=';
-  const feeds=[
-    {url:'https://www.portafolio.co/rss/economia.xml',src:'Portafolio',dot:'ncd-blue',cat:'trib'},
-    {url:'https://www.larepublica.co/rss/finanzas.xml',src:'La República',dot:'ncd-red',cat:'trib'},
-    {url:'https://www.bloomberglinea.com/feed/',src:'Bloomberg Línea',dot:'ncd-purple',cat:'trib'},
-    {url:'https://www.eltiempo.com/rss/economia.xml',src:'El Tiempo',dot:'ncd-blue',cat:'trib'},
-    {url:'https://www.semana.com/rss/economia.xml',src:'Semana',dot:'ncd-red',cat:'trib'},
-  ];
-  try{
-    const res=await Promise.allSettled(
-      feeds.map(f=>fetch(API+encodeURIComponent(f.url)).then(r=>r.json()).then(d=>{
-        if(d.status==='ok'&&d.items)return d.items.slice(0,4).map(i=>({t:i.title,l:i.link,d:i.pubDate,s:f.src,dot:f.dot}));
-        return[];
-      }).catch(()=>[]))
-    );
-    let all=[];
-    res.forEach(r=>{if(r.status==='fulfilled')all=all.concat(r.value)});
-
-    /* Dedup inteligente: extrae palabras clave y detecta temas repetidos */
-    function extraerPalabras(t){
-      return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-        .replace(/[^a-z0-9\s]/g,' ').split(/\s+/)
-        .filter(w=>w.length>3&&!['para','como','tras','este','esta','esto','estos','estas','sera','puede','sobre','desde','entre','hasta','segun','donde','tambien','ante','pero','cada','todo','todos','tiene','dice','dijo','afirmo','confirma','segun','habria','podria'].includes(w));
-    }
-    function similitud(a,b){
-      const wa=new Set(extraerPalabras(a)),wb=new Set(extraerPalabras(b));
-      if(wa.size===0||wb.size===0)return 0;
-      let comunes=0;wa.forEach(w=>{if(wb.has(w))comunes++});
-      return comunes/Math.min(wa.size,wb.size);
-    }
-    const dedup=[];
-    for(const n of all){
-      if(dedup.some(d=>similitud(d.t,n.t)>0.5))continue;
-      dedup.push(n);
-    }
-    all=dedup;
-
-    all.sort((a,b)=>new Date(b.d)-new Date(a.d));
-
-    /* Max 2 por fuente para diversidad */
-    const porFuente={};
-    all=all.filter(n=>{porFuente[n.s]=(porFuente[n.s]||0)+1;return porFuente[n.s]<=2;});
-
-    const show=all.slice(0,6);
-
-    if(show.length===0){
-      grid.innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)"><strong>Noticias económicas</strong><br>Visita <a href="https://www.portafolio.co/economia" target="_blank" style="color:var(--green-600)">Portafolio</a> · <a href="https://www.larepublica.co/finanzas" target="_blank" style="color:var(--green-600)">La República</a> · <a href="https://www.bloomberglinea.com" target="_blank" style="color:var(--green-600)">Bloomberg Línea</a></div>';
-      return;
-    }
-
-    grid.innerHTML=show.map(n=>{
-      const rel=tiempoRelativo(new Date(n.d));
-      return `<div class="news-card">
-        <div class="news-card-top">
-          <div class="news-card-source"><div class="news-card-dot ${n.dot}"></div>${n.s}</div>
-          <div class="news-card-date">${rel}</div>
-        </div>
-        <h3><a href="${n.l}" target="_blank" rel="noopener">${n.t}</a></h3>
-      </div>`;
-    }).join('');
-
-  }catch(e){
-    grid.innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)"><strong>Noticias económicas</strong><br>Visita <a href="https://www.portafolio.co/economia" target="_blank" style="color:var(--green-600)">Portafolio</a> · <a href="https://www.larepublica.co/finanzas" target="_blank" style="color:var(--green-600)">La República</a> · <a href="https://www.bloomberglinea.com" target="_blank" style="color:var(--green-600)">Bloomberg Línea</a></div>';
-  }
-}
-
-function tiempoRelativo(d){
-  const s=Math.floor((Date.now()-d)/1000);
-  if(s<60)return 'Ahora';
-  if(s<3600)return Math.floor(s/60)+'m';
-  if(s<86400)return Math.floor(s/3600)+'h';
-  if(s<604800)return Math.floor(s/86400)+'d';
-  return d.toLocaleDateString('es-CO',{day:'numeric',month:'short'});
-}
-
-cargarNoticias();
-/* Timeout: si después de 8s sigue "Consultando", mostrar fallback */
-setTimeout(()=>{
-  const loading=document.getElementById('newsLoading');
-  if(loading){
-    document.getElementById('newsGrid').innerHTML='<div class="news-card" style="grid-column:span 3;text-align:center;padding:32px;color:var(--gray-400)"><strong>Noticias económicas</strong><br>Visita <a href="https://www.portafolio.co/economia" target="_blank" style="color:var(--green-600)">Portafolio</a> · <a href="https://www.larepublica.co/finanzas" target="_blank" style="color:var(--green-600)">La República</a> · <a href="https://www.bloomberglinea.com" target="_blank" style="color:var(--green-600)">Bloomberg Línea</a></div>';
-  }
-},8000);
+/* News feed removed — replaced by static AI services section */
 </script>
 
 <script>
