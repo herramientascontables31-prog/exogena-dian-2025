@@ -189,8 +189,20 @@ gtag('config', 'G-S7SM6ST4CC');
     <p style="font-size:.88rem;color:var(--gray-500);line-height:1.6;text-align:center">Para activar PRO en cualquier herramienta, solo ingresa tu email. No necesitas guardar ninguna clave.</p>
   </div>
 
+  <!-- Aceptación de términos (se muestra antes de activar) -->
+  <div id="proAccept" style="display:none;background:#fff;border:1.5px solid var(--green-300);border-radius:16px;padding:28px;margin-bottom:24px;text-align:left;animation:fadeUp .6s .2s ease-out both">
+    <p style="font-size:.95rem;font-weight:700;color:var(--gray-800);margin-bottom:14px;text-align:center">Un último paso para activar PRO</p>
+    <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:.84rem;color:var(--gray-600);line-height:1.55">
+      <input type="checkbox" id="acceptTerms" style="margin-top:3px;width:18px;height:18px;accent-color:#059669;flex-shrink:0;cursor:pointer">
+      <span>Acepto que al activar mi clave PRO, la prestación del servicio digital comienza de inmediato y <strong>renuncio al derecho de retracto</strong> conforme al artículo 47 de la Ley 1480 de 2011. He revisado las funciones PRO en la <a href="https://exogenadian.com/#planes" target="_blank" style="color:#059669;font-weight:600">página de precios</a> y los <a href="https://exogenadian.com/terminos.html" target="_blank" style="color:#059669;font-weight:600">términos y condiciones</a>.</span>
+    </label>
+    <button id="acceptBtn" onclick="onAcceptTerms()" disabled style="margin-top:18px;width:100%;padding:14px;background:var(--gray-200);color:var(--gray-400);border:none;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;cursor:not-allowed;transition:all .25s">
+      Activar mi PRO →
+    </button>
+  </div>
+
   <!-- Loading state -->
-  <div id="proLoading" style="background:#fff;border:1.5px solid var(--gray-200);border-radius:16px;padding:28px;margin-bottom:24px">
+  <div id="proLoading" style="display:none;background:#fff;border:1.5px solid var(--gray-200);border-radius:16px;padding:28px;margin-bottom:24px">
     <p style="font-size:1rem;color:var(--gray-500)">⏳ Activando tu suscripción PRO...</p>
   </div>
 
@@ -233,8 +245,31 @@ gtag('config', 'G-S7SM6ST4CC');
     document.getElementById('refId').textContent = referencia;
   }
 
-  // Activar PRO verificando el pago con Wompi
-  async function activarPro(){
+  // Checkbox habilita botón
+  document.getElementById('acceptTerms').addEventListener('change',function(){
+    var btn=document.getElementById('acceptBtn');
+    if(this.checked){
+      btn.disabled=false;
+      btn.style.background='var(--green-600)';
+      btn.style.color='#fff';
+      btn.style.cursor='pointer';
+      btn.style.boxShadow='0 4px 14px rgba(5,150,105,0.3)';
+    }else{
+      btn.disabled=true;
+      btn.style.background='var(--gray-200)';
+      btn.style.color='var(--gray-400)';
+      btn.style.cursor='not-allowed';
+      btn.style.boxShadow='none';
+    }
+  });
+
+  // Mostrar aceptación en lugar del loading
+  document.getElementById('proAccept').style.display='block';
+
+  // Al aceptar, activar PRO
+  window.onAcceptTerms=async function(){
+    document.getElementById('proAccept').style.display='none';
+    document.getElementById('proLoading').style.display='block';
     try{
       if(!transactionId){
         throw new Error('No transaction ID from Wompi');
@@ -246,14 +281,10 @@ gtag('config', 'G-S7SM6ST4CC');
       const resp=await fetch(url);
       const data=await resp.json();
       if(data.success && data.clave){
-        // Obtener el email de la transacción para mostrarlo
-        // El email se guardó en el Sheet al generar la clave
-        // Intentamos obtenerlo validando la clave recién creada
         try{
           const valResp=await fetch(APPS_SCRIPT_URL+'?action=validateKey&key='+encodeURIComponent(data.clave));
           const valData=await valResp.json();
         }catch(e){}
-        // Buscar email del pago Wompi
         let email='';
         try{
           const txResp=await fetch('https://production.wompi.co/v1/transactions/'+transactionId);
@@ -263,7 +294,6 @@ gtag('config', 'G-S7SM6ST4CC');
         document.getElementById('proLoading').style.display='none';
         document.getElementById('proKeyBox').style.display='block';
         document.getElementById('proEmailDisplay').textContent=email||'(revisa tu correo de pago)';
-        // Guardar email si lo tenemos, sino la clave como fallback
         if(email){
           localStorage.setItem('exogenadian_pro_email',email.toLowerCase());
         }else{
@@ -277,8 +307,7 @@ gtag('config', 'G-S7SM6ST4CC');
       document.getElementById('proLoading').style.display='none';
       document.getElementById('proError').style.display='block';
     }
-  }
-  activarPro();
+  };
 </script>
 </body>
 </html>
