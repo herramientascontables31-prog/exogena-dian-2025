@@ -816,7 +816,7 @@ function calcDv(n){
 function norm(s){return(s||'').toString().trim()}
 function toNum(v){if(typeof v==='number')return v;const s=norm(v).replace(/[,$\s]/g,'').replace(/\./g,'');const n=parseFloat(s);return isNaN(n)?0:n}
 function fN(n){return typeof n==='number'?Math.round(n).toLocaleString('es-CO'):'0'}
-function sanitizarNit(v){return norm(v).replace(/[.\-\s]/g,'').replace(/\-\d$/,'')}
+function sanitizarNit(v){return norm(v).replace(/[\s.]/g,'').replace(/-\d{1}$/,'').replace(/-/g,'')}
 
 /* ── ESTADO GLOBAL ── */
 let rawData=[], rawDisplay=[], headerRow=0, colMap={}, parsedData=[];
@@ -1193,6 +1193,12 @@ function concepto1001(cta,nom){
     for(const[conc,d,h] of PARAM_1001_RANGOS){if(enRango(cta,d,h))return conc}
     return'5016';
   }
+  // Clase 6 = Costos de ventas / COGS (pagos a proveedores)
+  if(cta[0]==='6'){
+    const r=clasificarPorNombre(nom,KW_1001);if(r)return r;
+    for(const[conc,d,h] of PARAM_1001_RANGOS){if(enRango(cta,d,h))return conc}
+    return'5016';
+  }
   // Clase 14 = Anticipos (activos deducibles)
   if(cta.startsWith('14')){
     for(const[conc,d,h] of PARAM_1001_RANGOS){if(enRango(cta,d,h))return conc}
@@ -1396,16 +1402,16 @@ const PREFIJOS_DIAN_F1009=['2365','2367','2368','2370','2404','2408','2412'];
 let formatos={};
 
 const FMT_HEADERS={
-  'F1001':['Concepto','Tipo Doc','No ID','DV','Razon Social','Pago Deducible','Pago No Deducible','Ret Fte Renta','Ret IVA'],
-  'F1003':['Concepto','Tipo Doc','No ID','DV','Razon Social','Base Retencion','Retencion Acumulada'],
-  'F1005':['Tipo Doc','No ID','DV','Razon Social','IVA Descontable'],
-  'F1006':['Tipo Doc','No ID','DV','Razon Social','IVA Generado'],
-  'F1007':['Concepto','Tipo Doc','No ID','DV','Razon Social','Ingresos Brutos','Devoluciones'],
-  'F1008':['Concepto','Tipo Doc','No ID','DV','Razon Social','Saldo CxC Dic31'],
-  'F1009':['Concepto','Tipo Doc','No ID','DV','Razon Social','Saldo CxP Dic31'],
-  'F1010':['Tipo Doc','No ID','DV','Razon Social','Valor Patrimonial','% Participacion'],
-  'F1012':['Concepto','Tipo Doc','No ID','DV','Razon Social','Saldo Dic31'],
-  'F2276':['Tipo Doc','No ID','DV','Razon Social','Salarios','Honorarios','Vacaciones','Cesantias','Otros Pag','Total Bruto','Aporte Salud','Aporte Pension','Ret Fte'],
+  'F1001':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Pago Deducible','Pago No Deducible','Ret Fte Practicada Renta','Ret Fte Asumida Renta','Ret Fte Practicada IVA','Ret Fte Asumida IVA'],
+  'F1003':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Base Retencion','Retencion Practicada'],
+  'F1005':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','IVA Descontable','Pais Residencia'],
+  'F1006':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','IVA Generado','Pais Residencia'],
+  'F1007':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Ingresos Brutos','Devoluciones'],
+  'F1008':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo CxC Dic31'],
+  'F1009':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo CxP Dic31'],
+  'F1010':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Valor Patrimonial','% Participacion'],
+  'F1012':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo Dic31'],
+  'F2276':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Salarios','Honorarios','Vacaciones','Cesantias','Otros Pag','Total Bruto','Aporte Salud','Aporte Pension','Ret Fte'],
 };
 
 function generarFormatos(){
@@ -1463,7 +1469,7 @@ function generarFormatos(){
     }else{final1[k]=v}
   }
   Object.assign(final1,men1);
-  formatos['F1001']=Object.values(final1).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.ded),Math.round(v.noDed),Math.round(v.retFte),Math.round(v.retIva)]);
+  formatos['F1001']=Object.values(final1).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.ded),Math.round(v.noDed),Math.round(v.retFte),0,Math.round(v.retIva),0]);
 
   // ── F1003: Retenciones ──
   const dic3={};
@@ -1474,7 +1480,7 @@ function generarFormatos(){
     // Valor retención: crédito del balance (o débito si ya se cruzó)
     dic3[k].ret+=r.cre>0?r.cre:r.deb;
   }
-  formatos['F1003']=Object.values(dic3).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,0,Math.round(v.ret)]);
+  formatos['F1003']=Object.values(dic3).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',0,Math.round(v.ret)]);
 
   // ── F1005: IVA Descontable ──
   const dic5={};
@@ -1483,7 +1489,7 @@ function generarFormatos(){
     if(!dic5[r.nit])dic5[r.nit]={nit:r.nit,razon:r.razon,val:0};
     dic5[r.nit].val+=r.deb;
   }
-  formatos['F1005']=Object.values(dic5).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+  formatos['F1005']=Object.values(dic5).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,Math.round(v.val),'169']);
 
   // ── F1006: IVA Generado ──
   const dic6={};
@@ -1492,7 +1498,7 @@ function generarFormatos(){
     if(!dic6[r.nit])dic6[r.nit]={nit:r.nit,razon:r.razon,val:0};
     dic6[r.nit].val+=r.cre;
   }
-  formatos['F1006']=Object.values(dic6).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+  formatos['F1006']=Object.values(dic6).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,Math.round(v.val),'169']);
 
   // ── F1007: Ingresos ──
   const dic7={};
@@ -1508,7 +1514,7 @@ function generarFormatos(){
     else final7[k]=v;
   }
   Object.assign(final7,men7);
-  formatos['F1007']=Object.values(final7).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val),0]);
+  formatos['F1007']=Object.values(final7).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.val),0]);
 
   // ── F1008: CxC ──
   const dic8={};
@@ -1524,7 +1530,7 @@ function generarFormatos(){
     else final8[k]=v;
   }
   Object.assign(final8,men8);
-  formatos['F1008']=Object.values(final8).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+  formatos['F1008']=Object.values(final8).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.val)]);
 
   // ── F1009: CxP ──
   const dic9={};
@@ -1550,17 +1556,17 @@ function generarFormatos(){
     else final9[k]=v;
   }
   Object.assign(final9,men9);
-  formatos['F1009']=Object.values(final9).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+  formatos['F1009']=Object.values(final9).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.val)]);
 
   // ── F1010: Socios ──
   const dic10={};
   for(const r of clasificacion){
     if(r.formato!=='F1010')continue;
     if(!dic10[r.nit])dic10[r.nit]={nit:r.nit,razon:r.razon,val:0};
-    dic10[r.nit].val+=r.val;
+    dic10[r.nit].val+=Math.max(r.cre-r.deb,0);
   }
   const capTotal=Object.values(dic10).reduce((s,v)=>s+v.val,0);
-  formatos['F1010']=Object.values(dic10).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val),capTotal>0?(v.val/capTotal*100).toFixed(2)+'%':'0%']);
+  formatos['F1010']=Object.values(dic10).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.val),capTotal>0?(v.val/capTotal*100).toFixed(2)+'%':'0%']);
 
   // ── F1012: Inversiones y Bancos ──
   const dic12={};
@@ -1580,7 +1586,7 @@ function generarFormatos(){
     if(!dic12[k])dic12[k]={concepto:r.concepto,nit,razon:r.razon,val:0};
     dic12[k].val+=r.val;
   }
-  formatos['F1012']=Object.values(dic12).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,Math.round(v.val)]);
+  formatos['F1012']=Object.values(dic12).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.val)]);
 
   // ── F2276: Nomina ──
   const dic26={};
@@ -1588,7 +1594,11 @@ function generarFormatos(){
     if(r.formato!=='F2276')continue;
     if(!dic26[r.nit])dic26[r.nit]={nit:r.nit,razon:r.razon,sal:0,hon:0,vac:0,ces:0,otros:0,bruto:0,apSalud:0,apPension:0,retFte:0};
     const c=r.concepto;
-    if(c==='5001')dic26[r.nit].sal+=r.val;
+    const nn=(r.name||'').toLowerCase();
+    if(c==='5001'&&nn.includes('vacacion'))dic26[r.nit].vac+=r.val;
+    else if(c==='5001'&&nn.includes('cesanti'))dic26[r.nit].ces+=r.val;
+    else if(c==='5001'&&nn.includes('prima'))dic26[r.nit].otros+=r.val;
+    else if(c==='5001')dic26[r.nit].sal+=r.val;
     else if(c==='5002')dic26[r.nit].hon+=r.val;
     else if(c==='5024')dic26[r.nit].apSalud+=r.val;
     else if(c==='5025')dic26[r.nit].apPension+=r.val;
@@ -1601,7 +1611,7 @@ function generarFormatos(){
     }
   }
   for(const v of Object.values(dic26)){v.bruto=v.sal+v.hon+v.vac+v.ces+v.otros}
-  formatos['F2276']=Object.values(dic26).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),v.razon,
+  formatos['F2276']=Object.values(dic26).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','',
     Math.round(v.sal),Math.round(v.hon),Math.round(v.vac),Math.round(v.ces),Math.round(v.otros),
     Math.round(v.bruto),Math.round(v.apSalud),Math.round(v.apPension),Math.round(v.retFte)]);
 
@@ -1664,10 +1674,10 @@ function renderFormatos(){
         if(String(row[i])===NM)nitNM++;
       }
       // Razon social vacia (buscar string vacio en posiciones tipicas)
-      const rsIdx=f==='F1001'||f==='F1003'||f==='F1007'||f==='F1008'||f==='F1009'?4:3;
+      const rsIdx=f==='F1001'||f==='F1003'||f==='F1007'||f==='F1008'||f==='F1009'||f==='F1012'?8:7;
       if(rsIdx<row.length&&(!row[rsIdx]||row[rsIdx]===''))sinRazon++;
       // DV vacio
-      const dvIdx=f==='F1001'||f==='F1003'||f==='F1007'||f==='F1008'||f==='F1009'?3:2;
+      const dvIdx=3;
       if(dvIdx<row.length&&(!row[dvIdx]||row[dvIdx]===''))sinDv++;
     }
     if(sinRazon>0)warnings.push(`<strong>${f}:</strong> ${sinRazon} registros sin razon social — revise el balance o complete manualmente`);

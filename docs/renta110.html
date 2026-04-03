@@ -545,7 +545,7 @@ const REGLAS_NO_DED=[
 
   // ── COSTOS Y GASTOS ESTIMADOS (Art. 105) ──
   {id:45,nom:'Costos estimados o provisionados',art:'105',tipo:'no_ded',test:(c,n)=>/costo.*estimado|costo.*provisionado|provision.*costo/.test(n)&&!/fiscal/.test(n)},
-  {id:46,nom:'Pasivos estimados y provisiones',art:'105',tipo:'no_ded',test:(c,n)=>c.startsWith('5160')||c.startsWith('526')},
+  {id:46,nom:'Pasivos estimados y provisiones',art:'105',tipo:'no_ded',test:(c,n)=>c.startsWith('526')||/^pasivo.*estimado|provision.*no.*fiscal/i.test(n)},
   {id:47,nom:'Provisiones diversas',art:'105',tipo:'no_ded',test:(c,n)=>c.startsWith('5299')&&!/fiscal|deducible/.test(n)},
 
   // ── IMPUESTOS ASUMIDOS (Art. 115) ──
@@ -1111,16 +1111,17 @@ function recalcular(){
   const antImpNeto=vTTD('antImpNeto'); // impuesto neto año anterior
   let c104=0;
   if(metodo==='75'){
-    // 75% del impuesto neto del año actual
-    c104=Math.round(c93*0.75/1000)*1000;
+    // 75% del impuesto neto del año actual menos retenciones (Art. 807 ET)
+    c104=Math.max(Math.round(c93*0.75/1000)*1000-c103,0);
   }else if(metodo==='promedio'){
-    // Promedio: (impNeto anterior * 75% + impNeto actual * 75%) / 2
+    // Promedio: (impNeto anterior * 75% + impNeto actual * 75%) / 2, menos retenciones
     const base=Math.round(((antImpNeto*0.75)+(c93*0.75))/2/1000)*1000;
-    c104=base;
+    c104=Math.max(base-c103,0);
   }else if(metodo==='25'){
-    // 25% del impuesto neto del año actual
-    c104=Math.round(c93*0.25/1000)*1000;
+    // 25% del impuesto neto del año actual menos retenciones
+    c104=Math.max(Math.round(c93*0.25/1000)*1000-c103,0);
   }
+  c104=Math.round(c104/1000)*1000;
   set('c104',c104);
 
   // SALDO
@@ -1327,8 +1328,8 @@ async function exportExcel(){
   wsAnt.getCell('B'+ra).value='DATOS BASE';wsAnt.getCell('B'+ra).font={...fB,color:{argb:WH}};wsAnt.getCell('B'+ra).fill=fH;wsAnt.getCell('B'+ra).border=bt;
   wsAnt.getCell('C'+ra).value='Valor';wsAnt.getCell('C'+ra).font={...fB,color:{argb:WH}};wsAnt.getCell('C'+ra).fill=fH;wsAnt.getCell('C'+ra).border=bt;wsAnt.getCell('C'+ra).alignment={horizontal:'center'};
   ra++;
-  const impAct=v('c93')+v('c95');const impAnt=vTTD('antImpNeto')||0;const rets=v('c103');
-  wsAnt.getCell('B'+ra).value='Impuesto neto AG '+year+' (cas. 93+95)';wsAnt.getCell('B'+ra).font=fN;wsAnt.getCell('B'+ra).border=bt;
+  const impAct=v('c93');const impAnt=vTTD('antImpNeto')||0;const rets=v('c103');
+  wsAnt.getCell('B'+ra).value='Impuesto neto AG '+year+' (cas. 93)';wsAnt.getCell('B'+ra).font=fN;wsAnt.getCell('B'+ra).border=bt;
   wsAnt.getCell('C'+ra).value=impAct;wsAnt.getCell('C'+ra).numFmt='#,##0';wsAnt.getCell('C'+ra).font=fB;wsAnt.getCell('C'+ra).border=bt;
   const rIA=ra;ra++;
   wsAnt.getCell('B'+ra).value='Impuesto neto AG anterior';wsAnt.getCell('B'+ra).font=fN;wsAnt.getCell('B'+ra).border=bt;

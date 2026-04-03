@@ -578,7 +578,7 @@ function processData(){
     const idClean=id.replace(/[^0-9]/g,'');
     if(!idClean||idClean.length<4){skipSub++;continue}
     if(deb===0&&cre===0)continue;
-    const isPJ=idClean.length===9||/S\.?A\.?S|LTDA|S\.?A\b|E\.?U\b|SOCIEDAD|COOPERATIVA|FUNDACI|INC\b|CORP\b/i.test(tercero);
+    const isPJ=idClean.length===9||/S\.?A\.?S|LTDA|S\.?A\b|E\.?U\b|SOCIEDAD|COOPERATIVA|FUNDACI|ASOCIACI|CORPORACI|FONDO|ENTIDAD|EMPRESA|INC\b|CORP\b|E\.?S\.?P\b|E\.?S\.?A\.?L/i.test(tercero);
     parsedAccounts.push({code,name,id:idClean,tercero,deb,cre,isPJ,tipo:isPJ?'PJ':'PN'});
   }
   showPreview();
@@ -675,7 +675,7 @@ function calc350(){
   const det={};
   parsedAccounts.forEach(a=>{
     const m=cM[a.code];if(!m||m.concepto==='ignorar')return;
-    const net=a.cre-a.deb;if(net<=0)return;
+    const net=a.cre-a.deb;if(net===0)return;
     const t=m.userTarifa||0,base=t>0?Math.round(net/(t/100)):0;
     let cb,cr;
     if(a.isPJ&&m.casPJr){cb=m.casPJb;cr=m.casPJr}else if(!a.isPJ&&m.casPNr){cb=m.casPNb;cr=m.casPNr}else{cb=m.casPJb||m.casPNb;cr=m.casPJr||m.casPNr}
@@ -685,6 +685,7 @@ function calc350(){
     if(!det[k].conceptos[m.concepto])det[k].conceptos[m.concepto]={name:m.name,base:0,ret:0,cb,cr};
     det[k].conceptos[m.concepto].base+=base;det[k].conceptos[m.concepto].ret+=net;
   });
+  for(const k in c)if(c[k]<0)c[k]=0;
   c[129]=0;
   const rr=[42,43,44,45,46,47,48,49,50,51,52,53,54,57,58,68,69,70,71,72,73,74,75,76,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,111,112,121,122,123,124,125,126,127,128];
   c[130]=rr.reduce((s,x)=>s+(c[x]||0),0)-(c[129]||0);

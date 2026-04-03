@@ -1480,7 +1480,7 @@ function buildPoliciesHtml(){
 
 function policySection(title,content){
   return `<div class="policy-section">
-    <div class="policy-header" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'block'">${title}</div>
+    <div class="policy-header" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">${title}</div>
     <div class="policy-body"><textarea>${content}</textarea></div>
   </div>`;
 }
@@ -1773,23 +1773,27 @@ function exportRevelacionesPdf(){
 
 /* ═══ REVELACIONES WORD EXPORT (PRO) ═══ */
 function buildWordStyles(){
-  return `body{font-family:Arial,sans-serif;font-size:11pt;line-height:1.6;color:#333}
-h1{font-size:16pt;color:#1B3A5C;text-align:center;margin-bottom:4pt}
-h2{font-size:13pt;color:#1B3A5C;border-bottom:2px solid #2E75B6;padding-bottom:4pt;margin-top:24pt}
-h3{font-size:11pt;color:#2E75B6;margin-top:14pt}
-p{margin:6pt 0;text-align:justify}
-.header{text-align:center;margin-bottom:24pt;page-break-after:always}
-.header p{margin:2pt 0;font-size:10pt;color:#666}
-.header h1{font-size:20pt;margin-top:120pt}
-.firmas{margin-top:80pt;font-size:10pt;color:#666;line-height:2.5}
-table{border-collapse:collapse;width:100%;margin:8pt 0}
-th,td{border:1px solid #ccc;padding:4pt 8pt;font-size:10pt}
-th{background:#D6E4F0;font-weight:bold;color:#1B3A5C}
-td.num{text-align:right;font-family:'Courier New',monospace}
-.section{font-size:14pt;color:#1B3A5C;font-weight:bold;margin-top:30pt;margin-bottom:12pt;border-bottom:3px solid #1B3A5C;padding-bottom:6pt;page-break-before:always}
-.total td{font-weight:bold;border-top:2px solid #999;border-bottom:2px solid #999}
-.subtotal td{font-weight:bold;background:#f0f2f5}
-.footer{text-align:center;font-size:8pt;color:#999;margin-top:20pt;font-style:italic}`;
+  return `@page{margin:2cm 2.5cm}body{font-family:Calibri,Arial,sans-serif;font-size:10pt;line-height:1.3;color:#222;margin:0}
+h1{font-size:16pt;color:#1B3A5C;text-align:center;margin-bottom:2pt}
+h2{font-size:11pt;color:#1B3A5C;border-bottom:1.5px solid #2E75B6;padding-bottom:2pt;margin-top:12pt;margin-bottom:4pt}
+h3{font-size:10pt;color:#2E75B6;margin-top:8pt;margin-bottom:3pt}
+p{margin:3pt 0;text-align:justify;font-size:10pt}
+.header{text-align:center;margin-bottom:10pt;page-break-after:always}
+.header p{margin:2pt 0;font-size:10pt;color:#555}
+.header h1{font-size:20pt;margin-top:80pt;margin-bottom:4pt;letter-spacing:.5pt;color:#1B3A5C}
+.header .subtitle{font-size:13pt;font-weight:bold;color:#2E75B6;margin-top:14pt;margin-bottom:4pt}
+.header .date{font-size:11pt;margin-top:10pt}
+.header .cifras{font-size:8pt;color:#999;margin-top:2pt}
+.firmas{margin-top:40pt;font-size:9pt;color:#666}
+.firmas p{text-align:center;margin:2pt 0}
+table{border-collapse:collapse;width:100%;margin:2pt 0}
+th,td{border:1px solid #c0c0c0;padding:2pt 5pt;font-size:9pt}
+th{background:#D6E4F0;font-weight:bold;color:#1B3A5C;padding:2pt 5pt;font-size:9pt}
+td.num{text-align:right;font-family:'Courier New',monospace;font-size:9pt}
+.section{font-size:12pt;color:#1B3A5C;font-weight:bold;margin-top:14pt;margin-bottom:6pt;border-bottom:2px solid #1B3A5C;padding-bottom:3pt;page-break-before:always}
+.total td{font-weight:bold;border-top:2px solid #555;border-bottom:2px solid #555;background:#dce4ed;font-size:9pt}
+.subtotal td{font-weight:bold;background:#edf0f4;font-size:9pt}
+.footer{text-align:center;font-size:7pt;color:#aaa;margin-top:8pt;font-style:italic}`;
 }
 
 function buildPoliciesWordHtml(){
@@ -1805,7 +1809,7 @@ function buildPoliciesWordHtml(){
     const body=textarea?textarea.value:'';
     h+=`<h3>${title}</h3>`;
     let inTable=false;
-    body.split('\\n').forEach(line=>{
+    body.split('\n').forEach(line=>{
       const trimmed=line.trim();
       if(trimmed.startsWith('|')&&trimmed.endsWith('|')){
         if(trimmed.includes('---'))return;
@@ -1851,8 +1855,10 @@ function buildEsfWordHtml(){
   if(esfVal('ppe'))h+=r('Propiedad, planta y equipo',esfVal('ppe'));
   if(esfVal('depreciacion'))h+=r('(-) Depreciación acumulada',esfVal('depreciacion'));
   if(esfVal('intangibles'))h+=r('Activos intangibles',esfVal('intangibles'));
+  if(esfVal('amortizacion'))h+=r('(-) Amortización acumulada',esfVal('amortizacion'));
   if(esfVal('inv_lp'))h+=r('Inversiones a largo plazo',esfVal('inv_lp'));
   if(esfVal('otros_act_nc'))h+=r('Otros activos no corrientes',esfVal('otros_act_nc'));
+  if(esfVal('valorizaciones'))h+=r('Valorizaciones',esfVal('valorizaciones'));
   h+=r('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr,'subtotal');
   h+=r('TOTAL ACTIVOS',totalActivos,'total');
 
@@ -1939,38 +1945,21 @@ function exportRevelacionesWord(){
   const revisor=document.getElementById('cfgRevisor').value||'';
   const tpRevisor=document.getElementById('cfgTPRevisor').value||'';
 
-  const firmaBlock=`<div style="margin-top:60pt;display:flex;justify-content:space-between">
-  <div style="text-align:center;width:45%">
-    <p>________________________________</p>
-    <p style="font-weight:bold">${repLegal||'Representante Legal'}</p>
-    <p>Representante Legal</p>
-  </div>
-  <div style="text-align:center;width:45%">
-    <p>________________________________</p>
-    <p style="font-weight:bold">${contador||'Contador Público'}</p>
-    <p>Contador Público${tpContador?' T.P. '+tpContador:''}</p>
-  </div>
-</div>
-${revisor?`<div style="text-align:center;margin-top:30pt;width:45%;margin:30pt auto 0">
-  <p>________________________________</p>
-  <p style="font-weight:bold">${revisor}</p>
-  <p>Revisor Fiscal${tpRevisor?' T.P. '+tpRevisor:''}</p>
-</div>`:''}`;
+  const firmaBlock=buildFirmaBlock(repLegal,contador,tpContador,revisor,tpRevisor);
+
+  const coverSignatures=buildCoverSignatures(repLegal,contador,tpContador,revisor,tpRevisor);
 
   let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta charset="utf-8"><style>${buildWordStyles()}</style></head><body>
 <div class="header">
   <h1>${empresa}</h1>
-  <p>NIT: ${nit}</p>
-  <p style="font-size:14pt;font-weight:bold;color:#2E75B6;margin-top:20pt">REVELACIONES A LOS<br>ESTADOS FINANCIEROS</p>
-  <p>Bajo Normas Internacionales de Información Financiera (NIIF)</p>
-  <p style="font-size:12pt;margin-top:16pt">Al 31 de diciembre de ${year}</p>
-  <p style="font-size:9pt;color:#999">(Cifras expresadas en pesos colombianos)</p>
-  <div class="firmas">
-    <p>Representante Legal: ${repLegal||'________________________________'}</p>
-    <p>Contador Público: ${contador||'________________________________'} T.P. ${tpContador||'________'}</p>
-    <p>Revisor Fiscal: ${revisor||'________________________________'} T.P. ${tpRevisor||'________'}</p>
-  </div>
+  <p style="font-size:11pt;color:#444">NIT: ${nit}</p>
+  <p class="subtitle">REVELACIONES A LOS<br>ESTADOS FINANCIEROS</p>
+  <p style="font-size:10pt;color:#555">Bajo Normas Internacionales de Información Financiera (NIIF)</p>
+  <p class="date">Al 31 de diciembre de ${year}</p>
+  <p class="cifras">(Cifras expresadas en pesos colombianos)</p>
+  <p style="font-size:10pt;margin-top:12pt;color:#444">${ciudad}</p>
+${coverSignatures}
 </div>
 <div class="section">POLÍTICAS CONTABLES</div>
 ${buildPoliciesWordHtml()}
@@ -2006,22 +1995,22 @@ async function exportRevelacionesWordPro(){
   const revisor=document.getElementById('cfgRevisor').value||'';
   const tpRevisor=document.getElementById('cfgTPRevisor').value||'';
 
-  const firmaBlock=`<div style="margin-top:60pt;display:flex;justify-content:space-between">
-  <div style="text-align:center;width:45%">
+  const firmaBlock=`<div style="margin-top:60pt;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20pt">
+  ${repLegal?`<div style="text-align:center;width:45%">
     <p>________________________________</p>
-    <p style="font-weight:bold">${repLegal||'Representante Legal'}</p>
-    <p>Representante Legal</p>
-  </div>
-  <div style="text-align:center;width:45%">
+    <p style="font-weight:bold;margin:2pt 0">${repLegal}</p>
+    <p style="font-size:9pt;color:#666;margin:0">Representante Legal</p>
+  </div>`:''}
+  ${contador?`<div style="text-align:center;width:45%">
     <p>________________________________</p>
-    <p style="font-weight:bold">${contador||'Contador Público'}</p>
-    <p>Contador Público${tpContador?' T.P. '+tpContador:''}</p>
-  </div>
+    <p style="font-weight:bold;margin:2pt 0">${contador}</p>
+    <p style="font-size:9pt;color:#666;margin:0">Contador Público${tpContador?' — T.P. '+tpContador:''}</p>
+  </div>`:''}
 </div>
 ${revisor?`<div style="text-align:center;margin-top:30pt;width:45%;margin:30pt auto 0">
   <p>________________________________</p>
-  <p style="font-weight:bold">${revisor}</p>
-  <p>Revisor Fiscal${tpRevisor?' T.P. '+tpRevisor:''}</p>
+  <p style="font-weight:bold;margin:2pt 0">${revisor}</p>
+  <p style="font-size:9pt;color:#666;margin:0">Revisor Fiscal${tpRevisor?' — T.P. '+tpRevisor:''}</p>
 </div>`:''}`;
 
   let html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
@@ -2033,11 +2022,11 @@ ${revisor?`<div style="text-align:center;margin-top:30pt;width:45%;margin:30pt a
   <p>Bajo Normas Internacionales de Información Financiera (NIIF)</p>
   <p style="font-size:12pt;margin-top:16pt">Al 31 de diciembre de ${year}</p>
   <p style="font-size:9pt;color:#999">(Cifras expresadas en pesos colombianos)</p>
-  <div class="firmas">
-    <p>Representante Legal: ${repLegal||'________________________________'}</p>
-    <p>Contador Público: ${contador||'________________________________'} T.P. ${tpContador||'________'}</p>
-    <p>Revisor Fiscal: ${revisor||'________________________________'} T.P. ${tpRevisor||'________'}</p>
-  </div>
+  ${(repLegal||contador||revisor)?`<div class="firmas" style="margin-top:40pt;font-size:9pt;color:#666">
+    ${repLegal?`<p>Representante Legal: <strong>${repLegal}</strong></p>`:''}
+    ${contador?`<p>Contador Público: <strong>${contador}</strong>${tpContador?' — T.P. '+tpContador:''}</p>`:''}
+    ${revisor?`<p>Revisor Fiscal: <strong>${revisor}</strong>${tpRevisor?' — T.P. '+tpRevisor:''}</p>`:''}
+  </div>`:''}
 </div>
 <div class="section">POLÍTICAS CONTABLES</div>
 ${buildPoliciesWordHtml()}
@@ -2267,7 +2256,7 @@ async function exportExcelEEFF(){
   const totalPasCorr=esfVal('oblig_fin_cp')+esfVal('proveedores')+esfVal('cxp')+esfVal('impuestos')+esfVal('laborales')+esfVal('provisiones')+esfVal('otros_pas_c');
   const totalPasNoCorr=esfVal('oblig_fin_lp')+esfVal('diferidos_pas')+esfVal('otros_pas');
   const totalPasivos=totalPasCorr+totalPasNoCorr;
-  const totalPatrimonio=esfVal('capital')+esfVal('superavit_cap')+esfVal('reservas')+esfVal('revalorizacion')+esfVal('resultado_ej')+esfVal('resultados_ant')+esfVal('superavit_val')+esfVal('otros_pat');
+  const totalPatrimonio=esfVal('capital')+esfVal('superavit_cap')+esfVal('reservas')+esfVal('revalorizacion')+esfVal('resultado_ej')+esfVal('resultados_ant')+esfVal('superavit_val')+esfVal('otros_pat')+esfVal('resultado_periodo');
 
   addSec('ACTIVOS');addSubSec('Activos Corrientes');
   addRow('Efectivo y equivalentes de efectivo',esfVal('efectivo'));
@@ -2314,6 +2303,7 @@ async function exportExcelEEFF(){
   addRow('Resultados de ejercicios anteriores',esfVal('resultados_ant'));
   addRow('Superávit por valorizaciones',esfVal('superavit_val'));
   addRow('Otros componentes patrimonio',esfVal('otros_pat'));
+  if(esfVal('resultado_periodo')!==0)addRow('Resultado del período (Ingresos - Gastos)',esfVal('resultado_periodo'));
   addTotal('TOTAL PATRIMONIO',totalPatrimonio);
   r++;
   addTotal('TOTAL PASIVOS + PATRIMONIO',totalPasivos+totalPatrimonio);

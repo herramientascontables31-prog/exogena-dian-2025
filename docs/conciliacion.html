@@ -545,50 +545,24 @@ function ejecutar() {
   let finalYearE, finalYearA;
   if (yearE && yearA && yearE !== yearA) {
     // Years conflict — use the auxiliar year for both (accounting is authoritative)
-    console.log('⚠ Años difieren: extracto=' + yearE + ' auxiliar=' + yearA + '. Usando año del auxiliar.');
     finalYearA = yearA;
-    finalYearE = yearA; // override extracto year with auxiliar year
+    finalYearE = yearA;
   } else {
     finalYearE = yearE || yearA || curYear;
     finalYearA = yearA || yearE || curYear;
   }
-  console.log('DEBUG yearE=', yearE, 'yearA=', yearA, 'finalE=', finalYearE, 'finalA=', finalYearA);
-  console.log('DEBUG E map=', JSON.stringify(F.E.map), 'numFmt=', F.E.numFmt, 'hdr=', F.E.headerRow);
-  console.log('DEBUG A map=', JSON.stringify(F.A.map), 'numFmt=', F.A.numFmt, 'hdr=', F.A.headerRow);
   const ext = buildRecords('E', finalYearE);
   const aux = buildRecords('A', finalYearA);
   if (ext.length === 0) { alert('No se encontraron movimientos en el extracto.'); return; }
   if (aux.length === 0) { alert('No se encontraron movimientos en el auxiliar.'); return; }
-  console.log('DEBUG ext[0]=', JSON.stringify(ext[0], (k,v) => v instanceof Date ? v.toISOString() : v));
-  console.log('DEBUG ext[1]=', JSON.stringify(ext[1], (k,v) => v instanceof Date ? v.toISOString() : v));
-  console.log('DEBUG aux[0]=', JSON.stringify(aux[0], (k,v) => v instanceof Date ? v.toISOString() : v));
-  console.log('DEBUG aux[1]=', JSON.stringify(aux[1], (k,v) => v instanceof Date ? v.toISOString() : v));
-  // Debug: test one specific match manually
-  let dbgMatchCount = 0;
-  for (let di = 0; di < Math.min(5, ext.length); di++) {
-    for (let dj = 0; dj < Math.min(5, aux.length); dj++) {
-      const am = amtMatch(ext[di], aux[dj], tol, true);
-      const dc = dateClose(ext[di].fecha, aux[dj].fecha, 0);
-      if (am || (ext[di].deb > 0 && aux[dj].deb > 0 && Math.abs(ext[di].deb - aux[dj].deb) < 100)) {
-        console.log(`DEBUG match test E[${di}] vs A[${dj}]: amt=${am} date=${dc}`,
-          `E.deb=${ext[di].deb} E.cre=${ext[di].cre} E.fecha=${ext[di].fecha}`,
-          `A.deb=${aux[dj].deb} A.cre=${aux[dj].cre} A.fecha=${aux[dj].fecha}`);
-        dbgMatchCount++;
-      }
-    }
-  }
-  console.log('DEBUG manual match checks found:', dbgMatchCount);
   const matched = [];
   const uE = new Set(), uA = new Set();
   doPass(ext, aux, uE, uA, matched, tol, 0, true, 'alta', 'Monto, fecha y tipo exactos');
-  console.log('DEBUG after pass1 (exact):', matched.length, 'matches');
   doPass(ext, aux, uE, uA, matched, tol, 2, true, 'alta', 'Monto y tipo, fecha ±2 días');
-  console.log('DEBUG after pass2 (±2d):', matched.length, 'matches');
   doPass(ext, aux, uE, uA, matched, tol, 5, true, 'media', 'Monto y tipo, fecha ±5 días');
   doPassRef(ext, aux, uE, uA, matched, tol, 'media', 'Monto y referencia');
   doPass(ext, aux, uE, uA, matched, tol, 15, true, 'baja', 'Monto y tipo, ±15 días');
   doPass(ext, aux, uE, uA, matched, tol, 31, false, 'baja', 'Solo monto (±31 días)');
-  console.log('DEBUG TOTAL matches:', matched.length);
   // === DIAGNÓSTICO VISUAL ===
   if (matched.length === 0 && ext.length > 0 && aux.length > 0) {
     let diag = '=== DIAGNÓSTICO (0 conciliadas) ===\n\n';
@@ -715,13 +689,19 @@ function doPassRef(ext, aux, uE, uA, matched, tol, conf, reason) {
 }
 
 function amtMatch(e, a, tol, chkSign) {
+  const t = tol * 100;
   if (chkSign) {
-    if (e.deb > 0 && a.deb > 0) return Math.abs(Math.round(e.deb*100) - Math.round(a.deb*100)) <= tol*100;
-    if (e.cre > 0 && a.cre > 0) return Math.abs(Math.round(e.cre*100) - Math.round(a.cre*100)) <= tol*100;
+    // Same-side: extracto.deb==auxiliar.deb, extracto.cre==auxiliar.cre
+    if (e.deb > 0 && a.deb > 0 && Math.abs(Math.round(e.deb*100) - Math.round(a.deb*100)) <= t) return true;
+    if (e.cre > 0 && a.cre > 0 && Math.abs(Math.round(e.cre*100) - Math.round(a.cre*100)) <= t) return true;
+    // Cross-side: extracto.deb==auxiliar.cre, extracto.cre==auxiliar.deb
+    // (bank debits your account = company credits bank in books, and vice versa)
+    if (e.deb > 0 && a.cre > 0 && Math.abs(Math.round(e.deb*100) - Math.round(a.cre*100)) <= t) return true;
+    if (e.cre > 0 && a.deb > 0 && Math.abs(Math.round(e.cre*100) - Math.round(a.deb*100)) <= t) return true;
     return false;
   }
   const ve = e.deb||e.cre, va = a.deb||a.cre;
-  return Math.abs(Math.round(ve*100) - Math.round(va*100)) <= tol*100;
+  return Math.abs(Math.round(ve*100) - Math.round(va*100)) <= t;
 }
 
 function dateClose(d1, d2, tol) {
@@ -900,6 +880,16 @@ function renderCatList(cats, all) {
   }
   h += '</ul>';
   h += `<div class="cat-total"><span>Total ${all.length} partidas</span><span>$ ${fmtN(totalNet)}</span></div>`;
+  // Detail table with individual items
+  if (all.length > 0) {
+    h += '<div style="margin-top:10px;max-height:350px;overflow-y:auto"><table style="width:100%;border-collapse:collapse;font-size:.78rem">';
+    h += '<thead><tr style="background:#f1f5f9;position:sticky;top:0"><th style="padding:4px 8px;text-align:left;border-bottom:2px solid #e2e8f0">Fecha</th><th style="padding:4px 8px;text-align:left;border-bottom:2px solid #e2e8f0">Descripción</th><th style="padding:4px 8px;text-align:right;border-bottom:2px solid #e2e8f0">Débito</th><th style="padding:4px 8px;text-align:right;border-bottom:2px solid #e2e8f0">Crédito</th></tr></thead><tbody>';
+    all.sort((a,b)=>(b.deb+b.cre)-(a.deb+a.cre)).forEach(item => {
+      const fd = item.fecha ? item.fecha.toLocaleDateString('es-CO') : '—';
+      h += `<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:3px 8px;white-space:nowrap">${fd}</td><td style="padding:3px 8px;max-width:250px;overflow:hidden;text-overflow:ellipsis">${(item.desc||'').substring(0,60)}</td><td style="padding:3px 8px;text-align:right;font-family:monospace;color:${item.deb?'#DC2626':'#999'}">${item.deb?'$'+fmtN(item.deb):''}</td><td style="padding:3px 8px;text-align:right;font-family:monospace;color:${item.cre?'#059669':'#999'}">${item.cre?'$'+fmtN(item.cre):''}</td></tr>`;
+    });
+    h += '</tbody></table></div>';
+  }
   return h;
 }
 

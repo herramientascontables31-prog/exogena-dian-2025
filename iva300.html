@@ -733,9 +733,9 @@ let colMap={code:-1,name:-1,deb:-1,cre:-1,saldoIni:-1,saldoFin:-1};
 const COL_FIELDS=[
   {key:'code', label:'Código Cuenta', required:true, icon:'🔢', hints:['cuenta','codigo','código','code','account']},
   {key:'name', label:'Nombre Cuenta', required:true, icon:'📝', hints:['descripcion','nombre cuenta','descripcion cuenta','cuenta contable','description','nombre']},
+  {key:'saldoIni', label:'Saldo Inicial', required:false, icon:'📊', hints:['saldo inicial','saldo anterior','inicial']},
   {key:'deb', label:'Débitos', required:true, icon:'📤', hints:['debito','débito','debitos','débitos','debit','movimiento debito']},
   {key:'cre', label:'Créditos', required:true, icon:'📥', hints:['credito','crédito','creditos','créditos','credit','movimiento credito']},
-  {key:'saldoIni', label:'Saldo Inicial', required:false, icon:'📊', hints:['saldo inicial','saldo anterior','inicial']},
   {key:'saldoFin', label:'Saldo Final', required:false, icon:'📈', hints:['saldo final','saldo total','saldo actual','final']},
 ];
 
@@ -743,7 +743,7 @@ function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\
 function toNum(v){if(typeof v==='number')return v;if(!v)return 0;let s=String(v).replace(/[$\s]/g,'');if(s.includes(',')&&s.includes('.')){if(s.lastIndexOf(',')>s.lastIndexOf('.'))s=s.replace(/\./g,'').replace(',','.');else s=s.replace(/,/g,'')}else if(s.includes(',')&&!s.includes('.')){const p=s.split(',');if(p[p.length-1].length<=2)s=s.replace(',','.');else s=s.replace(/,/g,'')}return parseFloat(s)||0}
 function fN(n){return(n||0).toLocaleString('es-CO',{minimumFractionDigits:0,maximumFractionDigits:0})}
 function r1000(n){return Math.round((n||0)/1000)*1000} // Redondeo a $1.000
-function cellStr(v){const s=String(v??'').trim();return(s==='undefined'||s==='null'||s==='NaN')?'':s}
+function cellStr(v){let s=String(v??'').trim();if(s==='undefined'||s==='null'||s==='NaN')return'';if(/^\d+\.\d*$/.test(s))s=s.split('.')[0];return s}
 
 /* ═══ FILE LOADING ═══ */
 document.getElementById('fileInput').addEventListener('change',e=>{if(e.target.files.length)loadFile(e.target.files[0])});
@@ -1524,9 +1524,9 @@ function calc300(){
   if(!tieneIngresosDirectos){
     if(cas[58])cas[27]=(cas[27]||0)+r1000(cas[58]/0.05); // IVA gen 5% → ingresos 5%
     if(cas[59])cas[28]=(cas[28]||0)+r1000(cas[59]/0.19); // IVA gen 19% → ingresos general
-    if(cas[61])cas[28]=(cas[28]||0)+r1000(cas[61]/0.19); // juegos → ingresos general
-    if(cas[62])cas[28]=(cas[28]||0)+r1000(cas[62]/0.19); // cerveza → ingresos general
-    if(cas[64])cas[28]=(cas[28]||0)+r1000(cas[64]/0.05); // licores 5% → ingresos general
+    if(cas[61])cas[34]=(cas[34]||0)+r1000(cas[61]/0.19); // juegos → ingresos juegos
+    if(cas[62])cas[36]=(cas[36]||0)+r1000(cas[62]/0.19); // cerveza → ingresos cerveza
+    if(cas[64])cas[38]=(cas[38]||0)+r1000(cas[64]/0.05); // licores 5% → ingresos licores
   }
 
   // === REDONDEAR TODAS LAS CASILLAS A $1.000 ===
@@ -1846,6 +1846,7 @@ function exportPdf300(){
   }
 
   const pw=window.open('','_blank');
+  if(!pw||pw.closed){alert('El navegador bloqueó la ventana emergente. Permite las ventanas emergentes para este sitio e intenta de nuevo.');return}
   pw.document.write(`<!DOCTYPE html><html><head><title>Borrador F300 — ${emp}</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -1993,14 +1994,6 @@ td{font-size:8px;padding:2px 4px;border-bottom:1px solid #e0e0e0}
 }
 
 async function exportXls300Pro(){
-  if(!proUnlocked){
-    if(confirm('La descarga en Excel es una función PRO.\n\n¿Deseas ir al paso 5 para activar PRO?\n(También puedes descargar PDF gratis)')){
-      goStep(5);
-    }
-    return;
-  }
-  const valid=await revalidarPro();
-  if(!valid){proUnlocked=false;updateProUI();alert('Tu clave PRO expiró o fue desactivada. Verifica tu suscripción.');return}
   exportXls300();
 }
 
@@ -2022,7 +2015,7 @@ async function exportXls300(){
 
   // Mapa casilla -> celda en la plantilla (LEFT: col T, RIGHT: col AQ)
   const leftInputs={27:'T16',28:'T17',29:'T18',30:'T19',31:'T20',32:'T21',33:'T22',34:'T23',35:'T24',36:'T25',37:'T26',38:'T27',39:'T28',40:'T29',42:'T31',44:'T33',45:'T34',46:'T35',47:'T36',48:'T37',49:'T38',50:'T39',51:'T40',52:'T41',53:'T42',54:'T43',56:'T45',58:'T47',59:'T48',60:'T49',61:'T50'};
-  const rightInputs={62:'AQ16',63:'AQ17',65:'AQ19',66:'AQ20',68:'AQ22',69:'AQ23',70:'AQ24',71:'AQ25',72:'AQ26',73:'AQ27',74:'AQ28',75:'AQ29',76:'AQ30',78:'AQ32',79:'AQ33',80:'AQ34',84:'AQ38',85:'AQ39',87:'AQ41',90:'AQ44',91:'AQ45',92:'AQ46'};
+  const rightInputs={62:'AQ16',63:'AQ17',64:'AQ18',65:'AQ19',66:'AQ20',68:'AQ22',69:'AQ23',70:'AQ24',71:'AQ25',72:'AQ26',73:'AQ27',74:'AQ28',75:'AQ29',76:'AQ30',78:'AQ32',79:'AQ33',80:'AQ34',84:'AQ38',85:'AQ39',87:'AQ41',90:'AQ44',91:'AQ45',92:'AQ46'};
 
   // Casillas calculadas: escribir valor + formula (result)
   const calcCells={41:'T30',43:'T32',55:'T44',57:'T46',67:'AQ21',77:'AQ31',81:'AQ35',82:'AQ36',83:'AQ37',86:'AQ40',88:'AQ42',89:'AQ43',93:'AQ47'};
