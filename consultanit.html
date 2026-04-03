@@ -391,7 +391,7 @@ let allResults = [];
 function calcDV(nit) {
   const s = String(nit).replace(/\D/g, '');
   if (!s || s.length < 1 || s.length > 15) return null;
-  const pesos = [71, 67, 59, 53, 47, 43, 41, 37, 29, 23, 17, 13, 7, 3, 1];
+  const pesos = [71, 67, 59, 53, 47, 43, 41, 37, 29, 23, 19, 17, 13, 7, 3];
   const padded = s.padStart(15, '0');
   let sum = 0;
   for (let i = 0; i < 15; i++) {
@@ -666,6 +666,11 @@ function renderSingleResult(r) {
     html += '<div class="sr-item sr-ok"><div class="sr-item-icon">👑</div><div class="sr-item-text"><div class="sr-item-label">Gran Contribuyente</div><div class="sr-item-value">SÍ — ' + esc(r.gcResolucion) + '</div></div></div>';
   } else {
     html += '<div class="sr-item sr-neutral"><div class="sr-item-icon">👑</div><div class="sr-item-text"><div class="sr-item-label">Gran Contribuyente</div><div class="sr-item-value">NO</div></div></div>';
+  }
+
+  // Autorretenedor de Renta (solo por resolución)
+  if (r.esAutorretenedor) {
+    html += '<div class="sr-item sr-info"><div class="sr-item-icon">🔄</div><div class="sr-item-text"><div class="sr-item-label">Autorretenedor de Renta</div><div class="sr-item-value">SÍ — ' + esc(r.arResolucion) + '</div></div></div>';
   }
 
   // Proveedor Ficticio
