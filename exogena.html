@@ -436,6 +436,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 </div>
 
 <script>
+function esc(s){return(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 /* ═══════════════════════════════════════════════════════════
    EXOGENA DIAN — GENERADOR DE 10 FORMATOS
    Fase A: Carga de archivo + Deteccion de columnas
@@ -877,6 +878,8 @@ const dz=document.getElementById('dz');
 dz.addEventListener('drop',e=>{if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0])});
 
 function loadFile(file){
+  const MAX_FILE_SIZE=20*1024*1024; // 20 MB
+  if(file.size>MAX_FILE_SIZE){alert('El archivo excede el límite de 20 MB. Reduce el tamaño del Excel antes de cargarlo.');return}
   const reader=new FileReader();
   reader.onload=ev=>{
     try{
@@ -1073,7 +1076,7 @@ const PARAM_1001_RANGOS=[
   ['5016','5125','5125'],['5016','5135','5139'],
   ['5016','5140','5199'],['5016','5210','5219'],
   ['5016','5235','5249'],['5016','5295','5299'],
-  ['5006','5305','5305'],['5101','530515','530515'],
+  ['5006','5305','5305'],['5101','530540','530540'],
   ['5007','1435','1499'],['5010','1504','1699'],['5010','1520','1540'],
 ];
 const PARAM_1001_NOMINA_SUB={
@@ -1122,7 +1125,8 @@ const KW_1001=[
   ['5004',['acueducto','energia','telefono','internet','gas','servicio publico','vigilancia',
            'transporte','flete','acarreo','mensajeria']],
   ['5055',['impuesto','ica','industria y comercio','predial','vehiculo','timbre','estampilla']],
-  ['5006',['interes bancario','gmf','4x1000','comision bancaria','gasto financiero','gravamen',
+  ['5101',['gmf','4x1000','gravamen a los movimientos','gravamen movimiento']],
+  ['5006',['interes bancario','comision bancaria','gasto financiero','gravamen',
            'diferencia en cambio']],
   ['5010',['gastos de personal','bienestar','medicina prepagada']],
   ['5016',['viaje','viatico','pasaje','tiquete','hospedaje','mantenimiento','reparacion',

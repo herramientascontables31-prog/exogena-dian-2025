@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 import openpyxl
@@ -15,7 +16,7 @@ GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/TU_ID_AQUI/pub?
 # === DIRECTORIO CENTRALIZADO DE TERCEROS ===
 DIRECTORIO_CENTRAL_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAr6NT6bJmum4GUAPuPmrJ2m-pybG8Nyve1Nv8s_MyuUOFQZ42gIPpKt_dm0efy1J8kqGcE8AwNxdk/pub?gid=0&single=true&output=csv"
 
-CLAVE_ADMIN = "ExoDIAN-2025-ADMIN"
+CLAVE_ADMIN = os.environ.get("EXODIAN_ADMIN_KEY", "")
 
 @st.cache_data(ttl=300)
 def cargar_clientes():
@@ -657,7 +658,7 @@ PARAM_1001_RANGOS = [
     ("5016", "5140", "5199", True), ("5016", "5210", "5219", True),
     ("5016", "5235", "5249", True), ("5016", "5295", "5299", True),
     ("5055", "5115", "5115", True), ("5006", "5305", "5305", True),
-    ("5101", "530515", "530515", True), ("5007", "1435", "1499", True),
+    ("5101", "530540", "530540", True), ("5007", "1435", "1499", True),
     ("5010", "1504", "1699", True), ("5010", "1520", "1540", True),
 ]
 
@@ -750,7 +751,8 @@ KEYWORDS_1001 = [
     ("5004", True, ["transporte", "flete", "acarreo", "taxi", "taxis", "buses", "envio", "mensajeria"]),
     ("5055", True, ["impuesto", "ica", "industria y comercio", "predial", "vehiculo",
                      "timbre", "estampilla", "estampillas"]),
-    ("5006", True, ["interes bancario", "intereses bancarios", "interes mora", "gmf", "4x1000", "4 x 1000",
+    ("5101", True, ["gmf", "4x1000", "4 x 1000", "gravamen a los movimientos", "gravamen movimiento"]),
+    ("5006", True, ["interes bancario", "intereses bancarios", "interes mora",
                      "comision bancaria", "comisiones bancarias", "gasto financiero", "gastos financieros",
                      "diferencia en cambio", "gravamen", "rendimiento financiero"]),
     ("5010", True, ["gastos de personal", "personal admn", "bienestar", "medicina prepagada",
