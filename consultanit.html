@@ -236,9 +236,9 @@ gtag('config', 'G-S7SM6ST4CC');
     <div id="singleResult"></div>
   </div>
 
-  <!-- Contador de consultas gratis -->
+  <!-- Contador de consultas -->
   <div id="freeCounter" style="margin-bottom:14px;padding:10px 16px;background:var(--f50);border:1px solid var(--f200);border-radius:10px;display:flex;justify-content:space-between;align-items:center;font-size:.8rem">
-    <div><span style="font-weight:700;color:var(--f700)">Consultas DIAN hoy:</span> <span id="freeUsed">0</span> / <span id="freeLimit">3</span> <span style="color:var(--f400)">gratis</span></div>
+    <div id="queryCounter"><span style="font-weight:700;color:var(--f700)">Consultas DIAN hoy:</span> <span id="freeUsed">0</span> / <span id="freeLimit">10</span> <span style="color:var(--f400)">gratis</span></div>
     <div id="proStatus"></div>
   </div>
 
@@ -546,19 +546,25 @@ async function consultarBackend(nit) {
 
 async function consultarBackendBulk(nits) {
   if (!BACKEND_AVAILABLE) return null;
-  try {
-    const resp = await fetch(`${API_URL}/api/nit/bulk`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nits: nits.slice(0, 50) }),
-      signal: AbortSignal.timeout(120000),
-    });
-    if (!resp.ok) return null;
-    return await resp.json();
-  } catch (e) {
-    console.warn('Backend bulk no disponible:', e.message);
-    return null;
+  const results = {};
+  for (let i = 0; i < nits.length; i += 50) {
+    const batch = nits.slice(i, i + 50);
+    try {
+      const resp = await fetch(`${API_URL}/api/nit/bulk`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nits: batch }),
+        signal: AbortSignal.timeout(120000),
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        Object.assign(results, data);
+      }
+    } catch (e) {
+      console.warn('Backend bulk batch error:', e.message);
+    }
   }
+  return Object.keys(results).length > 0 ? results : null;
 }
 
 async function checkBackend() {
@@ -1051,11 +1057,15 @@ function updateProUI() {
   }
 }
 
+let PRO_CREDITS = 500;
+
 function updateFreeCounter() {
-  const used = 3 - FREE_REMAINING;
-  document.getElementById('freeUsed').textContent = Math.max(0, used);
+  const counter = document.getElementById('queryCounter');
   if (IS_PRO) {
-    document.getElementById('freeCounter').style.display = 'none';
+    counter.innerHTML = '<span style="font-weight:700;color:var(--g700)">Créditos DIAN:</span> <span id="creditsLeft">' + PRO_CREDITS + '</span> / 500 <span style="color:var(--f400)">este mes</span>';
+  } else {
+    const used = 10 - FREE_REMAINING;
+    document.getElementById('freeUsed').textContent = Math.max(0, used);
   }
 }
 
@@ -1079,12 +1089,14 @@ function showProPaywall() {
 }
 
 async function fetchRemaining() {
-  if (IS_PRO || !BACKEND_AVAILABLE) return;
   try {
-    const resp = await fetch(`${API_URL}/api/remaining`, { signal: AbortSignal.timeout(5000) });
+    const headers = {};
+    if (IS_PRO && PRO_KEY) headers['X-Pro-Key'] = PRO_KEY;
+    const resp = await fetch(`${API_URL}/api/remaining`, { headers, signal: AbortSignal.timeout(5000) });
     if (resp.ok) {
       const data = await resp.json();
       FREE_REMAINING = data.remaining;
+      if (data.credits_remaining !== undefined) PRO_CREDITS = data.credits_remaining;
       updateFreeCounter();
     }
   } catch {}
