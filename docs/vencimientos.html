@@ -32,7 +32,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"¿Cuándo vence la declaración de renta 2025 para personas jurídicas?","acceptedAnswer":{"@type":"Answer","text":"La declaración de renta AG 2025 para personas jurídicas vence entre mayo y julio de 2026, según el último dígito del NIT. La primera cuota va del 12 al 26 de mayo y la segunda del 9 al 23 de julio."}},
-{"@type":"Question","name":"¿Cuándo vence la exógena DIAN 2025?","acceptedAnswer":{"@type":"Answer","text":"Los vencimientos de información exógena AG 2025 van de abril a junio de 2026. Grandes contribuyentes: abril–mayo. Personas jurídicas: mayo–junio. Se asigna por los dos últimos dígitos del NIT."}},
+{"@type":"Question","name":"¿Cuándo vence la exógena DIAN 2025?","acceptedAnswer":{"@type":"Answer","text":"Los vencimientos de información exógena AG 2025 van de abril a junio de 2026. Grandes contribuyentes: del 28 de abril al 13 de mayo, según el último dígito del NIT. Personas jurídicas y naturales: del 14 de mayo al 12 de junio, según los dos últimos dígitos del NIT."}},
 {"@type":"Question","name":"¿Cuáles son los vencimientos de IVA bimestral 2026?","acceptedAnswer":{"@type":"Answer","text":"El IVA bimestral 2026 tiene 6 períodos con vencimientos en marzo, mayo, julio, septiembre, noviembre de 2026 y enero de 2027, según el último dígito del NIT."}},
 {"@type":"Question","name":"¿Cuándo se presenta la retención en la fuente 2026?","acceptedAnswer":{"@type":"Answer","text":"La retención en la fuente se declara mensualmente, con vencimientos entre el 10 y el 26 del mes siguiente al período declarado, según el último dígito del NIT."}}
 ]}
@@ -443,18 +443,21 @@ var RET_ALL = [
   {label:'Octubre',d:D_RET_OCT},{label:'Noviembre',d:D_RET_NOV},{label:'Diciembre',d:D_RET_DIC}
 ];
 
-// Exógena (2-digit ranges) — unchanged
-var EXOG = [
-  {lo:1,hi:5,gc:'2026-04-14',pj:'2026-05-12'},{lo:6,hi:10,gc:'2026-04-15',pj:'2026-05-13'},
-  {lo:11,hi:15,gc:'2026-04-16',pj:'2026-05-14'},{lo:16,hi:20,gc:'2026-04-17',pj:'2026-05-15'},
-  {lo:21,hi:25,gc:'2026-04-20',pj:'2026-05-18'},{lo:26,hi:30,gc:'2026-04-21',pj:'2026-05-19'},
-  {lo:31,hi:35,gc:'2026-04-22',pj:'2026-05-20'},{lo:36,hi:40,gc:'2026-04-23',pj:'2026-05-21'},
-  {lo:41,hi:45,gc:'2026-04-24',pj:'2026-05-22'},{lo:46,hi:50,gc:'2026-04-27',pj:'2026-05-25'},
-  {lo:51,hi:55,gc:'2026-04-28',pj:'2026-05-26'},{lo:56,hi:60,gc:'2026-04-29',pj:'2026-05-27'},
-  {lo:61,hi:65,gc:'2026-04-30',pj:'2026-05-28'},{lo:66,hi:70,gc:'2026-05-04',pj:'2026-06-01'},
-  {lo:71,hi:75,gc:'2026-05-05',pj:'2026-06-02'},{lo:76,hi:80,gc:'2026-05-06',pj:'2026-06-03'},
-  {lo:81,hi:85,gc:'2026-05-07',pj:'2026-06-04'},{lo:86,hi:90,gc:'2026-05-08',pj:'2026-06-05'},
-  {lo:91,hi:95,gc:'2026-05-11',pj:'2026-06-08'},{lo:96,hi:0,gc:'2026-05-12',pj:'2026-06-09'}
+// Exógena GC: último dígito del NIT (Fuente: DIAN Res. 000162/2023 mod. Res. 000188/2024)
+var EXOG_GC = dm(['2026-04-28','2026-04-29','2026-05-04','2026-05-05','2026-05-06','2026-05-07','2026-05-08','2026-05-11','2026-05-12','2026-05-13']);
+
+// Exógena PJ/PN: últimos 2 dígitos del NIT
+var EXOG_PJ = [
+  {lo:1,hi:5,d:'2026-05-14'},{lo:6,hi:10,d:'2026-05-15'},
+  {lo:11,hi:15,d:'2026-05-19'},{lo:16,hi:20,d:'2026-05-20'},
+  {lo:21,hi:25,d:'2026-05-21'},{lo:26,hi:30,d:'2026-05-22'},
+  {lo:31,hi:35,d:'2026-05-25'},{lo:36,hi:40,d:'2026-05-26'},
+  {lo:41,hi:45,d:'2026-05-27'},{lo:46,hi:50,d:'2026-05-28'},
+  {lo:51,hi:55,d:'2026-05-29'},{lo:56,hi:60,d:'2026-06-01'},
+  {lo:61,hi:65,d:'2026-06-02'},{lo:66,hi:70,d:'2026-06-03'},
+  {lo:71,hi:75,d:'2026-06-04'},{lo:76,hi:80,d:'2026-06-05'},
+  {lo:81,hi:85,d:'2026-06-09'},{lo:86,hi:90,d:'2026-06-10'},
+  {lo:91,hi:95,d:'2026-06-11'},{lo:96,hi:0,d:'2026-06-12'}
 ];
 
 // Activos exterior PJ (2-digit ranges)
@@ -531,7 +534,11 @@ function computeVencimientos(emp) {
       }
     }
     else if(oblId === 'exogena') {
-      out.push({oblId:oblId,label:meta.label,periodo:'Presentación',fecha:lookup2(EXOG,emp.nit,emp.tipo),color:meta.color});
+      if(emp.tipo === 'gc') {
+        out.push({oblId:oblId,label:meta.label,periodo:'Presentación',fecha:EXOG_GC[d1],color:meta.color});
+      } else {
+        out.push({oblId:oblId,label:meta.label,periodo:'Presentación',fecha:lookup2(EXOG_PJ,emp.nit,null),color:meta.color});
+      }
     }
     else if(oblId === 'iva_bim') {
       var bims = [
