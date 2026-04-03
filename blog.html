@@ -121,10 +121,22 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .btn-green:hover{background:var(--green-700);transform:translateY(-1px);box-shadow:var(--shadow-xl)}
 .btn-sm{padding:8px 16px;font-size:.82rem;border-radius:10px}
 .hamburger{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:8px;color:var(--gray-700)}
+.nav-dropdown{position:relative}
+.nav-dropdown-toggle{display:inline-flex;align-items:center;gap:5px;text-decoration:none;color:var(--gray-500);font-size:.88rem;font-weight:500;transition:color .2s;cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;padding:0}
+.nav-dropdown-toggle:hover{color:var(--gray-900)}
+.nav-dropdown-toggle svg{width:14px;height:14px;transition:transform .2s}
+.nav-dropdown.open .nav-dropdown-toggle svg{transform:rotate(180deg)}
+.nav-dropdown-menu{display:none;position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;padding:8px;min-width:220px;box-shadow:0 12px 40px rgba(0,0,0,.1);z-index:200}
+.nav-dropdown.open .nav-dropdown-menu{display:block}
+.nav-dropdown-menu a{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;text-decoration:none;color:var(--gray-600);font-size:.88rem;font-weight:500;transition:all .15s;white-space:nowrap}
+.nav-dropdown-menu a:hover{background:var(--green-50);color:var(--green-700)}
+.nav-dropdown-menu a .dd-icon{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
 @media(max-width:900px){
   .hamburger{display:block}
   .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:var(--white);padding:16px 20px;flex-direction:column;gap:12px;border-top:1px solid var(--gray-200);box-shadow:0 8px 20px rgba(0,0,0,.08)}
   .nav-links.open{display:flex}
+  .nav-dropdown-menu{position:static;transform:none;box-shadow:none;border:none;padding:0 0 0 12px;min-width:auto}
+  .nav-dropdown.open .nav-dropdown-menu{display:flex;flex-direction:column}
 }
 
 /* ===== HERO ===== */
