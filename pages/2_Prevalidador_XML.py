@@ -84,7 +84,7 @@ def safe_str(v):
 
 def safe_int(v):
     try: return int(float(v))
-    except: return 0
+    except Exception: return 0
 
 def detectar_tipo_doc(nit):
     if not nit or nit == NM: return TDM
@@ -228,7 +228,7 @@ def sanitizar_registro(reg, fdef, info_declarante):
         else:
             try:
                 r[cv] = str(int(float(val)))
-            except:
+            except Exception:
                 r[cv] = "0"
 
     return r
@@ -593,7 +593,7 @@ def validar_formato(nombre, datos):
                     v = float(val)
                     if v < 0:
                         errores.append((fila, campo_v, "warn", "Valor negativo en " + campo_v + ": " + str(v) + " - NIT " + nid))
-                except:
+                except Exception:
                     errores.append((fila, campo_v, "error", "Valor no numerico en " + campo_v + ": '" + val + "' - NIT " + nid))
     return errores
 
@@ -649,7 +649,7 @@ def generar_xml_formato(nombre_hoja, datos, info_declarante, num_envio):
         primer_campo_valor = fdef["campos_valor"][0]
         for reg in registros_limpios:
             try: valor_total += int(float(reg.get(primer_campo_valor, 0)))
-            except: pass
+            except Exception: pass
 
     campos_cab = [
         ("Ano", ANO_GRAVABLE),
@@ -696,7 +696,7 @@ def generar_xml_formato(nombre_hoja, datos, info_declarante, num_envio):
             # Campos valor ya sanitizados, pero doble-check
             if campo in campos_valor:
                 try: val = str(int(float(val))) if val else "0"
-                except: val = "0"
+                except Exception: val = "0"
             el = SubElement(row_el, tag)
             el.text = str(val) if val else ""
 
@@ -707,7 +707,7 @@ def generar_xml_formato(nombre_hoja, datos, info_declarante, num_envio):
         lines = xml_pretty.decode("ISO-8859-1").split("\n")
         lines[0] = '<?xml version="1.0" encoding="ISO-8859-1"?>'
         return "\n".join(lines)
-    except:
+    except Exception:
         return '<?xml version="1.0" encoding="ISO-8859-1"?>\n' + xml_str
 
 def main():

@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Environment & secrets
+.env
+.env.*
+dian-proxy/.env
+
+# Cache & runtime
+dian-proxy/cache_data.json
+__pycache__/
+*.pyc
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+_tmp_*
+*.tmp
+
+# Excel test files (large binaries)
+archivos_prueba/*.xlsx
+*.xlsm
+
+# Python
+*.egg-info/
+dist/
+build/

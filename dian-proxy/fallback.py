@@ -3,8 +3,11 @@ Fuentes de fallback para cuando DIAN MUISCA no responde.
 Consulta en cascada: RUES → datos.gov.co (Pymes) → web search.
 Adaptado de 1_Generar_Formatos.py:buscar_info_terceros()
 """
+import logging
 import re
 import httpx
+
+logger = logging.getLogger("exogenadian.fallback")
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -49,7 +52,8 @@ async def buscar_rues(nit: str) -> dict | None:
 
             reg = registros[0] if isinstance(registros, list) else registros
             return _extraer_info_dict(reg, "RUES")
-    except Exception:
+    except Exception as e:
+        logger.debug("RUES lookup failed for %s: %s", nit, e)
         return None
 
 
@@ -61,7 +65,7 @@ async def buscar_datos_gov(nit: str) -> dict | None:
             resp = await client.get(
                 "https://www.datos.gov.co/resource/gskn-y6cz.json",
                 params={
-                    "$where": f"nit='{nit}' OR identificacion='{nit}'",
+                    "$where": f"nit='{re.sub(r'[^0-9]', '', nit)}' OR identificacion='{re.sub(r'[^0-9]', '', nit)}'",
                     "$limit": 5,
                 },
                 headers=HEADERS,
@@ -70,8 +74,8 @@ async def buscar_datos_gov(nit: str) -> dict | None:
                 data = resp.json()
                 if data and isinstance(data, list) and len(data) > 0:
                     return _extraer_info_dict(data[0], "datos.gov.co")
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug("datos.gov.co lookup failed for %s: %s", nit, e)
     return None
 
 
@@ -114,8 +118,8 @@ async def buscar_einforma(nit: str) -> dict | None:
             if info.get("razon_social") or info.get("direccion"):
                 info["dv"] = _calc_dv(nit)
                 return info
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug("Einforma lookup failed for %s: %s", nit, e)
     return None
 
 
@@ -160,8 +164,8 @@ async def buscar_web(nit: str) -> dict | None:
                             "dv": _calc_dv(nit),
                             "fuente": "Búsqueda web",
                         }
-    except Exception:
-        pass
+    except Exception as e:
+        logger.debug("Web search failed for %s: %s", nit, e)
     return None
 
 

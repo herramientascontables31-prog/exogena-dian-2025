@@ -67,7 +67,7 @@ def cargar_claves_pro():
             if clave and clave.lower() != 'nan':
                 claves[clave] = {'activo': estado in ('activo', 'si', 'sí', '1', 'true'), 'nombre': nombre}
         return claves
-    except:
+    except Exception:
         return {}
 
 def verificar_pro(clave):
@@ -143,7 +143,7 @@ def cargar_directorio_central():
             nit = nit.replace('.', '').replace('-', '').strip()
             if '.' in nit:
                 try: nit = str(int(float(nit)))
-                except: pass
+                except Exception: pass
             directorio[nit] = {
                 'razon': str(row.get('razón social', row.get('razon social', ''))).strip(),
                 'dir': str(row.get('dirección', row.get('direccion', ''))).strip(),
@@ -229,7 +229,7 @@ def detectar_tipo_doc(nit):
     nit = str(nit).strip()
     if '.' in nit:
         try: nit = str(int(float(nit)))
-        except: pass
+        except Exception: pass
     if not nit.isdigit():
         letras = sum(1 for c in nit if c.isalpha())
         if letras <= 3:
@@ -255,7 +255,7 @@ def safe_num(v):
         if s.lower() == 'nan' or s == '':
             return 0.0
         return float(s.replace(",", "").replace("$", "").replace(" ", ""))
-    except:
+    except Exception:
         return 0.0
 
 def safe_str(v):
@@ -328,7 +328,7 @@ def pad_dpto(v):
     v = str(v).strip()
     if '.' in v:
         try: v = str(int(float(v)))
-        except: pass
+        except Exception: pass
     if v.lower() == 'nan': return ""
     return v.zfill(2) if v.isdigit() else v
 
@@ -337,7 +337,7 @@ def pad_mpio(v):
     v = str(v).strip()
     if '.' in v:
         try: v = str(int(float(v)))
-        except: pass
+        except Exception: pass
     if v.lower() == 'nan': return ""
     return v.zfill(3) if v.isdigit() else v
 
@@ -899,7 +899,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
             if not nit_d: continue
             if '.' in nit_d:
                 try: nit_d = str(int(float(nit_d)))
-                except: pass
+                except Exception: pass
             dir_externo[nit_d] = {
                 'dir': safe_str(row.iloc[1]) if len(row) > 1 else "",
                 'dp': pad_dpto(safe_str(row.iloc[2])) if len(row) > 2 else "",
@@ -919,7 +919,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
             continue
         if '.' in nit:
             try: nit = str(int(float(nit)))
-            except: pass
+            except Exception: pass
 
         # Permitir filas sin tercero para bancos (F1012 las necesita)
         if not nit:

@@ -1,0 +1,24 @@
+{
+  "name": "exogenadian",
+  "version": "2.0.0",
+  "description": "Herramientas contables para contadores colombianos — Exógena DIAN, IVA 300, Retención 350, Estados Financieros NIIF",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "dev": "npx live-server --port=5500 --no-browser",
+    "test": "cd dian-proxy && python -m pytest tests/ -v",
+    "test:quick": "cd dian-proxy && python -m pytest tests/ -q",
+    "lint": "echo 'No linter configured yet'"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "html-minifier-terser": "^7.2.0",
+    "javascript-obfuscator": "^5.4.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

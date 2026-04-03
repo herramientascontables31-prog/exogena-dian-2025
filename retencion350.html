@@ -152,19 +152,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 </style>
 </head>
 <body>
-<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:'DM Sans',sans-serif">
-  <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem"><div style="width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900">E</div>ExógenaDIAN</a>
-  <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
-    <a href="exogena.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Exógena</a>
-    <a href="renta110.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Renta</a>
-    <a href="consultanit.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Consulta NIT</a>
-    <a href="conciliacion.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Conciliaciones</a>
-    <a href="iva300.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">IVA 300</a>
-    <a href="retencion350.html" style="font-size:.82rem;color:#059669;text-decoration:none;font-weight:700">Ret 350</a>
-    <a href="estadosfinancieros.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">EEFF</a>
-    <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">← Inicio</a>
-  </div>
-</div>
+<div id="nav-container"></div>
+<script src="shared/nav.js"></script>
 <div class="container">
   <div class="header"><div>
     <h1><span>350</span> Declaración Retenciones en la Fuente</h1>
@@ -290,6 +279,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 </div>
 
 <script>
+function esc(s){return(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 /* ═══ DEFAULTS ═══ */
 const DEFAULT_MAP=[
   {prefix:'236505',name:'Salarios y pagos laborales',concepto:'rentas_trabajo',aplica:'PN',tarifa:0,casPJb:null,casPJr:null,casPNb:77,casPNr:93},
@@ -352,6 +342,8 @@ dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
 dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files.length)loadFile(e.dataTransfer.files[0])});
 
 function loadFile(file){
+  var MAX_FILE_SIZE=20*1024*1024;
+  if(file.size>MAX_FILE_SIZE){alert('El archivo excede el límite de 20 MB.');return}
   document.getElementById('fileName').textContent='✓ '+file.name;
   const reader=new FileReader();
   reader.onload=function(e){
