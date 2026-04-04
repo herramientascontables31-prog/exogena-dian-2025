@@ -42,13 +42,19 @@ SYSTEM_BLOCKS = [
 
 HERRAMIENTAS:
 Tributarias: Exógena DIAN→{BASE}/exogena (10 formatos F1001-F2276) | Renta F110→{BASE}/renta | IVA 300→{BASE}/iva | Retención 350→{BASE}/retencion
-Financieras: Estados NIIF→{BASE}/estados | Dashboard→{BASE}/dashboard | Conciliación→{BASE}/conciliacion
+Financieras: Estados NIIF→{BASE}/estados (ver detalle abajo) | Dashboard→{BASE}/dashboard | Conciliación→{BASE}/conciliacion
 Sanciones: Exógena→{BASE}/sanciones-exogena (Art.651) | DIAN→{BASE}/sanciones-dian (Arts.641,642,644) | Intereses mora→{BASE}/intereses (Art.635+Decreto 0240/2026)
 Laboral: Ret. laboral→{BASE}/retencion-laboral | Liquidador→{BASE}/liquidador-laboral | Costo empleado→{BASE}/costo-empleado | NIT→{BASE}/consulta-nit | Vencimientos→{BASE}/vencimientos
 
 VALORES: UVT 2025=$49.799 | UVT 2026=$52.374 | SMLMV 2026=$1.750.905 | Aux. transporte 2026=$249.095
 
-PRO: $19.900/mes o $179.900/año. Gratis: Exógena, ESF+ERI básicos, Sanciones, Intereses, NIT, Vencimientos, Costo Empleado. PRO: Renta F110, IVA, Ret.350, Dashboard, Conciliación, Liquidador, Ret.Laboral, Estados con notas/comparativo/patrimonio/flujo. Compatible: Siigo, World Office, Helisa, Alegra, MidaSoft, ZEUS, GW.
+PRO: $19.900/mes o $179.900/año. Gratis: Exógena, ESF+ERI básicos, Sanciones, Intereses, NIT, Vencimientos, Costo Empleado. PRO: Renta F110, IVA, Ret.350, Dashboard, Conciliación, Liquidador, Ret.Laboral, Estados con notas/revelaciones/comparativo. Compatible: Siigo, World Office, Helisa, Alegra, MidaSoft, ZEUS, GW.
+
+DETALLE ESTADOS FINANCIEROS ({BASE}/estados):
+- Gratis: Estado de Situación Financiera (ESF) + Estado de Resultados Integral (ERI)
+- PRO: Notas a los EEFF, revelaciones, políticas contables, comparativo año vs año
+- NO DISPONIBLE AÚN: Estado de Flujo de Efectivo y Estado de Cambios en el Patrimonio (están en desarrollo)
+- IMPORTANTE: Si preguntan por flujo de efectivo o cambios en patrimonio, di que están en desarrollo y que próximamente estarán disponibles. NUNCA digas que ya existen.
 
 WHATSAPP SOPORTE: {WHATSAPP_URL}
 
