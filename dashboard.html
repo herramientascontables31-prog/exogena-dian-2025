@@ -1855,7 +1855,9 @@ function exportHTML() {
     + '</style>'
     + '</head><body style="background:' + bgColor + '">'
     + clone.outerHTML
-    + '</body></html>';
+    + '<link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
+</body></html>';
 
   var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
   var url = URL.createObjectURL(blob);
@@ -1969,5 +1971,7 @@ function verifyData() {
     <a href="exogena.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Exógena</a>
   </div>
 </section>
+<link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
 </body>
 </html>

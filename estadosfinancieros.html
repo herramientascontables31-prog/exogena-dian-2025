@@ -2237,7 +2237,9 @@ function exportRevelacionesPdf(){
     </div>
     <div class="footer">Las notas son parte integral de los estados financieros</div>
   </div>
-  </body></html>`);
+  <link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
+</body></html>`);
   w.document.close();
   setTimeout(()=>w.print(),500);
 }
@@ -2447,6 +2449,8 @@ ${firmaBlock}`:''}
 ${buildECPWordHtml()}
 ${firmaBlock}
 <p class="footer">Generado por ExógenaDIAN.com — Verificar antes de presentar oficialmente</p>
+<link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
 </body></html>`;
 
   const blob=new Blob(['\ufeff'+html],{type:'application/msword'});
@@ -2523,6 +2527,8 @@ ${firmaBlock}
 ${buildNotasHtml()}
 ${firmaBlock}
 <p class="footer">Generado por ExógenaDIAN.com — Verificar antes de presentar oficialmente</p>
+<link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
 </body></html>`;
 
   const blob=new Blob(['\ufeff'+html],{type:'application/msword'});
@@ -2693,7 +2699,9 @@ function exportPdfEEFF(){
     </div>
     <div class="footer">Las notas son parte integral de los estados financieros</div>
   </div>
-  </body></html>`);
+  <link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
+</body></html>`);
   w.document.close();
   setTimeout(()=>w.print(),500);
 }
@@ -2976,7 +2984,9 @@ function exportPoliciesPdf(){
   </div>
   ${content}
   <div class="footer">Documento generado como borrador. Debe ser revisado y aprobado por la administración de la entidad.</div>
-  </body></html>`);
+  <link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
+</body></html>`);
   w.document.close();
   setTimeout(()=>w.print(),500);
 }
@@ -3032,7 +3042,9 @@ th{background:#D6E4F0;font-weight:bold;color:#1B3A5C}
     if(inTable){html+='</table>';inTable=false}
   });
 
-  html+=`</body></html>`;
+  html+=`<link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
+</body></html>`;
 
   const blob=new Blob(['\ufeff'+html],{type:'application/msword'});
   const url=URL.createObjectURL(blob);
@@ -3346,7 +3358,9 @@ function exportNotasPdf(){
   .footer{text-align:center;font-size:9px;color:#888;margin-top:40px;font-style:italic;padding-top:12px;border-top:1px solid #ddd}
   </style></head><body>${content.innerHTML}
   <div class="footer">Las notas son parte integral de los estados financieros</div>
-  </body></html>`);
+  <link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
+</body></html>`);
   w.document.close();
   setTimeout(()=>w.print(),500);
 }
@@ -3370,7 +3384,9 @@ th,td{border:1px solid #ccc;padding:4pt 8pt;font-size:10pt}
 th{background:#D6E4F0;font-weight:bold;color:#1B3A5C}
 </style></head><body>`;
   html+=content.innerHTML;
-  html+=`</body></html>`;
+  html+=`<link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
+</body></html>`;
 
   const blob=new Blob(['\ufeff'+html],{type:'application/msword'});
   const url=URL.createObjectURL(blob);
@@ -3441,5 +3457,7 @@ async function btnLoading(btn,fn){
     <a href="exogena.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Exógena</a>
   </div>
 </section>
+<link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
 </body>
 </html>
