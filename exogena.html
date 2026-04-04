@@ -15,11 +15,11 @@ gtag('config', 'G-S7SM6ST4CC');
 <meta name="theme-color" content="#059669">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Información Exógena DIAN 2025 — Generador de 10 Formatos | ExógenaDIAN</title>
-<meta name="description" content="Genera automáticamente los 10 formatos de información exógena DIAN (F1001 a F2276) desde tu balance de prueba. Excel + XML listos para el prevalidador MUISCA. 100% en tu navegador.">
-<meta name="keywords" content="información exógena DIAN 2025, formatos exógena, F1001 pagos, F1003 retenciones, F1007 ingresos, F2276 rentas trabajo, prevalidador MUISCA, medios magnéticos DIAN">
+<meta name="description" content="Genera automáticamente los 10 formatos de información exógena DIAN (F1001 a F2276) desde tu balance de prueba. Excel listo para revisar y prevalidar en MUISCA. 100% en tu navegador.">
+<meta name="keywords" content="información exógena DIAN 2025, formatos exógena, F1001 pagos, F1003 retenciones, F1007 ingresos, F2276 rentas trabajo, medios magnéticos DIAN, generador exógena">
 <link rel="canonical" href="https://exogenadian.com/exogena.html">
 <meta property="og:title" content="Información Exógena DIAN 2025 — 10 Formatos Automáticos | ExógenaDIAN">
-<meta property="og:description" content="Genera los 10 formatos de exógena DIAN desde tu balance de prueba. Excel + XML listos para MUISCA.">
+<meta property="og:description" content="Genera los 10 formatos de exógena DIAN desde tu balance de prueba. Excel listo para revisar y prevalidar.">
 <meta property="og:url" content="https://exogenadian.com/exogena.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_CO">
@@ -30,7 +30,7 @@ gtag('config', 'G-S7SM6ST4CC');
 <meta property="og:image:type" content="image/png">
 <meta name="robots" content="index, follow">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"Generador de Información Exógena DIAN 2025","url":"https://exogenadian.com/exogena.html","description":"Genera automáticamente los 10 formatos de información exógena DIAN (F1001 a F2276) desde tu balance de prueba. Excel + XML listos para el prevalidador MUISCA.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"Generador de Información Exógena DIAN 2025","url":"https://exogenadian.com/exogena.html","description":"Genera automáticamente los 10 formatos de información exógena DIAN (F1001 a F2276) desde tu balance de prueba. Excel listo para revisar y prevalidar en MUISCA.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Información Exógena DIAN","item":"https://exogenadian.com/exogena.html"}]}
@@ -155,7 +155,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <li><span class="step-num">1</span><div><strong>Sube tu balance</strong><br>Archivo Excel (.xlsx) con columnas de Cuenta, NIT, Debito y Credito</div></li>
       <li><span class="step-num">2</span><div><strong>Configura tu empresa</strong><br>NIT, razon social, direccion y datos del declarante</div></li>
       <li><span class="step-num">3</span><div><strong>Mapea columnas</strong><br>Vincula las columnas de tu Excel con los campos requeridos</div></li>
-      <li><span class="step-num">4</span><div><strong>Descarga los formatos</strong><br>Excel con 10 hojas + archivo para el prevalidador MUISCA</div></li>
+      <li><span class="step-num">4</span><div><strong>Descarga los formatos</strong><br>Excel con 10 hojas listo para revisar. Luego genera los XML con el Prevalidador.</div></li>
     </ol>
     <p style="font-size:.82rem;color:var(--green)">Tus datos se procesan 100% en tu navegador. Nunca salen de tu equipo.</p>
     <button class="onboard-close" onclick="cerrarOnboarding()">Entendido, comenzar</button>
@@ -450,7 +450,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px">
         <button onclick="btnLoading(this,exportExcel)" class="btn btn-success" style="padding:14px 32px;font-size:1rem">📊 Descargar Excel con los 10 Formatos</button>
       </div>
-      <p style="font-size:.82rem;color:var(--muted)">Un libro Excel con una hoja por formato, formateado profesional.<br>Listo para revisar y subir al prevalidador DIAN para generar los XML.</p>
+      <p style="font-size:.82rem;color:var(--muted)">Un libro Excel con una hoja por formato, formateado profesional.<br>Revisa los datos y luego usa el Prevalidador para generar los XML que subes al MUISCA.</p>
     </div>
     <div class="card">
       <div style="padding:12px;background:var(--pri3);border-radius:8px;font-size:.8rem;color:var(--pri)">
@@ -1808,7 +1808,7 @@ function renderDescargar(){
 }
 
 /* ═══════════════════════════════════════════════════════════
-   FASE D: EXPORTAR EXCEL + XML
+   FASE D: EXPORTAR EXCEL
    ═══════════════════════════════════════════════════════════ */
 
 function getCompanyConfig(){
