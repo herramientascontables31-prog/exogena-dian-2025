@@ -1,0 +1,258 @@
+/* ═══ ExógenaDIAN — Exa Chat Widget ═══
+   Dark mode: #0A0F1E  |  Accent: #22C55E
+   ─────────────────────────────────────── */
+
+/* ===== FAB (floating action button) ===== */
+.exa-fab{
+  position:fixed;bottom:24px;right:24px;z-index:9990;
+  width:58px;height:58px;border-radius:50%;border:none;cursor:pointer;
+  background:linear-gradient(135deg,#22C55E,#16A34A);
+  color:#fff;font-size:1.5rem;
+  display:grid;place-items:center;
+  box-shadow:0 4px 20px rgba(34,197,94,.4);
+  transition:all .25s ease;
+}
+.exa-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(34,197,94,.55)}
+.exa-fab.open{transform:rotate(90deg) scale(1.08)}
+.exa-fab svg{width:26px;height:26px;transition:transform .25s}
+
+/* Pulse ring on first load */
+.exa-fab::after{
+  content:'';position:absolute;inset:-4px;border-radius:50%;
+  border:2px solid rgba(34,197,94,.5);
+  animation:exaPulse 2s ease-out 3;
+  pointer-events:none;
+}
+@keyframes exaPulse{
+  0%{transform:scale(1);opacity:1}
+  100%{transform:scale(1.5);opacity:0}
+}
+
+/* ===== PANEL ===== */
+.exa-panel{
+  position:fixed;bottom:96px;right:24px;z-index:9991;
+  width:400px;max-width:calc(100vw - 32px);
+  height:min(600px, calc(100vh - 130px));
+  background:#0A0F1E;
+  border:1px solid rgba(34,197,94,.2);
+  border-radius:20px;
+  display:flex;flex-direction:column;
+  box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 40px rgba(34,197,94,.08);
+  opacity:0;transform:translateY(16px) scale(.96);
+  pointer-events:none;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  font-family:'Outfit','DM Sans',sans-serif;
+  overflow:hidden;
+}
+.exa-panel.open{
+  opacity:1;transform:translateY(0) scale(1);
+  pointer-events:auto;
+}
+
+/* ===== HEADER ===== */
+.exa-header{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 20px;
+  background:linear-gradient(135deg,rgba(34,197,94,.08),rgba(34,197,94,.03));
+  border-bottom:1px solid rgba(255,255,255,.06);
+  flex-shrink:0;
+}
+.exa-avatar{
+  width:38px;height:38px;border-radius:12px;
+  background:linear-gradient(135deg,#22C55E,#16A34A);
+  display:grid;place-items:center;
+  font-weight:900;font-size:.85rem;color:#fff;
+  flex-shrink:0;
+}
+.exa-header-info{flex:1;min-width:0}
+.exa-header-info h3{
+  font-size:.92rem;font-weight:700;color:#F0FDF4;
+  margin:0;line-height:1.2;
+}
+.exa-header-info span{
+  font-size:.72rem;color:#6EE7B7;font-weight:500;
+  display:flex;align-items:center;gap:4px;
+}
+.exa-header-info span::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:#22C55E;display:inline-block;
+  animation:exaDot 2s ease-in-out infinite;
+}
+@keyframes exaDot{0%,100%{opacity:1}50%{opacity:.4}}
+.exa-close{
+  background:none;border:none;color:rgba(255,255,255,.4);
+  cursor:pointer;font-size:1.2rem;padding:4px;
+  transition:color .2s;border-radius:8px;
+}
+.exa-close:hover{color:#fff;background:rgba(255,255,255,.08)}
+
+/* WhatsApp button in header */
+.exa-wa-btn{
+  display:grid;place-items:center;
+  width:34px;height:34px;border-radius:10px;
+  background:rgba(37,211,102,.12);color:#25D366;
+  text-decoration:none;transition:all .2s;flex-shrink:0;
+}
+.exa-wa-btn:hover{background:rgba(37,211,102,.25);transform:scale(1.08)}
+.exa-wa-btn svg{width:18px;height:18px}
+
+/* WhatsApp card in welcome */
+.exa-wa-card{margin-top:10px}
+.exa-wa-card a{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.74rem;color:rgba(255,255,255,.35);
+  text-decoration:none;transition:color .2s;
+}
+.exa-wa-card a:hover{color:#25D366}
+.exa-wa-card svg{flex-shrink:0}
+
+/* ===== MESSAGES ===== */
+.exa-messages{
+  flex:1;overflow-y:auto;padding:16px 16px 8px;
+  display:flex;flex-direction:column;gap:12px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.1) transparent;
+}
+.exa-messages::-webkit-scrollbar{width:5px}
+.exa-messages::-webkit-scrollbar-track{background:transparent}
+.exa-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
+
+/* Message bubbles */
+.exa-msg{
+  max-width:88%;padding:10px 14px;border-radius:14px;
+  font-size:.86rem;line-height:1.55;word-break:break-word;
+  animation:exaFadeIn .25s ease;
+}
+@keyframes exaFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.exa-msg.user{
+  align-self:flex-end;
+  background:linear-gradient(135deg,#22C55E,#16A34A);
+  color:#fff;border-bottom-right-radius:4px;
+}
+.exa-msg.assistant{
+  align-self:flex-start;
+  background:rgba(255,255,255,.06);
+  color:#E2E8F0;
+  border:1px solid rgba(255,255,255,.06);
+  border-bottom-left-radius:4px;
+}
+
+/* Markdown inside assistant messages */
+.exa-msg.assistant strong{color:#22C55E;font-weight:700}
+.exa-msg.assistant a{color:#6EE7B7;text-decoration:underline;text-underline-offset:2px}
+.exa-msg.assistant a:hover{color:#22C55E}
+.exa-msg.assistant code{
+  background:rgba(255,255,255,.08);padding:1px 5px;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;font-size:.8rem;
+}
+.exa-msg.assistant ul,.exa-msg.assistant ol{
+  margin:6px 0;padding-left:18px;
+}
+.exa-msg.assistant li{margin:3px 0}
+.exa-msg.assistant p{margin:0 0 6px}
+.exa-msg.assistant p:last-child{margin-bottom:0}
+.exa-msg.assistant h4{color:#22C55E;font-size:.88rem;margin:8px 0 4px}
+
+/* Welcome message */
+.exa-welcome{
+  text-align:center;padding:32px 20px;color:rgba(255,255,255,.5);
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  flex:1;justify-content:center;
+}
+.exa-welcome-icon{
+  width:52px;height:52px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(34,197,94,.05));
+  display:grid;place-items:center;
+  font-size:1.4rem;
+  border:1px solid rgba(34,197,94,.15);
+}
+.exa-welcome h4{color:#E2E8F0;font-size:.95rem;margin:0}
+.exa-welcome p{font-size:.8rem;line-height:1.5;max-width:280px;margin:0}
+
+/* Quick actions */
+.exa-quick{
+  display:flex;flex-wrap:wrap;gap:6px;justify-content:center;
+  margin-top:8px;
+}
+.exa-quick button{
+  background:rgba(34,197,94,.08);
+  border:1px solid rgba(34,197,94,.2);
+  color:#6EE7B7;font-size:.74rem;font-weight:500;
+  padding:6px 12px;border-radius:20px;cursor:pointer;
+  font-family:'Outfit',sans-serif;
+  transition:all .2s;white-space:nowrap;
+}
+.exa-quick button:hover{
+  background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.4);
+  color:#22C55E;
+}
+
+/* Typing indicator */
+.exa-typing{
+  display:flex;gap:4px;align-items:center;
+  padding:10px 14px;align-self:flex-start;
+}
+.exa-typing span{
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(34,197,94,.5);
+  animation:exaBounce 1.2s ease-in-out infinite;
+}
+.exa-typing span:nth-child(2){animation-delay:.15s}
+.exa-typing span:nth-child(3){animation-delay:.3s}
+@keyframes exaBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+/* ===== INPUT ===== */
+.exa-input-area{
+  display:flex;align-items:flex-end;gap:8px;
+  padding:12px 16px;
+  border-top:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.02);
+  flex-shrink:0;
+}
+.exa-input{
+  flex:1;resize:none;border:none;outline:none;
+  background:rgba(255,255,255,.06);
+  color:#E2E8F0;font-size:.86rem;
+  font-family:'Outfit','DM Sans',sans-serif;
+  padding:10px 14px;border-radius:12px;
+  max-height:100px;min-height:40px;
+  line-height:1.4;
+  border:1px solid rgba(255,255,255,.08);
+  transition:border-color .2s;
+}
+.exa-input::placeholder{color:rgba(255,255,255,.25)}
+.exa-input:focus{border-color:rgba(34,197,94,.3)}
+.exa-send{
+  width:40px;height:40px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,#22C55E,#16A34A);
+  color:#fff;cursor:pointer;
+  display:grid;place-items:center;
+  transition:all .2s;flex-shrink:0;
+}
+.exa-send:hover{transform:scale(1.05);box-shadow:0 2px 12px rgba(34,197,94,.4)}
+.exa-send:disabled{opacity:.3;cursor:default;transform:none;box-shadow:none}
+.exa-send svg{width:18px;height:18px}
+
+/* ===== FOOTER ===== */
+.exa-footer{
+  text-align:center;padding:6px;
+  font-size:.62rem;color:rgba(255,255,255,.2);
+  border-top:1px solid rgba(255,255,255,.03);
+  flex-shrink:0;
+}
+.exa-footer a{color:rgba(34,197,94,.4);text-decoration:none}
+.exa-footer a:hover{color:#22C55E}
+
+/* ===== MOBILE ===== */
+@media(max-width:480px){
+  .exa-fab{bottom:16px;right:16px;width:52px;height:52px}
+  .exa-panel{
+    bottom:0;right:0;left:0;
+    width:100%;max-width:100%;
+    height:100vh;height:100dvh;
+    border-radius:0;
+    border:none;
+  }
+  .exa-panel .exa-header{border-radius:0}
+}

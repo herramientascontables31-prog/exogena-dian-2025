@@ -37,9 +37,12 @@
     .mega-col .mega-divider{height:1px;background:var(--gray-100,#F3F4F6);margin:6px 10px}
 
     /* ===== TOOL NAV CATEGORIES ===== */
-    .tn-group{display:flex;align-items:center;gap:10px}
-    .tn-sep{width:1px;height:16px;background:#e2e8f0;margin:0 4px;flex-shrink:0}
-    .tn-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9CA3AF;margin-right:2px}
+    .ed-nav{gap:10px!important}
+    .ed-nav #navLinks{gap:4px 2px!important}
+    .ed-nav #navLinks a{font-size:.78rem!important;padding:4px 10px!important;border-radius:6px!important;color:#4B5563!important;text-decoration:none!important;transition:all .15s!important;white-space:nowrap!important}
+    .ed-nav #navLinks a:hover{background:#ECFDF5!important;color:#047857!important}
+    .tn-sep{width:1px;height:20px;background:#e2e8f0;margin:0 6px;flex-shrink:0}
+    .tn-label{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#fff;background:#9CA3AF;padding:2px 7px;border-radius:4px;margin-right:2px;white-space:nowrap}
     .tn-hamburger{display:none;background:none;border:none;font-size:1.3rem;cursor:pointer;padding:6px;color:#374151;flex-shrink:0}
 
     /* ===== TOOL NAV MOBILE ===== */
@@ -51,11 +54,10 @@
       .ed-nav #navLinks{display:none;width:100%;padding-top:8px;border-top:1px solid #e2e8f0;margin-top:8px}
       .ed-nav #navLinks.open{display:flex;flex-wrap:wrap}
       .tn-sep{display:none}
-      .tn-label{width:100%;margin-top:6px}
+      .tn-label{width:auto;margin-top:6px}
     }
     @media(max-width:480px){
       .ed-nav{padding:8px 12px!important}
-      .ed-nav #navLinks a{font-size:.78rem!important}
     }
 
     /* ===== MOBILE MEGA ===== */
@@ -87,41 +89,40 @@
 
   /* ─── Tool nav (compact bar for tool pages) ─── */
   var toolNav=skipLink+
-  '<nav class="ed-nav" role="navigation" aria-label="Navegación de herramientas" style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:\'Outfit\',\'DM Sans\',sans-serif;gap:12px;flex-wrap:wrap">'+
+  '<nav class="ed-nav" role="navigation" aria-label="Navegación de herramientas" style="display:flex;align-items:center;justify-content:space-between;padding:8px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:Outfit,DM Sans,sans-serif;flex-wrap:wrap">'+
   '  <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem;flex-shrink:0">'+
   '    <div style="width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900">E</div>'+
   '    ExógenaDIAN'+
   '  </a>'+
   '  <button class="tn-hamburger" aria-expanded="false" aria-label="Abrir menú" onclick="var nl=document.getElementById(\'navLinks\');nl.classList.toggle(\'open\');this.setAttribute(\'aria-expanded\',nl.classList.contains(\'open\'))">☰</button>'+
-  '  <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap" id="navLinks">'+
+  '  <div style="display:flex;align-items:center;gap:3px;flex-wrap:wrap" id="navLinks">'+
        /* Tributarias */
   '    <span class="tn-label">Tributarias</span>'+
-  '    <a href="exogena.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Exógena</a>'+
-  '    <a href="renta110.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Renta</a>'+
-  '    <a href="iva300.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">IVA 300</a>'+
-  '    <a href="retencion350.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Ret 350</a>'+
-       /* sep */
+  '    <a href="exogena.html">Exógena</a>'+
+  '    <a href="renta110.html">Renta</a>'+
+  '    <a href="iva300.html">IVA 300</a>'+
+  '    <a href="retencion350.html">Ret 350</a>'+
   '    <span class="tn-sep"></span>'+
        /* Financieras */
   '    <span class="tn-label">Financieras</span>'+
-  '    <a href="estadosfinancieros.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">EEFF</a>'+
-  '    <a href="dashboard.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Dashboard</a>'+
-  '    <a href="conciliacion.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Conciliación</a>'+
-       /* sep */
+  '    <a href="estadosfinancieros.html">EEFF</a>'+
+  '    <a href="dashboard.html">Dashboard</a>'+
+  '    <a href="conciliacion.html">Conciliación</a>'+
   '    <span class="tn-sep"></span>'+
        /* Sanciones */
   '    <span class="tn-label">Sanciones</span>'+
-  '    <a href="sanciones.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Exógena</a>'+
-  '    <a href="sanciones-dian.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">DIAN</a>'+
-  '    <a href="intereses.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Intereses</a>'+
-  '    <a href="retencion-fuente.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Retención</a>'+
-       /* sep */
+  '    <a href="sanciones.html">Exógena</a>'+
+  '    <a href="sanciones-dian.html">DIAN</a>'+
+  '    <a href="intereses.html">Intereses</a>'+
+  '    <a href="retencion-fuente.html">Ret Fuente</a>'+
   '    <span class="tn-sep"></span>'+
        /* Laborales + Consultas */
-  '    <a href="liquidador.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Laboral</a>'+
-  '    <a href="costoreal.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Costo Empleado</a>'+
-  '    <a href="consultanit.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">NIT</a>'+
-  '    <a href="vencimientos.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Vencimientos</a>'+
+  '    <span class="tn-label">Más</span>'+
+  '    <a href="liquidador.html">Laboral</a>'+
+  '    <a href="costoreal.html">Costo Empleado</a>'+
+  '    <a href="consultanit.html">NIT</a>'+
+  '    <a href="vencimientos.html">Vencimientos</a>'+
+  '    <a href="uvt.html">UVT</a>'+
   '  </div>'+
   '</nav>';
 
