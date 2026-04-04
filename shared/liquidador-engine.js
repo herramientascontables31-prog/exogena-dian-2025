@@ -206,7 +206,20 @@ function liquidar(d) {
   var cesantias = calcCesantias(sblCesPrima, diasAnio);
   var intereses = calcIntereses(cesantias, diasAnio);
   var prima = calcPrima(sblCesPrima, diasSem);
-  var vac = calcVacaciones(sblVac, diasTotal, d.diasVacDisfrutados || 0);
+  // Vacaciones: 3 modos
+  var vac;
+  if (d.vacMode === 'pendientes') {
+    // Usuario ingresó directamente los días pendientes
+    var diasPend = d.diasVacPendientes || 0;
+    var diasDer = Math.round(diasTotal * 15 / 360 * 100) / 100;
+    vac = { diasDerecho: diasDer, diasDisfrutados: Math.max(0, diasDer - diasPend), diasPendientes: diasPend, valor: Math.round(sblVac * diasPend / 30) };
+  } else if (d.vacMode === 'ninguna') {
+    // No ha salido a vacaciones → todo pendiente
+    vac = calcVacaciones(sblVac, diasTotal, 0);
+  } else {
+    // Modo por defecto: días disfrutados
+    vac = calcVacaciones(sblVac, diasTotal, d.diasVacDisfrutados || 0);
+  }
 
   // Salario proporcional último mes
   var diaDelMes = ff.getDate();

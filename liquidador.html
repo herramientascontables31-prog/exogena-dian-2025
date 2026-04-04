@@ -208,9 +208,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
 
     <div class="form-grid" style="margin-top:16px">
-      <div class="form-group">
-        <label>Días de vacaciones disfrutados <span class="tip" data-tip="Días ya tomados desde el último corte de vacaciones. Vacaciones se calculan sobre salario básico únicamente (Art. 189 CST).">?</span></label>
+      <div class="form-group full">
+        <label>Vacaciones <span class="tip" data-tip="Art. 186-189 CST. Se calculan sobre salario básico únicamente, sin auxilio de transporte ni extras.">?</span></label>
+        <select id="iVacMode" onchange="toggleVacMode()">
+          <option value="disfrutados">Sé cuántos días he disfrutado de vacaciones</option>
+          <option value="pendientes">Sé cuántos días tengo pendientes</option>
+          <option value="ninguna">No he salido a vacaciones / No sé</option>
+        </select>
+      </div>
+      <div class="form-group" id="gVacDisfrutados">
+        <label>Días de vacaciones disfrutados</label>
         <input type="number" id="iVacDisfrutados" value="0" min="0">
+        <span class="hint">Días tomados desde el inicio del contrato o último corte</span>
+      </div>
+      <div class="form-group" id="gVacPendientes" style="display:none">
+        <label>Días de vacaciones pendientes</label>
+        <input type="number" id="iVacPendientes" value="0" min="0">
+        <span class="hint">Días que tiene acumulados sin disfrutar</span>
       </div>
       <div class="form-group">
         <label>Anticipos de cesantías (COP) <span class="tip" data-tip="Si el trabajador retiró parcial o totalmente las cesantías del fondo. Se descontarán del total.">?</span></label>
@@ -268,7 +282,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 </div><!-- /container -->
 
 <!-- Libs externas -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <!-- Motor -->
@@ -313,6 +327,13 @@ function checkSalario(){
     else h.textContent='';
     if(integral&&s<p.SMLMV*13) h.textContent='Alerta: salario integral debe ser ≥ 13 SMLMV ($'+fNum(p.SMLMV*13)+')';
   } else h.textContent='';
+}
+
+/* Toggle vacaciones mode */
+function toggleVacMode(){
+  var mode=document.getElementById('iVacMode').value;
+  document.getElementById('gVacDisfrutados').style.display=mode==='disfrutados'?'flex':'none';
+  document.getElementById('gVacPendientes').style.display=mode==='pendientes'?'flex':'none';
 }
 
 /* Toggle variable */
@@ -376,7 +397,10 @@ function renderReview(){
     var pv=parseMoney('iComisiones')+parseMoney('iExtras')+parseMoney('iBonif');
     rows.push(['Promedio variable',fCOP(pv)+'/mes']);
   }
-  rows.push(['Vacaciones disfrutadas',document.getElementById('iVacDisfrutados').value+' días']);
+  var vm=val('iVacMode');
+  if(vm==='pendientes') rows.push(['Vacaciones pendientes',document.getElementById('iVacPendientes').value+' días (ingresados directamente)']);
+  else if(vm==='ninguna') rows.push(['Vacaciones','No ha salido a vacaciones — se liquidan todas']);
+  else rows.push(['Vacaciones disfrutadas',document.getElementById('iVacDisfrutados').value+' días']);
   if(parseMoney('iAnticipos')>0)rows.push(['Anticipos cesantías',fCOP(parseMoney('iAnticipos'))]);
   if(parseMoney('iPrestamos')>0)rows.push(['Préstamos/libranzas',fCOP(parseMoney('iPrestamos'))]);
 
@@ -408,7 +432,9 @@ function calcular(){
     salario:parseMoney('iSalario'),
     esVariable:document.getElementById('iEsVariable').checked,
     promedioVariable:parseMoney('iComisiones')+parseMoney('iExtras')+parseMoney('iBonif'),
+    vacMode:val('iVacMode'),
     diasVacDisfrutados:parseInt(document.getElementById('iVacDisfrutados').value)||0,
+    diasVacPendientes:parseInt(document.getElementById('iVacPendientes').value)||0,
     anticiposCesantias:parseMoney('iAnticipos'),
     prestamos:parseMoney('iPrestamos')
   };
