@@ -105,6 +105,7 @@ gtag('config', 'G-S7SM6ST4CC');
 </style>
 </head>
 <body>
+<div class="exo-loading" id="loadingOverlay"><div class="spinner"></div><div class="spinner-text">Procesando archivo...</div></div>
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
 <script src="shared/toast.js"></script>
@@ -177,6 +178,7 @@ function readFile(file, k) {
   var MAX_FILE_SIZE=20*1024*1024;
   if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el límite de 20 MB.','warning');return}
   const reader = new FileReader();
+  reader.onerror=function(){L.classList.remove('active')};
   reader.onload = ev => {
     try {
       const wb = XLSX.read(ev.target.result, {type:'array', cellDates:true});
@@ -207,8 +209,9 @@ function readFile(file, k) {
       checkReady();
     } catch(err) {
       exoToast('Error al leer el archivo: ' + err.message,'error');
-    }
+    } finally{L.classList.remove('active')}
   };
+  var L=document.getElementById('loadingOverlay');L.classList.add('active');
   reader.readAsArrayBuffer(file);
 }
 

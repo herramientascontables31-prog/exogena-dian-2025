@@ -127,6 +127,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 </style>
 </head>
 <body>
+<div class="exo-loading" id="loadingOverlay"><div class="spinner"></div><div class="spinner-text">Procesando balance...</div></div>
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
 <script src="shared/toast.js"></script>
@@ -879,7 +880,9 @@ dz.addEventListener('drop',e=>{if(e.dataTransfer.files[0])loadFile(e.dataTransfe
 function loadFile(file){
   const MAX_FILE_SIZE=20*1024*1024; // 20 MB
   if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el límite de 20 MB. Reduce el tamaño del Excel antes de cargarlo.','warning');return}
+  var L=document.getElementById('loadingOverlay');L.classList.add('active');
   const reader=new FileReader();
+  reader.onerror=function(){L.classList.remove('active')};
   reader.onload=ev=>{
     try{
       const wb=XLSX.read(ev.target.result,{type:'array',cellDates:true});
@@ -897,7 +900,7 @@ function loadFile(file){
       headerRow=autoDetectHeaderRow();
       goStep(2);
       renderStep2();
-    }catch(err){exoToast('Error al leer: '+err.message,'error')}
+    }catch(err){exoToast('Error al leer: '+err.message,'error')}finally{L.classList.remove('active')}
   };
   reader.readAsArrayBuffer(file);
 }

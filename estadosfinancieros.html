@@ -209,6 +209,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 </style>
 </head>
 <body>
+<div class="exo-loading" id="loadingOverlay"><div class="spinner"></div><div class="spinner-text">Procesando balance...</div></div>
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
 <script src="shared/toast.js"></script>
@@ -600,12 +601,16 @@ function loadFile(file){
   if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el límite de 20 MB.','warning');return}
   document.getElementById('fileName').textContent='✓ '+file.name;
   const reader=new FileReader();
+  reader.onerror=function(){L.classList.remove('active')};
   reader.onload=function(e){
+    try{
     const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});
     rawData=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
     extractMeta();
     detectedHeaderRow=autoDetectHeaderRow();
+    }finally{L.classList.remove('active')}
   };
+  var L=document.getElementById('loadingOverlay');L.classList.add('active');
   reader.readAsArrayBuffer(file);
 }
 

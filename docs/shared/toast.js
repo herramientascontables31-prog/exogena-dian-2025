@@ -44,4 +44,11 @@
       setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el)},300);
     }
   };
+  /* ─── HTML escape utility (prevents XSS from user data / Excel content) ─── */
+  window.esc=function(s){
+    if(s==null)return'';
+    var d=document.createElement('div');
+    d.textContent=String(s);
+    return d.innerHTML;
+  };
 })();
