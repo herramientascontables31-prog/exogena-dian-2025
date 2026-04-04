@@ -13,7 +13,7 @@
 
   // ─── Config ───
   var CFG = Object.assign({
-    apiUrl: 'https://exogenadian-api-xxxxxxxx.a.run.app',  // Cambiar por URL real de Cloud Run
+    apiUrl: 'https://dian-proxy-337146111457.southamerica-east1.run.app',
     maxHistory: 10,       // mensajes enviados a la API (reducido para ahorrar tokens)
     storageKey: 'exa_chat_history',
     whatsapp: WA,

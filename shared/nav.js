@@ -36,28 +36,25 @@
     .mega-col a .dd-icon{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;font-size:.8rem;flex-shrink:0}
     .mega-col .mega-divider{height:1px;background:var(--gray-100,#F3F4F6);margin:6px 10px}
 
-    /* ===== TOOL NAV CATEGORIES ===== */
-    .ed-nav{gap:10px!important}
-    .ed-nav #navLinks{gap:4px 2px!important}
-    .ed-nav #navLinks a{font-size:.78rem!important;padding:4px 10px!important;border-radius:6px!important;color:#4B5563!important;text-decoration:none!important;transition:all .15s!important;white-space:nowrap!important}
-    .ed-nav #navLinks a:hover{background:#ECFDF5!important;color:#047857!important}
-    .tn-sep{width:1px;height:20px;background:#e2e8f0;margin:0 6px;flex-shrink:0}
-    .tn-label{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#fff;background:#9CA3AF;padding:2px 7px;border-radius:4px;margin-right:2px;white-space:nowrap}
+    /* ===== TOOL NAV DROPDOWN CATEGORIES ===== */
+    .tn-cat{position:relative}
+    .tn-cat-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;font-size:.82rem;font-weight:600;color:#374151;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+    .tn-cat-btn:hover,.tn-cat.open .tn-cat-btn{background:#ECFDF5;border-color:#059669;color:#047857}
+    .tn-cat-btn svg{width:12px;height:12px;transition:transform .2s}
+    .tn-cat.open .tn-cat-btn svg{transform:rotate(180deg)}
+    .tn-dd{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:6px;min-width:160px;box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:200}
+    .tn-cat.open .tn-dd{display:block}
+    .tn-dd a{display:block;padding:7px 12px;border-radius:6px;text-decoration:none;color:#4B5563;font-size:.82rem;font-weight:500;transition:all .12s;white-space:nowrap}
+    .tn-dd a:hover{background:#ECFDF5;color:#047857}
     .tn-hamburger{display:none;background:none;border:none;font-size:1.3rem;cursor:pointer;padding:6px;color:#374151;flex-shrink:0}
 
     /* ===== TOOL NAV MOBILE ===== */
-    @media(min-width:769px){
-      .tn-hamburger{display:none!important}
-    }
     @media(max-width:768px){
       .tn-hamburger{display:block}
       .ed-nav #navLinks{display:none;width:100%;padding-top:8px;border-top:1px solid #e2e8f0;margin-top:8px}
-      .ed-nav #navLinks.open{display:flex;flex-wrap:wrap}
-      .tn-sep{display:none}
-      .tn-label{width:auto;margin-top:6px}
-    }
-    @media(max-width:480px){
-      .ed-nav{padding:8px 12px!important}
+      .ed-nav #navLinks.open{display:flex;flex-wrap:wrap;gap:6px}
+      .tn-dd{position:static;box-shadow:none;border:none;padding:2px 0 2px 8px;min-width:auto}
+      .tn-cat.open .tn-dd{display:block}
     }
 
     /* ===== MOBILE MEGA ===== */
@@ -88,6 +85,7 @@
   var skipLink='<a href="#main" class="skip-link">Ir al contenido</a>';
 
   /* ─── Tool nav (compact bar for tool pages) ─── */
+  var chevron='<svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>';
   var toolNav=skipLink+
   '<nav class="ed-nav" role="navigation" aria-label="Navegación de herramientas" style="display:flex;align-items:center;justify-content:space-between;padding:8px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:Outfit,DM Sans,sans-serif;flex-wrap:wrap">'+
   '  <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem;flex-shrink:0">'+
@@ -95,34 +93,43 @@
   '    ExógenaDIAN'+
   '  </a>'+
   '  <button class="tn-hamburger" aria-expanded="false" aria-label="Abrir menú" onclick="var nl=document.getElementById(\'navLinks\');nl.classList.toggle(\'open\');this.setAttribute(\'aria-expanded\',nl.classList.contains(\'open\'))">☰</button>'+
-  '  <div style="display:flex;align-items:center;gap:3px;flex-wrap:wrap" id="navLinks">'+
+  '  <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap" id="navLinks">'+
        /* Tributarias */
-  '    <span class="tn-label">Tributarias</span>'+
-  '    <a href="exogena.html">Exógena</a>'+
-  '    <a href="renta110.html">Renta</a>'+
-  '    <a href="iva300.html">IVA 300</a>'+
-  '    <a href="retencion350.html">Ret 350</a>'+
-  '    <span class="tn-sep"></span>'+
+  '    <div class="tn-cat"><button class="tn-cat-btn" onclick="toggleTnCat(this)">Tributarias '+chevron+'</button>'+
+  '      <div class="tn-dd">'+
+  '        <a href="exogena.html">📊 Exógena DIAN</a>'+
+  '        <a href="renta110.html">📑 Renta F110</a>'+
+  '        <a href="iva300.html">📋 IVA 300</a>'+
+  '        <a href="retencion350.html">🧮 Retención 350</a>'+
+  '      </div>'+
+  '    </div>'+
        /* Financieras */
-  '    <span class="tn-label">Financieras</span>'+
-  '    <a href="estadosfinancieros.html">EEFF</a>'+
-  '    <a href="dashboard.html">Dashboard</a>'+
-  '    <a href="conciliacion.html">Conciliación</a>'+
-  '    <span class="tn-sep"></span>'+
+  '    <div class="tn-cat"><button class="tn-cat-btn" onclick="toggleTnCat(this)">Financieras '+chevron+'</button>'+
+  '      <div class="tn-dd">'+
+  '        <a href="estadosfinancieros.html">📄 Estados Financieros</a>'+
+  '        <a href="dashboard.html">📊 Dashboard</a>'+
+  '        <a href="conciliacion.html">🏦 Conciliación</a>'+
+  '      </div>'+
+  '    </div>'+
        /* Sanciones */
-  '    <span class="tn-label">Sanciones</span>'+
-  '    <a href="sanciones.html">Exógena</a>'+
-  '    <a href="sanciones-dian.html">DIAN</a>'+
-  '    <a href="intereses.html">Intereses</a>'+
-  '    <a href="retencion-fuente.html">Ret Fuente</a>'+
-  '    <span class="tn-sep"></span>'+
-       /* Laborales + Consultas */
-  '    <span class="tn-label">Más</span>'+
-  '    <a href="liquidador.html">Laboral</a>'+
-  '    <a href="costoreal.html">Costo Empleado</a>'+
-  '    <a href="consultanit.html">NIT</a>'+
-  '    <a href="vencimientos.html">Vencimientos</a>'+
-  '    <a href="uvt.html">UVT</a>'+
+  '    <div class="tn-cat"><button class="tn-cat-btn" onclick="toggleTnCat(this)">Sanciones '+chevron+'</button>'+
+  '      <div class="tn-dd">'+
+  '        <a href="sanciones.html">⚖️ Sanciones Exógena</a>'+
+  '        <a href="sanciones-dian.html">⚖️ Sanciones DIAN</a>'+
+  '        <a href="intereses.html">% Intereses de Mora</a>'+
+  '        <a href="retencion-fuente.html">💰 Retención Fuente</a>'+
+  '      </div>'+
+  '    </div>'+
+       /* Laboral + Consultas */
+  '    <div class="tn-cat"><button class="tn-cat-btn" onclick="toggleTnCat(this)">Más '+chevron+'</button>'+
+  '      <div class="tn-dd">'+
+  '        <a href="liquidador.html">👷 Liquidador Laboral</a>'+
+  '        <a href="costoreal.html">💰 Costo Empleado</a>'+
+  '        <a href="consultanit.html">🔍 Consulta NIT</a>'+
+  '        <a href="vencimientos.html">📅 Vencimientos</a>'+
+  '        <a href="uvt.html">🔢 Conversor UVT</a>'+
+  '      </div>'+
+  '    </div>'+
   '  </div>'+
   '</nav>';
 
@@ -202,6 +209,27 @@
     document.body.insertAdjacentHTML('afterbegin',html);
   }
 
+  /* ─── Tool nav dropdown toggle ─── */
+  window.toggleTnCat=function(btn){
+    var cat=btn.parentElement;
+    var wasOpen=cat.classList.contains('open');
+    // Close all other dropdowns
+    document.querySelectorAll('.tn-cat.open').forEach(function(c){c.classList.remove('open')});
+    if(!wasOpen)cat.classList.add('open');
+  };
+  // Close tool nav dropdowns on outside click
+  document.addEventListener('click',function(e){
+    if(!e.target.closest('.tn-cat')){
+      document.querySelectorAll('.tn-cat.open').forEach(function(c){c.classList.remove('open')});
+    }
+  });
+  // Close on Escape
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){
+      document.querySelectorAll('.tn-cat.open').forEach(function(c){c.classList.remove('open')});
+    }
+  });
+
   /* ─── Highlight current page ─── */
   var links=document.querySelectorAll('#navLinks a[href]');
   links.forEach(function(a){
@@ -211,12 +239,16 @@
       a.style.fontWeight='700';
     }
   });
-  // Also highlight in mega-menu
-  var ddLinks=document.querySelectorAll('.mega-col a[href]');
+  // Also highlight in mega-menu and tool nav dropdowns
+  var ddLinks=document.querySelectorAll('.mega-col a[href], .tn-dd a[href]');
   ddLinks.forEach(function(a){
     if(a.getAttribute('href')===page){
       a.style.color='#059669';
       a.style.fontWeight='700';
+      a.style.background='#ECFDF5';
+      // Also highlight parent category button
+      var cat=a.closest('.tn-cat');
+      if(cat){var btn=cat.querySelector('.tn-cat-btn');if(btn){btn.style.borderColor='#059669';btn.style.color='#047857'}}
     }
   });
 
