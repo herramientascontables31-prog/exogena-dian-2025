@@ -31,6 +31,8 @@ const HTML_FILES = [
   'terminos.html',
   'liquidador.html',
   'sanciones-dian.html',
+  'uvt.html',
+  'costoreal.html',
 ];
 
 // ─── Directorios/archivos estáticos a copiar tal cual ───
