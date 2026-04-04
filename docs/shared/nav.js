@@ -41,6 +41,7 @@
   '    <a href="estadosfinancieros.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">EEFF</a>'+
   '    <a href="dashboard.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Dashboard</a>'+
   '    <a href="intereses.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Intereses</a>'+
+  '    <a href="liquidador.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Liquidador</a>'+
   '    <a href="sanciones.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Sanciones</a>'+
   '    <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">&larr; Inicio</a>'+
   '  </div>'+
@@ -69,6 +70,7 @@
   '        <a href="vencimientos.html"><div class="dd-icon" style="background:var(--purple-50)">📅</div> Vencimientos</a>'+
   '        <a href="dashboard.html"><div class="dd-icon" style="background:#1E293B">📊</div> Dashboard</a>'+
   '        <a href="intereses.html"><div class="dd-icon" style="background:var(--rose-50)">%</div> Intereses Mora</a>'+
+  '        <a href="liquidador.html"><div class="dd-icon" style="background:var(--green-50)">⚖️</div> Liquidador Laboral</a>'+
   '        <a href="sanciones.html"><div class="dd-icon" style="background:var(--amber-50)">⚖️</div> Sanciones</a>'+
   '        <a href="blog.html"><div class="dd-icon" style="background:var(--blue-50)">📝</div> Blog</a>'+
   '      </div>'+

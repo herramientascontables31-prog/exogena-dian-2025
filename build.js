@@ -29,6 +29,7 @@ const HTML_FILES = [
   'blog.html',
   'gracias.html',
   'terminos.html',
+  'liquidador.html',
 ];
 
 // ─── Directorios/archivos estáticos a copiar tal cual ───
