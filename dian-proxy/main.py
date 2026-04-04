@@ -57,9 +57,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=False,
-    allow_methods=["GET", "OPTIONS"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type"],
 )
+
+# ─── Chat router ───
+from chat import router as chat_router
+app.include_router(chat_router)
 
 
 from starlette.middleware.base import BaseHTTPMiddleware
