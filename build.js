@@ -33,6 +33,8 @@ const HTML_FILES = [
   'sanciones-dian.html',
   'uvt.html',
   'costoreal.html',
+  'politica-privacidad.html',
+  'retencion-fuente.html',
 ];
 
 // ─── Directorios/archivos estáticos a copiar tal cual ───

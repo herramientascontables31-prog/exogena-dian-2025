@@ -100,6 +100,7 @@ gtag('config', 'G-S7SM6ST4CC');
 </head>
 <body>
 <div id="nav-container"></div>
+<script src="shared/pro.js"></script>
 <script src="shared/nav.js"></script>
 <div class="container">
 <div class="page-header"><div class="page-badge">Conciliación Bancaria Automática</div><h1>Concilia extracto vs libro auxiliar</h1><p>Sube ambos archivos en Excel o CSV. La herramienta detecta automáticamente la estructura y te permite verificar antes de procesar.</p></div>
@@ -138,7 +139,16 @@ gtag('config', 'G-S7SM6ST4CC');
    CONCILIACIÓN BANCARIA v3 — FINAL BULLETPROOF
    ======================================================================== */
 const FREE_LIMIT = 500;
-const PRICING = [{max:50,price:0},{max:200,price:3000,label:'$3.000'},{max:500,price:5000,label:'$5.000'},{max:999999,price:10000,label:'$10.000'}];
+let IS_PRO = false;
+// Validate PRO server-side via shared module (loaded from shared/pro.js)
+(function(){
+  if(window.exoPro){
+    window.exoPro.check().then(function(valid){IS_PRO=valid});
+  } else {
+    // Fallback: check unified localStorage keys
+    IS_PRO=!!(localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key'));
+  }
+})();
 
 const F = {
   E: {raw:null,display:null,headerRow:0,noHeader:false,numFmt:'auto',map:{},name:''},
@@ -774,7 +784,7 @@ function guessCausa(desc) {
 function renderResults() {
   const {matched, soloE, soloA, ext, aux, sE, sA, ssE, ssA, tol} = resultados;
   const total = Math.max(ext.length, aux.length);
-  const needsPay = total > FREE_LIMIT;
+  const needsPay = total > FREE_LIMIT && !IS_PRO;
   const lim = needsPay ? FREE_LIMIT : 999999;
   const pctConc = ext.length > 0 ? Math.round(matched.length / Math.max(ext.length, aux.length) * 100) : 0;
   document.getElementById('sumCards').innerHTML =
@@ -869,7 +879,7 @@ function renderResults() {
   p += '</table></div></div>';
   document.getElementById('rPanels').innerHTML = p;
   if (needsPay) {
-    document.getElementById('payZone').innerHTML = `<div class="paywall"><h3>🔒 Tu archivo tiene ${total} filas (gratis: ${FREE_LIMIT})</h3><p>Se muestran ${FREE_LIMIT} partidas. Para todo + Excel:</p><div class="pricing-mini">${PRICING.filter(p=>p.price>0).map(pr=>`<div class="pm-opt ${total<=pr.max?'selected':''}"><div class="pm-rows">Hasta ${pr.max}</div><div class="pm-price">${pr.label}</div><div class="pm-unit">COP</div></div>`).join('')}</div><button class="btn btn-primary" onclick="alert('Integración Wompi próximamente.')">Desbloquear</button></div>`;
+    document.getElementById('payZone').innerHTML = `<div class="paywall"><h3>🔒 Tu archivo tiene ${total} filas (gratis: ${FREE_LIMIT})</h3><p>Se muestran las primeras ${FREE_LIMIT} partidas. Suscríbete a PRO para conciliar sin límite de filas y descargar el Excel completo.</p><a href="https://exogenadian.com/#planes" class="btn btn-primary" style="display:inline-block;padding:12px 24px;text-decoration:none;color:#fff;text-align:center">Suscribirse PRO — $19.900/mes</a></div>`;
     document.getElementById('btnXls').style.display = 'none';
   } else {
     document.getElementById('payZone').innerHTML = '';

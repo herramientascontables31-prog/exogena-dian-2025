@@ -79,6 +79,7 @@
   '    <a href="sanciones.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Exógena</a>'+
   '    <a href="sanciones-dian.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">DIAN</a>'+
   '    <a href="intereses.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Intereses</a>'+
+  '    <a href="retencion-fuente.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Retención</a>'+
        /* sep */
   '    <span class="tn-sep"></span>'+
        /* Laborales + Consultas */
@@ -127,6 +128,7 @@
   '          <a href="sanciones.html"><div class="dd-icon" style="background:#FFFBEB">⚖️</div> Sanciones Exógena</a>'+
   '          <a href="sanciones-dian.html"><div class="dd-icon" style="background:#EFF6FF">⚖️</div> Sanciones DIAN</a>'+
   '          <a href="intereses.html"><div class="dd-icon" style="background:#FFF1F2">%</div> Intereses de Mora</a>'+
+  '          <a href="retencion-fuente.html"><div class="dd-icon" style="background:#EFF6FF">💰</div> Retención Fuente</a>'+
   '        </div>'+
            /* ── Col 4: Laboral + Consultas ── */
   '        <div class="mega-col">'+
@@ -202,36 +204,7 @@
     });
   }
 
-  /* ─── PRO Nav Functions ─── */
-  window.activarProNav=function(){
-    var el=document.getElementById('proNavKey');
-    if(!el)return;
-    var key=el.value.trim();
-    if(!key)return;
-    var url=APPS_SCRIPT_URL+'?action=validateEmail&email='+encodeURIComponent(key);
-    fetch(url).then(function(r){return r.json()}).then(function(d){
-      if(d.valid){
-        localStorage.setItem('proKey',key);
-        localStorage.setItem('proName',d.name||'PRO');
-        showProActive();
-      }else{
-        alert(d.message||'Clave PRO no válida o expirada');
-      }
-    }).catch(function(){alert('Error al verificar. Intenta de nuevo.')});
-  };
-
-  window.cerrarProNav=function(){
-    localStorage.removeItem('proKey');
-    localStorage.removeItem('proName');
-    var login=document.getElementById('proNavLogin');
-    var active=document.getElementById('proNavActive');
-    var sub=document.getElementById('proNavSubscribe');
-    if(login)login.style.display='flex';
-    if(active)active.style.display='none';
-    if(sub)sub.style.display='none';
-    if(typeof window.onProStatusChange==='function')window.onProStatusChange(false);
-  };
-
+  /* ─── PRO Nav Functions (uses shared/pro.js if available, standalone fallback) ─── */
   function showProActive(){
     var login=document.getElementById('proNavLogin');
     var active=document.getElementById('proNavActive');
@@ -240,8 +213,72 @@
     if(typeof window.onProStatusChange==='function')window.onProStatusChange(true);
   }
 
-  // Auto-restore PRO from localStorage
-  if(localStorage.getItem('proKey')){
-    showProActive();
+  function showProLogin(){
+    var login=document.getElementById('proNavLogin');
+    var active=document.getElementById('proNavActive');
+    var sub=document.getElementById('proNavSubscribe');
+    if(login)login.style.display='flex';
+    if(active)active.style.display='none';
+    if(sub)sub.style.display='none';
+    if(typeof window.onProStatusChange==='function')window.onProStatusChange(false);
+  }
+
+  window.activarProNav=function(){
+    var el=document.getElementById('proNavKey');
+    if(!el)return;
+    var key=el.value.trim().toLowerCase();
+    if(!key)return;
+    // Use shared module if available
+    if(window.exoPro){
+      window.exoPro.activate(key).then(function(valid){
+        if(valid){showProActive()}
+        else{alert('Clave PRO no válida o expirada')}
+      });
+      return;
+    }
+    // Standalone fallback
+    var url=APPS_SCRIPT_URL+'?action=validateEmail&email='+encodeURIComponent(key);
+    fetch(url).then(function(r){return r.json()}).then(function(d){
+      if(d.valid){
+        localStorage.setItem('exogenadian_pro_email',key);
+        showProActive();
+      }else{
+        alert(d.message||'Clave PRO no válida o expirada');
+      }
+    }).catch(function(){alert('Error al verificar. Intenta de nuevo.')});
+  };
+
+  window.cerrarProNav=function(){
+    if(window.exoPro){
+      window.exoPro.clearPro();
+    } else {
+      localStorage.removeItem('exogenadian_pro_email');
+      localStorage.removeItem('exogenadian_pro_key');
+    }
+    showProLogin();
+  };
+
+  // Auto-restore PRO from localStorage (with server validation if pro.js loaded)
+  var savedPro=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');
+  // Also check old keys for backward compat
+  if(!savedPro){
+    var oldKey=localStorage.getItem('proKey');
+    if(oldKey){
+      savedPro=oldKey;
+      // Migrate
+      if(oldKey.includes('@')){localStorage.setItem('exogenadian_pro_email',oldKey)}
+      else{localStorage.setItem('exogenadian_pro_key',oldKey)}
+      localStorage.removeItem('proKey');
+      localStorage.removeItem('proName');
+    }
+  }
+  if(savedPro){
+    if(window.exoPro){
+      window.exoPro.check().then(function(valid){
+        if(valid){showProActive()}else{showProLogin()}
+      });
+    } else {
+      showProActive();
+    }
   }
 })();
