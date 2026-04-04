@@ -50,10 +50,10 @@
       var data = localStorage.getItem(CFG.storageKey);
       if (data) {
         var parsed = JSON.parse(data);
-        // Filtrar mensajes válidos: role user|assistant, content string <= 500 chars
+        // Filtrar mensajes válidos
         messages = parsed.filter(function (m) {
           return m && (m.role === 'user' || m.role === 'assistant')
-            && typeof m.content === 'string' && m.content.length > 0 && m.content.length <= 500;
+            && typeof m.content === 'string' && m.content.length > 0 && m.content.length <= 4000;
         });
       }
     } catch (e) {

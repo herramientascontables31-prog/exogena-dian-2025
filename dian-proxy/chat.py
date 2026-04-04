@@ -105,11 +105,11 @@ rate_limiter = ChatRateLimiter()
 
 class ChatMessage(BaseModel):
     role: str = Field(pattern="^(user|assistant)$")
-    content: str = Field(max_length=500)
+    content: str = Field(max_length=4000)  # assistant responses can be long
 
 
 class ChatRequest(BaseModel):
-    messages: list[ChatMessage] = Field(max_length=10)
+    messages: list[ChatMessage] = Field(max_length=20)
 
 
 # ─── Helpers ───
