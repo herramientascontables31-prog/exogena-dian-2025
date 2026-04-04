@@ -44,17 +44,32 @@
     return '<p>' + html + '</p>';
   }
 
-  // ─── Load/save history ───
+  // ─── Load/save/clear history ───
   function loadHistory() {
     try {
       var data = localStorage.getItem(CFG.storageKey);
-      if (data) messages = JSON.parse(data);
-    } catch (e) { /* ignore */ }
+      if (data) {
+        var parsed = JSON.parse(data);
+        // Filtrar mensajes válidos: role user|assistant, content string <= 500 chars
+        messages = parsed.filter(function (m) {
+          return m && (m.role === 'user' || m.role === 'assistant')
+            && typeof m.content === 'string' && m.content.length > 0 && m.content.length <= 500;
+        });
+      }
+    } catch (e) {
+      messages = [];
+      localStorage.removeItem(CFG.storageKey);
+    }
   }
   function saveHistory() {
     try {
       localStorage.setItem(CFG.storageKey, JSON.stringify(messages.slice(-20)));
     } catch (e) { /* ignore */ }
+  }
+  function clearHistory() {
+    messages = [];
+    localStorage.removeItem(CFG.storageKey);
+    renderMessages();
   }
 
   // ─── DOM refs ───
@@ -94,6 +109,9 @@
           '<h3>Exa</h3>' +
           '<span>Asistente contable IA</span>' +
         '</div>' +
+        '<button class="exa-clear" aria-label="Nueva conversación" title="Nueva conversación">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>' +
+        '</button>' +
         '<button class="exa-close" aria-label="Cerrar chat">&times;</button>' +
       '</div>' +
       '<div class="exa-messages"></div>' +
@@ -113,6 +131,7 @@
     sendBtn = panel.querySelector('.exa-send');
 
     panel.querySelector('.exa-close').onclick = togglePanel;
+    panel.querySelector('.exa-clear').onclick = clearHistory;
     sendBtn.onclick = sendMessage;
     inputEl.addEventListener('input', function () {
       sendBtn.disabled = !inputEl.value.trim() || isStreaming;
@@ -215,6 +234,7 @@
     var apiMessages = messages.slice(-CFG.maxHistory);
 
     var fullText = '';
+    var isError = false;
     abortCtrl = new AbortController();
 
     try {
@@ -282,21 +302,24 @@
       }
     } catch (err) {
       hideTyping();
-      if (err.name === 'AbortError') {
-        fullText = fullText || '(Mensaje cancelado)';
-      } else {
-        var errorText = err.message || 'Error de conexión. Intenta de nuevo.';
-        if (!fullText) {
-          fullText = errorText;
-          var lastBubble = messagesEl.querySelector('.exa-msg.assistant:last-child');
-          if (!lastBubble) lastBubble = addBubble('assistant', '');
-          lastBubble.innerHTML = '<em style="color:#F87171">' + md(errorText) + '</em>';
-        }
+      isError = true;
+      var errorText = err.name === 'AbortError'
+        ? '(Mensaje cancelado)'
+        : (err.message || 'Error de conexión. Intenta de nuevo.');
+      if (!fullText) {
+        var lastBubble = messagesEl.querySelector('.exa-msg.assistant:last-child');
+        if (!lastBubble) lastBubble = addBubble('assistant', '');
+        lastBubble.innerHTML = '<em style="color:#F87171">' + esc(errorText) + '</em>';
       }
     }
 
-    if (fullText) {
+    // Solo guardar respuestas exitosas (no errores) para no contaminar historial
+    if (fullText && !isError) {
       messages.push({ role: 'assistant', content: fullText });
+      saveHistory();
+    } else if (isError) {
+      // Quitar también el mensaje del usuario que causó el error
+      messages.pop();
       saveHistory();
     }
 
