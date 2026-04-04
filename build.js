@@ -22,6 +22,7 @@ const HTML_FILES = [
   'iva300.html',
   'retencion350.html',
   'estadosfinancieros.html',
+  'intereses.html',
   'sanciones.html',
   'vencimientos.html',
   'blog.html',

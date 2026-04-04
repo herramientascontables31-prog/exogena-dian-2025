@@ -39,6 +39,7 @@
   '    <a href="iva300.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">IVA 300</a>'+
   '    <a href="retencion350.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Ret 350</a>'+
   '    <a href="estadosfinancieros.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">EEFF</a>'+
+  '    <a href="intereses.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Intereses</a>'+
   '    <a href="sanciones.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Sanciones</a>'+
   '    <a href="index.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">&larr; Inicio</a>'+
   '  </div>'+
@@ -65,6 +66,7 @@
   '        <a href="retencion350.html"><div class="dd-icon" style="background:var(--blue-50)">🧮</div> Retención 350</a>'+
   '        <a href="estadosfinancieros.html"><div class="dd-icon" style="background:var(--green-50)">📄</div> Estados Financieros</a>'+
   '        <a href="vencimientos.html"><div class="dd-icon" style="background:var(--purple-50)">📅</div> Vencimientos</a>'+
+  '        <a href="intereses.html"><div class="dd-icon" style="background:var(--rose-50)">%</div> Intereses Mora</a>'+
   '        <a href="sanciones.html"><div class="dd-icon" style="background:var(--amber-50)">⚖️</div> Sanciones</a>'+
   '        <a href="blog.html"><div class="dd-icon" style="background:var(--blue-50)">📝</div> Blog</a>'+
   '      </div>'+
