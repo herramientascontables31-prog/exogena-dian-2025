@@ -57,16 +57,77 @@ gtag('config', 'G-S7SM6ST4CC');
   --radius:12px;--radius-sm:8px;
   --shadow:0 4px 24px rgba(0,0,0,.3);
   --font-ui:'DM Sans',sans-serif;--font-num:'JetBrains Mono',monospace;--font-title:'Space Grotesk',sans-serif;
+  --header-gradient:linear-gradient(135deg,#111827 0%,#1e293b 50%,#0f172a 100%);
+  --donut-stroke:#111827;
+  --donut-center-text:#F9FAFB;
 }
+
+/* === LIGHT THEME === */
+html.light-theme{
+  --bg:#F9FAFB;--surface:#FFFFFF;--card:#FFFFFF;--card-hover:#F3F4F6;
+  --accent:#059669;--accent2:#34D399;--green:#10B981;--green-dim:rgba(16,185,129,.12);
+  --red:#EF4444;--red-dim:rgba(239,68,68,.12);--amber:#F59E0B;--amber-dim:rgba(245,158,11,.12);
+  --text:#111827;--text2:#374151;--text3:#6B7280;
+  --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.12);
+  --shadow:0 2px 12px rgba(0,0,0,.06);
+  --header-gradient:linear-gradient(135deg,#064E3B,#059669);
+  --donut-stroke:#FFFFFF;
+  --donut-center-text:#111827;
+}
+html.light-theme body{background:var(--bg)}
+html.light-theme .dash-header{background:var(--header-gradient)}
+html.light-theme .dash-header-left h1{color:#fff}
+html.light-theme .dash-header-left p{color:rgba(255,255,255,.7)}
+html.light-theme .company-info{color:rgba(255,255,255,.7)}
+html.light-theme .company-info .name{color:#fff}
+html.light-theme .company-info .nit{color:rgba(255,255,255,.8)}
+html.light-theme .period-btn.active{background:var(--accent)}
+html.light-theme .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(5,150,105,.05)}
+html.light-theme .fin-table tbody tr:hover::before{background:var(--accent)}
+html.light-theme .fin-table tbody tr::before{background:var(--accent)}
+html.light-theme .kpi-card:hover{border-color:var(--accent);box-shadow:0 8px 32px rgba(5,150,105,.1)}
+html.light-theme .row-total{background:rgba(5,150,105,.04)!important}
+html.light-theme .row-grand-total{background:rgba(5,150,105,.08)!important;border-top:2px solid var(--accent)}
+html.light-theme .btn-accent{background:var(--accent);border-color:var(--accent)}
+html.light-theme .btn-accent:hover{background:#047857}
+html.light-theme .kpi-tooltip{background:#fff;border-color:var(--border2);color:var(--text2)}
+html.light-theme .kpi-tooltip::after{border-top-color:#fff}
+html.light-theme .fin-table tbody tr:hover{background:rgba(5,150,105,.03)}
+html.light-theme .badge-beta{background:linear-gradient(135deg,var(--accent),#34D399)}
+
 html{scroll-behavior:smooth}
 body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+
+/* === UPLOAD SCREEN === */
+.upload-screen{min-height:80vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px}
+.upload-screen .dash-header{max-width:900px;width:100%;margin-bottom:32px}
+.upload-card{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:40px 36px;max-width:560px;width:100%;text-align:center}
+.upload-card .card-title{font-family:var(--font-title);font-size:1.4rem;font-weight:700;margin-bottom:12px;color:var(--text)}
+.upload-card>p{color:var(--text3);font-size:.9rem;margin-bottom:24px;line-height:1.6}
+.drop-zone{border:2px dashed var(--border2);border-radius:var(--radius);padding:40px 24px;cursor:pointer;transition:all .3s;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);background:rgba(59,130,246,.04)}
+html.light-theme .drop-zone:hover,html.light-theme .drop-zone.drag-over{background:rgba(5,150,105,.04);border-color:var(--accent)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.dz-icon{font-size:2.2rem}
+.dz-title{font-size:1rem;font-weight:600;color:var(--text)}
+.dz-hint{font-size:.82rem;color:var(--text3)}
+.dz-filename{font-size:.85rem;color:var(--accent);font-weight:600;margin-top:4px}
+.or-divider{color:var(--text3);font-size:.85rem;margin:20px 0;position:relative}
+.or-divider::before,.or-divider::after{content:'';position:absolute;top:50%;width:40%;height:1px;background:var(--border2)}
+.or-divider::before{left:0}
+.or-divider::after{right:0}
+.btn-demo{background:transparent;border:2px solid var(--accent);color:var(--accent);padding:12px 28px;border-radius:var(--radius-sm);font-family:var(--font-ui);font-size:.92rem;font-weight:600;cursor:pointer;transition:all .25s}
+.btn-demo:hover{background:var(--accent);color:#fff}
+.security-note{font-size:.78rem;color:var(--text3);margin-top:20px}
+.upload-error{color:var(--red);font-size:.85rem;margin-top:12px;font-weight:600;display:none}
 
 /* === LAYOUT === */
 .dash-container{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
 
 /* === HEADER === */
-.dash-header{background:linear-gradient(135deg,#111827 0%,#1e293b 50%,#0f172a 100%);border:1px solid var(--border2);border-radius:16px;padding:28px 32px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.dash-header{background:var(--header-gradient);border:1px solid var(--border2);border-radius:16px;padding:28px 32px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
 .dash-header::before{content:'';position:absolute;top:-50%;right:-10%;width:300px;height:300px;background:radial-gradient(circle,rgba(59,130,246,.08) 0%,transparent 70%);pointer-events:none}
+html.light-theme .dash-header::before{background:radial-gradient(circle,rgba(255,255,255,.1) 0%,transparent 70%)}
 .dash-header-left h1{font-family:var(--font-title);font-size:1.5rem;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .badge-beta{background:linear-gradient(135deg,var(--accent),#8B5CF6);color:#fff;font-size:.65rem;padding:3px 10px;border-radius:20px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;font-family:var(--font-ui)}
 .dash-header-left p{color:var(--text3);font-size:.85rem;margin-top:4px}
@@ -79,6 +140,7 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-heig
 .period-selector{display:flex;gap:0;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden}
 .period-btn{padding:10px 22px;font-family:var(--font-ui);font-size:.85rem;font-weight:600;color:var(--text3);background:transparent;border:none;cursor:pointer;transition:all .25s}
 .period-btn:hover{color:var(--text2);background:rgba(255,255,255,.03)}
+html.light-theme .period-btn:hover{background:rgba(0,0,0,.03)}
 .period-btn.active{background:var(--accent);color:#fff}
 .controls-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .toggle-wrap{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text3)}
@@ -92,6 +154,9 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-heig
 .btn:hover{background:var(--card-hover);color:var(--text);border-color:var(--accent)}
 .btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
 .btn-accent:hover{background:#2563EB}
+
+/* Theme toggle button */
+.btn-theme{font-size:1rem;padding:9px 14px}
 
 /* === KPI CARDS === */
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
@@ -117,6 +182,7 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-heig
 .tab-bar{display:flex;gap:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
 .tab-btn{flex:1;padding:12px 20px;font-family:var(--font-ui);font-size:.88rem;font-weight:600;color:var(--text3);background:transparent;border:none;cursor:pointer;transition:all .25s;text-align:center;border-bottom:3px solid transparent}
 .tab-btn:hover{color:var(--text2);background:rgba(255,255,255,.02)}
+html.light-theme .tab-btn:hover{background:rgba(0,0,0,.02)}
 .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(59,130,246,.05)}
 .tab-content{display:none;animation:fadeIn .3s ease}
 .tab-content.active{display:block}
@@ -148,6 +214,7 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-heig
 .row-header td{color:var(--text)!important;font-weight:700;font-size:.84rem;text-transform:uppercase;letter-spacing:.3px}
 .expand-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:.8rem;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;transition:all .2s;flex-shrink:0}
 .expand-btn:hover{background:rgba(255,255,255,.08);color:var(--text)}
+html.light-theme .expand-btn:hover{background:rgba(0,0,0,.06)}
 .expand-btn.expanded{transform:rotate(90deg)}
 .child-row{overflow:hidden;transition:max-height .3s ease, opacity .3s ease}
 .child-row.collapsed{max-height:0!important;opacity:0;border-bottom:none}
@@ -195,12 +262,14 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-heig
   .fin-table thead th{padding:8px 10px;font-size:.68rem}
   .fin-table td{padding:8px 10px}
   .equation-bar{font-size:.78rem;gap:10px;padding:12px 16px}
+  .upload-card{padding:24px 18px}
+  .drop-zone{padding:28px 16px}
 }
 
 /* === PRINT === */
 @media print{
   body{background:#fff!important;color:#000!important;font-size:10pt}
-  #nav-container,.controls-bar,.tab-bar,.charts-grid,.dash-footer,.btn,.toggle-wrap{display:none!important}
+  #nav-container,.controls-bar,.tab-bar,.charts-grid,.dash-footer,.btn,.toggle-wrap,.upload-screen,.btn-theme{display:none!important}
   .dash-container{max-width:100%;padding:0}
   .dash-header{background:#f5f5f5!important;color:#000!important;border:1px solid #ccc;print-color-adjust:exact;-webkit-print-color-adjust:exact}
   .dash-header-left h1{color:#000}
@@ -226,7 +295,33 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-heig
 <div id="nav-container"></div>
 <script src="shared/nav.js"></script>
 
-<div class="dash-container">
+<!-- ========== UPLOAD SCREEN ========== -->
+<div class="upload-screen" id="uploadScreen">
+  <div class="dash-header" style="max-width:900px;width:100%;margin-bottom:32px">
+    <div class="dash-header-left">
+      <h1>Dashboard Financiero <span class="badge-beta">BETA</span></h1>
+      <p>Indicadores, PYG y Balance General interactivo bajo NIIF</p>
+    </div>
+  </div>
+  <div class="upload-card">
+    <div class="card-title">Carga tu balance de prueba</div>
+    <p>Sube el balance de prueba de tu software contable y genera el dashboard financiero automaticamente.</p>
+    <div class="drop-zone" id="dropZone">
+      <span class="dz-icon">&#128193;</span>
+      <span class="dz-title">Arrastra tu archivo aqui</span>
+      <span class="dz-hint">o haz clic para seleccionar &middot; Excel (.xlsx, .xls) o CSV</span>
+      <span class="dz-filename" id="dzFilename"></span>
+      <input type="file" accept=".xlsx,.xls,.csv" id="fileInput">
+    </div>
+    <div id="uploadError" class="upload-error"></div>
+    <div class="or-divider">o</div>
+    <button onclick="loadDemoData()" class="btn-demo">Ver datos de ejemplo &rarr;</button>
+    <p class="security-note">&#128274; Tu archivo se procesa 100% en tu navegador. No se sube a ningun servidor.</p>
+  </div>
+</div>
+
+<!-- ========== DASHBOARD (hidden initially) ========== -->
+<div class="dash-container" id="dashboardContainer" style="display:none">
 
   <!-- Header -->
   <div class="dash-header">
@@ -234,10 +329,10 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-heig
       <h1>Dashboard Financiero <span class="badge-beta">BETA</span></h1>
       <p>Indicadores, PYG y Balance General interactivo bajo NIIF</p>
     </div>
-    <div class="company-info">
-      <div class="name">Distribuciones del Valle S.A.S.</div>
-      <div class="nit">NIT: 900.123.456-7</div>
-      <div style="margin-top:4px;font-size:.72rem">Datos de demostración</div>
+    <div class="company-info" id="companyInfo">
+      <div class="name" id="companyName">Distribuciones del Valle S.A.S.</div>
+      <div class="nit" id="companyNit">NIT: 900.123.456-7</div>
+      <div id="companyExtra" style="margin-top:4px;font-size:.72rem">Datos de demostracion</div>
     </div>
   </div>
 
@@ -249,6 +344,8 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-heig
       <button class="period-btn active" data-year="2024">2024</button>
     </div>
     <div class="controls-right">
+      <button class="btn" id="btnUploadNew" title="Cargar otro archivo">&#128194; Nuevo archivo</button>
+      <button class="btn btn-theme" id="btnTheme" title="Cambiar tema">&#9790;</button>
       <label class="toggle-wrap">
         <span>Comparativo</span>
         <label class="toggle-switch">
@@ -304,23 +401,64 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-heig
       <div id="waterfallChart"></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Composición del Activo</div>
+      <div class="chart-title">Composicion del Activo</div>
       <div id="donutChart"></div>
     </div>
   </div>
 
   <!-- Footer -->
   <div class="dash-footer">
-    Dashboard Financiero NIIF &mdash; ExógenaDIAN.com &copy; 2026. Datos de demostración. No constituye asesoría financiera.
+    Dashboard Financiero NIIF &mdash; ExogenaDIAN.com &copy; 2026. No constituye asesoria financiera.
   </div>
 
 </div>
 
 <script>
 // =====================================================
-// DATA
+// THEME TOGGLE
 // =====================================================
-const DATA = {
+function applyTheme(theme) {
+  if (theme === 'light') {
+    document.documentElement.classList.add('light-theme');
+    document.body.style.background = '';
+  } else {
+    document.documentElement.classList.remove('light-theme');
+    document.body.style.background = '';
+  }
+  updateThemeButton();
+}
+function updateThemeButton() {
+  const btn = document.getElementById('btnTheme');
+  if (!btn) return;
+  const isLight = document.documentElement.classList.contains('light-theme');
+  btn.innerHTML = isLight ? '&#9728;' : '&#9790;';
+  btn.title = isLight ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro';
+}
+function toggleTheme() {
+  document.documentElement.classList.toggle('light-theme');
+  const isLight = document.documentElement.classList.contains('light-theme');
+  document.body.style.background = '';
+  localStorage.setItem('dashTheme', isLight ? 'light' : 'dark');
+  updateThemeButton();
+  // Re-render charts to pick up theme colors
+  if (typeof renderWaterfall === 'function' && document.getElementById('dashboardContainer').style.display !== 'none') {
+    renderWaterfall();
+    renderDonut();
+  }
+}
+// Restore theme on load
+(function(){
+  var saved = localStorage.getItem('dashTheme');
+  if (saved === 'light') {
+    document.documentElement.classList.add('light-theme');
+    document.body.style.background = '';
+  }
+})();
+
+// =====================================================
+// DEMO DATA
+// =====================================================
+const DEMO_DATA = {
   2022: {
     pyg: {
       ventasBienes: 1950000000,
@@ -446,7 +584,463 @@ const DATA = {
   }
 };
 
+// Active data (will be set to demo or parsed)
+let DATA = {};
+let isDemoMode = false;
+
+// =====================================================
+// BALANCE DE PRUEBA PARSER
+// =====================================================
+const COL_HINTS = {
+  code: ['cuenta','codigo','code','cta','puc','cod'],
+  name: ['descripcion','nombre cuenta','nombre','detalle','cuenta contable'],
+  deb:  ['debito','debito','debit','cargo','debe','movimiento debito'],
+  cre:  ['credito','credito','credit','abono','haber','movimiento credito'],
+  saldoFin: ['saldo final','saldo total','saldo','saldo actual'],
+  saldoIni: ['saldo inicial','saldo anterior']
+};
+
+function norm(s) {
+  if (!s) return '';
+  return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+}
+
+function parseNumber(v) {
+  if (v == null) return 0;
+  if (typeof v === 'number') return v;
+  var s = String(v).replace(/[$\s]/g,'');
+  // Handle parentheses as negative
+  if (/^\(.*\)$/.test(s)) {
+    s = '-' + s.replace(/[()]/g,'');
+  }
+  // Remove thousands separator (.), keep decimal (,) or (.)
+  // Detect format: if there's a comma followed by exactly 2 digits at end, it's decimal comma
+  if (/,\d{1,2}$/.test(s)) {
+    s = s.replace(/\./g,'').replace(',','.');
+  } else {
+    s = s.replace(/,/g,'');
+  }
+  var n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+
+function detectHeader(rows) {
+  var bestRow = 0, bestScore = 0;
+  var limit = Math.min(rows.length, 20);
+  for (var i = 0; i < limit; i++) {
+    var row = rows[i];
+    if (!row) continue;
+    var score = 0;
+    for (var j = 0; j < row.length; j++) {
+      var cell = norm(row[j]);
+      if (!cell) continue;
+      for (var field in COL_HINTS) {
+        var hints = COL_HINTS[field];
+        for (var h = 0; h < hints.length; h++) {
+          if (cell.indexOf(hints[h]) !== -1) { score++; break; }
+        }
+      }
+    }
+    if (score > bestScore) { bestScore = score; bestRow = i; }
+  }
+  return bestRow;
+}
+
+function mapColumns(headerRow) {
+  var mapping = {};
+  for (var j = 0; j < headerRow.length; j++) {
+    var cell = norm(headerRow[j]);
+    if (!cell) continue;
+    for (var field in COL_HINTS) {
+      if (mapping[field] !== undefined) continue;
+      var hints = COL_HINTS[field];
+      for (var h = 0; h < hints.length; h++) {
+        if (cell.indexOf(hints[h]) !== -1) {
+          mapping[field] = j;
+          break;
+        }
+      }
+    }
+  }
+  return mapping;
+}
+
+function classifyAccount(code) {
+  var c = code.charAt(0);
+  if (c === '1') return 'activo';
+  if (c === '2') return 'pasivo';
+  if (c === '3') return 'patrimonio';
+  if (c === '4') return 'ingreso';
+  if (c === '5') return 'gasto';
+  if (c === '6') return 'costo';
+  if (c === '7') return 'costoProduccion';
+  return 'otro';
+}
+
+function parseBalancePrueba(rows) {
+  var headerIdx = detectHeader(rows);
+  var headerRow = rows[headerIdx];
+  var cols = mapColumns(headerRow);
+
+  if (cols.code === undefined) throw new Error('No se encontro columna de codigo de cuenta.');
+  if (cols.name === undefined) throw new Error('No se encontro columna de nombre de cuenta.');
+  if (cols.deb === undefined && cols.saldoFin === undefined) throw new Error('No se encontraron columnas de debito/credito ni saldo final.');
+
+  // Extract all data rows
+  var accounts = [];
+  for (var i = headerIdx + 1; i < rows.length; i++) {
+    var row = rows[i];
+    if (!row) continue;
+    var codeRaw = String(row[cols.code] || '').replace(/\s/g,'').replace(/\./g,'').replace(/-/g,'');
+    // Must be at least 4 digits
+    if (!/^\d{4,}$/.test(codeRaw)) continue;
+    var name = String(row[cols.name] || '').trim();
+    if (!name) continue;
+    var deb = cols.deb !== undefined ? parseNumber(row[cols.deb]) : 0;
+    var cre = cols.cre !== undefined ? parseNumber(row[cols.cre]) : 0;
+    var saldoFin = cols.saldoFin !== undefined ? parseNumber(row[cols.saldoFin]) : null;
+    var saldoIni = cols.saldoIni !== undefined ? parseNumber(row[cols.saldoIni]) : 0;
+
+    // Skip rows with no movement and no saldo
+    if (deb === 0 && cre === 0 && (saldoFin === null || saldoFin === 0) && saldoIni === 0) continue;
+
+    accounts.push({ code: codeRaw, name: name, deb: deb, cre: cre, saldoFin: saldoFin, saldoIni: saldoIni });
+  }
+
+  if (accounts.length === 0) throw new Error('No se encontraron cuentas validas en el archivo.');
+
+  // Filter to leaf accounts only (no parents)
+  var codes = accounts.map(function(a){ return a.code; });
+  var leafAccounts = accounts.filter(function(a) {
+    // An account is a parent if another account's code starts with it and is longer
+    for (var j = 0; j < codes.length; j++) {
+      if (codes[j] !== a.code && codes[j].indexOf(a.code) === 0 && codes[j].length > a.code.length) {
+        return false;
+      }
+    }
+    return true;
+  });
+
+  // Calculate saldo for each account based on nature
+  leafAccounts.forEach(function(a) {
+    var cls = classifyAccount(a.code);
+    if (a.saldoFin !== null) {
+      a.saldo = a.saldoFin;
+    } else {
+      // Calculate from deb/cre based on nature
+      if (cls === 'activo' || cls === 'gasto' || cls === 'costo' || cls === 'costoProduccion') {
+        a.saldo = a.deb - a.cre;
+      } else {
+        a.saldo = a.cre - a.deb;
+      }
+    }
+    a.clase = cls;
+    a.prefix2 = a.code.substring(0,2);
+  });
+
+  return leafAccounts;
+}
+
+function buildDataFromAccounts(accounts) {
+  // Aggregate by class
+  var sums = {};
+  accounts.forEach(function(a) {
+    var key = a.clase + '_' + a.prefix2;
+    if (!sums[key]) sums[key] = 0;
+    sums[key] += Math.abs(a.saldo);
+  });
+  function s(key) { return sums[key] || 0; }
+
+  // PYG structure
+  // Class 4: ingresos. 41xx = ventas bienes, 4175 could be servicios, 42xx = no operacionales
+  var ventasBienes = 0, prestacionServicios = 0, ingresosOtros = 0;
+  var ingresosNoOp = 0, interesesNoOp = 0, otrosIngNoOp = 0;
+  accounts.forEach(function(a) {
+    if (a.clase !== 'ingreso') return;
+    var p2 = a.prefix2;
+    var p4 = a.code.substring(0,4);
+    if (p2 === '42') {
+      // Non-operational income
+      if (p4 === '4210') interesesNoOp += Math.abs(a.saldo);
+      else otrosIngNoOp += Math.abs(a.saldo);
+      ingresosNoOp += Math.abs(a.saldo);
+    } else {
+      // Operational income: try to split bienes vs servicios
+      if (p4 === '4175' || p4 === '4170') {
+        prestacionServicios += Math.abs(a.saldo);
+      } else {
+        ventasBienes += Math.abs(a.saldo);
+      }
+    }
+  });
+
+  // Class 6: costos
+  var costoBienes = 0, costoServicios = 0, costoVentasTotal = 0;
+  accounts.forEach(function(a) {
+    if (a.clase !== 'costo' && a.clase !== 'costoProduccion') return;
+    var p4 = a.code.substring(0,4);
+    if (p4 === '6175' || p4 === '6170') {
+      costoServicios += Math.abs(a.saldo);
+    } else {
+      costoBienes += Math.abs(a.saldo);
+    }
+    costoVentasTotal += Math.abs(a.saldo);
+  });
+
+  // Class 5: gastos
+  var gastosPersonal = 0, honorarios = 0, arrendamientos = 0, serviciosGasto = 0;
+  var depreciaciones = 0, otrosGastosOp = 0;
+  var gastosNoOp = 0, interesesGasto = 0, otrosGastosNoOp = 0;
+  accounts.forEach(function(a) {
+    if (a.clase !== 'gasto') return;
+    var p2 = a.prefix2;
+    var p4 = a.code.substring(0,4);
+    if (p2 === '53') {
+      // Non-operational expenses
+      if (p4 === '5305') interesesGasto += Math.abs(a.saldo);
+      else otrosGastosNoOp += Math.abs(a.saldo);
+      gastosNoOp += Math.abs(a.saldo);
+    } else if (p2 === '54') {
+      // Impuesto de renta - handled separately
+    } else {
+      // Operational expenses
+      if (p2 === '51') gastosPersonal += Math.abs(a.saldo);
+      else if (p4 === '5210') honorarios += Math.abs(a.saldo);
+      else if (p4 === '5220' || p4 === '5240') arrendamientos += Math.abs(a.saldo);
+      else if (p4 === '5295') serviciosGasto += Math.abs(a.saldo);
+      else if (p4 === '5260') depreciaciones += Math.abs(a.saldo);
+      else otrosGastosOp += Math.abs(a.saldo);
+    }
+  });
+
+  // Impuesto de renta (class 54)
+  var impuestoRenta = 0;
+  accounts.forEach(function(a) {
+    if (a.clase === 'gasto' && a.prefix2 === '54') {
+      impuestoRenta += Math.abs(a.saldo);
+    }
+  });
+
+  // Devoluciones: check for counter-income or debit balances in class 4
+  // For simplicity, treat any class 4 account with debit nature as devoluciones
+  var devolucionesDescuentos = 0;
+  accounts.forEach(function(a) {
+    if (a.clase === 'ingreso' && a.prefix2 !== '42') {
+      // If the saldo is negative (debit nature for income = contra account)
+      if (a.saldo < 0) {
+        devolucionesDescuentos += Math.abs(a.saldo);
+        ventasBienes -= Math.abs(a.saldo); // Remove from bienes since we counted abs
+      }
+    }
+  });
+
+  // BALANCE
+  var efectivo = 0, inversionesCP = 0, cxcClientes = 0, inventarios = 0, anticipos = 0;
+  var ppeNeto = 0, intangibles = 0, inversionesLP = 0;
+  accounts.forEach(function(a) {
+    if (a.clase !== 'activo') return;
+    var p2 = a.prefix2;
+    if (p2 === '11') efectivo += Math.abs(a.saldo);
+    else if (p2 === '12') {
+      // Distinguish CP vs LP: 4-digit codes starting with 1205 = CP, 1210 = LP
+      var p4 = a.code.substring(0,4);
+      if (p4 === '1210') inversionesLP += Math.abs(a.saldo);
+      else inversionesCP += Math.abs(a.saldo);
+    }
+    else if (p2 === '13') {
+      var p4 = a.code.substring(0,4);
+      if (p4 === '1380') anticipos += Math.abs(a.saldo);
+      else cxcClientes += Math.abs(a.saldo);
+    }
+    else if (p2 === '14') inventarios += Math.abs(a.saldo);
+    else if (p2 === '15') ppeNeto += Math.abs(a.saldo);
+    else if (p2 === '16') intangibles += Math.abs(a.saldo);
+    else if (p2 === '17') anticipos += Math.abs(a.saldo); // diferidos
+    else {
+      // Other assets, put into PPE as catch-all
+      ppeNeto += Math.abs(a.saldo);
+    }
+  });
+
+  var obligFinCP = 0, proveedores = 0, impuestosPorPagar = 0, obligLaborales = 0;
+  var obligFinLP = 0;
+  accounts.forEach(function(a) {
+    if (a.clase !== 'pasivo') return;
+    var p2 = a.prefix2;
+    if (p2 === '21') {
+      // Split CP vs LP by 4-digit
+      var p4 = a.code.substring(0,4);
+      if (p4 === '2120' || p4 === '2125') obligFinLP += Math.abs(a.saldo);
+      else obligFinCP += Math.abs(a.saldo);
+    }
+    else if (p2 === '22') proveedores += Math.abs(a.saldo);
+    else if (p2 === '23') proveedores += Math.abs(a.saldo); // cxp goes with proveedores
+    else if (p2 === '24') impuestosPorPagar += Math.abs(a.saldo);
+    else if (p2 === '25') obligLaborales += Math.abs(a.saldo);
+    else if (p2 === '26' || p2 === '27' || p2 === '28' || p2 === '29') {
+      obligFinLP += Math.abs(a.saldo); // Long-term catch-all
+    }
+    else obligFinCP += Math.abs(a.saldo);
+  });
+
+  var capitalSocial = 0, reservaLegal = 0, utilidadesAcumuladas = 0;
+  accounts.forEach(function(a) {
+    if (a.clase !== 'patrimonio') return;
+    var p2 = a.prefix2;
+    if (p2 === '31') capitalSocial += Math.abs(a.saldo);
+    else if (p2 === '32') capitalSocial += Math.abs(a.saldo); // superavit
+    else if (p2 === '33') reservaLegal += Math.abs(a.saldo);
+    else if (p2 === '34') reservaLegal += Math.abs(a.saldo); // revalorizacion
+    else if (p2 === '36') utilidadesAcumuladas += Math.abs(a.saldo); // utilidad ejercicio
+    else if (p2 === '37') utilidadesAcumuladas += Math.abs(a.saldo);
+    else if (p2 === '38') utilidadesAcumuladas += Math.abs(a.saldo); // superavit valorizaciones
+    else utilidadesAcumuladas += Math.abs(a.saldo);
+  });
+
+  return {
+    pyg: {
+      ventasBienes: ventasBienes,
+      prestacionServicios: prestacionServicios,
+      devolucionesDescuentos: devolucionesDescuentos,
+      costoVentas: costoVentasTotal,
+      costoBienes: costoBienes,
+      costoServicios: costoServicios,
+      gastosPersonal: gastosPersonal,
+      honorarios: honorarios,
+      arrendamientos: arrendamientos,
+      servicios: serviciosGasto,
+      depreciaciones: depreciaciones,
+      otrosGastosOp: otrosGastosOp,
+      ingresosNoOp: ingresosNoOp,
+      interesesNoOp: interesesNoOp,
+      otrosIngNoOp: otrosIngNoOp,
+      gastosNoOp: gastosNoOp,
+      interesesGasto: interesesGasto,
+      otrosGastosNoOp: otrosGastosNoOp,
+      impuestoRenta: impuestoRenta
+    },
+    balance: {
+      efectivo: efectivo,
+      inversionesCP: inversionesCP,
+      cxcClientes: cxcClientes,
+      inventarios: inventarios,
+      anticipos: anticipos,
+      ppeNeto: ppeNeto,
+      intangibles: intangibles,
+      inversionesLP: inversionesLP,
+      obligFinCP: obligFinCP,
+      proveedores: proveedores,
+      impuestosPorPagar: impuestosPorPagar,
+      obligLaborales: obligLaborales,
+      obligFinLP: obligFinLP,
+      capitalSocial: capitalSocial,
+      reservaLegal: reservaLegal,
+      utilidadesAcumuladas: utilidadesAcumuladas
+    }
+  };
+}
+
+// =====================================================
+// FILE UPLOAD HANDLING
+// =====================================================
+function processFile(file) {
+  var errorEl = document.getElementById('uploadError');
+  errorEl.style.display = 'none';
+  errorEl.textContent = '';
+
+  var ext = file.name.split('.').pop().toLowerCase();
+  if (['xlsx','xls','csv'].indexOf(ext) === -1) {
+    errorEl.textContent = 'Formato no soportado. Usa .xlsx, .xls o .csv';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  document.getElementById('dzFilename').textContent = file.name;
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data;
+      if (ext === 'csv') {
+        data = new Uint8Array(e.target.result);
+      } else {
+        data = new Uint8Array(e.target.result);
+      }
+      var workbook = XLSX.read(data, { type: 'array' });
+      var sheetName = workbook.SheetNames[0];
+      var sheet = workbook.Sheets[sheetName];
+      var rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+
+      var accounts = parseBalancePrueba(rows);
+      var yearData = buildDataFromAccounts(accounts);
+
+      // Set single-year data
+      var currentYr = new Date().getFullYear();
+      DATA = {};
+      DATA[currentYr] = yearData;
+      isDemoMode = false;
+      currentYear = currentYr;
+
+      // Update period selector to show only one year
+      var selector = document.getElementById('periodSelector');
+      selector.innerHTML = '<button class="period-btn active" data-year="' + currentYr + '">' + currentYr + '</button>';
+
+      // Update company info
+      var fname = file.name.replace(/\.(xlsx|xls|csv)$/i, '');
+      document.getElementById('companyName').textContent = fname;
+      document.getElementById('companyNit').textContent = accounts.length + ' cuentas procesadas';
+      document.getElementById('companyExtra').textContent = 'Balance cargado: ' + file.name;
+
+      showDashboard();
+    } catch(err) {
+      errorEl.textContent = err.message || 'Error al procesar el archivo.';
+      errorEl.style.display = 'block';
+      console.error(err);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function loadDemoData() {
+  DATA = JSON.parse(JSON.stringify(DEMO_DATA));
+  isDemoMode = true;
+  currentYear = 2024;
+
+  // Restore period selector with 3 years
+  var selector = document.getElementById('periodSelector');
+  selector.innerHTML =
+    '<button class="period-btn" data-year="2022">2022</button>' +
+    '<button class="period-btn" data-year="2023">2023</button>' +
+    '<button class="period-btn active" data-year="2024">2024</button>';
+  bindPeriodSelector();
+
+  // Restore demo company info
+  document.getElementById('companyName').textContent = 'Distribuciones del Valle S.A.S.';
+  document.getElementById('companyNit').textContent = 'NIT: 900.123.456-7';
+  document.getElementById('companyExtra').textContent = 'Datos de demostracion';
+
+  showDashboard();
+}
+
+function showDashboard() {
+  document.getElementById('uploadScreen').style.display = 'none';
+  document.getElementById('dashboardContainer').style.display = 'block';
+  bindPeriodSelector();
+  renderAll();
+}
+
+function showUploadScreen() {
+  document.getElementById('dashboardContainer').style.display = 'none';
+  document.getElementById('uploadScreen').style.display = 'flex';
+  // Reset upload state
+  document.getElementById('dzFilename').textContent = '';
+  document.getElementById('uploadError').style.display = 'none';
+  document.getElementById('fileInput').value = '';
+}
+
+// =====================================================
 // Compute derived PYG values
+// =====================================================
 function computePYG(p) {
   const ingresosOp = p.ventasBienes + p.prestacionServicios;
   const ingresosNetos = ingresosOp - p.devolucionesDescuentos;
@@ -523,11 +1117,14 @@ let comparativo = false;
 let expandedRows = new Set();
 
 function getPrevYear() {
-  return currentYear === 2022 ? null : currentYear - 1;
+  var years = Object.keys(DATA).map(Number).sort();
+  var idx = years.indexOf(currentYear);
+  return idx > 0 ? years[idx - 1] : null;
 }
 
 function getComputed(year) {
   const d = DATA[year];
+  if (!d) return { pyg: computePYG(DATA[currentYear].pyg), bal: computeBalance(DATA[currentYear].balance, 0) };
   const pyg = computePYG(d.pyg);
   const bal = computeBalance(d.balance, pyg.utilidadNeta);
   return { pyg, bal };
@@ -538,13 +1135,13 @@ function getComputed(year) {
 // =====================================================
 function computeKPIs(year) {
   const { pyg, bal } = getComputed(year);
-  const margenBruto = pyg.utilidadBruta / pyg.ingresosNetos;
-  const margenOp = pyg.utilidadOp / pyg.ingresosNetos;
-  const margenNeto = pyg.utilidadNeta / pyg.ingresosNetos;
-  const roe = pyg.utilidadNeta / bal.totalPatrimonio;
-  const razonCorriente = bal.activoCorriente / bal.pasivoCorriente;
-  const pruebaAcida = (bal.activoCorriente - bal.inventarios) / bal.pasivoCorriente;
-  const endeudamiento = bal.totalPasivos / bal.totalActivos;
+  const margenBruto = pyg.ingresosNetos !== 0 ? pyg.utilidadBruta / pyg.ingresosNetos : 0;
+  const margenOp = pyg.ingresosNetos !== 0 ? pyg.utilidadOp / pyg.ingresosNetos : 0;
+  const margenNeto = pyg.ingresosNetos !== 0 ? pyg.utilidadNeta / pyg.ingresosNetos : 0;
+  const roe = bal.totalPatrimonio !== 0 ? pyg.utilidadNeta / bal.totalPatrimonio : 0;
+  const razonCorriente = bal.pasivoCorriente !== 0 ? bal.activoCorriente / bal.pasivoCorriente : 0;
+  const pruebaAcida = bal.pasivoCorriente !== 0 ? (bal.activoCorriente - bal.inventarios) / bal.pasivoCorriente : 0;
+  const endeudamiento = bal.totalActivos !== 0 ? bal.totalPasivos / bal.totalActivos : 0;
   const ebitda = pyg.ebitda;
   return [
     {
@@ -572,13 +1169,13 @@ function computeKPIs(year) {
       critical: roe < 0.05
     },
     {
-      id: 'razonCorriente', label: 'Razón Corriente', value: razonCorriente, format: 'ratio',
+      id: 'razonCorriente', label: 'Razon Corriente', value: razonCorriente, format: 'ratio',
       formula: 'Activo Corriente / Pasivo Corriente',
       light: razonCorriente >= 1.5 ? 'green' : razonCorriente >= 1.0 ? 'yellow' : 'red',
       critical: razonCorriente < 0.8
     },
     {
-      id: 'pruebaAcida', label: 'Prueba Ácida', value: pruebaAcida, format: 'ratio',
+      id: 'pruebaAcida', label: 'Prueba Acida', value: pruebaAcida, format: 'ratio',
       formula: '(Activo Corriente - Inventarios) / Pasivo Corriente',
       light: pruebaAcida >= 1.0 ? 'green' : pruebaAcida >= 0.7 ? 'yellow' : 'red',
       critical: pruebaAcida < 0.5
@@ -643,7 +1240,7 @@ function renderKPIs() {
           }
         }
       } else {
-        subEl.innerHTML = '<span style="color:var(--text3)">Sin período anterior</span>';
+        subEl.innerHTML = '<span style="color:var(--text3)">Sin periodo anterior</span>';
       }
     });
   }, 400);
@@ -677,7 +1274,7 @@ function buildPYGRows(year) {
   return [
     { code: '4', name: 'INGRESOS OPERACIONALES', value: p.ingresosOp, pct: pct(p.ingresosOp), level: 0, type: 'header', key: 'ingOp', children: ['41', '4175', 'devol'] },
     { code: '4135', name: 'Ventas de bienes', value: p.ventasBienes, pct: pct(p.ventasBienes), level: 1, type: 'detail', parent: 'ingOp', key: '41' },
-    { code: '4175', name: 'Prestación de servicios', value: p.prestacionServicios, pct: pct(p.prestacionServicios), level: 1, type: 'detail', parent: 'ingOp', key: '4175' },
+    { code: '4175', name: 'Prestacion de servicios', value: p.prestacionServicios, pct: pct(p.prestacionServicios), level: 1, type: 'detail', parent: 'ingOp', key: '4175' },
     { code: '', name: '(-) Devoluciones y descuentos', value: -p.devolucionesDescuentos, pct: pct(-p.devolucionesDescuentos), level: 1, type: 'detail', parent: 'ingOp', key: 'devol' },
     { code: '', name: 'INGRESOS NETOS', value: p.ingresosNetos, pct: 1, level: 0, type: 'total', key: 'ingNetos' },
     { code: '6', name: '(-) COSTO DE VENTAS', value: -p.costoVentas, pct: pct(-p.costoVentas), level: 0, type: 'header', key: 'costoV', children: ['costBien', 'costServ'] },
@@ -713,7 +1310,7 @@ function renderPYG() {
   // Head
   const pygHead = document.getElementById('pygHead');
   let headHtml = '<tr><th style="width:50px"></th><th>Cuenta</th><th>' + currentYear + '</th><th>% Vertical</th>';
-  if (prevRows) headHtml += '<th>' + prev + '</th><th>Variación</th>';
+  if (prevRows) headHtml += '<th>' + prev + '</th><th>Variacion</th>';
   headHtml += '</tr>';
   pygHead.innerHTML = headHtml;
 
@@ -831,7 +1428,8 @@ function renderBalance() {
   // Equation bar
   const { bal } = getComputed(currentYear);
   const eq = document.getElementById('equationBar');
-  const balanced = bal.totalActivos === bal.totalPasivoPatrimonio;
+  const diff = Math.abs(bal.totalActivos - bal.totalPasivoPatrimonio);
+  const balanced = diff < 1; // Allow rounding tolerance
   eq.innerHTML = `
     <div class="eq-item"><span class="eq-label">Activos</span><span class="eq-value">${formatCOP(bal.totalActivos, true)}</span></div>
     <span class="eq-op">=</span>
@@ -844,7 +1442,7 @@ function renderBalance() {
   // Head
   const head = document.getElementById('balanceHead');
   let headHtml = '<tr><th style="width:50px"></th><th>Cuenta</th><th>' + currentYear + '</th>';
-  if (prevRows) headHtml += '<th>' + prev + '</th><th>Variación</th>';
+  if (prevRows) headHtml += '<th>' + prev + '</th><th>Variacion</th>';
   headHtml += '</tr>';
   head.innerHTML = headHtml;
 
@@ -914,6 +1512,7 @@ function renderBalance() {
 function renderWaterfall() {
   const container = document.getElementById('waterfallChart');
   const { pyg } = getComputed(currentYear);
+  const isLight = document.documentElement.classList.contains('light-theme');
 
   const items = [
     { label: 'Ingresos\nNetos', value: pyg.ingresosNetos, type: 'total' },
@@ -934,15 +1533,21 @@ function renderWaterfall() {
   const gap = chartW / items.length;
 
   const maxVal = pyg.ingresosNetos;
-  const scale = chartH / (maxVal * 1.1);
+  const scale = maxVal > 0 ? chartH / (maxVal * 1.1) : 1;
+
+  const gridColor = isLight ? 'rgba(0,0,0,0.06)' : 'rgba(255,255,255,0.05)';
+  const labelColor = isLight ? '#6B7280' : '#6B7280';
+  const textLabelColor = isLight ? '#6B7280' : '#9CA3AF';
+  const accentBlue = isLight ? '#059669' : '#3B82F6';
+  const accentBlue2 = isLight ? '#34D399' : '#60A5FA';
 
   let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px" xmlns="http://www.w3.org/2000/svg">`;
   // grid lines
   for (let i = 0; i <= 5; i++) {
     const y = padT + (chartH / 5) * i;
     const val = maxVal * 1.1 * (1 - i / 5);
-    svg += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
-    svg += `<text x="${padL - 8}" y="${y + 4}" fill="#6B7280" font-size="9" font-family="JetBrains Mono" text-anchor="end">${formatCOP(val, true)}</text>`;
+    svg += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="${gridColor}" stroke-width="1"/>`;
+    svg += `<text x="${padL - 8}" y="${y + 4}" fill="${labelColor}" font-size="9" font-family="JetBrains Mono" text-anchor="end">${formatCOP(val, true)}</text>`;
   }
 
   let runningTotal = 0;
@@ -953,7 +1558,7 @@ function renderWaterfall() {
     if (item.type === 'total' || item.type === 'subtotal') {
       barHeight = Math.abs(item.value) * scale;
       barTop = padT + chartH - barHeight;
-      color = item.type === 'total' ? '#3B82F6' : '#60A5FA';
+      color = item.type === 'total' ? accentBlue : accentBlue2;
       runningTotal = item.value;
     } else {
       const prevTotal = runningTotal;
@@ -969,13 +1574,6 @@ function renderWaterfall() {
       }
     }
 
-    // connector line
-    if (i > 0 && item.type !== 'total' && item.type !== 'subtotal') {
-      const prevX = padL + gap * (i - 1) + (gap - barW) / 2 + barW;
-      const lineY = padT + chartH - (runningTotal - item.value) * scale + (item.value < 0 ? 0 : 0);
-      // We draw from previous bar end to current bar start
-    }
-
     svg += `<rect x="${x}" y="${barTop}" width="${barW}" height="${Math.max(barHeight, 1)}" rx="3" fill="${color}" opacity="0.85">
       <animate attributeName="height" from="0" to="${barHeight}" dur="0.6s" fill="freeze"/>
       <animate attributeName="y" from="${padT + chartH}" to="${barTop}" dur="0.6s" fill="freeze"/>
@@ -988,7 +1586,7 @@ function renderWaterfall() {
     // Label at bottom
     const lines = item.label.split('\n');
     lines.forEach((line, li) => {
-      svg += `<text x="${x + barW / 2}" y="${H - padB + 16 + li * 13}" fill="#9CA3AF" font-size="9" font-family="DM Sans" text-anchor="middle">${line}</text>`;
+      svg += `<text x="${x + barW / 2}" y="${H - padB + 16 + li * 13}" fill="${textLabelColor}" font-size="9" font-family="DM Sans" text-anchor="middle">${line}</text>`;
     });
   });
 
@@ -1002,13 +1600,14 @@ function renderWaterfall() {
 function renderDonut() {
   const container = document.getElementById('donutChart');
   const { bal } = getComputed(currentYear);
+  const isLight = document.documentElement.classList.contains('light-theme');
 
   const segments = [
-    { label: 'Efectivo', value: bal.efectivo, color: '#3B82F6' },
-    { label: 'Inversiones CP', value: bal.inversionesCP, color: '#60A5FA' },
-    { label: 'CxC Clientes', value: bal.cxcClientes, color: '#818CF8' },
-    { label: 'Inventarios', value: bal.inventarios, color: '#A78BFA' },
-    { label: 'Anticipos', value: bal.anticipos, color: '#C4B5FD' },
+    { label: 'Efectivo', value: bal.efectivo, color: isLight ? '#059669' : '#3B82F6' },
+    { label: 'Inversiones CP', value: bal.inversionesCP, color: isLight ? '#34D399' : '#60A5FA' },
+    { label: 'CxC Clientes', value: bal.cxcClientes, color: isLight ? '#6366F1' : '#818CF8' },
+    { label: 'Inventarios', value: bal.inventarios, color: isLight ? '#8B5CF6' : '#A78BFA' },
+    { label: 'Anticipos', value: bal.anticipos, color: isLight ? '#A78BFA' : '#C4B5FD' },
     { label: 'PPE Neto', value: bal.ppeNeto, color: '#10B981' },
     { label: 'Intangibles', value: bal.intangibles, color: '#34D399' },
     { label: 'Inversiones LP', value: bal.inversionesLP, color: '#6EE7B7' }
@@ -1018,10 +1617,17 @@ function renderDonut() {
   const cx = 140, cy = 140, r = 100, inner = 60;
   const W = 420, H = 300;
 
+  const strokeColor = isLight ? '#FFFFFF' : '#111827';
+  const centerTextColor = isLight ? '#111827' : '#F9FAFB';
+  const centerValColor = isLight ? '#059669' : '#3B82F6';
+  const legendColor = isLight ? '#374151' : '#9CA3AF';
+  const legendSubColor = isLight ? '#6B7280' : '#6B7280';
+
   let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px" xmlns="http://www.w3.org/2000/svg">`;
 
   let startAngle = -Math.PI / 2;
   segments.forEach((seg, i) => {
+    if (total === 0) return;
     const pct = seg.value / total;
     const angle = pct * 2 * Math.PI;
     const endAngle = startAngle + angle;
@@ -1036,7 +1642,7 @@ function renderDonut() {
     const x2i = cx + inner * Math.cos(startAngle);
     const y2i = cy + inner * Math.sin(startAngle);
 
-    svg += `<path d="M${x1o},${y1o} A${r},${r} 0 ${largeArc} 1 ${x2o},${y2o} L${x1i},${y1i} A${inner},${inner} 0 ${largeArc} 0 ${x2i},${y2i} Z" fill="${seg.color}" opacity="0.85" stroke="#111827" stroke-width="2">
+    svg += `<path d="M${x1o},${y1o} A${r},${r} 0 ${largeArc} 1 ${x2o},${y2o} L${x1i},${y1i} A${inner},${inner} 0 ${largeArc} 0 ${x2i},${y2i} Z" fill="${seg.color}" opacity="0.85" stroke="${strokeColor}" stroke-width="2">
       <title>${seg.label}: ${formatCOP(seg.value, true)} (${(pct * 100).toFixed(1)}%)</title>
     </path>`;
 
@@ -1044,17 +1650,17 @@ function renderDonut() {
   });
 
   // Center text
-  svg += `<text x="${cx}" y="${cy - 6}" fill="#F9FAFB" font-size="12" font-family="DM Sans" text-anchor="middle" font-weight="600">Total Activos</text>`;
-  svg += `<text x="${cx}" y="${cy + 14}" fill="#3B82F6" font-size="14" font-family="JetBrains Mono" text-anchor="middle" font-weight="600">${formatCOP(total, true)}</text>`;
+  svg += `<text x="${cx}" y="${cy - 6}" fill="${centerTextColor}" font-size="12" font-family="DM Sans" text-anchor="middle" font-weight="600">Total Activos</text>`;
+  svg += `<text x="${cx}" y="${cy + 14}" fill="${centerValColor}" font-size="14" font-family="JetBrains Mono" text-anchor="middle" font-weight="600">${formatCOP(total, true)}</text>`;
 
   // Legend
   const legX = 295, legY = 30;
   segments.forEach((seg, i) => {
     const y = legY + i * 32;
-    const pct = ((seg.value / total) * 100).toFixed(1);
+    const pct = total > 0 ? ((seg.value / total) * 100).toFixed(1) : '0.0';
     svg += `<rect x="${legX}" y="${y}" width="12" height="12" rx="3" fill="${seg.color}"/>`;
-    svg += `<text x="${legX + 18}" y="${y + 10}" fill="#9CA3AF" font-size="10" font-family="DM Sans">${seg.label}</text>`;
-    svg += `<text x="${legX + 18}" y="${y + 23}" fill="#6B7280" font-size="9" font-family="JetBrains Mono">${formatCOP(seg.value, true)} (${pct.replace('.', ',')}%)</text>`;
+    svg += `<text x="${legX + 18}" y="${y + 10}" fill="${legendColor}" font-size="10" font-family="DM Sans">${seg.label}</text>`;
+    svg += `<text x="${legX + 18}" y="${y + 23}" fill="${legendSubColor}" font-size="9" font-family="JetBrains Mono">${formatCOP(seg.value, true)} (${pct.replace('.', ',')}%)</text>`;
   });
 
   svg += '</svg>';
@@ -1066,14 +1672,14 @@ function renderDonut() {
 // =====================================================
 function exportExcel() {
   if (typeof XLSX === 'undefined') {
-    alert('La librería XLSX no se ha cargado. Recarga la página e intenta de nuevo.');
+    alert('La libreria XLSX no se ha cargado. Recarga la pagina e intenta de nuevo.');
     return;
   }
   const wb = XLSX.utils.book_new();
 
   // PYG sheet
   const pygRows = buildPYGRows(currentYear);
-  const pygData = [['Código PUC', 'Cuenta', 'Valor COP ' + currentYear, '% Vertical']];
+  const pygData = [['Codigo PUC', 'Cuenta', 'Valor COP ' + currentYear, '% Vertical']];
   pygRows.forEach(r => {
     pygData.push([r.code, r.name, r.value, r.pct != null ? +(r.pct * 100).toFixed(2) : '']);
   });
@@ -1083,7 +1689,7 @@ function exportExcel() {
 
   // Balance sheet
   const balRows = buildBalanceRows(currentYear);
-  const balData = [['Código PUC', 'Cuenta', 'Valor COP ' + currentYear]];
+  const balData = [['Codigo PUC', 'Cuenta', 'Valor COP ' + currentYear]];
   balRows.forEach(r => {
     balData.push([r.code, r.name, r.value]);
   });
@@ -1093,7 +1699,7 @@ function exportExcel() {
 
   // KPIs sheet
   const kpis = computeKPIs(currentYear);
-  const kpiData = [['Indicador', 'Valor', 'Fórmula']];
+  const kpiData = [['Indicador', 'Valor', 'Formula']];
   kpis.forEach(k => {
     let val;
     if (k.format === 'pct') val = (k.value * 100).toFixed(2) + '%';
@@ -1111,15 +1717,17 @@ function exportExcel() {
 // =====================================================
 // EVENT HANDLERS
 // =====================================================
-// Period selector
-document.querySelectorAll('.period-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentYear = parseInt(btn.dataset.year);
-    renderAll();
+// Period selector binding (called after DOM changes)
+function bindPeriodSelector() {
+  document.querySelectorAll('.period-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentYear = parseInt(btn.dataset.year);
+      renderAll();
+    });
   });
-});
+}
 
 // Comparativo toggle
 document.getElementById('toggleComparativo').addEventListener('change', (e) => {
@@ -1139,7 +1747,6 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 
 // Expand / Collapse all
 document.getElementById('btnExpandAll').addEventListener('click', () => {
-  // Collect all parent keys
   const allParents = new Set();
   document.querySelectorAll('.expand-btn').forEach(btn => allParents.add(btn.dataset.key));
   allParents.forEach(k => expandedRows.add(k));
@@ -1156,6 +1763,40 @@ document.getElementById('btnCollapseAll').addEventListener('click', () => {
 // Export
 document.getElementById('btnExportExcel').addEventListener('click', exportExcel);
 
+// Theme toggle
+document.getElementById('btnTheme').addEventListener('click', toggleTheme);
+updateThemeButton();
+
+// Upload new file
+document.getElementById('btnUploadNew').addEventListener('click', showUploadScreen);
+
+// File upload handlers
+(function() {
+  var dropZone = document.getElementById('dropZone');
+  var fileInput = document.getElementById('fileInput');
+
+  dropZone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+  });
+  dropZone.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+  });
+  dropZone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    if (e.dataTransfer.files.length > 0) {
+      processFile(e.dataTransfer.files[0]);
+    }
+  });
+  fileInput.addEventListener('change', function(e) {
+    if (e.target.files.length > 0) {
+      processFile(e.target.files[0]);
+    }
+  });
+})();
+
 // =====================================================
 // RENDER ALL
 // =====================================================
@@ -1167,19 +1808,21 @@ function renderAll() {
   renderDonut();
 }
 
-// Initial render
-renderAll();
-
 // =====================================================
 // DATA INTEGRITY VERIFICATION (console)
 // =====================================================
-[2022, 2023, 2024].forEach(year => {
-  const { pyg, bal } = getComputed(year);
-  const balanced = bal.totalActivos === bal.totalPasivoPatrimonio;
-  const pygMatch = pyg.utilidadNeta === bal.utilidadesEjercicio;
-  console.log(`[${year}] Balance cuadra: ${balanced} (Activos=${bal.totalActivos}, P+P=${bal.totalPasivoPatrimonio})`);
-  console.log(`[${year}] PYG↔Balance: ${pygMatch} (Util.Neta=${pyg.utilidadNeta}, Util.Ejercicio=${bal.utilidadesEjercicio})`);
-});
+function verifyData() {
+  Object.keys(DATA).forEach(function(year) {
+    const { pyg, bal } = getComputed(parseInt(year));
+    const diff = Math.abs(bal.totalActivos - bal.totalPasivoPatrimonio);
+    const balanced = diff < 1;
+    const pygMatch = Math.abs(pyg.utilidadNeta - bal.utilidadesEjercicio) < 1;
+    console.log('[' + year + '] Balance cuadra: ' + balanced + ' (Activos=' + bal.totalActivos + ', P+P=' + bal.totalPasivoPatrimonio + ')');
+    console.log('[' + year + '] PYG<->Balance: ' + pygMatch + ' (Util.Neta=' + pyg.utilidadNeta + ', Util.Ejercicio=' + bal.utilidadesEjercicio + ')');
+  });
+}
+
+// Show upload screen on initial load (no auto-render of dashboard)
 </script>
 
 </body>
