@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-S7SM6ST4CC');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Calculadora Retención en la Fuente 2026 — Asalariados e Independientes | ExógenaDIAN</title>
+<meta name="description" content="Calcula GRATIS la retención en la fuente por salarios (Procedimiento 1 y 2) e independientes. Tabla Art. 383 ET, sugerencias para reducir la base gravable. Exporta Excel formulado.">
+<meta name="keywords" content="retención en la fuente 2026, calculadora retención salarios, procedimiento 1 retención, procedimiento 2 retención, art 383 ET, retención independientes, UVT 2026, depuración base gravable, retención honorarios servicios">
+<link rel="canonical" href="https://exogenadian.com/retencion-fuente.html">
+<meta property="og:title" content="Calculadora Retención en la Fuente 2026 — Asalariados e Independientes | ExógenaDIAN">
+<meta property="og:description" content="Calcula GRATIS retención en la fuente. Procedimiento 1 y 2 para asalariados, independientes con Art. 383 ET. Sugerencias de optimización y exporta Excel.">
+<meta property="og:url" content="https://exogenadian.com/retencion-fuente.html">
+<meta property="og:type" content="website"><meta property="og:locale" content="es_CO"><meta property="og:site_name" content="ExógenaDIAN">
+<meta property="og:image" content="https://exogenadian.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Calculadora Retención en la Fuente Colombia","url":"https://exogenadian.com/retencion-fuente.html","description":"Herramienta gratuita para calcular retención en la fuente por salarios (Procedimiento 1 y 2) e independientes. Tabla Art. 383 ET con sugerencias de optimización.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Cómo se calcula la retención en la fuente por salarios en Colombia?","acceptedAnswer":{"@type":"Answer","text":"Se depura el ingreso mensual restando aportes obligatorios (salud 4%, pensión 4%, FSP si aplica), deducciones (dependientes, intereses vivienda, prepagada, aportes voluntarios) y la renta exenta del 25% (máx 240 UVT). La base gravable se convierte a UVT y se aplica la tabla del Art. 383 ET."}},
+{"@type":"Question","name":"¿Cuál es la diferencia entre Procedimiento 1 y 2 de retención?","acceptedAnswer":{"@type":"Answer","text":"El Procedimiento 1 calcula la retención mes a mes sobre el ingreso real. El Procedimiento 2 (Art. 386 ET) calcula un porcentaje fijo semestral basado en el promedio de ingresos de los últimos 12 meses, que se aplica durante 6 meses."}},
+{"@type":"Question","name":"¿Cómo se calcula la retención a independientes en 2026?","acceptedAnswer":{"@type":"Answer","text":"Los independientes cotizan seguridad social sobre el 40% del ingreso (Dec. 0572/2025). Se restan aportes de salud (12.5%) y pensión (16%) sobre esa base, más deducciones permitidas y renta exenta 25%. La base se lleva a la tabla Art. 383 ET. También puede aplicarse tarifa fija Art. 392."}},
+{"@type":"Question","name":"¿Cuánto es la UVT en 2026?","acceptedAnswer":{"@type":"Answer","text":"La UVT para 2026 es $52.374. Para 2025 fue $49.799."}}
+]}</script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<style>
+:root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#059669;--green2:#ECFDF5;--green3:#D1FAE5;--red:#DC2626;--amber:#D97706;--amber2:#FFF8E1;--amber3:#FEF3C7;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.container{max-width:940px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);padding:28px 32px;border-radius:16px;margin-bottom:24px;color:#fff;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.header h1{font-size:1.4rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.header h1 span{font-size:1.5rem}
+.header p{opacity:.8;font-size:.83rem;margin-top:4px;max-width:520px;line-height:1.5}
+.header-right{text-align:right;font-size:.78rem;opacity:.75}
+.badge-ley{display:inline-block;background:rgba(16,185,129,.2);color:#6EE7B7;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;margin-top:6px}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.chip-row{display:grid;gap:10px;margin-bottom:16px}
+.chip-row.cols2{grid-template-columns:1fr 1fr}
+.chip-row.cols3{grid-template-columns:1fr 1fr 1fr}
+.chip{padding:14px 16px;border:2px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;transition:.2s;text-align:center}
+.chip:hover{border-color:var(--pri2);background:var(--pri3)}
+.chip.sel{border-color:var(--pri2);background:var(--pri3);box-shadow:0 0 0 3px rgba(46,117,182,.12)}
+.chip strong{display:block;font-size:.88rem;color:var(--text);margin-bottom:2px}
+.chip small{font-size:.68rem;color:var(--muted);line-height:1.3;display:block;margin-top:4px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid.cols3{grid-template-columns:1fr 1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;gap:4px}
+.form-group label .tip{cursor:help;background:var(--pri3);color:var(--pri);width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;position:relative}
+.form-group label .tip:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--pri);color:#fff;padding:6px 10px;border-radius:6px;font-size:.72rem;white-space:normal;max-width:300px;z-index:10;font-weight:400;text-transform:none;letter-spacing:0;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.form-group input,.form-group select{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:.95rem;font-family:'DM Sans',sans-serif;transition:.2s}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 3px rgba(46,117,182,.12)}
+.form-group input.money{font-family:'JetBrains Mono',monospace}
+.form-group .hint{font-size:.7rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
+.alert{padding:12px 16px;border-radius:8px;font-size:.82rem;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.alert-info{background:var(--pri3);color:var(--pri);border:1px solid #B4C6E7}
+.alert-green{background:var(--green2);color:#065F46;border:1px solid #A7F3D0}
+.alert-warn{background:var(--amber3);color:#92400E;border:1px solid #FDE68A}
+.btn-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn{padding:11px 24px;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.9rem;font-family:inherit;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.btn-pri{background:var(--pri2);color:#fff;width:100%;justify-content:center}
+.btn-pri:hover{background:var(--pri);transform:translateY(-1px);box-shadow:0 4px 14px rgba(27,58,92,.3)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#047857}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--pri2);color:var(--pri2)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.results{display:none;animation:fadeIn .4s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center}
+.kpi .val{font-size:1.25rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.kpi .lbl{font-size:.7rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:4px}
+.kpi.green .val{color:var(--green)}.kpi.blue .val{color:var(--pri2)}.kpi.amber .val{color:var(--amber)}.kpi.red .val{color:var(--red)}
+.liq-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.liq-table th{background:var(--pri);color:#fff;padding:10px 12px;text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:.3px}
+.liq-table th:last-child{text-align:right}
+.liq-table td{padding:9px 12px;border-bottom:1px solid var(--border)}
+.liq-table td:last-child{text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600}
+.liq-table tr:nth-child(even){background:#FAFBFC}
+.liq-table tr.highlight{background:var(--pri3);font-weight:700}
+.liq-table tr.total{background:var(--pri);color:#fff;font-weight:700}
+.liq-table tr.total td{font-size:.95rem;padding:12px}
+.liq-table tr.ded td{color:var(--red)}
+.liq-table tr.savings{background:var(--green2)}
+.liq-table tr.savings td{color:#065F46;font-weight:700}
+.result-total{background:var(--pri);color:#fff;border-radius:12px;padding:20px 24px;margin-top:16px;display:flex;align-items:center;justify-content:space-between}
+.result-total .label{font-size:.95rem;font-weight:600}
+.result-total .amount{font-size:1.8rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.collapsible-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:14px 0;border-bottom:1px solid var(--border);margin-bottom:14px}
+.collapsible-header h3{font-size:.95rem;font-weight:700;color:var(--pri);display:flex;align-items:center;gap:8px}
+.collapsible-header .arrow{transition:.3s;font-size:.8rem}
+.collapsible-header.open .arrow{transform:rotate(180deg)}
+.collapsible-body{display:none;animation:fadeIn .3s}
+.collapsible-body.show{display:block}
+.sug-card{background:#F9FAFB;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.sug-card .sug-title{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.sug-card .sug-norma{font-size:.7rem;color:var(--muted);margin-bottom:6px}
+.sug-card .sug-limit{font-size:.78rem;color:var(--muted);margin-bottom:8px}
+.sug-card .sug-savings{font-size:.82rem;font-weight:700;color:var(--green);background:var(--green2);padding:4px 10px;border-radius:6px;display:inline-block}
+.sug-card .sug-savings.zero{color:var(--muted);background:#f0f0f0}
+.normativa-list{margin-top:16px;padding:14px 18px;background:#F9FAFB;border:1px solid var(--border);border-radius:8px;font-size:.78rem;color:var(--muted);line-height:1.8}
+.disclaimer{margin-top:16px;padding:14px 18px;background:var(--amber2);border:1px solid #FDE68A;border-radius:8px;font-size:.76rem;color:#92400E;line-height:1.6}
+.hidden{display:none!important}
+.p2-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.p2-grid .form-group label{font-size:.7rem}
+.compare-box{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.compare-col{border-radius:12px;padding:18px;text-align:center}
+.compare-col.sin{background:#FEF2F2;border:1px solid #FECACA}
+.compare-col.con{background:var(--green2);border:1px solid #A7F3D0}
+.compare-col .compare-label{font-size:.78rem;font-weight:600;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.compare-col .compare-val{font-size:1.4rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.compare-col.sin .compare-val{color:var(--red)}
+.compare-col.con .compare-val{color:var(--green)}
+.compare-col .compare-diff{font-size:.8rem;margin-top:4px;font-weight:600}
+@media(max-width:768px){
+  .header{flex-direction:column;text-align:center;padding:22px 18px}
+  .header-right{text-align:center}
+  .form-grid,.form-grid.cols3{grid-template-columns:1fr}
+  .chip-row.cols2,.chip-row.cols3{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .p2-grid{grid-template-columns:1fr 1fr}
+  .compare-box{grid-template-columns:1fr}
+  .container{padding:12px}
+  .liq-table{font-size:.78rem}
+  .liq-table th,.liq-table td{padding:7px 8px}
+  .btn-row{flex-direction:column}
+  .btn{width:100%;justify-content:center}
+  .result-total{flex-direction:column;text-align:center;gap:8px}
+}
+</style>
+</head>
+<body>
+
+<div id="nav-container"></div>
+<script src="shared/nav.js"></script>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <h1><span>&#128176;</span> Calculadora Retención en la Fuente</h1>
+    <p>Asalariados (Procedimiento 1 y 2) &middot; Independientes &middot; Tabla Art. 383 ET &middot; Sugerencias de optimización</p>
+    <div class="badge-ley">UVT 2026: $52.374 &middot; Estatuto Tributario vigente</div>
+  </div>
+  <div class="header-right">100% en tu navegador<br>Tus datos no salen de tu equipo<br><strong>Cálculo instantáneo</strong></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- CONFIG -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-title">&#9881; Configuración</div>
+  <div class="form-grid cols3">
+    <div class="form-group">
+      <label>Año gravable</label>
+      <select id="anio" onchange="calcular()">
+        <option value="2026" selected>2026</option>
+        <option value="2025">2025</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Perfil</label>
+      <select id="perfil" onchange="togglePerfil();calcular()">
+        <option value="asalariado">Asalariado</option>
+        <option value="independiente">Independiente / Contratista</option>
+      </select>
+    </div>
+    <div class="form-group" id="procGroup">
+      <label>Procedimiento <span class="tip" data-tip="P1: depuración mensual. P2: porcentaje fijo semestral basado en promedio 12 meses (Art. 386 ET)">?</span></label>
+      <select id="proc" onchange="toggleProc();calcular()">
+        <option value="1">Procedimiento 1</option>
+        <option value="2">Procedimiento 2</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- INGRESOS ASALARIADO -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="card" id="cardAsal">
+  <div class="card-title">&#128181; Ingresos del mes</div>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Salario básico mensual</label>
+      <input type="text" id="salario" class="money" value="0" oninput="fmtMoney(this);calcular()">
+    </div>
+    <div class="form-group">
+      <label>Horas extras y recargos</label>
+      <input type="text" id="extras" class="money" value="0" oninput="fmtMoney(this);calcular()">
+    </div>
+    <div class="form-group">
+      <label>Bonificación salarial</label>
+      <input type="text" id="bonSal" class="money" value="0" oninput="fmtMoney(this);calcular()">
+    </div>
+    <div class="form-group">
+      <label>Bonificación NO salarial</label>
+      <input type="text" id="bonNoSal" class="money" value="0" oninput="fmtMoney(this);calcular()">
+    </div>
+    <div class="form-group full">
+      <label>Otros ingresos laborales</label>
+      <input type="text" id="otrosIng" class="money" value="0" oninput="fmtMoney(this);calcular()">
+    </div>
+  </div>
+</div>
+
+<!-- PROCEDIMIENTO 2: 12 MESES -->
+<div class="card hidden" id="cardP2">
+  <div class="card-title">&#128197; Promedio 12 meses — Procedimiento 2 (Art. 386 ET)</div>
+  <div class="alert alert-info">Ingrese los ingresos brutos de cada uno de los 12 meses anteriores. El sistema calcula el promedio y aplica la depuración sobre ese promedio.</div>
+  <div class="p2-grid" id="p2Grid"></div>
+  <div style="text-align:right;font-size:.85rem;font-weight:700;color:var(--pri)">Promedio: <span id="p2Prom" style="font-family:'JetBrains Mono',monospace">$0</span></div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- INGRESOS INDEPENDIENTE -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="card hidden" id="cardInd">
+  <div class="card-title">&#128181; Datos del contrato</div>
+  <div class="form-grid cols3">
+    <div class="form-group">
+      <label>Tipo de ingreso</label>
+      <select id="tipoIng" onchange="calcular()">
+        <option value="honorarios">Honorarios</option>
+        <option value="servicios">Servicios</option>
+        <option value="comisiones">Comisiones</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>¿Declarante de renta?</label>
+      <select id="declarante" onchange="calcular()">
+        <option value="si">Sí</option>
+        <option value="no">No</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Ingreso bruto mensual</label>
+      <input type="text" id="ingresoInd" class="money" value="0" oninput="fmtMoney(this);calcular()">
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- DEDUCCIONES -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="card">
+  <div class="collapsible-header" onclick="toggleCollapsible(this)">
+    <h3>&#128161; Optimizar mi retención — Deducciones y rentas exentas</h3>
+    <span class="arrow">&#9660;</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="alert alert-green">Cada deducción reduce su base gravable. Complete solo las que apliquen a su caso. Los topes legales se aplican automáticamente.</div>
+
+    <div class="form-grid" id="dedAsalOnly">
+      <div class="form-group">
+        <label>Dependientes económicos <span class="tip" data-tip="10% del ingreso bruto, máx 32 UVT/mes por dependiente. Hasta 2 dependientes. Solo asalariados (Art. 387 ET).">?</span></label>
+        <select id="dependientes" onchange="calcular()">
+          <option value="0">0</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Medicina prepagada / seguros <span class="tip" data-tip="Hasta 16 UVT/mes. Solo asalariados (Art. 387 ET). Requiere certificado.">?</span></label>
+        <input type="text" id="prepagada" class="money" value="0" oninput="fmtMoney(this);calcular()">
+      </div>
+    </div>
+
+    <div class="form-grid" style="margin-top:12px">
+      <div class="form-group">
+        <label>Aportes vol. pensión AFP <span class="tip" data-tip="Hasta 25% del ingreso, máx 3.800 UVT/año (Art. 126-1 ET). Deducible de la base.">?</span></label>
+        <input type="text" id="volPension" class="money" value="0" oninput="fmtMoney(this);calcular()">
+      </div>
+      <div class="form-group">
+        <label>Aportes AFC / ahorro vivienda <span class="tip" data-tip="Límite conjunto con pensión voluntaria: 30% del ingreso bruto, máx 3.800 UVT/año (Art. 126-4 ET).">?</span></label>
+        <input type="text" id="afc" class="money" value="0" oninput="fmtMoney(this);calcular()">
+      </div>
+      <div class="form-group">
+        <label>Intereses crédito vivienda <span class="tip" data-tip="Hasta 100 UVT/mes (Art. 119 ET). Requiere certificado bancario.">?</span></label>
+        <input type="text" id="intVivienda" class="money" value="0" oninput="fmtMoney(this);calcular()">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CALCULAR -->
+<div class="btn-row" style="margin-bottom:24px">
+  <button class="btn btn-pri" onclick="calcular()">&#128200; Calcular retención</button>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- RESULTADOS -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="results" id="results">
+
+  <!-- KPIs -->
+  <div class="kpis" id="kpis"></div>
+
+  <!-- Tabla depuración -->
+  <div class="card">
+    <div class="card-title">&#128203; Depuración paso a paso</div>
+    <table class="liq-table" id="tblDep"><thead></thead><tbody></tbody></table>
+    <div class="result-total" id="resultTotal"></div>
+  </div>
+
+  <!-- Comparativo -->
+  <div class="card" id="cardCompare">
+    <div class="card-title">&#128200; Sin optimización vs Con optimización</div>
+    <div class="compare-box" id="compareBox"></div>
+  </div>
+
+  <!-- Tarifa fija (solo independientes) -->
+  <div class="card hidden" id="cardTarifaFija">
+    <div class="card-title">&#9878; Comparativo: Depuración Art. 383 vs Tarifa fija Art. 392</div>
+    <div id="tarifaFijaContent"></div>
+  </div>
+
+  <!-- Sugerencias -->
+  <div class="card" id="cardSug">
+    <div class="card-title">&#128161; Sugerencias para reducir tu retención</div>
+    <div id="sugContent"></div>
+  </div>
+
+  <!-- Export -->
+  <div class="card">
+    <div class="card-title">&#128229; Exportar</div>
+    <div class="btn-row">
+      <button class="btn btn-green" onclick="exportarExcel()">&#128196; Descargar Excel formulado (PRO)</button>
+      <button class="btn btn-outline" onclick="copiarWhatsApp()">&#128172; Copiar para WhatsApp</button>
+    </div>
+    <div id="proExportMsg" style="margin-top:10px"></div>
+  </div>
+
+  <!-- Normativa -->
+  <div class="normativa-list">
+    <strong>Normativa aplicada:</strong><br>
+    &bull; Art. 383 ET — Tabla de retención en la fuente para personas naturales<br>
+    &bull; Art. 386 ET — Procedimiento 2 de retención<br>
+    &bull; Art. 387 ET — Deducciones por dependientes, prepagada<br>
+    &bull; Art. 392 ET — Tarifas de retención para otros ingresos tributarios<br>
+    &bull; Art. 126-1 ET — Aportes voluntarios a fondos de pensiones<br>
+    &bull; Art. 126-4 ET — Aportes a cuentas AFC<br>
+    &bull; Art. 119 ET — Intereses por crédito de vivienda<br>
+    &bull; Art. 206 num. 10 ET — Renta exenta del 25%<br>
+    &bull; Decreto 0572 de 2025 — Base de cotización independientes
+  </div>
+  <div class="disclaimer">&#9888; Este cálculo es orientativo. No constituye asesoría tributaria. Consulte siempre con su contador o asesor tributario. ExógenaDIAN.com no se hace responsable de decisiones tomadas con base en esta herramienta.</div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+/* ═══ CONSTANTES ═══ */
+const UVT={2026:52374,2025:49799};
+const SMLMV={2026:1423500,2025:1300000};
+
+/* ═══ PRO ═══ */
+const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
+let proUnlocked=false;
+function getDeviceFingerprint(){let u=localStorage.getItem('exogenadian_device_id');if(!u){u='D-'+crypto.randomUUID().split('-').slice(0,2).join('');localStorage.setItem('exogenadian_device_id',u)}return u}
+async function validarPro(v){try{const fp=getDeviceFingerprint(),isE=v.includes('@'),act=isE?'validateEmail':'validateKey',p=isE?'email':'key',url=APPS_SCRIPT_URL+'?action='+act+'&'+p+'='+encodeURIComponent(v)+'&device='+encodeURIComponent(fp),r=await fetch(url),d=await r.json();if(d.valid)return true}catch(e){}return false}
+async function initPro(){const s=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');if(s){const v=await validarPro(s);if(v){proUnlocked=true}else{localStorage.removeItem('exogenadian_pro_email');localStorage.removeItem('exogenadian_pro_key')}}}
+(function(){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initPro);else initPro()})();
+
+/* ═══ UTILS ═══ */
+function $(id){return document.getElementById(id)}
+function num(id){return parseInt(String($(id).value).replace(/[^0-9]/g,''))||0}
+function fmt(n){return new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',minimumFractionDigits:0,maximumFractionDigits:0}).format(n)}
+function fmtN(n){return new Intl.NumberFormat('es-CO').format(Math.round(n))}
+function fmtMoney(el){const v=el.value.replace(/[^0-9]/g,'');el.value=v?parseInt(v).toLocaleString('es-CO'):'0'}
+function fmtUVT(n){return n.toFixed(2)+' UVT'}
+
+/* ═══ TABLA ART. 383 ═══ */
+function retencionArt383(baseUVT){
+  if(baseUVT<=95)return 0;
+  if(baseUVT<=150)return(baseUVT-95)*0.19;
+  if(baseUVT<=360)return(baseUVT-150)*0.28+10.56;
+  if(baseUVT<=640)return(baseUVT-360)*0.33+69.36;
+  if(baseUVT<=945)return(baseUVT-640)*0.35+162;
+  if(baseUVT<=2300)return(baseUVT-945)*0.37+268.75;
+  return(baseUVT-2300)*0.39+770.35;
+}
+
+/* ═══ TOGGLE UI ═══ */
+function togglePerfil(){
+  const p=$('perfil').value;
+  $('cardAsal').classList.toggle('hidden',p!=='asalariado');
+  $('cardInd').classList.toggle('hidden',p==='asalariado');
+  $('procGroup').classList.toggle('hidden',p!=='asalariado');
+  $('dedAsalOnly').classList.toggle('hidden',p!=='asalariado');
+  if(p==='asalariado')toggleProc();
+  else $('cardP2').classList.add('hidden');
+}
+
+function toggleProc(){
+  const show=$('proc').value==='2'&&$('perfil').value==='asalariado';
+  $('cardP2').classList.toggle('hidden',!show);
+}
+
+function toggleCollapsible(el){
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('show');
+}
+
+/* ═══ P2 GRID ═══ */
+(function(){
+  const g=$('p2Grid');
+  for(let i=1;i<=12;i++){
+    g.innerHTML+=`<div class="form-group"><label>Mes ${i}</label><input type="text" id="p2m${i}" class="money" value="0" oninput="fmtMoney(this);calcular()"></div>`;
+  }
+})();
+
+function getP2Promedio(){
+  let sum=0;for(let i=1;i<=12;i++)sum+=num('p2m'+i);
+  return Math.round(sum/12);
+}
+
+/* ═══ CALCULAR ═══ */
+function calcular(){
+  const anio=parseInt($('anio').value);
+  const uvt=UVT[anio];
+  const smlmv=SMLMV[anio];
+  const perfil=$('perfil').value;
+  const proc=parseInt($('proc').value);
+
+  let result;
+  if(perfil==='asalariado'){
+    result=calcAsalariado(anio,uvt,smlmv,proc);
+  }else{
+    result=calcIndependiente(anio,uvt,smlmv);
+  }
+
+  renderResults(result,perfil,uvt);
+  $('results').style.display='block';
+}
+
+function calcAsalariado(anio,uvt,smlmv,proc){
+  // Ingreso base
+  let ingreso;
+  if(proc===2){
+    ingreso=getP2Promedio();
+    $('p2Prom').textContent=fmt(ingreso);
+  }else{
+    ingreso=num('salario')+num('extras')+num('bonSal')+num('bonNoSal')+num('otrosIng');
+  }
+
+  // Aportes obligatorios
+  const salud=Math.round(ingreso*0.04);
+  const pension=Math.round(ingreso*0.04);
+  const fsp=ingreso>(smlmv*4)?Math.round(ingreso*0.01):0;
+
+  const sub1=ingreso-salud-pension-fsp;
+
+  // Deducciones
+  const nDep=parseInt($('dependientes').value)||0;
+  const dedDep=nDep>0?Math.min(Math.round(ingreso*0.1),Math.round(32*uvt))*Math.min(nDep,2):0;
+  const dedPrep=Math.min(num('prepagada'),Math.round(16*uvt));
+  const dedVolPen=Math.min(num('volPension'),Math.round(ingreso*0.25),Math.round(3800*uvt/12));
+  const dedAFC=Math.min(num('afc'),Math.max(Math.round(ingreso*0.3)-dedVolPen,0),Math.round(3800*uvt/12)-dedVolPen);
+  const dedViv=Math.min(num('intVivienda'),Math.round(100*uvt));
+  const totalDed=dedDep+dedPrep+dedVolPen+dedAFC+dedViv;
+
+  const sub2=Math.max(sub1-totalDed,0);
+  const exenta25=Math.min(Math.round(sub2*0.25),Math.round(240*uvt));
+  const baseGravable=Math.max(sub2-exenta25,0);
+  const baseUVT=baseGravable/uvt;
+  const retUVT=retencionArt383(baseUVT);
+  const retCOP=Math.round(retUVT*uvt);
+
+  // Sin optimización (sin deducciones adicionales)
+  const sub2Sin=Math.max(sub1,0);
+  const exenta25Sin=Math.min(Math.round(sub2Sin*0.25),Math.round(240*uvt));
+  const baseSin=Math.max(sub2Sin-exenta25Sin,0);
+  const retSinUVT=retencionArt383(baseSin/uvt);
+  const retSinCOP=Math.round(retSinUVT*uvt);
+
+  const depuracion=[
+    {concepto:'Ingreso bruto laboral'+(proc===2?' (promedio 12 meses)':''),valor:ingreso,norma:'',tipo:'normal'},
+    {concepto:'(−) Aporte obligatorio salud (4%)',valor:salud,norma:'Art. 56 ET',tipo:'ded'},
+    {concepto:'(−) Aporte obligatorio pensión (4%)',valor:pension,norma:'Art. 55 ET',tipo:'ded'},
+    {concepto:'(−) Fondo Solidaridad Pensional'+(fsp===0?' (no aplica)':''),valor:fsp,norma:'Art. 27 L.100/93',tipo:'ded'},
+    {concepto:'Subtotal después de aportes',valor:sub1,norma:'',tipo:'highlight'},
+  ];
+  if(dedDep>0)depuracion.push({concepto:'(−) Dependientes ('+nDep+')',valor:dedDep,norma:'Art. 387 ET',tipo:'ded'});
+  if(dedPrep>0)depuracion.push({concepto:'(−) Medicina prepagada',valor:dedPrep,norma:'Art. 387 ET',tipo:'ded'});
+  if(dedVolPen>0)depuracion.push({concepto:'(−) Aportes vol. pensión AFP',valor:dedVolPen,norma:'Art. 126-1 ET',tipo:'ded'});
+  if(dedAFC>0)depuracion.push({concepto:'(−) Aportes AFC',valor:dedAFC,norma:'Art. 126-4 ET',tipo:'ded'});
+  if(dedViv>0)depuracion.push({concepto:'(−) Intereses crédito vivienda',valor:dedViv,norma:'Art. 119 ET',tipo:'ded'});
+  if(totalDed>0)depuracion.push({concepto:'Total deducciones',valor:totalDed,norma:'',tipo:'ded'});
+  depuracion.push({concepto:'Subtotal después de deducciones',valor:sub2,norma:'',tipo:'highlight'});
+  depuracion.push({concepto:'(−) Renta exenta 25% (máx 240 UVT)',valor:exenta25,norma:'Art. 206 num.10 ET',tipo:'ded'});
+  depuracion.push({concepto:'BASE GRAVABLE',valor:baseGravable,norma:fmtUVT(baseUVT),tipo:'total'});
+
+  return{ingreso,retCOP,retUVT,baseGravable,baseUVT,retSinCOP,retSinUVT:retSinUVT,tasa:ingreso?retCOP/ingreso:0,depuracion,deducciones:{dedDep,dedPrep,dedVolPen,dedAFC,dedViv},proc};
+}
+
+function calcIndependiente(anio,uvt,smlmv){
+  const ingreso=num('ingresoInd');
+  const tipo=$('tipoIng').value;
+  const declarante=$('declarante').value==='si';
+
+  // Tarifa fija Art. 392
+  let tarifaFija;
+  if(tipo==='honorarios')tarifaFija=declarante?0.10:0.11;
+  else if(tipo==='servicios')tarifaFija=declarante?0.04:0.06;
+  else tarifaFija=declarante?0.10:0.11;
+  const retFija=Math.round(ingreso*tarifaFija);
+
+  // Cuantía mínima
+  const cuantiaMinima=tipo==='servicios'?2*uvt:0;
+  const aplicaCuantia=tipo!=='honorarios'&&ingreso<cuantiaMinima;
+
+  // Depuración Art. 383
+  const baseCot=Math.round(ingreso*0.4);
+  const salud=Math.round(baseCot*0.125);
+  const pension=Math.round(baseCot*0.16);
+  const sub1=ingreso-salud-pension;
+
+  const dedVolPen=Math.min(num('volPension'),Math.round(ingreso*0.25),Math.round(3800*uvt/12));
+  const dedAFC=Math.min(num('afc'),Math.max(Math.round(ingreso*0.3)-dedVolPen,0),Math.round(3800*uvt/12)-dedVolPen);
+  const dedViv=Math.min(num('intVivienda'),Math.round(100*uvt));
+  const totalDed=dedVolPen+dedAFC+dedViv;
+
+  const sub2=Math.max(sub1-totalDed,0);
+  const exenta25=Math.min(Math.round(sub2*0.25),Math.round(240*uvt));
+  const baseGravable=Math.max(sub2-exenta25,0);
+  const baseUVT=baseGravable/uvt;
+  const retUVT=retencionArt383(baseUVT);
+  const retCOP=aplicaCuantia?0:Math.round(retUVT*uvt);
+
+  // Sin optimización
+  const sub2Sin=Math.max(sub1,0);
+  const exenta25Sin=Math.min(Math.round(sub2Sin*0.25),Math.round(240*uvt));
+  const baseSin=Math.max(sub2Sin-exenta25Sin,0);
+  const retSinCOP=aplicaCuantia?0:Math.round(retencionArt383(baseSin/uvt)*uvt);
+
+  const depuracion=[
+    {concepto:'Ingreso bruto ('+tipo+')',valor:ingreso,norma:'',tipo:'normal'},
+    {concepto:'Base cotización SS (40% ingreso)',valor:baseCot,norma:'Dec. 0572/2025',tipo:'normal'},
+    {concepto:'(−) Aporte salud (12.5% sobre 40%)',valor:salud,norma:'',tipo:'ded'},
+    {concepto:'(−) Aporte pensión (16% sobre 40%)',valor:pension,norma:'',tipo:'ded'},
+    {concepto:'Subtotal después de aportes',valor:sub1,norma:'',tipo:'highlight'},
+  ];
+  if(dedVolPen>0)depuracion.push({concepto:'(−) Aportes vol. pensión AFP',valor:dedVolPen,norma:'Art. 126-1 ET',tipo:'ded'});
+  if(dedAFC>0)depuracion.push({concepto:'(−) Aportes AFC',valor:dedAFC,norma:'Art. 126-4 ET',tipo:'ded'});
+  if(dedViv>0)depuracion.push({concepto:'(−) Intereses crédito vivienda',valor:dedViv,norma:'Art. 119 ET',tipo:'ded'});
+  if(totalDed>0)depuracion.push({concepto:'Total deducciones',valor:totalDed,norma:'',tipo:'ded'});
+  depuracion.push({concepto:'Subtotal después de deducciones',valor:sub2,norma:'',tipo:'highlight'});
+  depuracion.push({concepto:'(−) Renta exenta 25% (máx 240 UVT)',valor:exenta25,norma:'Art. 206 num.10 ET',tipo:'ded'});
+  depuracion.push({concepto:'BASE GRAVABLE',valor:baseGravable,norma:fmtUVT(baseUVT),tipo:'total'});
+
+  return{ingreso,retCOP,retUVT,baseGravable,baseUVT,retSinCOP,tasa:ingreso?retCOP/ingreso:0,depuracion,retFija,tarifaFija,aplicaCuantia,cuantiaMinima,tipo,declarante,deducciones:{dedVolPen,dedAFC,dedViv}};
+}
+
+/* ═══ RENDER ═══ */
+function renderResults(r,perfil,uvt){
+  // KPIs
+  $('kpis').innerHTML=`
+    <div class="kpi blue"><div class="val">${fmt(r.ingreso)}</div><div class="lbl">Ingreso bruto</div></div>
+    <div class="kpi"><div class="val">${fmt(r.baseGravable)}</div><div class="lbl">Base gravable</div></div>
+    <div class="kpi red"><div class="val">${fmt(r.retCOP)}</div><div class="lbl">Retención del mes</div></div>
+    <div class="kpi amber"><div class="val">${(r.tasa*100).toFixed(2)}%</div><div class="lbl">Tasa efectiva</div></div>
+  `;
+
+  // Tabla depuración
+  const thead=$('tblDep').querySelector('thead');
+  const tbody=$('tblDep').querySelector('tbody');
+  thead.innerHTML='<tr><th>Concepto</th><th>Norma</th><th style="text-align:right">Valor</th></tr>';
+  tbody.innerHTML=r.depuracion.map(d=>`<tr class="${d.tipo}"><td>${d.concepto}</td><td style="font-size:.75rem;color:var(--muted)">${d.norma}</td><td>${fmt(d.valor)}</td></tr>`).join('');
+
+  $('resultTotal').innerHTML=`<div class="label">Retención en la fuente del mes</div><div class="amount">${fmt(r.retCOP)}</div>`;
+
+  // Comparativo sin vs con
+  const ahorro=r.retSinCOP-r.retCOP;
+  if(ahorro>0){
+    $('cardCompare').classList.remove('hidden');
+    $('compareBox').innerHTML=`
+      <div class="compare-col sin"><div class="compare-label">Sin optimización</div><div class="compare-val">${fmt(r.retSinCOP)}</div></div>
+      <div class="compare-col con"><div class="compare-label">Con optimización</div><div class="compare-val">${fmt(r.retCOP)}</div><div class="compare-diff">Ahorras ${fmt(ahorro)}/mes</div></div>
+    `;
+  }else{
+    $('cardCompare').classList.add('hidden');
+  }
+
+  // Tarifa fija (independientes)
+  if(perfil==='independiente'){
+    $('cardTarifaFija').classList.remove('hidden');
+    const mejor=r.retCOP<r.retFija;
+    $('tarifaFijaContent').innerHTML=`
+      ${r.aplicaCuantia?'<div class="alert alert-warn">&#9888; No aplica retención: el pago es menor a la cuantía mínima ('+fmt(r.cuantiaMinima)+' = 2 UVT para servicios)</div>':''}
+      <div class="compare-box">
+        <div class="compare-col ${mejor?'con':'sin'}"><div class="compare-label">Depuración Art. 383</div><div class="compare-val">${fmt(r.retCOP)}</div></div>
+        <div class="compare-col ${mejor?'sin':'con'}"><div class="compare-label">Tarifa fija Art. 392 (${(r.tarifaFija*100)}%)</div><div class="compare-val">${fmt(r.retFija)}</div></div>
+      </div>
+      <div style="text-align:center;margin-top:12px;font-size:.9rem;font-weight:700;color:${mejor?'var(--green)':'var(--amber)'}">
+        ${mejor?'&#9989; Te conviene la depuración — ahorras '+fmt(r.retFija-r.retCOP)+'/mes':'&#9888; La tarifa fija te sale más barata'}
+      </div>
+    `;
+  }else{
+    $('cardTarifaFija').classList.add('hidden');
+  }
+
+  // Sugerencias
+  renderSugerencias(r,perfil,uvt);
+}
+
+function renderSugerencias(r,perfil,uvt){
+  const ing=r.ingreso;
+  const sugs=[];
+  if(perfil==='asalariado'){
+    sugs.push({t:'Aportes voluntarios pensión AFP',norma:'Art. 126-1 ET',desc:'Hasta 25% del ingreso, máx 3.800 UVT/año',max:Math.min(Math.round(ing*0.25),Math.round(3800*uvt/12)),usado:r.deducciones.dedVolPen||0});
+    sugs.push({t:'Aportes AFC / ahorro vivienda',norma:'Art. 126-4 ET',desc:'Conjunto con pensión vol.: 30% ingreso, máx 3.800 UVT/año',max:Math.round(ing*0.3),usado:r.deducciones.dedAFC||0});
+    sugs.push({t:'Intereses crédito de vivienda',norma:'Art. 119 ET',desc:'Hasta 100 UVT/mes. Requiere certificado bancario.',max:Math.round(100*uvt),usado:r.deducciones.dedViv||0});
+    sugs.push({t:'Dependientes económicos (máx 2)',norma:'Art. 387 ET',desc:'10% ingreso bruto, máx 32 UVT/mes por dependiente.',max:Math.min(Math.round(ing*0.1),Math.round(32*uvt))*2,usado:r.deducciones.dedDep||0});
+    sugs.push({t:'Medicina prepagada / seguros salud',norma:'Art. 387 ET',desc:'Hasta 16 UVT/mes.',max:Math.round(16*uvt),usado:r.deducciones.dedPrep||0});
+  }else{
+    sugs.push({t:'Aportes voluntarios pensión AFP',norma:'Art. 126-1 ET',desc:'Hasta 25% del ingreso, máx 3.800 UVT/año',max:Math.min(Math.round(ing*0.25),Math.round(3800*uvt/12)),usado:r.deducciones.dedVolPen||0});
+    sugs.push({t:'Aportes AFC / ahorro vivienda',norma:'Art. 126-4 ET',desc:'Conjunto con pensión vol.: 30% ingreso, máx 3.800 UVT/año',max:Math.round(ing*0.3),usado:r.deducciones.dedAFC||0});
+    sugs.push({t:'Intereses crédito de vivienda',norma:'Art. 119 ET',desc:'Hasta 100 UVT/mes.',max:Math.round(100*uvt),usado:r.deducciones.dedViv||0});
+  }
+
+  let html='';
+  sugs.forEach(s=>{
+    const disponible=Math.max(s.max-s.usado,0);
+    // Estimate savings: rough — the marginal rate at current base
+    const savingsEst=disponible>0?Math.round(disponible*r.tasa):0;
+    html+=`<div class="sug-card">
+      <div class="sug-title">${s.t}</div>
+      <div class="sug-norma">${s.norma} — ${s.desc}</div>
+      <div class="sug-limit">Máximo deducible: <strong>${fmt(s.max)}</strong> &middot; Ya aplicado: <strong>${fmt(s.usado)}</strong> &middot; Disponible: <strong>${fmt(disponible)}</strong></div>
+      <span class="sug-savings ${savingsEst===0?'zero':''}">
+        ${savingsEst>0?'Podrías ahorrar aprox. '+fmt(savingsEst)+'/mes si usas el máximo':'Ya estás al máximo o no aplica'}
+      </span>
+    </div>`;
+  });
+  $('sugContent').innerHTML=html;
+}
+
+/* ═══ COPIAR WHATSAPP ═══ */
+function copiarWhatsApp(){
+  const perfil=$('perfil').value;
+  const anio=$('anio').value;
+  const uvt=UVT[anio];
+  let texto;
+
+  if(perfil==='asalariado'){
+    const ingreso=parseInt($('proc').value)===2?getP2Promedio():num('salario')+num('extras')+num('bonSal')+num('bonNoSal')+num('otrosIng');
+    const res=calcAsalariado(parseInt(anio),uvt,SMLMV[anio],parseInt($('proc').value));
+    texto=`*Retención en la Fuente ${anio} — Asalariado P${$('proc').value}*\n\nIngreso: ${fmt(res.ingreso)}\nBase gravable: ${fmt(res.baseGravable)} (${fmtUVT(res.baseUVT)})\n*Retención: ${fmt(res.retCOP)}*\nTasa efectiva: ${(res.tasa*100).toFixed(2)}%\n\n_Calculado en ExógenaDIAN.com_`;
+  }else{
+    const res=calcIndependiente(parseInt(anio),uvt,SMLMV[anio]);
+    texto=`*Retención en la Fuente ${anio} — Independiente*\n\nIngreso: ${fmt(res.ingreso)}\nBase gravable: ${fmt(res.baseGravable)} (${fmtUVT(res.baseUVT)})\n*Retención Art. 383: ${fmt(res.retCOP)}*\nTarifa fija Art. 392: ${fmt(res.retFija)}\nTasa efectiva: ${(res.tasa*100).toFixed(2)}%\n\n_Calculado en ExógenaDIAN.com_`;
+  }
+  navigator.clipboard.writeText(texto).then(()=>alert('Copiado al portapapeles')).catch(()=>{});
+}
+
+/* ═══ EXPORTAR EXCEL (PRO) ═══ */
+async function exportarExcel(){
+  if(!proUnlocked){
+    const saved=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');
+    if(saved){const v=await validarPro(saved);if(v){proUnlocked=true}}
+    if(!proUnlocked){
+      $('proExportMsg').innerHTML='<div class="alert alert-warn">&#128274; La exportación a Excel es exclusiva para suscriptores PRO. <a href="index.html#planes" style="color:#92400E;font-weight:700">Suscríbete aquí</a> o ingresa tu email PRO abajo:<br><br><input type="email" id="proEmailExport" placeholder="Email PRO" style="padding:6px 12px;border:1px solid #D97706;border-radius:8px;font-size:.85rem;width:200px"> <button onclick="activarProExport()" style="padding:6px 14px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer">Activar</button></div>';
+      return;
+    }
+  }
+  generarExcelCliente();
+}
+
+async function activarProExport(){
+  const inp=document.getElementById('proEmailExport');
+  const val=inp?.value?.trim()?.toLowerCase();
+  if(!val){alert('Ingresa tu email PRO');return}
+  const valid=await validarPro(val);
+  if(valid){
+    proUnlocked=true;
+    if(val.includes('@'))localStorage.setItem('exogenadian_pro_email',val);
+    else localStorage.setItem('exogenadian_pro_key',val);
+    $('proExportMsg').innerHTML='<div class="alert alert-green">&#9989; PRO activado. Generando Excel...</div>';
+    setTimeout(generarExcelCliente,500);
+  }else{
+    alert('No hay suscripción activa para este email.');
+  }
+}
+
+async function generarExcelCliente(){
+  const anio=parseInt($('anio').value);
+  const uvt=UVT[anio];
+  const smlmv=SMLMV[anio];
+  const perfil=$('perfil').value;
+
+  const wb=new ExcelJS.Workbook();
+  wb.creator='ExógenaDIAN';
+
+  const pri='1B3A5C',pri2='2E75B6',green='059669',green2='ECFDF5',red='DC2626',white='FFFFFF',bg='F0F2F5',card='FFFFFF',muted='6B7280',border='E2E8F0';
+
+  const fillPri={type:'pattern',pattern:'solid',fgColor:{argb:pri}};
+  const fillCard={type:'pattern',pattern:'solid',fgColor:{argb:card}};
+  const fillBg={type:'pattern',pattern:'solid',fgColor:{argb:bg}};
+  const fillGreen={type:'pattern',pattern:'solid',fgColor:{argb:green2}};
+  const fillYellow={type:'pattern',pattern:'solid',fgColor:{argb:'FEF3C7'}};
+  const borderStyle={top:{style:'thin',color:{argb:border}},bottom:{style:'thin',color:{argb:border}},left:{style:'thin',color:{argb:border}},right:{style:'thin',color:{argb:border}}};
+
+  function styleHeader(cell){cell.font={color:{argb:white},bold:true,size:10};cell.fill=fillPri;cell.border=borderStyle;cell.alignment={horizontal:'center'}}
+  function styleNormal(cell){cell.font={color:{argb:'1A1A2E'},size:10};cell.fill=fillCard;cell.border=borderStyle}
+  function styleDed(cell){cell.font={color:{argb:red},size:10};cell.fill=fillCard;cell.border=borderStyle}
+  function styleHighlight(cell){cell.font={color:{argb:pri},size:10,bold:true};cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'D6E4F0'}};cell.border=borderStyle}
+  function styleTotal(cell){cell.font={color:{argb:white},size:11,bold:true};cell.fill=fillPri;cell.border=borderStyle}
+  function styleInput(cell){cell.fill=fillYellow;cell.font={color:{argb:pri},size:11,bold:true};cell.border={bottom:{style:'medium',color:{argb:'F59E0B'}}}}
+
+  // ── Hoja Tabla Art. 383 ──
+  const wsT=wb.addWorksheet('Tabla Art.383');
+  wsT.getColumn(2).width=18;wsT.getColumn(3).width=16;wsT.getColumn(4).width=16;wsT.getColumn(5).width=18;wsT.getColumn(6).width=30;
+  wsT.getCell('B2').value='PARÁMETROS GENERALES';styleTotal(wsT.getCell('B2'));wsT.mergeCells('B2:C2');
+  wsT.getCell('B4').value='Año gravable';styleNormal(wsT.getCell('B4'));
+  wsT.getCell('C4').value=anio;styleInput(wsT.getCell('C4'));
+  wsT.getCell('C4').dataValidation={type:'list',formulae:['"2025,2026"']};
+  wsT.getCell('B5').value='UVT 2026';styleNormal(wsT.getCell('B5'));wsT.getCell('C5').value=52374;styleNormal(wsT.getCell('C5'));wsT.getCell('C5').numFmt='#,##0';
+  wsT.getCell('B6').value='UVT 2025';styleNormal(wsT.getCell('B6'));wsT.getCell('C6').value=49799;styleNormal(wsT.getCell('C6'));wsT.getCell('C6').numFmt='#,##0';
+  wsT.getCell('B7').value='UVT aplicable';styleHighlight(wsT.getCell('B7'));
+  wsT.getCell('C7').value={formula:'IF(C4=2026,C5,C6)'};styleHighlight(wsT.getCell('C7'));wsT.getCell('C7').numFmt='#,##0';
+  wsT.getCell('B8').value='SMLMV 2026';styleNormal(wsT.getCell('B8'));wsT.getCell('C8').value=1423500;styleNormal(wsT.getCell('C8'));wsT.getCell('C8').numFmt='#,##0';
+  wsT.getCell('B9').value='SMLMV 2025';styleNormal(wsT.getCell('B9'));wsT.getCell('C9').value=1300000;styleNormal(wsT.getCell('C9'));wsT.getCell('C9').numFmt='#,##0';
+  wsT.getCell('B10').value='SMLMV aplicable';styleHighlight(wsT.getCell('B10'));
+  wsT.getCell('C10').value={formula:'IF(C4=2026,C8,C9)'};styleHighlight(wsT.getCell('C10'));wsT.getCell('C10').numFmt='#,##0';
+
+  wsT.getCell('B12').value='TABLA ART. 383 ET';styleTotal(wsT.getCell('B12'));wsT.mergeCells('B12:F12');
+  ['Desde UVT','Hasta UVT','Tarifa','Imp. base UVT','Fórmula'].forEach((h,i)=>{styleHeader(wsT.getCell(13,2+i));wsT.getCell(13,2+i).value=h});
+  [[0,95,'0%',0,'Exento'],[95,150,'19%',0,'(Base-95)×19%'],[150,360,'28%',10.56,'(Base-150)×28%+10.56'],[360,640,'33%',69.36,'(Base-360)×33%+69.36'],[640,945,'35%',162,'(Base-640)×35%+162'],[945,2300,'37%',268.75,'(Base-945)×37%+268.75'],[2300,'∞','39%',770.35,'(Base-2300)×39%+770.35']].forEach((r,i)=>{
+    r.forEach((v,j)=>{const c=wsT.getCell(14+i,2+j);c.value=v;styleNormal(c);c.alignment={horizontal:'center'}});
+  });
+
+  // ── Hoja Cálculo ──
+  const wsC=wb.addWorksheet(perfil==='asalariado'?'Asalariado P'+$('proc').value:'Independiente');
+  wsC.getColumn(2).width=44;wsC.getColumn(3).width=22;wsC.getColumn(4).width=18;wsC.getColumn(5).width=18;
+  const U="'Tabla Art.383'!C7";
+  const SM="'Tabla Art.383'!C10";
+
+  let row=2;
+  wsC.getCell(`B${row}`).value='RETENCIÓN EN LA FUENTE — '+($('perfil').options[$('perfil').selectedIndex].text).toUpperCase();
+  styleTotal(wsC.getCell(`B${row}`));wsC.mergeCells(`B${row}:E${row}`);
+  row+=2;
+
+  // Ingresos
+  wsC.getCell(`B${row}`).value='INGRESOS';styleHeader(wsC.getCell(`B${row}`));wsC.getCell(`C${row}`).value='VALOR';styleHeader(wsC.getCell(`C${row}`));
+  row++;
+
+  if(perfil==='asalariado'){
+    const campos=[['Salario básico',num('salario')],['Horas extras',num('extras')],['Bonificación salarial',num('bonSal')],['Bonificación NO salarial',num('bonNoSal')],['Otros ingresos',num('otrosIng')]];
+    const startR=row;
+    campos.forEach(([l,v])=>{
+      wsC.getCell(`B${row}`).value=l;styleNormal(wsC.getCell(`B${row}`));
+      wsC.getCell(`C${row}`).value=v;styleInput(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+      row++;
+    });
+    wsC.getCell(`B${row}`).value='TOTAL INGRESOS';styleHighlight(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`SUM(C${startR}:C${row-1})`};styleHighlight(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    var ingRef=`C${row}`;
+    row+=2;
+
+    // Depuración
+    wsC.getCell(`B${row}`).value='DEPURACIÓN';styleHeader(wsC.getCell(`B${row}`));wsC.getCell(`C${row}`).value='VALOR';styleHeader(wsC.getCell(`C${row}`));wsC.getCell(`D${row}`).value='NORMA';styleHeader(wsC.getCell(`D${row}`));
+    row++;
+
+    const rIng=row;
+    wsC.getCell(`B${rIng}`).value='Ingreso bruto';styleNormal(wsC.getCell(`B${rIng}`));
+    wsC.getCell(`C${rIng}`).value={formula:`+${ingRef}`};styleNormal(wsC.getCell(`C${rIng}`));wsC.getCell(`C${rIng}`).numFmt='#,##0';
+    row++;
+
+    wsC.getCell(`B${row}`).value='(−) Aporte salud (4%)';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`ROUND(${ingRef}*0.04,0)`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    wsC.getCell(`D${row}`).value='Art. 56 ET';styleNormal(wsC.getCell(`D${row}`));
+    const rSalud=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Aporte pensión (4%)';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`ROUND(${ingRef}*0.04,0)`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    wsC.getCell(`D${row}`).value='Art. 55 ET';styleNormal(wsC.getCell(`D${row}`));
+    const rPen=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Fondo Solidaridad Pensional';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`IF(${ingRef}>(${SM}*4),ROUND(${ingRef}*0.01,0),0)`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    wsC.getCell(`D${row}`).value='L.100/93';styleNormal(wsC.getCell(`D${row}`));
+    const rFSP=row;row++;
+
+    wsC.getCell(`B${row}`).value='Subtotal después de aportes';styleHighlight(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`C${rIng}-C${rSalud}-C${rPen}-C${rFSP}`};styleHighlight(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rSub1=row;row++;
+
+    // Deducciones
+    wsC.getCell(`B${row}`).value='(−) Dependientes';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MIN(ROUND(${ingRef}*0.1,0),ROUND(32*${U},0))*${parseInt($('dependientes').value)||0}`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    wsC.getCell(`D${row}`).value='Art. 387 ET';styleNormal(wsC.getCell(`D${row}`));
+    const rDep=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Medicina prepagada';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MIN(${num('prepagada')},ROUND(16*${U},0))`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    wsC.getCell(`D${row}`).value='Art. 387 ET';styleNormal(wsC.getCell(`D${row}`));
+    const rPrep=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Aportes vol. pensión AFP';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MIN(${num('volPension')},ROUND(${ingRef}*0.25,0),ROUND(3800*${U}/12,0))`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    wsC.getCell(`D${row}`).value='Art. 126-1 ET';styleNormal(wsC.getCell(`D${row}`));
+    const rVP=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Aportes AFC';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MIN(${num('afc')},MAX(ROUND(${ingRef}*0.3,0)-C${rVP},0))`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    wsC.getCell(`D${row}`).value='Art. 126-4 ET';styleNormal(wsC.getCell(`D${row}`));
+    const rAFC=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Intereses crédito vivienda';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MIN(${num('intVivienda')},ROUND(100*${U},0))`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    wsC.getCell(`D${row}`).value='Art. 119 ET';styleNormal(wsC.getCell(`D${row}`));
+    const rViv=row;row++;
+
+    wsC.getCell(`B${row}`).value='Total deducciones';styleDed(wsC.getCell(`B${row}`));wsC.getCell(`B${row}`).font.bold=true;
+    wsC.getCell(`C${row}`).value={formula:`C${rDep}+C${rPrep}+C${rVP}+C${rAFC}+C${rViv}`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).font.bold=true;wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rTD=row;row++;
+
+    wsC.getCell(`B${row}`).value='Subtotal después de deducciones';styleHighlight(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MAX(C${rSub1}-C${rTD},0)`};styleHighlight(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rSub2=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Renta exenta 25% (máx 240 UVT)';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MIN(ROUND(C${rSub2}*0.25,0),ROUND(240*${U},0))`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    wsC.getCell(`D${row}`).value='Art. 206 n.10 ET';styleNormal(wsC.getCell(`D${row}`));
+    const rEx=row;row++;
+
+    row++;
+    wsC.getCell(`B${row}`).value='★ BASE GRAVABLE';styleTotal(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MAX(C${rSub2}-C${rEx},0)`};styleTotal(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    wsC.getCell(`D${row}`).value={formula:`ROUND(C${row}/${U},2)&" UVT"`};styleTotal(wsC.getCell(`D${row}`));
+    const rBase=row;row+=2;
+
+    const baseUVTRef=`C${rBase}/${U}`;
+    const retF=`IF(${baseUVTRef}<=95,0,IF(${baseUVTRef}<=150,(${baseUVTRef}-95)*0.19,IF(${baseUVTRef}<=360,(${baseUVTRef}-150)*0.28+10.56,IF(${baseUVTRef}<=640,(${baseUVTRef}-360)*0.33+69.36,IF(${baseUVTRef}<=945,(${baseUVTRef}-640)*0.35+162,IF(${baseUVTRef}<=2300,(${baseUVTRef}-945)*0.37+268.75,(${baseUVTRef}-2300)*0.39+770.35))))))`;
+
+    wsC.getCell(`B${row}`).value='Retención en UVT';styleNormal(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:retF};styleNormal(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0.00';
+    const rRetU=row;row++;
+
+    wsC.getCell(`B${row}`).value='★ RETENCIÓN DEL MES';styleTotal(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`ROUND(C${rRetU}*${U},0)`};styleTotal(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rRetCOP=row;row++;
+
+    wsC.getCell(`B${row}`).value='Tasa efectiva';styleHighlight(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`IF(${ingRef}=0,0,C${rRetCOP}/${ingRef})`};styleHighlight(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='0.00%';
+    row+=2;
+
+    // Sugerencias
+    wsC.getCell(`B${row}`).value='SUGERENCIAS PARA REDUCIR LA RETENCIÓN';styleTotal(wsC.getCell(`B${row}`));wsC.mergeCells(`B${row}:E${row}`);
+    row++;
+    ['Sugerencia','Máximo deducible','Ya aplicado','Disponible'].forEach((h,i)=>{styleHeader(wsC.getCell(row,2+i));wsC.getCell(row,2+i).value=h});
+    row++;
+    const sugData=[
+      ['Aportes vol. pensión (Art. 126-1)',`MIN(ROUND(${ingRef}*0.25,0),ROUND(3800*${U}/12,0))`,`C${rVP}`],
+      ['AFC / ahorro vivienda (Art. 126-4)',`ROUND(${ingRef}*0.3,0)`,`C${rAFC}`],
+      ['Intereses vivienda (Art. 119)',`ROUND(100*${U},0)`,`C${rViv}`],
+      ['Dependientes (Art. 387)',`MIN(ROUND(${ingRef}*0.1,0),ROUND(32*${U},0))*2`,`C${rDep}`],
+      ['Prepagada (Art. 387)',`ROUND(16*${U},0)`,`C${rPrep}`],
+    ];
+    sugData.forEach(([label,maxF,usadoRef])=>{
+      wsC.getCell(`B${row}`).value=label;styleNormal(wsC.getCell(`B${row}`));
+      wsC.getCell(`C${row}`).value={formula:maxF};styleNormal(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+      wsC.getCell(`D${row}`).value={formula:`+${usadoRef}`};styleNormal(wsC.getCell(`D${row}`));wsC.getCell(`D${row}`).numFmt='#,##0';
+      wsC.getCell(`E${row}`).value={formula:`MAX(C${row}-D${row},0)`};
+      wsC.getCell(`E${row}`).font={color:{argb:green},bold:true,size:10};wsC.getCell(`E${row}`).fill=fillGreen;wsC.getCell(`E${row}`).border=borderStyle;wsC.getCell(`E${row}`).numFmt='#,##0';
+      row++;
+    });
+
+  }else{
+    // Independiente
+    const rIng=row;
+    wsC.getCell(`B${row}`).value='Ingreso bruto';styleNormal(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value=num('ingresoInd');styleInput(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    var ingRef=`C${row}`;
+    row+=2;
+
+    wsC.getCell(`B${row}`).value='DEPURACIÓN';styleHeader(wsC.getCell(`B${row}`));wsC.getCell(`C${row}`).value='VALOR';styleHeader(wsC.getCell(`C${row}`));wsC.getCell(`D${row}`).value='NORMA';styleHeader(wsC.getCell(`D${row}`));
+    row++;
+
+    wsC.getCell(`B${row}`).value='Ingreso bruto';styleNormal(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`+${ingRef}`};styleNormal(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const r0=row;row++;
+
+    wsC.getCell(`B${row}`).value='Base cotización SS (40%)';styleNormal(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`ROUND(${ingRef}*0.4,0)`};styleNormal(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    wsC.getCell(`D${row}`).value='Dec. 0572/2025';styleNormal(wsC.getCell(`D${row}`));
+    const rBC=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Salud (12.5% sobre 40%)';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`ROUND(C${rBC}*0.125,0)`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rS=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Pensión (16% sobre 40%)';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`ROUND(C${rBC}*0.16,0)`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rP=row;row++;
+
+    wsC.getCell(`B${row}`).value='Subtotal';styleHighlight(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`C${r0}-C${rS}-C${rP}`};styleHighlight(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rSub1=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Aportes vol. pensión';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MIN(${num('volPension')},ROUND(${ingRef}*0.25,0),ROUND(3800*${U}/12,0))`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rVP=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) AFC';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MIN(${num('afc')},MAX(ROUND(${ingRef}*0.3,0)-C${rVP},0))`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rAFC=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Intereses vivienda';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MIN(${num('intVivienda')},ROUND(100*${U},0))`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rViv=row;row++;
+
+    wsC.getCell(`B${row}`).value='Total deducciones';styleDed(wsC.getCell(`B${row}`));wsC.getCell(`B${row}`).font.bold=true;
+    wsC.getCell(`C${row}`).value={formula:`C${rVP}+C${rAFC}+C${rViv}`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).font.bold=true;wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rTD=row;row++;
+
+    wsC.getCell(`B${row}`).value='Subtotal después de deducciones';styleHighlight(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MAX(C${rSub1}-C${rTD},0)`};styleHighlight(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rSub2=row;row++;
+
+    wsC.getCell(`B${row}`).value='(−) Renta exenta 25% (máx 240 UVT)';styleDed(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MIN(ROUND(C${rSub2}*0.25,0),ROUND(240*${U},0))`};styleDed(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rEx=row;row++;
+
+    row++;
+    wsC.getCell(`B${row}`).value='★ BASE GRAVABLE';styleTotal(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`MAX(C${rSub2}-C${rEx},0)`};styleTotal(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    const rBase=row;row+=2;
+
+    const baseUVTRef=`C${rBase}/${U}`;
+    const retF=`IF(${baseUVTRef}<=95,0,IF(${baseUVTRef}<=150,(${baseUVTRef}-95)*0.19,IF(${baseUVTRef}<=360,(${baseUVTRef}-150)*0.28+10.56,IF(${baseUVTRef}<=640,(${baseUVTRef}-360)*0.33+69.36,IF(${baseUVTRef}<=945,(${baseUVTRef}-640)*0.35+162,IF(${baseUVTRef}<=2300,(${baseUVTRef}-945)*0.37+268.75,(${baseUVTRef}-2300)*0.39+770.35))))))`;
+
+    wsC.getCell(`B${row}`).value='Retención en UVT';styleNormal(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:retF};styleNormal(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0.00';
+    const rRetU=row;row++;
+
+    wsC.getCell(`B${row}`).value='★ RETENCIÓN Art. 383';styleTotal(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`ROUND(C${rRetU}*${U},0)`};styleTotal(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+    row++;
+
+    wsC.getCell(`B${row}`).value='Tasa efectiva';styleHighlight(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`IF(${ingRef}=0,0,C${row-1}/${ingRef})`};styleHighlight(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='0.00%';
+    row+=2;
+
+    // Tarifa fija comparativo
+    const tipo=$('tipoIng').value;
+    const decl=$('declarante').value==='si';
+    let tf;
+    if(tipo==='honorarios')tf=decl?0.10:0.11;
+    else if(tipo==='servicios')tf=decl?0.04:0.06;
+    else tf=decl?0.10:0.11;
+    wsC.getCell(`B${row}`).value='COMPARATIVO: Tarifa fija Art. 392 ('+(tf*100)+'%)';styleTotal(wsC.getCell(`B${row}`));wsC.mergeCells(`B${row}:D${row}`);
+    row++;
+    wsC.getCell(`B${row}`).value='Retención tarifa fija';styleNormal(wsC.getCell(`B${row}`));
+    wsC.getCell(`C${row}`).value={formula:`ROUND(${ingRef}*${tf},0)`};styleNormal(wsC.getCell(`C${row}`));wsC.getCell(`C${row}`).numFmt='#,##0';
+  }
+
+  // Descargar
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`Retencion_Fuente_${anio}_ExogenaDIAN.xlsx`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ═══ INIT ═══ */
+togglePerfil();
+</script>
+
+</body>
+</html>

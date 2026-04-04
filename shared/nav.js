@@ -79,6 +79,7 @@
   '    <a href="sanciones.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Exógena</a>'+
   '    <a href="sanciones-dian.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">DIAN</a>'+
   '    <a href="intereses.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Intereses</a>'+
+  '    <a href="retencion-fuente.html" style="font-size:.82rem;color:#6b7280;text-decoration:none">Retención</a>'+
        /* sep */
   '    <span class="tn-sep"></span>'+
        /* Laborales + Consultas */
@@ -127,6 +128,7 @@
   '          <a href="sanciones.html"><div class="dd-icon" style="background:#FFFBEB">⚖️</div> Sanciones Exógena</a>'+
   '          <a href="sanciones-dian.html"><div class="dd-icon" style="background:#EFF6FF">⚖️</div> Sanciones DIAN</a>'+
   '          <a href="intereses.html"><div class="dd-icon" style="background:#FFF1F2">%</div> Intereses de Mora</a>'+
+  '          <a href="retencion-fuente.html"><div class="dd-icon" style="background:#EFF6FF">💰</div> Retención Fuente</a>'+
   '        </div>'+
            /* ── Col 4: Laboral + Consultas ── */
   '        <div class="mega-col">'+
