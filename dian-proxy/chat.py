@@ -57,8 +57,7 @@ PRO: $19.900/mes o $179.900/año. Gratis: Exógena, ESF+ERI básicos, Sanciones,
 DETALLE ESTADOS FINANCIEROS ({BASE}/estados):
 - Gratis: Estado de Situación Financiera (ESF) + Estado de Resultados Integral (ERI)
 - PRO: Notas a los EEFF, revelaciones, políticas contables, comparativo año vs año
-- NO DISPONIBLE AÚN: Estado de Flujo de Efectivo y Estado de Cambios en el Patrimonio (están en desarrollo)
-- IMPORTANTE: Si preguntan por flujo de efectivo o cambios en patrimonio, di que están en desarrollo y que próximamente estarán disponibles. NUNCA digas que ya existen.
+- PRO: Estado de Flujo de Efectivo (método indirecto) + Estado de Cambios en el Patrimonio
 
 WHATSAPP SOPORTE: {WHATSAPP_URL}
 
@@ -245,8 +244,10 @@ async def chat(body: ChatRequest, request: Request):
     if not ANTHROPIC_API_KEY:
         return {"error": "Chat no configurado. Falta ANTHROPIC_API_KEY."}
 
-    # Budget check
+    # Hard budget cap — reject immediately if over budget
     if cost_tracker.is_over_budget():
+        logger.warning("Chat request rejected: monthly budget exceeded ($%.2f/$%.2f)",
+                       cost_tracker.spend, CHAT_MONTHLY_BUDGET)
         return {"error": BUDGET_EXCEEDED_MSG}
 
     ip = _get_client_ip(request)

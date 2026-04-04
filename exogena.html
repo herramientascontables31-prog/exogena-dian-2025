@@ -35,13 +35,16 @@ gtag('config', 'G-S7SM6ST4CC');
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Información Exógena DIAN","item":"https://exogenadian.com/exogena.html"}]}
 </script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" integrity="sha384-OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" integrity="sha384-Pqp51FUN2/qzfxZxBCtF0stpc9ONI6MYZpVqmo8m20SoaQCzf+arZvACkLkirlPz" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
 :root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#548235;--green2:#E2EFDA;--red:#CC0000;--amber:#D97706;--amber2:#FFF8E1;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+.skip-link{position:absolute;top:-40px;left:0;background:var(--pri);color:#fff;padding:8px 16px;z-index:9999;border-radius:0 0 8px 0;font-weight:600;transition:top .2s}
+.skip-link:focus{top:0}
+*:focus-visible{outline:2px solid var(--pri2);outline-offset:2px;border-radius:2px}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
 .container{max-width:1200px;margin:0 auto;padding:20px}
@@ -124,14 +127,46 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 .fmt-1009{background:#FBE9E7;color:#BF360C}.fmt-1010{background:#F3E5F5;color:#6A1B9A}.fmt-1012{background:#E1F5FE;color:#0277BD}
 .fmt-2276{background:#EFEBE9;color:#4E342E}
 @media(max-width:768px){.config-grid,.config-grid-3{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.steps{flex-wrap:wrap}.step-pill{font-size:.72rem;padding:8px 10px}}
+/* Onboarding modal */
+.onboard-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}
+.onboard-overlay.active{opacity:1}
+.onboard-box{background:#fff;border-radius:16px;max-width:520px;width:90%;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative}
+.onboard-box h2{font-size:1.3rem;margin-bottom:8px;color:var(--pri)}
+.onboard-box p{color:var(--muted);font-size:.9rem;line-height:1.6;margin-bottom:16px}
+.onboard-steps{list-style:none;padding:0;margin:0 0 20px}
+.onboard-steps li{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.onboard-steps li:last-child{border-bottom:none}
+.onboard-steps .step-num{background:var(--pri2);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0}
+.onboard-close{width:100%;padding:12px;background:var(--pri2);color:#fff;border:none;border-radius:10px;font-size:1rem;font-weight:600;cursor:pointer;transition:background .2s}
+.onboard-close:hover{background:var(--pri)}
+/* Help tooltip */
+.help-btn{background:none;border:1px solid var(--border);border-radius:50%;width:22px;height:22px;font-size:.75rem;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;margin-left:6px;transition:all .2s}
+.help-btn:hover{background:var(--pri3);color:var(--pri);border-color:var(--pri2)}
 </style>
 </head>
 <body>
-<div class="exo-loading" id="loadingOverlay"><div class="spinner"></div><div class="spinner-text">Procesando balance...</div></div>
+<a href="#main" class="skip-link">Ir al contenido</a>
+<!-- Onboarding modal -->
+<div class="onboard-overlay" id="onboardModal">
+  <div class="onboard-box">
+    <h2>Bienvenido a Exogena DIAN</h2>
+    <p>Genera automaticamente los 10 formatos de informacion exogena desde tu balance de prueba en 4 pasos:</p>
+    <ol class="onboard-steps">
+      <li><span class="step-num">1</span><div><strong>Sube tu balance</strong><br>Archivo Excel (.xlsx) con columnas de Cuenta, NIT, Debito y Credito</div></li>
+      <li><span class="step-num">2</span><div><strong>Configura tu empresa</strong><br>NIT, razon social, direccion y datos del declarante</div></li>
+      <li><span class="step-num">3</span><div><strong>Mapea columnas</strong><br>Vincula las columnas de tu Excel con los campos requeridos</div></li>
+      <li><span class="step-num">4</span><div><strong>Descarga los formatos</strong><br>Excel con 10 hojas + archivo para el prevalidador MUISCA</div></li>
+    </ol>
+    <p style="font-size:.82rem;color:var(--green)">Tus datos se procesan 100% en tu navegador. Nunca salen de tu equipo.</p>
+    <button class="onboard-close" onclick="cerrarOnboarding()">Entendido, comenzar</button>
+  </div>
+</div>
+<div class="exo-loading" id="loadingOverlay" role="status" aria-label="Cargando"><div class="spinner"></div><div class="spinner-text">Procesando balance...</div></div>
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
 <script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
+<main id="main" role="main">
 <div class="container">
   <div class="header"><div>
     <h1><span>EXÓGENA</span> Información Exógena DIAN</h1>
@@ -145,7 +180,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <span style="font-size:.85rem;color:var(--muted)" id="proStatus">Version gratuita</span>
     </div>
     <div style="display:flex;gap:8px;align-items:center" id="proActivation">
-      <input type="email" id="proKeyInput" placeholder="Email PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:180px">
+      <input type="email" id="proKeyInput" placeholder="Email PRO" aria-label="Email para activar suscripcion PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:180px">
       <button onclick="activarPro()" class="btn btn-primary" style="padding:6px 16px;font-size:.82rem">Activar</button>
       <a href="https://exogenadian.com/#planes" target="_blank" style="font-size:.78rem;color:var(--pri2);text-decoration:none" title="PRO: $19.900/mes — Exógena completa, notas EEFF, comparativos">Suscribirse → <span style="font-size:.7rem;color:var(--muted)">$19.900/mes</span></a>
     </div>
@@ -272,10 +307,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <!-- ═══ STEP 1: INICIO ═══ -->
   <div id="step1">
     <div class="card">
-      <div class="card-title"><span>📊</span> Balance de Prueba por Terceros</div>
+      <div class="card-title"><span>📊</span> Balance de Prueba por Terceros <button class="help-btn" title="Ayuda" onclick="exoToast('Necesitas un balance de prueba con auxiliar por tercero del ano gravable completo (ene-dic). Debe tener minimo: Codigo PUC, Nombre cuenta, NIT tercero, Debitos y Creditos. Lo puedes exportar desde Siigo, World Office, Helisa, Alegra u otro software contable.','info')">?</button></div>
       <div class="alert alert-info"><span>💡</span><div>Sube el <strong>balance de prueba por terceros</strong> con las clases 1 a 6. Debe incluir <strong>codigo de cuenta, nombre, NIT del tercero, debitos y creditos</strong>. Compatible con cualquier software contable.</div></div>
       <div class="drop-zone" id="dz">
-        <input type="file" accept=".xlsx,.xls,.csv" id="fileInput">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileInput" aria-label="Seleccionar archivo de balance de prueba">
         <span class="dz-icon">📊</span>
         <div class="dz-title">Arrastra tu archivo aqui o haz clic</div>
         <div class="dz-hint">Excel (.xlsx, .xls) o CSV — Siigo, MidaSoft, World Office, Helisa, Alegra, otros</div>
@@ -348,7 +383,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <!-- ═══ STEP 3: CLASIFICACION ═══ -->
   <div id="step3" class="hidden">
     <div class="card">
-      <div class="card-title"><span>📋</span> Clasificacion por Formato</div>
+      <div class="card-title"><span>📋</span> Clasificacion por Formato <button class="help-btn" title="Ayuda" onclick="exoToast('La herramienta clasifica automaticamente cada cuenta del balance en el formato DIAN correspondiente segun el codigo PUC y el nombre de la cuenta. Las cuentas de clase 3 (patrimonio) y de orden generalmente no aplican para exogena.','info')">?</button></div>
       <div id="clasifStats" class="stats"></div>
       <div class="alert alert-success hidden" id="clasifOk"><span>✅</span><div id="clasifOkText"></div></div>
       <div class="alert alert-warn hidden" id="clasifWarn"><span>⚠️</span><div id="clasifWarnText"></div></div>
@@ -407,7 +442,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <!-- ═══ STEP 5: DESCARGAR ═══ -->
   <div id="step5" class="hidden">
     <div class="card">
-      <div class="card-title"><span>📥</span> Descargar Formatos</div>
+      <div class="card-title"><span>📥</span> Descargar Formatos <button class="help-btn" title="Ayuda" onclick="exoToast('Descarga un Excel con 10 hojas (una por formato DIAN) listo para revisar. Luego usa el Prevalidador XML para generar los archivos que se suben al MUISCA de la DIAN.','info')">?</button></div>
       <div id="dlStats" class="stats"></div>
       <div id="dlSummary"></div>
     </div>
@@ -871,6 +906,15 @@ const COL_FIELDS=[
   {key:'cre',label:'Creditos',required:true}
 ];
 
+/* ── Onboarding (solo primera visita) ── */
+function cerrarOnboarding(){
+  document.getElementById('onboardModal').classList.remove('active');
+  localStorage.setItem('exogenadian_onboarded','1');
+}
+if(!localStorage.getItem('exogenadian_onboarded')){
+  setTimeout(()=>document.getElementById('onboardModal').classList.add('active'),500);
+}
+
 document.getElementById('fileInput').addEventListener('change',e=>{if(e.target.files[0])loadFile(e.target.files[0])});
 const dz=document.getElementById('dz');
 ['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add('drag')}));
@@ -878,6 +922,11 @@ const dz=document.getElementById('dz');
 dz.addEventListener('drop',e=>{if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0])});
 
 function loadFile(file){
+  // Validar tipo de archivo
+  const ext=(file.name||'').split('.').pop().toLowerCase();
+  if(!['xlsx','xls','csv'].includes(ext)){
+    exoToast('Formato no soportado: .'+ext+'. Solo se aceptan archivos Excel (.xlsx, .xls) o CSV (.csv).','error');return;
+  }
   const MAX_FILE_SIZE=20*1024*1024; // 20 MB
   if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el límite de 20 MB. Reduce el tamaño del Excel antes de cargarlo.','warning');return}
   var L=document.getElementById('loadingOverlay');L.classList.add('active');
@@ -893,14 +942,15 @@ function loadFile(file){
         const n=raw.filter(r=>r.some(c=>c!==''&&c!=null)).length;
         if(n>bestN){best={sn,raw,disp};bestN=n}
       }
-      if(!best||bestN<3){exoToast('El archivo parece vacio.','warning');return}
+      if(!best||bestN<3){exoToast('El archivo parece vacío o no contiene datos suficientes. Verifica que tenga al menos un balance de prueba con columnas de Cuenta, Débito y Crédito.','warning');return}
       rawData=best.raw.filter(r=>r.some(c=>c!==''&&c!=null));
       rawDisplay=best.disp.filter(r=>r.some(c=>c!==''&&c!=null));
       document.getElementById('fileName').textContent=`${file.name} · ${rawData.length} filas · hoja: ${best.sn}`;
+      exoToast('Archivo cargado: '+rawData.length+' filas detectadas en hoja "'+best.sn+'"','success');
       headerRow=autoDetectHeaderRow();
       goStep(2);
       renderStep2();
-    }catch(err){exoToast('Error al leer: '+err.message,'error')}finally{L.classList.remove('active')}
+    }catch(err){exoToast('Error al leer el archivo: '+err.message+'. Verifica que el Excel no esté dañado o protegido con contraseña.','error')}finally{L.classList.remove('active')}
   };
   reader.readAsArrayBuffer(file);
 }
@@ -1036,6 +1086,14 @@ function showPreview(skipped){
   const ctas=new Set(parsedData.map(r=>r.code.substring(0,4))).size;
   const totalDeb=parsedData.reduce((s,r)=>s+r.deb,0);
   const totalCre=parsedData.reduce((s,r)=>s+r.cre,0);
+
+  // Detectar posibles cuentas en moneda extranjera
+  const fxPatterns=/USD|EUR|GBP|dolar|dollar|moneda extranjera|divisa|diferencia.*cambio/i;
+  const fxCuentas=parsedData.filter(r=>fxPatterns.test(r.name)||/[A-Z]$/.test(r.code));
+  if(fxCuentas.length>0){
+    const ctasUnicas=[...new Set(fxCuentas.map(r=>r.code+' '+r.name))].slice(0,5);
+    exoToast('Se detectaron '+fxCuentas.length+' registros que podrian ser moneda extranjera: '+ctasUnicas.join(', ')+'. Verifica que los valores esten convertidos a COP con la TRM de cierre.','warning');
+  }
 
   document.getElementById('fileStats').innerHTML=`
     <div class="stat-card blue"><div class="val">${total.toLocaleString()}</div><div class="lbl">Registros</div></div>
@@ -1475,6 +1533,15 @@ function generarFormatos(){
     }else{final1[k]=v}
   }
   Object.assign(final1,men1);
+  // Validar: conceptos solo-entidades no deben ir a personas naturales
+  for(const[k,v] of Object.entries(final1)){
+    if(CONCEPTOS_SOLO_ENTIDADES.has(v.concepto)){
+      const td=detectarTipoDoc(v.nit);
+      if(td!=='31'&&td!=='44'&&td!=='50'&&v.nit!==NM){
+        v.concepto='5016'; // Reclasificar a "otros costos y gastos"
+      }
+    }
+  }
   formatos['F1001']=Object.values(final1).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.ded),Math.round(v.noDed),Math.round(v.retFte),0,Math.round(v.retIva),0]);
 
   // ── F1003: Retenciones ──
@@ -1694,6 +1761,10 @@ function renderFormatos(){
     document.getElementById('fmtWarnings').classList.remove('hidden');
     document.getElementById('fmtWarningsList').innerHTML=warnings.map(w=>`<div class="alert alert-warn" style="margin-bottom:8px"><span>⚠️</span><div>${w}</div></div>`).join('');
   }
+  // Toast de éxito
+  const totalGen=fmtOrder2.filter(f=>formatos[f]&&formatos[f].length>0).length;
+  const totalReg2=fmtOrder2.reduce((s,f)=>(formatos[f]?s+formatos[f].length:s),0);
+  if(totalGen>0)exoToast(totalGen+' formatos generados con '+totalReg2.toLocaleString('es-CO')+' registros','success');
 }
 
 function switchFmtTab(el,panelId){
@@ -1758,6 +1829,31 @@ function getCompanyConfig(){
 }
 
 async function exportExcel(){
+  // Validación cruzada: formatos vs balance
+  const cruces=[];
+  const sumFmt=(f,colIdx)=>(formatos[f]||[]).reduce((s,r)=>typeof r[colIdx]==='number'?s+r[colIdx]:s,0);
+  const sumBal=(prefijo)=>parsedData.filter(r=>r.code.startsWith(prefijo)).reduce((s,r)=>s+Math.abs(r.deb-r.cre),0);
+  const checks=[
+    ['F1007 Ingresos',sumFmt('F1007',13),sumBal('4')],
+    ['F1001 Pagos',sumFmt('F1001',13)+sumFmt('F1001',14),sumBal('5')+sumBal('6')],
+    ['F1008 CxC',sumFmt('F1008',12),parsedData.filter(r=>r.code.startsWith('13')&&!r.code.startsWith('1355')).reduce((s,r)=>s+Math.abs(r.saldo||0),0)],
+    ['F1009 CxP',sumFmt('F1009',12),parsedData.filter(r=>r.code.startsWith('2')).reduce((s,r)=>s+Math.abs(r.saldo||0),0)],
+    ['F1005 IVA Desc.',sumFmt('F1005',8),parsedData.filter(r=>r.code.startsWith('2408')).reduce((s,r)=>s+r.deb,0)],
+    ['F1006 IVA Gen.',sumFmt('F1006',8),parsedData.filter(r=>r.code.startsWith('2408')).reduce((s,r)=>s+r.cre,0)],
+  ];
+  const alertas=[];
+  for(const[nombre,valExo,valBal] of checks){
+    if(valBal===0)continue;
+    const pct=Math.abs((valExo-valBal)/valBal*100);
+    if(pct>5&&Math.abs(valExo-valBal)>10000){
+      alertas.push(`${nombre}: Exogena $${fN(valExo)} vs Balance $${fN(valBal)} (${pct.toFixed(1)}% diferencia)`);
+    }
+  }
+  if(alertas.length>0){
+    const msg='⚠️ DISCREPANCIAS DETECTADAS:\n\n'+alertas.join('\n')+'\n\nEstas diferencias pueden generar requerimientos de la DIAN.\n\n¿Desea descargar de todas formas?';
+    if(!confirm(msg))return;
+  }
+
   const wb=new ExcelJS.Workbook();
   const hdrFill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1F4E79'}};
   const hdrFont={bold:true,color:{argb:'FFFFFFFF'},size:10,name:'Arial'};
@@ -1893,9 +1989,12 @@ async function descargarEjemplo(){
   t(64,'F1007 — Ingresos recibidos (cuentas 4xxx)',T);
   t(65,'F1008 — Saldos de cuentas por cobrar (cuentas 13xx)',T);
   t(66,'F1009 — Saldos de cuentas por pagar (cuentas 2xxx)',T);
-  t(67,'F1011 — Información de declaraciones tributarias',T);
-  t(68,'F1012 — Información de contratos',T);
+  t(67,'F1010 — Socios y accionistas (cuentas 31xx)',T);
+  t(68,'F1012 — Inversiones y bancos (cuentas 1105, 1110, 12xx)',T);
   t(69,'F2276 — Información de rentas de trabajo (cuentas 5105, 5110, etc.)',T);
+  t(70,'',T);
+  t(71,'FORMATOS NO INCLUIDOS (requieren datos manuales o declaraciones):',{bold:true,size:10,color:{argb:'FFDC2626'}});
+  t(72,'F1004 - Descuentos tributarios / F1011 - Declaraciones tributarias / F1647 - Ingresos recibidos para terceros',T);
 
   t(71,'PRUEBA RÁPIDA',S);
   t(72,'Puedes subir directamente la hoja "Balance Ejemplo" de este archivo para ver cómo funciona la herramienta.',T);
@@ -2056,5 +2155,6 @@ async function btnLoading(btn,fn){
     <a href="vencimientos.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Vencimientos</a>
   </div>
 </section>
+</main>
 </body>
 </html>

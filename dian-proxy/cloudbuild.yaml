@@ -1,0 +1,46 @@
+# Google Cloud Build — Deploy a Cloud Run
+# Ejecutar: gcloud builds submit --config cloudbuild.yaml
+# O deploy directo: gcloud run deploy dian-proxy --source . --region southamerica-east1
+
+steps:
+  # Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/dian-proxy', '.']
+
+  # Push to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/dian-proxy']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'dian-proxy'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/dian-proxy'
+      - '--region'
+      - 'southamerica-east1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--memory'
+      - '1Gi'
+      - '--cpu'
+      - '1'
+      - '--timeout'
+      - '60'
+      - '--concurrency'
+      - '10'
+      - '--min-instances'
+      - '0'
+      - '--max-instances'
+      - '2'
+      - '--set-env-vars'
+      - 'ALLOWED_ORIGINS=https://exogenadian.com,CHAT_MODEL=claude-sonnet-4-20250514,CHAT_MAX_TOKENS=800,CHAT_RATE_LIMIT=20,CHAT_MONTHLY_BUDGET=5.0'
+
+images:
+  - 'gcr.io/$PROJECT_ID/dian-proxy'
+
+timeout: '600s'

@@ -1102,7 +1102,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         # Conceptos 5011, 5012, 5013, etc. solo para entidades (NIT jurídico)
         if conc in CONCEPTOS_SOLO_ENTIDADES:
             td = detectar_tipo_doc(f['nit'])
-            if td == '13':  # Persona natural → reclasificar a 5016
+            if td not in ('31', '44', '50') and f['nit'] != NM:  # No es entidad → reclasificar
                 nits_pila_persona.append((f['nit'], conc, valor))
                 conc = '5016'
 
@@ -1150,13 +1150,13 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     for (conc, nit), v in sorted(final.items()):
         ws.cell(fila, 1).value = conc
         escribir_tercero(ws, fila, 2, nit, True)
-        ws.cell(fila, 14).value = int(v[0])
-        ws.cell(fila, 15).value = int(v[1])
+        ws.cell(fila, 14).value = round(v[0])
+        ws.cell(fila, 15).value = round(v[1])
         ws.cell(fila, 16).value = 0
         ws.cell(fila, 17).value = 0
-        ws.cell(fila, 18).value = int(v[2])
+        ws.cell(fila, 18).value = round(v[2])
         ws.cell(fila, 19).value = 0
-        ws.cell(fila, 20).value = int(v[4])
+        ws.cell(fila, 20).value = round(v[4])
         ws.cell(fila, 21).value = 0
         fmt(ws, fila, range(14, 22))
         zebra(ws, fila)
@@ -1232,8 +1232,8 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     for (conc, nit), v in sorted(dic3.items()):
         ws.cell(fila, 1).value = conc
         escribir_tercero(ws, fila, 2, nit)
-        ws.cell(fila, 13).value = int(v[0])
-        ws.cell(fila, 14).value = int(v[1])
+        ws.cell(fila, 13).value = round(v[0])
+        ws.cell(fila, 14).value = round(v[1])
         fmt(ws, fila, [13, 14])
         zebra(ws, fila)
         fila += 1
@@ -1258,7 +1258,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     fila = 2
     for nit, val in sorted(dic5.items()):
         escribir_tercero(ws, fila, 1, nit)
-        ws.cell(fila, 12).value = int(val)
+        ws.cell(fila, 12).value = round(val)
         ws.cell(fila, 13).value = 0
         fmt(ws, fila, [12, 13])
         zebra(ws, fila)
@@ -1284,7 +1284,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     fila = 2
     for nit, val in sorted(dic6.items()):
         escribir_tercero(ws, fila, 1, nit)
-        ws.cell(fila, 12).value = int(val)
+        ws.cell(fila, 12).value = round(val)
         ws.cell(fila, 13).value = 0
         ws.cell(fila, 14).value = 0
         fmt(ws, fila, [12, 13, 14])
@@ -1318,7 +1318,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     for (conc, nit), val in sorted(final7.items()):
         ws.cell(fila, 1).value = conc
         escribir_tercero(ws, fila, 2, nit, True)
-        ws.cell(fila, 14).value = int(val)
+        ws.cell(fila, 14).value = round(val)
         ws.cell(fila, 15).value = 0
         fmt(ws, fila, [14, 15])
         zebra(ws, fila)
@@ -1351,7 +1351,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     for (conc, nit), val in sorted(final8.items()):
         ws.cell(fila, 1).value = conc
         escribir_tercero(ws, fila, 2, nit)
-        ws.cell(fila, 13).value = int(val)
+        ws.cell(fila, 13).value = round(val)
         fmt(ws, fila, [13])
         zebra(ws, fila)
         fila += 1
@@ -1431,7 +1431,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     for (conc, nit), val in sorted(final9.items()):
         ws.cell(fila, 1).value = conc
         escribir_tercero(ws, fila, 2, nit)
-        ws.cell(fila, 13).value = int(val)
+        ws.cell(fila, 13).value = round(val)
         fmt(ws, fila, [13])
         zebra(ws, fila)
         fila += 1
@@ -1452,11 +1452,11 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     fila = 2
     for nit, val in sorted(dic10.items()):
         escribir_tercero(ws, fila, 1, nit, True)
-        ws.cell(fila, 13).value = int(val)
+        ws.cell(fila, 13).value = round(val)
         pct = round(val / capital_total * 100, 2) if capital_total > 0 else 0
         ws.cell(fila, 14).value = pct / 100
         ws.cell(fila, 14).number_format = '0.00%'
-        ws.cell(fila, 15).value = int(val)
+        ws.cell(fila, 15).value = round(val)
         fmt(ws, fila, [13, 15])
         zebra(ws, fila)
         fila += 1
@@ -1514,8 +1514,8 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
     for (conc, nit), val in sorted(dic12.items()):
         ws.cell(fila, 1).value = conc
         escribir_tercero(ws, fila, 2, nit)
-        ws.cell(fila, 10).value = int(val)
-        ws.cell(fila, 11).value = int(val)
+        ws.cell(fila, 10).value = round(val)
+        ws.cell(fila, 11).value = round(val)
         fmt(ws, fila, [10, 11])
         zebra(ws, fila)
         fila += 1
@@ -1616,7 +1616,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
 
     for f in bal:
         if not f['nit']: continue
-        if en_rango(f['cta'], "2365", "2365") and f['nit'] in dic26:
+        if en_rango(f['cta'], "236505", "236505") and f['nit'] in dic26:
             dic26[f['nit']][17] += valor_impuesto(f, 'pasivo')
     for nit in dic26:
         dic26[nit][10] = sum(dic26[nit][:10])   # Total Bruto = sum(Salarios..OtrosPagLab)
@@ -1633,7 +1633,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
             cell.value = val
             cell.number_format = '@'
         for i in range(19):
-            ws.cell(fila, 12 + i).value = int(v[i])
+            ws.cell(fila, 12 + i).value = round(v[i])
             ws.cell(fila, 12 + i).number_format = '#,##0'
         zebra(ws, fila)
         fila += 1
@@ -1980,16 +1980,16 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         ws_rv.cell(rv_row, 1).value = formato
         ws_rv.cell(rv_row, 2).value = concepto
         ws_rv.cell(rv_row, 3).value = regs if regs else None
-        ws_rv.cell(rv_row, 4).value = int(val_exo) if val_exo else None
+        ws_rv.cell(rv_row, 4).value = round(val_exo) if val_exo else None
         ws_rv.cell(rv_row, 5).value = cta_bal
-        ws_rv.cell(rv_row, 6).value = int(val_bal) if val_bal else None
+        ws_rv.cell(rv_row, 6).value = round(val_bal) if val_bal else None
         ws_rv.cell(rv_row, 4).number_format = rv_nfmt
         ws_rv.cell(rv_row, 6).number_format = rv_nfmt
         ws_rv.cell(rv_row, 3).alignment = Alignment(horizontal='center')
 
         # Calcular diferencia y estado
         if val_exo is not None and val_bal is not None and val_bal != "":
-            dif = int(val_exo or 0) - int(val_bal or 0)
+            dif = round(val_exo or 0) - round(val_bal or 0)
             ws_rv.cell(rv_row, 7).value = dif
             ws_rv.cell(rv_row, 7).number_format = rv_nfmt
             pct = abs(dif / val_bal * 100) if val_bal and val_bal != 0 else (100 if dif != 0 else 0)

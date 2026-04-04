@@ -357,15 +357,20 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
   .tools-main{grid-template-columns:1fr!important}
   .blog-grid{grid-template-columns:1fr!important}
 }
+.skip-link{position:absolute;top:-40px;left:0;background:#059669;color:#fff;padding:8px 16px;z-index:9999;border-radius:0 0 8px 0;font-weight:600;transition:top .2s}
+.skip-link:focus{top:0}
+*:focus-visible{outline:2px solid #059669;outline-offset:2px;border-radius:2px}
 </style>
 </head>
 <body>
+<a href="#main" class="skip-link">Ir al contenido</a>
 
 <div id="nav-container" data-variant="full"></div>
 <script src="shared/pro.js"></script>
 <script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 
+<main id="main" role="main">
 <!-- ===== HERO ===== -->
 <section class="hero">
   <div class="hero-inner">
@@ -1145,6 +1150,7 @@ try{
 <!-- Exa: Asistente contable IA -->
 <link rel="stylesheet" href="shared/chat.css?v=2">
 <script src="shared/chat.js?v=2"></script>
+</main>
 
 </body>
 </html>

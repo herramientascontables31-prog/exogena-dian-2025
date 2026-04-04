@@ -30,6 +30,8 @@
   var KEY_EMAIL='exogenadian_pro_email';
   var KEY_PRO='exogenadian_pro_key';
   var KEY_DEVICE='exogenadian_device_id';
+  var KEY_ACTIVATED='exogenadian_pro_activated_at';
+  var PRO_MAX_DAYS=395; // 365 días + 30 de gracia
 
   // --- Backward compatibility: migrate old keys ---
   function migrateOldKeys(){
@@ -63,7 +65,15 @@
   function clearPro(){
     localStorage.removeItem(KEY_EMAIL);
     localStorage.removeItem(KEY_PRO);
+    localStorage.removeItem(KEY_ACTIVATED);
     sessionStorage.removeItem(CACHE_KEY);
+  }
+
+  function isLocallyExpired(){
+    var activated=localStorage.getItem(KEY_ACTIVATED);
+    if(!activated) return false; // Sin fecha, dejar que el server valide
+    var days=(Date.now()-parseInt(activated,10))/(1000*60*60*24);
+    return days>PRO_MAX_DAYS;
   }
 
   function isCacheValid(){
@@ -113,6 +123,11 @@
     migrateOldKeys();
     var saved=getSaved();
     if(!saved) return Promise.resolve(false);
+    // Expiración local como capa extra de protección
+    if(isLocallyExpired()){
+      clearPro();
+      return Promise.resolve(false);
+    }
     if(isCacheValid()) return Promise.resolve(true);
     return validateAgainstServer(saved).then(function(valid){
       if(!valid) clearPro();
@@ -142,6 +157,10 @@
           localStorage.setItem(KEY_EMAIL, valor);
         } else {
           localStorage.setItem(KEY_PRO, valor);
+        }
+        // Guardar fecha de activación si no existe
+        if(!localStorage.getItem(KEY_ACTIVATED)){
+          localStorage.setItem(KEY_ACTIVATED, String(Date.now()));
         }
       }
       return valid;
