@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S7SM6ST4CC');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Financiero NIIF Gratis — Indicadores, PYG y Balance General | ExógenaDIAN</title>
+<meta name="description" content="Dashboard financiero interactivo GRATIS para contadores colombianos. Visualiza PYG, Balance General, 8 indicadores KPI, gráfico waterfall y análisis vertical bajo NIIF. Exporta a Excel.">
+<meta name="keywords" content="dashboard financiero NIIF, indicadores financieros Colombia, PYG estado de resultados, balance general NIIF, margen bruto, margen operacional, ROE, razón corriente, prueba ácida, endeudamiento, EBITDA, análisis vertical, análisis horizontal, waterfall chart, herramientas contables gratis">
+<meta name="author" content="ExógenaDIAN">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://exogenadian.com/dashboard.html">
+<meta property="og:title" content="Dashboard Financiero NIIF Gratis — KPIs, PYG y Balance | ExógenaDIAN">
+<meta property="og:description" content="Visualiza PYG, Balance General, 8 KPIs financieros con gráficos interactivos. Exporta a Excel. Gratis para contadores colombianos.">
+<meta property="og:url" content="https://exogenadian.com/dashboard.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="ExógenaDIAN">
+<meta property="og:image" content="https://exogenadian.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Dashboard Financiero NIIF Gratis — KPIs y Análisis">
+<meta name="twitter:description" content="PYG, Balance General, 8 indicadores financieros y gráficos interactivos. Gratis para contadores colombianos.">
+<meta name="twitter:image" content="https://exogenadian.com/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Dashboard Financiero NIIF — Indicadores y Estados Financieros","url":"https://exogenadian.com/dashboard.html","description":"Dashboard financiero interactivo con PYG, Balance General, 8 KPIs, gráficos waterfall y donut bajo NIIF. Exporta a Excel. Gratis para contadores colombianos.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"¿Qué indicadores financieros muestra el dashboard?","acceptedAnswer":{"@type":"Answer","text":"El dashboard muestra 8 KPIs: Margen Bruto, Margen Operacional, Margen Neto, ROE, Razón Corriente, Prueba Ácida, Endeudamiento y EBITDA. Cada indicador incluye semáforo de alerta y fórmula."}},
+  {"@type":"Question","name":"¿Cómo se calcula el análisis vertical del PYG?","acceptedAnswer":{"@type":"Answer","text":"El análisis vertical toma como base los Ingresos Netos (100%) y expresa cada línea del estado de resultados como porcentaje de esa base, permitiendo identificar la estructura de costos y gastos."}},
+  {"@type":"Question","name":"¿El dashboard cumple con NIIF para PYMES en Colombia?","acceptedAnswer":{"@type":"Answer","text":"Sí, la estructura del PYG y Balance General sigue las secciones 3-5 de NIIF para PYMES y utiliza el Plan Único de Cuentas (PUC) de Colombia como referencia de codificación."}}
+]}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* === RESET & BASE === */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0A0F1E;--surface:#111827;--card:#1F2937;--card-hover:#283548;
+  --accent:#3B82F6;--accent2:#60A5FA;--green:#10B981;--green-dim:rgba(16,185,129,.15);
+  --red:#EF4444;--red-dim:rgba(239,68,68,.15);--amber:#F59E0B;--amber-dim:rgba(245,158,11,.15);
+  --text:#F9FAFB;--text2:#9CA3AF;--text3:#6B7280;
+  --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.1);
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 4px 24px rgba(0,0,0,.3);
+  --font-ui:'DM Sans',sans-serif;--font-num:'JetBrains Mono',monospace;--font-title:'Space Grotesk',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+
+/* === LAYOUT === */
+.dash-container{max-width:1280px;margin:0 auto;padding:20px 24px 60px}
+
+/* === HEADER === */
+.dash-header{background:linear-gradient(135deg,#111827 0%,#1e293b 50%,#0f172a 100%);border:1px solid var(--border2);border-radius:16px;padding:28px 32px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.dash-header::before{content:'';position:absolute;top:-50%;right:-10%;width:300px;height:300px;background:radial-gradient(circle,rgba(59,130,246,.08) 0%,transparent 70%);pointer-events:none}
+.dash-header-left h1{font-family:var(--font-title);font-size:1.5rem;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.badge-beta{background:linear-gradient(135deg,var(--accent),#8B5CF6);color:#fff;font-size:.65rem;padding:3px 10px;border-radius:20px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;font-family:var(--font-ui)}
+.dash-header-left p{color:var(--text3);font-size:.85rem;margin-top:4px}
+.company-info{text-align:right;font-size:.8rem;color:var(--text3)}
+.company-info .name{font-weight:700;color:var(--text);font-size:.95rem}
+.company-info .nit{font-family:var(--font-num);color:var(--text2);margin-top:2px}
+
+/* === PERIOD SELECTOR === */
+.controls-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.period-selector{display:flex;gap:0;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden}
+.period-btn{padding:10px 22px;font-family:var(--font-ui);font-size:.85rem;font-weight:600;color:var(--text3);background:transparent;border:none;cursor:pointer;transition:all .25s}
+.period-btn:hover{color:var(--text2);background:rgba(255,255,255,.03)}
+.period-btn.active{background:var(--accent);color:#fff}
+.controls-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.toggle-wrap{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--text3)}
+.toggle-switch{position:relative;width:40px;height:22px;cursor:pointer}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--card);border:1px solid var(--border2);border-radius:11px;transition:.3s}
+.toggle-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:2px;background:var(--text3);border-radius:50%;transition:.3s}
+.toggle-switch input:checked+.toggle-slider{background:var(--accent);border-color:var(--accent)}
+.toggle-switch input:checked+.toggle-slider::before{transform:translateX(17px);background:#fff}
+.btn{padding:9px 18px;border-radius:var(--radius-sm);font-family:var(--font-ui);font-size:.82rem;font-weight:600;border:1px solid var(--border2);background:var(--card);color:var(--text2);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.btn:hover{background:var(--card-hover);color:var(--text);border-color:var(--accent)}
+.btn-accent{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn-accent:hover{background:#2563EB}
+
+/* === KPI CARDS === */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;transition:all .3s;cursor:default}
+.kpi-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 32px rgba(59,130,246,.1)}
+.kpi-card .kpi-label{font-size:.75rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.kpi-card .kpi-value{font-family:var(--font-num);font-size:1.7rem;font-weight:600;color:var(--text);line-height:1.2}
+.kpi-card .kpi-sub{font-size:.75rem;color:var(--text3);margin-top:6px;display:flex;align-items:center;gap:6px}
+.kpi-light{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.kpi-light.green{background:var(--green);box-shadow:0 0 8px rgba(16,185,129,.5)}
+.kpi-light.yellow{background:var(--amber);box-shadow:0 0 8px rgba(245,158,11,.5)}
+.kpi-light.red{background:var(--red);box-shadow:0 0 8px rgba(239,68,68,.5)}
+.kpi-card.critical{animation:pulse-red 2s ease-in-out infinite}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}50%{box-shadow:0 0 20px 4px rgba(239,68,68,.15)}}
+.kpi-tooltip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1e293b;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 14px;font-size:.75rem;color:var(--text2);white-space:nowrap;z-index:100;box-shadow:var(--shadow)}
+.kpi-tooltip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#1e293b}
+.kpi-card:hover .kpi-tooltip{display:block}
+/* shimmer */
+.kpi-card.shimmer .kpi-value,.kpi-card.shimmer .kpi-sub{background:linear-gradient(90deg,var(--card) 25%,rgba(255,255,255,.06) 50%,var(--card) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;color:transparent;border-radius:4px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* === TABS === */
+.tab-bar{display:flex;gap:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px}
+.tab-btn{flex:1;padding:12px 20px;font-family:var(--font-ui);font-size:.88rem;font-weight:600;color:var(--text3);background:transparent;border:none;cursor:pointer;transition:all .25s;text-align:center;border-bottom:3px solid transparent}
+.tab-btn:hover{color:var(--text2);background:rgba(255,255,255,.02)}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(59,130,246,.05)}
+.tab-content{display:none;animation:fadeIn .3s ease}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* === FINANCIAL TABLE === */
+.table-controls{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.table-controls .left{display:flex;gap:8px}
+.fin-table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.fin-table{width:100%;border-collapse:collapse;font-size:.82rem}
+.fin-table thead th{background:var(--card);padding:12px 14px;text-align:left;font-weight:600;color:var(--text3);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+.fin-table thead th:not(:first-child){text-align:right}
+.fin-table tbody tr{border-bottom:1px solid var(--border);transition:all .2s;position:relative}
+.fin-table tbody tr:hover{background:rgba(59,130,246,.03)}
+.fin-table tbody tr:hover::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(1);transition:transform .2s}
+.fin-table tbody tr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent);transform:scaleY(0);transition:transform .2s}
+.fin-table td{padding:10px 14px;color:var(--text2);vertical-align:middle}
+.fin-table td:not(:first-child){text-align:right;font-family:var(--font-num);font-size:.8rem}
+.fin-table td.name-cell{display:flex;align-items:center;gap:6px}
+.fin-table .puc-code{color:var(--text3);font-family:var(--font-num);font-size:.72rem;min-width:48px}
+.row-level-0 td:first-child{padding-left:14px}
+.row-level-1 td:first-child{padding-left:30px}
+.row-level-2 td:first-child{padding-left:46px}
+.row-level-3 td:first-child{padding-left:62px}
+.row-total{background:rgba(59,130,246,.04)!important;font-weight:700}
+.row-total td{color:var(--text)!important;font-weight:700}
+.row-grand-total{background:rgba(59,130,246,.08)!important;font-weight:700;border-top:2px solid var(--accent)}
+.row-grand-total td{color:var(--text)!important;font-weight:700;font-size:.88rem}
+.row-header td{color:var(--text)!important;font-weight:700;font-size:.84rem;text-transform:uppercase;letter-spacing:.3px}
+.expand-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:.8rem;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;transition:all .2s;flex-shrink:0}
+.expand-btn:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.expand-btn.expanded{transform:rotate(90deg)}
+.child-row{overflow:hidden;transition:max-height .3s ease, opacity .3s ease}
+.child-row.collapsed{max-height:0!important;opacity:0;border-bottom:none}
+.child-row.collapsed td{padding-top:0;padding-bottom:0;border:none}
+.pct-positive{color:var(--green)}
+.pct-negative{color:var(--red)}
+.var-chip{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600}
+.var-chip.up{background:var(--green-dim);color:var(--green)}
+.var-chip.down{background:var(--red-dim);color:var(--red)}
+
+/* === EQUATION BAR === */
+.equation-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:16px;font-family:var(--font-num);font-size:.9rem;flex-wrap:wrap}
+.eq-item{display:flex;flex-direction:column;align-items:center;gap:2px}
+.eq-label{font-size:.68rem;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-family:var(--font-ui)}
+.eq-value{font-weight:600;color:var(--text)}
+.eq-op{font-size:1.2rem;color:var(--text3);font-weight:700}
+.eq-check{font-size:1.1rem}
+.eq-check.ok{color:var(--green)}
+.eq-check.fail{color:var(--red)}
+
+/* === CHARTS === */
+.charts-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-top:28px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+.chart-title{font-family:var(--font-title);font-size:1rem;font-weight:700;margin-bottom:16px;color:var(--text)}
+
+/* === FOOTER === */
+.dash-footer{text-align:center;padding:32px 0 16px;font-size:.75rem;color:var(--text3);border-top:1px solid var(--border);margin-top:40px}
+
+/* === RESPONSIVE === */
+@media(max-width:1024px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .charts-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .dash-container{padding:12px 14px 40px}
+  .dash-header{flex-direction:column;align-items:flex-start;gap:12px;padding:20px}
+  .company-info{text-align:left}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .kpi-card .kpi-value{font-size:1.3rem}
+  .controls-bar{flex-direction:column;align-items:stretch}
+  .period-selector{justify-content:center}
+  .controls-right{justify-content:center}
+  .charts-grid{display:none}
+  .fin-table{font-size:.75rem}
+  .fin-table thead th{padding:8px 10px;font-size:.68rem}
+  .fin-table td{padding:8px 10px}
+  .equation-bar{font-size:.78rem;gap:10px;padding:12px 16px}
+}
+
+/* === PRINT === */
+@media print{
+  body{background:#fff!important;color:#000!important;font-size:10pt}
+  #nav-container,.controls-bar,.tab-bar,.charts-grid,.dash-footer,.btn,.toggle-wrap{display:none!important}
+  .dash-container{max-width:100%;padding:0}
+  .dash-header{background:#f5f5f5!important;color:#000!important;border:1px solid #ccc;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .dash-header-left h1{color:#000}
+  .company-info,.company-info .name{color:#000!important}
+  .kpi-grid{grid-template-columns:repeat(4,1fr);gap:8px}
+  .kpi-card{background:#f9f9f9!important;border:1px solid #ddd;color:#000!important;page-break-inside:avoid}
+  .kpi-card .kpi-value,.kpi-card .kpi-label,.kpi-card .kpi-sub{color:#000!important}
+  .fin-table-wrap{border:1px solid #ccc}
+  .fin-table thead th{background:#eee!important;color:#333!important;border-bottom:2px solid #999}
+  .fin-table td{color:#333!important;border-bottom:1px solid #ddd}
+  .row-total td{font-weight:700}
+  .row-grand-total{border-top:2px solid #333}
+  .equation-bar{background:#f5f5f5!important;border:1px solid #ccc}
+  .eq-value,.eq-op,.eq-label{color:#000!important}
+  .tab-content{display:block!important;page-break-before:always}
+  .child-row.collapsed{max-height:none!important;opacity:1!important}
+}
+</style>
+</head>
+<body style="background:#0A0F1E">
+
+<!-- Nav -->
+<div id="nav-container"></div>
+<script src="shared/nav.js"></script>
+
+<div class="dash-container">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <h1>Dashboard Financiero <span class="badge-beta">BETA</span></h1>
+      <p>Indicadores, PYG y Balance General interactivo bajo NIIF</p>
+    </div>
+    <div class="company-info">
+      <div class="name">Distribuciones del Valle S.A.S.</div>
+      <div class="nit">NIT: 900.123.456-7</div>
+      <div style="margin-top:4px;font-size:.72rem">Datos de demostración</div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls-bar">
+    <div class="period-selector" id="periodSelector">
+      <button class="period-btn" data-year="2022">2022</button>
+      <button class="period-btn" data-year="2023">2023</button>
+      <button class="period-btn active" data-year="2024">2024</button>
+    </div>
+    <div class="controls-right">
+      <label class="toggle-wrap">
+        <span>Comparativo</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleComparativo">
+          <span class="toggle-slider"></span>
+        </label>
+      </label>
+      <button class="btn" id="btnExpandAll">&#9654; Expandir todo</button>
+      <button class="btn" id="btnCollapseAll">&#9660; Contraer todo</button>
+      <button class="btn btn-accent" id="btnExportExcel">&#128196; Exportar Excel</button>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <!-- Tabs -->
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="pyg">Estado de Resultados (PYG)</button>
+    <button class="tab-btn" data-tab="balance">Balance General</button>
+  </div>
+
+  <!-- PYG Tab -->
+  <div class="tab-content active" id="tab-pyg">
+    <div class="table-controls">
+      <div class="left">
+        <span style="font-size:.78rem;color:var(--text3)">Cifras en pesos colombianos (COP). Analisis vertical base = Ingresos Netos.</span>
+      </div>
+    </div>
+    <div class="fin-table-wrap">
+      <table class="fin-table" id="pygTable">
+        <thead id="pygHead"></thead>
+        <tbody id="pygBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Balance Tab -->
+  <div class="tab-content" id="tab-balance">
+    <div id="equationBar" class="equation-bar"></div>
+    <div class="fin-table-wrap">
+      <table class="fin-table" id="balanceTable">
+        <thead id="balanceHead"></thead>
+        <tbody id="balanceBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Cascada de Resultados (Waterfall)</div>
+      <div id="waterfallChart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Composición del Activo</div>
+      <div id="donutChart"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="dash-footer">
+    Dashboard Financiero NIIF &mdash; ExógenaDIAN.com &copy; 2026. Datos de demostración. No constituye asesoría financiera.
+  </div>
+
+</div>
+
+<script>
+// =====================================================
+// DATA
+// =====================================================
+const DATA = {
+  2022: {
+    pyg: {
+      ventasBienes: 1950000000,
+      prestacionServicios: 320000000,
+      devolucionesDescuentos: 70000000,
+      costoVentas: 1430000000,
+      costoBienes: 1280000000,
+      costoServicios: 150000000,
+      gastosPersonal: 215000000,
+      honorarios: 52000000,
+      arrendamientos: 42000000,
+      servicios: 35000000,
+      depreciaciones: 38000000,
+      otrosGastosOp: 128000000,
+      ingresosNoOp: 18000000,
+      interesesNoOp: 12000000,
+      otrosIngNoOp: 6000000,
+      gastosNoOp: 72000000,
+      interesesGasto: 55000000,
+      otrosGastosNoOp: 17000000,
+      impuestoRenta: 70000000
+    },
+    balance: {
+      efectivo: 95000000,
+      inversionesCP: 25000000,
+      cxcClientes: 195000000,
+      inventarios: 220000000,
+      anticipos: 15000000,
+      ppeNeto: 380000000,
+      intangibles: 28000000,
+      inversionesLP: 42000000,
+      obligFinCP: 100000000,
+      proveedores: 155000000,
+      impuestosPorPagar: 42000000,
+      obligLaborales: 35000000,
+      obligFinLP: 180000000,
+      capitalSocial: 200000000,
+      reservaLegal: 48000000,
+      utilidadesAcumuladas: 104000000
+    }
+  },
+  2023: {
+    pyg: {
+      ventasBienes: 2180000000,
+      prestacionServicios: 390000000,
+      devolucionesDescuentos: 85000000,
+      costoVentas: 1670000000,
+      costoBienes: 1490000000,
+      costoServicios: 180000000,
+      gastosPersonal: 248000000,
+      honorarios: 62000000,
+      arrendamientos: 48000000,
+      servicios: 42000000,
+      depreciaciones: 40000000,
+      otrosGastosOp: 140000000,
+      ingresosNoOp: 22000000,
+      interesesNoOp: 15000000,
+      otrosIngNoOp: 7000000,
+      gastosNoOp: 85000000,
+      interesesGasto: 65000000,
+      otrosGastosNoOp: 20000000,
+      impuestoRenta: 60000000
+    },
+    balance: {
+      efectivo: 78000000,
+      inversionesCP: 30000000,
+      cxcClientes: 240000000,
+      inventarios: 265000000,
+      anticipos: 20000000,
+      ppeNeto: 420000000,
+      intangibles: 35000000,
+      inversionesLP: 52000000,
+      obligFinCP: 130000000,
+      proveedores: 185000000,
+      impuestosPorPagar: 44000000,
+      obligLaborales: 42000000,
+      obligFinLP: 220000000,
+      capitalSocial: 200000000,
+      reservaLegal: 55000000,
+      utilidadesAcumuladas: 152000000
+    }
+  },
+  2024: {
+    pyg: {
+      ventasBienes: 2480000000,
+      prestacionServicios: 450000000,
+      devolucionesDescuentos: 95000000,
+      costoVentas: 1850000000,
+      costoBienes: 1650000000,
+      costoServicios: 200000000,
+      gastosPersonal: 275000000,
+      honorarios: 68000000,
+      arrendamientos: 52000000,
+      servicios: 45000000,
+      depreciaciones: 44000000,
+      otrosGastosOp: 161000000,
+      ingresosNoOp: 28000000,
+      interesesNoOp: 18000000,
+      otrosIngNoOp: 10000000,
+      gastosNoOp: 95000000,
+      interesesGasto: 72000000,
+      otrosGastosNoOp: 23000000,
+      impuestoRenta: 93000000
+    },
+    balance: {
+      efectivo: 120000000,
+      inversionesCP: 35000000,
+      cxcClientes: 285000000,
+      inventarios: 310000000,
+      anticipos: 22000000,
+      ppeNeto: 580000000,
+      intangibles: 45000000,
+      inversionesLP: 103000000,
+      obligFinCP: 155000000,
+      proveedores: 215000000,
+      impuestosPorPagar: 58000000,
+      obligLaborales: 48000000,
+      obligFinLP: 280000000,
+      capitalSocial: 200000000,
+      reservaLegal: 65000000,
+      utilidadesAcumuladas: 299000000
+    }
+  }
+};
+
+// Compute derived PYG values
+function computePYG(p) {
+  const ingresosOp = p.ventasBienes + p.prestacionServicios;
+  const ingresosNetos = ingresosOp - p.devolucionesDescuentos;
+  const utilidadBruta = ingresosNetos - p.costoVentas;
+  const gastosOp = p.gastosPersonal + p.honorarios + p.arrendamientos + p.servicios + p.depreciaciones + p.otrosGastosOp;
+  const utilidadOp = utilidadBruta - gastosOp;
+  const utilidadAntesImp = utilidadOp + p.ingresosNoOp - p.gastosNoOp;
+  const utilidadNeta = utilidadAntesImp - p.impuestoRenta;
+  return {
+    ...p, ingresosOp, ingresosNetos, utilidadBruta, gastosOp,
+    utilidadOp, utilidadAntesImp, utilidadNeta,
+    ebitda: utilidadOp + p.depreciaciones
+  };
+}
+
+function computeBalance(b, utilidadNeta) {
+  const activoCorriente = b.efectivo + b.inversionesCP + b.cxcClientes + b.inventarios + b.anticipos;
+  const activoNoCorriente = b.ppeNeto + b.intangibles + b.inversionesLP;
+  const totalActivos = activoCorriente + activoNoCorriente;
+  const pasivoCorriente = b.obligFinCP + b.proveedores + b.impuestosPorPagar + b.obligLaborales;
+  const pasivoNoCorriente = b.obligFinLP;
+  const totalPasivos = pasivoCorriente + pasivoNoCorriente;
+  const utilidadesEjercicio = utilidadNeta;
+  const totalPatrimonio = b.capitalSocial + b.reservaLegal + utilidadesEjercicio + b.utilidadesAcumuladas;
+  const totalPasivoPatrimonio = totalPasivos + totalPatrimonio;
+  return {
+    ...b, activoCorriente, activoNoCorriente, totalActivos,
+    pasivoCorriente, pasivoNoCorriente, totalPasivos,
+    utilidadesEjercicio, totalPatrimonio, totalPasivoPatrimonio
+  };
+}
+
+// =====================================================
+// FORMATTING
+// =====================================================
+function formatCOP(value, abbreviated) {
+  if (value == null) return '';
+  const neg = value < 0;
+  const abs = Math.abs(value);
+  if (abbreviated) {
+    if (abs >= 1e9) {
+      const s = '$' + (abs / 1e6).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'M';
+      return neg ? '(' + s + ')' : s;
+    }
+    if (abs >= 1e6) {
+      const s = '$' + (abs / 1e6).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + 'M';
+      return neg ? '(' + s + ')' : s;
+    }
+  }
+  const formatted = '$' + abs.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return neg ? '(' + formatted + ')' : formatted;
+}
+
+function formatPct(value, decimals, showSign) {
+  if (value == null || isNaN(value)) return '';
+  const d = decimals != null ? decimals : 1;
+  const abs = Math.abs(value * 100);
+  const s = abs.toFixed(d).replace('.', ',');
+  if (showSign) {
+    return (value >= 0 ? '+' : '\u2212') + s + '%';
+  }
+  return (value < 0 ? '\u2212' : '') + s + '%';
+}
+
+function formatRatio(v) {
+  return v.toFixed(2).replace('.', ',');
+}
+
+// =====================================================
+// STATE
+// =====================================================
+let currentYear = 2024;
+let comparativo = false;
+let expandedRows = new Set();
+
+function getPrevYear() {
+  return currentYear === 2022 ? null : currentYear - 1;
+}
+
+function getComputed(year) {
+  const d = DATA[year];
+  const pyg = computePYG(d.pyg);
+  const bal = computeBalance(d.balance, pyg.utilidadNeta);
+  return { pyg, bal };
+}
+
+// =====================================================
+// KPI CARDS
+// =====================================================
+function computeKPIs(year) {
+  const { pyg, bal } = getComputed(year);
+  const margenBruto = pyg.utilidadBruta / pyg.ingresosNetos;
+  const margenOp = pyg.utilidadOp / pyg.ingresosNetos;
+  const margenNeto = pyg.utilidadNeta / pyg.ingresosNetos;
+  const roe = pyg.utilidadNeta / bal.totalPatrimonio;
+  const razonCorriente = bal.activoCorriente / bal.pasivoCorriente;
+  const pruebaAcida = (bal.activoCorriente - bal.inventarios) / bal.pasivoCorriente;
+  const endeudamiento = bal.totalPasivos / bal.totalActivos;
+  const ebitda = pyg.ebitda;
+  return [
+    {
+      id: 'margenBruto', label: 'Margen Bruto', value: margenBruto, format: 'pct',
+      formula: 'Utilidad Bruta / Ingresos Netos x 100',
+      light: margenBruto >= 0.35 ? 'green' : margenBruto >= 0.20 ? 'yellow' : 'red',
+      critical: margenBruto < 0.15
+    },
+    {
+      id: 'margenOp', label: 'Margen Operacional', value: margenOp, format: 'pct',
+      formula: 'Utilidad Operacional / Ingresos Netos x 100',
+      light: margenOp >= 0.10 ? 'green' : margenOp >= 0.05 ? 'yellow' : 'red',
+      critical: margenOp < 0.03
+    },
+    {
+      id: 'margenNeto', label: 'Margen Neto', value: margenNeto, format: 'pct',
+      formula: 'Utilidad Neta / Ingresos Netos x 100',
+      light: margenNeto >= 0.08 ? 'green' : margenNeto >= 0.03 ? 'yellow' : 'red',
+      critical: margenNeto < 0.02
+    },
+    {
+      id: 'roe', label: 'ROE', value: roe, format: 'pct',
+      formula: 'Utilidad Neta / Patrimonio x 100',
+      light: roe >= 0.15 ? 'green' : roe >= 0.08 ? 'yellow' : 'red',
+      critical: roe < 0.05
+    },
+    {
+      id: 'razonCorriente', label: 'Razón Corriente', value: razonCorriente, format: 'ratio',
+      formula: 'Activo Corriente / Pasivo Corriente',
+      light: razonCorriente >= 1.5 ? 'green' : razonCorriente >= 1.0 ? 'yellow' : 'red',
+      critical: razonCorriente < 0.8
+    },
+    {
+      id: 'pruebaAcida', label: 'Prueba Ácida', value: pruebaAcida, format: 'ratio',
+      formula: '(Activo Corriente - Inventarios) / Pasivo Corriente',
+      light: pruebaAcida >= 1.0 ? 'green' : pruebaAcida >= 0.7 ? 'yellow' : 'red',
+      critical: pruebaAcida < 0.5
+    },
+    {
+      id: 'endeudamiento', label: 'Endeudamiento', value: endeudamiento, format: 'pct',
+      formula: 'Total Pasivos / Total Activos x 100',
+      light: endeudamiento <= 0.50 ? 'green' : endeudamiento <= 0.70 ? 'yellow' : 'red',
+      critical: endeudamiento > 0.80
+    },
+    {
+      id: 'ebitda', label: 'EBITDA', value: ebitda, format: 'cop',
+      formula: 'Utilidad Operacional + Depreciaciones',
+      light: ebitda > 0 ? 'green' : 'red',
+      critical: ebitda <= 0
+    }
+  ];
+}
+
+function renderKPIs() {
+  const grid = document.getElementById('kpiGrid');
+  const kpis = computeKPIs(currentYear);
+  // Add shimmer first
+  grid.innerHTML = kpis.map(k => `
+    <div class="kpi-card shimmer" id="kpi-${k.id}">
+      <div class="kpi-label">${k.label} <span class="kpi-light ${k.light}"></span></div>
+      <div class="kpi-value" data-target="${k.value}" data-format="${k.format}">--</div>
+      <div class="kpi-sub">&nbsp;</div>
+      <div class="kpi-tooltip">${k.formula}</div>
+    </div>
+  `).join('');
+
+  // Animate after short delay
+  setTimeout(() => {
+    kpis.forEach(k => {
+      const card = document.getElementById('kpi-' + k.id);
+      card.classList.remove('shimmer');
+      if (k.critical) card.classList.add('critical');
+      else card.classList.remove('critical');
+      const valEl = card.querySelector('.kpi-value');
+      const subEl = card.querySelector('.kpi-sub');
+      animateValue(valEl, k.value, k.format, 600);
+
+      // Compute YoY change
+      const prev = getPrevYear();
+      if (prev) {
+        const prevKpis = computeKPIs(prev);
+        const prevK = prevKpis.find(x => x.id === k.id);
+        if (prevK) {
+          const change = k.value - prevK.value;
+          if (k.format === 'cop') {
+            const pctChg = prevK.value !== 0 ? change / Math.abs(prevK.value) : 0;
+            subEl.innerHTML = `<span class="var-chip ${pctChg >= 0 ? 'up' : 'down'}">${pctChg >= 0 ? '&#9650;' : '&#9660;'} ${formatPct(pctChg, 1, true)}</span> vs ${prev}`;
+          } else {
+            const arrow = change >= 0 ? '&#9650;' : '&#9660;';
+            const cls = k.id === 'endeudamiento' ? (change <= 0 ? 'up' : 'down') : (change >= 0 ? 'up' : 'down');
+            if (k.format === 'pct') {
+              subEl.innerHTML = `<span class="var-chip ${cls}">${arrow} ${(Math.abs(change) * 100).toFixed(1).replace('.', ',')} pp</span> vs ${prev}`;
+            } else {
+              subEl.innerHTML = `<span class="var-chip ${cls}">${arrow} ${Math.abs(change).toFixed(2).replace('.', ',')}</span> vs ${prev}`;
+            }
+          }
+        }
+      } else {
+        subEl.innerHTML = '<span style="color:var(--text3)">Sin período anterior</span>';
+      }
+    });
+  }, 400);
+}
+
+function animateValue(el, target, format, duration) {
+  const start = performance.now();
+  const from = 0;
+  function step(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+    const current = from + (target - from) * eased;
+    if (format === 'pct') el.textContent = (current * 100).toFixed(1).replace('.', ',') + '%';
+    else if (format === 'ratio') el.textContent = current.toFixed(2).replace('.', ',');
+    else if (format === 'cop') el.textContent = formatCOP(current, true);
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+// =====================================================
+// PYG TABLE
+// =====================================================
+function buildPYGRows(year) {
+  const c = getComputed(year);
+  const p = c.pyg;
+  const base = p.ingresosNetos;
+  function pct(v) { return base !== 0 ? v / base : 0; }
+
+  return [
+    { code: '4', name: 'INGRESOS OPERACIONALES', value: p.ingresosOp, pct: pct(p.ingresosOp), level: 0, type: 'header', key: 'ingOp', children: ['41', '4175', 'devol'] },
+    { code: '4135', name: 'Ventas de bienes', value: p.ventasBienes, pct: pct(p.ventasBienes), level: 1, type: 'detail', parent: 'ingOp', key: '41' },
+    { code: '4175', name: 'Prestación de servicios', value: p.prestacionServicios, pct: pct(p.prestacionServicios), level: 1, type: 'detail', parent: 'ingOp', key: '4175' },
+    { code: '', name: '(-) Devoluciones y descuentos', value: -p.devolucionesDescuentos, pct: pct(-p.devolucionesDescuentos), level: 1, type: 'detail', parent: 'ingOp', key: 'devol' },
+    { code: '', name: 'INGRESOS NETOS', value: p.ingresosNetos, pct: 1, level: 0, type: 'total', key: 'ingNetos' },
+    { code: '6', name: '(-) COSTO DE VENTAS', value: -p.costoVentas, pct: pct(-p.costoVentas), level: 0, type: 'header', key: 'costoV', children: ['costBien', 'costServ'] },
+    { code: '6135', name: 'Costo de bienes vendidos', value: -p.costoBienes, pct: pct(-p.costoBienes), level: 1, type: 'detail', parent: 'costoV', key: 'costBien' },
+    { code: '6175', name: 'Costo de servicios prestados', value: -p.costoServicios, pct: pct(-p.costoServicios), level: 1, type: 'detail', parent: 'costoV', key: 'costServ' },
+    { code: '', name: 'UTILIDAD BRUTA', value: p.utilidadBruta, pct: pct(p.utilidadBruta), level: 0, type: 'total', key: 'utilBruta' },
+    { code: '5', name: '(-) GASTOS OPERACIONALES', value: -p.gastosOp, pct: pct(-p.gastosOp), level: 0, type: 'header', key: 'gastosOp', children: ['g51', 'g5210', 'g5240', 'g5295', 'g5260', 'gOtros'] },
+    { code: '51', name: 'Gastos de personal', value: -p.gastosPersonal, pct: pct(-p.gastosPersonal), level: 1, type: 'detail', parent: 'gastosOp', key: 'g51' },
+    { code: '5210', name: 'Honorarios', value: -p.honorarios, pct: pct(-p.honorarios), level: 1, type: 'detail', parent: 'gastosOp', key: 'g5210' },
+    { code: '5240', name: 'Arrendamientos', value: -p.arrendamientos, pct: pct(-p.arrendamientos), level: 1, type: 'detail', parent: 'gastosOp', key: 'g5240' },
+    { code: '5295', name: 'Servicios', value: -p.servicios, pct: pct(-p.servicios), level: 1, type: 'detail', parent: 'gastosOp', key: 'g5295' },
+    { code: '5260', name: 'Depreciaciones', value: -p.depreciaciones, pct: pct(-p.depreciaciones), level: 1, type: 'detail', parent: 'gastosOp', key: 'g5260' },
+    { code: '5299', name: 'Otros gastos operacionales', value: -p.otrosGastosOp, pct: pct(-p.otrosGastosOp), level: 1, type: 'detail', parent: 'gastosOp', key: 'gOtros' },
+    { code: '', name: 'UTILIDAD OPERACIONAL (EBIT)', value: p.utilidadOp, pct: pct(p.utilidadOp), level: 0, type: 'total', key: 'utilOp' },
+    { code: '42', name: '(+) INGRESOS NO OPERACIONALES', value: p.ingresosNoOp, pct: pct(p.ingresosNoOp), level: 0, type: 'header', key: 'ingNoOp', children: ['i4210', 'iOtros'] },
+    { code: '4210', name: 'Ingresos financieros (intereses)', value: p.interesesNoOp, pct: pct(p.interesesNoOp), level: 1, type: 'detail', parent: 'ingNoOp', key: 'i4210' },
+    { code: '4295', name: 'Otros ingresos no operacionales', value: p.otrosIngNoOp, pct: pct(p.otrosIngNoOp), level: 1, type: 'detail', parent: 'ingNoOp', key: 'iOtros' },
+    { code: '53', name: '(-) GASTOS NO OPERACIONALES', value: -p.gastosNoOp, pct: pct(-p.gastosNoOp), level: 0, type: 'header', key: 'gastosNoOp', children: ['gInt', 'gOtrosNo'] },
+    { code: '5305', name: 'Gastos financieros (intereses)', value: -p.interesesGasto, pct: pct(-p.interesesGasto), level: 1, type: 'detail', parent: 'gastosNoOp', key: 'gInt' },
+    { code: '5395', name: 'Otros gastos no operacionales', value: -p.otrosGastosNoOp, pct: pct(-p.otrosGastosNoOp), level: 1, type: 'detail', parent: 'gastosNoOp', key: 'gOtrosNo' },
+    { code: '', name: 'UTILIDAD ANTES DE IMPUESTOS', value: p.utilidadAntesImp, pct: pct(p.utilidadAntesImp), level: 0, type: 'total', key: 'utilAntesImp' },
+    { code: '54', name: '(-) IMPUESTO DE RENTA', value: -p.impuestoRenta, pct: pct(-p.impuestoRenta), level: 0, type: 'row', key: 'impRenta' },
+    { code: '', name: 'UTILIDAD NETA', value: p.utilidadNeta, pct: pct(p.utilidadNeta), level: 0, type: 'grand-total', key: 'utilNeta' }
+  ];
+}
+
+function renderPYG() {
+  const rows = buildPYGRows(currentYear);
+  let prevRows = null;
+  const prev = getPrevYear();
+  if (comparativo && prev) prevRows = buildPYGRows(prev);
+
+  // Head
+  const pygHead = document.getElementById('pygHead');
+  let headHtml = '<tr><th style="width:50px"></th><th>Cuenta</th><th>' + currentYear + '</th><th>% Vertical</th>';
+  if (prevRows) headHtml += '<th>' + prev + '</th><th>Variación</th>';
+  headHtml += '</tr>';
+  pygHead.innerHTML = headHtml;
+
+  // Body
+  const tbody = document.getElementById('pygBody');
+  tbody.innerHTML = '';
+  rows.forEach((r, i) => {
+    const tr = document.createElement('tr');
+    const isParent = r.children && r.children.length > 0;
+    const isChild = !!r.parent;
+    const isExpanded = expandedRows.has(r.key);
+
+    let rowClass = 'row-level-' + r.level;
+    if (r.type === 'total') rowClass += ' row-total';
+    if (r.type === 'grand-total') rowClass += ' row-grand-total';
+    if (r.type === 'header') rowClass += ' row-header';
+    if (isChild) rowClass += ' child-row' + (expandedRows.has(r.parent) ? '' : ' collapsed');
+    tr.className = rowClass;
+    if (isChild) tr.dataset.parent = r.parent;
+
+    let html = '<td class="puc-code">';
+    if (isParent) {
+      html += '<button class="expand-btn ' + (isExpanded ? 'expanded' : '') + '" data-key="' + r.key + '">&#9654;</button>';
+    }
+    html += '</td>';
+    html += '<td>' + (r.code ? '<span class="puc-code">' + r.code + '</span> ' : '') + r.name + '</td>';
+    html += '<td class="' + (r.value < 0 ? 'pct-negative' : '') + '">' + formatCOP(r.value) + '</td>';
+    html += '<td>' + formatPct(r.pct, 1) + '</td>';
+
+    if (prevRows) {
+      const pr = prevRows.find(x => x.key === r.key);
+      if (pr) {
+        html += '<td class="' + (pr.value < 0 ? 'pct-negative' : '') + '">' + formatCOP(pr.value) + '</td>';
+        const variation = pr.value !== 0 ? (r.value - pr.value) / Math.abs(pr.value) : 0;
+        const vClass = variation >= 0 ? 'up' : 'down';
+        html += '<td><span class="var-chip ' + vClass + '">' + (variation >= 0 ? '&#9650;' : '&#9660;') + ' ' + formatPct(variation, 1, true) + '</span></td>';
+      } else {
+        html += '<td></td><td></td>';
+      }
+    }
+
+    tr.innerHTML = html;
+    tbody.appendChild(tr);
+  });
+
+  // Bind expand buttons
+  tbody.querySelectorAll('.expand-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.key;
+      if (expandedRows.has(key)) {
+        expandedRows.delete(key);
+        btn.classList.remove('expanded');
+      } else {
+        expandedRows.add(key);
+        btn.classList.add('expanded');
+      }
+      tbody.querySelectorAll('[data-parent="' + key + '"]').forEach(child => {
+        child.classList.toggle('collapsed');
+      });
+    });
+  });
+}
+
+// =====================================================
+// BALANCE TABLE
+// =====================================================
+function buildBalanceRows(year) {
+  const { pyg, bal } = (() => { const d = getComputed(year); return d; })();
+
+  return [
+    // ACTIVOS
+    { code: '', name: 'ACTIVOS', value: null, level: 0, type: 'section-header', key: 'secActivos' },
+    { code: '', name: 'ACTIVO CORRIENTE', value: bal.activoCorriente, level: 0, type: 'header', key: 'actCor', children: ['a11', 'a1205', 'a1305', 'a14', 'a1380'] },
+    { code: '1105', name: 'Efectivo y equivalentes', value: bal.efectivo, level: 1, type: 'detail', parent: 'actCor', key: 'a11' },
+    { code: '1205', name: 'Inversiones a corto plazo', value: bal.inversionesCP, level: 1, type: 'detail', parent: 'actCor', key: 'a1205' },
+    { code: '1305', name: 'Cuentas por cobrar clientes', value: bal.cxcClientes, level: 1, type: 'detail', parent: 'actCor', key: 'a1305' },
+    { code: '1435', name: 'Inventarios', value: bal.inventarios, level: 1, type: 'detail', parent: 'actCor', key: 'a14' },
+    { code: '1380', name: 'Anticipos y avances', value: bal.anticipos, level: 1, type: 'detail', parent: 'actCor', key: 'a1380' },
+    { code: '', name: 'ACTIVO NO CORRIENTE', value: bal.activoNoCorriente, level: 0, type: 'header', key: 'actNoCor', children: ['a15', 'a16', 'a12lp'] },
+    { code: '1520', name: 'Propiedad, planta y equipo (neto)', value: bal.ppeNeto, level: 1, type: 'detail', parent: 'actNoCor', key: 'a15' },
+    { code: '1605', name: 'Intangibles', value: bal.intangibles, level: 1, type: 'detail', parent: 'actNoCor', key: 'a16' },
+    { code: '1210', name: 'Inversiones a largo plazo', value: bal.inversionesLP, level: 1, type: 'detail', parent: 'actNoCor', key: 'a12lp' },
+    { code: '', name: 'TOTAL ACTIVOS', value: bal.totalActivos, level: 0, type: 'grand-total', key: 'totalActivos' },
+
+    // PASIVOS
+    { code: '', name: 'PASIVOS', value: null, level: 0, type: 'section-header', key: 'secPasivos' },
+    { code: '', name: 'PASIVO CORRIENTE', value: bal.pasivoCorriente, level: 0, type: 'header', key: 'pasCor', children: ['p21cp', 'p2205', 'p24', 'p25'] },
+    { code: '2105', name: 'Obligaciones financieras CP', value: bal.obligFinCP, level: 1, type: 'detail', parent: 'pasCor', key: 'p21cp' },
+    { code: '2205', name: 'Proveedores nacionales', value: bal.proveedores, level: 1, type: 'detail', parent: 'pasCor', key: 'p2205' },
+    { code: '2404', name: 'Impuestos por pagar', value: bal.impuestosPorPagar, level: 1, type: 'detail', parent: 'pasCor', key: 'p24' },
+    { code: '2505', name: 'Obligaciones laborales', value: bal.obligLaborales, level: 1, type: 'detail', parent: 'pasCor', key: 'p25' },
+    { code: '', name: 'PASIVO NO CORRIENTE', value: bal.pasivoNoCorriente, level: 0, type: 'header', key: 'pasNoCor', children: ['p21lp'] },
+    { code: '2120', name: 'Obligaciones financieras LP', value: bal.obligFinLP, level: 1, type: 'detail', parent: 'pasNoCor', key: 'p21lp' },
+    { code: '', name: 'TOTAL PASIVOS', value: bal.totalPasivos, level: 0, type: 'total', key: 'totalPasivos' },
+
+    // PATRIMONIO
+    { code: '', name: 'PATRIMONIO', value: null, level: 0, type: 'section-header', key: 'secPatrimonio' },
+    { code: '', name: 'PATRIMONIO', value: bal.totalPatrimonio, level: 0, type: 'header', key: 'patrim', children: ['p3105', 'p3305', 'p3605', 'p3710'] },
+    { code: '3105', name: 'Capital social', value: bal.capitalSocial, level: 1, type: 'detail', parent: 'patrim', key: 'p3105' },
+    { code: '3305', name: 'Reserva legal', value: bal.reservaLegal, level: 1, type: 'detail', parent: 'patrim', key: 'p3305' },
+    { code: '3605', name: 'Utilidades del ejercicio', value: bal.utilidadesEjercicio, level: 1, type: 'detail', parent: 'patrim', key: 'p3605' },
+    { code: '3710', name: 'Utilidades acumuladas', value: bal.utilidadesAcumuladas, level: 1, type: 'detail', parent: 'patrim', key: 'p3710' },
+    { code: '', name: 'TOTAL PATRIMONIO', value: bal.totalPatrimonio, level: 0, type: 'total', key: 'totalPatrimonio' },
+
+    { code: '', name: 'TOTAL PASIVO + PATRIMONIO', value: bal.totalPasivoPatrimonio, level: 0, type: 'grand-total', key: 'totalPP' }
+  ];
+}
+
+function renderBalance() {
+  const rows = buildBalanceRows(currentYear);
+  let prevRows = null;
+  const prev = getPrevYear();
+  if (comparativo && prev) prevRows = buildBalanceRows(prev);
+
+  // Equation bar
+  const { bal } = getComputed(currentYear);
+  const eq = document.getElementById('equationBar');
+  const balanced = bal.totalActivos === bal.totalPasivoPatrimonio;
+  eq.innerHTML = `
+    <div class="eq-item"><span class="eq-label">Activos</span><span class="eq-value">${formatCOP(bal.totalActivos, true)}</span></div>
+    <span class="eq-op">=</span>
+    <div class="eq-item"><span class="eq-label">Pasivos</span><span class="eq-value">${formatCOP(bal.totalPasivos, true)}</span></div>
+    <span class="eq-op">+</span>
+    <div class="eq-item"><span class="eq-label">Patrimonio</span><span class="eq-value">${formatCOP(bal.totalPatrimonio, true)}</span></div>
+    <span class="eq-check ${balanced ? 'ok' : 'fail'}">${balanced ? '&#10003; Cuadra' : '&#10007; Descuadre'}</span>
+  `;
+
+  // Head
+  const head = document.getElementById('balanceHead');
+  let headHtml = '<tr><th style="width:50px"></th><th>Cuenta</th><th>' + currentYear + '</th>';
+  if (prevRows) headHtml += '<th>' + prev + '</th><th>Variación</th>';
+  headHtml += '</tr>';
+  head.innerHTML = headHtml;
+
+  // Body
+  const tbody = document.getElementById('balanceBody');
+  tbody.innerHTML = '';
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    const isParent = r.children && r.children.length > 0;
+    const isChild = !!r.parent;
+
+    let rowClass = 'row-level-' + r.level;
+    if (r.type === 'total') rowClass += ' row-total';
+    if (r.type === 'grand-total') rowClass += ' row-grand-total';
+    if (r.type === 'header') rowClass += ' row-header';
+    if (r.type === 'section-header') rowClass += ' row-header';
+    if (isChild) rowClass += ' child-row' + (expandedRows.has(r.parent) ? '' : ' collapsed');
+    tr.className = rowClass;
+    if (isChild) tr.dataset.parent = r.parent;
+
+    let html = '<td class="puc-code">';
+    if (isParent) {
+      const isExpanded = expandedRows.has(r.key);
+      html += '<button class="expand-btn ' + (isExpanded ? 'expanded' : '') + '" data-key="' + r.key + '">&#9654;</button>';
+    }
+    html += '</td>';
+    html += '<td>' + (r.code ? '<span class="puc-code">' + r.code + '</span> ' : '') + r.name + '</td>';
+    html += '<td>' + (r.value != null ? formatCOP(r.value) : '') + '</td>';
+
+    if (prevRows) {
+      const pr = prevRows.find(x => x.key === r.key);
+      if (pr && pr.value != null) {
+        html += '<td>' + formatCOP(pr.value) + '</td>';
+        const variation = pr.value !== 0 ? (r.value - pr.value) / Math.abs(pr.value) : 0;
+        const vClass = variation >= 0 ? 'up' : 'down';
+        html += '<td><span class="var-chip ' + vClass + '">' + (variation >= 0 ? '&#9650;' : '&#9660;') + ' ' + formatPct(variation, 1, true) + '</span></td>';
+      } else {
+        html += '<td></td><td></td>';
+      }
+    }
+
+    tr.innerHTML = html;
+    tbody.appendChild(tr);
+  });
+
+  // Bind expand buttons
+  tbody.querySelectorAll('.expand-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.key;
+      if (expandedRows.has(key)) {
+        expandedRows.delete(key);
+        btn.classList.remove('expanded');
+      } else {
+        expandedRows.add(key);
+        btn.classList.add('expanded');
+      }
+      tbody.querySelectorAll('[data-parent="' + key + '"]').forEach(child => {
+        child.classList.toggle('collapsed');
+      });
+    });
+  });
+}
+
+// =====================================================
+// WATERFALL CHART (Pure SVG)
+// =====================================================
+function renderWaterfall() {
+  const container = document.getElementById('waterfallChart');
+  const { pyg } = getComputed(currentYear);
+
+  const items = [
+    { label: 'Ingresos\nNetos', value: pyg.ingresosNetos, type: 'total' },
+    { label: 'Costo\nVentas', value: -pyg.costoVentas, type: 'decrease' },
+    { label: 'Utilidad\nBruta', value: pyg.utilidadBruta, type: 'subtotal' },
+    { label: 'Gastos\nOperac.', value: -pyg.gastosOp, type: 'decrease' },
+    { label: 'Ing. No\nOperac.', value: pyg.ingresosNoOp, type: 'increase' },
+    { label: 'Gastos\nNo Oper.', value: -pyg.gastosNoOp, type: 'decrease' },
+    { label: 'Impuesto\nRenta', value: -pyg.impuestoRenta, type: 'decrease' },
+    { label: 'Utilidad\nNeta', value: pyg.utilidadNeta, type: 'total' }
+  ];
+
+  const W = 700, H = 340;
+  const padL = 60, padR = 20, padT = 30, padB = 60;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+  const barW = chartW / items.length * 0.55;
+  const gap = chartW / items.length;
+
+  const maxVal = pyg.ingresosNetos;
+  const scale = chartH / (maxVal * 1.1);
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px" xmlns="http://www.w3.org/2000/svg">`;
+  // grid lines
+  for (let i = 0; i <= 5; i++) {
+    const y = padT + (chartH / 5) * i;
+    const val = maxVal * 1.1 * (1 - i / 5);
+    svg += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>`;
+    svg += `<text x="${padL - 8}" y="${y + 4}" fill="#6B7280" font-size="9" font-family="JetBrains Mono" text-anchor="end">${formatCOP(val, true)}</text>`;
+  }
+
+  let runningTotal = 0;
+  items.forEach((item, i) => {
+    const x = padL + gap * i + (gap - barW) / 2;
+    let barTop, barHeight, color;
+
+    if (item.type === 'total' || item.type === 'subtotal') {
+      barHeight = Math.abs(item.value) * scale;
+      barTop = padT + chartH - barHeight;
+      color = item.type === 'total' ? '#3B82F6' : '#60A5FA';
+      runningTotal = item.value;
+    } else {
+      const prevTotal = runningTotal;
+      runningTotal += item.value;
+      if (item.value < 0) {
+        barTop = padT + chartH - prevTotal * scale;
+        barHeight = Math.abs(item.value) * scale;
+        color = '#EF4444';
+      } else {
+        barTop = padT + chartH - runningTotal * scale;
+        barHeight = item.value * scale;
+        color = '#10B981';
+      }
+    }
+
+    // connector line
+    if (i > 0 && item.type !== 'total' && item.type !== 'subtotal') {
+      const prevX = padL + gap * (i - 1) + (gap - barW) / 2 + barW;
+      const lineY = padT + chartH - (runningTotal - item.value) * scale + (item.value < 0 ? 0 : 0);
+      // We draw from previous bar end to current bar start
+    }
+
+    svg += `<rect x="${x}" y="${barTop}" width="${barW}" height="${Math.max(barHeight, 1)}" rx="3" fill="${color}" opacity="0.85">
+      <animate attributeName="height" from="0" to="${barHeight}" dur="0.6s" fill="freeze"/>
+      <animate attributeName="y" from="${padT + chartH}" to="${barTop}" dur="0.6s" fill="freeze"/>
+    </rect>`;
+
+    // Value on top
+    const valY = barTop - 6;
+    svg += `<text x="${x + barW / 2}" y="${valY}" fill="${color}" font-size="9" font-family="JetBrains Mono" text-anchor="middle" font-weight="600">${formatCOP(item.value, true)}</text>`;
+
+    // Label at bottom
+    const lines = item.label.split('\n');
+    lines.forEach((line, li) => {
+      svg += `<text x="${x + barW / 2}" y="${H - padB + 16 + li * 13}" fill="#9CA3AF" font-size="9" font-family="DM Sans" text-anchor="middle">${line}</text>`;
+    });
+  });
+
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+
+// =====================================================
+// DONUT CHART (Pure SVG)
+// =====================================================
+function renderDonut() {
+  const container = document.getElementById('donutChart');
+  const { bal } = getComputed(currentYear);
+
+  const segments = [
+    { label: 'Efectivo', value: bal.efectivo, color: '#3B82F6' },
+    { label: 'Inversiones CP', value: bal.inversionesCP, color: '#60A5FA' },
+    { label: 'CxC Clientes', value: bal.cxcClientes, color: '#818CF8' },
+    { label: 'Inventarios', value: bal.inventarios, color: '#A78BFA' },
+    { label: 'Anticipos', value: bal.anticipos, color: '#C4B5FD' },
+    { label: 'PPE Neto', value: bal.ppeNeto, color: '#10B981' },
+    { label: 'Intangibles', value: bal.intangibles, color: '#34D399' },
+    { label: 'Inversiones LP', value: bal.inversionesLP, color: '#6EE7B7' }
+  ];
+
+  const total = segments.reduce((s, seg) => s + seg.value, 0);
+  const cx = 140, cy = 140, r = 100, inner = 60;
+  const W = 420, H = 300;
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px" xmlns="http://www.w3.org/2000/svg">`;
+
+  let startAngle = -Math.PI / 2;
+  segments.forEach((seg, i) => {
+    const pct = seg.value / total;
+    const angle = pct * 2 * Math.PI;
+    const endAngle = startAngle + angle;
+    const largeArc = angle > Math.PI ? 1 : 0;
+
+    const x1o = cx + r * Math.cos(startAngle);
+    const y1o = cy + r * Math.sin(startAngle);
+    const x2o = cx + r * Math.cos(endAngle);
+    const y2o = cy + r * Math.sin(endAngle);
+    const x1i = cx + inner * Math.cos(endAngle);
+    const y1i = cy + inner * Math.sin(endAngle);
+    const x2i = cx + inner * Math.cos(startAngle);
+    const y2i = cy + inner * Math.sin(startAngle);
+
+    svg += `<path d="M${x1o},${y1o} A${r},${r} 0 ${largeArc} 1 ${x2o},${y2o} L${x1i},${y1i} A${inner},${inner} 0 ${largeArc} 0 ${x2i},${y2i} Z" fill="${seg.color}" opacity="0.85" stroke="#111827" stroke-width="2">
+      <title>${seg.label}: ${formatCOP(seg.value, true)} (${(pct * 100).toFixed(1)}%)</title>
+    </path>`;
+
+    startAngle = endAngle;
+  });
+
+  // Center text
+  svg += `<text x="${cx}" y="${cy - 6}" fill="#F9FAFB" font-size="12" font-family="DM Sans" text-anchor="middle" font-weight="600">Total Activos</text>`;
+  svg += `<text x="${cx}" y="${cy + 14}" fill="#3B82F6" font-size="14" font-family="JetBrains Mono" text-anchor="middle" font-weight="600">${formatCOP(total, true)}</text>`;
+
+  // Legend
+  const legX = 295, legY = 30;
+  segments.forEach((seg, i) => {
+    const y = legY + i * 32;
+    const pct = ((seg.value / total) * 100).toFixed(1);
+    svg += `<rect x="${legX}" y="${y}" width="12" height="12" rx="3" fill="${seg.color}"/>`;
+    svg += `<text x="${legX + 18}" y="${y + 10}" fill="#9CA3AF" font-size="10" font-family="DM Sans">${seg.label}</text>`;
+    svg += `<text x="${legX + 18}" y="${y + 23}" fill="#6B7280" font-size="9" font-family="JetBrains Mono">${formatCOP(seg.value, true)} (${pct.replace('.', ',')}%)</text>`;
+  });
+
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+
+// =====================================================
+// EXCEL EXPORT
+// =====================================================
+function exportExcel() {
+  if (typeof XLSX === 'undefined') {
+    alert('La librería XLSX no se ha cargado. Recarga la página e intenta de nuevo.');
+    return;
+  }
+  const wb = XLSX.utils.book_new();
+
+  // PYG sheet
+  const pygRows = buildPYGRows(currentYear);
+  const pygData = [['Código PUC', 'Cuenta', 'Valor COP ' + currentYear, '% Vertical']];
+  pygRows.forEach(r => {
+    pygData.push([r.code, r.name, r.value, r.pct != null ? +(r.pct * 100).toFixed(2) : '']);
+  });
+  const ws1 = XLSX.utils.aoa_to_sheet(pygData);
+  ws1['!cols'] = [{ wch: 10 }, { wch: 40 }, { wch: 20 }, { wch: 12 }];
+  XLSX.utils.book_append_sheet(wb, ws1, 'PYG ' + currentYear);
+
+  // Balance sheet
+  const balRows = buildBalanceRows(currentYear);
+  const balData = [['Código PUC', 'Cuenta', 'Valor COP ' + currentYear]];
+  balRows.forEach(r => {
+    balData.push([r.code, r.name, r.value]);
+  });
+  const ws2 = XLSX.utils.aoa_to_sheet(balData);
+  ws2['!cols'] = [{ wch: 10 }, { wch: 40 }, { wch: 20 }];
+  XLSX.utils.book_append_sheet(wb, ws2, 'Balance ' + currentYear);
+
+  // KPIs sheet
+  const kpis = computeKPIs(currentYear);
+  const kpiData = [['Indicador', 'Valor', 'Fórmula']];
+  kpis.forEach(k => {
+    let val;
+    if (k.format === 'pct') val = (k.value * 100).toFixed(2) + '%';
+    else if (k.format === 'ratio') val = k.value.toFixed(2);
+    else val = k.value;
+    kpiData.push([k.label, val, k.formula]);
+  });
+  const ws3 = XLSX.utils.aoa_to_sheet(kpiData);
+  ws3['!cols'] = [{ wch: 22 }, { wch: 16 }, { wch: 50 }];
+  XLSX.utils.book_append_sheet(wb, ws3, 'KPIs');
+
+  XLSX.writeFile(wb, 'Dashboard_Financiero_' + currentYear + '.xlsx');
+}
+
+// =====================================================
+// EVENT HANDLERS
+// =====================================================
+// Period selector
+document.querySelectorAll('.period-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentYear = parseInt(btn.dataset.year);
+    renderAll();
+  });
+});
+
+// Comparativo toggle
+document.getElementById('toggleComparativo').addEventListener('change', (e) => {
+  comparativo = e.target.checked;
+  renderAll();
+});
+
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// Expand / Collapse all
+document.getElementById('btnExpandAll').addEventListener('click', () => {
+  // Collect all parent keys
+  const allParents = new Set();
+  document.querySelectorAll('.expand-btn').forEach(btn => allParents.add(btn.dataset.key));
+  allParents.forEach(k => expandedRows.add(k));
+  document.querySelectorAll('.expand-btn').forEach(btn => btn.classList.add('expanded'));
+  document.querySelectorAll('.child-row').forEach(row => row.classList.remove('collapsed'));
+});
+
+document.getElementById('btnCollapseAll').addEventListener('click', () => {
+  expandedRows.clear();
+  document.querySelectorAll('.expand-btn').forEach(btn => btn.classList.remove('expanded'));
+  document.querySelectorAll('.child-row').forEach(row => row.classList.add('collapsed'));
+});
+
+// Export
+document.getElementById('btnExportExcel').addEventListener('click', exportExcel);
+
+// =====================================================
+// RENDER ALL
+// =====================================================
+function renderAll() {
+  renderKPIs();
+  renderPYG();
+  renderBalance();
+  renderWaterfall();
+  renderDonut();
+}
+
+// Initial render
+renderAll();
+
+// =====================================================
+// DATA INTEGRITY VERIFICATION (console)
+// =====================================================
+[2022, 2023, 2024].forEach(year => {
+  const { pyg, bal } = getComputed(year);
+  const balanced = bal.totalActivos === bal.totalPasivoPatrimonio;
+  const pygMatch = pyg.utilidadNeta === bal.utilidadesEjercicio;
+  console.log(`[${year}] Balance cuadra: ${balanced} (Activos=${bal.totalActivos}, P+P=${bal.totalPasivoPatrimonio})`);
+  console.log(`[${year}] PYG↔Balance: ${pygMatch} (Util.Neta=${pyg.utilidadNeta}, Util.Ejercicio=${bal.utilidadesEjercicio})`);
+});
+</script>
+
+</body>
+</html>
