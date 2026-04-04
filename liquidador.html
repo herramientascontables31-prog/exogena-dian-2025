@@ -101,6 +101,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <div class="header-right">100% en tu navegador<br>Tus datos no salen de tu equipo</div>
 </div>
 
+<!-- PRO bar -->
+<div style="display:flex;justify-content:space-between;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:10px 18px;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+  <span style="font-size:.83rem;color:var(--muted)" id="proStatus">PDF gratis — Word y Excel requieren PRO</span>
+  <div id="proActivation" style="display:flex;align-items:center;gap:6px">
+    <input type="text" id="proKeyInput" placeholder="Email PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:160px;font-family:inherit">
+    <button onclick="activarPro()" class="btn btn-green" style="padding:6px 14px;font-size:.8rem">Activar</button>
+  </div>
+  <div id="proBadge"></div>
+</div>
+
 <!-- FORMULARIO ÚNICO -->
 <div id="formulario">
 <div class="card">
@@ -210,8 +220,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <table class="liq-table" id="liqTable"></table>
     <div class="export-row">
       <button class="btn btn-blue" onclick="descargarPDF()">&#128196; PDF</button>
-      <button class="btn btn-purple" onclick="descargarWord()">&#128209; Word editable</button>
-      <button class="btn btn-green" onclick="descargarExcel()">&#128202; Excel</button>
+      <button class="btn btn-purple" onclick="descargarWord()">&#128209; Word editable <span style="font-size:.65rem;background:rgba(255,255,255,.3);padding:1px 6px;border-radius:4px;margin-left:4px">PRO</span></button>
+      <button class="btn btn-green" onclick="descargarExcel()">&#128202; Excel <span style="font-size:.65rem;background:rgba(255,255,255,.3);padding:1px 6px;border-radius:4px;margin-left:4px">PRO</span></button>
     </div>
     <details class="normativa-list"><summary style="cursor:pointer;font-weight:700;color:var(--text)">Normativa aplicada</summary><div id="normaList"></div></details>
     <div class="disclaimer">Este cálculo es orientativo. Los valores exactos pueden variar según las condiciones específicas del contrato. Consúltese con un abogado laboral para casos complejos.</div>
@@ -230,6 +240,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 
 <script>
 var resultado=null;
+
+/* ═══ PRO ═══ */
+var APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
+var proUnlocked=false;
+function getDeviceFingerprint(){var uid=localStorage.getItem('exogenadian_device_id');if(!uid){uid='D-'+Math.random().toString(36).substr(2,9);localStorage.setItem('exogenadian_device_id',uid)}return uid;}
+async function validarPro(valor){try{var fp=getDeviceFingerprint();var isEmail=valor.includes('@');var url=APPS_SCRIPT_URL+'?action='+(isEmail?'validateEmail':'validateKey')+'&'+(isEmail?'email':'key')+'='+encodeURIComponent(valor)+'&device='+encodeURIComponent(fp);var resp=await fetch(url);var data=await resp.json();if(data.valid)return true;}catch(e){}return false;}
+function updateProUI(){var b=document.getElementById('proBadge');if(b)b.innerHTML=proUnlocked?'<span style="background:#059669;color:#fff;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700">PRO activo</span>':'';var s=document.getElementById('proStatus');if(s)s.textContent=proUnlocked?'Todas las descargas desbloqueadas':'PDF gratis — Word y Excel requieren PRO';var a=document.getElementById('proActivation');if(a)a.style.display=proUnlocked?'none':'flex';}
+async function activarPro(){var inp=document.getElementById('proKeyInput');var v=inp.value.trim().toLowerCase();if(!v){alert('Ingresa tu email PRO');return;}var btn=inp.parentElement.querySelector('button');if(btn){btn.textContent='Verificando...';btn.disabled=true;}var valid=await validarPro(v);if(valid){proUnlocked=true;if(v.includes('@'))localStorage.setItem('exogenadian_pro_email',v);else localStorage.setItem('exogenadian_pro_key',v);updateProUI();alert('PRO activado correctamente');}else{alert('No hay suscripción activa para este email.');}if(btn){btn.textContent='Activar';btn.disabled=false;}}
+(function(){var saved=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');if(saved){validarPro(saved).then(function(ok){if(ok){proUnlocked=true;updateProUI();}else{localStorage.removeItem('exogenadian_pro_email');localStorage.removeItem('exogenadian_pro_key');}});}})();
 
 document.querySelectorAll('.money').forEach(function(el){
   el.addEventListener('input',function(){var v=this.value.replace(/\D/g,'');this.value=v?parseInt(v).toLocaleString('es-CO'):'';});
@@ -322,8 +341,8 @@ function renderResultados(r){
 function rw(c,b,d,v){return '<tr><td>'+c+'</td><td>'+b+'</td><td>'+d+'</td><td>'+fCOP(v)+'</td></tr>';}
 function nuevaLiquidacion(){document.getElementById('resultados').style.display='none';document.getElementById('formulario').style.display='block';}
 function descargarPDF(){if(resultado){exportarPDF(resultado);if(typeof exoTrack!=='undefined')exoTrack.generate('liquidador','pdf');}}
-function descargarExcel(){if(resultado){exportarExcel(resultado);if(typeof exoTrack!=='undefined')exoTrack.generate('liquidador','excel');}}
-function descargarWord(){if(resultado){exportarWord(resultado);if(typeof exoTrack!=='undefined')exoTrack.generate('liquidador','word');}}
+function descargarExcel(){if(!proUnlocked){alert('La descarga en Excel es una función PRO.\n\nIngresa tu email PRO o suscríbete en exogenadian.com');return;}if(resultado){exportarExcel(resultado);if(typeof exoTrack!=='undefined')exoTrack.generate('liquidador','excel');}}
+function descargarWord(){if(!proUnlocked){alert('La descarga en Word es una función PRO.\n\nIngresa tu email PRO o suscríbete en exogenadian.com');return;}if(resultado){exportarWord(resultado);if(typeof exoTrack!=='undefined')exoTrack.generate('liquidador','word');}}
 
 document.getElementById('iFechaFin').value=new Date().toISOString().split('T')[0];
 </script>
