@@ -722,17 +722,29 @@ function parseBalancePrueba(rows) {
   });
 
   // Calculate saldo for each account based on nature
+  // Saldo siempre se expresa como POSITIVO para la naturaleza normal de la cuenta:
+  // Activos/Gastos/Costos: positivo = débito. Pasivos/Patrimonio/Ingresos: positivo = crédito.
   leafAccounts.forEach(function(a) {
     var cls = classifyAccount(a.code);
-    if (a.saldoFin !== null) {
+    var esNatDebito = (cls === 'activo' || cls === 'gasto' || cls === 'costo' || cls === 'costoProduccion');
+
+    if (a.saldoFin !== null && a.deb === 0 && a.cre === 0) {
+      // Solo tiene saldo final (sin movimientos separados)
+      // El saldo final en un balance de prueba refleja la naturaleza de la cuenta:
+      // Si es positivo en cuenta de naturaleza crédito → saldo normal
+      // Si es negativo en cuenta de naturaleza crédito → contra-cuenta (ej: devoluciones)
       a.saldo = a.saldoFin;
-    } else {
-      // Calculate from deb/cre based on nature
-      if (cls === 'activo' || cls === 'gasto' || cls === 'costo' || cls === 'costoProduccion') {
+    } else if (a.deb > 0 || a.cre > 0) {
+      // Tiene movimientos: calcular según naturaleza
+      if (esNatDebito) {
         a.saldo = a.deb - a.cre;
       } else {
         a.saldo = a.cre - a.deb;
       }
+    } else if (a.saldoFin !== null) {
+      a.saldo = a.saldoFin;
+    } else {
+      a.saldo = 0;
     }
     a.clase = cls;
     a.prefix2 = a.code.substring(0,2);
@@ -752,85 +764,78 @@ function buildDataFromAccounts(accounts) {
   function s(key) { return sums[key] || 0; }
 
   // PYG structure
-  // Class 4: ingresos. 41xx = ventas bienes, 4175 could be servicios, 42xx = no operacionales
-  var ventasBienes = 0, prestacionServicios = 0, ingresosOtros = 0;
+  // Class 4: ingresos. Saldo positivo = ingreso normal. Saldo negativo = devolución/contra-cuenta.
+  // 41xx = operacionales, 42xx = no operacionales
+  var ventasBienes = 0, prestacionServicios = 0;
   var ingresosNoOp = 0, interesesNoOp = 0, otrosIngNoOp = 0;
+  var devolucionesDescuentos = 0;
+
   accounts.forEach(function(a) {
     if (a.clase !== 'ingreso') return;
     var p2 = a.prefix2;
     var p4 = a.code.substring(0,4);
+
     if (p2 === '42') {
-      // Non-operational income
-      if (p4 === '4210') interesesNoOp += Math.abs(a.saldo);
-      else otrosIngNoOp += Math.abs(a.saldo);
-      ingresosNoOp += Math.abs(a.saldo);
+      // Ingresos no operacionales (siempre positivos)
+      var val = Math.abs(a.saldo);
+      if (p4 === '4210') interesesNoOp += val;
+      else otrosIngNoOp += val;
+      ingresosNoOp += val;
     } else {
-      // Operational income: try to split bienes vs servicios
-      if (p4 === '4175' || p4 === '4170') {
-        prestacionServicios += Math.abs(a.saldo);
+      // Ingresos operacionales (41xx)
+      if (a.saldo < 0) {
+        // Saldo negativo en cuenta de ingreso = devolución / descuento / contra-cuenta
+        devolucionesDescuentos += Math.abs(a.saldo);
       } else {
-        ventasBienes += Math.abs(a.saldo);
+        // Ingreso normal positivo
+        if (p4 === '4175' || p4 === '4170') {
+          prestacionServicios += a.saldo;
+        } else {
+          ventasBienes += a.saldo;
+        }
       }
     }
   });
 
-  // Class 6: costos
+  // Class 6: costos (saldo siempre positivo por naturaleza débito)
   var costoBienes = 0, costoServicios = 0, costoVentasTotal = 0;
   accounts.forEach(function(a) {
     if (a.clase !== 'costo' && a.clase !== 'costoProduccion') return;
+    var val = Math.abs(a.saldo);
     var p4 = a.code.substring(0,4);
     if (p4 === '6175' || p4 === '6170') {
-      costoServicios += Math.abs(a.saldo);
+      costoServicios += val;
     } else {
-      costoBienes += Math.abs(a.saldo);
+      costoBienes += val;
     }
-    costoVentasTotal += Math.abs(a.saldo);
+    costoVentasTotal += val;
   });
 
-  // Class 5: gastos
+  // Class 5: gastos operacionales (51-52) y no operacionales (53), impuesto (54)
   var gastosPersonal = 0, honorarios = 0, arrendamientos = 0, serviciosGasto = 0;
   var depreciaciones = 0, otrosGastosOp = 0;
   var gastosNoOp = 0, interesesGasto = 0, otrosGastosNoOp = 0;
+  var impuestoRenta = 0;
+
   accounts.forEach(function(a) {
     if (a.clase !== 'gasto') return;
+    var val = Math.abs(a.saldo);
     var p2 = a.prefix2;
     var p4 = a.code.substring(0,4);
-    if (p2 === '53') {
-      // Non-operational expenses
-      if (p4 === '5305') interesesGasto += Math.abs(a.saldo);
-      else otrosGastosNoOp += Math.abs(a.saldo);
-      gastosNoOp += Math.abs(a.saldo);
-    } else if (p2 === '54') {
-      // Impuesto de renta - handled separately
+
+    if (p2 === '54') {
+      impuestoRenta += val;
+    } else if (p2 === '53') {
+      if (p4 === '5305') interesesGasto += val;
+      else otrosGastosNoOp += val;
+      gastosNoOp += val;
     } else {
-      // Operational expenses
-      if (p2 === '51') gastosPersonal += Math.abs(a.saldo);
-      else if (p4 === '5210') honorarios += Math.abs(a.saldo);
-      else if (p4 === '5220' || p4 === '5240') arrendamientos += Math.abs(a.saldo);
-      else if (p4 === '5295') serviciosGasto += Math.abs(a.saldo);
-      else if (p4 === '5260') depreciaciones += Math.abs(a.saldo);
-      else otrosGastosOp += Math.abs(a.saldo);
-    }
-  });
-
-  // Impuesto de renta (class 54)
-  var impuestoRenta = 0;
-  accounts.forEach(function(a) {
-    if (a.clase === 'gasto' && a.prefix2 === '54') {
-      impuestoRenta += Math.abs(a.saldo);
-    }
-  });
-
-  // Devoluciones: check for counter-income or debit balances in class 4
-  // For simplicity, treat any class 4 account with debit nature as devoluciones
-  var devolucionesDescuentos = 0;
-  accounts.forEach(function(a) {
-    if (a.clase === 'ingreso' && a.prefix2 !== '42') {
-      // If the saldo is negative (debit nature for income = contra account)
-      if (a.saldo < 0) {
-        devolucionesDescuentos += Math.abs(a.saldo);
-        ventasBienes -= Math.abs(a.saldo); // Remove from bienes since we counted abs
-      }
+      if (p2 === '51') gastosPersonal += val;
+      else if (p4 === '5210') honorarios += val;
+      else if (p4 === '5220' || p4 === '5240') arrendamientos += val;
+      else if (p4 === '5295') serviciosGasto += val;
+      else if (p4 === '5260') depreciaciones += val;
+      else otrosGastosOp += val;
     }
   });
 
@@ -1671,47 +1676,52 @@ function renderDonut() {
 // EXCEL EXPORT
 // =====================================================
 function exportExcel() {
-  if (typeof XLSX === 'undefined') {
-    alert('La libreria XLSX no se ha cargado. Recarga la pagina e intenta de nuevo.');
+  if (typeof XLSX === 'undefined' || !XLSX.utils) {
+    alert('La libreria de Excel no se ha cargado. Recarga la pagina (Ctrl+Shift+R) e intenta de nuevo.');
     return;
   }
-  const wb = XLSX.utils.book_new();
+  try {
+  var wb = XLSX.utils.book_new();
 
   // PYG sheet
-  const pygRows = buildPYGRows(currentYear);
-  const pygData = [['Codigo PUC', 'Cuenta', 'Valor COP ' + currentYear, '% Vertical']];
-  pygRows.forEach(r => {
+  var pygRows = buildPYGRows(currentYear);
+  var pygData = [['Codigo PUC', 'Cuenta', 'Valor COP ' + currentYear, '% Vertical']];
+  pygRows.forEach(function(r) {
     pygData.push([r.code, r.name, r.value, r.pct != null ? +(r.pct * 100).toFixed(2) : '']);
   });
-  const ws1 = XLSX.utils.aoa_to_sheet(pygData);
+  var ws1 = XLSX.utils.aoa_to_sheet(pygData);
   ws1['!cols'] = [{ wch: 10 }, { wch: 40 }, { wch: 20 }, { wch: 12 }];
   XLSX.utils.book_append_sheet(wb, ws1, 'PYG ' + currentYear);
 
   // Balance sheet
-  const balRows = buildBalanceRows(currentYear);
-  const balData = [['Codigo PUC', 'Cuenta', 'Valor COP ' + currentYear]];
-  balRows.forEach(r => {
+  var balRows = buildBalanceRows(currentYear);
+  var balData = [['Codigo PUC', 'Cuenta', 'Valor COP ' + currentYear]];
+  balRows.forEach(function(r) {
     balData.push([r.code, r.name, r.value]);
   });
-  const ws2 = XLSX.utils.aoa_to_sheet(balData);
+  var ws2 = XLSX.utils.aoa_to_sheet(balData);
   ws2['!cols'] = [{ wch: 10 }, { wch: 40 }, { wch: 20 }];
   XLSX.utils.book_append_sheet(wb, ws2, 'Balance ' + currentYear);
 
   // KPIs sheet
-  const kpis = computeKPIs(currentYear);
-  const kpiData = [['Indicador', 'Valor', 'Formula']];
-  kpis.forEach(k => {
-    let val;
+  var kpis = computeKPIs(currentYear);
+  var kpiData = [['Indicador', 'Valor', 'Formula']];
+  kpis.forEach(function(k) {
+    var val;
     if (k.format === 'pct') val = (k.value * 100).toFixed(2) + '%';
     else if (k.format === 'ratio') val = k.value.toFixed(2);
     else val = k.value;
     kpiData.push([k.label, val, k.formula]);
   });
-  const ws3 = XLSX.utils.aoa_to_sheet(kpiData);
+  var ws3 = XLSX.utils.aoa_to_sheet(kpiData);
   ws3['!cols'] = [{ wch: 22 }, { wch: 16 }, { wch: 50 }];
   XLSX.utils.book_append_sheet(wb, ws3, 'KPIs');
 
   XLSX.writeFile(wb, 'Dashboard_Financiero_' + currentYear + '.xlsx');
+  } catch(e) {
+    console.error('Error exportando Excel:', e);
+    alert('Error al exportar: ' + e.message);
+  }
 }
 
 // =====================================================
