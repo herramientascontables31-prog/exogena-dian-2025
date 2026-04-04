@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-S7SM6ST4CC');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Conversor UVT y Semáforo Fiscal Colombia 2026 | ExógenaDIAN</title>
+<meta name="description" content="Convierte UVT a pesos y viceversa. Semáforo fiscal: verifica qué obligaciones tributarias te aplican según tus ingresos. Tabla histórica UVT 2010-2026.">
+<link rel="canonical" href="https://exogenadian.com/uvt.html">
+<meta property="og:title" content="Conversor UVT y Semáforo Fiscal Colombia | ExógenaDIAN">
+<meta property="og:description" content="Convierte UVT a pesos, semáforo fiscal y tabla histórica UVT 2010-2026.">
+<meta property="og:url" content="https://exogenadian.com/uvt.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="ExógenaDIAN">
+<meta property="og:image" content="https://exogenadian.com/og-image.png">
+<meta name="robots" content="index, follow">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0F1E;--card:#111827;--card2:#1F2937;--border:#374151;--text:#F9FAFB;--muted:#9CA3AF;--green:#22C55E;--green2:#166534;--green3:#052e16;--yellow:#EAB308;--yellow2:#854d0e;--red:#EF4444;--red2:#991B1B;--blue:#3B82F6;--mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;--radius:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#064E3B,#166534);padding:28px 32px;border-radius:16px;margin-bottom:24px;color:#fff;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.header h1{font-size:1.4rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.header p{opacity:.8;font-size:.83rem;margin-top:4px}
+.header-right{text-align:right;font-size:.78rem;opacity:.75}
+.badge{display:inline-block;background:rgba(34,197,94,.2);color:var(--green);padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;margin-top:6px}
+/* Grid 3 cols */
+.grid3{display:grid;grid-template-columns:300px 1fr 260px;gap:20px;align-items:start}
+/* Cards */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.card-title{font-size:.95rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;color:var(--green)}
+/* Inputs */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.field input,.field select{width:100%;padding:10px 14px;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--mono);font-size:1rem;transition:.2s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(34,197,94,.15)}
+.field input::placeholder{color:#4B5563}
+.field .hint{font-size:.68rem;color:var(--muted);margin-top:3px}
+.field select{cursor:pointer}
+.year-pills{display:flex;gap:6px;margin-bottom:14px}
+.year-pill{padding:6px 14px;border:1.5px solid var(--border);border-radius:20px;background:transparent;color:var(--muted);font-family:var(--sans);font-size:.82rem;font-weight:600;cursor:pointer;transition:.2s}
+.year-pill:hover{border-color:var(--green);color:var(--green)}
+.year-pill.sel{background:var(--green);color:#fff;border-color:var(--green)}
+.result-box{background:var(--green3);border:1px solid var(--green2);border-radius:10px;padding:14px;text-align:center;margin-top:10px}
+.result-box .val{font-family:var(--mono);font-size:1.4rem;font-weight:700;color:var(--green)}
+.result-box .lbl{font-size:.7rem;color:var(--muted);margin-top:2px}
+/* Semáforo */
+.sem-input{display:flex;gap:10px;margin-bottom:14px}
+.sem-input input{flex:1}
+.sem-input select{width:auto;min-width:140px}
+.sem-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border);font-size:.82rem;cursor:pointer;transition:background .15s;border-radius:6px}
+.sem-row:hover{background:var(--card2)}
+.sem-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.sem-dot.g{background:var(--green)}
+.sem-dot.y{background:var(--yellow)}
+.sem-dot.r{background:var(--red)}
+.sem-name{flex:1;color:var(--text);font-weight:500}
+.sem-vals{text-align:right;font-family:var(--mono);font-size:.75rem;color:var(--muted);line-height:1.3}
+.sem-vals strong{color:var(--text);font-weight:600}
+.sem-tip{display:none;padding:8px 12px;background:var(--card2);border:1px solid var(--border);border-radius:8px;font-size:.75rem;color:var(--muted);margin:-4px 0 4px 22px;line-height:1.5}
+.sem-tip.show{display:block}
+.sem-section{font-size:.7rem;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.5px;padding:10px 12px 4px;margin-top:8px}
+/* Copy btn */
+.btn{padding:10px 20px;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.85rem;font-family:var(--sans);transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:#16A34A}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--muted)}
+.btn-outline:hover{border-color:var(--green);color:var(--green)}
+/* Tabla histórica */
+.hist-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.hist-table th{background:var(--green2);color:#fff;padding:8px 10px;text-align:center;font-size:.7rem;text-transform:uppercase;letter-spacing:.3px;position:sticky;top:0}
+.hist-table td{padding:6px 10px;border-bottom:1px solid var(--border);text-align:center;font-family:var(--mono);font-size:.78rem}
+.hist-table tr:hover td{background:var(--card2)}
+.hist-table .var-pos{color:var(--green)}
+.hist-table .var-neg{color:var(--red)}
+.hist-wrap{max-height:520px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius)}
+/* Footer */
+.footer{margin-top:32px;padding:16px 20px;border-top:1px solid var(--border);text-align:center;font-size:.76rem;color:var(--muted);line-height:1.6}
+.footer a{color:var(--green);text-decoration:none;font-weight:600}
+@media(max-width:900px){
+  .grid3{grid-template-columns:1fr}
+  .container{padding:12px}
+  .header{flex-direction:column;text-align:center;padding:20px}
+  .header-right{text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="nav-container"></div>
+<script src="shared/pro.js"></script>
+<script src="shared/nav.js"></script>
+
+<div class="container">
+
+<div class="header">
+  <div>
+    <h1>&#128176; Conversor UVT + Semáforo Fiscal</h1>
+    <p>Convierte UVT &#8596; COP en tiempo real &middot; Verifica tus obligaciones tributarias</p>
+    <div class="badge">Colombia 2026 &middot; Estatuto Tributario</div>
+  </div>
+  <div class="header-right">100% en tu navegador<br>Tus datos no salen de tu equipo</div>
+</div>
+
+<div class="grid3">
+
+<!-- ═══ COL 1: CONVERSOR ═══ -->
+<div>
+  <div class="card">
+    <div class="card-title">&#128260; Conversor UVT &#8596; COP</div>
+    <div class="year-pills" id="yearPills"></div>
+    <div style="text-align:center;font-family:var(--mono);font-size:.82rem;color:var(--muted);margin-bottom:12px">1 UVT = $<span id="uvtDisplay">52.374</span></div>
+    <div class="field">
+      <label>Valor en UVT</label>
+      <input type="text" id="inUvt" placeholder="Ej: 1.400" inputmode="decimal" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Valor en COP ($)</label>
+      <input type="text" id="inCop" placeholder="Ej: 73.323.600" inputmode="numeric" autocomplete="off">
+    </div>
+    <div class="result-box" id="resultBox" style="display:none">
+      <div class="val" id="resultVal"></div>
+      <div class="lbl" id="resultLbl"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ COL 2: SEMÁFORO ═══ -->
+<div>
+  <div class="card">
+    <div class="card-title">&#128678; Semáforo Fiscal</div>
+    <div class="sem-input">
+      <input type="text" id="inIngreso" placeholder="Ingresos brutos anuales ($)" inputmode="numeric" autocomplete="off">
+    </div>
+    <div id="semList"></div>
+    <div style="margin-top:14px;display:flex;gap:8px">
+      <button class="btn btn-green" onclick="copiarSemaforo()">&#128203; Copiar resumen</button>
+      <button class="btn btn-outline" onclick="document.getElementById('inIngreso').value='';actualizarSemaforo()">&#128260; Limpiar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ COL 3: TABLA HISTÓRICA ═══ -->
+<div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="card-title" style="padding:16px 16px 10px">&#128200; Tabla Histórica UVT</div>
+    <div class="hist-wrap">
+      <table class="hist-table" id="histTable">
+        <thead><tr><th>Año</th><th>UVT ($)</th><th>Var %</th></tr></thead>
+        <tbody id="histBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- grid3 -->
+
+<div class="footer">
+  <a href="index.html">ExógenaDIAN</a> &middot;
+  <a href="sanciones-dian.html">Sanciones DIAN</a> &middot;
+  <a href="intereses.html">Intereses de Mora</a> &middot;
+  <a href="sanciones.html">Sanciones Exógena</a><br>
+  Herramienta orientativa &mdash; El contador debe validar. 100% procesado en tu navegador.
+</div>
+
+</div><!-- container -->
+
+<script>
+/* ═══ DATOS ═══ */
+var UVT_HIST = [
+  [2026,52374],[2025,49799],[2024,47065],[2023,42412],[2022,38004],
+  [2021,36308],[2020,35607],[2019,34270],[2018,33156],[2017,31859],
+  [2016,29753],[2015,28279],[2014,27485],[2013,26841],[2012,26049],
+  [2011,25132],[2010,24555]
+];
+var anioSel = 2026;
+function uvtVal(){ return UVT_HIST.find(function(r){return r[0]===anioSel})[1]; }
+
+/* ═══ UMBRALES SEMÁFORO ═══ */
+var UMBRALES = [
+  {sec:'Personas Naturales'},
+  {nombre:'Declarar renta (ingresos)',uvt:1400,art:'Art. 592 ET, numeral 1'},
+  {nombre:'Declarar renta (patrimonio)',uvt:4500,art:'Art. 592 ET — patrimonio bruto último día del año gravable',tipo:'patrimonio'},
+  {nombre:'Declarar renta (consumos TC)',uvt:1400,art:'Art. 594-3 ET — consumos con tarjeta de crédito'},
+  {nombre:'Declarar renta (consignaciones)',uvt:1400,art:'Art. 594-3 ET — consignaciones, depósitos o inversiones financieras'},
+  {nombre:'Responsable de IVA',uvt:3500,art:'Art. 437 ET, Par. 3 — si supera en el año anterior'},
+  {nombre:'Retención salarios (base mensual)',uvt:95,art:'Art. 383 ET — base gravable mensual',tipo:'mensual'},
+  {nombre:'Exención GMF (retiros/mes)',uvt:350,art:'Art. 879 ET, numeral 1 — exención mensual cuenta de ahorros',tipo:'mensual'},
+  {nombre:'Agente retenedor PN comerciante',uvt:30000,art:'Art. 368-2 ET — ingresos o patrimonio bruto > 30.000 UVT'},
+  {sec:'Cuantías mínimas retención'},
+  {nombre:'Honorarios / servicios',uvt:4,art:'Art. 392 ET — cuantía mínima para retención por honorarios'},
+  {nombre:'Compras generales',uvt:27,art:'Art. 401 ET — cuantía mínima para retención en compras'},
+  {nombre:'Arrendamientos',uvt:27,art:'Decreto 1625/2016 Art. 1.2.4.9 — retención arrendamientos'},
+  {nombre:'Sanción mínima DIAN',uvt:10,art:'Art. 639 ET — toda sanción, incluso reducida, mínimo 10 UVT'},
+  {sec:'Límites deducciones'},
+  {nombre:'Pensión voluntaria / AFC',uvt:3800,art:'Art. 126-1 ET — 30% del ingreso, máx. 3.800 UVT/año'},
+  {nombre:'Dependientes (retención/mes)',uvt:32,art:'Art. 387 ET — deducción por dependientes, máx. 32 UVT/mes',tipo:'mensual'},
+  {nombre:'Medicina prepagada (/mes)',uvt:16,art:'Art. 387 ET — deducción medicina prepagada, máx. 16 UVT/mes',tipo:'mensual'},
+  {nombre:'Intereses vivienda (/mes)',uvt:100,art:'Art. 387 ET — intereses crédito vivienda, máx. 100 UVT/mes',tipo:'mensual'},
+  {sec:'Otros'},
+  {nombre:'Facturación electrónica',uvt:0,art:'Resolución DIAN 000165/2023 — obligatoria para todos los responsables de IVA'},
+  {nombre:'Salario integral mínimo',uvt:null,fijo:18505500,art:'Art. 132 CST — 13 SMLMV 2026 ($1.423.500 × 13)'}
+];
+
+/* ═══ FORMATO ═══ */
+function fN(n){return Math.round(n).toLocaleString('es-CO')}
+function fCOP(n){return '$ '+fN(n)}
+function parse(s){return parseFloat(String(s).replace(/[^\d.,]/g,'').replace(/\./g,'').replace(',','.'))||0}
+function fmtInput(el){
+  var v=el.value.replace(/[^\d]/g,'');
+  if(v)el.value=parseInt(v).toLocaleString('es-CO');
+}
+
+/* ═══ YEAR PILLS ═══ */
+function renderPills(){
+  var h='';
+  [2026,2025,2024,2023,2022].forEach(function(y){
+    h+='<button class="year-pill'+(y===anioSel?' sel':'')+'" onclick="setYear('+y+')">'+y+'</button>';
+  });
+  document.getElementById('yearPills').innerHTML=h;
+  document.getElementById('uvtDisplay').textContent=fN(uvtVal());
+}
+function setYear(y){
+  anioSel=y;
+  renderPills();
+  convertFromUvt();
+  actualizarSemaforo();
+}
+
+/* ═══ CONVERSOR ═══ */
+var lastEdit='uvt';
+document.getElementById('inUvt').addEventListener('input',function(){
+  lastEdit='uvt';
+  var raw=this.value.replace(/[^\d.,]/g,'').replace(/\./g,'').replace(',','.');
+  convertFromUvt(parseFloat(raw)||0);
+});
+document.getElementById('inCop').addEventListener('input',function(){
+  lastEdit='cop';
+  fmtInput(this);
+  convertFromCop(parse(this.value));
+});
+
+function convertFromUvt(v){
+  if(v===undefined){
+    var raw=document.getElementById('inUvt').value.replace(/[^\d.,]/g,'').replace(/\./g,'').replace(',','.');
+    v=parseFloat(raw)||0;
+  }
+  if(v>0){
+    var cop=v*uvtVal();
+    document.getElementById('inCop').value=fN(cop);
+    showResult(fCOP(cop),v+' UVT = '+fCOP(cop));
+  }else{
+    document.getElementById('inCop').value='';
+    hideResult();
+  }
+}
+function convertFromCop(v){
+  if(v>0){
+    var uvts=v/uvtVal();
+    document.getElementById('inUvt').value=uvts%1===0?uvts:uvts.toFixed(2);
+    showResult(uvts.toFixed(2)+' UVT','$'+fN(v)+' = '+uvts.toFixed(2)+' UVT');
+  }else{
+    document.getElementById('inUvt').value='';
+    hideResult();
+  }
+}
+function showResult(val,lbl){
+  document.getElementById('resultBox').style.display='block';
+  document.getElementById('resultVal').textContent=val;
+  document.getElementById('resultLbl').textContent=lbl;
+}
+function hideResult(){document.getElementById('resultBox').style.display='none'}
+
+/* ═══ SEMÁFORO ═══ */
+document.getElementById('inIngreso').addEventListener('input',function(){fmtInput(this);actualizarSemaforo()});
+
+function actualizarSemaforo(){
+  var ing=parse(document.getElementById('inIngreso').value);
+  var u=uvtVal();
+  var h='';
+  UMBRALES.forEach(function(t,i){
+    if(t.sec){h+='<div class="sem-section">'+t.sec+'</div>';return;}
+    var copVal=t.fijo?t.fijo:(t.uvt*u);
+    var uvtLabel=t.uvt!==null&&t.uvt!==undefined?fN(t.uvt)+' UVT':'—';
+    var copLabel=fCOP(copVal);
+    var color='g',icon='&#x1F7E2;';
+    if(ing>0&&copVal>0){
+      var ratio=ing/copVal;
+      if(ratio>=1){color='r';icon='&#x1F534;';}
+      else if(ratio>=0.9){color='y';icon='&#x1F7E1;';}
+    }
+    if(t.uvt===0){color=ing>0?'r':'g';icon=ing>0?'&#x1F534;':'&#x1F7E2;';}
+    h+='<div class="sem-row" onclick="toggleTip('+i+')">';
+    h+='<div class="sem-dot '+color+'"></div>';
+    h+='<div class="sem-name">'+t.nombre+'</div>';
+    h+='<div class="sem-vals"><strong>'+uvtLabel+'</strong><br>'+copLabel+'</div>';
+    h+='</div>';
+    h+='<div class="sem-tip" id="tip'+i+'">'+icon+' '+(t.art||'')+(t.tipo==='mensual'?' (umbral mensual)':'')+'</div>';
+  });
+  document.getElementById('semList').innerHTML=h;
+}
+
+function toggleTip(i){
+  var el=document.getElementById('tip'+i);
+  if(el)el.classList.toggle('show');
+}
+
+/* ═══ COPIAR SEMÁFORO ═══ */
+function copiarSemaforo(){
+  var ing=parse(document.getElementById('inIngreso').value);
+  var u=uvtVal();
+  var txt='*Semáforo fiscal '+anioSel+'* — Ingresos: '+fCOP(ing)+'\n';
+  UMBRALES.forEach(function(t){
+    if(t.sec||!t.nombre)return;
+    var copVal=t.fijo?t.fijo:(t.uvt*u);
+    if(copVal<=0)return;
+    var ratio=ing>0?ing/copVal:0;
+    if(ratio>=1)txt+='\u{1F6A8} Supera: '+t.nombre+' ('+fCOP(copVal)+')\n';
+    else if(ratio>=0.9)txt+='\u26A0\uFE0F Cerca: '+t.nombre+' (faltan '+fCOP(copVal-ing)+')\n';
+    else txt+='\u2705 No supera: '+t.nombre+'\n';
+  });
+  txt+='\nCalculado en exogenadian.com/uvt.html';
+  navigator.clipboard.writeText(txt).then(function(){
+    var btn=event.target.closest('.btn');
+    var orig=btn.innerHTML;
+    btn.innerHTML='\u2705 Copiado';
+    setTimeout(function(){btn.innerHTML=orig},2000);
+  });
+}
+
+/* ═══ TABLA HISTÓRICA ═══ */
+function renderHist(){
+  var h='';
+  UVT_HIST.forEach(function(r,i){
+    var varPct='—';
+    var cls='';
+    if(i<UVT_HIST.length-1){
+      var prev=UVT_HIST[i+1][1];
+      var pct=((r[1]-prev)/prev*100).toFixed(1);
+      varPct='+'+pct+'%';
+      cls='var-pos';
+    }
+    h+='<tr><td>'+r[0]+'</td><td>$'+fN(r[1])+'</td><td class="'+cls+'">'+varPct+'</td></tr>';
+  });
+  document.getElementById('histBody').innerHTML=h;
+}
+
+/* ═══ INIT ═══ */
+renderPills();
+actualizarSemaforo();
+renderHist();
+</script>
+</body>
+</html>
