@@ -39,6 +39,9 @@ gtag('config', 'G-S7SM6ST4CC');
   {"@type":"Question","name":"¿Qué son las partidas conciliatorias?","acceptedAnswer":{"@type":"Answer","text":"Son las diferencias entre el saldo del extracto bancario y el libro auxiliar contable. Pueden ser notas débito/crédito no registradas, cheques girados no cobrados, consignaciones en tránsito u otros conceptos que generan diferencias temporales."}}
 ]}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Conciliación Bancaria","item":"https://exogenadian.com/conciliacion.html"}]}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
@@ -104,6 +107,7 @@ gtag('config', 'G-S7SM6ST4CC');
 <body>
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 <div class="container">
 <div class="page-header"><div class="page-badge">Conciliación Bancaria Automática</div><h1>Concilia extracto vs libro auxiliar</h1><p>Sube ambos archivos en Excel o CSV. La herramienta detecta automáticamente la estructura y te permite verificar antes de procesar.</p></div>
@@ -171,7 +175,7 @@ let resultados = null;
 
 function readFile(file, k) {
   var MAX_FILE_SIZE=20*1024*1024;
-  if(file.size>MAX_FILE_SIZE){alert('El archivo excede el límite de 20 MB.');return}
+  if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el límite de 20 MB.','warning');return}
   const reader = new FileReader();
   reader.onload = ev => {
     try {
@@ -183,7 +187,7 @@ function readFile(file, k) {
         const n = raw.filter(r => r.some(c => c !== '' && c != null)).length;
         if (n > bestN) { best = {sn, raw, disp}; bestN = n; }
       }
-      if (!best || bestN < 2) { alert('El archivo parece vacío o no tiene datos suficientes.'); return; }
+      if (!best || bestN < 2) { exoToast('El archivo parece vacío o no tiene datos suficientes.','warning'); return; }
       const rawClean = [], dispClean = [];
       for (let i = 0; i < best.raw.length; i++) {
         if (best.raw[i].some(c => c !== '' && c != null)) {
@@ -202,7 +206,7 @@ function readFile(file, k) {
       document.getElementById('dz'+k).classList.add('loaded');
       checkReady();
     } catch(err) {
-      alert('Error al leer el archivo: ' + err.message);
+      exoToast('Error al leer el archivo: ' + err.message,'error');
     }
   };
   reader.readAsArrayBuffer(file);
@@ -576,8 +580,8 @@ function ejecutar() {
   }
   const ext = buildRecords('E', finalYearE);
   const aux = buildRecords('A', finalYearA);
-  if (ext.length === 0) { alert('No se encontraron movimientos en el extracto.'); return; }
-  if (aux.length === 0) { alert('No se encontraron movimientos en el auxiliar.'); return; }
+  if (ext.length === 0) { exoToast('No se encontraron movimientos en el extracto.','warning'); return; }
+  if (aux.length === 0) { exoToast('No se encontraron movimientos en el auxiliar.','warning'); return; }
   const matched = [];
   const uE = new Set(), uA = new Set();
   doPass(ext, aux, uE, uA, matched, tol, 0, true, 'alta', 'Monto, fecha y tipo exactos');
@@ -639,7 +643,7 @@ function ejecutar() {
     }
     diag += '\nE map=' + JSON.stringify(F.E.map) + '\nA map=' + JSON.stringify(F.A.map);
     diag += '\nE numFmt=' + F.E.numFmt + ' A numFmt=' + F.A.numFmt;
-    alert(diag);
+    exoToast(diag,'info');
   }
   const soloE = ext.filter((_,i) => !uE.has(i));
   const soloA = aux.filter((_,i) => !uA.has(i));
@@ -1223,5 +1227,14 @@ function descargarEjemploConciliacion(){
   XLSX.writeFile(wb,'Ejemplo_Conciliacion_ExogenaDIAN.xlsx');
 }
 </script>
+<div id="main"></div>
+<section style="max-width:1200px;margin:32px auto 0;padding:0 20px 40px">
+  <h3 style="font-size:1rem;font-weight:700;color:#374151;margin-bottom:12px">Herramientas relacionadas</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="dashboard.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Dashboard</a>
+    <a href="estadosfinancieros.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Estados Financieros</a>
+    <a href="iva300.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">IVA 300</a>
+  </div>
+</section>
 </body>
 </html>

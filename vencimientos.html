@@ -40,6 +40,9 @@
 {"@type":"Question","name":"¿Cuándo se presenta la retención en la fuente 2026?","acceptedAnswer":{"@type":"Answer","text":"La retención en la fuente se declara mensualmente, con vencimientos entre el 10 y el 26 del mes siguiente al período declarado, según el último dígito del NIT."}}
 ]}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Calendario Tributario","item":"https://exogenadian.com/vencimientos.html"}]}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -251,6 +254,7 @@ body{font-family:'Outfit',sans-serif;background:var(--f50);color:var(--f900);min
 
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 
 <div class="container">
@@ -1006,5 +1010,15 @@ function downloadExcel(){
   });
 }
 </script>
+<div id="main"></div>
+<section style="max-width:1200px;margin:32px auto 0;padding:0 20px 40px">
+  <h3 style="font-size:1rem;font-weight:700;color:#374151;margin-bottom:12px">Herramientas relacionadas</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="exogena.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Exógena</a>
+    <a href="iva300.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">IVA 300</a>
+    <a href="renta110.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Renta F110</a>
+    <a href="sanciones-dian.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Sanciones DIAN</a>
+  </div>
+</section>
 </body>
 </html>

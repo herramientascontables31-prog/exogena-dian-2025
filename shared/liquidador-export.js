@@ -7,9 +7,9 @@ var _tiposTxt={indefinido:'Término indefinido',fijo:'Término fijo',obra:'Obra 
 function exportarPDF(r){
   try{
     var J=(window.jspdf&&window.jspdf.jsPDF)||window.jsPDF;
-    if(!J){alert('Error: jsPDF no cargó. Recarga la página.');return;}
+    if(!J){exoToast('Error: jsPDF no cargó. Recarga la página.','error');return;}
     var doc=new J('p','mm','letter');
-  }catch(e){alert('Error PDF: '+e.message);return;}
+  }catch(e){exoToast('Error PDF: '+e.message,'error');return;}
   var W=216,M=18,cw=W-2*M,y=18;
 
   doc.setFillColor(27,58,92);doc.rect(0,0,W,40,'F');
@@ -72,7 +72,7 @@ function exportarPDF(r){
   doc.setFontSize(6.5);doc.setTextColor(160);
   doc.text('Arts. 249, 306, 186-189, 64 CST | Ley 2466/2025 | Valores vigentes '+r.anioLiq+' | Documento informativo',M,270);
 
-  try{doc.save('Liquidacion_'+(r.empleado||'trabajador').replace(/\s+/g,'_')+'.pdf');}catch(e){alert('Error guardando PDF: '+e.message);}
+  try{doc.save('Liquidacion_'+(r.empleado||'trabajador').replace(/\s+/g,'_')+'.pdf');}catch(e){exoToast('Error guardando PDF: '+e.message,'error');}
 }
 
 function _pdfSection(doc,M,cw,y,title){
@@ -155,13 +155,13 @@ function exportarExcel(r){
       var a=document.createElement('a');a.href=URL.createObjectURL(b);
       a.download='Liquidacion_'+(r.empleado||'trabajador').replace(/\s+/g,'_')+'.xlsx';a.click();
     });
-  }catch(e){alert('Error Excel: '+e.message);}
+  }catch(e){exoToast('Error Excel: '+e.message,'error');}
 }
 
 /* ═══ Word editable con docx.js ═══ */
 function exportarWord(r){
   try{
-    var D=window.docx;if(!D){alert('Librería Word no cargó. Recarga la página.');return;}
+    var D=window.docx;if(!D){exoToast('Librería Word no cargó. Recarga la página.','error');return;}
     var causaTxt=_causasTxt[r.causa]||r.causa;
     var tipoTxt=_tiposTxt[r.tipoContrato]||r.tipoContrato;
 
@@ -234,7 +234,7 @@ function exportarWord(r){
       var a=document.createElement('a');a.href=URL.createObjectURL(blob);
       a.download='Liquidacion_'+(r.empleado||'trabajador').replace(/\s+/g,'_')+'.docx';a.click();
     });
-  }catch(e){alert('Error Word: '+e.message);}
+  }catch(e){exoToast('Error Word: '+e.message,'error');}
 }
 
 function _wp(text){return new docx.Paragraph({children:[new docx.TextRun({text:text,size:20})],spacing:{after:60}});}

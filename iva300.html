@@ -39,6 +39,9 @@ gtag('config', 'G-S7SM6ST4CC');
   {"@type":"Question","name":"¿La herramienta calcula el prorrateo de IVA automáticamente?","acceptedAnswer":{"@type":"Answer","text":"Sí, si tu empresa tiene ingresos gravados y excluidos, la herramienta calcula automáticamente el prorrateo del IVA descontable según la proporción establecida por la DIAN."}}
 ]}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Formulario 300 IVA","item":"https://exogenadian.com/iva300.html"}]}
+</script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -177,6 +180,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <body>
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 <div class="container">
   <div class="header"><div>
@@ -701,7 +705,7 @@ function updateProUI(){
 async function _activar(inputId){
   const inp=document.getElementById(inputId);
   const val=inp?.value?.trim()?.toLowerCase();
-  if(!val){alert('Ingresa tu email PRO');return}
+  if(!val){exoToast('Ingresa tu email PRO','warning');return}
   const btn=inp.closest('div')?.querySelector('button');
   const btnText=btn?btn.textContent:'';
   if(btn){btn.textContent='Verificando...';btn.disabled=true}
@@ -716,9 +720,9 @@ async function _activar(inputId){
       if(val.includes('@')){localStorage.setItem('exogenadian_pro_email',val)}
       else{localStorage.setItem('exogenadian_pro_key',val)}
       updateProUI();
-      alert('PRO activado correctamente');
+      exoToast('PRO activado correctamente','success');
     }else{
-      alert('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com');
+      exoToast('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com','warning');
     }
   }finally{
     if(inp) inp.disabled=false;
@@ -757,7 +761,7 @@ dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if
 
 function loadFile(file){
   var MAX_FILE_SIZE=20*1024*1024;
-  if(file.size>MAX_FILE_SIZE){alert('El archivo excede el límite de 20 MB.');return}
+  if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el límite de 20 MB.','warning');return}
   document.getElementById('fileName').textContent='✓ '+file.name;
   const reader=new FileReader();
   reader.onload=function(e){
@@ -997,8 +1001,8 @@ function confirmColumns(){
     if((f.key==='deb'||f.key==='cre')&&hasSaldoFin)return false;
     return colMap[f.key]<0;
   });
-  if(missing.length){alert('Faltan columnas obligatorias:\n'+missing.map(f=>'• '+f.label).join('\n')+
-    (colMap.deb<0&&colMap.cre<0&&!hasSaldoFin?'\n\nTip: Si no tienes Débitos/Créditos, asigna la columna "Saldo Final".':''));return}
+  if(missing.length){exoToast('Faltan columnas obligatorias:\n'+missing.map(f=>'• '+f.label).join('\n')+
+    (colMap.deb<0&&colMap.cre<0&&!hasSaldoFin?'\n\nTip: Si no tienes Débitos/Créditos, asigna la columna "Saldo Final".':''),'warning');return}
   processData();
   if(parsedAccounts.length>0){
     goStep(3);
@@ -1115,7 +1119,7 @@ function showPreview(){
 }
 
 /* ═══ STEP 3: MAPPING ═══ */
-function goToStep3(){if(!parsedAccounts.length){alert('No hay movimientos.');return}goStep(3);buildMappingTable()}
+function goToStep3(){if(!parsedAccounts.length){exoToast('No hay movimientos.','warning');return}goStep(3);buildMappingTable()}
 
 function autoMapIVA(code,name){
   const c=String(code),n=norm(name);
@@ -1468,8 +1472,8 @@ function updateMapIVA(idx,val){
 /* ═══ STEP 4: FORM 300 ═══ */
 function goStep4(){
   goStep(4);
-  try{calc300()}catch(e){console.error('calc300 error:',e);alert('Error en cálculo: '+e.message)}
-  try{render300()}catch(e){console.error('render300 error:',e);alert('Error en render: '+e.message)}
+  try{calc300()}catch(e){console.error('calc300 error:',e);exoToast('Error en cálculo: '+e.message,'error')}
+  try{render300()}catch(e){console.error('render300 error:',e);exoToast('Error en render: '+e.message,'error')}
   try{renderDetail()}catch(e){console.error('renderDetail error:',e)}
   try{renderConciliacion()}catch(e){console.error('renderConciliacion error:',e)}
   try{renderBalanceSidebar()}catch(e){console.error('sidebar error:',e)}
@@ -1851,7 +1855,7 @@ function exportPdf300(){
   }
 
   const pw=window.open('','_blank');
-  if(!pw||pw.closed){alert('El navegador bloqueó la ventana emergente. Permite las ventanas emergentes para este sitio e intenta de nuevo.');return}
+  if(!pw||pw.closed){exoToast('El navegador bloqueó la ventana emergente. Permite las ventanas emergentes para este sitio e intenta de nuevo.','warning');return}
   pw.document.write(`<!DOCTYPE html><html><head><title>Borrador F300 — ${emp}</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -2407,19 +2411,19 @@ function setModo(modo){
 
 async function iniciarProceso(){
   if((modoActual==='dian'||modoActual==='comparar')&&!proUnlocked){
-    alert('Activa PRO para usar el listado DIAN. Paga con el botón de arriba.');
+    exoToast('Activa PRO para usar el listado DIAN. Paga con el botón de arriba.','info');
     return;
   }
   if((modoActual==='dian'||modoActual==='comparar')&&proUnlocked){
     const valid=await revalidarPro();
-    if(!valid){proUnlocked=false;updateProUI();alert('Tu clave PRO expiró o fue desactivada. Verifica tu suscripción.');return}
+    if(!valid){proUnlocked=false;updateProUI();exoToast('Tu clave PRO expiró o fue desactivada. Verifica tu suscripción.','warning');return}
   }
   if(modoActual==='balance'||modoActual==='comparar'){
-    if(!rawData.length){alert('Carga un balance de prueba primero.');return}
+    if(!rawData.length){exoToast('Carga un balance de prueba primero.','warning');return}
     goStep(2); // va a columnas
   }
   if(modoActual==='dian'){
-    if(!dianRawData){alert('Carga el listado DIAN primero.');return}
+    if(!dianRawData){exoToast('Carga el listado DIAN primero.','warning');return}
     runDianGenerate(); // genera directo desde DIAN
   }
 }
@@ -2457,7 +2461,7 @@ function runDianGenerate(){
   mappings=[];
   // Ir directo al paso 4
   goStep(4);
-  try{render300()}catch(e){console.error(e);alert('Error: '+e.message)}
+  try{render300()}catch(e){console.error(e);exoToast('Error: '+e.message,'error')}
   try{renderConciliacion()}catch(e){}
   try{renderBalanceSidebar()}catch(e){}
 }
@@ -2733,7 +2737,7 @@ function runDianAnalysis(){
 }
 
 async function exportDianXls(){
-  alert('Descarga del análisis DIAN en construcción.');
+  exoToast('Descarga del análisis DIAN en construcción.','info');
 }
 
 function descargarEjemplo300(){
@@ -2763,7 +2767,7 @@ async function btnLoading(btn,fn){
   const orig=btn.innerHTML;
   btn.disabled=true;btn.style.opacity='.6';
   btn.innerHTML='Generando...';
-  try{await fn()}catch(e){alert('Error: '+e.message);console.error(e)}
+  try{await fn()}catch(e){exoToast('Error: '+e.message,'error');console.error(e)}
   finally{btn.disabled=false;btn.style.opacity='';btn.innerHTML=orig}
 }
 </script>
@@ -2771,5 +2775,15 @@ async function btnLoading(btn,fn){
   <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExógenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>
   🔒 Información tratada con total confidencialidad · 100% procesado en tu navegador
 </div>
+<div id="main"></div>
+<section style="max-width:1200px;margin:32px auto 0;padding:0 20px 40px">
+  <h3 style="font-size:1rem;font-weight:700;color:#374151;margin-bottom:12px">Herramientas relacionadas</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="retencion350.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Retención 350</a>
+    <a href="exogena.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Exógena</a>
+    <a href="vencimientos.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Vencimientos</a>
+    <a href="sanciones-dian.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Sanciones DIAN</a>
+  </div>
+</section>
 </body>
 </html>

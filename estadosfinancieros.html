@@ -39,6 +39,9 @@ gtag('config', 'G-S7SM6ST4CC');
   {"@type":"Question","name":"¿Las revelaciones y notas se generan automáticamente?","acceptedAnswer":{"@type":"Answer","text":"Sí, la herramienta analiza tu balance de prueba y genera automáticamente las revelaciones relevantes para cada partida contable, incluyendo políticas de reconocimiento, medición y presentación bajo NIIF."}}
 ]}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Estados Financieros NIIF","item":"https://exogenadian.com/estadosfinancieros.html"}]}
+</script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -208,6 +211,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <body>
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 <div class="container">
   <div class="header"><div>
@@ -515,7 +519,7 @@ function updateProUI(){
 async function _activar(inputId){
   const inp=document.getElementById(inputId);
   const val=inp?.value?.trim()?.toLowerCase();
-  if(!val){alert('Ingresa tu email PRO');return}
+  if(!val){exoToast('Ingresa tu email PRO','warning');return}
   const btn=inp.closest('div')?.querySelector('button');
   const btnText=btn?btn.textContent:'';
   if(btn){btn.textContent='Verificando...';btn.disabled=true}
@@ -530,9 +534,9 @@ async function _activar(inputId){
       if(val.includes('@')){localStorage.setItem('exogenadian_pro_email',val)}
       else{localStorage.setItem('exogenadian_pro_key',val)}
       updateProUI();
-      alert('PRO activado correctamente');
+      exoToast('PRO activado correctamente','success');
     }else{
-      alert('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com');
+      exoToast('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com','warning');
     }
   }finally{
     if(inp) inp.disabled=false;
@@ -593,7 +597,7 @@ dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if
 
 function loadFile(file){
   var MAX_FILE_SIZE=20*1024*1024;
-  if(file.size>MAX_FILE_SIZE){alert('El archivo excede el límite de 20 MB.');return}
+  if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el límite de 20 MB.','warning');return}
   document.getElementById('fileName').textContent='✓ '+file.name;
   const reader=new FileReader();
   reader.onload=function(e){
@@ -621,7 +625,7 @@ function extractMeta(){
 }
 
 function iniciarProceso(){
-  if(!rawData.length){alert('Primero carga un archivo de balance de prueba.');return}
+  if(!rawData.length){exoToast('Primero carga un archivo de balance de prueba.','warning');return}
   goStep(2);
   buildColumnMapper();
 }
@@ -771,7 +775,7 @@ function onColChange(key,val){
 /* ═══ CONFIRM COLUMNS ═══ */
 function confirmColumns(){
   const missing=COL_FIELDS.filter(f=>f.required&&colMap[f.key]<0);
-  if(missing.length){alert('Faltan columnas obligatorias:\n'+missing.map(f=>'• '+f.label).join('\n'));return}
+  if(missing.length){exoToast('Faltan columnas obligatorias:\n'+missing.map(f=>'• '+f.label).join('\n'),'warning');return}
   processData();
   if(classifiedAccounts.length>0){goStep(3);buildClassificationTable()}
 }
@@ -2035,9 +2039,9 @@ ${firmaBlock}
 }
 
 async function exportRevelacionesWordPro(){
-  if(!proUnlocked){alert('La versión con Notas detalladas es una función PRO.\\n\\nDesbloquea PRO para descargar las Revelaciones completas con notas por cuenta.');return}
+  if(!proUnlocked){exoToast('La versión con Notas detalladas es una función PRO. Desbloquea PRO para descargar las Revelaciones completas con notas por cuenta.','info');return}
   const valid=await revalidarPro();
-  if(!valid){proUnlocked=false;updateProUI();alert('Tu clave PRO expiró o fue desactivada. Verifica tu suscripción.');return}
+  if(!valid){proUnlocked=false;updateProUI();exoToast('Tu clave PRO expiró o fue desactivada. Verifica tu suscripción.','warning');return}
 
   const year=document.getElementById('cfgYear').value;
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
@@ -2823,7 +2827,7 @@ function buildNotas(){
 /* ═══ NOTAS PDF ═══ */
 function exportNotasPdf(){
   const content=document.getElementById('notasContent');
-  if(!content||!content.innerHTML.trim()){alert('Primero genera los estados financieros para ver las notas.');return}
+  if(!content||!content.innerHTML.trim()){exoToast('Primero genera los estados financieros para ver las notas.','warning');return}
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
   const w=window.open('','_blank');
   w.document.write(`<!DOCTYPE html><html><head><title>Notas EEFF - ${empresa}</title>
@@ -2845,7 +2849,7 @@ function exportNotasPdf(){
 /* ═══ NOTAS WORD (.doc) ═══ */
 function exportNotasWord(){
   const content=document.getElementById('notasContent');
-  if(!content||!content.innerHTML.trim()){alert('Primero genera los estados financieros para ver las notas.');return}
+  if(!content||!content.innerHTML.trim()){exoToast('Primero genera los estados financieros para ver las notas.','warning');return}
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
   const year=document.getElementById('cfgYear').value;
 
@@ -2915,7 +2919,7 @@ async function btnLoading(btn,fn){
   const orig=btn.innerHTML;
   btn.disabled=true;btn.style.opacity='.6';
   btn.innerHTML='Generando...';
-  try{await fn()}catch(e){alert('Error: '+e.message);console.error(e)}
+  try{await fn()}catch(e){exoToast('Error: '+e.message,'error');console.error(e)}
   finally{btn.disabled=false;btn.style.opacity='';btn.innerHTML=orig}
 }
 </script>
@@ -2923,5 +2927,14 @@ async function btnLoading(btn,fn){
   <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExógenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>
   🔒 Información tratada con total confidencialidad · 100% procesado en tu navegador
 </div>
+<div id="main"></div>
+<section style="max-width:1200px;margin:32px auto 0;padding:0 20px 40px">
+  <h3 style="font-size:1rem;font-weight:700;color:#374151;margin-bottom:12px">Herramientas relacionadas</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="renta110.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Renta F110</a>
+    <a href="dashboard.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Dashboard</a>
+    <a href="exogena.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Exógena</a>
+  </div>
+</section>
 </body>
 </html>

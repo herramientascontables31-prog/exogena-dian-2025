@@ -19,6 +19,9 @@
 <meta property="og:image" content="https://exogenadian.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="robots" content="index, follow">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Liquidador Laboral Colombia","url":"https://exogenadian.com/liquidador.html","description":"Herramienta gratuita para liquidar contratos laborales en Colombia.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Liquidador Laboral","item":"https://exogenadian.com/liquidador.html"}]}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#059669;--green2:#ECFDF5;--green3:#D1FAE5;--red:#DC2626;--amber:#D97706;--amber2:#FFF8E1;--amber3:#FEF3C7;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
@@ -123,6 +126,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <body>
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 
 <div class="container">
@@ -282,7 +286,7 @@ var proUnlocked=false;
 function getDeviceFingerprint(){var uid=localStorage.getItem('exogenadian_device_id');if(!uid){uid='D-'+Math.random().toString(36).substr(2,9);localStorage.setItem('exogenadian_device_id',uid)}return uid;}
 async function validarPro(valor){try{var fp=getDeviceFingerprint();var isEmail=valor.includes('@');var url=APPS_SCRIPT_URL+'?action='+(isEmail?'validateEmail':'validateKey')+'&'+(isEmail?'email':'key')+'='+encodeURIComponent(valor)+'&device='+encodeURIComponent(fp);var resp=await fetch(url);var data=await resp.json();if(data.valid)return true;}catch(e){}return false;}
 function updateProUI(){var b=document.getElementById('proBadge');if(b)b.innerHTML=proUnlocked?'<span style="background:#059669;color:#fff;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700">PRO activo</span>':'';var s=document.getElementById('proStatus');if(s)s.textContent=proUnlocked?'Todas las descargas desbloqueadas':'PDF gratis — Word y Excel requieren PRO';var a=document.getElementById('proActivation');if(a)a.style.display=proUnlocked?'none':'flex';}
-async function activarPro(){var inp=document.getElementById('proKeyInput');var v=inp.value.trim().toLowerCase();if(!v){alert('Ingresa tu email PRO');return;}var btn=inp.parentElement.querySelector('button');if(btn){btn.textContent='Verificando...';btn.disabled=true;}var valid=await validarPro(v);if(valid){proUnlocked=true;if(v.includes('@'))localStorage.setItem('exogenadian_pro_email',v);else localStorage.setItem('exogenadian_pro_key',v);updateProUI();alert('PRO activado correctamente');}else{alert('No hay suscripción activa para este email.');}if(btn){btn.textContent='Activar';btn.disabled=false;}}
+async function activarPro(){var inp=document.getElementById('proKeyInput');var v=inp.value.trim().toLowerCase();if(!v){exoToast('Ingresa tu email PRO','warning');return;}var btn=inp.parentElement.querySelector('button');if(btn){btn.textContent='Verificando...';btn.disabled=true;}var valid=await validarPro(v);if(valid){proUnlocked=true;if(v.includes('@'))localStorage.setItem('exogenadian_pro_email',v);else localStorage.setItem('exogenadian_pro_key',v);updateProUI();exoToast('PRO activado correctamente','success');}else{exoToast('No hay suscripción activa para este email.','warning');}if(btn){btn.textContent='Activar';btn.disabled=false;}}
 (function(){var saved=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');if(saved){validarPro(saved).then(function(ok){if(ok){proUnlocked=true;updateProUI();}else{localStorage.removeItem('exogenadian_pro_email');localStorage.removeItem('exogenadian_pro_key');}});}})();
 
 document.querySelectorAll('.money').forEach(function(el){
@@ -319,11 +323,11 @@ function toggleVacMode(){
 
 function calcular(){
   var fi=val('iFechaInicio'),ff=val('iFechaFin');
-  if(!fi||!ff){alert('Ingresa las fechas de inicio y terminación.');return;}
-  if(new Date(fi)>=new Date(ff)){alert('La fecha de inicio debe ser anterior a la de terminación.');return;}
-  if(document.getElementById('iTipoContrato').value==='fijo'&&!val('iFechaVenc')){alert('Ingresa la fecha de vencimiento del contrato fijo.');return;}
+  if(!fi||!ff){exoToast('Ingresa las fechas de inicio y terminación.','warning');return;}
+  if(new Date(fi)>=new Date(ff)){exoToast('La fecha de inicio debe ser anterior a la de terminación.','warning');return;}
+  if(document.getElementById('iTipoContrato').value==='fijo'&&!val('iFechaVenc')){exoToast('Ingresa la fecha de vencimiento del contrato fijo.','warning');return;}
   var s=parseMoney('iSalario');
-  if(s<1){alert('Ingresa el salario básico mensual.');return;}
+  if(s<1){exoToast('Ingresa el salario básico mensual.','warning');return;}
 
   resultado=liquidar({
     empleado:val('iEmpleado'),empleador:val('iEmpleador'),nitEmpleador:val('iNit'),cargo:val('iCargo'),
@@ -376,11 +380,20 @@ function renderResultados(r){
 function rw(c,b,d,v){return '<tr><td>'+c+'</td><td>'+b+'</td><td>'+d+'</td><td>'+fCOP(v)+'</td></tr>';}
 function nuevaLiquidacion(){document.getElementById('resultados').style.display='none';document.getElementById('formulario').style.display='block';}
 function descargarPDF(){if(resultado){exportarPDF(resultado);if(typeof exoTrack!=='undefined')exoTrack.generate('liquidador','pdf');}}
-function descargarExcel(){if(!proUnlocked){alert('La descarga en Excel es una función PRO.\n\nIngresa tu email PRO o suscríbete en exogenadian.com');return;}if(resultado){exportarExcel(resultado);if(typeof exoTrack!=='undefined')exoTrack.generate('liquidador','excel');}}
-function descargarWord(){if(!proUnlocked){alert('La descarga en Word es una función PRO.\n\nIngresa tu email PRO o suscríbete en exogenadian.com');return;}if(resultado){exportarWord(resultado);if(typeof exoTrack!=='undefined')exoTrack.generate('liquidador','word');}}
+function descargarExcel(){if(!proUnlocked){exoToast('La descarga en Excel es una función PRO. Ingresa tu email PRO o suscríbete en exogenadian.com','info');return;}if(resultado){exportarExcel(resultado);if(typeof exoTrack!=='undefined')exoTrack.generate('liquidador','excel');}}
+function descargarWord(){if(!proUnlocked){exoToast('La descarga en Word es una función PRO. Ingresa tu email PRO o suscríbete en exogenadian.com','info');return;}if(resultado){exportarWord(resultado);if(typeof exoTrack!=='undefined')exoTrack.generate('liquidador','word');}}
 
 document.getElementById('iFechaFin').value=new Date().toISOString().split('T')[0];
 </script>
+<div id="main"></div>
+<section style="max-width:1200px;margin:32px auto 0;padding:0 20px 40px">
+  <h3 style="font-size:1rem;font-weight:700;color:#374151;margin-bottom:12px">Herramientas relacionadas</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="costoreal.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Costo Empleado</a>
+    <a href="retencion-fuente.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Retención Fuente</a>
+    <a href="uvt.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Conversor UVT</a>
+  </div>
+</section>
 <script src="shared/analytics.js"></script>
 </body>
 </html>

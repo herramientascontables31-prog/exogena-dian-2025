@@ -19,6 +19,9 @@
 <meta property="og:site_name" content="ExógenaDIAN">
 <meta property="og:image" content="https://exogenadian.com/og-image.png">
 <meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Conversor UVT","item":"https://exogenadian.com/uvt.html"}]}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0A0F1E;--card:#111827;--card2:#1F2937;--border:#374151;--text:#F9FAFB;--muted:#9CA3AF;--green:#22C55E;--green2:#166534;--green3:#052e16;--yellow:#EAB308;--yellow2:#854d0e;--red:#EF4444;--red2:#991B1B;--blue:#3B82F6;--mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif;--radius:12px}
@@ -95,6 +98,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:
 
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 
 <div class="container">
@@ -356,5 +360,15 @@ renderPills();
 actualizarSemaforo();
 renderHist();
 </script>
+<div id="main"></div>
+<section style="max-width:1200px;margin:32px auto 0;padding:0 20px 40px">
+  <h3 style="font-size:1rem;font-weight:700;color:#374151;margin-bottom:12px">Herramientas relacionadas</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="sanciones-dian.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Sanciones DIAN</a>
+    <a href="retencion-fuente.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Retención Fuente</a>
+    <a href="intereses.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Intereses de Mora</a>
+    <a href="vencimientos.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Vencimientos</a>
+  </div>
+</section>
 </body>
 </html>

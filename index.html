@@ -67,6 +67,9 @@ gtag('config', 'G-S7SM6ST4CC');
   ]
 }
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com","logo":"https://exogenadian.com/og-image.png","description":"Herramientas contables gratuitas para contadores colombianos","contactPoint":{"@type":"ContactPoint","telephone":"+57-305-455-9574","contactType":"customer service","availableLanguage":"Spanish"}}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -327,6 +330,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 
 <div id="nav-container" data-variant="full"></div>
 <script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 
 <!-- ===== HERO ===== -->
@@ -899,7 +903,7 @@ function cerrarProNav(){
 async function activarProNav(){
   const inp=document.getElementById('proNavKey');
   const val=inp?inp.value.trim().toLowerCase():'';
-  if(!val){alert('Ingresa tu email PRO');return}
+  if(!val){exoToast('Ingresa tu email PRO','warning');return}
   // Loading state
   const btn=inp.nextElementSibling;
   const btnText=btn?btn.textContent:'';
@@ -930,9 +934,9 @@ async function activarProNav(){
         :data.reason&&data.reason.includes('dispositivos')?'Límite de dispositivos (máx 2)'
         :data.reason&&data.reason.includes('No se encontró')?'No hay suscripción activa para este email'
         :data.reason||'No encontrado';
-      alert(msg);
+      exoToast(msg,'warning');
     }
-  }catch(e){console.error('[PRO] Error:',e);alert('Error de conexión: '+e.message)}
+  }catch(e){console.error('[PRO] Error:',e);exoToast('Error de conexión: '+e.message,'error')}
   finally{if(inp)inp.disabled=false;if(btn){btn.textContent=btnText;btn.disabled=false}}
 }
 

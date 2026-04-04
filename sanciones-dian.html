@@ -28,6 +28,9 @@
 {"@type":"Question","name":"¿Cuál es la diferencia entre el Art. 641 y el Art. 642?","acceptedAnswer":{"@type":"Answer","text":"El Art. 641 aplica cuando el contribuyente presenta la declaración extemporánea ANTES de que la DIAN profiera emplazamiento. El Art. 642 aplica DESPUÉS del emplazamiento, con tarifas y límites del doble: 10% por mes en vez de 5%, máximo 200% en vez de 100%."}},
 {"@type":"Question","name":"¿Cómo funciona la reducción del Art. 640 ET?","acceptedAnswer":{"@type":"Answer","text":"El Art. 640 permite reducir la sanción al 50% si en los 2 años anteriores no se cometió la misma conducta y la DIAN no ha proferido pliego de cargos; o al 75% si la condición se cumple solo para el año anterior. La sanción reducida nunca puede ser menor a 10 UVT."}}
 ]}</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Sanciones DIAN","item":"https://exogenadian.com/sanciones-dian.html"}]}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#059669;--green2:#ECFDF5;--green3:#D1FAE5;--red:#DC2626;--amber:#D97706;--amber2:#FFF8E1;--amber3:#FEF3C7;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
@@ -179,6 +182,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 
 <div class="container">
@@ -689,14 +693,14 @@ function calcular() {
       );
     }
     if (meses <= 0) {
-      alert('Ingresa las fechas o los meses de retardo.');
+      exoToast('Ingresa las fechas o los meses de retardo.','warning');
       return;
     }
 
     if (casoSel === 'impuesto') {
       /* CASO 1 — Impuesto a cargo */
       var imp = parseMoney(document.getElementById('iImpuesto').value);
-      if (!imp) { alert('Ingresa el impuesto / retención a cargo.'); return; }
+      if (!imp) { exoToast('Ingresa el impuesto / retención a cargo.','warning'); return; }
       var tarifa = es642 ? 0.10 : 0.05;
       var maxPct = es642 ? 2.00 : 1.00;
       sancionBruta = imp * tarifa * meses;
@@ -714,7 +718,7 @@ function calcular() {
     } else if (casoSel === 'ingresos') {
       /* CASO 2 — Sin impuesto, con ingresos */
       var ing = parseMoney(document.getElementById('iIngresos').value);
-      if (!ing) { alert('Ingresa los ingresos brutos.'); return; }
+      if (!ing) { exoToast('Ingresa los ingresos brutos.','warning'); return; }
       var sf = parseMoney(document.getElementById('iSaldoFavorIng').value);
       var tarifa = es642 ? 0.01 : 0.005;
       var limPctIng = es642 ? 0.10 : 0.05;
@@ -738,7 +742,7 @@ function calcular() {
     } else if (casoSel === 'patrimonio') {
       /* CASO 3 — Sin impuesto ni ingresos */
       var pat = parseMoney(document.getElementById('iPatrimonio').value);
-      if (!pat) { alert('Ingresa el patrimonio líquido del año anterior.'); return; }
+      if (!pat) { exoToast('Ingresa el patrimonio líquido del año anterior.','warning'); return; }
       var sf = parseMoney(document.getElementById('iSaldoFavorPat').value);
       var tarifa = es642 ? 0.02 : 0.01;
       var limPctPat = es642 ? 0.20 : 0.10;
@@ -762,7 +766,7 @@ function calcular() {
     } else if (casoSel === 'gmf') {
       /* GMF */
       var gmf = parseMoney(document.getElementById('iGmf').value);
-      if (!gmf) { alert('Ingresa el impuesto GMF a cargo.'); return; }
+      if (!gmf) { exoToast('Ingresa el impuesto GMF a cargo.','warning'); return; }
       var tarifa = es642 ? 0.02 : 0.01;
       var maxPct = es642 ? 2.00 : 1.00;
       sancionBruta = gmf * tarifa * meses;
@@ -783,7 +787,7 @@ function calcular() {
   /* ─── ART. 644 ─── */
   } else if (artSel === '644') {
     var delta = parseMoney(document.getElementById('iDelta').value);
-    if (!delta) { alert('Ingresa el mayor valor a pagar o menor saldo a favor (delta).'); return; }
+    if (!delta) { exoToast('Ingresa el mayor valor a pagar o menor saldo a favor (delta).','warning'); return; }
 
     var pctBase = numSel === '1' ? 0.10 : 0.20;
     sancionBruta = delta * pctBase;
@@ -942,5 +946,15 @@ function limpiar() {
 actualizarUVT();
 actualizarTarifasCaso();
 </script>
+<div id="main"></div>
+<section style="max-width:1200px;margin:32px auto 0;padding:0 20px 40px">
+  <h3 style="font-size:1rem;font-weight:700;color:#374151;margin-bottom:12px">Herramientas relacionadas</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="sanciones.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Sanciones Exógena</a>
+    <a href="intereses.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Intereses de Mora</a>
+    <a href="vencimientos.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Vencimientos</a>
+    <a href="uvt.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Conversor UVT</a>
+  </div>
+</section>
 </body>
 </html>

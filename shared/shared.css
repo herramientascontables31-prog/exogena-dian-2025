@@ -26,6 +26,11 @@
 html{scroll-behavior:smooth}
 body{font-family:'Outfit',sans-serif;background:var(--white);color:var(--gray-900);overflow-x:hidden}
 
+/* ===== ACCESSIBILITY ===== */
+*:focus-visible{outline:2px solid var(--green-500);outline-offset:2px;border-radius:4px}
+.skip-link{position:absolute;top:-100%;left:16px;background:var(--green-600);color:#fff;padding:8px 16px;border-radius:0 0 8px 8px;font-size:.85rem;font-weight:600;z-index:9999;text-decoration:none;transition:top .2s}
+.skip-link:focus{top:0}
+
 /* ===== NAV ===== */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.04);transition:all .3s}
 nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}

@@ -51,9 +51,12 @@
   `;
   document.head.appendChild(megaCSS);
 
+  /* ─── Skip link (accessibility) ─── */
+  var skipLink='<a href="#main" class="skip-link">Ir al contenido</a>';
+
   /* ─── Tool nav (compact bar for tool pages) ─── */
-  var toolNav=
-  '<nav class="ed-nav" style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:\'Outfit\',\'DM Sans\',sans-serif;gap:12px;flex-wrap:wrap">'+
+  var toolNav=skipLink+
+  '<nav class="ed-nav" role="navigation" aria-label="Navegación de herramientas" style="display:flex;align-items:center;justify-content:space-between;padding:10px 20px;background:#fff;border-bottom:1px solid #e2e8f0;font-family:\'Outfit\',\'DM Sans\',sans-serif;gap:12px;flex-wrap:wrap">'+
   '  <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#1a1a2e;font-weight:800;font-size:.95rem;flex-shrink:0">'+
   '    <div style="width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900">E</div>'+
   '    ExógenaDIAN'+
@@ -91,8 +94,8 @@
   '</nav>';
 
   /* ─── Full nav (index.html, blog.html — mega-menu + PRO + hamburger) ─── */
-  var fullNav=
-  '<nav id="nav">'+
+  var fullNav=skipLink+
+  '<nav id="nav" role="navigation" aria-label="Navegación principal">'+
   '  <a href="index.html" class="logo">'+
   '    <div class="logo-mark">E</div>'+
   '    <div>ExógenaDIAN<small>Portal Contable</small></div>'+
@@ -103,7 +106,7 @@
   '    <a href="renta110.html">Renta F110</a>'+
        /* Mega-menu dropdown */
   '    <div class="nav-dropdown" id="navDropdown">'+
-  '      <button class="nav-dropdown-toggle" onclick="document.getElementById(\'navDropdown\').classList.toggle(\'open\')">'+
+  '      <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-label="Abrir menú de herramientas" onclick="var dd=document.getElementById(\'navDropdown\');dd.classList.toggle(\'open\');this.setAttribute(\'aria-expanded\',dd.classList.contains(\'open\'))">'+
   '        Herramientas <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>'+
   '      </button>'+
   '      <div class="mega-menu">'+
@@ -155,7 +158,7 @@
   '    </div>'+
   '    <a href="#planes" id="proNavSubscribe" class="btn btn-green btn-sm" style="display:none">PRO &rarr;</a>'+
   '  </div>'+
-  '  <button class="hamburger" id="hamburger" onclick="document.getElementById(\'navLinks\').classList.toggle(\'open\')">☰</button>'+
+  '  <button class="hamburger" id="hamburger" aria-expanded="false" aria-label="Abrir menú" onclick="var nl=document.getElementById(\'navLinks\');nl.classList.toggle(\'open\');this.setAttribute(\'aria-expanded\',nl.classList.contains(\'open\'))">☰</button>'+
   '</nav>';
 
   /* ─── Inject ─── */
@@ -197,6 +200,16 @@
         document.getElementById('navLinks').classList.remove('open');
       });
     });
+    // Close on Escape key
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'){
+        var dd=document.getElementById('navDropdown');
+        if(dd){dd.classList.remove('open');var btn=dd.querySelector('.nav-dropdown-toggle');if(btn){btn.setAttribute('aria-expanded','false');btn.focus()}}
+        var nl=document.getElementById('navLinks');
+        var hb=document.getElementById('hamburger');
+        if(nl&&nl.classList.contains('open')){nl.classList.remove('open');if(hb){hb.setAttribute('aria-expanded','false');hb.focus()}}
+      }
+    });
     // Scroll effect
     window.addEventListener('scroll',function(){
       var nav=document.getElementById('nav');
@@ -232,7 +245,7 @@
     if(window.exoPro){
       window.exoPro.activate(key).then(function(valid){
         if(valid){showProActive()}
-        else{alert('Clave PRO no válida o expirada')}
+        else{exoToast('Clave PRO no válida o expirada','warning')}
       });
       return;
     }
@@ -243,9 +256,9 @@
         localStorage.setItem('exogenadian_pro_email',key);
         showProActive();
       }else{
-        alert(d.message||'Clave PRO no válida o expirada');
+        exoToast(d.message||'Clave PRO no válida o expirada','warning');
       }
-    }).catch(function(){alert('Error al verificar. Intenta de nuevo.')});
+    }).catch(function(){exoToast('Error al verificar. Intenta de nuevo.','error')});
   };
 
   window.cerrarProNav=function(){

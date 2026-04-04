@@ -32,6 +32,9 @@ gtag('config', 'G-S7SM6ST4CC');
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"Generador de Información Exógena DIAN 2025","url":"https://exogenadian.com/exogena.html","description":"Genera automáticamente los 10 formatos de información exógena DIAN (F1001 a F2276) desde tu balance de prueba. Excel + XML listos para el prevalidador MUISCA.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Información Exógena DIAN","item":"https://exogenadian.com/exogena.html"}]}
+</script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -126,6 +129,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <body>
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 <div class="container">
   <div class="header"><div>
@@ -874,7 +878,7 @@ dz.addEventListener('drop',e=>{if(e.dataTransfer.files[0])loadFile(e.dataTransfe
 
 function loadFile(file){
   const MAX_FILE_SIZE=20*1024*1024; // 20 MB
-  if(file.size>MAX_FILE_SIZE){alert('El archivo excede el límite de 20 MB. Reduce el tamaño del Excel antes de cargarlo.');return}
+  if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el límite de 20 MB. Reduce el tamaño del Excel antes de cargarlo.','warning');return}
   const reader=new FileReader();
   reader.onload=ev=>{
     try{
@@ -886,14 +890,14 @@ function loadFile(file){
         const n=raw.filter(r=>r.some(c=>c!==''&&c!=null)).length;
         if(n>bestN){best={sn,raw,disp};bestN=n}
       }
-      if(!best||bestN<3){alert('El archivo parece vacio.');return}
+      if(!best||bestN<3){exoToast('El archivo parece vacio.','warning');return}
       rawData=best.raw.filter(r=>r.some(c=>c!==''&&c!=null));
       rawDisplay=best.disp.filter(r=>r.some(c=>c!==''&&c!=null));
       document.getElementById('fileName').textContent=`${file.name} · ${rawData.length} filas · hoja: ${best.sn}`;
       headerRow=autoDetectHeaderRow();
       goStep(2);
       renderStep2();
-    }catch(err){alert('Error al leer: '+err.message)}
+    }catch(err){exoToast('Error al leer: '+err.message,'error')}
   };
   reader.readAsArrayBuffer(file);
 }
@@ -991,7 +995,7 @@ function onColChange(key,val){
 function confirmColumns(){
   // Validate required columns
   for(const f of COL_FIELDS){
-    if(f.required&&!(f.key in colMap)){alert('Falta asignar la columna: '+f.label);return}
+    if(f.required&&!(f.key in colMap)){exoToast('Falta asignar la columna: '+f.label,'warning');return}
   }
   processData();
 }
@@ -1874,7 +1878,7 @@ function updateProUI(){
 async function activarPro(){
   const inp=document.getElementById('proKeyInput');
   const val=inp?.value?.trim()?.toLowerCase();
-  if(!val){alert('Ingresa tu email PRO');return}
+  if(!val){exoToast('Ingresa tu email PRO','warning');return}
   const btn=inp.closest('div')?.querySelector('button[onclick*="activarPro"]');
   const btnText=btn?btn.textContent:'';
   if(btn){btn.textContent='Verificando...';btn.disabled=true}
@@ -1889,9 +1893,9 @@ async function activarPro(){
       if(val.includes('@')){localStorage.setItem('exogenadian_pro_email',val)}
       else{localStorage.setItem('exogenadian_pro_key',val)}
       updateProUI();
-      alert('PRO activado correctamente');
+      exoToast('PRO activado correctamente','success');
     }else{
-      alert('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com');
+      exoToast('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com','warning');
     }
   }finally{
     if(inp) inp.disabled=false;
@@ -1911,9 +1915,20 @@ async function btnLoading(btn,fn){
   const orig=btn.innerHTML;
   btn.disabled=true;btn.style.opacity='.6';
   btn.innerHTML='Generando...';
-  try{await fn()}catch(e){alert('Error: '+e.message);console.error(e)}
+  try{await fn()}catch(e){exoToast('Error: '+e.message,'error');console.error(e)}
   finally{btn.disabled=false;btn.style.opacity='';btn.innerHTML=orig}
 }
 </script>
+<div id="main"></div>
+<section style="max-width:1200px;margin:32px auto 0;padding:0 20px 40px">
+  <h3 style="font-size:1rem;font-weight:700;color:#374151;margin-bottom:12px">Herramientas relacionadas</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="renta110.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Renta F110</a>
+    <a href="iva300.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">IVA 300</a>
+    <a href="retencion350.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Retención 350</a>
+    <a href="sanciones.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Sanciones Exógena</a>
+    <a href="vencimientos.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Vencimientos</a>
+  </div>
+</section>
 </body>
 </html>

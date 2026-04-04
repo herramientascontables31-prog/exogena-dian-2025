@@ -25,6 +25,9 @@
 {"@type":"Question","name":"¿Cómo se calcula la retención a independientes en 2026?","acceptedAnswer":{"@type":"Answer","text":"Los independientes cotizan seguridad social sobre el 40% del ingreso (Dec. 0572/2025). Se restan aportes de salud (12.5%) y pensión (16%) sobre esa base, más deducciones permitidas y renta exenta 25%. La base se lleva a la tabla Art. 383 ET. También puede aplicarse tarifa fija Art. 392."}},
 {"@type":"Question","name":"¿Cuánto es la UVT en 2026?","acceptedAnswer":{"@type":"Answer","text":"La UVT para 2026 es $52.374. Para 2025 fue $49.799."}}
 ]}</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Retención en la Fuente","item":"https://exogenadian.com/retencion-fuente.html"}]}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <style>
@@ -139,6 +142,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 
 <div class="container">
@@ -659,7 +663,7 @@ function copiarWhatsApp(){
     const res=calcIndependiente(parseInt(anio),uvt,SMLMV[anio]);
     texto=`*Retención en la Fuente ${anio} — Independiente*\n\nIngreso: ${fmt(res.ingreso)}\nBase gravable: ${fmt(res.baseGravable)} (${fmtUVT(res.baseUVT)})\n*Retención Art. 383: ${fmt(res.retCOP)}*\nTarifa fija Art. 392: ${fmt(res.retFija)}\nTasa efectiva: ${(res.tasa*100).toFixed(2)}%\n\n_Calculado en ExógenaDIAN.com_`;
   }
-  navigator.clipboard.writeText(texto).then(()=>alert('Copiado al portapapeles')).catch(()=>{});
+  navigator.clipboard.writeText(texto).then(()=>exoToast('Copiado al portapapeles','success')).catch(()=>{});
 }
 
 /* ═══ EXPORTAR EXCEL (PRO) ═══ */
@@ -678,7 +682,7 @@ async function exportarExcel(){
 async function activarProExport(){
   const inp=document.getElementById('proEmailExport');
   const val=inp?.value?.trim()?.toLowerCase();
-  if(!val){alert('Ingresa tu email PRO');return}
+  if(!val){exoToast('Ingresa tu email PRO','warning');return}
   const valid=await validarPro(val);
   if(valid){
     proUnlocked=true;
@@ -687,7 +691,7 @@ async function activarProExport(){
     $('proExportMsg').innerHTML='<div class="alert alert-green">&#9989; PRO activado. Generando Excel...</div>';
     setTimeout(generarExcelCliente,500);
   }else{
-    alert('No hay suscripción activa para este email.');
+    exoToast('No hay suscripción activa para este email.','warning');
   }
 }
 
@@ -979,5 +983,15 @@ async function generarExcelCliente(){
 togglePerfil();
 </script>
 
+<div id="main"></div>
+<section style="max-width:1200px;margin:32px auto 0;padding:0 20px 40px">
+  <h3 style="font-size:1rem;font-weight:700;color:#374151;margin-bottom:12px">Herramientas relacionadas</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="retencion350.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Retención 350</a>
+    <a href="liquidador.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Liquidador Laboral</a>
+    <a href="costoreal.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Costo Empleado</a>
+    <a href="uvt.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Conversor UVT</a>
+  </div>
+</section>
 </body>
 </html>

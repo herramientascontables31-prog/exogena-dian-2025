@@ -39,6 +39,9 @@ gtag('config', 'G-S7SM6ST4CC');
   {"@type":"Question","name":"¿El formulario 350 diferencia entre personas jurídicas y naturales?","acceptedAnswer":{"@type":"Answer","text":"Sí, la herramienta separa automáticamente los valores de retención practicada a personas jurídicas y personas naturales en las casillas correspondientes del formulario 350."}}
 ]}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Formulario 350 Retención","item":"https://exogenadian.com/retencion350.html"}]}
+</script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -166,6 +169,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <body>
 <div id="nav-container"></div>
 <script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
 <div class="container">
   <div class="header"><div>
@@ -356,7 +360,7 @@ dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if
 
 function loadFile(file){
   var MAX_FILE_SIZE=20*1024*1024;
-  if(file.size>MAX_FILE_SIZE){alert('El archivo excede el límite de 20 MB.');return}
+  if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el límite de 20 MB.','warning');return}
   document.getElementById('fileName').textContent='✓ '+file.name;
   const reader=new FileReader();
   reader.onload=function(e){
@@ -560,7 +564,7 @@ function confirmColumns(){
   // Validate required columns
   const missing=COL_FIELDS.filter(f=>f.required&&colMap[f.key]<0);
   if(missing.length){
-    alert('Faltan columnas obligatorias:\n'+missing.map(f=>'• '+f.label).join('\n'));
+    exoToast('Faltan columnas obligatorias:\n'+missing.map(f=>'• '+f.label).join('\n'),'warning');
     return;
   }
   processData();
@@ -621,7 +625,7 @@ function showPreview(){
 }
 
 /* ═══ STEP 3: PUC MAPPING ═══ */
-function goToStep3(){if(!parsedAccounts.length){alert('No hay movimientos.');return}goStep(3);buildMappingTable()}
+function goToStep3(){if(!parsedAccounts.length){exoToast('No hay movimientos.','warning');return}goStep(3);buildMappingTable()}
 
 function autoMapAccount(code,name){
   const n=norm(name),c=String(code);
@@ -980,7 +984,7 @@ async function btnLoading(btn,fn){
   const orig=btn.innerHTML;
   btn.disabled=true;btn.style.opacity='.6';
   btn.innerHTML='Generando...';
-  try{await fn()}catch(e){alert('Error: '+e.message);console.error(e)}
+  try{await fn()}catch(e){exoToast('Error: '+e.message,'error');console.error(e)}
   finally{btn.disabled=false;btn.style.opacity='';btn.innerHTML=orig}
 }
 </script>
@@ -988,5 +992,15 @@ async function btnLoading(btn,fn){
   <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExógenaDIAN</a> · Herramienta de asistencia — El contador debe validar antes de presentar a la DIAN<br>
   🔒 Información tratada con total confidencialidad · 100% procesado en tu navegador
 </div>
+<div id="main"></div>
+<section style="max-width:1200px;margin:32px auto 0;padding:0 20px 40px">
+  <h3 style="font-size:1rem;font-weight:700;color:#374151;margin-bottom:12px">Herramientas relacionadas</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="iva300.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">IVA 300</a>
+    <a href="retencion-fuente.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Retención Fuente</a>
+    <a href="exogena.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Exógena</a>
+    <a href="vencimientos.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Vencimientos</a>
+  </div>
+</section>
 </body>
 </html>
