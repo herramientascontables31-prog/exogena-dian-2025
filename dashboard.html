@@ -1683,7 +1683,7 @@ function exportHTML() {
   var balRows = buildBalanceRows(currentYear);
   var kpis = computeKPIs(currentYear);
   var c = getComputed(currentYear);
-  var bal = c.balance;
+  var bal = c.bal;
 
   function fmtVal(v) { return formatCOP(v); }
   function fmtPctV(v) { return v != null ? (v * 100).toFixed(1) + '%' : ''; }
