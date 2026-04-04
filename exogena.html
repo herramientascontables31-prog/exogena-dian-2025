@@ -286,7 +286,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
           <svg width="20" height="20" viewBox="0 0 20 20" fill="#059669" style="flex-shrink:0;margin-top:1px"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/></svg>
           <span><strong>Tu archivo no sale de tu computador.</strong> Todo se procesa en tu navegador, sin enviar datos a ning&uacute;n servidor. Al cerrar esta p&aacute;gina no queda ning&uacute;n rastro. <strong>No usamos inteligencia artificial</strong> con tus datos contables. <a href="https://exogenadian.com/politica-privacidad.html" style="color:#047857;text-decoration:underline">Pol&iacute;tica de privacidad</a></span>
         </div>
-        <button onclick="descargarEjemplo()" style="padding:8px 16px;background:#f0f2f5;border:1px solid #e2e8f0;border-radius:8px;font-size:.78rem;font-weight:600;color:#1B3A5C;cursor:pointer;white-space:nowrap;font-family:inherit">📥 Descargar ejemplo</button>
+        <button onclick="btnLoading(this,descargarEjemplo)" style="padding:8px 16px;background:#f0f2f5;border:1px solid #e2e8f0;border-radius:8px;font-size:.78rem;font-weight:600;color:#1B3A5C;cursor:pointer;white-space:nowrap;font-family:inherit">📥 Descargar ejemplo</button>
       </div>
     </div>
 
@@ -1811,28 +1811,151 @@ function descargarBlob(blob,filename){
 }
 
 /* ── EJEMPLO DESCARGABLE ── */
-function descargarEjemplo(){
-  const data=[
-    ['Codigo','Nombre Cuenta','NIT Tercero','Nombre Tercero','Debito','Credito'],
-    ['5135','Servicios','900123456','CONSULTOR ABC S.A.S',5000000,0],
-    ['236525','Retencion servicios','900123456','CONSULTOR ABC S.A.S',0,200000],
-    ['240810','IVA descontable','900123456','CONSULTOR ABC S.A.S',950000,0],
-    ['4135','Comercio al por mayor','800555444','CLIENTE XYZ LTDA',0,25000000],
-    ['240805','IVA generado','800555444','CLIENTE XYZ LTDA',0,4750000],
-    ['1305','Clientes','800555444','CLIENTE XYZ LTDA',29750000,0],
-    ['6135','Compras','811222333','DISTRIBUIDORA NACIONAL',15000000,0],
-    ['236540','Retencion compras','811222333','DISTRIBUIDORA NACIONAL',0,375000],
-    ['5105','Sueldos','1098765432','JUAN PEREZ',3500000,0],
-    ['236505','Retencion salarios','1098765432','JUAN PEREZ',0,175000],
-    ['1110','Bancos','890903938','BANCOLOMBIA S.A.',0,48850000],
-    ['2205','Proveedores','811222333','DISTRIBUIDORA NACIONAL',0,14625000],
-    ['3105','Capital social','901234567','MI EMPRESA S.A.S',0,10000000],
+async function descargarEjemplo(){
+  const wb=new ExcelJS.Workbook();
+  wb.creator='ExógenaDIAN';
+  const B={type:'pattern',pattern:'solid',fgColor:{argb:'FF1B3A5C'}};
+  const G={type:'pattern',pattern:'solid',fgColor:{argb:'FF059669'}};
+  const W={bold:true,color:{argb:'FFFFFFFF'}};
+  const S={bold:true,size:12,color:{argb:'FF1B3A5C'}};
+  const T={size:10,color:{argb:'FF374151'}};
+  const H={size:10,color:{argb:'FF6B7280'}};
+  const A={bold:true,size:10,color:{argb:'FF059669'}};
+  const R={italic:true,size:9,color:{argb:'FF9CA3AF'}};
+  const tb={top:{style:'thin',color:{argb:'FFE5E7EB'}},bottom:{style:'thin',color:{argb:'FFE5E7EB'}},left:{style:'thin',color:{argb:'FFE5E7EB'}},right:{style:'thin',color:{argb:'FFE5E7EB'}}};
+
+  /* ── Hoja 1: Instrucciones ── */
+  const wi=wb.addWorksheet('Instrucciones');
+  wi.getColumn(1).width=90;
+  wi.getRow(1).height=36;
+  const t=(r,v,f)=>{wi.getCell('A'+r).value=v;if(f)wi.getCell('A'+r).font=f;};
+  wi.getCell('A1').value='EXÓGENA DIAN — Guía para preparar tu archivo';
+  wi.getCell('A1').font={bold:true,size:16,...W}; wi.getCell('A1').fill=B;
+  wi.getCell('A1').alignment={vertical:'middle'};
+
+  t(3,'¿QUÉ NECESITAS?',S);
+  t(4,'Un balance de prueba CON AUXILIAR POR TERCERO del año gravable, exportado desde tu software contable.',T);
+  t(5,'Con ese único archivo la herramienta genera automáticamente los 10 formatos de información exógena.',T);
+
+  t(7,'PASO A PASO',S);
+  t(8,'Paso 1 — Abre tu software contable (Siigo, World Office, Helisa, Alegra, Contai, SAP, etc.).',T);
+  t(9,'Paso 2 — Genera el reporte: "Balance de prueba por tercero" o "Auxiliar por tercero" del año gravable completo (ene-dic).',T);
+  t(10,'Paso 3 — Exporta el reporte a Excel (.xlsx o .xls) o CSV. NO exportes PDF.',T);
+  t(11,'Paso 4 — Verifica que el archivo tenga las 6 columnas que se describen abajo (el orden no importa).',T);
+  t(12,'Paso 5 — Entra a exogenadian.com → Exógena → Arrastra o selecciona tu archivo → Asigna columnas si es necesario → Genera.',T);
+
+  t(14,'LAS 6 COLUMNAS QUE NECESITA TU ARCHIVO',S);
+  t(15,'(El orden de las columnas NO importa, la herramienta las detecta automáticamente por el nombre del encabezado)',H);
+  t(17,'Columna 1 — CÓDIGO CUENTA (obligatoria)',A);
+  t(18,'Código PUC de la cuenta contable. Mínimo 4 dígitos. Ejemplos: 1305, 4135, 236525, 5105.',T);
+  t(19,'La herramienta también acepta encabezados como: "Cuenta", "Cta", "PUC", "Cod Cuenta", "Código".',H);
+
+  t(21,'Columna 2 — NOMBRE CUENTA (obligatoria)',A);
+  t(22,'Nombre descriptivo de la cuenta. Ejemplos: "Clientes", "Retención servicios", "IVA descontable".',T);
+  t(23,'También acepta: "Descripción", "Detalle Cuenta", "Nom Cta".',H);
+
+  t(25,'Columna 3 — NIT TERCERO (obligatoria)',A);
+  t(26,'NIT o cédula del tercero, SIN dígito de verificación. Solo números. Ej: 900123456, 1098765432.',T);
+  t(27,'Si tu archivo trae guiones o puntos (900.123.456-1), la herramienta los limpia automáticamente.',H);
+  t(28,'También acepta: "Identificación", "Documento Tercero", "Cédula", "Nro Documento".',H);
+
+  t(30,'Columna 4 — NOMBRE TERCERO (opcional pero recomendada)',A);
+  t(31,'Razón social o nombre completo del tercero. Ej: "CONSULTOR ABC S.A.S", "JUAN PÉREZ".',T);
+  t(32,'También acepta: "Razón Social", "Tercero", "Beneficiario", "Proveedor".',H);
+
+  t(34,'Columna 5 — DÉBITO (obligatoria)',A);
+  t(35,'Valor total de débitos del período para esa cuenta y tercero. Sin negativos.',T);
+  t(36,'Acepta formatos: 5000000, 5.000.000, $5,000,000. La herramienta limpia símbolos automáticamente.',H);
+  t(37,'También acepta encabezados: "Cargo", "Debe", "Movimiento Débito".',H);
+
+  t(39,'Columna 6 — CRÉDITO (obligatoria)',A);
+  t(40,'Valor total de créditos del período para esa cuenta y tercero. Sin negativos.',T);
+  t(41,'Acepta formatos: 5000000, 5.000.000, $5,000,000. La herramienta limpia símbolos automáticamente.',H);
+  t(42,'También acepta encabezados: "Abono", "Haber", "Movimiento Crédito".',H);
+
+  t(44,'ERRORES COMUNES Y CÓMO EVITARLOS',S);
+  t(45,'Error: "No se encontraron registros válidos"',{bold:true,size:10,color:{argb:'FFDC2626'}});
+  t(46,'→ Tu archivo no tiene códigos PUC de al menos 4 dígitos, o las columnas no fueron detectadas. Revisa los encabezados.',T);
+  t(48,'Error: "Falta asignar la columna: NIT Tercero"',{bold:true,size:10,color:{argb:'FFDC2626'}});
+  t(49,'→ La herramienta no encontró una columna de NIT. Usa el selector manual de columnas que aparece en pantalla.',T);
+  t(51,'El archivo carga pero genera pocos formatos o valores en cero',{bold:true,size:10,color:{argb:'FFDC2626'}});
+  t(52,'→ Verifica que exportaste el balance POR TERCERO (no el balance general resumido). Sin terceros no hay exógena.',T);
+  t(53,'→ Verifica que el período sea el año gravable completo, no solo un mes.',T);
+  t(55,'Las filas con débito y crédito ambos en cero se ignoran automáticamente.',H);
+  t(56,'El tamaño máximo del archivo es 20 MB.',H);
+  t(57,'Formatos aceptados: .xlsx, .xls y .csv',H);
+
+  t(59,'¿QUÉ FORMATOS GENERA LA HERRAMIENTA?',S);
+  t(60,'F1001 — Pagos y abonos a terceros (cuentas 5xxx, 1435-1699)',T);
+  t(61,'F1003 — Retenciones practicadas (cuentas 2365, 2367)',T);
+  t(62,'F1005 — IVA descontable (cuentas 2408, 2404, 2405 en débito)',T);
+  t(63,'F1006 — IVA generado (cuentas 2408 en crédito)',T);
+  t(64,'F1007 — Ingresos recibidos (cuentas 4xxx)',T);
+  t(65,'F1008 — Saldos de cuentas por cobrar (cuentas 13xx)',T);
+  t(66,'F1009 — Saldos de cuentas por pagar (cuentas 2xxx)',T);
+  t(67,'F1011 — Información de declaraciones tributarias',T);
+  t(68,'F1012 — Información de contratos',T);
+  t(69,'F2276 — Información de rentas de trabajo (cuentas 5105, 5110, etc.)',T);
+
+  t(71,'PRUEBA RÁPIDA',S);
+  t(72,'Puedes subir directamente la hoja "Balance Ejemplo" de este archivo para ver cómo funciona la herramienta.',T);
+  t(73,'Contiene 13 movimientos ficticios con ventas, compras, retenciones, IVA, nómina y bancos.',T);
+
+  t(75,'exogenadian.com — Tus archivos se procesan 100% en tu navegador. Nunca se envían a servidores. Sin IA. Sin almacenamiento.',R);
+
+  /* ── Hoja 2: Balance Ejemplo ── */
+  const ws=wb.addWorksheet('Balance Ejemplo');
+  ws.columns=[
+    {key:'codigo',   header:'Codigo',         width:12},
+    {key:'nombre',   header:'Nombre Cuenta',   width:30},
+    {key:'nit',      header:'NIT Tercero',     width:16},
+    {key:'tercero',  header:'Nombre Tercero',  width:30},
+    {key:'debito',   header:'Debito',          width:18},
+    {key:'credito',  header:'Credito',         width:18},
   ];
-  const ws=XLSX.utils.aoa_to_sheet(data);
-  ws['!cols']=[{wch:10},{wch:28},{wch:14},{wch:28},{wch:16},{wch:16}];
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'Balance Ejemplo');
-  XLSX.writeFile(wb,'Ejemplo_Exogena_ExogenaDIAN.xlsx');
+
+  ws.getRow(1).height=24;
+  ws.getRow(1).eachCell(c=>{
+    c.fill=B; c.font={bold:true,size:10,...W};
+    c.border={bottom:{style:'medium',color:{argb:'FF059669'}}};
+    c.alignment={vertical:'middle',horizontal:'center'};
+  });
+
+  const rows=[
+    {codigo:'5135',  nombre:'Servicios',            nit:'900123456', tercero:'CONSULTOR ABC S.A.S',      debito:5000000, credito:0},
+    {codigo:'236525',nombre:'Retención servicios',   nit:'900123456', tercero:'CONSULTOR ABC S.A.S',      debito:0,       credito:200000},
+    {codigo:'240810',nombre:'IVA descontable',       nit:'900123456', tercero:'CONSULTOR ABC S.A.S',      debito:950000,  credito:0},
+    {codigo:'4135',  nombre:'Comercio al por mayor', nit:'800555444', tercero:'CLIENTE XYZ LTDA',         debito:0,       credito:25000000},
+    {codigo:'240805',nombre:'IVA generado',          nit:'800555444', tercero:'CLIENTE XYZ LTDA',         debito:0,       credito:4750000},
+    {codigo:'1305',  nombre:'Clientes',              nit:'800555444', tercero:'CLIENTE XYZ LTDA',         debito:29750000,credito:0},
+    {codigo:'6135',  nombre:'Compras',               nit:'811222333', tercero:'DISTRIBUIDORA NACIONAL',   debito:15000000,credito:0},
+    {codigo:'236540',nombre:'Retención compras',     nit:'811222333', tercero:'DISTRIBUIDORA NACIONAL',   debito:0,       credito:375000},
+    {codigo:'5105',  nombre:'Sueldos',               nit:'1098765432',tercero:'JUAN PÉREZ',               debito:3500000, credito:0},
+    {codigo:'236505',nombre:'Retención salarios',    nit:'1098765432',tercero:'JUAN PÉREZ',               debito:0,       credito:175000},
+    {codigo:'1110',  nombre:'Bancos',                nit:'890903938', tercero:'BANCOLOMBIA S.A.',          debito:0,       credito:48850000},
+    {codigo:'2205',  nombre:'Proveedores',           nit:'811222333', tercero:'DISTRIBUIDORA NACIONAL',   debito:0,       credito:14625000},
+    {codigo:'3105',  nombre:'Capital social',        nit:'901234567', tercero:'MI EMPRESA S.A.S',         debito:0,       credito:10000000},
+  ];
+  const zb={type:'pattern',pattern:'solid',fgColor:{argb:'FFF9FAFB'}};
+  const nf='#,##0';
+  rows.forEach((r,i)=>{
+    const row=ws.addRow(r);
+    row.getCell('debito').numFmt=nf;
+    row.getCell('credito').numFmt=nf;
+    row.eachCell(c=>{ c.border=tb; c.font={size:10}; });
+    if(i%2===0) row.eachCell(c=>{ c.fill=zb; });
+  });
+  const totRow=ws.addRow({codigo:'',nombre:'',nit:'',tercero:'TOTALES',debito:rows.reduce((s,r)=>s+r.debito,0),credito:rows.reduce((s,r)=>s+r.credito,0)});
+  totRow.eachCell(c=>{ c.font={bold:true,size:10,color:{argb:'FF1B3A5C'}}; c.border={top:{style:'medium',color:{argb:'FF1B3A5C'}}}; });
+  totRow.getCell('debito').numFmt=nf;
+  totRow.getCell('credito').numFmt=nf;
+  ws.autoFilter={from:'A1',to:'F1'};
+
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='Ejemplo_Exogena_ExogenaDIAN.xlsx';a.click();
+  URL.revokeObjectURL(url);
 }
 
 /* ═══ PRO VALIDATION ═══ */

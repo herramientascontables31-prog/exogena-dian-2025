@@ -267,7 +267,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
           <svg width="20" height="20" viewBox="0 0 20 20" fill="#059669" style="flex-shrink:0;margin-top:1px"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/></svg>
           <span><strong>Tu archivo no sale de tu computador.</strong> Todo se procesa en tu navegador, sin enviar datos a ning&uacute;n servidor. Al cerrar esta p&aacute;gina no queda ning&uacute;n rastro. <strong>No usamos inteligencia artificial</strong> con tus datos contables. <a href="https://exogenadian.com/politica-privacidad.html" style="color:#047857;text-decoration:underline">Pol&iacute;tica de privacidad</a></span>
         </div>
-        <button onclick="descargarEjemplo300()" style="padding:8px 16px;background:#f0f2f5;border:1px solid #e2e8f0;border-radius:8px;font-size:.78rem;font-weight:600;color:#1B3A5C;cursor:pointer;white-space:nowrap;font-family:inherit">📥 Descargar ejemplo</button>
+        <button onclick="btnLoading(this,descargarEjemplo300)" style="padding:8px 16px;background:#f0f2f5;border:1px solid #e2e8f0;border-radius:8px;font-size:.78rem;font-weight:600;color:#1B3A5C;cursor:pointer;white-space:nowrap;font-family:inherit">📥 Descargar ejemplo</button>
       </div>
       <div style="margin-top:20px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)">
         <div style="font-weight:700;font-size:.95rem;margin-bottom:12px">📅 Datos del período</div>
@@ -2745,24 +2745,148 @@ async function exportDianXls(){
   exoToast('Descarga del análisis DIAN en construcción.','info');
 }
 
-function descargarEjemplo300(){
-  const data=[
-    ['Código','Nombre Cuenta','Débito','Crédito'],
-    ['4135','Comercio al por mayor y menor',0,85000000],
-    ['4175','Devoluciones en ventas',2500000,0],
-    ['4210','Rendimientos financieros',0,1200000],
-    ['6135','Comercio al por mayor y menor',48000000,0],
-    ['6225','Devoluciones en compras',0,800000],
-    ['240805','IVA generado 19%',0,16150000],
-    ['240810','IVA descontable 19%',9120000,0],
-    ['135515','Retención de IVA (saldo a favor)',580000,0],
-    ['236705','Retención de IVA practicada',0,720000],
+async function descargarEjemplo300(){
+  const wb=new ExcelJS.Workbook();
+  wb.creator='ExógenaDIAN';
+  const O={type:'pattern',pattern:'solid',fgColor:{argb:'FFD97706'}};
+  const W={bold:true,color:{argb:'FFFFFFFF'}};
+  const S={bold:true,size:12,color:{argb:'FFD97706'}};
+  const T={size:10,color:{argb:'FF374151'}};
+  const H={size:10,color:{argb:'FF6B7280'}};
+  const A={bold:true,size:10,color:{argb:'FFD97706'}};
+  const R={italic:true,size:9,color:{argb:'FF9CA3AF'}};
+  const tb={top:{style:'thin',color:{argb:'FFE5E7EB'}},bottom:{style:'thin',color:{argb:'FFE5E7EB'}},left:{style:'thin',color:{argb:'FFE5E7EB'}},right:{style:'thin',color:{argb:'FFE5E7EB'}}};
+
+  /* ── Hoja 1: Instrucciones ── */
+  const wi=wb.addWorksheet('Instrucciones');
+  wi.getColumn(1).width=90;
+  wi.getRow(1).height=36;
+  const t=(r,v,f)=>{wi.getCell('A'+r).value=v;if(f)wi.getCell('A'+r).font=f;};
+  wi.getCell('A1').value='FORMULARIO 300 IVA — Guía para preparar tu archivo';
+  wi.getCell('A1').font={bold:true,size:16,...W}; wi.getCell('A1').fill=O;
+  wi.getCell('A1').alignment={vertical:'middle'};
+
+  t(3,'¿QUÉ NECESITAS?',S);
+  t(4,'Un balance de prueba del bimestre o cuatrimestre que vas a declarar, exportado desde tu software contable.',T);
+  t(5,'NO necesitas terceros. Solo cuentas contables con sus débitos y créditos del período.',T);
+
+  t(7,'PASO A PASO',S);
+  t(8,'Paso 1 — Abre tu software contable (Siigo, World Office, Helisa, Alegra, Contai, SAP, etc.).',T);
+  t(9,'Paso 2 — Genera el reporte: "Balance de prueba" del período del IVA (bimestre o cuatrimestre según tu calendario).',T);
+  t(10,'Paso 3 — Exporta a Excel (.xlsx, .xls) o CSV. NO exportes PDF.',T);
+  t(11,'Paso 4 — Verifica que tenga las columnas que se describen abajo (mínimo: Código, Débito, Crédito).',T);
+  t(12,'Paso 5 — Entra a exogenadian.com → IVA 300 → Arrastra o selecciona tu archivo → Asigna columnas si es necesario.',T);
+  t(13,'Paso 6 — La herramienta calcula automáticamente todos los renglones del Formulario 300.',T);
+
+  t(15,'LAS COLUMNAS QUE NECESITA TU ARCHIVO',S);
+  t(16,'(El orden de las columnas NO importa. La herramienta las detecta automáticamente por el nombre del encabezado)',H);
+
+  t(18,'Columna 1 — CÓDIGO CUENTA (obligatoria)',A);
+  t(19,'Código PUC de la cuenta contable. Mínimo 4 dígitos. Ejemplos: 4135, 6135, 240805, 240810.',T);
+  t(20,'También acepta encabezados: "Cuenta", "Código", "Code", "Account".',H);
+
+  t(22,'Columna 2 — NOMBRE CUENTA (obligatoria)',A);
+  t(23,'Nombre descriptivo de la cuenta. Ejemplos: "Comercio al por mayor", "IVA generado 19%".',T);
+  t(24,'También acepta: "Descripción", "Nombre", "Descripción Cuenta", "Cuenta Contable".',H);
+
+  t(26,'Columna 3 — DÉBITO (obligatoria*)',A);
+  t(27,'Valor total de débitos del período. Se usa para: devoluciones en ventas, IVA descontable, retención de IVA a favor.',T);
+  t(28,'Acepta formatos: 5000000, 5.000.000, $5,000,000. La herramienta limpia símbolos automáticamente.',H);
+  t(29,'También acepta: "Débitos", "Debit", "Movimiento Débito".',H);
+
+  t(31,'Columna 4 — CRÉDITO (obligatoria*)',A);
+  t(32,'Valor total de créditos del período. Se usa para: ingresos gravados, IVA generado, retención de IVA practicada.',T);
+  t(33,'Acepta formatos: 5000000, 5.000.000, $5,000,000.',H);
+  t(34,'También acepta: "Créditos", "Credit", "Movimiento Crédito".',H);
+
+  t(36,'Columna 5 — SALDO INICIAL (opcional)',A);
+  t(37,'Si tu balance tiene saldo inicial, la herramienta lo usa para mayor precisión. No es obligatorio.',T);
+  t(38,'Acepta: "Saldo Inicial", "Saldo Anterior", "Inicial".',H);
+
+  t(40,'Columna 6 — SALDO FINAL (opcional, alternativa a Débito/Crédito)',A);
+  t(41,'Si tu balance solo tiene saldo final (sin débito/crédito separados), puedes usar esta columna en su lugar.',T);
+  t(42,'Acepta: "Saldo Final", "Saldo Total", "Saldo Actual", "Final".',H);
+  t(43,'* Si tienes "Saldo Final", las columnas Débito y Crédito dejan de ser obligatorias.',{italic:true,size:10,color:{argb:'FFD97706'}});
+
+  t(45,'¿QUÉ CUENTAS RECONOCE LA HERRAMIENTA?',S);
+  t(46,'Ingresos gravados — Cuentas 41xx (comercio, servicios, etc.)',T);
+  t(47,'Ingresos no operacionales — Cuentas 42xx (rendimientos financieros, arrendamientos, etc.)',T);
+  t(48,'Devoluciones en ventas — Cuentas 4175, 4275',T);
+  t(49,'Compras gravadas — Cuentas 61xx, 62xx',T);
+  t(50,'Devoluciones en compras — Cuentas 6225',T);
+  t(51,'IVA generado — Cuenta 240805 (crédito = IVA cobrado en ventas)',T);
+  t(52,'IVA descontable — Cuentas 240810, 2404xx, 2405xx (débito = IVA pagado en compras)',T);
+  t(53,'Retención de IVA a favor — Cuenta 1355xx (retención que te practicaron)',T);
+  t(54,'Retención de IVA practicada — Cuenta 2367xx (retención que tú practicaste)',T);
+
+  t(56,'ERRORES COMUNES Y CÓMO EVITARLOS',S);
+  t(57,'Error: "Faltan columnas obligatorias"',{bold:true,size:10,color:{argb:'FFDC2626'}});
+  t(58,'→ La herramienta no encontró Código, Nombre, Débito o Crédito. Revisa los nombres de encabezado o usa el selector manual.',T);
+  t(60,'Error: "No hay movimientos"',{bold:true,size:10,color:{argb:'FFDC2626'}});
+  t(61,'→ Ninguna cuenta del archivo coincide con cuentas de IVA. Verifica que incluyas cuentas 24xx, 41xx, 61xx.',T);
+  t(63,'El IVA generado sale en cero',{bold:true,size:10,color:{argb:'FFDC2626'}});
+  t(64,'→ Verifica que la cuenta 240805 tenga valores en la columna CRÉDITO (no en débito).',T);
+  t(66,'El IVA descontable sale en cero',{bold:true,size:10,color:{argb:'FFDC2626'}});
+  t(67,'→ Verifica que la cuenta 240810 tenga valores en la columna DÉBITO (no en crédito).',T);
+
+  t(69,'NOTAS IMPORTANTES',S);
+  t(70,'El tamaño máximo del archivo es 20 MB.',T);
+  t(71,'Formatos aceptados: .xlsx, .xls y .csv',T);
+  t(72,'La herramienta detecta automáticamente si tu archivo usa formato colombiano (1.000,00) o inglés (1,000.00).',T);
+  t(73,'Las filas de totales, subtotales o encabezados se ignoran automáticamente.',T);
+
+  t(75,'PRUEBA RÁPIDA',S);
+  t(76,'Puedes subir directamente la hoja "Balance Ejemplo" de este archivo para ver cómo funciona la herramienta.',T);
+  t(77,'Contiene un bimestre ficticio con ventas ($85M), compras ($48M), IVA generado, IVA descontable y retenciones.',T);
+
+  t(79,'exogenadian.com — Tus archivos se procesan 100% en tu navegador. Nunca se envían a servidores. Sin IA. Sin almacenamiento.',R);
+
+  /* ── Hoja 2: Balance Ejemplo ── */
+  const ws=wb.addWorksheet('Balance Ejemplo');
+  ws.columns=[
+    {key:'codigo', header:'Código',        width:12},
+    {key:'nombre', header:'Nombre Cuenta', width:38},
+    {key:'debito', header:'Débito',        width:18},
+    {key:'credito',header:'Crédito',       width:18},
   ];
-  const ws=XLSX.utils.aoa_to_sheet(data);
-  ws['!cols']=[{wch:10},{wch:35},{wch:16},{wch:16}];
-  const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'Balance Ejemplo');
-  XLSX.writeFile(wb,'Ejemplo_IVA300_ExogenaDIAN.xlsx');
+  ws.getRow(1).height=24;
+  ws.getRow(1).eachCell(c=>{
+    c.fill=O; c.font={bold:true,size:10,...W};
+    c.border={bottom:{style:'medium',color:{argb:'FF92400E'}}};
+    c.alignment={vertical:'middle',horizontal:'center'};
+  });
+
+  const rows=[
+    {codigo:'4135',  nombre:'Comercio al por mayor y menor',    debito:0,       credito:85000000},
+    {codigo:'4175',  nombre:'Devoluciones en ventas',            debito:2500000, credito:0},
+    {codigo:'4210',  nombre:'Rendimientos financieros',          debito:0,       credito:1200000},
+    {codigo:'6135',  nombre:'Comercio al por mayor y menor',    debito:48000000,credito:0},
+    {codigo:'6225',  nombre:'Devoluciones en compras',           debito:0,       credito:800000},
+    {codigo:'240805',nombre:'IVA generado 19%',                  debito:0,       credito:16150000},
+    {codigo:'240810',nombre:'IVA descontable 19%',               debito:9120000, credito:0},
+    {codigo:'135515',nombre:'Retención de IVA (saldo a favor)',  debito:580000,  credito:0},
+    {codigo:'236705',nombre:'Retención de IVA practicada',       debito:0,       credito:720000},
+  ];
+  const zb={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFFBEB'}};
+  const nf='#,##0';
+  rows.forEach((r,i)=>{
+    const row=ws.addRow(r);
+    row.getCell('debito').numFmt=nf;
+    row.getCell('credito').numFmt=nf;
+    row.eachCell(c=>{ c.border=tb; c.font={size:10}; });
+    if(i%2===0) row.eachCell(c=>{ c.fill=zb; });
+  });
+  const totRow=ws.addRow({codigo:'',nombre:'TOTALES',debito:rows.reduce((s,r)=>s+r.debito,0),credito:rows.reduce((s,r)=>s+r.credito,0)});
+  totRow.eachCell(c=>{ c.font={bold:true,size:10,color:{argb:'FFD97706'}}; c.border={top:{style:'medium',color:{argb:'FFD97706'}}}; });
+  totRow.getCell('debito').numFmt=nf;
+  totRow.getCell('credito').numFmt=nf;
+  ws.autoFilter={from:'A1',to:'D1'};
+
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='Ejemplo_IVA300_ExogenaDIAN.xlsx';a.click();
+  URL.revokeObjectURL(url);
 }
 
 

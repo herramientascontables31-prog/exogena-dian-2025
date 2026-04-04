@@ -121,7 +121,7 @@ gtag('config', 'G-S7SM6ST4CC');
 <div class="drop-zone" id="dzA"><input type="file" accept=".xlsx,.xls,.csv,.tsv,.txt" id="fA"><button class="dz-clear" onclick="clearFile('A');event.stopPropagation()">✕</button><span class="dz-icon">📒</span><div class="dz-title">Libro Auxiliar Contable</div><div class="dz-hint">Excel o CSV · Siigo, World Office, Helisa, otros</div><div class="dz-file" id="nA"></div><div class="dz-rows" id="rA"></div></div>
 </div>
 <div class="actions">
-  <button onclick="descargarEjemploConciliacion()" class="btn btn-outline" style="font-size:.82rem">📥 Descargar archivos de ejemplo</button>
+  <button onclick="btnLoading(this,descargarEjemploConciliacion)" class="btn btn-outline" style="font-size:.82rem">📥 Descargar archivos de ejemplo</button>
   <button class="btn btn-primary" id="btnNext" disabled onclick="goStep2()">Continuar → Verificar columnas</button>
 </div>
 </div>
@@ -1197,37 +1197,196 @@ function fD(d){if(!d)return'—';return d.toLocaleDateString('es-CO',{day:'2-dig
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function sc(cls,val,lab){return`<div class="summary-card ${cls}"><div class="sc-val">${val}</div><div class="sc-label">${lab}</div></div>`}
 
-function descargarEjemploConciliacion(){
-  const extracto=[
-    ['Fecha','Descripción','Débito','Crédito','Saldo'],
-    ['2026-01-05','Consignación cliente ABC',5000000,0,45000000],
-    ['2026-01-08','Pago nómina enero',0,12000000,33000000],
-    ['2026-01-10','Transferencia proveedor XYZ',0,3500000,29500000],
-    ['2026-01-15','Consignación cliente DEF',8200000,0,37700000],
-    ['2026-01-18','Pago arriendo oficina',0,2800000,34900000],
-    ['2026-01-22','Intereses bancarios',0,45000,34855000],
-    ['2026-01-25','Consignación cliente GHI',3100000,0,37955000],
-    ['2026-01-28','Pago servicios públicos',0,650000,37305000],
-    ['2026-01-30','GMF (4x1000)',0,32000,37273000],
+async function btnLoading(btn,fn){
+  if(btn.disabled)return;
+  const orig=btn.innerHTML;
+  btn.disabled=true;btn.style.opacity='.6';
+  btn.innerHTML='Generando...';
+  try{await fn()}catch(e){console.error(e)}
+  finally{btn.disabled=false;btn.style.opacity='';btn.innerHTML=orig}
+}
+
+async function descargarEjemploConciliacion(){
+  const wb=new ExcelJS.Workbook();
+  wb.creator='ExógenaDIAN';
+  const B={type:'pattern',pattern:'solid',fgColor:{argb:'FF1B3A5C'}};
+  const G={type:'pattern',pattern:'solid',fgColor:{argb:'FF059669'}};
+  const W={bold:true,color:{argb:'FFFFFFFF'}};
+  const S={bold:true,size:12,color:{argb:'FF1B3A5C'}};
+  const T={size:10,color:{argb:'FF374151'}};
+  const H={size:10,color:{argb:'FF6B7280'}};
+  const A={bold:true,size:10,color:{argb:'FF1B3A5C'}};
+  const A2={bold:true,size:10,color:{argb:'FF059669'}};
+  const R={italic:true,size:9,color:{argb:'FF9CA3AF'}};
+  const tb={top:{style:'thin',color:{argb:'FFE5E7EB'}},bottom:{style:'thin',color:{argb:'FFE5E7EB'}},left:{style:'thin',color:{argb:'FFE5E7EB'}},right:{style:'thin',color:{argb:'FFE5E7EB'}}};
+  const nf='#,##0';
+
+  /* ── Hoja 1: Instrucciones ── */
+  const wi=wb.addWorksheet('Instrucciones');
+  wi.getColumn(1).width=90;
+  wi.getRow(1).height=36;
+  const t=(r,v,f)=>{wi.getCell('A'+r).value=v;if(f)wi.getCell('A'+r).font=f;};
+  wi.getCell('A1').value='CONCILIACIÓN BANCARIA — Guía para preparar tus archivos';
+  wi.getCell('A1').font={bold:true,size:16,...W}; wi.getCell('A1').fill=B;
+  wi.getCell('A1').alignment={vertical:'middle'};
+
+  t(3,'¿QUÉ NECESITAS?',S);
+  t(4,'Dos archivos separados del mismo período (mes):',T);
+  t(5,'  1. El extracto bancario (lo descargas del portal del banco)',{bold:true,size:10,color:{argb:'FF374151'}});
+  t(6,'  2. El auxiliar contable de la cuenta de bancos (lo exportas de tu software contable)',{bold:true,size:10,color:{argb:'FF374151'}});
+  t(7,'La herramienta cruza ambos archivos y encuentra las partidas conciliatorias automáticamente.',T);
+
+  t(9,'PASO A PASO',S);
+  t(10,'Paso 1 — Entra al portal de tu banco (Bancolombia, Davivienda, Bogotá, BBVA, etc.).',T);
+  t(11,'Paso 2 — Descarga el extracto del mes en Excel o CSV. La mayoría de bancos ofrecen esta opción.',T);
+  t(12,'Paso 3 — Abre tu software contable y exporta el "Auxiliar de la cuenta de bancos" (cuenta 1110xx) del mismo mes.',T);
+  t(13,'Paso 4 — Entra a exogenadian.com → Conciliación Bancaria.',T);
+  t(14,'Paso 5 — En "Archivo E (Extracto)" sube el archivo del banco.',T);
+  t(15,'Paso 6 — En "Archivo A (Libro Auxiliar)" sube el archivo contable.',T);
+  t(16,'Paso 7 — Asigna las columnas si la herramienta no las detectó automáticamente.',T);
+  t(17,'Paso 8 — La herramienta cruza los movimientos por valor y fecha, mostrando las partidas que no coinciden.',T);
+
+  t(19,'ARCHIVO E — EXTRACTO BANCARIO',S);
+  t(20,'(Es el archivo que descargas del portal del banco)',H);
+
+  t(22,'Columna: FECHA (requerida)',A);
+  t(23,'Fecha del movimiento bancario. Acepta múltiples formatos:',T);
+  t(24,'DD/MM/AAAA (05/01/2026), AAAA-MM-DD (2026-01-05), D MMM AAAA (5 Ene 2026), D MMMM AAAA (5 Enero 2026).',H);
+  t(25,'También acepta encabezados: "Fecha", "Date", "Fec", "Fch".',H);
+
+  t(27,'Columna: DESCRIPCIÓN (requerida)',A);
+  t(28,'Descripción del movimiento como aparece en el extracto. Ej: "Consignación cliente ABC", "Pago nómina".',T);
+  t(29,'También acepta: "Detalle", "Concepto", "Observación", "Movimiento".',H);
+
+  t(31,'Columna: DÉBITO (requerida*)',A);
+  t(32,'Valor de entradas (consignaciones, transferencias recibidas). Para el banco, débito = dinero que entra.',T);
+  t(33,'También acepta: "Cargo", "Retiro", "Salida", "Egreso".',H);
+
+  t(35,'Columna: CRÉDITO (requerida*)',A);
+  t(36,'Valor de salidas (pagos, transferencias, comisiones). Para el banco, crédito = dinero que sale.',T);
+  t(37,'También acepta: "Abono", "Depósito", "Entrada", "Consignación".',H);
+
+  t(39,'Columna: VALOR (alternativa a Débito/Crédito)',A);
+  t(40,'Si tu extracto tiene una sola columna de valor (positivo = entrada, negativo = salida), úsala en vez de Débito/Crédito.',T);
+  t(41,'También acepta: "Monto", "Importe", "Amount", "Vlr".',H);
+  t(42,'* Si tienes "Valor", las columnas Débito y Crédito no son necesarias.',{italic:true,size:10,color:{argb:'FF1B3A5C'}});
+
+  t(44,'Columna: REFERENCIA (opcional)',A);
+  t(45,'Número de referencia, cheque o transacción. Ayuda a cruzar con el auxiliar contable.',T);
+  t(46,'También acepta: "Dcto", "Comprobante", "Nro", "Cheque", "Transacción".',H);
+
+  t(48,'ARCHIVO A — LIBRO AUXILIAR CONTABLE',S);
+  t(49,'(Es el archivo que exportas de tu software contable)',H);
+
+  t(51,'Las columnas son las mismas que el extracto, más estas adicionales:',T);
+
+  t(53,'Columna: DOCUMENTO (recomendada)',A2);
+  t(54,'Número del comprobante contable: RC (recibo de caja), CE (comprobante de egreso), FC (factura), etc.',T);
+  t(55,'También acepta: "Referencia", "Dcto", "Comprobante", "Nro".',H);
+
+  t(57,'Columna: TERCERO (opcional)',A2);
+  t(58,'Nombre del tercero asociado al movimiento. Ayuda a identificar partidas.',T);
+  t(59,'También acepta: "Nombre Tercero", "Razón Social", "Beneficiario".',H);
+
+  t(61,'ERRORES COMUNES Y CÓMO EVITARLOS',S);
+  t(62,'Todas las partidas aparecen como "no conciliadas"',{bold:true,size:10,color:{argb:'FFDC2626'}});
+  t(63,'→ Verifica que ambos archivos sean del MISMO mes y la MISMA cuenta bancaria.',T);
+  t(64,'→ Si el banco usa formato colombiano (1.000,00) y el contable usa formato inglés (1,000.00), la herramienta lo detecta.',T);
+  t(66,'La fecha no se detecta correctamente',{bold:true,size:10,color:{argb:'FFDC2626'}});
+  t(67,'→ Verifica que la columna de fecha tenga un formato consistente. Mezclar formatos (DD/MM y MM/DD) causa errores.',T);
+  t(69,'Aparecen filas de "Total" o "Saldo anterior" como movimientos',{bold:true,size:10,color:{argb:'FFDC2626'}});
+  t(70,'→ La herramienta ignora automáticamente filas con: "total", "subtotal", "saldo anterior", "procesado en", "fin estado".',T);
+
+  t(72,'NOTAS IMPORTANTES',S);
+  t(73,'Formatos aceptados: .xlsx, .xls y .csv',T);
+  t(74,'La herramienta detecta automáticamente si tu archivo usa formato colombiano (1.000.000) o inglés (1,000,000).',T);
+  t(75,'Los encabezados se buscan en las primeras 25 filas, así que no importa si hay filas vacías o títulos arriba.',T);
+
+  t(77,'PRUEBA RÁPIDA',S);
+  t(78,'Este archivo tiene dos hojas de ejemplo listas para usar:',T);
+  t(79,'  "Extracto Bancario" — 9 movimientos del banco (enero 2026), incluyendo intereses y GMF.',{bold:true,size:10,color:{argb:'FF374151'}});
+  t(80,'  "Auxiliar Contable" — 7 movimientos contables del mismo período.',{bold:true,size:10,color:{argb:'FF374151'}});
+  t(81,'Hay 2 partidas conciliatorias a propósito: intereses bancarios y GMF aparecen en el extracto pero NO en contabilidad.',T);
+  t(82,'Sube cada hoja como archivo separado para ver cómo la herramienta las detecta.',T);
+
+  t(84,'exogenadian.com — Tus archivos se procesan 100% en tu navegador. Nunca se envían a servidores. Sin IA. Sin almacenamiento.',R);
+
+  /* ── Hoja 2: Extracto Bancario ── */
+  const ws1=wb.addWorksheet('Extracto Bancario');
+  ws1.columns=[
+    {key:'fecha',  header:'Fecha',       width:14},
+    {key:'desc',   header:'Descripción', width:34},
+    {key:'debito', header:'Débito',      width:16},
+    {key:'credito',header:'Crédito',     width:16},
+    {key:'saldo',  header:'Saldo',       width:16},
   ];
-  const auxiliar=[
-    ['Fecha','Documento','Descripción','Débito','Crédito'],
-    ['2026-01-05','RC-001','Recibo caja cliente ABC',5000000,0],
-    ['2026-01-08','CE-015','Comprobante egreso nómina',0,12000000],
-    ['2026-01-10','CE-016','Pago proveedor XYZ',0,3500000],
-    ['2026-01-15','RC-002','Recibo caja cliente DEF',8200000,0],
-    ['2026-01-18','CE-017','Pago arriendo oficina',0,2800000],
-    ['2026-01-25','RC-003','Recibo caja cliente GHI',3100000,0],
-    ['2026-01-28','CE-018','Pago servicios públicos',0,650000],
+  const wf={bold:true,size:10,...W};
+  ws1.getRow(1).height=24;
+  ws1.getRow(1).eachCell(c=>{
+    c.fill=B; c.font=wf;
+    c.alignment={vertical:'middle',horizontal:'center'};
+    c.border={bottom:{style:'medium',color:{argb:'FF059669'}}};
+  });
+
+  const extRows=[
+    {fecha:'2026-01-05',desc:'Consignación cliente ABC',     debito:5000000, credito:0,       saldo:45000000},
+    {fecha:'2026-01-08',desc:'Pago nómina enero',            debito:0,       credito:12000000,saldo:33000000},
+    {fecha:'2026-01-10',desc:'Transferencia proveedor XYZ',  debito:0,       credito:3500000, saldo:29500000},
+    {fecha:'2026-01-15',desc:'Consignación cliente DEF',     debito:8200000, credito:0,       saldo:37700000},
+    {fecha:'2026-01-18',desc:'Pago arriendo oficina',        debito:0,       credito:2800000, saldo:34900000},
+    {fecha:'2026-01-22',desc:'Intereses bancarios',          debito:0,       credito:45000,   saldo:34855000},
+    {fecha:'2026-01-25',desc:'Consignación cliente GHI',     debito:3100000, credito:0,       saldo:37955000},
+    {fecha:'2026-01-28',desc:'Pago servicios públicos',      debito:0,       credito:650000,  saldo:37305000},
+    {fecha:'2026-01-30',desc:'GMF (4x1000)',                 debito:0,       credito:32000,   saldo:37273000},
   ];
-  const wb=XLSX.utils.book_new();
-  const ws1=XLSX.utils.aoa_to_sheet(extracto);
-  ws1['!cols']=[{wch:12},{wch:30},{wch:14},{wch:14},{wch:14}];
-  XLSX.utils.book_append_sheet(wb,ws1,'Extracto Bancario');
-  const ws2=XLSX.utils.aoa_to_sheet(auxiliar);
-  ws2['!cols']=[{wch:12},{wch:10},{wch:30},{wch:14},{wch:14}];
-  XLSX.utils.book_append_sheet(wb,ws2,'Auxiliar Contable');
-  XLSX.writeFile(wb,'Ejemplo_Conciliacion_ExogenaDIAN.xlsx');
+  const zb1={type:'pattern',pattern:'solid',fgColor:{argb:'FFF0F9FF'}};
+  extRows.forEach((r,i)=>{
+    const row=ws1.addRow(r);
+    ['debito','credito','saldo'].forEach(k=>{ row.getCell(k).numFmt=nf; });
+    row.eachCell(c=>{ c.border=tb; c.font={size:10}; });
+    if(i%2===0) row.eachCell(c=>{ c.fill=zb1; });
+  });
+  ws1.autoFilter={from:'A1',to:'E1'};
+
+  /* ── Hoja 3: Auxiliar Contable ── */
+  const ws2=wb.addWorksheet('Auxiliar Contable');
+  ws2.columns=[
+    {key:'fecha',  header:'Fecha',       width:14},
+    {key:'doc',    header:'Documento',   width:12},
+    {key:'desc',   header:'Descripción', width:34},
+    {key:'debito', header:'Débito',      width:16},
+    {key:'credito',header:'Crédito',     width:16},
+  ];
+  ws2.getRow(1).height=24;
+  ws2.getRow(1).eachCell(c=>{
+    c.fill=G; c.font=wf;
+    c.alignment={vertical:'middle',horizontal:'center'};
+    c.border={bottom:{style:'medium',color:{argb:'FF047857'}}};
+  });
+
+  const auxRows=[
+    {fecha:'2026-01-05',doc:'RC-001', desc:'Recibo caja cliente ABC',       debito:5000000, credito:0},
+    {fecha:'2026-01-08',doc:'CE-015', desc:'Comprobante egreso nómina',     debito:0,       credito:12000000},
+    {fecha:'2026-01-10',doc:'CE-016', desc:'Pago proveedor XYZ',            debito:0,       credito:3500000},
+    {fecha:'2026-01-15',doc:'RC-002', desc:'Recibo caja cliente DEF',       debito:8200000, credito:0},
+    {fecha:'2026-01-18',doc:'CE-017', desc:'Pago arriendo oficina',         debito:0,       credito:2800000},
+    {fecha:'2026-01-25',doc:'RC-003', desc:'Recibo caja cliente GHI',       debito:3100000, credito:0},
+    {fecha:'2026-01-28',doc:'CE-018', desc:'Pago servicios públicos',       debito:0,       credito:650000},
+  ];
+  const zb2={type:'pattern',pattern:'solid',fgColor:{argb:'FFECFDF5'}};
+  auxRows.forEach((r,i)=>{
+    const row=ws2.addRow(r);
+    ['debito','credito'].forEach(k=>{ row.getCell(k).numFmt=nf; });
+    row.eachCell(c=>{ c.border=tb; c.font={size:10}; });
+    if(i%2===0) row.eachCell(c=>{ c.fill=zb2; });
+  });
+  ws2.autoFilter={from:'A1',to:'E1'};
+
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='Ejemplo_Conciliacion_ExogenaDIAN.xlsx';a.click();
+  URL.revokeObjectURL(url);
 }
 </script>
 <div id="main"></div>
