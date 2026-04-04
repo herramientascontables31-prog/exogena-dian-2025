@@ -44,6 +44,9 @@ function doGet(e) {
       case 'validateEmail':
         result = handleValidateEmail(e.parameter);
         break;
+      case 'sendAlert':
+        result = handleSendAlert(e.parameter);
+        break;
       default:
         result = { success: false, error: 'Acción no válida' };
     }
@@ -388,6 +391,23 @@ function enviarEmailExpiracion(email, clave) {
     MailApp.sendEmail(email, subject, body);
   } catch (e) {
     Logger.log('Error enviando email a ' + email + ': ' + e.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// ALERTAS (usadas por el backend para notificar presupuesto)
+// ═══════════════════════════════════════════════════════════
+function handleSendAlert(params) {
+  var email = params.email || 'soporte@exogenadian.com';
+  var subject = params.subject || 'Alerta ExógenaDIAN';
+  var body = params.body || 'Alerta sin contenido';
+
+  try {
+    MailApp.sendEmail(email, subject, body);
+    return { success: true, message: 'Alerta enviada a ' + email };
+  } catch (e) {
+    Logger.log('Error enviando alerta a ' + email + ': ' + e.message);
+    return { success: false, error: e.message };
   }
 }
 

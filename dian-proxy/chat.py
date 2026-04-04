@@ -1,14 +1,12 @@
 """
 ExógenaDIAN — Chat endpoint: "Exa", asistente contable IA
 Anthropic API con prompt caching + streaming SSE.
-Rate limit: 20 mensajes/hora por IP.
 
-Optimizaciones:
-  - Prompt caching: el system prompt (~1200 tokens) se cachea por 5 min.
-    Tokens cacheados cuestan 90% menos ($0.30/M vs $3/M input).
-  - max_tokens reducido a 800 (respuestas concisas de Exa).
-  - Historial recortado: solo últimos 10 mensajes para reducir input.
-  - Mensajes de usuario limitados a 500 chars.
+Features:
+  - Prompt caching (90% cheaper on system prompt)
+  - Rate limit: 20 msgs/hora por IP
+  - Cost tracker: acumula gasto mensual, alerta al 80%, bloquea al 100%
+  - Budget: configurable via CHAT_MONTHLY_BUDGET (default $5 USD)
 """
 import json
 import logging
@@ -30,11 +28,17 @@ CHAT_MODEL = os.getenv("CHAT_MODEL", "claude-sonnet-4-20250514")
 CHAT_MAX_TOKENS = int(os.getenv("CHAT_MAX_TOKENS", "800"))
 CHAT_RATE_LIMIT = int(os.getenv("CHAT_RATE_LIMIT", "20"))  # msgs/hora
 WHATSAPP_URL = os.getenv("WHATSAPP_URL", "https://wa.me/573054559574")
+CHAT_MONTHLY_BUDGET = float(os.getenv("CHAT_MONTHLY_BUDGET", "5.0"))  # USD
+ALERT_EMAIL = os.getenv("ALERT_EMAIL", "soporte@exogenadian.com")
+ALERT_WEBHOOK_URL = os.getenv("ALERT_WEBHOOK_URL", "")  # Google Apps Script URL
+
+# Precios Sonnet (USD por millón de tokens)
+PRICE_INPUT = 3.0
+PRICE_CACHED_INPUT = 0.30
+PRICE_OUTPUT = 15.0
 
 BASE = "https://exogenadian.com"
 
-# System prompt con cache_control para Anthropic prompt caching.
-# Se envía como array de bloques [{type, text, cache_control}].
 SYSTEM_BLOCKS = [
     {
         "type": "text",
@@ -85,6 +89,113 @@ REGLAS:
     }
 ]
 
+BUDGET_EXCEEDED_MSG = (
+    "En este momento estoy en mantenimiento. Mientras tanto, puedes consultar "
+    f"nuestras herramientas directamente en [{BASE}]({BASE}) o escribirnos por "
+    f"**[WhatsApp]({WHATSAPP_URL})**."
+)
+
+
+# ═══════════════════════════════════════════════════════════════
+#  COST TRACKER — acumula gasto mensual, alerta, bloquea
+# ═══════════════════════════════════════════════════════════════
+
+class CostTracker:
+    def __init__(self):
+        self.spend: float = 0.0
+        self.month: str = self._current_month()
+        self.alert_sent: bool = False
+        self.message_count: int = 0
+
+    @staticmethod
+    def _current_month() -> str:
+        return datetime.now(timezone.utc).strftime("%Y-%m")
+
+    def _reset_if_new_month(self):
+        current = self._current_month()
+        if current != self.month:
+            self.spend = 0.0
+            self.month = current
+            self.alert_sent = False
+            self.message_count = 0
+
+    def add(self, input_tokens: int, cached_tokens: int, output_tokens: int):
+        """Sumar costo de una respuesta."""
+        self._reset_if_new_month()
+        # Tokens no cacheados = input_tokens - cached_tokens
+        fresh_input = max(0, input_tokens - cached_tokens)
+        cost = (
+            (fresh_input / 1_000_000) * PRICE_INPUT
+            + (cached_tokens / 1_000_000) * PRICE_CACHED_INPUT
+            + (output_tokens / 1_000_000) * PRICE_OUTPUT
+        )
+        self.spend += cost
+        self.message_count += 1
+        logger.info(
+            "Chat cost: $%.4f (total: $%.4f / $%.2f, msgs: %d)",
+            cost, self.spend, CHAT_MONTHLY_BUDGET, self.message_count,
+        )
+        return cost
+
+    def is_over_budget(self) -> bool:
+        self._reset_if_new_month()
+        return self.spend >= CHAT_MONTHLY_BUDGET
+
+    def should_alert(self) -> bool:
+        """True si estamos al 80%+ y no se ha enviado alerta este mes."""
+        self._reset_if_new_month()
+        if self.alert_sent:
+            return False
+        return self.spend >= CHAT_MONTHLY_BUDGET * 0.8
+
+    def mark_alert_sent(self):
+        self.alert_sent = True
+
+    def stats(self) -> dict:
+        self._reset_if_new_month()
+        return {
+            "month": self.month,
+            "spend_usd": round(self.spend, 4),
+            "budget_usd": CHAT_MONTHLY_BUDGET,
+            "percent_used": round((self.spend / CHAT_MONTHLY_BUDGET) * 100, 1) if CHAT_MONTHLY_BUDGET > 0 else 0,
+            "messages": self.message_count,
+            "alert_sent": self.alert_sent,
+        }
+
+
+cost_tracker = CostTracker()
+
+
+async def _send_budget_alert():
+    """Enviar alerta de presupuesto via Google Apps Script webhook."""
+    if not ALERT_WEBHOOK_URL:
+        logger.warning("Budget alert triggered but no ALERT_WEBHOOK_URL configured")
+        return
+    stats = cost_tracker.stats()
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            await client.get(
+                ALERT_WEBHOOK_URL,
+                params={
+                    "action": "sendAlert",
+                    "email": ALERT_EMAIL,
+                    "subject": f"⚠️ Exa: {stats['percent_used']}% del presupuesto usado",
+                    "body": (
+                        f"Hola,\n\n"
+                        f"El chatbot Exa ha usado el {stats['percent_used']}% del presupuesto mensual.\n\n"
+                        f"Gasto: ${stats['spend_usd']} USD de ${stats['budget_usd']} USD\n"
+                        f"Mensajes este mes: {stats['messages']}\n"
+                        f"Mes: {stats['month']}\n\n"
+                        f"Recarga tu saldo en console.anthropic.com → Settings → Billing.\n\n"
+                        f"---\nExógenaDIAN · exogenadian.com"
+                    ),
+                },
+            )
+        cost_tracker.mark_alert_sent()
+        logger.info("Budget alert sent to %s", ALERT_EMAIL)
+    except Exception as e:
+        logger.error("Failed to send budget alert: %s", e)
+
 
 # ─── Rate limiter (por IP, ventana deslizante 1h) ───
 
@@ -111,7 +222,7 @@ rate_limiter = ChatRateLimiter()
 
 class ChatMessage(BaseModel):
     role: str = Field(pattern="^(user|assistant)$")
-    content: str = Field(max_length=4000)  # assistant responses can be long
+    content: str = Field(max_length=4000)
 
 
 class ChatRequest(BaseModel):
@@ -134,6 +245,10 @@ async def chat(body: ChatRequest, request: Request):
     if not ANTHROPIC_API_KEY:
         return {"error": "Chat no configurado. Falta ANTHROPIC_API_KEY."}
 
+    # Budget check
+    if cost_tracker.is_over_budget():
+        return {"error": BUDGET_EXCEEDED_MSG}
+
     ip = _get_client_ip(request)
     allowed, remaining = rate_limiter.check(ip)
 
@@ -145,10 +260,15 @@ async def chat(body: ChatRequest, request: Request):
 
     rate_limiter.consume(ip)
 
-    # Últimos 10 mensajes para reducir tokens de input
     messages = [{"role": m.role, "content": m.content} for m in body.messages[-10:]]
 
+    # Track tokens across the stream
+    usage_input = 0
+    usage_cached = 0
+    usage_output = 0
+
     async def event_stream():
+        nonlocal usage_input, usage_cached, usage_output
         try:
             async with httpx.AsyncClient(timeout=60.0) as client:
                 async with client.stream(
@@ -187,14 +307,28 @@ async def chat(body: ChatRequest, request: Request):
 
                         etype = event.get("type", "")
 
-                        if etype == "content_block_delta":
+                        # Capture usage from message_start
+                        if etype == "message_start":
+                            msg = event.get("message", {})
+                            u = msg.get("usage", {})
+                            usage_input = u.get("input_tokens", 0)
+                            usage_cached = u.get("cache_read_input_tokens", 0)
+
+                        elif etype == "content_block_delta":
                             delta = event.get("delta", {})
                             if delta.get("type") == "text_delta":
                                 text = delta.get("text", "")
                                 if text:
                                     yield f"data: {json.dumps({'type': 'text', 'text': text})}\n\n"
+
+                        # Capture output tokens from message_delta
+                        elif etype == "message_delta":
+                            u = event.get("usage", {})
+                            usage_output = u.get("output_tokens", 0)
+
                         elif etype == "message_stop":
                             yield f"data: {json.dumps({'type': 'done'})}\n\n"
+
                         elif etype == "error":
                             yield f"data: {json.dumps({'type': 'error', 'error': 'Error interno.'})}\n\n"
 
@@ -204,8 +338,21 @@ async def chat(body: ChatRequest, request: Request):
             logger.error("Chat stream error: %s", e)
             yield f"data: {json.dumps({'type': 'error', 'error': 'Error inesperado.'})}\n\n"
 
+    async def tracked_stream():
+        """Wrapper que rastrea costos después del stream."""
+        async for chunk in event_stream():
+            yield chunk
+
+        # Después de que el stream termine, registrar costo
+        if usage_input > 0 or usage_output > 0:
+            cost_tracker.add(usage_input, usage_cached, usage_output)
+
+            # Enviar alerta si estamos al 80%+
+            if cost_tracker.should_alert():
+                await _send_budget_alert()
+
     return StreamingResponse(
-        event_stream(),
+        tracked_stream(),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
@@ -219,4 +366,8 @@ async def chat(body: ChatRequest, request: Request):
 async def chat_remaining(request: Request):
     ip = _get_client_ip(request)
     _, remaining = rate_limiter.check(ip)
-    return {"remaining": remaining, "limit": CHAT_RATE_LIMIT}
+    return {
+        "remaining": remaining,
+        "limit": CHAT_RATE_LIMIT,
+        "budget": cost_tracker.stats(),
+    }
