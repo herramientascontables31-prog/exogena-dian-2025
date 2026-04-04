@@ -28,8 +28,8 @@
   var megaCSS=document.createElement('style');
   megaCSS.textContent=`
     /* ===== MEGA MENU ===== */
-    .mega-menu{display:none;position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);background:var(--white,#fff);border:1.5px solid var(--gray-200,#E5E7EB);border-radius:16px;padding:20px 24px;min-width:600px;box-shadow:0 16px 48px rgba(0,0,0,.12);z-index:200}
-    .nav-dropdown.open .mega-menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:20px}
+    .mega-menu{display:none;position:absolute;top:calc(100% + 12px);right:-60px;background:var(--white,#fff);border:1.5px solid var(--gray-200,#E5E7EB);border-radius:16px;padding:20px 24px;min-width:620px;box-shadow:0 16px 48px rgba(0,0,0,.12);z-index:200}
+    .nav-dropdown.open .mega-menu{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
     .mega-col h6{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400,#9CA3AF);margin-bottom:10px;padding:0 10px}
     .mega-col a{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--gray-600,#4B5563);font-size:.84rem;font-weight:500;transition:all .15s;white-space:nowrap}
     .mega-col a:hover{background:var(--green-50,#ECFDF5);color:var(--green-700,#047857)}
