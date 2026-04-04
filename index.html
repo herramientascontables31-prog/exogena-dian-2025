@@ -301,22 +301,22 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 .footer-bottom{padding-top:24px;border-top:1px solid rgba(255,255,255,.06);text-align:center;font-size:.82rem;color:var(--gray-600);line-height:1.8}
 
 /* ===== TRUST / SECURITY ===== */
-.trust{padding:60px 48px;background:linear-gradient(170deg,#ECFDF5 0%,#fff 50%,#F0FFF4 100%);position:relative;overflow:hidden}
+.trust{padding:56px 48px;background:linear-gradient(170deg,#ECFDF5 0%,#fff 50%,#F0FFF4 100%);position:relative;overflow:hidden}
 .trust::before{content:'';position:absolute;top:-20%;right:-10%;width:400px;height:400px;background:radial-gradient(circle,rgba(16,185,129,.06) 0%,transparent 70%);border-radius:50%;pointer-events:none}
 .trust-inner{max-width:1100px;margin:0 auto}
-.trust-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;margin-top:28px}
-.trust-flow{display:flex;flex-direction:column;gap:10px}
-.trust-step{display:flex;align-items:flex-start;gap:14px;background:#fff;border-radius:12px;padding:16px;border:1.5px solid var(--green-200);transition:all .3s}
+.trust-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:stretch;margin-top:20px}
+.trust-flow{display:flex;flex-direction:column;gap:8px}
+.trust-step{display:flex;align-items:flex-start;gap:12px;background:#fff;border-radius:12px;padding:14px 16px;border:1.5px solid var(--green-200);transition:all .3s;flex:1}
 .trust-step:hover{border-color:var(--green-400);box-shadow:0 8px 24px rgba(5,150,105,.08)}
-.trust-step-num{width:32px;height:32px;border-radius:50%;background:var(--green-600);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.85rem;flex-shrink:0}
-.trust-step h4{font-size:.95rem;font-weight:700;margin-bottom:3px;color:var(--gray-900)}
-.trust-step p{font-size:.84rem;color:var(--gray-500);line-height:1.45}
-.trust-badges{display:flex;flex-direction:column;gap:10px}
-.trust-badge{display:flex;align-items:flex-start;gap:12px;background:#fff;border-radius:12px;padding:16px 18px;border:1px solid var(--gray-200);transition:all .3s}
+.trust-step-num{width:30px;height:30px;border-radius:50%;background:var(--green-600);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.82rem;flex-shrink:0}
+.trust-step h4{font-size:.92rem;font-weight:700;margin-bottom:2px;color:var(--gray-900)}
+.trust-step p{font-size:.82rem;color:var(--gray-500);line-height:1.4}
+.trust-badges{display:flex;flex-direction:column;gap:8px}
+.trust-badge{display:flex;align-items:flex-start;gap:12px;background:#fff;border-radius:12px;padding:14px 16px;border:1px solid var(--gray-200);transition:all .3s;flex:1}
 .trust-badge:hover{border-color:var(--green-300);box-shadow:var(--shadow)}
-.trust-badge-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:1.3rem;flex-shrink:0;background:var(--green-50);border:1px solid var(--green-100)}
-.trust-badge h4{font-size:.9rem;font-weight:700;margin-bottom:2px;color:var(--gray-900)}
-.trust-badge p{font-size:.82rem;color:var(--gray-500);line-height:1.4}
+.trust-badge-icon{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;font-size:1.2rem;flex-shrink:0;background:var(--green-50);border:1px solid var(--green-100)}
+.trust-badge h4{font-size:.88rem;font-weight:700;margin-bottom:2px;color:var(--gray-900)}
+.trust-badge p{font-size:.8rem;color:var(--gray-500);line-height:1.4}
 .sec-faq{padding:60px 48px;background:var(--white)}
 .sec-faq-inner{max-width:800px;margin:0 auto}
 .sec-faq-item{border-bottom:1px solid var(--gray-200);padding:20px 0}
@@ -582,18 +582,17 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
 <!-- ===== SEGURIDAD Y PRIVACIDAD ===== -->
 <section class="trust fade-in" id="seguridad">
   <div class="trust-inner">
-    <div class="section-tag" style="color:var(--green-700)">Seguridad y Privacidad</div>
     <h2 class="section-title">Tu informaci&oacute;n nunca sale de tu computador</h2>
-    <p class="section-desc" style="margin-bottom:28px">Dise&ntilde;amos esta herramienta para que <strong>todo se procese en tu equipo</strong>, sin enviar nada a ning&uacute;n servidor.</p>
+    <p style="color:var(--gray-500);font-size:1rem;line-height:1.5;max-width:600px;margin-bottom:24px">Dise&ntilde;amos esta herramienta para que <strong>todo se procese en tu equipo</strong>, sin enviar nada a ning&uacute;n servidor.</p>
 
     <div class="trust-grid">
       <div class="trust-flow">
-        <h3 style="font-size:1rem;font-weight:700;color:var(--gray-800);margin-bottom:2px">As&iacute; funciona la protecci&oacute;n de tus datos:</h3>
+        <p style="font-size:.85rem;font-weight:600;color:var(--gray-600);margin-bottom:0">As&iacute; funciona la protecci&oacute;n de tus datos:</p>
         <div class="trust-step">
           <div class="trust-step-num">1</div>
           <div>
             <h4>Seleccionas tu archivo Excel</h4>
-            <p>El archivo se abre <strong>directamente en tu navegador</strong> (Chrome, Edge, Firefox). Es como abrirlo en Excel, pero en la p&aacute;gina web. Nunca se "sube" a internet.</p>
+            <p>El archivo se abre <strong>directamente en tu navegador</strong> (Chrome, Edge, Firefox). Es como abrirlo en Excel, pero en la p&aacute;gina web. Nunca se &ldquo;sube&rdquo; a internet.</p>
           </div>
         </div>
         <div class="trust-step">
@@ -641,7 +640,6 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
             <p>Si decides comprar PRO, el pago lo procesa Wompi, respaldado por Bancolombia. Nosotros nunca vemos ni almacenamos datos de tarjetas.</p>
           </div>
         </div>
-
       </div>
     </div>
   </div>
