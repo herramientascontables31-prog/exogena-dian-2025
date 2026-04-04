@@ -105,7 +105,8 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);line-heig
 .upload-card .card-title{font-family:var(--font-title);font-size:1.4rem;font-weight:700;margin-bottom:12px;color:var(--text)}
 .upload-card>p{color:var(--text3);font-size:.9rem;margin-bottom:24px;line-height:1.6}
 .drop-zone{border:2px dashed var(--border2);border-radius:var(--radius);padding:40px 24px;cursor:pointer;transition:all .3s;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative}
-.drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);background:rgba(59,130,246,.04)}
+.drop-zone:hover,.drop-zone.drag-over,.drop-zone.dragover{border-color:var(--accent);background:rgba(59,130,246,.04)}
+.drop-zone.loaded{border-color:var(--green);border-style:solid;background:rgba(16,185,129,.06)}
 html.light-theme .drop-zone:hover,html.light-theme .drop-zone.drag-over{background:rgba(5,150,105,.04);border-color:var(--accent)}
 .drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
 .dz-icon{font-size:2.2rem}
@@ -249,6 +250,7 @@ html.light-theme .expand-btn:hover{background:rgba(0,0,0,.06)}
   .charts-grid{grid-template-columns:1fr}
 }
 @media(max-width:768px){
+  #uploadGrid{grid-template-columns:1fr!important}
   .dash-container{padding:12px 14px 40px}
   .dash-header{flex-direction:column;align-items:flex-start;gap:12px;padding:20px}
   .company-info{text-align:left}
@@ -305,17 +307,39 @@ html.light-theme .expand-btn:hover{background:rgba(0,0,0,.06)}
   </div>
   <div class="upload-card">
     <div class="card-title">Carga tu balance de prueba</div>
-    <p>Sube el balance de prueba de tu software contable y genera el dashboard financiero automaticamente.</p>
-    <div class="drop-zone" id="dropZone">
-      <span class="dz-icon">&#128193;</span>
-      <span class="dz-title">Arrastra tu archivo aqui</span>
-      <span class="dz-hint">o haz clic para seleccionar &middot; Excel (.xlsx, .xls) o CSV</span>
-      <span class="dz-filename" id="dzFilename"></span>
-      <input type="file" accept=".xlsx,.xls,.csv" id="fileInput">
+    <p>Sube uno o dos balances de prueba para generar el dashboard. Con dos archivos se activa el comparativo automaticamente.</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="uploadGrid">
+      <!-- Periodo actual -->
+      <div>
+        <div style="font-size:.82rem;font-weight:600;color:var(--text2);margin-bottom:8px">Periodo actual <span style="color:var(--red)">*</span></div>
+        <div class="drop-zone" id="dropZone1" style="padding:28px 16px">
+          <span class="dz-icon" style="font-size:1.8rem">&#128193;</span>
+          <span class="dz-title" style="font-size:.9rem">Arrastra aqui</span>
+          <span class="dz-hint">Excel o CSV</span>
+          <span class="dz-filename" id="dzFilename1"></span>
+          <input type="file" accept=".xlsx,.xls,.csv" id="fileInput1">
+        </div>
+        <input type="text" id="labelPeriodo1" placeholder="Etiqueta (ej: 2024, Dic-2024)" value="" style="width:100%;margin-top:8px;padding:8px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--card);color:var(--text);font-family:var(--font-ui);font-size:.82rem">
+      </div>
+      <!-- Periodo anterior (opcional) -->
+      <div>
+        <div style="font-size:.82rem;font-weight:600;color:var(--text2);margin-bottom:8px">Periodo anterior <span style="color:var(--text3)">(opcional)</span></div>
+        <div class="drop-zone" id="dropZone2" style="padding:28px 16px">
+          <span class="dz-icon" style="font-size:1.8rem">&#128194;</span>
+          <span class="dz-title" style="font-size:.9rem">Arrastra aqui</span>
+          <span class="dz-hint">Para comparativo</span>
+          <span class="dz-filename" id="dzFilename2"></span>
+          <input type="file" accept=".xlsx,.xls,.csv" id="fileInput2">
+        </div>
+        <input type="text" id="labelPeriodo2" placeholder="Etiqueta (ej: 2023, Dic-2023)" value="" style="width:100%;margin-top:8px;padding:8px 12px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--card);color:var(--text);font-family:var(--font-ui);font-size:.82rem">
+      </div>
     </div>
+
+    <button onclick="processUploadedFiles()" class="btn-accent" id="btnGenerar" style="width:100%;padding:14px;font-size:.95rem;border-radius:var(--radius);border:none;cursor:pointer;font-family:var(--font-ui);font-weight:700;color:#fff;background:var(--accent);margin-bottom:12px;display:none">Generar Dashboard &rarr;</button>
     <div id="uploadError" class="upload-error"></div>
     <div class="or-divider">o</div>
-    <button onclick="loadDemoData()" class="btn-demo">Ver datos de ejemplo &rarr;</button>
+    <button onclick="loadDemoData()" class="btn-demo">Ver datos de ejemplo (con comparativo) &rarr;</button>
     <p class="security-note">&#128274; Tu archivo se procesa 100% en tu navegador. No se sube a ningun servidor.</p>
   </div>
 </div>
@@ -946,64 +970,138 @@ function buildDataFromAccounts(accounts) {
 }
 
 // =====================================================
-// FILE UPLOAD HANDLING
+// FILE UPLOAD HANDLING (2 periodos)
 // =====================================================
-function processFile(file) {
+var uploadedFile1 = null;
+var uploadedFile2 = null;
+
+function readExcelFile(file) {
+  return new Promise(function(resolve, reject) {
+    var ext = file.name.split('.').pop().toLowerCase();
+    if (['xlsx','xls','csv'].indexOf(ext) === -1) {
+      reject(new Error('Formato no soportado: ' + ext));
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        var data = new Uint8Array(e.target.result);
+        var workbook = XLSX.read(data, { type: 'array' });
+        var sheet = workbook.Sheets[workbook.SheetNames[0]];
+        var rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+        var accounts = parseBalancePrueba(rows);
+        var yearData = buildDataFromAccounts(accounts);
+        resolve({ data: yearData, accounts: accounts.length, name: file.name });
+      } catch(err) {
+        reject(err);
+      }
+    };
+    reader.onerror = function() { reject(new Error('Error leyendo archivo')); };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+function updateGenerarBtn() {
+  var btn = document.getElementById('btnGenerar');
+  btn.style.display = uploadedFile1 ? 'block' : 'none';
+}
+
+function setupDropZone(zoneId, inputId, filenameId, fileNum) {
+  var zone = document.getElementById(zoneId);
+  var input = document.getElementById(inputId);
+  if (!zone || !input) return;
+
+  zone.addEventListener('click', function() { input.click(); });
+  zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', function() { zone.classList.remove('dragover'); });
+  zone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) {
+      var f = e.dataTransfer.files[0];
+      if (fileNum === 1) uploadedFile1 = f; else uploadedFile2 = f;
+      document.getElementById(filenameId).textContent = f.name;
+      zone.classList.add('loaded');
+      updateGenerarBtn();
+    }
+  });
+  input.addEventListener('change', function() {
+    if (input.files.length > 0) {
+      var f = input.files[0];
+      if (fileNum === 1) uploadedFile1 = f; else uploadedFile2 = f;
+      document.getElementById(filenameId).textContent = f.name;
+      zone.classList.add('loaded');
+      updateGenerarBtn();
+    }
+  });
+}
+
+function processUploadedFiles() {
   var errorEl = document.getElementById('uploadError');
   errorEl.style.display = 'none';
-  errorEl.textContent = '';
-
-  var ext = file.name.split('.').pop().toLowerCase();
-  if (['xlsx','xls','csv'].indexOf(ext) === -1) {
-    errorEl.textContent = 'Formato no soportado. Usa .xlsx, .xls o .csv';
+  if (!uploadedFile1) {
+    errorEl.textContent = 'Debes cargar al menos el balance del periodo actual.';
     errorEl.style.display = 'block';
     return;
   }
 
-  document.getElementById('dzFilename').textContent = file.name;
+  var btn = document.getElementById('btnGenerar');
+  btn.textContent = 'Procesando...';
+  btn.disabled = true;
 
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      var data;
-      if (ext === 'csv') {
-        data = new Uint8Array(e.target.result);
-      } else {
-        data = new Uint8Array(e.target.result);
-      }
-      var workbook = XLSX.read(data, { type: 'array' });
-      var sheetName = workbook.SheetNames[0];
-      var sheet = workbook.Sheets[sheetName];
-      var rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+  var label1 = document.getElementById('labelPeriodo1').value.trim() || new Date().getFullYear().toString();
+  var label2 = document.getElementById('labelPeriodo2').value.trim() || (parseInt(label1) - 1).toString();
 
-      var accounts = parseBalancePrueba(rows);
-      var yearData = buildDataFromAccounts(accounts);
+  // Use numeric keys derived from labels (or sequential)
+  var key1 = parseInt(label1) || 2024;
+  var key2 = parseInt(label2) || key1 - 1;
+  if (key1 === key2) key2 = key1 - 1;
 
-      // Set single-year data
-      var currentYr = new Date().getFullYear();
-      DATA = {};
-      DATA[currentYr] = yearData;
-      isDemoMode = false;
-      currentYear = currentYr;
+  var p1 = readExcelFile(uploadedFile1);
+  var p2 = uploadedFile2 ? readExcelFile(uploadedFile2) : Promise.resolve(null);
 
-      // Update period selector to show only one year
-      var selector = document.getElementById('periodSelector');
-      selector.innerHTML = '<button class="period-btn active" data-year="' + currentYr + '">' + currentYr + '</button>';
+  Promise.all([p1, p2]).then(function(results) {
+    var res1 = results[0];
+    var res2 = results[1];
 
-      // Update company info
-      var fname = file.name.replace(/\.(xlsx|xls|csv)$/i, '');
-      document.getElementById('companyName').textContent = fname;
-      document.getElementById('companyNit').textContent = accounts.length + ' cuentas procesadas';
-      document.getElementById('companyExtra').textContent = 'Balance cargado: ' + file.name;
+    DATA = {};
+    DATA[key1] = res1.data;
+    isDemoMode = false;
+    currentYear = key1;
 
-      showDashboard();
-    } catch(err) {
-      errorEl.textContent = err.message || 'Error al procesar el archivo.';
-      errorEl.style.display = 'block';
-      console.error(err);
+    var selector = document.getElementById('periodSelector');
+    var totalCuentas = res1.accounts;
+
+    if (res2) {
+      DATA[key2] = res2.data;
+      totalCuentas += res2.accounts;
+      selector.innerHTML =
+        '<button class="period-btn" data-year="' + key2 + '">' + label2 + '</button>' +
+        '<button class="period-btn active" data-year="' + key1 + '">' + label1 + '</button>';
+      // Activar comparativo automáticamente
+      document.getElementById('toggleComparativo').checked = true;
+      comparativo = true;
+    } else {
+      selector.innerHTML = '<button class="period-btn active" data-year="' + key1 + '">' + label1 + '</button>';
     }
-  };
-  reader.readAsArrayBuffer(file);
+    bindPeriodSelector();
+
+    var fname = uploadedFile1.name.replace(/\.(xlsx|xls|csv)$/i, '');
+    document.getElementById('companyName').textContent = fname;
+    document.getElementById('companyNit').textContent = totalCuentas + ' cuentas procesadas';
+    document.getElementById('companyExtra').textContent = res2
+      ? 'Comparativo: ' + label1 + ' vs ' + label2
+      : 'Periodo: ' + label1;
+
+    showDashboard();
+  }).catch(function(err) {
+    errorEl.textContent = err.message || 'Error al procesar los archivos.';
+    errorEl.style.display = 'block';
+    console.error(err);
+  }).finally(function() {
+    btn.textContent = 'Generar Dashboard \u2192';
+    btn.disabled = false;
+  });
 }
 
 function loadDemoData() {
@@ -1038,9 +1136,18 @@ function showUploadScreen() {
   document.getElementById('dashboardContainer').style.display = 'none';
   document.getElementById('uploadScreen').style.display = 'flex';
   // Reset upload state
-  document.getElementById('dzFilename').textContent = '';
+  uploadedFile1 = null;
+  uploadedFile2 = null;
+  document.getElementById('dzFilename1').textContent = '';
+  document.getElementById('dzFilename2').textContent = '';
   document.getElementById('uploadError').style.display = 'none';
-  document.getElementById('fileInput').value = '';
+  document.getElementById('fileInput1').value = '';
+  document.getElementById('fileInput2').value = '';
+  document.getElementById('labelPeriodo1').value = '';
+  document.getElementById('labelPeriodo2').value = '';
+  document.getElementById('btnGenerar').style.display = 'none';
+  var zones = document.querySelectorAll('.drop-zone');
+  for (var i = 0; i < zones.length; i++) zones[i].classList.remove('loaded');
 }
 
 // =====================================================
@@ -1813,32 +1920,9 @@ updateThemeButton();
 // Upload new file
 document.getElementById('btnUploadNew').addEventListener('click', showUploadScreen);
 
-// File upload handlers
-(function() {
-  var dropZone = document.getElementById('dropZone');
-  var fileInput = document.getElementById('fileInput');
-
-  dropZone.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    dropZone.classList.add('drag-over');
-  });
-  dropZone.addEventListener('dragleave', function(e) {
-    e.preventDefault();
-    dropZone.classList.remove('drag-over');
-  });
-  dropZone.addEventListener('drop', function(e) {
-    e.preventDefault();
-    dropZone.classList.remove('drag-over');
-    if (e.dataTransfer.files.length > 0) {
-      processFile(e.dataTransfer.files[0]);
-    }
-  });
-  fileInput.addEventListener('change', function(e) {
-    if (e.target.files.length > 0) {
-      processFile(e.target.files[0]);
-    }
-  });
-})();
+// File upload handlers (2 drop zones)
+setupDropZone('dropZone1', 'fileInput1', 'dzFilename1', 1);
+setupDropZone('dropZone2', 'fileInput2', 'dzFilename2', 2);
 
 // =====================================================
 // RENDER ALL
