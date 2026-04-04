@@ -50,7 +50,7 @@
   function getDeviceFingerprint(){
     var uid=localStorage.getItem(KEY_DEVICE);
     if(!uid){
-      uid='D-'+crypto.randomUUID().split('-').slice(0,2).join('');
+      uid='D-'+(crypto.randomUUID?crypto.randomUUID():([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,function(c){return(c^(crypto.getRandomValues(new Uint8Array(1))[0]&(15>>c/4))).toString(16)})).split('-').slice(0,2).join('');
       localStorage.setItem(KEY_DEVICE, uid);
     }
     return uid;

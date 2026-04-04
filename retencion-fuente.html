@@ -4,6 +4,9 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-S7SM6ST4CC');</script>
 <meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="og-image.png">
+<meta name="theme-color" content="#059669">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Calculadora Retención en la Fuente 2026 — Asalariados e Independientes | ExógenaDIAN</title>
 <meta name="description" content="Calcula GRATIS la retención en la fuente por salarios (Procedimiento 1 y 2) e independientes. Tabla Art. 383 ET, sugerencias para reducir la base gravable. Exporta Excel formulado.">
@@ -357,12 +360,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <script>
 /* ═══ CONSTANTES ═══ */
 const UVT={2026:52374,2025:49799};
-const SMLMV={2026:1423500,2025:1300000};
+const SMLMV={2026:1750905,2025:1423500};
 
 /* ═══ PRO ═══ */
 const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
 let proUnlocked=false;
-function getDeviceFingerprint(){let u=localStorage.getItem('exogenadian_device_id');if(!u){u='D-'+crypto.randomUUID().split('-').slice(0,2).join('');localStorage.setItem('exogenadian_device_id',u)}return u}
+function getDeviceFingerprint(){let u=localStorage.getItem('exogenadian_device_id');if(!u){u='D-'+(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).substr(2,9)+'-'+Math.random().toString(36).substr(2,9)).split('-').slice(0,2).join('');localStorage.setItem('exogenadian_device_id',u)}return u}
 async function validarPro(v){try{const fp=getDeviceFingerprint(),isE=v.includes('@'),act=isE?'validateEmail':'validateKey',p=isE?'email':'key',url=APPS_SCRIPT_URL+'?action='+act+'&'+p+'='+encodeURIComponent(v)+'&device='+encodeURIComponent(fp),r=await fetch(url),d=await r.json();if(d.valid)return true}catch(e){}return false}
 async function initPro(){const s=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');if(s){const v=await validarPro(s);if(v){proUnlocked=true}else{localStorage.removeItem('exogenadian_pro_email');localStorage.removeItem('exogenadian_pro_key')}}}
 (function(){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initPro);else initPro()})();
@@ -512,7 +515,7 @@ function calcIndependiente(anio,uvt,smlmv){
   const retFija=Math.round(ingreso*tarifaFija);
 
   // Cuantía mínima
-  const cuantiaMinima=tipo==='servicios'?2*uvt:0;
+  const cuantiaMinima=tipo==='servicios'?4*uvt:0;
   const aplicaCuantia=tipo!=='honorarios'&&ingreso<cuantiaMinima;
 
   // Depuración Art. 383
@@ -724,8 +727,8 @@ async function generarExcelCliente(){
   wsT.getCell('B6').value='UVT 2025';styleNormal(wsT.getCell('B6'));wsT.getCell('C6').value=49799;styleNormal(wsT.getCell('C6'));wsT.getCell('C6').numFmt='#,##0';
   wsT.getCell('B7').value='UVT aplicable';styleHighlight(wsT.getCell('B7'));
   wsT.getCell('C7').value={formula:'IF(C4=2026,C5,C6)'};styleHighlight(wsT.getCell('C7'));wsT.getCell('C7').numFmt='#,##0';
-  wsT.getCell('B8').value='SMLMV 2026';styleNormal(wsT.getCell('B8'));wsT.getCell('C8').value=1423500;styleNormal(wsT.getCell('C8'));wsT.getCell('C8').numFmt='#,##0';
-  wsT.getCell('B9').value='SMLMV 2025';styleNormal(wsT.getCell('B9'));wsT.getCell('C9').value=1300000;styleNormal(wsT.getCell('C9'));wsT.getCell('C9').numFmt='#,##0';
+  wsT.getCell('B8').value='SMLMV 2026';styleNormal(wsT.getCell('B8'));wsT.getCell('C8').value=1750905;styleNormal(wsT.getCell('C8'));wsT.getCell('C8').numFmt='#,##0';
+  wsT.getCell('B9').value='SMLMV 2025';styleNormal(wsT.getCell('B9'));wsT.getCell('C9').value=1423500;styleNormal(wsT.getCell('C9'));wsT.getCell('C9').numFmt='#,##0';
   wsT.getCell('B10').value='SMLMV aplicable';styleHighlight(wsT.getCell('B10'));
   wsT.getCell('C10').value={formula:'IF(C4=2026,C8,C9)'};styleHighlight(wsT.getCell('C10'));wsT.getCell('C10').numFmt='#,##0';
 

@@ -32,6 +32,7 @@ load_dotenv()
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://exogenadian.com").split(",")
 CACHE_TTL_DAYS = int(os.getenv("CACHE_TTL_DAYS", "7"))
 PORT = int(os.getenv("PORT", "8080"))
+STATS_API_KEY = os.getenv("STATS_API_KEY", "")
 FREE_DIAN_QUERIES_PER_DAY = 10
 
 # ─── Lifespan ───
@@ -235,7 +236,11 @@ async def health_check():
 
 
 @app.get("/api/stats")
-async def stats():
+async def stats(request: Request):
+    # Proteger con API key — enviar como header X-Stats-Key
+    key = request.headers.get("x-stats-key", "")
+    if not STATS_API_KEY or key != STATS_API_KEY:
+        return {"error": "Unauthorized", "detail": "API key requerida en header X-Stats-Key"}
     from captcha_solver import get_balance
     try:
         balance = await get_balance()

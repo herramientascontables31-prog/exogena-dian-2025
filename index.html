@@ -10,6 +10,9 @@ gtag('js', new Date());
 gtag('config', 'G-S7SM6ST4CC');
 </script>
 <meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="og-image.png">
+<meta name="theme-color" content="#059669">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Información Exógena DIAN 2025 Gratis — Formulario 300 IVA, Retención 350, Estados Financieros NIIF | ExógenaDIAN</title>
 <meta name="description" content="Herramientas contables GRATIS para contadores colombianos. Genera información exógena DIAN 2025, formulario 300 IVA, retención 350, estados financieros NIIF automáticos desde tu balance de prueba. Formatos F1001, F1003, F1005, F1007, F2276 listos para el MUISCA.">
@@ -818,7 +821,7 @@ footer{padding:48px 48px 36px;background:var(--gray-900);color:var(--gray-400)}
       </div>
     </div>
     <div class="footer-bottom">
-      Exógena DIAN AG 2025 · Resolución 000227/2025 · UVT $52.374<br>
+      Exógena DIAN AG 2025 · Resolución 000227/2025 · UVT AG 2025: $49.799 · UVT 2026: $52.374<br>
       ⚠️ Herramienta de asistencia. El contador debe validar antes de presentar a la DIAN.<br>
       🔒 Información tratada con total confidencialidad — Ley 1581/2012 · Hecho con 💚 para contadores colombianos<br>
       <a href="terminos.html" style="color:var(--gray-500)">Términos y condiciones</a> · <a href="politica-privacidad.html" style="color:var(--gray-500)">Política de privacidad</a> · Aziendale S.A.S. · Medellín
@@ -875,7 +878,7 @@ const PRO_API='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4
 
 function getDeviceFingerprint(){
   let uid=localStorage.getItem('exogenadian_device_id');
-  if(!uid){uid='D-'+crypto.randomUUID().split('-').slice(0,2).join('');localStorage.setItem('exogenadian_device_id',uid)}
+  if(!uid){uid='D-'+(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).substr(2,9)+'-'+Math.random().toString(36).substr(2,9)).split('-').slice(0,2).join('');localStorage.setItem('exogenadian_device_id',uid)}
   return uid;
 }
 

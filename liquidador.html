@@ -4,6 +4,9 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-S7SM6ST4CC');</script>
 <meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="og-image.png">
+<meta name="theme-color" content="#059669">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Liquidador Laboral Colombia — Cesantías, Prima, Vacaciones, Indemnización | ExógenaDIAN</title>
 <meta name="description" content="Liquida GRATIS contratos laborales en Colombia: cesantías, intereses, prima, vacaciones e indemnización. Ley 2466/2025, Art. 64 CST, exporta PDF, Word y Excel.">
@@ -83,6 +86,37 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   .kpis{grid-template-columns:1fr 1fr}.container{padding:12px}
   .liq-table{font-size:.76rem}.liq-table th,.liq-table td{padding:6px 8px}
   .btn-row,.export-row{flex-direction:column}.btn{width:100%;justify-content:center}
+}
+
+@media print {
+  body { background: #fff !important; color: #000 !important; font-size: 11pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  /* Hide nav, form inputs, PRO bar, export buttons */
+  #nav-container, #formulario, .export-row, .btn-row,
+  #proActivation, #proKeyInput, #proBadge,
+  .btn, button { display: none !important; }
+  /* Show results */
+  .results { display: block !important; }
+  /* Layout */
+  .container { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+  .header { border-radius: 0 !important; margin-bottom: 12px !important; padding: 16px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .card { box-shadow: none !important; border: none !important; padding: 8px 0 !important; }
+  /* KPIs */
+  .kpis { grid-template-columns: repeat(4, 1fr) !important; }
+  .kpi { border: 1px solid #ccc !important; box-shadow: none !important; }
+  /* Tables with borders */
+  .liq-table { width: 100% !important; border-collapse: collapse !important; }
+  .liq-table th { background: #1B3A5C !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .liq-table td { border-bottom: 1px solid #ccc !important; }
+  .liq-table tr.total { background: #1B3A5C !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .liq-table tr.subtotal { background: #ECFDF5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  /* PRO bar hide */
+  #proStatus { display: none !important; }
+  div:has(> #proStatus) { display: none !important; }
+  /* Links */
+  a { color: #000 !important; text-decoration: none !important; }
+  /* Disclaimer and normativa visible */
+  .disclaimer, .normativa-list { page-break-inside: avoid; }
+  @page { margin: 12mm; }
 }
 </style>
 </head>

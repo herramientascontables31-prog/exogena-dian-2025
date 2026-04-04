@@ -16,8 +16,12 @@
  */
 
 // ── CONFIGURACIÓN ──
-const WOMPI_PRIVATE_KEY = 'prv_prod_TpBuk69z3wE5y7V9GqV1a3zfwvKvKqU2';
-const SPREADSHEET_ID = '1H8PGZPWrc0K2EKTWuTNMs1CwUzUF9rJ6nA78GWjyeoU';
+// ⚠️ Las credenciales se leen de PropertiesService (Script Properties).
+//   Configurar en: Apps Script → ⚙️ Project Settings → Script Properties:
+//     WOMPI_PRIVATE_KEY = tu clave privada de Wompi producción
+//     SPREADSHEET_ID    = ID de la hoja de Google Sheets
+const WOMPI_PRIVATE_KEY = PropertiesService.getScriptProperties().getProperty('WOMPI_PRIVATE_KEY');
+const SPREADSHEET_ID = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
 const SHEET_NAME = 'Claves';
 const MONTO_MINIMO_COP = 1990000; // $19,900 en centavos
 const DIAS_VIGENCIA = 30;
@@ -452,10 +456,10 @@ function setupSheet() {
   sheet.getRange(1, 1, 1, 10).setFontWeight('bold');
   sheet.setFrozenRows(1);
 
-  sheet.appendRow([
-    'ExoDIAN-2025-ADMIN', '2026-03-31', 'activo', 'ADMIN',
-    'ADMIN', '', '2099-12-31', 0, '', ''
-  ]);
+  // Para crear una clave admin, usa PropertiesService:
+  //   Script Properties → ADMIN_KEY = tu-clave-segura
+  // Luego inserta manualmente en la hoja.
+  // NO hardcodear claves en el código fuente.
 
-  Logger.log('Sheet configurado correctamente');
+  Logger.log('Sheet configurado correctamente. Agrega la clave admin manualmente desde la hoja.');
 }

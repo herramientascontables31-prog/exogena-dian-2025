@@ -4,6 +4,9 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-S7SM6ST4CC');</script>
 <meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="og-image.png">
+<meta name="theme-color" content="#059669">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Liquidador de Sanciones DIAN — Arts. 641, 642, 644 ET · Extemporaneidad y Corrección | ExógenaDIAN</title>
 <meta name="description" content="Calcula GRATIS sanciones DIAN por extemporaneidad (Art. 641-642 ET) y corrección de declaraciones (Art. 644 ET). Reducciones Art. 640 y Decreto 0240/2026. Sanción mínima Art. 639.">
@@ -135,6 +138,40 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   .btn-row{flex-direction:column}
   .btn{width:100%;justify-content:center}
   .result-total{flex-direction:column;text-align:center;gap:8px}
+}
+
+@media print {
+  body { background: #fff !important; color: #000 !important; font-size: 11pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  /* Hide nav, input forms, buttons */
+  #nav-container, .btn-row, .btn, button { display: none !important; }
+  /* Hide input cards but keep chip selections visible as read-only context */
+  .form-grid input, .form-grid select, .form-group input, .form-group select { border: none !important; background: transparent !important; }
+  .chip { pointer-events: none; }
+  .chip:not(.sel) { display: none !important; }
+  .chip.sel { border-color: #333 !important; background: #f0f2f5 !important; }
+  /* Show results */
+  .results { display: block !important; }
+  /* Layout */
+  .container { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+  .header { border-radius: 0 !important; margin-bottom: 12px !important; padding: 16px !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .card { box-shadow: none !important; border: 1px solid #ccc !important; margin-bottom: 8px !important; }
+  /* KPIs */
+  .kpis { grid-template-columns: repeat(4, 1fr) !important; }
+  .kpi { border: 1px solid #ccc !important; box-shadow: none !important; }
+  /* Tables with borders */
+  .liq-table { width: 100% !important; border-collapse: collapse !important; }
+  .liq-table th { background: #1B3A5C !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .liq-table td { border-bottom: 1px solid #ccc !important; }
+  .liq-table tr.total { background: #1B3A5C !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  /* Result total box */
+  .result-total { background: #1B3A5C !important; color: #fff !important; border-radius: 0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  /* Decreto box */
+  .decreto-box { page-break-inside: avoid; border: 1px solid #A7F3D0 !important; }
+  /* Normativa and disclaimer */
+  .normativa-list, .disclaimer { page-break-inside: avoid; }
+  /* Links */
+  a { color: #000 !important; text-decoration: none !important; }
+  @page { margin: 12mm; }
 }
 </style>
 </head>
@@ -591,9 +628,10 @@ function contarMeses(fechaIni, fechaFin) {
   var d1 = new Date(fechaIni + 'T00:00:00');
   var d2 = new Date(fechaFin + 'T00:00:00');
   if (d2 <= d1) return 0;
-  var diffMs = d2.getTime() - d1.getTime();
-  var diffDias = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-  return Math.ceil(diffDias / 30);
+  // Meses calendario: "por cada mes o fracción de mes" (Art. 641 ET)
+  var meses = (d2.getFullYear() - d1.getFullYear()) * 12 + (d2.getMonth() - d1.getMonth());
+  if (d2.getDate() > d1.getDate()) meses++;
+  return Math.max(meses, 1);
 }
 
 function calcMeses() {
