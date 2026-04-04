@@ -355,7 +355,7 @@ html.light-theme .expand-btn:hover{background:rgba(0,0,0,.06)}
       </label>
       <button class="btn" id="btnExpandAll">&#9654; Expandir todo</button>
       <button class="btn" id="btnCollapseAll">&#9660; Contraer todo</button>
-      <button class="btn btn-accent" id="btnExportExcel">&#128196; Exportar Excel</button>
+      <button class="btn btn-accent" id="btnExportHTML">&#128196; Exportar Reporte</button>
     </div>
   </div>
 
@@ -1675,51 +1675,118 @@ function renderDonut() {
 // =====================================================
 // EXCEL EXPORT
 // =====================================================
-function exportExcel() {
-  if (typeof XLSX === 'undefined' || !XLSX.utils) {
-    alert('La libreria de Excel no se ha cargado. Recarga la pagina (Ctrl+Shift+R) e intenta de nuevo.');
-    return;
-  }
+function exportHTML() {
   try {
-  var wb = XLSX.utils.book_new();
-
-  // PYG sheet
+  var companyName = document.getElementById('companyName').textContent || 'Empresa';
+  var companyNit = document.getElementById('companyNit').textContent || '';
   var pygRows = buildPYGRows(currentYear);
-  var pygData = [['Codigo PUC', 'Cuenta', 'Valor COP ' + currentYear, '% Vertical']];
-  pygRows.forEach(function(r) {
-    pygData.push([r.code, r.name, r.value, r.pct != null ? +(r.pct * 100).toFixed(2) : '']);
-  });
-  var ws1 = XLSX.utils.aoa_to_sheet(pygData);
-  ws1['!cols'] = [{ wch: 10 }, { wch: 40 }, { wch: 20 }, { wch: 12 }];
-  XLSX.utils.book_append_sheet(wb, ws1, 'PYG ' + currentYear);
-
-  // Balance sheet
   var balRows = buildBalanceRows(currentYear);
-  var balData = [['Codigo PUC', 'Cuenta', 'Valor COP ' + currentYear]];
-  balRows.forEach(function(r) {
-    balData.push([r.code, r.name, r.value]);
-  });
-  var ws2 = XLSX.utils.aoa_to_sheet(balData);
-  ws2['!cols'] = [{ wch: 10 }, { wch: 40 }, { wch: 20 }];
-  XLSX.utils.book_append_sheet(wb, ws2, 'Balance ' + currentYear);
-
-  // KPIs sheet
   var kpis = computeKPIs(currentYear);
-  var kpiData = [['Indicador', 'Valor', 'Formula']];
+  var c = getComputed(currentYear);
+  var bal = c.balance;
+
+  function fmtVal(v) { return formatCOP(v); }
+  function fmtPctV(v) { return v != null ? (v * 100).toFixed(1) + '%' : ''; }
+
+  // Build PYG table rows
+  var pygHtml = '';
+  pygRows.forEach(function(r) {
+    var cls = '';
+    var indent = r.level * 24;
+    if (r.type === 'total') cls = 'font-weight:700;background:#f0f7ff;';
+    if (r.type === 'grand-total') cls = 'font-weight:700;background:#dbeafe;border-top:2px solid #3b82f6;';
+    if (r.type === 'header') cls = 'font-weight:700;color:#1e40af;';
+    var neg = r.value < 0 ? 'color:#dc2626;' : '';
+    pygHtml += '<tr style="' + cls + '">'
+      + '<td style="color:#9ca3af;font-family:monospace;font-size:11px;padding:6px 8px">' + (r.code || '') + '</td>'
+      + '<td style="padding:6px 8px 6px ' + (14 + indent) + 'px">' + r.name + '</td>'
+      + '<td style="text-align:right;font-family:monospace;padding:6px 12px;' + neg + '">' + fmtVal(r.value) + '</td>'
+      + '<td style="text-align:right;font-family:monospace;padding:6px 12px;color:#6b7280">' + fmtPctV(r.pct) + '</td>'
+      + '</tr>';
+  });
+
+  // Build Balance table rows
+  var balHtml = '';
+  balRows.forEach(function(r) {
+    var cls = '';
+    var indent = r.level * 24;
+    if (r.type === 'total') cls = 'font-weight:700;background:#f0f7ff;';
+    if (r.type === 'grand-total') cls = 'font-weight:700;background:#dbeafe;border-top:2px solid #3b82f6;';
+    if (r.type === 'header') cls = 'font-weight:700;color:#1e40af;';
+    balHtml += '<tr style="' + cls + '">'
+      + '<td style="color:#9ca3af;font-family:monospace;font-size:11px;padding:6px 8px">' + (r.code || '') + '</td>'
+      + '<td style="padding:6px 8px 6px ' + (14 + indent) + 'px">' + r.name + '</td>'
+      + '<td style="text-align:right;font-family:monospace;padding:6px 12px">' + fmtVal(r.value) + '</td>'
+      + '</tr>';
+  });
+
+  // Build KPIs
+  var kpiHtml = '';
   kpis.forEach(function(k) {
     var val;
-    if (k.format === 'pct') val = (k.value * 100).toFixed(2) + '%';
+    if (k.format === 'pct') val = (k.value * 100).toFixed(1) + '%';
     else if (k.format === 'ratio') val = k.value.toFixed(2);
-    else val = k.value;
-    kpiData.push([k.label, val, k.formula]);
+    else val = formatCOP(k.value, true);
+    var color = k.status === 'green' ? '#059669' : k.status === 'red' ? '#dc2626' : '#d97706';
+    kpiHtml += '<div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:16px;text-align:center;border-left:4px solid ' + color + '">'
+      + '<div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">' + k.label + '</div>'
+      + '<div style="font-size:1.5rem;font-weight:700;font-family:monospace;color:#111827">' + val + '</div>'
+      + '</div>';
   });
-  var ws3 = XLSX.utils.aoa_to_sheet(kpiData);
-  ws3['!cols'] = [{ wch: 22 }, { wch: 16 }, { wch: 50 }];
-  XLSX.utils.book_append_sheet(wb, ws3, 'KPIs');
 
-  XLSX.writeFile(wb, 'Dashboard_Financiero_' + currentYear + '.xlsx');
+  // Ecuación contable
+  var eqOk = Math.abs(bal.totalActivos - bal.totalPasivoPatrimonio) < 1000;
+  var eqHtml = '<div style="text-align:center;padding:12px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-family:monospace;font-size:14px;margin:16px 0">'
+    + 'Activos ' + fmtVal(bal.totalActivos) + ' = Pasivos ' + fmtVal(bal.totalPasivos) + ' + Patrimonio ' + fmtVal(bal.totalPatrimonio)
+    + ' ' + (eqOk ? '<span style="color:#059669">&#10004;</span>' : '<span style="color:#dc2626">&#9888; Descuadre</span>')
+    + '</div>';
+
+  var fecha = new Date().toLocaleDateString('es-CO', { day:'2-digit', month:'long', year:'numeric' });
+
+  var html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">'
+    + '<title>Reporte Financiero - ' + companyName + ' - ' + currentYear + '</title>'
+    + '<style>'
+    + 'body{font-family:Arial,Helvetica,sans-serif;color:#111827;background:#fff;margin:0;padding:24px 32px;font-size:13px;line-height:1.5}'
+    + 'h1{font-size:20px;margin-bottom:4px;color:#1e3a5f}'
+    + 'h2{font-size:16px;color:#1e3a5f;margin:28px 0 12px;padding-bottom:6px;border-bottom:2px solid #dbeafe}'
+    + '.meta{color:#6b7280;font-size:12px;margin-bottom:20px}'
+    + 'table{width:100%;border-collapse:collapse;margin-bottom:8px}'
+    + 'th{background:#1e3a5f;color:#fff;padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.5px}'
+    + 'th:not(:nth-child(2)){text-align:right}'
+    + 'td{padding:6px 8px;border-bottom:1px solid #e5e7eb;font-size:12px}'
+    + '.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}'
+    + '.footer{text-align:center;padding:20px 0;font-size:11px;color:#9ca3af;border-top:1px solid #e5e7eb;margin-top:32px}'
+    + '@media print{body{padding:12px 16px}h1{font-size:18px}}'
+    + '</style></head><body>'
+    + '<h1>' + companyName + '</h1>'
+    + '<div class="meta">' + companyNit + ' &middot; Periodo: ' + currentYear + ' &middot; Generado: ' + fecha + ' &middot; ExógenaDIAN.com</div>'
+
+    + '<h2>Indicadores Financieros</h2>'
+    + '<div class="kpi-grid">' + kpiHtml + '</div>'
+
+    + '<h2>Estado de Resultados (PYG)</h2>'
+    + '<table><thead><tr><th style="width:60px">PUC</th><th>Cuenta</th><th style="text-align:right">Valor COP</th><th style="text-align:right">% Vertical</th></tr></thead>'
+    + '<tbody>' + pygHtml + '</tbody></table>'
+
+    + '<h2>Balance General</h2>'
+    + eqHtml
+    + '<table><thead><tr><th style="width:60px">PUC</th><th>Cuenta</th><th style="text-align:right">Valor COP</th></tr></thead>'
+    + '<tbody>' + balHtml + '</tbody></table>'
+
+    + '<div class="footer">Reporte generado por <strong>ExógenaDIAN.com</strong> &mdash; Herramienta de asistencia. El contador debe validar antes de presentar.</div>'
+    + '</body></html>';
+
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'Reporte_Financiero_' + currentYear + '.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
   } catch(e) {
-    console.error('Error exportando Excel:', e);
+    console.error('Error exportando:', e);
     alert('Error al exportar: ' + e.message);
   }
 }
@@ -1771,7 +1838,7 @@ document.getElementById('btnCollapseAll').addEventListener('click', () => {
 });
 
 // Export
-document.getElementById('btnExportExcel').addEventListener('click', exportExcel);
+document.getElementById('btnExportHTML').addEventListener('click', exportHTML);
 
 // Theme toggle
 document.getElementById('btnTheme').addEventListener('click', toggleTheme);
