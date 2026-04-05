@@ -152,15 +152,20 @@
   '        <a href="sanciones.html">⚖️ Sanciones Exógena</a>'+
   '        <a href="sanciones-dian.html">⚖️ Sanciones DIAN</a>'+
   '        <a href="intereses.html">% Intereses de Mora</a>'+
-  '        <a href="retencion-fuente.html">💰 Retención Fuente</a>'+
   '      </div>'+
   '    </div>'+
-       /* Laboral + Consultas */
-  '    <div class="tn-cat"><button class="tn-cat-btn" onclick="toggleTnCat(this)">Más '+chevron+'</button>'+
+       /* Laboral */
+  '    <div class="tn-cat"><button class="tn-cat-btn" onclick="toggleTnCat(this)">Laboral '+chevron+'</button>'+
   '      <div class="tn-dd">'+
   '        <a href="liquidador.html">👷 Liquidador Laboral</a>'+
   '        <a href="costoreal.html">💰 Costo Empleado</a>'+
   '        <a href="formato220.html">📄 Certificado F220</a>'+
+  '        <a href="retencion-fuente.html">💰 Retención por Salarios</a>'+
+  '      </div>'+
+  '    </div>'+
+       /* Consultas */
+  '    <div class="tn-cat"><button class="tn-cat-btn" onclick="toggleTnCat(this)">Consultas '+chevron+'</button>'+
+  '      <div class="tn-dd">'+
   '        <a href="consultanit.html">🔍 Consulta NIT</a>'+
   '        <a href="vencimientos.html">📅 Calendario Tributario</a>'+
   '        <a href="uvt.html">🔢 Conversor UVT</a>'+
@@ -212,7 +217,6 @@
   '          <a href="sanciones.html"><div class="dd-icon" style="background:#FFFBEB">⚖️</div> Sanciones Exógena</a>'+
   '          <a href="sanciones-dian.html"><div class="dd-icon" style="background:#EFF6FF">⚖️</div> Sanciones DIAN</a>'+
   '          <a href="intereses.html"><div class="dd-icon" style="background:#FFF1F2">%</div> Intereses de Mora</a>'+
-  '          <a href="retencion-fuente.html"><div class="dd-icon" style="background:#EFF6FF">💰</div> Retención Fuente</a>'+
   '        </div>'+
            /* ── Col 4: Laboral + Consultas ── */
   '        <div class="mega-col">'+
@@ -220,10 +224,12 @@
   '          <a href="liquidador.html"><div class="dd-icon" style="background:#ECFDF5">👷</div> Liquidador Laboral</a>'+
   '          <a href="costoreal.html"><div class="dd-icon" style="background:#DBEAFE">💰</div> Costo Empleado</a>'+
   '          <a href="formato220.html"><div class="dd-icon" style="background:#FFF8E1">📄</div> Certificado F220</a>'+
+  '          <a href="retencion-fuente.html"><div class="dd-icon" style="background:#F5F3FF">💰</div> Retención por Salarios</a>'+
   '          <div class="mega-divider"></div>'+
   '          <h6>Consultas</h6>'+
   '          <a href="consultanit.html"><div class="dd-icon" style="background:#F5F3FF">🔍</div> Consulta NIT</a>'+
   '          <a href="vencimientos.html"><div class="dd-icon" style="background:#FFF1F2">📅</div> Calendario Tributario</a>'+
+  '          <a href="uvt.html"><div class="dd-icon" style="background:#ECFEFF">🔢</div> Conversor UVT</a>'+
   '        </div>'+
   '      </div>'+
   '    </div>'+
