@@ -171,6 +171,7 @@
   '        <a href="uvt.html">🔢 Conversor UVT</a>'+
   '      </div>'+
   '    </div>'+
+  '    <a href="ia.html" style="display:inline-flex;align-items:center;gap:4px;padding:4px 12px;background:linear-gradient(135deg,#059669,#10B981);color:#fff;border-radius:16px;font-size:.78rem;font-weight:700;text-decoration:none;box-shadow:0 2px 8px rgba(5,150,105,.3);flex-shrink:0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10h16V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="14" r="2"/></svg>IA</a>'+
   '  </div>'+
   '  <div style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:8px;font-size:.75rem;font-weight:600;color:#047857;flex-shrink:0;white-space:nowrap" title="Tu archivo se procesa 100% en tu navegador. Nunca se env\u00eda a ning\u00fan servidor.">'+
   '    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="flex-shrink:0"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/></svg>'+
@@ -233,9 +234,10 @@
   '        </div>'+
   '      </div>'+
   '    </div>'+
-       /* Blog y PRO */
+       /* Blog, IA y PRO */
   '    <a href="precios.html">Precios</a>'+
   '    <a href="blog.html">Blog</a>'+
+  '    <a href="ia.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;background:linear-gradient(135deg,#059669,#10B981);color:#fff;border-radius:20px;font-size:.82rem;font-weight:700;text-decoration:none;transition:all .2s;box-shadow:0 2px 8px rgba(5,150,105,.3)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10h16V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="14" r="2"/></svg>IA</a>'+
        /* PRO Login */
   '    <div id="proNavLogin" style="display:flex;align-items:center;gap:6px">'+
   '      <input type="email" id="proNavKey" placeholder="Email PRO" style="padding:5px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:.78rem;font-family:inherit;width:170px;text-align:center">'+
