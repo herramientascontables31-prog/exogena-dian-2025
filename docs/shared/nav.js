@@ -61,8 +61,8 @@
       .nav-links.open{display:flex}
     }
     /* ===== MEGA MENU ===== */
-    .mega-menu{display:none;position:absolute;top:calc(100% + 12px);right:-60px;background:var(--white,#fff);border:1.5px solid var(--gray-200,#E5E7EB);border-radius:16px;padding:20px 24px;min-width:620px;box-shadow:0 16px 48px rgba(0,0,0,.12);z-index:200}
-    .nav-dropdown.open .mega-menu{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+    .mega-menu{display:none;position:absolute;top:calc(100% + 12px);right:-120px;background:var(--white,#fff);border:1.5px solid var(--gray-200,#E5E7EB);border-radius:16px;padding:20px 24px;min-width:780px;box-shadow:0 16px 48px rgba(0,0,0,.12);z-index:200}
+    .nav-dropdown.open .mega-menu{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
     .mega-col h6{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400,#9CA3AF);margin-bottom:10px;padding:0 10px}
     .mega-col a{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--gray-600,#4B5563);font-size:.84rem;font-weight:500;transition:all .15s;white-space:nowrap}
     .mega-col a:hover{background:var(--green-50,#ECFDF5);color:var(--green-700,#047857)}
@@ -174,7 +174,16 @@
   '        <a href="uvt.html">🔢 Conversor UVT</a>'+
   '      </div>'+
   '    </div>'+
-  '    <a href="ia.html" style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;background:linear-gradient(135deg,#059669,#10B981);color:#fff;border-radius:10px;font-size:.8rem;font-weight:800;text-decoration:none;box-shadow:0 2px 10px rgba(5,150,105,.35);flex-shrink:0;animation:iaGlow 3s ease-in-out infinite"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10h16V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="14" r="2"/></svg>IA Contable</a>'+
+       /* IA dropdown */
+  '    <div class="tn-cat"><button class="tn-cat-btn" onclick="toggleTnCat(this)" style="background:linear-gradient(135deg,#059669,#10B981);color:#fff;border-color:transparent;font-weight:800;box-shadow:0 2px 10px rgba(5,150,105,.25)">✨ IA '+chevron+'</button>'+
+  '      <div class="tn-dd">'+
+  '        <a href="ia-analisis-balance.html">🛡️ Auditor DIAN</a>'+
+  '        <a href="ia-chat-et.html">📖 Estatuto Tributario</a>'+
+  '        <a href="ia-asistente.html">🤖 Asistente Contable</a>'+
+  '        <a href="ia-respuesta-requerimiento.html">📝 Responder Requerimiento</a>'+
+  '        <a href="ia.html" style="font-weight:700;color:#059669">✨ Ver todas</a>'+
+  '      </div>'+
+  '    </div>'+
   '  </div>'+
   '  <div style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:8px;font-size:.75rem;font-weight:600;color:#047857;flex-shrink:0;white-space:nowrap" title="Tu archivo se procesa 100% en tu navegador. Nunca se env\u00eda a ning\u00fan servidor.">'+
   '    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="flex-shrink:0"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/></svg>'+
@@ -235,12 +244,20 @@
   '          <a href="vencimientos.html"><div class="dd-icon" style="background:#FFF1F2">📅</div> Calendario Tributario</a>'+
   '          <a href="uvt.html"><div class="dd-icon" style="background:#ECFEFF">🔢</div> Conversor UVT</a>'+
   '        </div>'+
+           /* ── Col 5: IA Contable ── */
+  '        <div class="mega-col">'+
+  '          <h6 style="color:#059669">IA Contable</h6>'+
+  '          <a href="ia-analisis-balance.html"><div class="dd-icon" style="background:#ECFDF5">🛡️</div> Auditor DIAN</a>'+
+  '          <a href="ia-chat-et.html"><div class="dd-icon" style="background:#ECFDF5">📖</div> Estatuto Tributario</a>'+
+  '          <a href="ia-asistente.html"><div class="dd-icon" style="background:#ECFDF5">🤖</div> Asistente Contable</a>'+
+  '          <a href="ia-respuesta-requerimiento.html"><div class="dd-icon" style="background:#ECFDF5">📝</div> Responder Requerimiento</a>'+
+  '          <div class="mega-divider"></div>'+
+  '          <a href="ia.html"><div class="dd-icon" style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5)">✨</div> <strong>Ver todas</strong></a>'+
+  '        </div>'+
   '      </div>'+
   '    </div>'+
-       /* Blog, IA y PRO */
-  '    <a href="precios.html">Precios</a>'+
-  '    <a href="blog.html">Blog</a>'+
-  '    <a href="ia.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:linear-gradient(135deg,#059669,#10B981);color:#fff;border-radius:12px;font-size:.9rem;font-weight:800;text-decoration:none;transition:all .2s;box-shadow:0 3px 12px rgba(5,150,105,.35);letter-spacing:.02em;animation:iaGlow 3s ease-in-out infinite"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10h16V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="14" r="2"/></svg>IA Contable</a>'+
+       /* IA CTA */
+  '    <a href="ia.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:linear-gradient(135deg,#059669,#10B981);color:#fff;border-radius:12px;font-size:.9rem;font-weight:800;text-decoration:none;transition:all .2s;box-shadow:0 3px 12px rgba(5,150,105,.35);letter-spacing:.02em;animation:iaGlow 3s ease-in-out infinite"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 8.89 3.89"/><path d="m17 3-2 2 2 2"/><path d="m22 6-2 2 2 2"/></svg>IA Contable</a>'+
        /* PRO Login */
   '    <div id="proNavLogin" style="display:flex;align-items:center;gap:6px">'+
   '      <input type="email" id="proNavKey" placeholder="Email PRO" style="padding:5px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:.78rem;font-family:inherit;width:170px;text-align:center">'+
