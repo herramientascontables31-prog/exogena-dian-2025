@@ -187,7 +187,7 @@
   '<nav id="nav" role="navigation" aria-label="Navegación principal">'+
   '  <a href="index.html" class="logo">'+
   '    <div class="logo-mark">E</div>'+
-  '    <div>ExógenaDIAN<small>Portal Contable</small></div>'+
+  '    <div>ExógenaDIAN<small>Portal Contable \u00b7 IA</small></div>'+
   '  </a>'+
   '  <div class="nav-links" id="navLinks">'+
        /* Links directos de alto tráfico */
