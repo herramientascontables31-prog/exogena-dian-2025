@@ -196,6 +196,21 @@ body {
   outline: none; border-color: var(--purple);
   box-shadow: 0 0 0 3px var(--purple-glow);
 }
+.attach-row {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+}
+.btn-attach {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: var(--bg-input); color: var(--text-dim); font-size: 0.78rem;
+  font-weight: 600; cursor: pointer; transition: all .2s;
+}
+.btn-attach:hover { border-color: var(--purple); color: var(--purple); }
+.btn-attach svg { width: 15px; height: 15px; }
+.attach-name {
+  font-size: 0.75rem; color: var(--purple); font-weight: 600;
+  max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 .char-counter {
   display: flex; justify-content: space-between; align-items: center;
   margin-top: 8px; font-size: 0.75rem; color: var(--text-muted);
@@ -443,6 +458,14 @@ body {
         Texto del requerimiento
         <span>- Copia y pega el contenido del acto administrativo de la DIAN</span>
       </label>
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.txt,.pdf,.doc,.docx" style="display:none">
+      <div class="attach-row">
+        <label class="btn-attach" for="fileInput">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+          Adjuntar archivo
+        </label>
+        <span class="attach-name" id="attachName"></span>
+      </div>
       <textarea
         id="reqInput"
         class="req-textarea"
@@ -536,6 +559,8 @@ body {
 
 <!-- PRO check -->
 <script src="shared/pro.js"></script>
+<!-- SheetJS para leer Excel -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <script>
 (function() {
@@ -571,6 +596,63 @@ body {
   var isPro = false;
   var lastReqText = '';
   var fullResponseText = '';
+  var fileInput = document.getElementById('fileInput');
+  var attachName = document.getElementById('attachName');
+
+  // ═══ File Upload (Excel, CSV, TXT) ═══
+  fileInput.addEventListener('change', function() {
+    var file = fileInput.files[0];
+    if (!file) return;
+    attachName.textContent = file.name;
+    var ext = file.name.split('.').pop().toLowerCase();
+
+    if (ext === 'csv' || ext === 'txt') {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var text = e.target.result;
+        if (ext === 'csv') text = csvToText(text);
+        textarea.value = text.substring(0, MAX_CHARS);
+        updateCharCount();
+        btnGenerar.disabled = false;
+      };
+      reader.readAsText(file);
+    } else if (ext === 'xlsx' || ext === 'xls') {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          var wb = XLSX.read(e.target.result, { type: 'array' });
+          var text = '';
+          wb.SheetNames.forEach(function(name) {
+            var ws = wb.Sheets[name];
+            var csv = XLSX.utils.sheet_to_csv(ws, { blankrows: false });
+            if (csv.trim()) {
+              text += (wb.SheetNames.length > 1 ? '--- ' + name + ' ---\n' : '') + csvToText(csv) + '\n';
+            }
+          });
+          textarea.value = text.substring(0, MAX_CHARS);
+          updateCharCount();
+          btnGenerar.disabled = false;
+        } catch (err) {
+          attachName.textContent = 'Error al leer archivo';
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+    fileInput.value = '';
+  });
+
+  function csvToText(csv) {
+    var lines = csv.split('\n');
+    var result = [];
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (!line) continue;
+      var cells = line.split(',');
+      var clean = cells.map(function(c) { return c.replace(/^"|"$/g, '').trim(); }).filter(function(c) { return c; });
+      if (clean.length > 0) result.push(clean.join(': '));
+    }
+    return result.join('\n');
+  }
 
   // ═══ Rate Limiting ═══
   function checkIALimit() {
