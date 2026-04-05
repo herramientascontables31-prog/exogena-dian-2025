@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S7SM6ST4CC');
+</script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="og-image.png">
+<meta name="theme-color" content="#059669">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat con Estatuto Tributario — IA Tributaria Colombia | ExógenaDIAN</title>
+<meta name="description" content="Consulta gratis el Estatuto Tributario colombiano con inteligencia artificial. Respuestas con fuente normativa sobre sanciones, obligaciones, topes, renta, IVA y más.">
+<meta name="keywords" content="estatuto tributario colombia, IA tributaria, consulta estatuto tributario, chat tributario, sanciones DIAN, obligaciones tributarias, normas fiscales colombia, inteligencia artificial contable">
+<meta name="author" content="ExógenaDIAN">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://exogenadian.com/ia-chat-et.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Chat con Estatuto Tributario — IA Tributaria Colombia">
+<meta property="og:description" content="Consulta gratis el Estatuto Tributario colombiano con inteligencia artificial. Respuestas con fuente normativa.">
+<meta property="og:url" content="https://exogenadian.com/ia-chat-et.html">
+<meta property="og:site_name" content="ExógenaDIAN">
+<meta property="og:locale" content="es_CO">
+<meta property="og:image" content="https://exogenadian.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Chat con Estatuto Tributario — IA Tributaria Colombia">
+<meta name="twitter:description" content="Consulta gratis el Estatuto Tributario colombiano con IA. Respuestas con fuente normativa.">
+<meta name="twitter:image" content="https://exogenadian.com/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Chat con Estatuto Tributario — IA Tributaria","url":"https://exogenadian.com/ia-chat-et.html","description":"Consulta el Estatuto Tributario colombiano con inteligencia artificial. Respuestas con fuente normativa sobre sanciones, obligaciones, topes y más.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"IA Tributaria","item":"https://exogenadian.com/ia.html"},{"@type":"ListItem","position":3,"name":"Chat con Estatuto Tributario","item":"https://exogenadian.com/ia-chat-et.html"}]}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══ CSS Variables ═══ */
+:root {
+  --bg: #0F0B1A;
+  --bg-card: #1A1425;
+  --bg-card-hover: #221A30;
+  --bg-input: #150F22;
+  --border: rgba(5, 150, 105, 0.15);
+  --border-light: rgba(5, 150, 105, 0.08);
+  --purple: #059669;
+  --purple-dim: rgba(5, 150, 105, 0.15);
+  --purple-glow: rgba(5, 150, 105, 0.3);
+  --violet: #34D399;
+  --violet-dim: rgba(52, 211, 153, 0.12);
+  --text: #E8E0F0;
+  --text-dim: #9B8FB8;
+  --text-muted: #6B5F80;
+  --white: #FEFCFF;
+  --red: #EF4444;
+  --red-dim: rgba(239, 68, 68, 0.12);
+  --green: #22C55E;
+  --amber: #F59E0B;
+  --r: 14px;
+}
+
+/* ═══ Reset ═══ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ═══ Header ═══ */
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  background: rgba(15, 11, 26, 0.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+.chat-header .back-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+.chat-header .back-link:hover { color: var(--purple); }
+.chat-header .back-link svg { width: 18px; height: 18px; }
+.header-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.header-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.header-title .icon-ai {
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, var(--purple), #34D399);
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+.header-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.limit-badge {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: var(--violet-dim);
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.limit-badge.pro {
+  color: var(--purple);
+  background: var(--purple-dim);
+  font-weight: 600;
+}
+.btn-new-chat {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-new-chat:hover {
+  border-color: var(--purple);
+  color: var(--purple);
+  background: var(--purple-dim);
+}
+.btn-new-chat svg { width: 14px; height: 14px; }
+
+/* ═══ Chat Layout ═══ */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.messages-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-behavior: smooth;
+}
+.messages-area::-webkit-scrollbar { width: 5px; }
+.messages-area::-webkit-scrollbar-track { background: transparent; }
+.messages-area::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+.messages-area::-webkit-scrollbar-thumb:hover {
+  background: rgba(5, 150, 105, 0.3);
+}
+
+/* ═══ Messages ═══ */
+.msg-row {
+  display: flex;
+  max-width: 780px;
+  width: 100%;
+  margin: 0 auto;
+  animation: msgIn 0.3s ease;
+}
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.msg-row.user { justify-content: flex-end; }
+.msg-row.assistant { justify-content: flex-start; }
+.msg-row.system { justify-content: center; }
+
+.msg-bubble {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 0.925rem;
+  line-height: 1.65;
+  word-break: break-word;
+}
+.msg-row.user .msg-bubble {
+  background: linear-gradient(135deg, var(--purple), #047857);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.msg-row.assistant .msg-bubble {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-bottom-left-radius: 4px;
+}
+.msg-row.system .msg-bubble {
+  background: var(--red-dim);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #FCA5A5;
+  font-size: 0.85rem;
+  max-width: 90%;
+  text-align: center;
+}
+.msg-row.system .msg-bubble .retry-btn {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--red);
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 4px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.msg-row.system .msg-bubble .retry-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* Assistant label */
+.msg-row.assistant .msg-wrapper { display: flex; flex-direction: column; gap: 0; max-width: 85%; }
+.msg-row.assistant .msg-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  padding-left: 4px;
+}
+
+/* Markdown inside assistant messages */
+.msg-bubble strong, .msg-bubble b { color: var(--white); font-weight: 600; }
+.msg-bubble a { color: var(--violet); text-decoration: underline; text-underline-offset: 2px; }
+.msg-bubble a:hover { color: var(--purple); }
+.msg-bubble ul, .msg-bubble ol {
+  margin: 6px 0 6px 20px;
+}
+.msg-bubble li { margin-bottom: 4px; }
+.msg-bubble p { margin-bottom: 8px; }
+.msg-bubble p:last-child { margin-bottom: 0; }
+.msg-bubble code {
+  background: rgba(5, 150, 105, 0.12);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Source chips */
+.sources-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  padding-left: 4px;
+}
+.source-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--violet-dim);
+  color: var(--violet);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(52, 211, 153, 0.15);
+  white-space: nowrap;
+}
+.source-chip svg { width: 11px; height: 11px; opacity: 0.7; }
+
+/* ═══ Welcome ═══ */
+.welcome-section {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 40px 16px 20px;
+  animation: msgIn 0.5s ease;
+}
+.welcome-icon {
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, var(--purple), #34D399);
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 16px;
+  font-size: 1.8rem;
+  box-shadow: 0 8px 32px var(--purple-glow);
+}
+.welcome-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.welcome-text {
+  font-size: 0.925rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+.example-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.example-chip {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.82rem;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.2s;
+  text-align: left;
+  line-height: 1.4;
+}
+.example-chip:hover {
+  border-color: var(--purple);
+  background: var(--bg-card-hover);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+/* ═══ Typing Indicator ═══ */
+.typing-indicator {
+  display: flex;
+  gap: 5px;
+  padding: 14px 18px;
+}
+.typing-indicator span {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: typeBounce 1.2s infinite;
+}
+.typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes typeBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ═══ Input Area ═══ */
+.input-area {
+  flex-shrink: 0;
+  padding: 12px 16px 16px;
+  background: rgba(15, 11, 26, 0.95);
+  border-top: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.input-wrapper {
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.input-field {
+  flex: 1;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.925rem;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s;
+  max-height: 96px; /* ~3 lines */
+  overflow-y: auto;
+}
+.input-field::placeholder { color: var(--text-muted); }
+.input-field:focus { border-color: var(--purple); }
+.input-field::-webkit-scrollbar { width: 4px; }
+.input-field::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+.btn-send {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--purple), #047857);
+  color: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.btn-send:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px var(--purple-glow);
+}
+.btn-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn-send svg { width: 20px; height: 20px; }
+
+.input-hint {
+  max-width: 780px;
+  margin: 6px auto 0;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ═══ Limit Banner ═══ */
+.limit-banner {
+  max-width: 780px;
+  margin: 0 auto 10px;
+  background: var(--purple-dim);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+  border-radius: 10px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--violet);
+  animation: msgIn 0.3s ease;
+}
+.limit-banner a {
+  color: var(--purple);
+  font-weight: 600;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+/* ═══ Mobile ═══ */
+@media (max-width: 640px) {
+  .chat-header { padding: 10px 14px; gap: 8px; }
+  .header-title { font-size: 0.92rem; }
+  .header-divider { display: none; }
+  .btn-new-chat span { display: none; }
+  .btn-new-chat { padding: 6px 8px; }
+  .limit-badge { font-size: 0.7rem; padding: 3px 8px; }
+  .messages-area { padding: 14px 10px; gap: 12px; }
+  .msg-bubble { max-width: 92%; font-size: 0.875rem; }
+  .msg-row.assistant .msg-wrapper { max-width: 92%; }
+  .welcome-section { padding: 24px 10px 16px; }
+  .welcome-title { font-size: 1.15rem; }
+  .welcome-icon { width: 52px; height: 52px; font-size: 1.4rem; border-radius: 14px; }
+  .example-chip { font-size: 0.78rem; padding: 7px 11px; }
+  .input-area { padding: 10px 10px 14px; }
+  .input-field { padding: 10px 14px; font-size: 0.875rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="chat-container">
+  <!-- Header -->
+  <header class="chat-header">
+    <a href="ia.html" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      IA
+    </a>
+    <div class="header-divider"></div>
+    <div class="header-title">
+      <span class="icon-ai">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </span>
+      Chat con Estatuto Tributario
+    </div>
+    <div class="header-right">
+      <span class="limit-badge" id="limitBadge"></span>
+      <button class="btn-new-chat" id="btnNewChat" title="Nueva consulta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Nueva consulta</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Messages -->
+  <div class="messages-area" id="messagesArea">
+    <!-- Welcome injected by JS -->
+  </div>
+
+  <!-- Input -->
+  <div class="input-area">
+    <div id="limitBanner"></div>
+    <div class="input-wrapper">
+      <textarea class="input-field" id="inputField" rows="1"
+        placeholder="Escribe tu consulta tributaria..."
+        maxlength="2000"></textarea>
+      <button class="btn-send" id="btnSend" title="Enviar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+    <div class="input-hint">IA puede cometer errores. Verifica siempre la normativa citada.</div>
+  </div>
+</div>
+
+<script src="shared/pro.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  /* ═══ Config ═══ */
+  var API_URL = 'https://dian-proxy-337146111457.southamerica-east1.run.app/api/ia/chat-et';
+  var MAX_HISTORY = 20;
+  var IA_LIMIT_KEY = 'exogenadian_ia_usage';
+  var IA_LIMIT_KEY_PRO = 'exogenadian_ia_usage_pro_chat';
+  var MAX_FREE = 3;
+  var MAX_PRO = 50;
+
+  /* ═══ State ═══ */
+  var history = [];
+  var isStreaming = false;
+  var isPro = false;
+
+  /* ═══ DOM ═══ */
+  var messagesArea = document.getElementById('messagesArea');
+  var inputField = document.getElementById('inputField');
+  var btnSend = document.getElementById('btnSend');
+  var btnNewChat = document.getElementById('btnNewChat');
+  var limitBadge = document.getElementById('limitBadge');
+  var limitBanner = document.getElementById('limitBanner');
+
+  /* ═══ Rate Limiting ═══ */
+  function checkIALimit() {
+    var key = isPro ? IA_LIMIT_KEY_PRO : IA_LIMIT_KEY;
+    var max = isPro ? MAX_PRO : MAX_FREE;
+    var data = JSON.parse(localStorage.getItem(key) || '{}');
+    var today = new Date().toISOString().slice(0, 10);
+    if (data.date !== today) return { allowed: true, count: 0, max: max };
+    return { allowed: data.count < max, count: data.count, max: max };
+  }
+
+  function consumeIALimit() {
+    var key = isPro ? IA_LIMIT_KEY_PRO : IA_LIMIT_KEY;
+    var today = new Date().toISOString().slice(0, 10);
+    var data = JSON.parse(localStorage.getItem(key) || '{}');
+    if (data.date !== today) { data.date = today; data.count = 0; }
+    data.count++;
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  function updateLimitUI() {
+    var info = checkIALimit();
+    var remaining = Math.max(0, info.max - info.count);
+    if (isPro) {
+      limitBadge.textContent = 'PRO ' + remaining + '/' + info.max;
+      limitBadge.className = 'limit-badge pro';
+    } else {
+      limitBadge.textContent = remaining + '/' + info.max + ' hoy';
+      limitBadge.className = 'limit-badge';
+    }
+    if (remaining === 0) {
+      var msg = isPro
+        ? 'Alcanzaste el limite de ' + MAX_PRO + ' consultas PRO de hoy. Se renueva manana.'
+        : 'Alcanzaste el limite de consultas gratis de hoy. <a href="precios.html">Desbloquea con PRO</a> para 50 consultas diarias.';
+      limitBanner.innerHTML =
+        '<div class="limit-banner">' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+          '<span>' + msg + '</span>' +
+        '</div>';
+    } else {
+      limitBanner.innerHTML = '';
+    }
+  }
+
+  /* ═══ PRO Check ═══ */
+  function initPro() {
+    if (typeof exoPro !== 'undefined' && exoPro.check) {
+      exoPro.check().then(function(result) {
+        isPro = !!result;
+        updateLimitUI();
+      }).catch(function() {
+        isPro = false;
+        updateLimitUI();
+      });
+    } else {
+      isPro = false;
+      updateLimitUI();
+    }
+  }
+
+  /* ═══ Markdown Renderer (simple) ═══ */
+  function renderMarkdown(text) {
+    // Escape HTML
+    var html = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    // Bold: **text** or __text__
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+
+    // Inline code
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Links: [text](url)
+    html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+    // Unordered lists: lines starting with - or *
+    html = html.replace(/^(\s*[-*])\s+(.+)$/gm, function(match, bullet, content) {
+      return '<li>' + content + '</li>';
+    });
+    // Wrap consecutive <li> in <ul>
+    html = html.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
+
+    // Ordered lists: lines starting with number.
+    html = html.replace(/^(\s*\d+\.)\s+(.+)$/gm, function(match, num, content) {
+      return '<oli>' + content + '</oli>';
+    });
+    html = html.replace(/((?:<oli>.*<\/oli>\n?)+)/g, function(match) {
+      return '<ol>' + match.replace(/<\/?oli>/g, function(t) {
+        return t === '<oli>' ? '<li>' : '</li>';
+      }) + '</ol>';
+    });
+
+    // Paragraphs: split by double newlines
+    html = html.replace(/\n{2,}/g, '</p><p>');
+    // Single newlines within a paragraph -> <br>
+    html = html.replace(/\n/g, '<br>');
+
+    html = '<p>' + html + '</p>';
+    // Clean empty paragraphs
+    html = html.replace(/<p>\s*<\/p>/g, '');
+
+    return html;
+  }
+
+  /* ═══ Source Extraction ═══ */
+  function extractSources(text) {
+    var sources = [];
+    var cleanText = text;
+
+    // Extract "Fuentes:" or "Fuente:" lines
+    var fuenteRegex = /^(?:Fuentes?:\s*)(.+)$/gim;
+    var match;
+    while ((match = fuenteRegex.exec(text)) !== null) {
+      var raw = match[1];
+      // Split by comma or ;
+      raw.split(/[,;]/).forEach(function(s) {
+        s = s.trim();
+        if (s) sources.push(s);
+      });
+      cleanText = cleanText.replace(match[0], '');
+    }
+
+    // Detect Art. patterns
+    var artRegex = /Art(?:\.|culo|iculo|\.?\s*culo)?\s*\.?\s*(\d+(?:-\d+)?)\s*(?:del\s+)?(?:E\.?\s*T\.?|Estatuto\s+Tributario)/gi;
+    while ((match = artRegex.exec(text)) !== null) {
+      var artLabel = 'Art. ' + match[1] + ' ET';
+      var exists = sources.some(function(s) { return s.indexOf(match[1]) !== -1; });
+      if (!exists) sources.push(artLabel);
+    }
+
+    // Deduplicate
+    var unique = [];
+    var seen = {};
+    sources.forEach(function(s) {
+      var key = s.toLowerCase().replace(/\s+/g, ' ').trim();
+      if (!seen[key]) { seen[key] = true; unique.push(s); }
+    });
+
+    return { cleanText: cleanText.trim(), sources: unique };
+  }
+
+  /* ═══ UI Helpers ═══ */
+  function scrollToBottom() {
+    requestAnimationFrame(function() {
+      messagesArea.scrollTop = messagesArea.scrollHeight;
+    });
+  }
+
+  function addMessageToUI(role, content, opts) {
+    opts = opts || {};
+    var row = document.createElement('div');
+    row.className = 'msg-row ' + role;
+
+    if (role === 'user') {
+      var bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+      bubble.textContent = content;
+      row.appendChild(bubble);
+    } else if (role === 'assistant') {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'msg-wrapper';
+
+      var label = document.createElement('div');
+      label.className = 'msg-label';
+      label.textContent = 'ExógenaDIAN IA';
+
+      var bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+      bubble.id = opts.id || '';
+
+      if (opts.streaming) {
+        bubble.innerHTML = '<div class="typing-indicator"><span></span><span></span><span></span></div>';
+      } else {
+        var extracted = extractSources(content);
+        bubble.innerHTML = renderMarkdown(extracted.cleanText);
+        if (extracted.sources.length > 0) {
+          var bar = document.createElement('div');
+          bar.className = 'sources-bar';
+          extracted.sources.forEach(function(src) {
+            var chip = document.createElement('span');
+            chip.className = 'source-chip';
+            chip.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' + escapeHtml(src);
+            bar.appendChild(chip);
+          });
+          wrapper.appendChild(label);
+          wrapper.appendChild(bubble);
+          wrapper.appendChild(bar);
+          row.appendChild(wrapper);
+          messagesArea.appendChild(row);
+          scrollToBottom();
+          return row;
+        }
+      }
+      wrapper.appendChild(label);
+      wrapper.appendChild(bubble);
+      row.appendChild(wrapper);
+    } else if (role === 'system') {
+      var bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+      bubble.innerHTML = escapeHtml(content);
+      if (opts.retry) {
+        var retryBtn = document.createElement('button');
+        retryBtn.className = 'retry-btn';
+        retryBtn.textContent = 'Reintentar';
+        retryBtn.onclick = function() {
+          row.remove();
+          retryLastMessage();
+        };
+        bubble.appendChild(document.createElement('br'));
+        bubble.appendChild(retryBtn);
+      }
+      row.appendChild(bubble);
+    }
+
+    messagesArea.appendChild(row);
+    scrollToBottom();
+    return row;
+  }
+
+  function escapeHtml(t) {
+    var d = document.createElement('div');
+    d.textContent = t;
+    return d.innerHTML;
+  }
+
+  function setStreaming(val) {
+    isStreaming = val;
+    btnSend.disabled = val;
+    inputField.disabled = val;
+    if (!val) inputField.focus();
+  }
+
+  /* ═══ Welcome Screen ═══ */
+  function showWelcome() {
+    var welcome = document.createElement('div');
+    welcome.className = 'welcome-section';
+    welcome.id = 'welcomeSection';
+    welcome.innerHTML =
+      '<div class="welcome-icon">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>' +
+      '</div>' +
+      '<h2 class="welcome-title">Chat con Estatuto Tributario</h2>' +
+      '<p class="welcome-text">Hola, soy tu asistente tributario. Preguntame lo que necesites sobre el Estatuto Tributario, sanciones, obligaciones, topes, o cualquier tema fiscal colombiano. Siempre cito la fuente normativa.</p>' +
+      '<div class="example-chips">' +
+        '<button class="example-chip" data-q="&iquest;Cu&aacute;nto es la sanci&oacute;n por presentar ex&oacute;gena tarde?">\u00bfCu\u00e1nto es la sanci\u00f3n por presentar ex\u00f3gena tarde?</button>' +
+        '<button class="example-chip" data-q="&iquest;Un m&eacute;dico con $120M debe declarar renta?">\u00bfUn m\u00e9dico con $120M debe declarar renta?</button>' +
+        '<button class="example-chip" data-q="&iquest;Cu&aacute;les son los topes del r&eacute;gimen simple 2026?">\u00bfCu\u00e1les son los topes del r\u00e9gimen simple 2026?</button>' +
+        '<button class="example-chip" data-q="Diferencia entre renta ordinaria y ganancia ocasional">Diferencia entre renta ordinaria y ganancia ocasional</button>' +
+      '</div>';
+    messagesArea.appendChild(welcome);
+  }
+
+  /* ═══ Send Message ═══ */
+  var lastUserText = '';
+
+  function retryLastMessage() {
+    if (lastUserText) sendMessage(lastUserText, true);
+  }
+
+  async function sendMessage(userText, isRetry) {
+    if (isStreaming) return;
+    userText = userText.trim();
+    if (!userText) return;
+    lastUserText = userText;
+
+    // Rate limit check (both free and PRO)
+    var limit = checkIALimit();
+    if (!limit.allowed) {
+      updateLimitUI();
+      return;
+    }
+
+    // Remove welcome
+    var welcomeEl = document.getElementById('welcomeSection');
+    if (welcomeEl) welcomeEl.remove();
+
+    // Add user message
+    if (!isRetry) {
+      history.push({ role: 'user', content: userText });
+      if (history.length > MAX_HISTORY) history = history.slice(-MAX_HISTORY);
+    }
+    addMessageToUI('user', userText);
+
+    // Clear input
+    inputField.value = '';
+    autoGrow();
+
+    // Create assistant bubble
+    var msgId = 'stream_' + Date.now();
+    var assistantRow = addMessageToUI('assistant', '', { streaming: true, id: msgId });
+    var bubble = document.getElementById(msgId);
+
+    setStreaming(true);
+
+    try {
+      var response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error del servidor (' + response.status + ')');
+      }
+
+      var reader = response.body.getReader();
+      var decoder = new TextDecoder();
+      var buffer = '';
+      var fullText = '';
+      var firstChunk = true;
+
+      while (true) {
+        var result = await reader.read();
+        if (result.done) break;
+        buffer += decoder.decode(result.value, { stream: true });
+
+        var lines = buffer.split('\n');
+        buffer = lines.pop(); // keep incomplete line in buffer
+
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          if (!line.startsWith('data: ')) continue;
+
+          try {
+            var event = JSON.parse(line.slice(6));
+
+            if (event.type === 'text' && event.text) {
+              if (firstChunk) {
+                bubble.innerHTML = '';
+                firstChunk = false;
+              }
+              fullText += event.text;
+              // Render progressively
+              bubble.innerHTML = renderMarkdown(fullText);
+              scrollToBottom();
+
+            } else if (event.type === 'done') {
+              // Finalize
+              break;
+
+            } else if (event.type === 'error') {
+              throw new Error(event.error || 'Error desconocido');
+            }
+          } catch (parseErr) {
+            if (parseErr.message && !parseErr.message.includes('JSON')) {
+              throw parseErr;
+            }
+          }
+        }
+      }
+
+      // Finalize the message with sources
+      if (fullText) {
+        var extracted = extractSources(fullText);
+        bubble.innerHTML = renderMarkdown(extracted.cleanText);
+
+        if (extracted.sources.length > 0) {
+          var wrapper = bubble.parentElement;
+          var bar = document.createElement('div');
+          bar.className = 'sources-bar';
+          extracted.sources.forEach(function(src) {
+            var chip = document.createElement('span');
+            chip.className = 'source-chip';
+            chip.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' + escapeHtml(src);
+            bar.appendChild(chip);
+          });
+          wrapper.appendChild(bar);
+        }
+
+        // Add to history
+        history.push({ role: 'assistant', content: fullText });
+        if (history.length > MAX_HISTORY) history = history.slice(-MAX_HISTORY);
+
+        // Consume limit after successful response (free and PRO)
+        consumeIALimit();
+        updateLimitUI();
+      }
+
+      scrollToBottom();
+
+    } catch (err) {
+      // Remove the streaming bubble
+      if (assistantRow && assistantRow.parentElement) {
+        assistantRow.remove();
+      }
+      // Remove the failed assistant entry from history if partially added
+      addMessageToUI('system', err.message || 'Error al conectar con la IA. Intenta de nuevo.', { retry: true });
+    } finally {
+      setStreaming(false);
+      scrollToBottom();
+    }
+  }
+
+  /* ═══ Input Auto-grow ═══ */
+  function autoGrow() {
+    inputField.style.height = 'auto';
+    inputField.style.height = Math.min(inputField.scrollHeight, 96) + 'px';
+  }
+
+  /* ═══ New Chat ═══ */
+  function clearChat() {
+    history = [];
+    messagesArea.innerHTML = '';
+    showWelcome();
+    updateLimitUI();
+    inputField.value = '';
+    autoGrow();
+    inputField.focus();
+  }
+
+  /* ═══ Event Listeners ═══ */
+  inputField.addEventListener('input', autoGrow);
+
+  inputField.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(inputField.value);
+    }
+  });
+
+  btnSend.addEventListener('click', function() {
+    sendMessage(inputField.value);
+  });
+
+  btnNewChat.addEventListener('click', clearChat);
+
+  // Example chip clicks (delegated)
+  messagesArea.addEventListener('click', function(e) {
+    var chip = e.target.closest('.example-chip');
+    if (chip) {
+      var q = chip.textContent.trim();
+      sendMessage(q);
+    }
+  });
+
+  /* ═══ Init ═══ */
+  showWelcome();
+  initPro();
+  inputField.focus();
+
+})();
+</script>
+</body>
+</html>

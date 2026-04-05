@@ -38,7 +38,7 @@ steps:
       - '--max-instances'
       - '2'
       - '--set-env-vars'
-      - 'ALLOWED_ORIGINS=https://exogenadian.com,CHAT_MODEL=claude-sonnet-4-20250514,CHAT_MAX_TOKENS=800,CHAT_RATE_LIMIT=20,CHAT_MONTHLY_BUDGET=5.0'
+      - 'ALLOWED_ORIGINS=https://exogenadian.com,CHAT_MODEL=claude-sonnet-4-20250514,CHAT_MAX_TOKENS=800,CHAT_RATE_LIMIT=20,CHAT_MONTHLY_BUDGET=5.0,IA_RATE_LIMIT=30'
 
 images:
   - 'gcr.io/$PROJECT_ID/dian-proxy'

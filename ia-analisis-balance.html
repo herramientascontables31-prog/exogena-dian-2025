@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S7SM6ST4CC');
+</script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="og-image.png">
+<meta name="theme-color" content="#059669">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analizador de Balance con IA — Alertas Tributarias Automáticas | ExógenaDIAN</title>
+<meta name="description" content="Analiza tu balance de prueba con inteligencia artificial. Detecta inconsistencias tributarias, alertas de proporcionalidad y recomendaciones del Estatuto Tributario. Gratis hasta 3 consultas diarias.">
+<meta name="keywords" content="analizador balance IA, análisis tributario IA, balance de prueba DIAN, alertas tributarias, proporcionalidad IVA, gastos no deducibles, exógena Colombia">
+<link rel="canonical" href="https://exogenadian.com/ia-analisis-balance.html">
+<meta property="og:title" content="Analizador de Balance con IA — Alertas Tributarias | ExógenaDIAN">
+<meta property="og:description" content="Analiza tu balance de prueba con IA. Detecta inconsistencias tributarias, alertas y recomendaciones del ET automáticamente.">
+<meta property="og:url" content="https://exogenadian.com/ia-analisis-balance.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="ExógenaDIAN">
+<meta property="og:image" content="https://exogenadian.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Analizador de Balance con IA","url":"https://exogenadian.com/ia-analisis-balance.html","description":"Analiza tu balance de prueba con inteligencia artificial. Detecta inconsistencias tributarias, alertas de proporcionalidad y recomendaciones del Estatuto Tributario.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"IA Contable","item":"https://exogenadian.com/ia.html"},{"@type":"ListItem","position":3,"name":"Analizador de Balance","item":"https://exogenadian.com/ia-analisis-balance.html"}]}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══ Variables ═══ */
+:root {
+  --primary: #059669;
+  --primary-light: #34D399;
+  --primary-dark: #047857;
+  --primary-glow: rgba(5, 150, 105, 0.25);
+  --bg: #0F1117;
+  --bg-card: #161B22;
+  --bg-card-hover: #1C222B;
+  --bg-input: #121720;
+  --border: #2A3040;
+  --border-light: #3A4255;
+  --text: #EFF2F6;
+  --text-muted: #8B95A8;
+  --text-dim: #5B6575;
+  --green: #10B981;
+  --green-bg: rgba(16, 185, 129, 0.12);
+  --green-border: rgba(16, 185, 129, 0.25);
+  --amber: #F59E0B;
+  --amber-bg: rgba(245, 158, 11, 0.12);
+  --amber-border: rgba(245, 158, 11, 0.25);
+  --red: #EF4444;
+  --red-bg: rgba(239, 68, 68, 0.12);
+  --red-border: rgba(239, 68, 68, 0.25);
+  --blue: #3B82F6;
+  --blue-bg: rgba(59, 130, 246, 0.12);
+  --blue-border: rgba(59, 130, 246, 0.25);
+  --r: 14px;
+}
+
+/* ═══ Reset & Base ═══ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'DM Sans', 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ Header ═══ */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(15, 17, 23, 0.85);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text);
+}
+.header-logo {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  border-radius: 10px;
+  display: grid; place-items: center;
+  font-size: 0.8rem; font-weight: 900; color: #fff;
+}
+.header-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700; font-size: 1.1rem;
+}
+.header-title small {
+  display: block; font-weight: 400; font-size: 0.65rem;
+  color: var(--text-dim);
+}
+.header-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.85rem; color: var(--text-muted);
+  text-decoration: none; transition: color 0.2s;
+}
+.header-back:hover { color: var(--primary-light); }
+.header-back svg { width: 16px; height: 16px; }
+
+/* ═══ Container ═══ */
+.container { max-width: 860px; margin: 0 auto; padding: 40px 24px 60px; }
+
+/* ═══ Page Header ═══ */
+.page-hero { text-align: center; margin-bottom: 36px; }
+.page-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--primary-glow); border: 1px solid rgba(5, 150, 105, 0.3);
+  padding: 6px 16px; border-radius: 20px;
+  font-size: 0.78rem; font-weight: 600; color: var(--primary-light);
+  margin-bottom: 16px;
+}
+.page-hero h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2rem; font-weight: 800;
+  line-height: 1.2; margin-bottom: 10px;
+  background: linear-gradient(135deg, #fff 30%, var(--primary-light));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.page-hero p {
+  color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;
+  max-width: 600px; margin: 0 auto;
+}
+
+/* ═══ Usage Counter ═══ */
+.usage-bar {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-bottom: 28px; font-size: 0.8rem; color: var(--text-dim);
+}
+.usage-bar .dots { display: flex; gap: 5px; }
+.usage-bar .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--border); border: 1.5px solid var(--border-light);
+}
+.usage-bar .dot.used { background: var(--primary); border-color: var(--primary); }
+.usage-bar .dot.available { background: var(--green); border-color: var(--green); }
+.usage-bar.pro { color: var(--primary-light); }
+.usage-pro-badge {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff; font-size: 0.68rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 6px;
+}
+
+/* ═══ Card ═══ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+/* ═══ Textarea ═══ */
+.input-group { position: relative; }
+.input-group label {
+  display: block; font-size: 0.85rem; font-weight: 600;
+  color: var(--text); margin-bottom: 10px;
+}
+.input-group label span {
+  font-weight: 400; color: var(--text-dim); font-size: 0.78rem;
+}
+.balance-textarea {
+  width: 100%; min-height: 260px; max-height: 500px;
+  padding: 18px; border-radius: 12px;
+  background: var(--bg-input); border: 1.5px solid var(--border);
+  color: var(--text); font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem; line-height: 1.7; resize: vertical;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.balance-textarea::placeholder { color: var(--text-dim); font-size: 0.78rem; }
+.balance-textarea:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+.char-counter {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 8px; font-size: 0.75rem; color: var(--text-dim);
+}
+.char-counter.warn { color: var(--amber); }
+.char-counter.over { color: var(--red); }
+
+/* ═══ Buttons ═══ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 32px; border-radius: 12px;
+  font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.95rem;
+  cursor: pointer; border: none; transition: all 0.25s;
+  text-decoration: none;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff; width: 100%; margin-top: 16px;
+  box-shadow: 0 4px 20px var(--primary-glow);
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(5, 150, 105, 0.4);
+}
+.btn-primary:disabled {
+  opacity: 0.4; cursor: not-allowed; transform: none;
+  box-shadow: none;
+}
+.btn-primary .spinner {
+  width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.btn-secondary {
+  background: transparent; color: var(--text-muted);
+  border: 1.5px solid var(--border); width: 100%; margin-top: 12px;
+}
+.btn-secondary:hover {
+  border-color: var(--primary); color: var(--primary-light);
+}
+
+.btn-retry {
+  background: var(--red-bg); color: var(--red);
+  border: 1px solid var(--red-border); margin-top: 12px;
+}
+.btn-retry:hover { background: rgba(239, 68, 68, 0.2); }
+
+/* ═══ Skeleton Loading ═══ */
+.skeleton-container { display: none; }
+.skeleton-container.active { display: block; }
+.skeleton-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 24px; margin-bottom: 16px;
+  overflow: hidden;
+}
+.skeleton-line {
+  height: 14px; border-radius: 8px; margin-bottom: 12px;
+  background: linear-gradient(90deg, var(--border) 25%, var(--border-light) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+.skeleton-line.w60 { width: 60%; }
+.skeleton-line.w80 { width: 80%; }
+.skeleton-line.w40 { width: 40%; }
+.skeleton-line.w100 { width: 100%; }
+.skeleton-line.h24 { height: 24px; }
+.skeleton-line.h40 { height: 40px; }
+.skeleton-circle {
+  width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 16px;
+  background: linear-gradient(90deg, var(--border) 25%, var(--border-light) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ═══ Results ═══ */
+.results-container { display: none; }
+.results-container.active { display: block; }
+
+/* Semaforo */
+.semaforo-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 32px; text-align: center;
+  margin-bottom: 20px;
+}
+.semaforo-circle {
+  width: 90px; height: 90px; border-radius: 50%; margin: 0 auto 16px;
+  display: grid; place-items: center; font-size: 2.2rem;
+  box-shadow: 0 0 40px currentColor;
+}
+.semaforo-circle.verde { background: var(--green); color: var(--green); }
+.semaforo-circle.amarillo { background: var(--amber); color: var(--amber); }
+.semaforo-circle.rojo { background: var(--red); color: var(--red); }
+.semaforo-circle .inner-icon { filter: brightness(0) invert(1); font-size: 2rem; }
+.semaforo-label {
+  font-family: 'Outfit', sans-serif; font-size: 1.3rem;
+  font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.semaforo-label.verde { color: var(--green); }
+.semaforo-label.amarillo { color: var(--amber); }
+.semaforo-label.rojo { color: var(--red); }
+.semaforo-justification {
+  color: var(--text-muted); font-size: 0.88rem; line-height: 1.6;
+  max-width: 560px; margin: 0 auto;
+}
+
+/* Section title */
+.section-title {
+  font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700;
+  margin: 28px 0 14px; padding-left: 4px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title .icon { font-size: 1.2rem; }
+.section-count {
+  font-size: 0.72rem; font-weight: 700; padding: 3px 10px;
+  border-radius: 8px; background: var(--primary-glow); color: var(--primary-light);
+}
+
+/* Alert Cards */
+.alert-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 20px 22px; margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+.alert-card:hover { border-color: var(--border-light); }
+.alert-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px; flex-wrap: wrap;
+}
+.severity-badge {
+  font-size: 0.68rem; font-weight: 700; padding: 3px 10px;
+  border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.severity-alta { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+.severity-media { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+.severity-baja { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+.alert-title { font-weight: 700; font-size: 0.92rem; color: var(--text); }
+.alert-desc { font-size: 0.84rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 8px; }
+.et-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.2);
+  padding: 3px 12px; border-radius: 8px;
+  font-size: 0.72rem; font-weight: 600; color: var(--primary-light);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Proporcionalidad */
+.prop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.prop-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 20px;
+}
+.prop-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+}
+.prop-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: grid; place-items: center; font-size: 1rem;
+}
+.prop-icon.ok { background: var(--green-bg); color: var(--green); }
+.prop-icon.bad { background: var(--red-bg); color: var(--red); }
+.prop-label { font-weight: 700; font-size: 0.88rem; }
+.prop-comment { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; }
+
+/* Recomendaciones */
+.reco-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 20px 22px; margin-bottom: 12px;
+  display: flex; gap: 16px;
+}
+.reco-num {
+  flex-shrink: 0; width: 32px; height: 32px; border-radius: 8px;
+  background: var(--primary-glow); color: var(--primary-light);
+  display: grid; place-items: center;
+  font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.85rem;
+}
+.reco-body { flex: 1; }
+.reco-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+.reco-detail { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 6px; }
+
+/* Disclaimer */
+.disclaimer-box {
+  background: rgba(91, 101, 117, 0.08); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 22px; margin-top: 24px;
+  text-align: center;
+}
+.disclaimer-box p {
+  font-size: 0.78rem; color: var(--text-dim); line-height: 1.6;
+  margin: 0;
+}
+.disclaimer-box p strong { color: var(--text-muted); }
+
+/* Error */
+.error-container {
+  display: none; text-align: center; padding: 40px 24px;
+  background: var(--bg-card); border: 1px solid var(--red-border);
+  border-radius: var(--r);
+}
+.error-container.active { display: block; }
+.error-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.error-title { font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+.error-msg { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; }
+
+/* Limit reached */
+.limit-overlay {
+  display: none; text-align: center; padding: 36px 24px;
+  background: var(--bg-card); border: 1.5px dashed var(--border-light);
+  border-radius: var(--r); margin-top: 16px;
+}
+.limit-overlay.active { display: block; }
+.limit-overlay h3 {
+  font-family: 'Outfit', sans-serif; font-size: 1.05rem;
+  font-weight: 700; margin-bottom: 8px;
+}
+.limit-overlay p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.55; }
+.btn-pro-cta {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: #fff; font-family: 'Outfit', sans-serif; font-weight: 700;
+  font-size: 0.9rem; text-decoration: none; border: none; cursor: pointer;
+  transition: all 0.25s;
+}
+.btn-pro-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px var(--primary-glow);
+}
+
+/* ═══ Responsive ═══ */
+@media (max-width: 640px) {
+  .header { padding: 14px 18px; }
+  .container { padding: 28px 16px 50px; }
+  .page-hero h1 { font-size: 1.5rem; }
+  .card { padding: 20px 18px; }
+  .balance-textarea { min-height: 200px; padding: 14px; font-size: 0.76rem; }
+  .prop-grid { grid-template-columns: 1fr; }
+  .reco-card { flex-direction: column; gap: 10px; }
+  .semaforo-circle { width: 72px; height: 72px; }
+  .semaforo-label { font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <a href="ia.html" class="header-brand">
+    <div class="header-logo">IA</div>
+    <div class="header-title">
+      ExógenaDIAN IA
+      <small>Herramientas con inteligencia artificial</small>
+    </div>
+  </a>
+  <a href="ia.html" class="header-back">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Volver a IA
+  </a>
+</header>
+
+<!-- Main Content -->
+<main class="container">
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="page-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Analizador de Balance
+    </div>
+    <h1>Analiza tu balance de prueba con IA</h1>
+    <p>Pega tu balance de prueba y recibe alertas tributarias, revisi&oacute;n de proporcionalidad y recomendaciones basadas en el Estatuto Tributario.</p>
+  </div>
+
+  <!-- Usage bar -->
+  <div class="usage-bar" id="usageBar">
+    <span id="usageText">Cargando...</span>
+    <div class="dots" id="usageDots"></div>
+  </div>
+
+  <!-- Input Section -->
+  <div class="card" id="inputSection">
+    <div class="input-group">
+      <label>
+        Balance de prueba
+        <span>- Pega el resumen de cuentas, saldos, ingresos, costos y gastos</span>
+      </label>
+      <textarea
+        id="balanceInput"
+        class="balance-textarea"
+        maxlength="8000"
+        placeholder="Ejemplo de formato:&#10;&#10;1105 Caja                    $2.500.000&#10;1110 Bancos                  $45.300.000&#10;1305 Clientes                $18.200.000&#10;1355 Anticipos                $3.800.000&#10;1592 Depreciaci&oacute;n acumulada  ($5.400.000)&#10;2105 Obligaciones financieras $22.000.000&#10;2205 Proveedores             $15.600.000&#10;2365 Retenci&oacute;n en la fuente   $1.200.000&#10;2408 IVA por pagar            $3.100.000&#10;3105 Capital social           $10.000.000&#10;4135 Ingresos operacionales  $120.000.000&#10;5105 Gastos de personal       $38.000.000&#10;5110 Honorarios              $22.000.000&#10;5195 Gastos diversos          $8.500.000&#10;5305 Gastos financieros       $4.200.000&#10;6135 Costos de servicios     $35.000.000"></textarea>
+      <div class="char-counter" id="charCounter">
+        <span>Puedes incluir cualquier formato de balance de prueba</span>
+        <span id="charCount">0 / 8.000</span>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btnAnalizar" disabled>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M20.5 7.5L12 12"/></svg>
+      Analizar Balance
+    </button>
+
+    <!-- Limit reached overlay -->
+    <div class="limit-overlay" id="limitOverlay">
+      <h3>Alcanzaste el l&iacute;mite diario gratuito</h3>
+      <p>Los usuarios gratuitos pueden realizar hasta 3 an&aacute;lisis por d&iacute;a.<br>Con PRO tienes an&aacute;lisis ilimitados todos los d&iacute;as.</p>
+      <a href="precios.html" class="btn-pro-cta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Obtener PRO
+      </a>
+    </div>
+  </div>
+
+  <!-- Skeleton Loading -->
+  <div class="skeleton-container" id="skeletonLoader">
+    <div class="skeleton-card" style="text-align:center;padding:36px">
+      <div class="skeleton-circle"></div>
+      <div class="skeleton-line h24 w40" style="margin:0 auto 12px"></div>
+      <div class="skeleton-line w80" style="margin:0 auto"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton-line h24 w40"></div>
+      <div class="skeleton-line w100"></div>
+      <div class="skeleton-line w80"></div>
+      <div class="skeleton-line w60"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton-line h24 w40"></div>
+      <div class="skeleton-line w100"></div>
+      <div class="skeleton-line w80"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skeleton-line h24 w40"></div>
+      <div class="skeleton-line w100"></div>
+      <div class="skeleton-line w60"></div>
+    </div>
+  </div>
+
+  <!-- Error Container -->
+  <div class="error-container" id="errorContainer">
+    <div class="error-icon">&#9888;&#65039;</div>
+    <div class="error-title">No pudimos completar el an&aacute;lisis</div>
+    <div class="error-msg" id="errorMsg">Ocurri&oacute; un error inesperado. Por favor intenta nuevamente.</div>
+    <button class="btn btn-retry" id="btnRetry" onclick="retryAnalysis()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      Reintentar
+    </button>
+  </div>
+
+  <!-- Results Container -->
+  <div class="results-container" id="resultsContainer">
+    <!-- Semaforo -->
+    <div class="semaforo-card" id="semaforoCard"></div>
+
+    <!-- Alertas -->
+    <div id="alertasSection"></div>
+
+    <!-- Proporcionalidad -->
+    <div id="propSection"></div>
+
+    <!-- Recomendaciones -->
+    <div id="recoSection"></div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer-box" id="disclaimerBox"></div>
+
+    <!-- New analysis button -->
+    <button class="btn btn-secondary" onclick="resetAnalysis()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .68-9.64L1 10"/></svg>
+      Nuevo an&aacute;lisis
+    </button>
+  </div>
+
+</main>
+
+<!-- PRO check -->
+<script src="shared/pro.js"></script>
+
+<script>
+(function() {
+  'use strict';
+
+  // ═══ Constants ═══
+  var API_URL = 'https://dian-proxy-337146111457.southamerica-east1.run.app/api/ia/analisis-balance';
+  var IA_LIMIT_KEY = 'exogenadian_ia_usage';
+  var IA_LIMIT_KEY_PRO = 'exogenadian_ia_usage_pro';
+  var MAX_CHARS = 8000;
+  var MAX_FREE = 3;
+  var MAX_PRO = 30;
+
+  // ═══ DOM refs ═══
+  var textarea = document.getElementById('balanceInput');
+  var btnAnalizar = document.getElementById('btnAnalizar');
+  var charCountEl = document.getElementById('charCount');
+  var charCounterEl = document.getElementById('charCounter');
+  var inputSection = document.getElementById('inputSection');
+  var skeletonLoader = document.getElementById('skeletonLoader');
+  var resultsContainer = document.getElementById('resultsContainer');
+  var errorContainer = document.getElementById('errorContainer');
+  var errorMsg = document.getElementById('errorMsg');
+  var usageBar = document.getElementById('usageBar');
+  var usageText = document.getElementById('usageText');
+  var usageDots = document.getElementById('usageDots');
+  var limitOverlay = document.getElementById('limitOverlay');
+
+  var isPro = false;
+  var lastBalanceText = '';
+
+  // ═══ IA Limit Management ═══
+  function checkIALimit() {
+    var key = isPro ? IA_LIMIT_KEY_PRO : IA_LIMIT_KEY;
+    var max = isPro ? MAX_PRO : MAX_FREE;
+    var data = JSON.parse(localStorage.getItem(key) || '{}');
+    var today = new Date().toISOString().slice(0, 10);
+    if (data.date !== today) return { allowed: true, count: 0, max: max };
+    return { allowed: data.count < max, count: data.count, max: max };
+  }
+
+  function consumeIALimit() {
+    var key = isPro ? IA_LIMIT_KEY_PRO : IA_LIMIT_KEY;
+    var today = new Date().toISOString().slice(0, 10);
+    var data = JSON.parse(localStorage.getItem(key) || '{}');
+    if (data.date !== today) { data.date = today; data.count = 0; }
+    data.count++;
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  // ═══ Usage bar rendering ═══
+  function renderUsage() {
+    var limit = checkIALimit();
+    usageDots.innerHTML = '';
+
+    if (isPro) {
+      usageBar.className = 'usage-bar pro';
+      usageText.innerHTML = '';
+      var badge = document.createElement('span');
+      badge.className = 'usage-pro-badge';
+      badge.textContent = 'PRO';
+      usageText.appendChild(badge);
+      var remaining = limit.max - limit.count;
+      var txt = document.createTextNode(' ' + remaining + ' de ' + limit.max + ' an\u00e1lisis restantes hoy');
+      usageText.appendChild(txt);
+      if (!limit.allowed) {
+        limitOverlay.classList.add('active');
+        btnAnalizar.disabled = true;
+      } else {
+        limitOverlay.classList.remove('active');
+      }
+      return;
+    }
+
+    usageBar.className = 'usage-bar';
+    var remaining = limit.max - limit.count;
+    usageText.textContent = remaining + ' de ' + limit.max + ' an\u00e1lisis restantes hoy';
+
+    for (var i = 0; i < MAX_FREE; i++) {
+      var dot = document.createElement('span');
+      dot.className = 'dot' + (i < limit.count ? ' used' : ' available');
+      usageDots.appendChild(dot);
+    }
+
+    if (!limit.allowed) {
+      limitOverlay.classList.add('active');
+      btnAnalizar.disabled = true;
+    } else {
+      limitOverlay.classList.remove('active');
+    }
+  }
+
+  // ═══ Textarea handling ═══
+  function updateCharCount() {
+    var len = textarea.value.length;
+    charCountEl.textContent = len.toLocaleString('es-CO') + ' / 8.000';
+    charCounterEl.className = 'char-counter' + (len > 7500 ? (len >= MAX_CHARS ? ' over' : ' warn') : '');
+    btnAnalizar.disabled = len < 20 || len > MAX_CHARS || !checkIALimit().allowed;
+  }
+
+  textarea.addEventListener('input', updateCharCount);
+
+  // ═══ Show/hide sections ═══
+  function showSection(section) {
+    inputSection.style.display = 'none';
+    skeletonLoader.classList.remove('active');
+    resultsContainer.classList.remove('active');
+    errorContainer.classList.remove('active');
+
+    if (section === 'input') inputSection.style.display = '';
+    else if (section === 'loading') skeletonLoader.classList.add('active');
+    else if (section === 'results') resultsContainer.classList.add('active');
+    else if (section === 'error') errorContainer.classList.add('active');
+  }
+
+  // ═══ Semaforo color mapping ═══
+  function semaforoIcon(color) {
+    if (color === 'verde') return '\u2705';
+    if (color === 'amarillo') return '\u26A0\uFE0F';
+    return '\u274C';
+  }
+
+  function semaforoText(color) {
+    if (color === 'verde') return 'Bajo riesgo';
+    if (color === 'amarillo') return 'Riesgo medio';
+    return 'Riesgo alto';
+  }
+
+  // ═══ Render results ═══
+  function renderResults(data) {
+    // Semaforo
+    var sColor = (data.semaforo || 'amarillo').toLowerCase();
+    var sCard = document.getElementById('semaforoCard');
+    sCard.innerHTML =
+      '<div class="semaforo-circle ' + sColor + '">' +
+        '<span class="inner-icon">' + semaforoIcon(sColor) + '</span>' +
+      '</div>' +
+      '<div class="semaforo-label ' + sColor + '">' + semaforoText(sColor) + '</div>' +
+      '<div class="semaforo-justification">' + esc(data.justificacion || '') + '</div>';
+
+    // Alertas
+    var alertas = data.alertas || [];
+    var alertasHTML = '';
+    if (alertas.length > 0) {
+      alertasHTML += '<div class="section-title"><span class="icon">\uD83D\uDEA8</span> Alertas <span class="section-count">' + alertas.length + '</span></div>';
+      alertas.forEach(function(a) {
+        var sev = (a.severidad || 'media').toLowerCase();
+        alertasHTML +=
+          '<div class="alert-card">' +
+            '<div class="alert-header">' +
+              '<span class="severity-badge severity-' + sev + '">' + sev + '</span>' +
+              '<span class="alert-title">' + esc(a.titulo || '') + '</span>' +
+            '</div>' +
+            '<div class="alert-desc">' + esc(a.descripcion || '') + '</div>' +
+            (a.articulo_et ? '<span class="et-chip">\u00A7 ' + esc(a.articulo_et) + '</span>' : '') +
+          '</div>';
+      });
+    }
+    document.getElementById('alertasSection').innerHTML = alertasHTML;
+
+    // Proporcionalidad
+    var prop = data.proporcionalidad || {};
+    var propHTML = '';
+    var propKeys = Object.keys(prop);
+    if (propKeys.length > 0) {
+      propHTML += '<div class="section-title"><span class="icon">\u2696\uFE0F</span> Proporcionalidad</div>';
+      propHTML += '<div class="prop-grid">';
+      propKeys.forEach(function(key) {
+        var item = prop[key];
+        var ok = item.coherente === true || item.coherente === 'true';
+        var label = key.replace(/_/g, ' ');
+        label = label.charAt(0).toUpperCase() + label.slice(1);
+        propHTML +=
+          '<div class="prop-card">' +
+            '<div class="prop-header">' +
+              '<div class="prop-icon ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '\u2713' : '\u2717') + '</div>' +
+              '<span class="prop-label">' + esc(label) + '</span>' +
+            '</div>' +
+            '<div class="prop-comment">' + esc(item.comentario || '') + '</div>' +
+          '</div>';
+      });
+      propHTML += '</div>';
+    }
+    document.getElementById('propSection').innerHTML = propHTML;
+
+    // Recomendaciones
+    var recos = data.recomendaciones || [];
+    var recoHTML = '';
+    if (recos.length > 0) {
+      recoHTML += '<div class="section-title"><span class="icon">\uD83D\uDCA1</span> Recomendaciones <span class="section-count">' + recos.length + '</span></div>';
+      recos.forEach(function(r, i) {
+        recoHTML +=
+          '<div class="reco-card">' +
+            '<div class="reco-num">' + (i + 1) + '</div>' +
+            '<div class="reco-body">' +
+              '<div class="reco-title">' + esc(r.titulo || '') + '</div>' +
+              '<div class="reco-detail">' + esc(r.detalle || '') + '</div>' +
+              (r.articulo_et ? '<span class="et-chip">\u00A7 ' + esc(r.articulo_et) + '</span>' : '') +
+            '</div>' +
+          '</div>';
+      });
+    }
+    document.getElementById('recoSection').innerHTML = recoHTML;
+
+    // Disclaimer
+    var disc = data.disclaimer || 'Este an\u00e1lisis es generado por inteligencia artificial con fines orientativos. No reemplaza la asesor\u00eda de un contador p\u00fablico.';
+    document.getElementById('disclaimerBox').innerHTML = '<p><strong>Aviso:</strong> ' + esc(disc) + '</p>';
+
+    showSection('results');
+  }
+
+  // ═══ Escape HTML ═══
+  function esc(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+  }
+
+  // ═══ API Call ═══
+  async function analyzeBalance() {
+    var text = textarea.value.trim();
+    if (!text || text.length < 20) return;
+
+    // Limit check (both free and PRO)
+    var limit = checkIALimit();
+    if (!limit.allowed) {
+      renderUsage();
+      return;
+    }
+
+    lastBalanceText = text;
+    showSection('loading');
+
+    try {
+      var response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ balance_text: text })
+      });
+
+      if (!response.ok) {
+        var errData;
+        try { errData = await response.json(); } catch(e) { errData = {}; }
+        throw new Error(errData.detail || errData.error || 'Error ' + response.status + ': No se pudo procesar la solicitud.');
+      }
+
+      var data = await response.json();
+
+      // Consume limit on success (free and PRO)
+      consumeIALimit();
+      renderUsage();
+
+      renderResults(data);
+
+      // Analytics event
+      if (typeof gtag === 'function') {
+        gtag('event', 'ia_analisis_balance', { event_category: 'IA', event_label: isPro ? 'pro' : 'free' });
+      }
+
+    } catch (err) {
+      errorMsg.textContent = err.message || 'Ocurri\u00f3 un error inesperado. Por favor intenta nuevamente.';
+      showSection('error');
+    }
+  }
+
+  // ═══ Button handlers ═══
+  btnAnalizar.addEventListener('click', function() {
+    analyzeBalance();
+  });
+
+  // ═══ Retry ═══
+  window.retryAnalysis = function() {
+    textarea.value = lastBalanceText;
+    updateCharCount();
+    analyzeBalance();
+  };
+
+  // ═══ Reset ═══
+  window.resetAnalysis = function() {
+    textarea.value = '';
+    lastBalanceText = '';
+    updateCharCount();
+    renderUsage();
+    showSection('input');
+    textarea.focus();
+  };
+
+  // ═══ Init ═══
+  async function init() {
+    try {
+      isPro = await exoPro.check();
+    } catch(e) {
+      isPro = false;
+    }
+    renderUsage();
+    updateCharCount();
+    showSection('input');
+  }
+
+  init();
+
+})();
+</script>
+
+</body>
+</html>

@@ -65,6 +65,10 @@ app.add_middleware(
 from chat import router as chat_router
 app.include_router(chat_router)
 
+# ─── IA router (ExógenaDIAN IA) ───
+from ia import router as ia_router
+app.include_router(ia_router)
+
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response

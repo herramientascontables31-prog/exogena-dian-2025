@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Detector de Inconsistencias IA — ExógenaDIAN</title>
+  <meta name="description" content="Detecta inconsistencias entre Renta, Exógena, IVA y Retenciones con inteligencia artificial. Cruces automáticos que hace la DIAN.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://exogenadian.com/ia-inconsistencias.html">
+
+  <!-- OG -->
+  <meta property="og:title" content="Detector de Inconsistencias IA — ExógenaDIAN">
+  <meta property="og:description" content="Detecta inconsistencias entre tus declaraciones tributarias con IA. Cruces Renta vs Exógena vs IVA vs Retenciones.">
+  <meta property="og:url" content="https://exogenadian.com/ia-inconsistencias.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://exogenadian.com/og-image.png">
+  <meta property="og:site_name" content="ExógenaDIAN">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- GA -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-S7SM6ST4CC');</script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+
+    :root{
+      --bg:#0B1410;--bg-card:#131F1A;--bg-card-hover:#1A2D24;--bg-input:#0F1B15;
+      --border:#1E2D24;--border-hover:#059669;
+      --accent:#059669;--accent-dim:#047857;--accent-glow:rgba(5,150,105,.25);
+      --text:#E0F0E8;--text-dim:#8FB8A0;--text-muted:#5F826B;
+      --green:#10B981;--green-bg:rgba(16,185,129,.12);
+      --yellow:#F59E0B;--yellow-bg:rgba(245,158,11,.12);
+      --red:#EF4444;--red-bg:rgba(239,68,68,.12);
+      --radius:14px;--radius-sm:10px;
+    }
+
+    body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
+
+    /* ===== HEADER ===== */
+    .ia-header{
+      position:sticky;top:0;z-index:100;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:16px 40px;
+      background:rgba(11,20,16,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+    }
+    .ia-header-left{display:flex;align-items:center;gap:14px}
+    .ia-back{
+      display:inline-flex;align-items:center;gap:6px;
+      color:var(--text-dim);text-decoration:none;font-size:.85rem;font-weight:500;
+      padding:6px 12px;border-radius:8px;transition:all .2s;
+    }
+    .ia-back:hover{color:var(--accent);background:var(--accent-glow)}
+    .ia-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .ia-brand-icon{
+      width:34px;height:34px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),#34D399);
+      display:grid;place-items:center;color:#fff;font-size:.8rem;font-weight:900;
+    }
+    .ia-brand-text{font-weight:800;font-size:1.15rem;color:var(--text);letter-spacing:-.02em}
+    .ia-brand-text small{display:block;font-weight:400;font-size:.6rem;color:var(--text-muted);letter-spacing:.04em;margin-top:-2px}
+    .ia-badge-pro{
+      background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff;
+      font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:6px;
+      letter-spacing:.04em;
+    }
+
+    /* ===== LAYOUT ===== */
+    .container{max-width:860px;margin:0 auto;padding:32px 20px 64px}
+
+    /* ===== HERO ===== */
+    .hero{text-align:center;margin-bottom:40px}
+    .hero h1{
+      font-size:2rem;font-weight:800;letter-spacing:-.03em;
+      background:linear-gradient(135deg,#D1FAE5,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      margin-bottom:10px;
+    }
+    .hero p{color:var(--text-dim);font-size:1rem;max-width:560px;margin:0 auto;line-height:1.6}
+
+    /* ===== FORM CARD ===== */
+    .form-card{
+      background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:32px;margin-bottom:32px;
+    }
+    .form-card h2{font-size:1.1rem;font-weight:700;margin-bottom:20px;color:var(--text);display:flex;align-items:center;gap:8px}
+    .form-card h2 svg{width:20px;height:20px;color:var(--accent)}
+
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+    .field{display:flex;flex-direction:column;gap:5px}
+    .field label{font-size:.82rem;font-weight:600;color:var(--text)}
+    .field .helper{font-size:.7rem;color:var(--text-muted);line-height:1.4}
+    .field input{
+      font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:500;
+      padding:12px 14px;border-radius:var(--radius-sm);
+      background:var(--bg-input);border:1.5px solid var(--border);color:var(--text);
+      transition:all .2s;width:100%;
+    }
+    .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+    .field input::placeholder{color:var(--text-muted);font-weight:400}
+    .field input.auto-calc{background:rgba(5,150,105,.08);border-color:rgba(5,150,105,.3);cursor:default}
+
+    /* ===== BUTTONS ===== */
+    .btn-detect{
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      width:100%;padding:16px;margin-top:8px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-dim));color:#fff;
+      border:none;border-radius:var(--radius-sm);cursor:pointer;
+      font-family:'Outfit',sans-serif;font-size:1.05rem;font-weight:700;
+      transition:all .25s;position:relative;overflow:hidden;
+    }
+    .btn-detect:hover{transform:translateY(-1px);box-shadow:0 8px 30px var(--accent-glow)}
+    .btn-detect:active{transform:translateY(0)}
+    .btn-detect:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+    .btn-detect svg{width:20px;height:20px}
+
+    .btn-reset{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      width:100%;padding:14px;margin-top:12px;
+      background:transparent;color:var(--text-dim);
+      border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;
+      font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;transition:all .2s;
+    }
+    .btn-reset:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-glow)}
+
+    /* ===== LIMIT BANNER ===== */
+    .limit-banner{
+      display:none;align-items:center;gap:10px;
+      padding:14px 18px;margin-bottom:20px;
+      background:var(--yellow-bg);border:1px solid rgba(245,158,11,.25);border-radius:var(--radius-sm);
+      color:#F59E0B;font-size:.85rem;font-weight:500;
+    }
+    .limit-banner.show{display:flex}
+    .limit-banner a{color:#F97316;text-decoration:underline;font-weight:600}
+
+    /* ===== SKELETON LOADING ===== */
+    .skeleton-wrap{display:none;margin-top:32px}
+    .skeleton-wrap.show{display:block}
+    .skel-card{
+      background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:24px;margin-bottom:16px;overflow:hidden;
+    }
+    .skel-line{
+      height:14px;border-radius:6px;margin-bottom:12px;
+      background:linear-gradient(90deg,var(--border) 25%,#2A4035 50%,var(--border) 75%);
+      background-size:400% 100%;
+      animation:shimmer 1.5s ease-in-out infinite;
+    }
+    .skel-line.w60{width:60%}.skel-line.w80{width:80%}.skel-line.w40{width:40%}.skel-line.w100{width:100%}
+    .skel-line.thick{height:20px}
+    .skel-circle{
+      width:48px;height:48px;border-radius:50%;margin-bottom:12px;
+      background:linear-gradient(90deg,var(--border) 25%,#2A4035 50%,var(--border) 75%);
+      background-size:400% 100%;animation:shimmer 1.5s ease-in-out infinite;
+    }
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* ===== RESULTS ===== */
+    .results{display:none;margin-top:32px}
+    .results.show{display:block}
+
+    /* RESUMEN CARD */
+    .resumen-card{
+      background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:28px;margin-bottom:28px;text-align:center;
+    }
+    .semaforo-big{
+      width:64px;height:64px;border-radius:50%;margin:0 auto 16px;
+      display:grid;place-items:center;
+      box-shadow:0 0 30px var(--glow-color,transparent);
+      transition:all .3s;
+    }
+    .semaforo-big.verde{background:var(--green);--glow-color:rgba(16,185,129,.35)}
+    .semaforo-big.amarillo{background:var(--yellow);--glow-color:rgba(245,158,11,.35)}
+    .semaforo-big.rojo{background:var(--red);--glow-color:rgba(239,68,68,.35)}
+    .semaforo-big svg{width:28px;height:28px;color:#fff}
+
+    .resumen-card .risk-count{font-size:1.6rem;font-weight:800;margin-bottom:6px}
+    .resumen-card .risk-count span{color:var(--accent)}
+    .resumen-card .recommendation{color:var(--text-dim);font-size:.92rem;line-height:1.6;max-width:500px;margin:0 auto}
+
+    /* CRUCES */
+    .cruces-title{font-size:1.1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+    .cruces-title svg{width:18px;height:18px;color:var(--accent)}
+
+    .cruce-card{
+      background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+      padding:20px 24px;margin-bottom:14px;transition:all .2s;
+    }
+    .cruce-card:hover{border-color:var(--border-hover);background:var(--bg-card-hover)}
+
+    .cruce-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+    .semaforo-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+    .semaforo-dot.verde{background:var(--green);box-shadow:0 0 8px rgba(16,185,129,.4)}
+    .semaforo-dot.amarillo{background:var(--yellow);box-shadow:0 0 8px rgba(245,158,11,.4)}
+    .semaforo-dot.rojo{background:var(--red);box-shadow:0 0 8px rgba(239,68,68,.4)}
+    .cruce-name{font-weight:700;font-size:.95rem;flex:1}
+    .badge-material{
+      background:var(--red-bg);color:var(--red);
+      font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:6px;
+      letter-spacing:.04em;text-transform:uppercase;
+    }
+    .badge-requerimiento{
+      font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:6px;
+      letter-spacing:.02em;
+    }
+    .badge-requerimiento.ninguno{background:var(--green-bg);color:var(--green)}
+    .badge-requerimiento.ordinario{background:var(--yellow-bg);color:var(--yellow)}
+    .badge-requerimiento.pliego,.badge-requerimiento.liquidacion{background:var(--red-bg);color:var(--red)}
+
+    .cruce-values{
+      display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;
+      margin-bottom:14px;
+    }
+    .val-box{
+      background:var(--bg-input);border-radius:8px;padding:10px 14px;
+    }
+    .val-box .val-label{font-size:.68rem;color:var(--text-muted);margin-bottom:4px;font-weight:500}
+    .val-box .val-amount{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:600;color:var(--text)}
+    .val-vs{color:var(--text-muted);font-size:.75rem;font-weight:600}
+
+    .cruce-diff{
+      display:flex;gap:16px;align-items:center;margin-bottom:14px;flex-wrap:wrap;
+    }
+    .diff-item{font-size:.82rem;color:var(--text-dim)}
+    .diff-item strong{font-family:'JetBrains Mono',monospace;color:var(--text);font-weight:600}
+
+    /* Expandable sections */
+    .cruce-expand{border-top:1px solid var(--border);padding-top:12px}
+    .expand-btn{
+      display:flex;align-items:center;gap:6px;width:100%;
+      background:none;border:none;color:var(--accent);cursor:pointer;
+      font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;
+      padding:6px 0;transition:color .2s;text-align:left;
+    }
+    .expand-btn:hover{color:#34D399}
+    .expand-btn svg{width:14px;height:14px;transition:transform .2s;flex-shrink:0}
+    .expand-btn.open svg{transform:rotate(90deg)}
+    .expand-content{
+      display:none;padding:10px 0 4px 20px;
+      color:var(--text-dim);font-size:.84rem;line-height:1.65;
+      font-family:'DM Sans',sans-serif;
+    }
+    .expand-content.open{display:block}
+
+    /* DISCLAIMER */
+    .disclaimer{
+      margin-top:28px;padding:16px 20px;
+      background:rgba(5,150,105,.06);border:1px solid rgba(5,150,105,.15);border-radius:var(--radius-sm);
+      color:var(--text-muted);font-size:.78rem;line-height:1.6;
+      font-family:'DM Sans',sans-serif;
+    }
+    .disclaimer strong{color:var(--text-dim)}
+
+    /* ERROR */
+    .error-card{
+      display:none;margin-top:32px;
+      background:var(--red-bg);border:1px solid rgba(239,68,68,.25);border-radius:var(--radius);
+      padding:24px;text-align:center;
+    }
+    .error-card.show{display:block}
+    .error-card p{color:var(--red);font-size:.92rem;margin-bottom:14px}
+    .btn-retry{
+      background:transparent;border:1.5px solid var(--red);color:var(--red);
+      padding:10px 24px;border-radius:var(--radius-sm);cursor:pointer;
+      font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;transition:all .2s;
+    }
+    .btn-retry:hover{background:var(--red-bg)}
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:640px){
+      .ia-header{padding:14px 16px}
+      .ia-back span{display:none}
+      .container{padding:24px 14px 48px}
+      .hero h1{font-size:1.5rem}
+      .hero p{font-size:.88rem}
+      .form-card{padding:20px 16px}
+      .form-grid{grid-template-columns:1fr}
+      .cruce-values{grid-template-columns:1fr;gap:6px}
+      .val-vs{text-align:center}
+      .cruce-header{gap:8px}
+      .cruce-diff{flex-direction:column;gap:6px}
+      .resumen-card{padding:20px 16px}
+    }
+
+    /* ===== FOCUS VISIBLE ===== */
+    *:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="ia-header">
+  <div class="ia-header-left">
+    <a href="ia.html" class="ia-back">
+      <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clip-rule="evenodd"/></svg>
+      <span>IA Tools</span>
+    </a>
+    <a href="index.html" class="ia-brand">
+      <div class="ia-brand-icon">ED</div>
+      <div class="ia-brand-text">ExógenaDIAN <small>INTELIGENCIA ARTIFICIAL</small></div>
+    </a>
+  </div>
+  <span class="ia-badge-pro" id="proBadge" style="display:none">PRO</span>
+</header>
+
+<!-- MAIN -->
+<main class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1>Detector de Inconsistencias IA</h1>
+    <p>Ingresa las cifras de tus declaraciones y la IA detecta automáticamente los cruces que hace la DIAN entre Renta, Exógena, IVA y Retenciones.</p>
+  </section>
+
+  <!-- LIMIT BANNER -->
+  <div class="limit-banner" id="limitBanner">
+    <svg viewBox="0 0 20 20" fill="currentColor" width="18" height="18" style="flex-shrink:0"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.168 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+    <span id="limitText">Has usado <strong>3 de 3</strong> análisis gratuitos hoy. <a href="precios.html">Hazte PRO</a> para análisis ilimitados.</span>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-card">
+    <h2>
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M15.98 1.804a1 1 0 00-1.96 0l-.24 1.192a1 1 0 01-.784.784l-1.192.238a1 1 0 000 1.962l1.192.238a1 1 0 01.784.785l.24 1.192a1 1 0 001.96 0l.239-1.192a1 1 0 01.784-.785l1.192-.238a1 1 0 000-1.962l-1.192-.238a1 1 0 01-.784-.784l-.24-1.192zM5.98 7.804a1 1 0 00-1.96 0l-.24 1.192a1 1 0 01-.784.784l-1.192.238a1 1 0 000 1.962l1.192.238a1 1 0 01.784.785l.24 1.192a1 1 0 001.96 0l.239-1.192a1 1 0 01.784-.785l1.192-.238a1 1 0 000-1.962l-1.192-.238a1 1 0 01-.784-.784L5.98 7.804z"/></svg>
+      Cifras tributarias
+    </h2>
+
+    <form id="formInconsistencias" autocomplete="off">
+      <div class="form-grid">
+
+        <div class="field">
+          <label for="ingresos_renta">Ingresos declarados en Renta (F110)</label>
+          <input type="text" id="ingresos_renta" inputmode="numeric" placeholder="$ 0">
+          <span class="helper">Renglón 42 del Formulario 110</span>
+        </div>
+
+        <div class="field">
+          <label for="ingresos_exogena">Ingresos reportados en Exógena (F1007)</label>
+          <input type="text" id="ingresos_exogena" inputmode="numeric" placeholder="$ 0">
+          <span class="helper">Sumatoria del Formato 1007 (concepto 4001 a 4090)</span>
+        </div>
+
+        <div class="field">
+          <label for="iva_generado">IVA generado total (F300)</label>
+          <input type="text" id="iva_generado" inputmode="numeric" placeholder="$ 0">
+          <span class="helper">Renglón 50 del Formulario 300 (suma todos los bimestres)</span>
+        </div>
+
+        <div class="field">
+          <label for="base_iva_implicita">Base gravable IVA implícita</label>
+          <input type="text" id="base_iva_implicita" inputmode="numeric" placeholder="Auto: IVA / 19%" class="auto-calc" readonly>
+          <span class="helper">Calculada automáticamente: IVA generado &divide; 19%</span>
+        </div>
+
+        <div class="field">
+          <label for="ventas_brutas">Ventas brutas del período</label>
+          <input type="text" id="ventas_brutas" inputmode="numeric" placeholder="$ 0">
+          <span class="helper">Total ventas brutas según contabilidad o F300 renglón 27</span>
+        </div>
+
+        <div class="field">
+          <label for="retenciones">Retenciones practicadas (F350)</label>
+          <input type="text" id="retenciones" inputmode="numeric" placeholder="$ 0">
+          <span class="helper">Total retenciones en la fuente practicadas (Formulario 350)</span>
+        </div>
+
+      </div>
+
+      <button type="submit" class="btn-detect" id="btnDetect">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/></svg>
+        Detectar Inconsistencias
+      </button>
+    </form>
+
+    <button class="btn-reset" id="btnReset" style="display:none" type="button">
+      <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16"><path fill-rule="evenodd" d="M15.312 11.424a5.5 5.5 0 01-9.201 2.466l-.312-.311V15.5a.75.75 0 01-1.5 0v-4.25a.75.75 0 01.75-.75h4.25a.75.75 0 010 1.5H7.378l.259.259a4 4 0 006.703-1.796.75.75 0 011.472.29v.001zm-.004-2.849a.75.75 0 01-.46-.96A4 4 0 008.144 5.82l-.258.258H10a.75.75 0 010 1.5H5.75a.75.75 0 01-.75-.75V2.578a.75.75 0 011.5 0v1.922l.312-.312a5.5 5.5 0 019.201 2.466.75.75 0 01-.705 1.921z" clip-rule="evenodd"/></svg>
+      Nuevo análisis
+    </button>
+  </div>
+
+  <!-- SKELETON LOADING -->
+  <div class="skeleton-wrap" id="skeleton">
+    <div class="skel-card" style="text-align:center">
+      <div class="skel-circle" style="margin:0 auto 12px"></div>
+      <div class="skel-line thick w60" style="margin:0 auto 10px"></div>
+      <div class="skel-line w80" style="margin:0 auto"></div>
+    </div>
+    <div class="skel-card">
+      <div class="skel-line thick w40"></div>
+      <div class="skel-line w100"></div>
+      <div class="skel-line w80"></div>
+      <div class="skel-line w60"></div>
+    </div>
+    <div class="skel-card">
+      <div class="skel-line thick w40"></div>
+      <div class="skel-line w100"></div>
+      <div class="skel-line w80"></div>
+      <div class="skel-line w60"></div>
+    </div>
+    <div class="skel-card">
+      <div class="skel-line thick w40"></div>
+      <div class="skel-line w100"></div>
+      <div class="skel-line w80"></div>
+    </div>
+  </div>
+
+  <!-- ERROR -->
+  <div class="error-card" id="errorCard">
+    <p id="errorMsg">Ocurrió un error al analizar las cifras.</p>
+    <button class="btn-retry" id="btnRetry" type="button">Reintentar análisis</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+    <!-- Resumen card -->
+    <div class="resumen-card" id="resumenCard"></div>
+
+    <!-- Cruces -->
+    <h3 class="cruces-title">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3.5a.5.5 0 010 1H14a1 1 0 00-1 1v1a1.5 1.5 0 01-3 0V7a1 1 0 00-1-1H5.5a.5.5 0 010-1H9a1 1 0 001-1v-.5zM5.5 11.5a1.5 1.5 0 013 0v.5a1 1 0 001 1h5a.5.5 0 010 1h-5a1 1 0 00-1 1v.5a1.5 1.5 0 01-3 0V15a1 1 0 00-1-1H2a.5.5 0 010-1h2.5a1 1 0 001-1v-.5z"/></svg>
+      Detalle de cruces
+    </h3>
+    <div id="crucesList"></div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer" id="disclaimer"></div>
+  </div>
+
+</main>
+
+<!-- PRO MODULE -->
+<script src="shared/pro.js"></script>
+
+<script>
+(function(){
+  'use strict';
+
+  const API_URL = 'https://dian-proxy-337146111457.southamerica-east1.run.app/api/ia/inconsistencias';
+  const IA_LIMIT_KEY = 'exogenadian_ia_usage';
+  const IA_LIMIT_KEY_PRO = 'exogenadian_ia_usage_pro';
+  const MAX_FREE = 3;
+  const MAX_PRO = 30;
+
+  // DOM refs
+  const form = document.getElementById('formInconsistencias');
+  const btnDetect = document.getElementById('btnDetect');
+  const btnReset = document.getElementById('btnReset');
+  const btnRetry = document.getElementById('btnRetry');
+  const skeleton = document.getElementById('skeleton');
+  const errorCard = document.getElementById('errorCard');
+  const errorMsg = document.getElementById('errorMsg');
+  const results = document.getElementById('results');
+  const resumenCard = document.getElementById('resumenCard');
+  const crucesList = document.getElementById('crucesList');
+  const disclaimer = document.getElementById('disclaimer');
+  const limitBanner = document.getElementById('limitBanner');
+  const limitText = document.getElementById('limitText');
+  const proBadge = document.getElementById('proBadge');
+
+  const fields = ['ingresos_renta','ingresos_exogena','iva_generado','base_iva_implicita','ventas_brutas','retenciones'];
+  let isPro = false;
+
+  // ─── PRO check ───
+  if (typeof exoPro !== 'undefined') {
+    exoPro.check().then(function(pro) {
+      isPro = pro;
+      if (pro) proBadge.style.display = '';
+      updateLimitUI();
+    });
+  }
+
+  // ─── COP Formatting ───
+  function formatCOP(n) {
+    return '$ ' + Math.round(n).toLocaleString('es-CO');
+  }
+
+  function parseCOP(str) {
+    if (!str) return 0;
+    return parseInt(String(str).replace(/[^0-9]/g, ''), 10) || 0;
+  }
+
+  // Format inputs on blur
+  fields.forEach(function(id) {
+    var input = document.getElementById(id);
+    if (id === 'base_iva_implicita') return; // auto-calc, skip
+
+    input.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9$.\s]/g, '');
+    });
+
+    input.addEventListener('blur', function() {
+      var val = parseCOP(this.value);
+      if (val > 0) {
+        this.value = formatCOP(val);
+      } else {
+        this.value = '';
+      }
+    });
+
+    input.addEventListener('focus', function() {
+      var val = parseCOP(this.value);
+      if (val > 0) this.value = val;
+      else this.value = '';
+    });
+  });
+
+  // Auto-calculate base IVA implícita
+  var ivaInput = document.getElementById('iva_generado');
+  var baseInput = document.getElementById('base_iva_implicita');
+
+  ivaInput.addEventListener('blur', updateBaseIVA);
+  ivaInput.addEventListener('input', function() {
+    // Delayed update for typing
+    clearTimeout(ivaInput._timer);
+    ivaInput._timer = setTimeout(updateBaseIVA, 500);
+  });
+
+  function updateBaseIVA() {
+    var iva = parseCOP(ivaInput.value);
+    if (iva > 0) {
+      var base = Math.round(iva / 0.19);
+      baseInput.value = formatCOP(base);
+    } else {
+      baseInput.value = '';
+    }
+  }
+
+  // ─── Rate Limit ───
+  function checkIALimit() {
+    var key = isPro ? IA_LIMIT_KEY_PRO : IA_LIMIT_KEY;
+    var max = isPro ? MAX_PRO : MAX_FREE;
+    var data = JSON.parse(localStorage.getItem(key) || '{}');
+    var today = new Date().toISOString().slice(0, 10);
+    if (data.date !== today) return { allowed: true, count: 0, max: max };
+    return { allowed: data.count < max, count: data.count, max: max };
+  }
+
+  function consumeIALimit() {
+    var key = isPro ? IA_LIMIT_KEY_PRO : IA_LIMIT_KEY;
+    var today = new Date().toISOString().slice(0, 10);
+    var data = JSON.parse(localStorage.getItem(key) || '{}');
+    if (data.date !== today) { data.date = today; data.count = 0; }
+    data.count++;
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  function updateLimitUI() {
+    var lim = checkIALimit();
+    var remaining = lim.max - lim.count;
+    if (remaining <= 1 && remaining > 0) {
+      limitText.innerHTML = 'Te queda <strong>' + remaining + ' análisis</strong> hoy.' + (isPro ? '' : ' <a href="precios.html">Hazte PRO</a> para 30 análisis diarios.');
+      limitBanner.classList.add('show');
+    } else if (!lim.allowed) {
+      limitText.innerHTML = isPro
+        ? 'Has usado <strong>' + lim.max + ' de ' + lim.max + '</strong> análisis PRO hoy. Se renueva mañana.'
+        : 'Has usado <strong>' + lim.max + ' de ' + lim.max + '</strong> análisis gratuitos hoy. <a href="precios.html">Hazte PRO</a> para 30 análisis diarios.';
+      limitBanner.classList.add('show');
+      btnDetect.disabled = true;
+    } else {
+      limitBanner.classList.remove('show');
+    }
+  }
+
+  updateLimitUI();
+
+  // ─── Submit ───
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    runAnalysis();
+  });
+
+  btnRetry.addEventListener('click', runAnalysis);
+
+  function runAnalysis() {
+    // Check limit (both free and PRO)
+    var lim = checkIALimit();
+    if (!lim.allowed) {
+      updateLimitUI();
+      return;
+    }
+
+    // Gather values
+    var body = {};
+    var allZero = true;
+    fields.forEach(function(id) {
+      var val = parseCOP(document.getElementById(id).value);
+      body[id] = val;
+      if (val > 0) allZero = false;
+    });
+
+    if (allZero) {
+      // Shake the form
+      form.style.animation = 'none';
+      form.offsetHeight; // reflow
+      form.style.animation = '';
+      return;
+    }
+
+    // UI: loading
+    results.classList.remove('show');
+    errorCard.classList.remove('show');
+    skeleton.classList.add('show');
+    btnDetect.disabled = true;
+    btnReset.style.display = 'none';
+
+    fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      skeleton.classList.remove('show');
+
+      if (data.error) {
+        showError(data.error);
+        return;
+      }
+
+      // Consume limit AFTER success (free and PRO)
+      consumeIALimit();
+      updateLimitUI();
+
+      renderResults(data);
+    })
+    .catch(function(err) {
+      skeleton.classList.remove('show');
+      showError('No pudimos conectar con el servidor. Verifica tu conexión e intenta de nuevo.');
+    });
+  }
+
+  function showError(msg) {
+    errorMsg.textContent = msg;
+    errorCard.classList.add('show');
+    btnDetect.disabled = false;
+    btnReset.style.display = '';
+  }
+
+  // ─── Render Results ───
+  function renderResults(data) {
+    // Resumen
+    var resumen = data.resumen_general || {};
+    var semaforoGlobal = resumen.semaforo_global || 'verde';
+    var crucesRiesgo = resumen.cruces_con_riesgo || 0;
+    var recomendacion = resumen.recomendacion || '';
+
+    var semaforoIcon = semaforoGlobal === 'verde'
+      ? '<svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/></svg>'
+      : semaforoGlobal === 'amarillo'
+      ? '<svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.168 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>'
+      : '<svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>';
+
+    resumenCard.innerHTML =
+      '<div class="semaforo-big ' + semaforoGlobal + '">' + semaforoIcon + '</div>' +
+      '<div class="risk-count"><span>' + crucesRiesgo + '</span> cruce' + (crucesRiesgo !== 1 ? 's' : '') + ' con riesgo</div>' +
+      '<div class="recommendation">' + escapeHTML(recomendacion) + '</div>';
+
+    // Cruces
+    var cruces = data.cruces || [];
+    crucesList.innerHTML = '';
+
+    cruces.forEach(function(c, i) {
+      var semaforo = c.semaforo || 'verde';
+      var materialHTML = c.es_material ? '<span class="badge-material">Material</span>' : '';
+
+      var reqClass = 'ninguno';
+      var reqText = c.tipo_requerimiento || 'Ninguno';
+      if (/ordinario/i.test(reqText)) reqClass = 'ordinario';
+      else if (/pliego/i.test(reqText)) reqClass = 'pliego';
+      else if (/liquidaci/i.test(reqText)) reqClass = 'liquidacion';
+
+      var html =
+        '<div class="cruce-card">' +
+          '<div class="cruce-header">' +
+            '<span class="semaforo-dot ' + semaforo + '"></span>' +
+            '<span class="cruce-name">' + escapeHTML(c.nombre || '') + '</span>' +
+            materialHTML +
+            '<span class="badge-requerimiento ' + reqClass + '">' + escapeHTML(reqText) + '</span>' +
+          '</div>' +
+
+          '<div class="cruce-values">' +
+            '<div class="val-box">' +
+              '<div class="val-label">' + escapeHTML(c.etiqueta_a || 'Valor A') + '</div>' +
+              '<div class="val-amount">' + formatCOP(c.valor_a || 0) + '</div>' +
+            '</div>' +
+            '<div class="val-vs">vs</div>' +
+            '<div class="val-box">' +
+              '<div class="val-label">' + escapeHTML(c.etiqueta_b || 'Valor B') + '</div>' +
+              '<div class="val-amount">' + formatCOP(c.valor_b || 0) + '</div>' +
+            '</div>' +
+          '</div>' +
+
+          '<div class="cruce-diff">' +
+            '<div class="diff-item">Diferencia: <strong>' + formatCOP(c.diferencia_abs || 0) + '</strong></div>' +
+            '<div class="diff-item">Porcentaje: <strong>' + (c.diferencia_pct != null ? c.diferencia_pct.toFixed(1) : '0.0') + '%</strong></div>' +
+          '</div>' +
+
+          '<div class="cruce-expand">' +
+            '<button class="expand-btn" data-target="exp-dian-' + i + '" type="button">' +
+              '<svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg>' +
+              '&iquest;Qué hace la DIAN?' +
+            '</button>' +
+            '<div class="expand-content" id="exp-dian-' + i + '">' + escapeHTML(c.explicacion || '') + '</div>' +
+
+            '<button class="expand-btn" data-target="exp-just-' + i + '" type="button">' +
+              '<svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd"/></svg>' +
+              '&iquest;Cómo justificar?' +
+            '</button>' +
+            '<div class="expand-content" id="exp-just-' + i + '">' + escapeHTML(c.como_justificar || '') + '</div>' +
+          '</div>' +
+        '</div>';
+
+      crucesList.insertAdjacentHTML('beforeend', html);
+    });
+
+    // Expandable buttons
+    document.querySelectorAll('.expand-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var target = document.getElementById(this.dataset.target);
+        if (!target) return;
+        var isOpen = target.classList.contains('open');
+        target.classList.toggle('open');
+        this.classList.toggle('open');
+      });
+    });
+
+    // Disclaimer
+    var disc = data.disclaimer || 'Este análisis es orientativo. El contador debe validar antes de presentar a la DIAN.';
+    disclaimer.innerHTML = '<strong>Aviso importante:</strong> ' + escapeHTML(disc);
+
+    // Show
+    results.classList.add('show');
+    btnDetect.disabled = false;
+    btnReset.style.display = '';
+
+    // Scroll to results
+    resumenCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ─── Reset ───
+  btnReset.addEventListener('click', function() {
+    fields.forEach(function(id) {
+      document.getElementById(id).value = '';
+    });
+    results.classList.remove('show');
+    errorCard.classList.remove('show');
+    skeleton.classList.remove('show');
+    btnDetect.disabled = false;
+    btnReset.style.display = 'none';
+    updateLimitUI();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ─── Helpers ───
+  function escapeHTML(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+})();
+</script>
+</body>
+</html>

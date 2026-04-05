@@ -38,6 +38,10 @@ const HTML_FILES = [
   'credito.html',
   'formato220.html',
   'precios.html',
+  'ia.html',
+  'ia-analisis-balance.html',
+  'ia-chat-et.html',
+  'ia-inconsistencias.html',
 ];
 
 // ─── Directorios/archivos estáticos a copiar tal cual ───
