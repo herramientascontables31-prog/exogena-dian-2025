@@ -86,7 +86,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
 .chart-box{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:16px;box-shadow:var(--shadow)}
 .chart-box h3{font-size:.85rem;font-weight:700;color:var(--pri);margin-bottom:12px;text-align:center}
-.chart-box canvas{width:100%!important;height:220px!important}
+.chart-box canvas{display:block;max-width:100%}
 .amort-wrap{max-height:500px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius)}
 .liq-table{width:100%;border-collapse:collapse;font-size:.8rem}
 .liq-table th{background:var(--pri);color:#fff;padding:10px 12px;text-align:right;font-size:.72rem;text-transform:uppercase;letter-spacing:.3px;position:sticky;top:0;z-index:1}
@@ -625,12 +625,14 @@ function calcular() {
   // Render tabla
   renderTable(result);
 
-  // Render gráficas
-  renderCharts(result);
-
-  // Mostrar resultados
+  // Mostrar resultados ANTES de renderizar gráficas (necesitan dimensiones reales)
   document.getElementById('results').style.display = 'block';
-  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Esperar al reflow del navegador para que los canvas tengan dimensiones
+  requestAnimationFrame(function() {
+    renderCharts(result);
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 }
 
 /* ── Render tabla de amortización ── */
@@ -745,12 +747,17 @@ function renderCharts(result) {
   drawCuotaChart(result);
 }
 
+function getChartWidth(canvas) {
+  var parent = canvas.parentElement;
+  var w = parent.clientWidth - 32;
+  return Math.max(w, 200);
+}
+
 function drawSaldoChart(result) {
   var canvas = document.getElementById('chartSaldo');
   var ctx = canvas.getContext('2d');
   var dpr = window.devicePixelRatio || 1;
-  var rect = canvas.parentElement.getBoundingClientRect();
-  var W = rect.width - 32;
+  var W = getChartWidth(canvas);
   var H = 220;
   canvas.width = W * dpr;
   canvas.height = H * dpr;
@@ -789,10 +796,15 @@ function drawSaldoChart(result) {
   // X-axis labels
   ctx.textAlign = 'center';
   ctx.fillStyle = '#9CA3AF';
-  var step = Math.max(1, Math.floor(rows.length / 6));
-  for (var xi = 0; xi < rows.length; xi += step) {
-    var xPos = pad.l + (xi / (rows.length - 1 || 1)) * cW;
+  var n = rows.length;
+  var step = Math.max(1, Math.floor(n / 6));
+  for (var xi = 0; xi < n; xi += step) {
+    var xPos = pad.l + (xi / Math.max(n - 1, 1)) * cW;
     ctx.fillText(rows[xi].num, xPos, H - pad.b + 16);
+  }
+  // Siempre mostrar el último mes
+  if ((n - 1) % step !== 0) {
+    ctx.fillText(rows[n - 1].num, pad.l + cW, H - pad.b + 16);
   }
   ctx.fillText('Mes', W / 2, H - 4);
 
@@ -827,8 +839,7 @@ function drawCuotaChart(result) {
   var canvas = document.getElementById('chartCuota');
   var ctx = canvas.getContext('2d');
   var dpr = window.devicePixelRatio || 1;
-  var rect = canvas.parentElement.getBoundingClientRect();
-  var W = rect.width - 32;
+  var W = getChartWidth(canvas);
   var H = 220;
   canvas.width = W * dpr;
   canvas.height = H * dpr;
