@@ -21,6 +21,9 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 EMBEDDING_MODEL = "gemini-embedding-001"
 EMBED_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{EMBEDDING_MODEL}:embedContent"
 ET_DATA_FILE = Path(__file__).parent / "et_data.json"
+# Formato comprimido (preferido)
+ET_NPZ_FILE = Path(__file__).parent / "et_embeddings.npz"
+ET_META_FILE = Path(__file__).parent / "et_articles_meta.json"
 
 
 class ETSearchEngine:
@@ -33,39 +36,61 @@ class ETSearchEngine:
         self._articles_index: dict[str, str] = {}  # numero -> titulo
 
     def load(self):
-        """Carga et_data.json en memoria. Llamar al inicio de la app."""
+        """Carga embeddings en memoria. Prefiere formato comprimido (.npz + meta)."""
         if self._loaded:
             return
 
-        if not ET_DATA_FILE.exists():
-            logger.warning("et_data.json no encontrado. RAG deshabilitado. Ejecuta et_scraper.py + et_embeddings.py")
+        try:
+            if ET_NPZ_FILE.exists() and ET_META_FILE.exists():
+                self._load_compressed()
+            elif ET_DATA_FILE.exists():
+                self._load_legacy()
+            else:
+                logger.warning("No hay datos del ET. RAG deshabilitado. Ejecuta et_scraper.py + et_embeddings.py + et_compress.py")
+                return
+        except Exception as e:
+            logger.error("Error cargando datos del ET: %s", e)
+
+    def _load_compressed(self):
+        """Carga desde formato comprimido: npz (embeddings) + json (metadata)."""
+        meta = json.loads(ET_META_FILE.read_text(encoding="utf-8"))
+        self._articles_index = meta.get("articles_index", {})
+        self._articles = meta.get("articles", [])
+
+        # Cargar embeddings float16 → float32 para cálculo
+        npz = np.load(ET_NPZ_FILE)
+        self._embeddings = npz["embeddings"].astype(np.float32)
+
+        # Normalizar
+        norms = np.linalg.norm(self._embeddings, axis=1, keepdims=True)
+        norms[norms == 0] = 1
+        self._embeddings = self._embeddings / norms
+
+        self._loaded = True
+        logger.info("ET Search cargado (comprimido): %d artículos (%d dims)",
+                    len(self._articles), self._embeddings.shape[1])
+
+    def _load_legacy(self):
+        """Carga desde et_data.json (formato original con embeddings inline)."""
+        data = json.loads(ET_DATA_FILE.read_text(encoding="utf-8"))
+        articles = data.get("articles", [])
+        self._articles_index = data.get("articles_index", {})
+
+        valid = [a for a in articles if a.get("embedding") and len(a["embedding"]) > 0]
+        if not valid:
+            logger.warning("No hay embeddings válidos en et_data.json")
             return
 
-        try:
-            data = json.loads(ET_DATA_FILE.read_text(encoding="utf-8"))
-            articles = data.get("articles", [])
-            self._articles_index = data.get("articles_index", {})
+        self._articles = valid
+        self._embeddings = np.array([a["embedding"] for a in valid], dtype=np.float32)
 
-            # Filtrar artículos con embedding válido
-            valid = [a for a in articles if a.get("embedding") and len(a["embedding"]) > 0]
-            if not valid:
-                logger.warning("No hay embeddings válidos en et_data.json")
-                return
+        norms = np.linalg.norm(self._embeddings, axis=1, keepdims=True)
+        norms[norms == 0] = 1
+        self._embeddings = self._embeddings / norms
 
-            self._articles = valid
-            self._embeddings = np.array([a["embedding"] for a in valid], dtype=np.float32)
-
-            # Normalizar para coseno rápido (dot product = coseno si normalizado)
-            norms = np.linalg.norm(self._embeddings, axis=1, keepdims=True)
-            norms[norms == 0] = 1  # evitar div/0
-            self._embeddings = self._embeddings / norms
-
-            self._loaded = True
-            logger.info("ET Search cargado: %d artículos con embedding (%d dims)",
-                        len(self._articles), self._embeddings.shape[1])
-
-        except Exception as e:
-            logger.error("Error cargando et_data.json: %s", e)
+        self._loaded = True
+        logger.info("ET Search cargado (legacy): %d artículos (%d dims)",
+                    len(self._articles), self._embeddings.shape[1])
 
     @property
     def is_available(self) -> bool:

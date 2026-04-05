@@ -464,6 +464,13 @@ class InconsistenciasRequest(BaseModel):
     ventas_brutas: float = Field(ge=0, le=1e13, description="Ventas brutas del periodo")
     retenciones: float = Field(ge=0, le=1e13, description="Retenciones practicadas F350")
 
+class ResumenDeclaracionRequest(BaseModel):
+    tipo_formulario: str = Field(description="Tipo: F110, F300, F350, Simple")
+    datos_declaracion: str = Field(max_length=8000, description="Resumen de los datos declarados")
+
+class RespuestaRequerimientoRequest(BaseModel):
+    texto_requerimiento: str = Field(max_length=10000, description="Texto del requerimiento DIAN")
+
 
 # ═══════════════════════════════════════════════════════════════
 #  HELPER: Parsear JSON robusto (maneja markdown code blocks)
@@ -887,7 +894,151 @@ async def asistente_contable(body: AsistenteRequest, request: Request):
 
 
 # ═══════════════════════════════════════════════════════════════
-#  ENDPOINT 5: Verificar artículos citados en una respuesta
+#  ENDPOINT 5: Resumen Ejecutivo Post-Declaración (Gemini Flash)
+# ═══════════════════════════════════════════════════════════════
+
+SYSTEM_RESUMEN_DECLARACION = """Eres un asesor tributario senior colombiano de ExógenaDIAN. El usuario acaba de generar una declaración tributaria y necesita un resumen ejecutivo claro en lenguaje natural.
+
+══ FECHA ACTUAL: """ + _FECHA_ACTUAL + """ ══
+""" + _DATOS_TRIBUTARIOS + """
+
+══ INSTRUCCIONES ══
+Genera un resumen ejecutivo en lenguaje natural (NO JSON) con estas secciones usando markdown:
+
+## Resumen de tu declaración
+Explica en 2-3 oraciones qué declaró, por qué monto, y cuánto debe pagar.
+
+## Datos clave
+Lista con viñetas de los valores más importantes (ingresos, impuesto, retenciones, saldo a pagar/favor).
+
+## Alertas y riesgos
+Si detectas algo inusual, menciona riesgos de fiscalización o posibles errores. Si todo parece normal, dilo.
+
+## Próximos pasos
+Qué debe hacer ahora: pagar (cuándo vence), guardar soporte, verificar cruces, próximas obligaciones relacionadas.
+
+══ REGLAS ══
+1. Lenguaje simple — el usuario puede ser el dueño de la empresa, no necesariamente contador.
+2. Montos en formato colombiano ($X.XXX.XXX).
+3. Si es F110 (renta): menciona plazos de pago según calendario y tipo de contribuyente.
+4. Si es F300 (IVA): menciona el siguiente bimestre/cuatrimestre.
+5. Si es F350 (retención): recuerda que sin pago se tiene como no presentada (Art. 580-1 ET).
+6. Si ves saldo a favor, menciona las opciones (compensar, devolver, imputar).
+7. Al final: "⚠️ Este resumen es orientativo. Valida con tu contador antes de presentar."
+8. Máximo 400 palabras. Directo al grano.
+"""
+
+@router.post("/resumen-declaracion")
+async def resumen_declaracion(body: ResumenDeclaracionRequest, request: Request):
+    ip = _get_client_ip(request)
+    allowed, remaining = ia_rate_limiter.check(ip)
+    if not allowed:
+        return {"error": "Has alcanzado el limite de consultas IA por hora. Intenta mas tarde."}
+
+    ia_rate_limiter.consume(ip)
+
+    user_msg = (
+        f"El usuario acaba de generar una declaración tipo {body.tipo_formulario}. "
+        f"Estos son los datos declarados:\n\n{body.datos_declaracion}\n\n"
+        f"Genera el resumen ejecutivo."
+    )
+
+    return StreamingResponse(
+        _stream_gemini(system=SYSTEM_RESUMEN_DECLARACION, messages=[{"role": "user", "content": user_msg}]),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "X-IA-Remaining": str(remaining - 1),
+        },
+    )
+
+
+# ═══════════════════════════════════════════════════════════════
+#  ENDPOINT 6: Generador de Respuestas a Requerimientos DIAN
+# ═══════════════════════════════════════════════════════════════
+
+SYSTEM_RESPUESTA_REQUERIMIENTO = """Eres un abogado tributarista colombiano experto en procedimiento tributario con 15 años de experiencia respondiendo requerimientos de la DIAN. Trabajas para ExógenaDIAN.
+
+══ FECHA ACTUAL: """ + _FECHA_ACTUAL + """ ══
+""" + _DATOS_TRIBUTARIOS + """
+
+══ PROCEDIMIENTO TRIBUTARIO — NORMAS CLAVE ══
+Art. 684 ET: Facultades de fiscalización — la DIAN puede pedir cualquier información.
+Art. 685 ET: Emplazamiento para declarar — 1 mes para responder.
+Art. 686 ET: Emplazamiento para corregir — puede aceptar o rechazar.
+Art. 702-714 ET: Requerimiento especial, liquidación oficial de revisión, firmeza.
+Art. 730 ET: Nulidades del acto (falta de competencia, motivación, notificación).
+Art. 742 ET: Pruebas — la carga de la prueba la tiene quien la alega.
+Art. 746 ET: Presunción de veracidad de las declaraciones.
+Art. 772-1 ET: Importancia de la contabilidad como prueba.
+
+══ INSTRUCCIONES ══
+El usuario pega el texto de un requerimiento DIAN. Genera un BORRADOR de respuesta formal con esta estructura en markdown:
+
+## Tipo de requerimiento identificado
+Clasifica: Requerimiento ordinario (Art. 684), Emplazamiento para declarar (Art. 685), Emplazamiento para corregir (Art. 686), Requerimiento especial (Art. 702), Pliego de cargos (Art. 638), u Otro.
+
+## Plazo para responder
+Indica el plazo legal y la fecha límite estimada.
+
+## Borrador de respuesta
+
+Estructura la respuesta con:
+1. **Encabezado**: Señores DIAN, ref. expediente/auto, NIT del contribuyente
+2. **Identificación**: "El suscrito [NOMBRE], identificado con NIT [XXX], en respuesta al [tipo de acto] No. [XXX] del [fecha]..."
+3. **Hechos**: Resumen de lo que la DIAN solicita o cuestiona
+4. **Fundamentos normativos**: Artículos del ET que soportan la posición del contribuyente
+5. **Pruebas sugeridas**: Qué documentos adjuntar para soportar la respuesta
+6. **Petición**: Lo que se solicita a la DIAN (archivar, aceptar corrección, etc.)
+
+## Recomendaciones
+- Documentos que debe reunir
+- Si conviene aceptar o controvertir
+- Riesgos de no responder a tiempo
+- Si necesita abogado tributarista
+
+══ REGLAS ══
+1. El borrador debe tener fundamento normativo sólido (artículos exactos del ET).
+2. Tono formal pero comprensible.
+3. Indica [COMPLETAR] donde el usuario debe poner sus datos específicos.
+4. Si el requerimiento es por diferencias numéricas, sugiere cómo justificarlas.
+5. SIEMPRE recomienda validar con un abogado tributarista antes de radicar.
+6. Al final: "⚠️ Este borrador es orientativo. Debe ser revisado y ajustado por un abogado tributarista antes de radicarse ante la DIAN."
+7. Máximo 800 palabras.
+"""
+
+@router.post("/respuesta-requerimiento")
+async def respuesta_requerimiento(body: RespuestaRequerimientoRequest, request: Request):
+    ip = _get_client_ip(request)
+    allowed, remaining = ia_rate_limiter.check(ip)
+    if not allowed:
+        return {"error": "Has alcanzado el limite de consultas IA por hora. Intenta mas tarde."}
+
+    ia_rate_limiter.consume(ip)
+
+    rag_context = await _build_rag_context(body.texto_requerimiento[:500])
+    system_with_rag = SYSTEM_RESPUESTA_REQUERIMIENTO + rag_context
+
+    user_msg = (
+        f"El contribuyente recibió el siguiente requerimiento de la DIAN. "
+        f"Genera el borrador de respuesta con fundamento normativo:\n\n"
+        f"--- TEXTO DEL REQUERIMIENTO ---\n{body.texto_requerimiento}\n--- FIN ---"
+    )
+
+    return StreamingResponse(
+        _stream_gemini(system=system_with_rag, messages=[{"role": "user", "content": user_msg}]),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "X-IA-Remaining": str(remaining - 1),
+        },
+    )
+
+
+# ═══════════════════════════════════════════════════════════════
+#  ENDPOINT 7: Verificar artículos citados en una respuesta
 # ═══════════════════════════════════════════════════════════════
 
 class VerificarArticulosRequest(BaseModel):

@@ -1,0 +1,12 @@
+# No incluir en la imagen Docker
+et_data.json
+et_articles.json
+et_scraper.py
+et_scraper_532_916.py
+et_embeddings.py
+et_compress.py
+training_questions_100.md
+__pycache__/
+*.pyc
+.env
+.git
