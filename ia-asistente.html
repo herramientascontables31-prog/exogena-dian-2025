@@ -710,7 +710,7 @@ body {
   /* ═══ Article Verification (RAG) ═══ */
   function verifyArticles(text, wrapperEl) {
     if (!wrapperEl) return;
-    fetch(API_BASE + '/verificar-articulos', {
+    fetch(API_URL.replace(/\/[^/]+$/, '/verificar-articulos'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ texto: text })
