@@ -233,18 +233,21 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .price-list li{color:var(--gray-600);font-size:.95rem;padding:5px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
 .price-list li::before{content:'✓';color:var(--green-600);font-weight:700;flex-shrink:0}
 .price-list li.hl{color:var(--green-700);font-weight:600}
-.wompi-btn-container{margin-top:auto}
+.wompi-btn-container{margin-top:auto;overflow:hidden}
 .wompi-btn-container form{width:100%}
 .wompi-btn-container form button,
 .wompi-btn-container button,
 .wompi-btn-container .waybox-button,
-.wompi-btn-container [class*="wompi"]{
+.wompi-btn-container [class*="wompi"],
+.wompi-btn-container [class*="waybox"]{
   width:100%!important;padding:14px 24px!important;border-radius:12px!important;
   font-family:'Outfit',sans-serif!important;font-weight:700!important;font-size:1rem!important;
   background:linear-gradient(135deg,var(--green-400),var(--green-300))!important;
   color:var(--green-900)!important;border:none!important;cursor:pointer!important;
   transition:all .25s!important;box-shadow:0 4px 14px rgba(52,211,153,.3)!important;
-  letter-spacing:.02em!important;
+  letter-spacing:.02em!important;overflow:hidden!important;text-overflow:ellipsis!important;
+  display:block!important;text-align:center!important;line-height:1.4!important;
+  max-width:100%!important;box-sizing:border-box!important;
 }
 .wompi-btn-container form button:hover,
 .wompi-btn-container button:hover,
