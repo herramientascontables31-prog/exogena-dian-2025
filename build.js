@@ -42,6 +42,7 @@ const HTML_FILES = [
   'ia-analisis-balance.html',
   'ia-chat-et.html',
   'ia-inconsistencias.html',
+  'ia-asistente.html',
 ];
 
 // ─── Directorios/archivos estáticos a copiar tal cual ───
