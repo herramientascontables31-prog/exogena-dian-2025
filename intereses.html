@@ -35,7 +35,7 @@ gtag('config', 'G-S7SM6ST4CC');
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
   {"@type":"Question","name":"¿Cómo se calculan los intereses de mora DIAN?","acceptedAnswer":{"@type":"Answer","text":"Se aplica interés simple diario sobre el capital adeudado. La tasa de mora EA es igual a la tasa de usura (IBC × 1.5) menos 2 puntos porcentuales. Se usa la tasa vigente en el mes del pago, no del mes de la deuda. Los intereses corren desde el día siguiente al vencimiento hasta el día del pago inclusive."}},
-  {"@type":"Question","name":"¿Qué tasa de mora aplica la DIAN en 2026?","acceptedAnswer":{"@type":"Answer","text":"La tasa varía mensualmente. En enero 2026 es 22.36% EA, en febrero 23.23% EA y en marzo 23.52% EA. Se calcula como la tasa de usura certificada por la Superfinanciera menos 2 puntos porcentuales."}},
+  {"@type":"Question","name":"¿Qué tasa de mora aplica la DIAN en 2026?","acceptedAnswer":{"@type":"Answer","text":"La tasa varía mensualmente. En abril 2026 es 24.76% EA, en marzo 23.52% EA, en febrero 23.23% EA y en enero 22.36% EA. Se calcula como la tasa de usura certificada por la Superfinanciera menos 2 puntos porcentuales."}},
   {"@type":"Question","name":"¿Qué es el beneficio del Decreto 0240 de 2026?","acceptedAnswer":{"@type":"Answer","text":"El Decreto 0240 de 2026 establece una tasa especial del 4.5% EA para deudas tributarias en mora al 31 de diciembre de 2025, siempre que el pago se realice antes del 30 de abril de 2026. Es significativamente menor que la tasa ordinaria de mora."}}
 ]}
 </script>
@@ -146,6 +146,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <div class="alert alert-info" style="font-size:.8rem;line-height:1.6">
   <span>&#128214;</span>
   <div><strong>Base legal:</strong> Los intereses moratorios se liquidan conforme al <strong>Art. 634 ET</strong> (interés de mora) y <strong>Art. 635 ET</strong> (determinación de la tasa). La tasa se calcula como la tasa de usura menos 2 puntos porcentuales (Decreto 2106/2019). El <strong>Decreto 0240 de 2026</strong> establece una tasa especial del 4.5% EA para deudas en mora al 31/dic/2025, con pago antes del 30/abr/2026.</div>
+</div>
+
+<!-- TASA VIGENTE BANNER (dinámico) -->
+<div id="tasaVigenteBanner" class="card" style="padding:16px 20px;border-left:4px solid var(--pri2);display:none">
 </div>
 
 <!-- CALCULADORA -->
@@ -267,7 +271,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
    Fuente: Superintendencia Financiera de Colombia
    Fórmula: Usura = IBC × 1.5 | Mora EA = Usura − 2 puntos porcentuales
    Cross-validado: iKiwi.co × CETA.org.co × EstrategiasTributarias.com
-   Última actualización: 2026-04-03
+   Última actualización: 2026-04-05
    ══════════════════════════════════════════════════════════════ */
 var TASAS_MORA = {
   "2020-01":{ibc:18.77,usura:28.16,mora:26.16},
@@ -344,7 +348,8 @@ var TASAS_MORA = {
   "2025-12":{ibc:16.68,usura:25.02,mora:23.02},
   "2026-01":{ibc:16.24,usura:24.36,mora:22.36},
   "2026-02":{ibc:16.82,usura:25.23,mora:23.23},
-  "2026-03":{ibc:17.01,usura:25.52,mora:23.52}
+  "2026-03":{ibc:17.01,usura:25.52,mora:23.52},
+  "2026-04":{ibc:17.84,usura:26.76,mora:24.76}
 };
 
 /* DECRETO 0240 DE 2026 — Tasa especial */
@@ -644,6 +649,52 @@ function toggleTasas() {
 }
 
 renderTasasTable();
+
+/* ══════════════════════════════════════════════════════════════
+   BANNER TASA VIGENTE — Se actualiza automáticamente al mes actual
+   Si el mes actual no tiene tasa, muestra advertencia con la última disponible
+   ══════════════════════════════════════════════════════════════ */
+(function(){
+  var banner = document.getElementById('tasaVigenteBanner');
+  if(!banner) return;
+  var hoy = new Date();
+  var mesActual = getMesPago(hoy);
+  var mesNombre = MESES[hoy.getMonth()] + ' ' + hoy.getFullYear();
+
+  if(TASAS_MORA[mesActual]){
+    var t = TASAS_MORA[mesActual];
+    var td = (Math.pow(1 + t.mora/100, 1/diasEnAnio(hoy)) - 1) * 100;
+    banner.style.borderLeftColor = '#2E75B6';
+    banner.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">'
+      + '<div>'
+      + '<div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px">Tasa de mora vigente — ' + mesNombre + '</div>'
+      + '<div style="display:flex;gap:20px;flex-wrap:wrap;align-items:baseline">'
+      + '<span style="font-family:JetBrains Mono,monospace;font-size:1.4rem;font-weight:700;color:var(--pri)">' + t.mora.toFixed(2) + '% <small style="font-size:.7rem;font-weight:600;color:var(--muted)">EA</small></span>'
+      + '<span style="font-size:.78rem;color:var(--muted)">IBC: ' + t.ibc.toFixed(2) + '% · Usura: ' + t.usura.toFixed(2) + '% · Diaria: ' + td.toFixed(4) + '%</span>'
+      + '</div>'
+      + '</div>'
+      + '<div style="font-size:.68rem;color:var(--muted);text-align:right">Fuente: Superfinanciera<br>Res. 0517/2026</div>'
+      + '</div>';
+    banner.style.display = 'block';
+  } else {
+    // No hay tasa para el mes actual — advertir
+    var keys = Object.keys(TASAS_MORA).sort();
+    var last = keys[keys.length-1];
+    var lastT = TASAS_MORA[last];
+    banner.style.borderLeftColor = '#D97706';
+    banner.style.background = '#FFFBEB';
+    banner.innerHTML = '<div style="display:flex;align-items:flex-start;gap:10px">'
+      + '<span style="font-size:1.2rem">⚠️</span>'
+      + '<div>'
+      + '<div style="font-size:.85rem;font-weight:700;color:#92400E;margin-bottom:4px">Tasa de ' + mesNombre + ' aún no registrada</div>'
+      + '<div style="font-size:.8rem;color:#92400E;line-height:1.5">La Superfinanciera aún no ha publicado la tasa para este mes, o no la hemos actualizado. '
+      + 'Se está usando la última disponible: <strong>' + nombreMes(last) + ' — ' + lastT.mora.toFixed(2) + '% EA</strong>. '
+      + 'El cálculo es aproximado hasta que se registre la tasa oficial.</div>'
+      + '</div>'
+      + '</div>';
+    banner.style.display = 'block';
+  }
+})();
 </script>
 
 <div id="main"></div>
