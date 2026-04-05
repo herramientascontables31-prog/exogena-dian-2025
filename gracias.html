@@ -243,6 +243,12 @@ gtag('config', 'G-S7SM6ST4CC');
   const transactionId = params.get('id') || '';
   const referencia = params.get('reference') || params.get('ref') || transactionId || 'WEB-'+Date.now();
 
+  // GA4: pago completado (el usuario llegó a la página de confirmación)
+  gtag('event','pago_completado',{
+    transaction_id: transactionId,
+    referencia: referencia
+  });
+
   if (referencia) {
     document.getElementById('refBox').style.display = 'inline-flex';
     document.getElementById('refId').textContent = referencia;
@@ -297,6 +303,11 @@ gtag('config', 'G-S7SM6ST4CC');
         document.getElementById('proLoading').style.display='none';
         document.getElementById('proKeyBox').style.display='block';
         document.getElementById('proEmailDisplay').textContent=email||'(revisa tu correo de pago)';
+        // GA4: registro/activación PRO completada
+        gtag('event','registro_completado',{
+          method: email?'email':'clave',
+          transaction_id: transactionId
+        });
         if(email){
           localStorage.setItem('exogenadian_pro_email',email.toLowerCase());
         }else{

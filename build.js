@@ -36,6 +36,8 @@ const HTML_FILES = [
   'politica-privacidad.html',
   'retencion-fuente.html',
   'credito.html',
+  'formato220.html',
+  'precios.html',
 ];
 
 // ─── Directorios/archivos estáticos a copiar tal cual ───

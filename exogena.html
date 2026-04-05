@@ -947,6 +947,8 @@ function loadFile(file){
       rawDisplay=best.disp.filter(r=>r.some(c=>c!==''&&c!=null));
       document.getElementById('fileName').textContent=`${file.name} · ${rawData.length} filas · hoja: ${best.sn}`;
       exoToast('Archivo cargado: '+rawData.length+' filas detectadas en hoja "'+best.sn+'"','success');
+      // GA4: usuario subió balance
+      gtag('event','exogena_balance_cargado',{filas:rawData.length,hoja:best.sn,archivo:ext});
       headerRow=autoDetectHeaderRow();
       goStep(2);
       renderStep2();
@@ -1475,7 +1477,13 @@ const FMT_HEADERS={
   'F1009':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo CxP Dic31'],
   'F1010':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Valor Patrimonial','% Participacion'],
   'F1012':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo Dic31'],
-  'F2276':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Salarios','Honorarios','Vacaciones','Cesantias','Otros Pag','Total Bruto','Aporte Salud','Aporte Pension','Ret Fte'],
+  'F2276':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais',
+    'Salarios','Emolumentos Eclesiast','Bonos Electrónicos','Exceso Alimentacion >41 UVT','Honorarios','Servicios','Comisiones','Prestaciones Sociales','Viaticos','Gastos Representacion','Compensacion Coop','Apoyos Economicos','Otros Pagos',
+    'Cesantias e Int Pagadas','Cesantias Consignadas Fondo','Cesantias Reg Tradicional','Pensiones Jub/Vejez/Inv',
+    'Total Ingresos Brutos',
+    'Aporte Salud','Aporte Pension y Solidaridad','Cotizaciones Vol RAIS','Aportes Vol Pensiones','Aportes AFC','Aportes AVC',
+    'Ret Fte Rentas Trabajo','IVA Mayor Valor','Ret Fte IVA','Alimentacion hasta 41 UVT','Ingreso Lab Promedio 6m',
+    'Tipo Doc Dependiente','No ID Dependiente','ID Fideicomiso','Tipo Doc Contrato Colab','ID Contrato Colab'],
 };
 
 function generarFormatos(){
@@ -1661,32 +1669,61 @@ function generarFormatos(){
   }
   formatos['F1012']=Object.values(dic12).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.val)]);
 
-  // ── F2276: Nomina ──
+  // ── F2276: Rentas de Trabajo (v4 — 45 columnas) ──
   const dic26={};
   for(const r of clasificacion){
     if(r.formato!=='F2276')continue;
-    if(!dic26[r.nit])dic26[r.nit]={nit:r.nit,razon:r.razon,sal:0,hon:0,vac:0,ces:0,otros:0,bruto:0,apSalud:0,apPension:0,retFte:0};
+    if(!dic26[r.nit])dic26[r.nit]={nit:r.nit,razon:r.razon,
+      salarios:0,emolEclesiast:0,bonosElectr:0,excesoAlim41:0,honorarios:0,servicios:0,comisiones:0,
+      prestSociales:0,viaticos:0,gastosRepres:0,compCoop:0,apoyosEcon:0,otrosPagos:0,
+      cesantiasIntPag:0,cesantiasConsigFondo:0,cesantiasRegTrad:0,pensiones:0,
+      apSalud:0,apPension:0,cotVolRAIS:0,aporVolPens:0,aportesAFC:0,aportesAVC:0,
+      retFteRentas:0,ivaMayorValor:0,retFteIVA:0,alimHasta41:0,ingLabProm6m:0};
     const c=r.concepto;
-    const nn=(r.name||'').toLowerCase();
-    if(c==='5001'&&nn.includes('vacacion'))dic26[r.nit].vac+=r.val;
-    else if(c==='5001'&&nn.includes('cesanti'))dic26[r.nit].ces+=r.val;
-    else if(c==='5001'&&nn.includes('prima'))dic26[r.nit].otros+=r.val;
-    else if(c==='5001')dic26[r.nit].sal+=r.val;
-    else if(c==='5002')dic26[r.nit].hon+=r.val;
+    const nn=normNombre(r.name||'');
+    if(c==='5001'){
+      if(nn.includes('vacacion'))dic26[r.nit].prestSociales+=r.val;
+      else if(nn.includes('cesanti')&&(nn.includes('pagad')||nn.includes('interes')))dic26[r.nit].cesantiasIntPag+=r.val;
+      else if(nn.includes('cesanti')&&nn.includes('consign'))dic26[r.nit].cesantiasConsigFondo+=r.val;
+      else if(nn.includes('cesanti'))dic26[r.nit].cesantiasConsigFondo+=r.val;
+      else if(nn.includes('prima'))dic26[r.nit].prestSociales+=r.val;
+      else if(nn.includes('viatico'))dic26[r.nit].viaticos+=r.val;
+      else if(nn.includes('comision'))dic26[r.nit].comisiones+=r.val;
+      else if(nn.includes('pension')&&(nn.includes('jubilacion')||nn.includes('vejez')||nn.includes('invalidez')))dic26[r.nit].pensiones+=r.val;
+      else if(nn.includes('dotacion'))dic26[r.nit].otrosPagos+=r.val;
+      else dic26[r.nit].salarios+=r.val;
+    }
+    else if(c==='5002')dic26[r.nit].honorarios+=r.val;
     else if(c==='5024')dic26[r.nit].apSalud+=r.val;
     else if(c==='5025')dic26[r.nit].apPension+=r.val;
-    else dic26[r.nit].otros+=r.val;
+    else if(c==='5023')dic26[r.nit].otrosPagos+=r.val;
+    else if(c==='5027')dic26[r.nit].otrosPagos+=r.val;
+    else dic26[r.nit].otrosPagos+=r.val;
   }
-  // Retenciones laborales
+  // Retenciones laborales (236505) y retención IVA (2367xx)
   for(const r of parsedData){
-    if(r.code.startsWith('236505')&&r.nit&&dic26[r.nit]){
-      dic26[r.nit].retFte+=Math.max(r.cre-r.deb,0);
+    if(!r.nit||!dic26[r.nit])continue;
+    if(r.code.startsWith('236505')){
+      dic26[r.nit].retFteRentas+=Math.max(r.cre-r.deb,0);
+    }
+    if(r.code.startsWith('2367')&&dic26[r.nit]){
+      dic26[r.nit].retFteIVA+=Math.max(r.cre-r.deb,0);
     }
   }
-  for(const v of Object.values(dic26)){v.bruto=v.sal+v.hon+v.vac+v.ces+v.otros}
-  formatos['F2276']=Object.values(dic26).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','',
-    Math.round(v.sal),Math.round(v.hon),Math.round(v.vac),Math.round(v.ces),Math.round(v.otros),
-    Math.round(v.bruto),Math.round(v.apSalud),Math.round(v.apPension),Math.round(v.retFte)]);
+  for(const v of Object.values(dic26)){
+    v.bruto=v.salarios+v.emolEclesiast+v.bonosElectr+v.excesoAlim41+v.honorarios+v.servicios+v.comisiones+
+      v.prestSociales+v.viaticos+v.gastosRepres+v.compCoop+v.apoyosEcon+v.otrosPagos+
+      v.cesantiasIntPag+v.cesantiasConsigFondo+v.cesantiasRegTrad+v.pensiones;
+  }
+  formatos['F2276']=Object.values(dic26).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',
+    Math.round(v.salarios),Math.round(v.emolEclesiast),Math.round(v.bonosElectr),Math.round(v.excesoAlim41),
+    Math.round(v.honorarios),Math.round(v.servicios),Math.round(v.comisiones),Math.round(v.prestSociales),
+    Math.round(v.viaticos),Math.round(v.gastosRepres),Math.round(v.compCoop),Math.round(v.apoyosEcon),Math.round(v.otrosPagos),
+    Math.round(v.cesantiasIntPag),Math.round(v.cesantiasConsigFondo),Math.round(v.cesantiasRegTrad),Math.round(v.pensiones),
+    Math.round(v.bruto),
+    Math.round(v.apSalud),Math.round(v.apPension),Math.round(v.cotVolRAIS),Math.round(v.aporVolPens),Math.round(v.aportesAFC),Math.round(v.aportesAVC),
+    Math.round(v.retFteRentas),Math.round(v.ivaMayorValor),Math.round(v.retFteIVA),Math.round(v.alimHasta41),Math.round(v.ingLabProm6m),
+    '','','','','']);
 
   renderFormatos();
 }
@@ -1777,6 +1814,9 @@ function switchFmtTab(el,panelId){
 /* ── Conectar Step 3 → Step 4 ── */
 function irAFormatos(){
   generarFormatos();
+  // GA4: usuario generó los 10 formatos
+  var totalRegs=0;for(var f in formatos)totalRegs+=(formatos[f]||[]).length;
+  gtag('event','exogena_formatos_generados',{total_registros:totalRegs});
   goStep(4);
 }
 
@@ -1895,6 +1935,8 @@ async function exportExcel(){
   const cfg=getCompanyConfig();
   descargarBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),
     `Exogena_AG${cfg.year}_${cfg.nit||'SIN_NIT'}.xlsx`);
+  // GA4: descarga del Excel con los 10 formatos
+  gtag('event','exogena_excel_descargado',{nit:cfg.nit||'sin_nit',year:cfg.year});
 }
 
 function descargarBlob(blob,filename){

@@ -127,6 +127,7 @@
   '      <div class="tn-dd">'+
   '        <a href="liquidador.html">👷 Liquidador Laboral</a>'+
   '        <a href="costoreal.html">💰 Costo Empleado</a>'+
+  '        <a href="formato220.html">📄 Certificado F220</a>'+
   '        <a href="consultanit.html">🔍 Consulta NIT</a>'+
   '        <a href="vencimientos.html">📅 Vencimientos</a>'+
   '        <a href="uvt.html">🔢 Conversor UVT</a>'+
@@ -185,6 +186,7 @@
   '          <h6>Laboral</h6>'+
   '          <a href="liquidador.html"><div class="dd-icon" style="background:#ECFDF5">👷</div> Liquidador Laboral</a>'+
   '          <a href="costoreal.html"><div class="dd-icon" style="background:#DBEAFE">💰</div> Costo Empleado</a>'+
+  '          <a href="formato220.html"><div class="dd-icon" style="background:#FFF8E1">📄</div> Certificado F220</a>'+
   '          <div class="mega-divider"></div>'+
   '          <h6>Consultas</h6>'+
   '          <a href="consultanit.html"><div class="dd-icon" style="background:#F5F3FF">🔍</div> Consulta NIT</a>'+
@@ -193,6 +195,7 @@
   '      </div>'+
   '    </div>'+
        /* Blog y PRO */
+  '    <a href="precios.html">Precios</a>'+
   '    <a href="blog.html">Blog</a>'+
        /* PRO Login */
   '    <div id="proNavLogin" style="display:flex;align-items:center;gap:6px">'+
@@ -203,7 +206,7 @@
   '      <span style="background:var(--green-100);color:var(--green-700);padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:700">PRO</span>'+
   '      <a href="#" onclick="cerrarProNav();return false" style="font-size:.7rem;color:var(--gray-400);text-decoration:none">salir</a>'+
   '    </div>'+
-  '    <a href="#planes" id="proNavSubscribe" class="btn btn-green btn-sm" style="display:none">PRO &rarr;</a>'+
+  '    <a href="precios.html" id="proNavSubscribe" class="btn btn-green btn-sm" style="display:none">PRO &rarr;</a>'+
   '  </div>'+
   '  <button class="hamburger" id="hamburger" aria-expanded="false" aria-label="Abrir menú" onclick="var nl=document.getElementById(\'navLinks\');nl.classList.toggle(\'open\');this.setAttribute(\'aria-expanded\',nl.classList.contains(\'open\'))">☰</button>'+
   '</nav>';
