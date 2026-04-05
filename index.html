@@ -234,8 +234,8 @@ nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
 .price-list li::before{content:'✓';color:var(--green-600);font-weight:700;flex-shrink:0}
 .price-list li.hl{color:var(--green-700);font-weight:600}
 .wompi-btn-container{margin-top:auto}
-.wompi-btn-container form{width:100%;display:none!important}
-.wompi-btn-container [class*="waybox"]{display:none!important}
+.wompi-btn-container form{width:0;height:0;overflow:hidden;position:absolute;pointer-events:none}
+.wompi-btn-container [class*="waybox"]{width:0!important;height:0!important;overflow:hidden!important;position:absolute!important}
 .wompi-custom-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 24px;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;background:linear-gradient(135deg,var(--green-400),var(--green-300));color:var(--green-900);border:none;cursor:pointer;transition:all .25s;box-shadow:0 4px 14px rgba(52,211,153,.3);letter-spacing:.02em}
 .wompi-custom-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(52,211,153,.4)}
 .price-foot{text-align:center;margin-top:36px;position:relative;z-index:1}
@@ -860,7 +860,7 @@ footer{padding:32px 48px 24px;background:var(--gray-900);color:var(--gray-400)}
         <li class="hl">100% automático · Procesa en segundos</li>
       </ul>
       <div class="wompi-btn-container">
-        <button type="button" class="wompi-custom-btn" onclick="var f=this.parentElement.querySelector('form');if(f){var b=f.querySelector('button');if(b)b.click();else f.submit()}">✅ Paga con Wompi</button>
+        <button type="button" class="wompi-custom-btn" onclick="var c=this.parentElement,f=c.querySelector('form');if(f){f.style.cssText='position:absolute;opacity:0;pointer-events:auto';var b=f.querySelector('button');if(b){b.click()}else{f.submit()}f.style.cssText='width:0;height:0;overflow:hidden;position:absolute;pointer-events:none'}">✅ Paga con Wompi</button>
         <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="1990000" data-reference="PRO-MENSUAL-001" data-signature:integrity="850dbd1399262fbf09a1646b18328cafde9300e157d49b6f9cbd7ae75c94f153" data-redirect-url="https://exogenadian.com/gracias.html"></script>
         <div class="wompi-fallback" style="display:none;padding:12px 24px;border-radius:10px;background:#FEF3C7;color:#92400E;font-weight:600;font-family:inherit;font-size:.85rem;text-align:center;border:1px solid #FDE68A">El botón de pago no cargó. Escríbenos por <a href="https://wa.me/573054559574" style="color:#D97706;font-weight:700;text-decoration:underline">WhatsApp</a> o recarga esta página.</div>
       </div>
@@ -887,7 +887,7 @@ footer{padding:32px 48px 24px;background:var(--gray-900);color:var(--gray-400)}
         <li class="hl">12 meses de acceso completo</li>
       </ul>
       <div class="wompi-btn-container">
-        <button type="button" class="wompi-custom-btn" onclick="var f=this.parentElement.querySelector('form');if(f){var b=f.querySelector('button');if(b)b.click();else f.submit()}">✅ Paga con Wompi</button>
+        <button type="button" class="wompi-custom-btn" onclick="var c=this.parentElement,f=c.querySelector('form');if(f){f.style.cssText='position:absolute;opacity:0;pointer-events:auto';var b=f.querySelector('button');if(b){b.click()}else{f.submit()}f.style.cssText='width:0;height:0;overflow:hidden;position:absolute;pointer-events:none'}">✅ Paga con Wompi</button>
         <script src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="17990000" data-reference="PRO-ANUAL-001" data-signature:integrity="7520398d9ebe32129bc26437f99b8ea4014d0f75087b1196e10bbad9bd4e150d" data-redirect-url="https://exogenadian.com/gracias.html"></script>
         <div class="wompi-fallback" style="display:none;padding:12px 24px;border-radius:10px;background:#FEF3C7;color:#92400E;font-weight:600;font-family:inherit;font-size:.85rem;text-align:center;border:1px solid #FDE68A">El botón de pago no cargó. Escríbenos por <a href="https://wa.me/573054559574" style="color:#D97706;font-weight:700;text-decoration:underline">WhatsApp</a> o recarga esta página.</div>
       </div>
@@ -1106,12 +1106,13 @@ document.addEventListener('click',function(e){
 const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('visible')})},{threshold:.1});
 document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
 
-/* === Wompi: fallback si no carga === */
+/* === Wompi: fallback solo si custom btn tampoco cargó === */
 document.addEventListener('DOMContentLoaded',function(){
   setTimeout(function(){
     document.querySelectorAll('.wompi-btn-container').forEach(function(container){
-      var hasWompiForm=container.querySelector('form');
-      if(!hasWompiForm){
+      var hasCustom=container.querySelector('.wompi-custom-btn');
+      var hasForm=container.querySelector('form');
+      if(!hasCustom&&!hasForm){
         var fallback=container.querySelector('.wompi-fallback');
         if(fallback) fallback.style.display='block';
       }
