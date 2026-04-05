@@ -596,7 +596,7 @@ footer{padding:32px 48px 24px;background:var(--gray-900);color:var(--gray-400)}
 </section>
 
 <!-- ===== EXOGENADIAN IA ===== -->
-<section class="fade-in" id="ia" style="padding:60px 48px;background:linear-gradient(170deg,#0B1210 0%,#111C18 50%,#0E1915 100%);position:relative;overflow:hidden">
+<section class="fade-in" id="ia" style="padding:60px 20px;background:linear-gradient(170deg,#0B1210 0%,#111C18 50%,#0E1915 100%);position:relative;overflow:hidden">
   <div style="position:absolute;top:-150px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(5,150,105,.15) 0%,transparent 65%);pointer-events:none"></div>
   <div style="max-width:1100px;margin:0 auto;position:relative;z-index:1">
     <div style="text-align:center;margin-bottom:40px">
@@ -608,7 +608,7 @@ footer{padding:32px 48px 24px;background:var(--gray-900);color:var(--gray-400)}
       <p style="color:#A2B8AE;font-size:1.1rem;max-width:560px;margin:0 auto;line-height:1.6">Herramientas de inteligencia artificial diseñadas para contadores colombianos. No es ChatGPT genérico — está entrenado en normativa colombiana vigente.</p>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:32px">
+    <div class="ia-home-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:32px">
       <!-- Auditor DIAN -->
       <a href="ia.html" style="background:#111C18;border:1px solid rgba(5,150,105,.15);border-radius:16px;padding:28px 24px;text-decoration:none;color:#EFF5F2;transition:all .3s;display:block">
         <div style="width:44px;height:44px;border-radius:12px;background:rgba(5,150,105,.12);display:flex;align-items:center;justify-content:center;margin-bottom:16px">
@@ -643,7 +643,7 @@ footer{padding:32px 48px 24px;background:var(--gray-900);color:var(--gray-400)}
       <p style="color:#6A8278;font-size:.82rem;margin-top:12px">3 consultas gratis por día — Sin límite con Plan PRO</p>
     </div>
   </div>
-  <style>@keyframes iaPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}</style>
+  <style>@keyframes iaPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}@media(max-width:768px){.ia-home-grid{grid-template-columns:1fr!important;gap:14px!important}}</style>
 </section>
 
 <!-- ===== CÓMO FUNCIONA ===== -->
