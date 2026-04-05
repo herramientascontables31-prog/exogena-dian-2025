@@ -18,6 +18,8 @@ from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
+from et_search import et_engine
+
 logger = logging.getLogger("exogenadian.ia")
 
 router = APIRouter(prefix="/api/ia", tags=["ia"])
@@ -116,7 +118,7 @@ Salarios: tabla Art. 383 ET desde 95 UVT ($4.976.000)
 Autorretención especial renta: 0,40%-1,60% según sector
 
 ══ CALENDARIO TRIBUTARIO 2026 (Decreto 2229/2023) ══
-RENTA Grandes Contribuyentes (AG 2025): 3 cuotas — 1a 10-23 feb, 2a 13-27 abr (declaración), 3a 10-24 jun. Por último dígito NIT.
+RENTA Grandes Contribuyentes (AG 2025): 3 cuotas — 1a 10-23 feb, 2a 13-24 abr (declaración), 3a 9-22 jul. Por último dígito NIT.
 RENTA PJ (AG 2025): 2 cuotas — 1a may (declaración), 2a jul. Dígito 1→12may, Dígito 0→26may.
 RENTA PN (AG 2025): 1 cuota — 12ago a 26oct por últimos 2 dígitos NIT.
 Retención mensual 2026 (F350): ene→10-23feb, feb→10-24mar, mar→13-27abr, abr→12-26may, may→10-24jun, jun→9-23jul, jul→12-26ago, ago→9-22sep, sep→9-23oct, oct→11-25nov, nov→10-23dic, dic→13-26ene27. Por último dígito NIT.
@@ -158,6 +160,15 @@ Res. 000165/2023 (nov): Facturación electrónica y documento soporte
 Res. 000124/2021 (oct): Nómina electrónica
 Decreto 0572/2025 (may): Retención servicios base bajó a 2 UVT
 Decreto 2229/2023 (dic): Calendario tributario 2024-2026
+
+══ ICA PRINCIPALES CIUDADES (impuesto municipal, Ley 14/1983) ══
+Rangos legales: Industrial 2-7‰ | Comercial 2-10‰ | Servicios 2-10‰ | Financiera hasta 14‰
+BOGOTÁ (Acuerdo 65/2002, DDI-032266/2025): Industria/comercio alimentos 4,14‰ | Restaurantes/hoteles 13,80‰ | Consultoría/servicios 6,90-9,66‰ | Informática 9,66‰ | Arrendamiento inmuebles 11,04‰ | Financieras 11,04-14,00‰ | Educación/salud 4,14‰ | Construcción 6,90‰. ReteICA Bogotá: base 4 UVT ($209.496), tarifa=misma ICA.
+MEDELLÍN (Acuerdo 066/2017): Industrial 4,0-7,0‰ | Comercio 4,0-10,0‰ | Servicios profesionales 4,0-10,0‰ | Financieras 5,0-11,0‰ | Restaurantes/hoteles 7,0-10,0‰. ReteICA: autorretencion 100%.
+CALI (Acuerdo 0426/2013): Industrial 2,0-7,0‰ | Comercio 4,0-10,0‰ | Servicios 3,0-10,0‰ | Financieras 5,0-10,0‰. ReteICA: 100%.
+BARRANQUILLA: Industrial 3,0-7,0‰ | Comercio 3,0-10,0‰ | Servicios 2,0-10,0‰. ReteICA: 100%.
+NOTA: ICA es municipal. Tarifas exactas dependen del código CIIU. Consultar estatuto tributario municipal.
+ICA deducción 100% en renta desde AG 2023 (ya NO descuento — Ley 2277 Art. 19).
 
 ══ NORMATIVA VIGENTE ══
 ET actualizado 2026 | Ley 2277/2022 (reforma) | DUR 1625/2016
@@ -647,6 +658,28 @@ async def analisis_balance(body: AnalisisBalanceRequest, request: Request):
 #  ENDPOINT 2: Chat con el Estatuto Tributario (DeepSeek streaming)
 # ═══════════════════════════════════════════════════════════════
 
+async def _build_rag_context(query: str) -> str:
+    """Busca artículos relevantes del ET y construye contexto RAG."""
+    if not et_engine.is_available:
+        return ""
+
+    results = await et_engine.search(query, top_k=5)
+    if not results:
+        return ""
+
+    parts = ["\n══ ARTÍCULOS DEL ET RELEVANTES (texto real verificado) ══"]
+    for r in results:
+        parts.append(
+            f"\n--- Art. {r['numero']} ET: {r['titulo']} (relevancia: {r['score']}) ---\n"
+            f"{r['texto']}"
+        )
+    parts.append("\n══ FIN ARTÍCULOS ET ══")
+    parts.append("INSTRUCCIÓN: Usa el texto REAL de los artículos anteriores para fundamentar tu respuesta. "
+                 "Cita textualmente cuando sea relevante. Si la pregunta requiere artículos que NO están arriba, "
+                 "responde con tu conocimiento pero aclara que el usuario debe verificar en la norma.")
+    return "\n".join(parts)
+
+
 @router.post("/chat-et")
 async def chat_et(body: ChatETRequest, request: Request):
     ip = _get_client_ip(request)
@@ -658,8 +691,18 @@ async def chat_et(body: ChatETRequest, request: Request):
 
     messages = [{"role": m.role, "content": m.content} for m in body.messages[-20:]]
 
+    # RAG: buscar artículos relevantes basado en el último mensaje del usuario
+    last_user_msg = ""
+    for m in reversed(messages):
+        if m["role"] == "user":
+            last_user_msg = m["content"]
+            break
+
+    rag_context = await _build_rag_context(last_user_msg) if last_user_msg else ""
+    system_with_rag = SYSTEM_CHAT_ET + rag_context
+
     return StreamingResponse(
-        _stream_gemini(system=SYSTEM_CHAT_ET, messages=messages),
+        _stream_gemini(system=system_with_rag, messages=messages),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
@@ -822,8 +865,18 @@ async def asistente_contable(body: AsistenteRequest, request: Request):
 
     messages = [{"role": m.role, "content": m.content} for m in body.messages[-20:]]
 
+    # RAG: buscar artículos relevantes para el asistente también
+    last_user_msg = ""
+    for m in reversed(messages):
+        if m["role"] == "user":
+            last_user_msg = m["content"]
+            break
+
+    rag_context = await _build_rag_context(last_user_msg) if last_user_msg else ""
+    system_with_rag = SYSTEM_ASISTENTE_CONTABLE + rag_context
+
     return StreamingResponse(
-        _stream_gemini(system=SYSTEM_ASISTENTE_CONTABLE, messages=messages),
+        _stream_gemini(system=system_with_rag, messages=messages),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
@@ -831,3 +884,26 @@ async def asistente_contable(body: AsistenteRequest, request: Request):
             "X-IA-Remaining": str(remaining - 1),
         },
     )
+
+
+# ═══════════════════════════════════════════════════════════════
+#  ENDPOINT 5: Verificar artículos citados en una respuesta
+# ═══════════════════════════════════════════════════════════════
+
+class VerificarArticulosRequest(BaseModel):
+    texto: str = Field(max_length=10000, description="Texto de la respuesta IA a verificar")
+
+@router.post("/verificar-articulos")
+async def verificar_articulos(body: VerificarArticulosRequest):
+    """Extrae artículos citados en un texto y valida si existen en el ET."""
+    if not et_engine.is_available:
+        return {"articulos": [], "rag_disponible": False}
+
+    articulos = et_engine.validate_articles(body.texto)
+    return {
+        "articulos": articulos,
+        "total_citados": len(articulos),
+        "verificados": sum(1 for a in articulos if a["verificado"]),
+        "no_verificados": sum(1 for a in articulos if not a["verificado"]),
+        "rag_disponible": True,
+    }

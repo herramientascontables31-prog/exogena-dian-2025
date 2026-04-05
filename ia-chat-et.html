@@ -305,6 +305,45 @@ body {
 }
 .source-chip svg { width: 11px; height: 11px; opacity: 0.7; }
 
+/* ═══ Verification Bar ═══ */
+.verify-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: rgba(5,150,105,0.06);
+  border-radius: 8px;
+  border: 1px solid rgba(5,150,105,0.12);
+}
+.verify-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #059669;
+  margin-right: 4px;
+}
+.verify-chip {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.verify-chip.verified {
+  background: rgba(5,150,105,0.12);
+  color: #059669;
+  border: 1px solid rgba(5,150,105,0.25);
+}
+.verify-chip.unverified {
+  background: rgba(245,158,11,0.1);
+  color: #d97706;
+  border: 1px solid rgba(245,158,11,0.25);
+}
+
 /* ═══ Welcome ═══ */
 .welcome-section {
   max-width: 640px;
@@ -668,6 +707,36 @@ body {
     return html;
   }
 
+  /* ═══ Article Verification (RAG) ═══ */
+  function verifyArticles(text, wrapperEl) {
+    if (!wrapperEl) return;
+    fetch(API_BASE + '/verificar-articulos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ texto: text })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.articulos || data.articulos.length === 0) return;
+      var bar = document.createElement('div');
+      bar.className = 'verify-bar';
+      var verified = data.verificados || 0;
+      var total = data.total_citados || 0;
+      bar.innerHTML = '<span class="verify-label">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg> ' +
+        verified + '/' + total + ' art\u00edculos verificados en ET</span>';
+      data.articulos.forEach(function(art) {
+        var chip = document.createElement('span');
+        chip.className = art.verificado ? 'verify-chip verified' : 'verify-chip unverified';
+        chip.textContent = 'Art. ' + art.numero;
+        if (art.titulo) chip.title = art.titulo;
+        bar.appendChild(chip);
+      });
+      wrapperEl.appendChild(bar);
+    })
+    .catch(function() { /* silently ignore verification errors */ });
+  }
+
   /* ═══ Source Extraction ═══ */
   function extractSources(text) {
     var sources = [];
@@ -932,6 +1001,9 @@ body {
           });
           wrapper.appendChild(bar);
         }
+
+        // Verificar artículos citados contra el ET real
+        verifyArticles(fullText, bubble.parentElement);
 
         // Add to history
         history.push({ role: 'assistant', content: fullText });

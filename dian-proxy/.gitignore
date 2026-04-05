@@ -1,0 +1,5 @@
+.env
+cache_data.json
+__pycache__/
+*.pyc
+et_articles.json

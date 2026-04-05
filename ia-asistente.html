@@ -14,15 +14,15 @@ gtag('config', 'G-S7SM6ST4CC');
 <link rel="apple-touch-icon" href="og-image.png">
 <meta name="theme-color" content="#059669">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Asistente Contable Colombia — IA para Contadores | ExógenaDIAN</title>
-<meta name="description" content="Asistente contable colombiano con inteligencia artificial. Consultas sobre contabilidad NIIF, tributaria, nómina, laboral, seguridad social, facturación electrónica y más.">
+<title>ET — Estatuto Tributario Inteligente | ExógenaDIAN IA</title>
+<meta name="description" content="ET — Tu asistente tributario y contable colombiano con IA. Consultas sobre Estatuto Tributario, contabilidad NIIF, nómina, laboral, seguridad social, facturación electrónica y más.">
 <meta name="keywords" content="asistente contable IA Colombia, contador virtual inteligencia artificial, IA contable gratis, consulta contable IA, nómina IA Colombia, NIIF con inteligencia artificial, liquidar prestaciones IA, seguridad social IA, facturación electrónica IA, contador IA gratis Colombia, herramienta contable inteligente">
 <meta name="author" content="ExógenaDIAN">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://exogenadian.com/ia-asistente.html">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Asistente Contable Colombia — IA para Contadores">
-<meta property="og:description" content="Asistente contable colombiano con inteligencia artificial. Consultas sobre contabilidad NIIF, tributaria, nómina, laboral y más.">
+<meta property="og:title" content="ET — Estatuto Tributario Inteligente | ExógenaDIAN IA">
+<meta property="og:description" content="ET — Tu asistente tributario y contable colombiano con IA. Estatuto Tributario, contabilidad NIIF, nómina, laboral y más.">
 <meta property="og:url" content="https://exogenadian.com/ia-asistente.html">
 <meta property="og:site_name" content="ExógenaDIAN">
 <meta property="og:locale" content="es_CO">
@@ -31,11 +31,11 @@ gtag('config', 'G-S7SM6ST4CC');
 <meta property="og:image:height" content="630">
 <meta property="og:image:type" content="image/png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Asistente Contable Colombia — IA para Contadores">
-<meta name="twitter:description" content="Asistente contable colombiano con IA. Consultas sobre contabilidad NIIF, tributaria, nómina, laboral y más.">
+<meta name="twitter:title" content="ET — Estatuto Tributario Inteligente | ExógenaDIAN IA">
+<meta name="twitter:description" content="ET — Tu asistente tributario y contable colombiano con IA. Estatuto Tributario, contabilidad NIIF, nómina, laboral y más.">
 <meta name="twitter:image" content="https://exogenadian.com/og-image.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"Asistente Contable Colombia — IA para Contadores","url":"https://exogenadian.com/ia-asistente.html","description":"Asistente contable colombiano con inteligencia artificial. Consultas sobre contabilidad NIIF, tributaria, nómina, laboral, seguridad social, facturación electrónica y más.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"ET \u2014 Estatuto Tributario Inteligente | Ex\u00f3genaDIAN IA","url":"https://exogenadian.com/ia-asistente.html","description":"ET — Tu asistente tributario y contable colombiano con IA. Consultas sobre Estatuto Tributario, contabilidad NIIF, nómina, laboral, seguridad social, facturación electrónica y más.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}
 </script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"IA Tributaria","item":"https://exogenadian.com/ia.html"},{"@type":"ListItem","position":3,"name":"Asistente Contable Colombia","item":"https://exogenadian.com/ia-asistente.html"}]}
@@ -305,6 +305,45 @@ body {
 }
 .source-chip svg { width: 11px; height: 11px; opacity: 0.7; }
 
+/* ═══ Verification Bar ═══ */
+.verify-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+  margin-top: 6px;
+  padding: 6px 8px;
+  background: rgba(5,150,105,0.06);
+  border-radius: 8px;
+  border: 1px solid rgba(5,150,105,0.12);
+}
+.verify-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #059669;
+  margin-right: 4px;
+}
+.verify-chip {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+.verify-chip.verified {
+  background: rgba(5,150,105,0.12);
+  color: #059669;
+  border: 1px solid rgba(5,150,105,0.25);
+}
+.verify-chip.unverified {
+  background: rgba(245,158,11,0.1);
+  color: #d97706;
+  border: 1px solid rgba(245,158,11,0.25);
+}
+
 /* ═══ Welcome ═══ */
 .welcome-section {
   max-width: 640px;
@@ -505,7 +544,7 @@ body {
       <span class="icon-ai">
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>
       </span>
-      Asistente Contable
+      ET — Asistente Tributario
     </div>
     <div class="header-right">
       <span class="limit-badge" id="limitBadge"></span>
@@ -668,6 +707,36 @@ body {
     return html;
   }
 
+  /* ═══ Article Verification (RAG) ═══ */
+  function verifyArticles(text, wrapperEl) {
+    if (!wrapperEl) return;
+    fetch(API_BASE + '/verificar-articulos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ texto: text })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.articulos || data.articulos.length === 0) return;
+      var bar = document.createElement('div');
+      bar.className = 'verify-bar';
+      var verified = data.verificados || 0;
+      var total = data.total_citados || 0;
+      bar.innerHTML = '<span class="verify-label">' +
+        '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg> ' +
+        verified + '/' + total + ' art\u00edculos verificados en ET</span>';
+      data.articulos.forEach(function(art) {
+        var chip = document.createElement('span');
+        chip.className = art.verificado ? 'verify-chip verified' : 'verify-chip unverified';
+        chip.textContent = 'Art. ' + art.numero;
+        if (art.titulo) chip.title = art.titulo;
+        bar.appendChild(chip);
+      });
+      wrapperEl.appendChild(bar);
+    })
+    .catch(function() { /* silently ignore verification errors */ });
+  }
+
   /* ═══ Source Extraction ═══ */
   function extractSources(text) {
     var sources = [];
@@ -805,8 +874,8 @@ body {
       '<div class="welcome-icon">' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>' +
       '</div>' +
-      '<h2 class="welcome-title">Asistente Contable Colombia</h2>' +
-      '<p class="welcome-text">Soy tu asistente contable colombiano. Puedo ayudarte con contabilidad NIIF, tributaria, n\u00f3mina, laboral, seguridad social, facturaci\u00f3n electr\u00f3nica, estados financieros y m\u00e1s. Siempre cito la fuente normativa. \u26a0\ufe0f Mis respuestas son orientativas \u2014 valida con tu contador o abogado.</p>' +
+      '<h2 class="welcome-title">ET — Estatuto Tributario Inteligente</h2>' +
+      '<p class="welcome-text">Soy ET, tu asistente tributario y contable colombiano. Puedo ayudarte con el Estatuto Tributario, contabilidad NIIF, n\u00f3mina, laboral, seguridad social, facturaci\u00f3n electr\u00f3nica, estados financieros y m\u00e1s. Mis respuestas se basan en el texto real del ET. \u26a0\ufe0f Son orientativas \u2014 valida con tu contador o abogado.</p>' +
       '<div class="example-chips">' +
         '<button class="example-chip" data-q="&iquest;C&oacute;mo liquido las prestaciones de un empleado que trabaj&oacute; 8 meses?">\u00bfC\u00f3mo liquido las prestaciones de un empleado que trabaj\u00f3 8 meses?</button>' +
         '<button class="example-chip" data-q="&iquest;Cu&aacute;les son los aportes a seguridad social para un independiente?">\u00bfCu\u00e1les son los aportes a seguridad social para un independiente?</button>' +
@@ -932,6 +1001,9 @@ body {
           });
           wrapper.appendChild(bar);
         }
+
+        // Verificar artículos citados contra el ET real
+        verifyArticles(fullText, bubble.parentElement);
 
         // Add to history
         history.push({ role: 'assistant', content: fullText });

@@ -41,6 +41,9 @@ from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app):
+    # Cargar motor de búsqueda semántica del ET (RAG)
+    from et_search import et_engine
+    et_engine.load()
     yield
     cache.flush()
 
