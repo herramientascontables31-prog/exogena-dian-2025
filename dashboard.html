@@ -63,7 +63,7 @@ gtag('config', 'G-S7SM6ST4CC');
   --radius:12px;--radius-sm:8px;
   --shadow:0 4px 24px rgba(0,0,0,.3);
   --font-ui:'DM Sans',sans-serif;--font-num:'JetBrains Mono',monospace;--font-title:'Space Grotesk',sans-serif;
-  --header-gradient:linear-gradient(135deg,#111827 0%,#1e293b 50%,#0f172a 100%);
+  --header-gradient:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);
   --donut-stroke:#111827;
   --donut-center-text:#F9FAFB;
 }
@@ -76,7 +76,7 @@ html.light-theme{
   --text:#111827;--text2:#374151;--text3:#6B7280;
   --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.12);
   --shadow:0 2px 12px rgba(0,0,0,.06);
-  --header-gradient:linear-gradient(135deg,#064E3B,#059669);
+  --header-gradient:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);
   --donut-stroke:#FFFFFF;
   --donut-center-text:#111827;
 }
@@ -1855,9 +1855,9 @@ function exportHTML() {
     + '</style>'
     + '</head><body style="background:' + bgColor + '">'
     + clone.outerHTML
-    + '<link rel="stylesheet" href="shared/chat.css?v=2">
-<script src="shared/chat.js?v=2"></script>
-</body></html>';
+    + '<link rel="stylesheet" href="shared/chat.css?v=2">'
+    + '<scr' + 'ipt src="shared/chat.js?v=2"></scr' + 'ipt>'
+    + '</body></html>';
 
   var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
   var url = URL.createObjectURL(blob);

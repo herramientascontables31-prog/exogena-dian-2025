@@ -128,8 +128,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 .fmt-2276{background:#EFEBE9;color:#4E342E}
 @media(max-width:768px){.config-grid,.config-grid-3{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.steps{flex-wrap:wrap}.step-pill{font-size:.72rem;padding:8px 10px}}
 /* Onboarding modal */
-.onboard-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}
-.onboard-overlay.active{opacity:1}
+.onboard-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.onboard-overlay.active{opacity:1;pointer-events:auto}
 .onboard-box{background:#fff;border-radius:16px;max-width:520px;width:90%;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative}
 .onboard-box h2{font-size:1.3rem;margin-bottom:8px;color:var(--pri)}
 .onboard-box p{color:var(--muted);font-size:.9rem;line-height:1.6;margin-bottom:16px}

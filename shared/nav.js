@@ -129,7 +129,7 @@
   '        <a href="costoreal.html">💰 Costo Empleado</a>'+
   '        <a href="formato220.html">📄 Certificado F220</a>'+
   '        <a href="consultanit.html">🔍 Consulta NIT</a>'+
-  '        <a href="vencimientos.html">📅 Vencimientos</a>'+
+  '        <a href="vencimientos.html">📅 Calendario Tributario</a>'+
   '        <a href="uvt.html">🔢 Conversor UVT</a>'+
   '      </div>'+
   '    </div>'+
@@ -190,7 +190,7 @@
   '          <div class="mega-divider"></div>'+
   '          <h6>Consultas</h6>'+
   '          <a href="consultanit.html"><div class="dd-icon" style="background:#F5F3FF">🔍</div> Consulta NIT</a>'+
-  '          <a href="vencimientos.html"><div class="dd-icon" style="background:#FFF1F2">📅</div> Vencimientos</a>'+
+  '          <a href="vencimientos.html"><div class="dd-icon" style="background:#FFF1F2">📅</div> Calendario Tributario</a>'+
   '        </div>'+
   '      </div>'+
   '    </div>'+
