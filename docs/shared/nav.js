@@ -21,12 +21,45 @@
 
   var APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
   var container=document.getElementById('nav-container');
-  var variant=(container&&container.getAttribute('data-variant'))||'tool';
+  var variant=(container&&container.getAttribute('data-variant'))||'full';
   var page=location.pathname.split('/').pop()||'index.html';
+
+  /* ─── Load Outfit font for full nav if not already present ─── */
+  if(!document.querySelector('link[href*="Outfit"]')){
+    var fontLink=document.createElement('link');
+    fontLink.rel='stylesheet';
+    fontLink.href='https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap';
+    document.head.appendChild(fontLink);
+  }
 
   /* ─── Mega-menu CSS (injected once) ─── */
   var megaCSS=document.createElement('style');
   megaCSS.textContent=`
+    /* ===== FULL NAV BASE ===== */
+    nav#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:rgba(255,255,255,.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.04);transition:all .3s;font-family:'Outfit',sans-serif}
+    nav#nav.scrolled{box-shadow:0 1px 20px rgba(0,0,0,.06)}
+    .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#111827;font-weight:800;font-size:1.2rem;letter-spacing:-.02em}
+    .logo-mark{width:34px;height:34px;background:linear-gradient(135deg,#059669,#34D399);border-radius:10px;display:grid;place-items:center;color:#fff;font-size:.85rem;font-weight:900}
+    .logo small{font-weight:400;font-size:.65rem;color:#9CA3AF;display:block;margin-top:-2px;letter-spacing:.04em}
+    .nav-links{display:flex;gap:28px;align-items:center}
+    .nav-links>a{text-decoration:none;color:#6B7280;font-size:.88rem;font-weight:500;transition:color .2s;font-family:'Outfit',sans-serif}
+    .nav-links>a:hover{color:#111827}
+    .nav-dropdown{position:relative}
+    .nav-dropdown-toggle{display:inline-flex;align-items:center;gap:5px;text-decoration:none;color:#6B7280;font-size:.88rem;font-weight:500;transition:color .2s;cursor:pointer;background:none;border:none;font-family:'Outfit',sans-serif;padding:0}
+    .nav-dropdown-toggle:hover{color:#111827}
+    .nav-dropdown-toggle svg{width:14px;height:14px;transition:transform .2s}
+    .nav-dropdown.open .nav-dropdown-toggle svg{transform:rotate(180deg)}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:600;font-size:1rem;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
+    .btn-green{background:#059669;color:#fff}
+    .btn-green:hover{background:#047857;transform:translateY(-1px);box-shadow:0 25px 60px -12px rgba(5,150,105,.15)}
+    .btn-sm{padding:8px 16px;font-size:.82rem;border-radius:10px}
+    .hamburger{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:8px;color:#374151}
+    @media(max-width:900px){
+      nav#nav{padding:12px 20px}
+      .hamburger{display:block}
+      .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;padding:16px 20px;flex-direction:column;gap:12px;border-top:1px solid #E5E7EB;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+      .nav-links.open{display:flex}
+    }
     /* ===== MEGA MENU ===== */
     .mega-menu{display:none;position:absolute;top:calc(100% + 12px);right:-60px;background:var(--white,#fff);border:1.5px solid var(--gray-200,#E5E7EB);border-radius:16px;padding:20px 24px;min-width:620px;box-shadow:0 16px 48px rgba(0,0,0,.12);z-index:200}
     .nav-dropdown.open .mega-menu{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
@@ -217,6 +250,11 @@
     container.outerHTML=html;
   }else{
     document.body.insertAdjacentHTML('afterbegin',html);
+  }
+
+  /* ─── Add body padding for fixed nav on tool pages ─── */
+  if(variant==='full'&&page!=='index.html'&&page!=='blog.html'&&page!==''){
+    document.body.style.paddingTop='64px';
   }
 
   /* ─── Tool nav dropdown toggle ─── */
