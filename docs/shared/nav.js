@@ -110,6 +110,7 @@
   '        <a href="estadosfinancieros.html">📄 Estados Financieros</a>'+
   '        <a href="dashboard.html">📊 Dashboard</a>'+
   '        <a href="conciliacion.html">🏦 Conciliación</a>'+
+  '        <a href="credito.html">🏦 Simulador Crédito</a>'+
   '      </div>'+
   '    </div>'+
        /* Sanciones */
@@ -169,6 +170,7 @@
   '          <a href="estadosfinancieros.html"><div class="dd-icon" style="background:#ECFDF5">📄</div> Estados Financieros</a>'+
   '          <a href="dashboard.html"><div class="dd-icon" style="background:#1E293B">📊</div> Dashboard</a>'+
   '          <a href="conciliacion.html"><div class="dd-icon" style="background:#ECFEFF">🏦</div> Conciliación Bancaria</a>'+
+  '          <a href="credito.html"><div class="dd-icon" style="background:#DBEAFE">🏦</div> Simulador Crédito</a>'+
   '        </div>'+
            /* ── Col 3: Sanciones y Mora ── */
   '        <div class="mega-col">'+

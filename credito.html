@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-S7SM6ST4CC');</script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="og-image.png">
+<meta name="theme-color" content="#059669">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Simulador de Crédito y Tabla de Amortización Gratis | ExógenaDIAN</title>
+<meta name="description" content="Simula GRATIS tu crédito con tabla de amortización detallada. Sistema francés, alemán y solo intereses. Abonos extra, gráficas interactivas, conversión EA/MV. Exporta a Excel.">
+<meta name="keywords" content="simulador crédito Colombia, tabla amortización, calculadora cuota crédito, sistema francés alemán, amortización préstamo, tasa EA MV, abono extraordinario crédito, calculadora préstamo gratis">
+<link rel="canonical" href="https://exogenadian.com/credito.html">
+<meta property="og:title" content="Simulador de Crédito y Tabla de Amortización Gratis | ExógenaDIAN">
+<meta property="og:description" content="Simula GRATIS tu crédito. Tabla de amortización con 3 sistemas, abonos extra, gráficas y exporta a Excel.">
+<meta property="og:url" content="https://exogenadian.com/credito.html">
+<meta property="og:type" content="website"><meta property="og:locale" content="es_CO"><meta property="og:site_name" content="ExógenaDIAN">
+<meta property="og:image" content="https://exogenadian.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Simulador de Crédito y Tabla de Amortización","url":"https://exogenadian.com/credito.html","description":"Herramienta gratuita para simular créditos con tabla de amortización detallada. Sistema francés, alemán y solo intereses. Abonos extra, gráficas y exportación a Excel.","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExógenaDIAN","url":"https://exogenadian.com"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"¿Qué es el sistema de amortización francés (cuota fija)?","acceptedAnswer":{"@type":"Answer","text":"Es el sistema más usado en Colombia. La cuota mensual es siempre igual durante toda la vida del crédito. Al inicio se pagan más intereses y menos capital, y esa proporción se invierte con el tiempo. La cuota se calcula con la fórmula: C = P × [r(1+r)^n] / [(1+r)^n - 1]."}},
+{"@type":"Question","name":"¿Cuál es la diferencia entre tasa EA y tasa MV?","acceptedAnswer":{"@type":"Answer","text":"La tasa EA (Efectiva Anual) es la tasa real que incluye el efecto de capitalización. La tasa MV (Mensual Vencida) es la tasa aplicada cada mes. Para convertir EA a MV: MV = (1+EA)^(1/12) - 1. Para convertir MV a EA: EA = (1+MV)^12 - 1."}},
+{"@type":"Question","name":"¿Cómo funcionan los abonos extraordinarios a capital?","acceptedAnswer":{"@type":"Answer","text":"Un abono extraordinario reduce directamente el saldo de capital, lo que disminuye los intereses futuros. En sistema francés con abonos extra, la cuota se mantiene igual pero el crédito se paga más rápido. El ahorro total puede ser significativo, especialmente si se hacen abonos en los primeros años."}},
+{"@type":"Question","name":"¿Qué sistema de amortización conviene más?","acceptedAnswer":{"@type":"Answer","text":"El sistema francés (cuota fija) es más cómodo para presupuestar. El sistema alemán (capital constante) genera menos intereses totales pero las primeras cuotas son más altas. El sistema de solo intereses tiene las cuotas más bajas pero el total pagado es mayor."}}
+]}</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Simulador de Crédito","item":"https://exogenadian.com/credito.html"}]}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" integrity="sha384-Pqp51FUN2/qzfxZxBCtF0stpc9ONI6MYZpVqmo8m20SoaQCzf+arZvACkLkirlPz" crossorigin="anonymous"></script>
+<style>
+:root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#059669;--green2:#ECFDF5;--green3:#D1FAE5;--red:#DC2626;--amber:#D97706;--amber2:#FFF8E1;--amber3:#FEF3C7;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.container{max-width:960px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);padding:28px 32px;border-radius:16px;margin-bottom:24px;color:#fff;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.header h1{font-size:1.4rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.header h1 span{font-size:1.5rem}
+.header p{opacity:.8;font-size:.83rem;margin-top:4px;max-width:520px;line-height:1.5}
+.header-right{text-align:right;font-size:.78rem;opacity:.75}
+.badge-free{display:inline-block;background:rgba(16,185,129,.2);color:#6EE7B7;padding:3px 10px;border-radius:20px;font-size:.7rem;font-weight:700;margin-top:6px}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.chip-row{display:grid;gap:10px;margin-bottom:16px}
+.chip-row.cols3{grid-template-columns:1fr 1fr 1fr}
+.chip{padding:14px 16px;border:2px solid var(--border);border-radius:12px;background:var(--card);cursor:pointer;transition:.2s;text-align:center}
+.chip:hover{border-color:var(--pri2);background:var(--pri3)}
+.chip.sel{border-color:var(--pri2);background:var(--pri3);box-shadow:0 0 0 3px rgba(46,117,182,.12)}
+.chip strong{display:block;font-size:.88rem;color:var(--text);margin-bottom:2px}
+.chip small{font-size:.68rem;color:var(--muted);line-height:1.3;display:block;margin-top:4px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid.cols3{grid-template-columns:1fr 1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;gap:4px}
+.form-group label .tip{cursor:help;background:var(--pri3);color:var(--pri);width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:800;position:relative}
+.form-group label .tip:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--pri);color:#fff;padding:6px 10px;border-radius:6px;font-size:.72rem;white-space:normal;max-width:300px;z-index:10;font-weight:400;text-transform:none;letter-spacing:0;line-height:1.4;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.form-group input,.form-group select{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:.95rem;font-family:'DM Sans',sans-serif;transition:.2s}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 3px rgba(46,117,182,.12)}
+.form-group input.money{font-family:'JetBrains Mono',monospace}
+.form-group .hint{font-size:.7rem;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
+.tasa-row{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end}
+.tasa-toggle{padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--card);cursor:pointer;font-size:.82rem;font-weight:700;color:var(--pri);transition:.2s;white-space:nowrap;align-self:end;height:42px}
+.tasa-toggle:hover{border-color:var(--pri2);background:var(--pri3)}
+.tasa-converted{font-size:.72rem;color:var(--pri2);font-weight:600;margin-top:2px;font-family:'JetBrains Mono',monospace;min-height:16px}
+.alert{padding:12px 16px;border-radius:8px;font-size:.82rem;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.alert-info{background:var(--pri3);color:var(--pri);border:1px solid #B4C6E7}
+.alert-green{background:var(--green2);color:#065F46;border:1px solid #A7F3D0}
+.alert-warn{background:var(--amber3);color:#92400E;border:1px solid #FDE68A}
+.btn-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn{padding:11px 24px;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:.9rem;font-family:inherit;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.btn-pri{background:var(--pri2);color:#fff;width:100%;justify-content:center}
+.btn-pri:hover{background:var(--pri);transform:translateY(-1px);box-shadow:0 4px 14px rgba(27,58,92,.3)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#047857}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--pri2);color:var(--pri2)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.results{display:none;animation:fadeIn .4s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center}
+.kpi .val{font-size:1.15rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.kpi .lbl{font-size:.7rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:4px}
+.kpi.green .val{color:var(--green)}.kpi.blue .val{color:var(--pri2)}.kpi.amber .val{color:var(--amber)}.kpi.red .val{color:var(--red)}
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.chart-box{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:16px;box-shadow:var(--shadow)}
+.chart-box h3{font-size:.85rem;font-weight:700;color:var(--pri);margin-bottom:12px;text-align:center}
+.chart-box canvas{width:100%!important;height:220px!important}
+.amort-wrap{max-height:500px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius)}
+.liq-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.liq-table th{background:var(--pri);color:#fff;padding:10px 12px;text-align:right;font-size:.72rem;text-transform:uppercase;letter-spacing:.3px;position:sticky;top:0;z-index:1}
+.liq-table th:first-child{text-align:center;width:50px}
+.liq-table th:nth-child(2){text-align:left}
+.liq-table td{padding:8px 12px;border-bottom:1px solid var(--border);text-align:right;font-family:'JetBrains Mono',monospace;font-size:.78rem}
+.liq-table td:first-child{text-align:center;font-family:'DM Sans',sans-serif;font-weight:600;color:var(--muted)}
+.liq-table td:nth-child(2){text-align:left;font-family:'DM Sans',sans-serif;font-size:.75rem;color:var(--muted)}
+.liq-table tr:nth-child(even){background:#FAFBFC}
+.liq-table tr:hover{background:var(--pri3)}
+.liq-table tr.yr-total{background:#EDF2F7;font-weight:700}
+.liq-table tr.yr-total td{border-top:2px solid var(--pri);color:var(--pri);font-weight:700;padding:10px 12px}
+.liq-table tr.grand-total{background:var(--pri);color:#fff;font-weight:700}
+.liq-table tr.grand-total td{padding:12px;font-size:.85rem;color:#fff}
+.liq-table td.extra-cell{color:var(--green);font-weight:600}
+.result-total{background:var(--pri);color:#fff;border-radius:12px;padding:20px 24px;margin-top:16px;display:flex;align-items:center;justify-content:space-between}
+.result-total .label{font-size:.95rem;font-weight:600}
+.result-total .amount{font-size:1.8rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.extras-section{margin-top:16px;padding:16px;background:#F9FAFB;border:1px solid var(--border);border-radius:10px}
+.extras-section h4{font-size:.88rem;font-weight:700;color:var(--pri);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.extra-row{display:grid;grid-template-columns:80px 1fr 40px;gap:8px;align-items:center;margin-bottom:8px}
+.extra-row input{padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:.85rem}
+.extra-row input.money{font-family:'JetBrains Mono',monospace}
+.extra-row button{width:32px;height:32px;border:none;border-radius:6px;background:#FEE2E2;color:var(--red);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.extra-row button:hover{background:#FECACA}
+.add-extra-btn{padding:8px 16px;border:1.5px dashed var(--border);border-radius:8px;background:none;cursor:pointer;font-size:.82rem;color:var(--pri2);font-weight:600;width:100%;transition:.2s;font-family:inherit}
+.add-extra-btn:hover{border-color:var(--pri2);background:var(--pri3)}
+.savings-box{background:var(--green2);border:1.5px solid #A7F3D0;border-radius:12px;padding:16px 20px;margin-top:16px}
+.savings-box h4{font-size:.88rem;font-weight:700;color:#065F46;margin-bottom:10px}
+.savings-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.85rem;border-bottom:1px solid rgba(0,0,0,.05)}
+.savings-row:last-child{border:none}
+.savings-row .lbl{color:#6B7280}
+.savings-row .val{font-family:'JetBrains Mono',monospace;font-weight:600;color:#065F46}
+.savings-row.highlight .val{color:var(--green);font-weight:800;font-size:1rem}
+.disclaimer{margin-top:16px;padding:14px 18px;background:var(--amber2);border:1px solid #FDE68A;border-radius:8px;font-size:.76rem;color:#92400E;line-height:1.6}
+.hidden{display:none!important}
+.yr-toggle{cursor:pointer;user-select:none}
+.yr-toggle .arrow{display:inline-block;transition:transform .2s;font-size:.7rem;margin-right:4px}
+.yr-toggle.collapsed .arrow{transform:rotate(-90deg)}
+.yr-hidden{display:none}
+@media(max-width:768px){
+  .header{flex-direction:column;gap:12px;text-align:center;padding:22px 20px}
+  .header-right{text-align:center}
+  .form-grid,.form-grid.cols3{grid-template-columns:1fr}
+  .tasa-row{grid-template-columns:1fr}
+  .chip-row.cols3{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .charts-grid{grid-template-columns:1fr}
+  .result-total{flex-direction:column;text-align:center;gap:8px}
+  .container{padding:12px}
+  .extra-row{grid-template-columns:70px 1fr 36px}
+}
+@media print{
+  .header,.card:first-of-type,#nav-container,.btn-row,.extras-section,.add-extra-btn{display:none}
+  .results{display:block!important}
+  .amort-wrap{max-height:none;overflow:visible}
+}
+</style>
+</head>
+<body>
+
+<div id="nav-container"></div>
+<script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
+<script src="shared/nav.js"></script>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+  <div>
+    <h1><span>🏦</span> Simulador de Crédito</h1>
+    <p>Tabla de amortización completa &middot; 3 sistemas &middot; Abonos extra &middot; Gráficas</p>
+    <div class="badge-free">100% GRATIS</div>
+  </div>
+  <div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div>
+</div>
+
+<!-- SISTEMA DE AMORTIZACIÓN -->
+<div class="card">
+  <div class="card-title"><span>📐</span> Sistema de amortización</div>
+  <div class="chip-row cols3">
+    <div class="chip sel" onclick="selectSistema(this,'frances')">
+      <strong>Cuota fija</strong>
+      <small>Sistema francés — la cuota es siempre igual. El más usado en Colombia.</small>
+    </div>
+    <div class="chip" onclick="selectSistema(this,'aleman')">
+      <strong>Capital constante</strong>
+      <small>Sistema alemán — abono a capital igual cada mes, cuota decreciente.</small>
+    </div>
+    <div class="chip" onclick="selectSistema(this,'interes')">
+      <strong>Solo intereses</strong>
+      <small>Se pagan solo intereses y el capital al final (bullet).</small>
+    </div>
+  </div>
+</div>
+
+<!-- DATOS DEL CRÉDITO -->
+<div class="card">
+  <div class="card-title"><span>💰</span> Datos del crédito</div>
+
+  <div class="form-grid" style="margin-bottom:16px">
+    <div class="form-group">
+      <label>Monto del crédito (COP) <span class="tip" data-tip="Capital prestado. Ingresa el valor total del préstamo sin centavos.">?</span></label>
+      <input type="text" id="iMonto" class="money" placeholder="50.000.000" inputmode="numeric" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>Plazo (meses) <span class="tip" data-tip="Duración del crédito en meses. Ej: 5 años = 60 meses, 15 años = 180 meses.">?</span></label>
+      <input type="number" id="iPlazo" placeholder="60" min="1" max="600" inputmode="numeric">
+    </div>
+  </div>
+
+  <div class="tasa-row" style="margin-bottom:8px">
+    <div class="form-group">
+      <label>Tasa de interés <span class="tip" data-tip="Ingresa la tasa en el formato seleccionado (EA o MV). Se convierte automáticamente.">?</span></label>
+      <input type="text" id="iTasa" placeholder="18.5" inputmode="decimal" autocomplete="off">
+      <div class="tasa-converted" id="tasaConv"></div>
+    </div>
+    <button class="tasa-toggle" id="tasaToggleBtn" onclick="toggleTasaTipo()">EA</button>
+    <div class="form-group">
+      <label>Fecha primer pago <span class="tip" data-tip="Fecha del primer pago de cuota. Opcional — se usa para mostrar fechas en la tabla.">?</span></label>
+      <input type="date" id="iFecha">
+    </div>
+  </div>
+
+  <!-- Abonos extraordinarios -->
+  <div class="extras-section" id="extrasSection">
+    <h4>💸 Abonos extraordinarios a capital <span style="font-weight:400;font-size:.72rem;color:var(--muted)">(opcional)</span></h4>
+    <div id="extrasList"></div>
+    <button class="add-extra-btn" onclick="addExtra()">+ Agregar abono extraordinario</button>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-pri" onclick="calcular()">Calcular amortización</button>
+  </div>
+</div>
+
+<!-- RESULTADOS -->
+<div class="results" id="results">
+
+  <!-- KPIs -->
+  <div class="kpis">
+    <div class="kpi blue">
+      <div class="val" id="rCuota">$0</div>
+      <div class="lbl">Cuota mensual</div>
+    </div>
+    <div class="kpi amber">
+      <div class="val" id="rIntereses">$0</div>
+      <div class="lbl">Total intereses</div>
+    </div>
+    <div class="kpi red">
+      <div class="val" id="rTotal">$0</div>
+      <div class="lbl">Costo total</div>
+    </div>
+    <div class="kpi green">
+      <div class="val" id="rPlazoReal">0</div>
+      <div class="lbl">Meses reales</div>
+    </div>
+  </div>
+
+  <!-- Ahorro por abonos extra -->
+  <div class="savings-box" id="savingsBox" style="display:none">
+    <h4>Ahorro por abonos extraordinarios</h4>
+    <div class="savings-row">
+      <span class="lbl">Intereses sin abonos extra</span>
+      <span class="val" id="svIntSin">$0</span>
+    </div>
+    <div class="savings-row">
+      <span class="lbl">Intereses con abonos extra</span>
+      <span class="val" id="svIntCon">$0</span>
+    </div>
+    <div class="savings-row">
+      <span class="lbl">Meses ahorrados</span>
+      <span class="val" id="svMeses">0</span>
+    </div>
+    <div class="savings-row highlight">
+      <span class="lbl">Ahorro total en intereses</span>
+      <span class="val" id="svAhorro">$0</span>
+    </div>
+  </div>
+
+  <!-- GRÁFICAS -->
+  <div class="charts-grid">
+    <div class="chart-box">
+      <h3>Saldo del crédito</h3>
+      <canvas id="chartSaldo"></canvas>
+    </div>
+    <div class="chart-box">
+      <h3>Composición de la cuota</h3>
+      <canvas id="chartCuota"></canvas>
+    </div>
+  </div>
+
+  <!-- TABLA DE AMORTIZACIÓN -->
+  <div class="card" style="padding:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div class="card-title" style="margin-bottom:0"><span>📋</span> Tabla de amortización</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline" style="padding:8px 14px;font-size:.78rem" onclick="toggleAllYears()">
+          <span id="toggleIcon">▼</span> Expandir/Colapsar
+        </button>
+        <button class="btn btn-green" style="padding:8px 14px;font-size:.78rem" onclick="exportExcel()">
+          📥 Exportar Excel
+        </button>
+      </div>
+    </div>
+    <div class="amort-wrap" id="amortWrap">
+      <table class="liq-table" id="amortTable">
+        <thead>
+          <tr>
+            <th style="text-align:center">#</th>
+            <th style="text-align:left">Fecha</th>
+            <th>Cuota</th>
+            <th>Capital</th>
+            <th>Interés</th>
+            <th>Abono extra</th>
+            <th>Saldo</th>
+          </tr>
+        </thead>
+        <tbody id="amortBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="result-total">
+    <div class="label">Total a pagar</div>
+    <div class="amount" id="rTotalFinal">$0</div>
+  </div>
+
+  <div class="disclaimer" style="margin-top:16px">
+    <strong>Nota:</strong> Esta simulación es orientativa y no constituye una oferta de crédito. Los valores reales pueden variar según la entidad financiera, seguros, comisiones y otros costos asociados. Consulte con su entidad financiera para una cotización oficial.
+  </div>
+</div>
+
+<!-- HERRAMIENTAS RELACIONADAS -->
+<div style="margin-top:32px">
+  <h3 style="font-size:1rem;font-weight:700;color:#374151;margin-bottom:12px">Herramientas relacionadas</h3>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="intereses.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Intereses de Mora</a>
+    <a href="uvt.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Conversor UVT</a>
+    <a href="liquidador.html" style="padding:8px 16px;background:#ECFDF5;color:#047857;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:500;transition:background .2s">Liquidador Laboral</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
+  <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">ExógenaDIAN</a> · Herramienta de asistencia — Consulte con su entidad financiera antes de tomar decisiones<br>
+  🔒 Información tratada con total confidencialidad · 100% procesado en tu navegador
+</div>
+
+</div><!-- /.container -->
+
+<script>
+/* ══════════════════════════════════════════════════════════════
+   SIMULADOR DE CRÉDITO — Tabla de Amortización
+   Sistemas: Francés (cuota fija), Alemán (capital constante),
+             Solo intereses (bullet)
+   ══════════════════════════════════════════════════════════════ */
+
+var sistema = 'frances';
+var tasaTipo = 'EA'; // EA o MV
+var extras = []; // [{mes: N, monto: X}]
+var lastResult = null;
+var lastResultSin = null;
+var allCollapsed = true;
+
+/* ── Selección de sistema ── */
+function selectSistema(el, tipo) {
+  document.querySelectorAll('.chip').forEach(function(c) { c.classList.remove('sel'); });
+  el.classList.add('sel');
+  sistema = tipo;
+}
+
+/* ── Toggle tasa EA/MV ── */
+function toggleTasaTipo() {
+  tasaTipo = tasaTipo === 'EA' ? 'MV' : 'EA';
+  document.getElementById('tasaToggleBtn').textContent = tasaTipo;
+  convertirTasa();
+}
+
+function convertirTasa() {
+  var val = parseFloat(document.getElementById('iTasa').value.replace(',', '.'));
+  var conv = document.getElementById('tasaConv');
+  if (!val || val <= 0) { conv.textContent = ''; return; }
+  var pct = val / 100;
+  if (tasaTipo === 'EA') {
+    var mv = (Math.pow(1 + pct, 1 / 12) - 1) * 100;
+    conv.textContent = '= ' + mv.toFixed(4) + '% MV';
+  } else {
+    var ea = (Math.pow(1 + pct, 12) - 1) * 100;
+    conv.textContent = '= ' + ea.toFixed(2) + '% EA';
+  }
+}
+
+/* ── Abonos extraordinarios ── */
+function addExtra() {
+  var id = Date.now();
+  extras.push({ id: id, mes: '', monto: 0 });
+  renderExtras();
+}
+
+function removeExtra(id) {
+  extras = extras.filter(function(e) { return e.id !== id; });
+  renderExtras();
+}
+
+function renderExtras() {
+  var container = document.getElementById('extrasList');
+  var html = '';
+  for (var i = 0; i < extras.length; i++) {
+    var e = extras[i];
+    html += '<div class="extra-row" data-id="' + e.id + '">' +
+      '<input type="number" placeholder="Mes #" min="1" value="' + (e.mes || '') + '" onchange="updateExtra(' + e.id + ',\'mes\',this.value)">' +
+      '<input type="text" class="money" placeholder="Monto del abono" value="' + (e.monto ? fmtNum(e.monto) : '') + '" oninput="fmtMoneyInput(this);updateExtra(' + e.id + ',\'monto\',parseMoney(this.value))">' +
+      '<button onclick="removeExtra(' + e.id + ')" title="Eliminar">✕</button>' +
+      '</div>';
+  }
+  container.innerHTML = html;
+}
+
+function updateExtra(id, field, value) {
+  for (var i = 0; i < extras.length; i++) {
+    if (extras[i].id === id) {
+      extras[i][field] = field === 'mes' ? parseInt(value) || 0 : parseFloat(value) || 0;
+    }
+  }
+}
+
+/* ── Formateo ── */
+function fmtCOP(n) {
+  return '$' + Math.round(n).toLocaleString('es-CO');
+}
+
+function fmtNum(n) {
+  return Math.round(n).toLocaleString('es-CO');
+}
+
+function parseMoney(str) {
+  return parseInt(String(str).replace(/[^0-9]/g, ''), 10) || 0;
+}
+
+function fmtMoneyInput(el) {
+  var pos = el.selectionStart;
+  var oldLen = el.value.length;
+  var n = parseMoney(el.value);
+  el.value = n ? fmtNum(n) : '';
+  var newLen = el.value.length;
+  el.selectionStart = el.selectionEnd = pos + (newLen - oldLen);
+}
+
+/* ── Formateo del campo monto ── */
+document.getElementById('iMonto').addEventListener('input', function() {
+  fmtMoneyInput(this);
+});
+
+document.getElementById('iTasa').addEventListener('input', function() {
+  convertirTasa();
+});
+
+/* ── Fecha por defecto: próximo mes ── */
+(function() {
+  var d = new Date();
+  d.setMonth(d.getMonth() + 1);
+  d.setDate(1);
+  document.getElementById('iFecha').value = d.toISOString().split('T')[0];
+})();
+
+/* ══════════════════════════════════════════════════════════════
+   MOTOR DE CÁLCULO
+   ══════════════════════════════════════════════════════════════ */
+
+function getTasaMV() {
+  var val = parseFloat(document.getElementById('iTasa').value.replace(',', '.'));
+  if (!val || val <= 0) return 0;
+  var pct = val / 100;
+  if (tasaTipo === 'EA') {
+    return Math.pow(1 + pct, 1 / 12) - 1;
+  }
+  return pct;
+}
+
+function getExtrasMap() {
+  var map = {};
+  for (var i = 0; i < extras.length; i++) {
+    var e = extras[i];
+    if (e.mes > 0 && e.monto > 0) {
+      map[e.mes] = (map[e.mes] || 0) + e.monto;
+    }
+  }
+  return map;
+}
+
+function amortizar(monto, plazo, tasaMV, sys, extrasMap) {
+  var rows = [];
+  var saldo = monto;
+  var totalInteres = 0;
+  var totalCapital = 0;
+  var totalExtra = 0;
+  var totalCuota = 0;
+
+  // Cuota fija (francés)
+  var cuotaFija = 0;
+  if (sys === 'frances' && tasaMV > 0) {
+    cuotaFija = monto * (tasaMV * Math.pow(1 + tasaMV, plazo)) / (Math.pow(1 + tasaMV, plazo) - 1);
+  } else if (sys === 'frances' && tasaMV === 0) {
+    cuotaFija = monto / plazo;
+  }
+
+  // Capital constante (alemán)
+  var capitalFijo = monto / plazo;
+
+  for (var i = 1; i <= plazo; i++) {
+    if (saldo <= 0) break;
+
+    var interes = saldo * tasaMV;
+    var capital, cuota;
+
+    if (sys === 'frances') {
+      cuota = Math.min(cuotaFija, saldo + interes);
+      capital = cuota - interes;
+    } else if (sys === 'aleman') {
+      capital = Math.min(capitalFijo, saldo);
+      cuota = capital + interes;
+    } else { // solo intereses
+      capital = (i === plazo) ? saldo : 0;
+      cuota = interes + capital;
+    }
+
+    // Abono extra
+    var extra = extrasMap[i] || 0;
+    if (extra > saldo - capital) {
+      extra = Math.max(0, saldo - capital);
+    }
+
+    saldo = saldo - capital - extra;
+    if (saldo < 1) saldo = 0; // limpiar decimales
+
+    totalInteres += interes;
+    totalCapital += capital;
+    totalExtra += extra;
+    totalCuota += cuota;
+
+    rows.push({
+      num: i,
+      cuota: Math.round(cuota),
+      capital: Math.round(capital),
+      interes: Math.round(interes),
+      extra: Math.round(extra),
+      saldo: Math.round(saldo)
+    });
+
+    if (saldo <= 0) break;
+  }
+
+  return {
+    rows: rows,
+    totalInteres: Math.round(totalInteres),
+    totalCapital: Math.round(totalCapital),
+    totalExtra: Math.round(totalExtra),
+    totalCuota: Math.round(totalCuota),
+    totalPagado: Math.round(totalCuota + totalExtra),
+    cuotaFija: Math.round(cuotaFija),
+    mesesReales: rows.length
+  };
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CALCULAR Y RENDERIZAR
+   ══════════════════════════════════════════════════════════════ */
+
+function calcular() {
+  var monto = parseMoney(document.getElementById('iMonto').value);
+  var plazo = parseInt(document.getElementById('iPlazo').value) || 0;
+  var tasaMV = getTasaMV();
+
+  if (!monto || monto < 1000) {
+    window.exoToast('Ingresa un monto válido (mínimo $1.000)', 'warning');
+    return;
+  }
+  if (!plazo || plazo < 1) {
+    window.exoToast('Ingresa un plazo válido (mínimo 1 mes)', 'warning');
+    return;
+  }
+  if (tasaMV < 0) {
+    window.exoToast('La tasa de interés debe ser positiva', 'warning');
+    return;
+  }
+
+  var extrasMap = getExtrasMap();
+  var hasExtras = Object.keys(extrasMap).length > 0;
+
+  // Calcular con extras
+  var result = amortizar(monto, plazo, tasaMV, sistema, extrasMap);
+  lastResult = result;
+
+  // Calcular sin extras (para comparación)
+  var resultSin = hasExtras ? amortizar(monto, plazo, tasaMV, sistema, {}) : null;
+  lastResultSin = resultSin;
+
+  // KPIs
+  var cuotaLabel = '';
+  if (sistema === 'frances') {
+    cuotaLabel = fmtCOP(result.cuotaFija);
+  } else if (sistema === 'aleman') {
+    cuotaLabel = fmtCOP(result.rows[0].cuota) + ' → ' + fmtCOP(result.rows[result.rows.length - 1].cuota);
+  } else {
+    cuotaLabel = fmtCOP(result.rows.length > 1 ? result.rows[0].cuota : 0);
+  }
+
+  document.getElementById('rCuota').textContent = sistema === 'frances' ? fmtCOP(result.cuotaFija) : cuotaLabel;
+  document.getElementById('rIntereses').textContent = fmtCOP(result.totalInteres);
+  document.getElementById('rTotal').textContent = fmtCOP(result.totalPagado);
+  document.getElementById('rPlazoReal').textContent = result.mesesReales;
+  document.getElementById('rTotalFinal').textContent = fmtCOP(result.totalPagado);
+
+  // KPI cuota label para alemán/bullet
+  var cuotaKpi = document.getElementById('rCuota');
+  if (sistema === 'aleman') {
+    cuotaKpi.style.fontSize = '.85rem';
+  } else {
+    cuotaKpi.style.fontSize = '';
+  }
+
+  // Savings box
+  var savingsBox = document.getElementById('savingsBox');
+  if (hasExtras && resultSin) {
+    savingsBox.style.display = 'block';
+    document.getElementById('svIntSin').textContent = fmtCOP(resultSin.totalInteres);
+    document.getElementById('svIntCon').textContent = fmtCOP(result.totalInteres);
+    document.getElementById('svMeses').textContent = (resultSin.mesesReales - result.mesesReales) + ' meses';
+    document.getElementById('svAhorro').textContent = fmtCOP(resultSin.totalInteres - result.totalInteres);
+  } else {
+    savingsBox.style.display = 'none';
+  }
+
+  // Render tabla
+  renderTable(result);
+
+  // Render gráficas
+  renderCharts(result);
+
+  // Mostrar resultados
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ── Render tabla de amortización ── */
+function renderTable(result) {
+  var tbody = document.getElementById('amortBody');
+  var fechaBase = document.getElementById('iFecha').value;
+  var fecha = fechaBase ? new Date(fechaBase + 'T00:00:00') : null;
+  var html = '';
+  var rows = result.rows;
+
+  // Agrupar por año
+  var years = {};
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    var yearKey;
+    if (fecha) {
+      var d = new Date(fecha);
+      d.setMonth(d.getMonth() + i);
+      r._fecha = d;
+      yearKey = d.getFullYear();
+    } else {
+      yearKey = Math.ceil(r.num / 12);
+    }
+    if (!years[yearKey]) years[yearKey] = [];
+    years[yearKey].push(r);
+  }
+
+  var MESES_CORTO = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+  var yearKeys = Object.keys(years);
+  for (var yi = 0; yi < yearKeys.length; yi++) {
+    var yk = yearKeys[yi];
+    var yRows = years[yk];
+    var yCuota = 0, yCapital = 0, yInteres = 0, yExtra = 0;
+
+    // Year header row
+    html += '<tr class="yr-total yr-toggle" onclick="toggleYear(this,\'' + yk + '\')" data-year="' + yk + '">' +
+      '<td colspan="2" style="text-align:left;cursor:pointer"><span class="arrow">▼</span> ' + (fecha ? 'Año ' + yk : 'Año ' + yk) + ' (' + yRows.length + ' cuotas)</td>' +
+      '<td></td><td></td><td></td><td></td><td>' + fmtNum(yRows[yRows.length - 1].saldo) + '</td></tr>';
+
+    for (var ri = 0; ri < yRows.length; ri++) {
+      var row = yRows[ri];
+      yCuota += row.cuota;
+      yCapital += row.capital;
+      yInteres += row.interes;
+      yExtra += row.extra;
+
+      var fechaStr = '';
+      if (row._fecha) {
+        fechaStr = MESES_CORTO[row._fecha.getMonth()] + ' ' + row._fecha.getFullYear();
+      }
+
+      html += '<tr class="yr-row yr-' + yk + ' yr-hidden" data-year="' + yk + '">' +
+        '<td>' + row.num + '</td>' +
+        '<td>' + fechaStr + '</td>' +
+        '<td>' + fmtNum(row.cuota) + '</td>' +
+        '<td>' + fmtNum(row.capital) + '</td>' +
+        '<td>' + fmtNum(row.interes) + '</td>' +
+        '<td class="' + (row.extra > 0 ? 'extra-cell' : '') + '">' + (row.extra > 0 ? fmtNum(row.extra) : '-') + '</td>' +
+        '<td>' + fmtNum(row.saldo) + '</td></tr>';
+    }
+  }
+
+  // Grand total
+  html += '<tr class="grand-total">' +
+    '<td colspan="2" style="text-align:left">TOTAL</td>' +
+    '<td>' + fmtNum(result.totalCuota) + '</td>' +
+    '<td>' + fmtNum(result.totalCapital) + '</td>' +
+    '<td>' + fmtNum(result.totalInteres) + '</td>' +
+    '<td>' + (result.totalExtra > 0 ? fmtNum(result.totalExtra) : '-') + '</td>' +
+    '<td>0</td></tr>';
+
+  tbody.innerHTML = html;
+  allCollapsed = true;
+}
+
+function toggleYear(el, year) {
+  var rows = document.querySelectorAll('.yr-' + year);
+  var isCollapsed = el.classList.contains('collapsed');
+  el.classList.toggle('collapsed');
+  for (var i = 0; i < rows.length; i++) {
+    if (isCollapsed) {
+      rows[i].classList.remove('yr-hidden');
+    } else {
+      rows[i].classList.add('yr-hidden');
+    }
+  }
+}
+
+function toggleAllYears() {
+  var toggles = document.querySelectorAll('.yr-toggle');
+  allCollapsed = !allCollapsed;
+  for (var i = 0; i < toggles.length; i++) {
+    var year = toggles[i].getAttribute('data-year');
+    var rows = document.querySelectorAll('.yr-' + year);
+    if (allCollapsed) {
+      toggles[i].classList.add('collapsed');
+      for (var j = 0; j < rows.length; j++) rows[j].classList.add('yr-hidden');
+    } else {
+      toggles[i].classList.remove('collapsed');
+      for (var j = 0; j < rows.length; j++) rows[j].classList.remove('yr-hidden');
+    }
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   GRÁFICAS — Canvas nativo (sin dependencias)
+   ══════════════════════════════════════════════════════════════ */
+
+function renderCharts(result) {
+  drawSaldoChart(result);
+  drawCuotaChart(result);
+}
+
+function drawSaldoChart(result) {
+  var canvas = document.getElementById('chartSaldo');
+  var ctx = canvas.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
+  var rect = canvas.parentElement.getBoundingClientRect();
+  var W = rect.width - 32;
+  var H = 220;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  var rows = result.rows;
+  if (!rows.length) return;
+
+  var pad = { t: 20, r: 20, b: 35, l: 70 };
+  var cW = W - pad.l - pad.r;
+  var cH = H - pad.t - pad.b;
+  var maxVal = rows[0].saldo > 0 ? rows[0].saldo : parseMoney(document.getElementById('iMonto').value);
+  // Include initial saldo (monto)
+  var monto = parseMoney(document.getElementById('iMonto').value);
+  if (monto > maxVal) maxVal = monto;
+
+  // Grid lines
+  ctx.strokeStyle = '#E5E7EB';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#9CA3AF';
+  ctx.font = '10px DM Sans';
+  ctx.textAlign = 'right';
+  for (var g = 0; g <= 4; g++) {
+    var yVal = maxVal * (1 - g / 4);
+    var yPos = pad.t + (g / 4) * cH;
+    ctx.beginPath();
+    ctx.moveTo(pad.l, yPos);
+    ctx.lineTo(W - pad.r, yPos);
+    ctx.stroke();
+    ctx.fillText(shortCOP(yVal), pad.l - 6, yPos + 3);
+  }
+
+  // X-axis labels
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#9CA3AF';
+  var step = Math.max(1, Math.floor(rows.length / 6));
+  for (var xi = 0; xi < rows.length; xi += step) {
+    var xPos = pad.l + (xi / (rows.length - 1 || 1)) * cW;
+    ctx.fillText(rows[xi].num, xPos, H - pad.b + 16);
+  }
+  ctx.fillText('Mes', W / 2, H - 4);
+
+  // Saldo area fill
+  ctx.beginPath();
+  ctx.moveTo(pad.l, pad.t + cH - (monto / maxVal) * cH);
+  for (var i = 0; i < rows.length; i++) {
+    var x = pad.l + (i / (rows.length - 1 || 1)) * cW;
+    var y = pad.t + cH - (rows[i].saldo / maxVal) * cH;
+    ctx.lineTo(x, y);
+  }
+  ctx.lineTo(pad.l + cW, pad.t + cH);
+  ctx.lineTo(pad.l, pad.t + cH);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(46,117,182,.12)';
+  ctx.fill();
+
+  // Saldo line
+  ctx.beginPath();
+  ctx.moveTo(pad.l, pad.t + cH - (monto / maxVal) * cH);
+  for (var i = 0; i < rows.length; i++) {
+    var x = pad.l + (i / (rows.length - 1 || 1)) * cW;
+    var y = pad.t + cH - (rows[i].saldo / maxVal) * cH;
+    ctx.lineTo(x, y);
+  }
+  ctx.strokeStyle = '#2E75B6';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+}
+
+function drawCuotaChart(result) {
+  var canvas = document.getElementById('chartCuota');
+  var ctx = canvas.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
+  var rect = canvas.parentElement.getBoundingClientRect();
+  var W = rect.width - 32;
+  var H = 220;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, W, H);
+
+  var rows = result.rows;
+  if (!rows.length) return;
+
+  var pad = { t: 20, r: 20, b: 35, l: 70 };
+  var cW = W - pad.l - pad.r;
+  var cH = H - pad.t - pad.b;
+
+  var maxCuota = 0;
+  for (var i = 0; i < rows.length; i++) {
+    var total = rows[i].capital + rows[i].interes + rows[i].extra;
+    if (total > maxCuota) maxCuota = total;
+  }
+  if (maxCuota === 0) maxCuota = 1;
+
+  // Grid
+  ctx.strokeStyle = '#E5E7EB';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = '#9CA3AF';
+  ctx.font = '10px DM Sans';
+  ctx.textAlign = 'right';
+  for (var g = 0; g <= 4; g++) {
+    var yVal = maxCuota * (1 - g / 4);
+    var yPos = pad.t + (g / 4) * cH;
+    ctx.beginPath();
+    ctx.moveTo(pad.l, yPos);
+    ctx.lineTo(W - pad.r, yPos);
+    ctx.stroke();
+    ctx.fillText(shortCOP(yVal), pad.l - 6, yPos + 3);
+  }
+
+  // Bars
+  var barW = Math.max(2, (cW / rows.length) * 0.7);
+  var gap = cW / rows.length;
+
+  for (var i = 0; i < rows.length; i++) {
+    var x = pad.l + i * gap + (gap - barW) / 2;
+    var hCap = (rows[i].capital / maxCuota) * cH;
+    var hInt = (rows[i].interes / maxCuota) * cH;
+    var hExt = (rows[i].extra / maxCuota) * cH;
+
+    // Interest (bottom)
+    ctx.fillStyle = '#F59E0B';
+    ctx.fillRect(x, pad.t + cH - hInt, barW, hInt);
+
+    // Capital (middle)
+    ctx.fillStyle = '#2E75B6';
+    ctx.fillRect(x, pad.t + cH - hInt - hCap, barW, hCap);
+
+    // Extra (top)
+    if (hExt > 0) {
+      ctx.fillStyle = '#059669';
+      ctx.fillRect(x, pad.t + cH - hInt - hCap - hExt, barW, hExt);
+    }
+  }
+
+  // X labels
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#9CA3AF';
+  ctx.font = '10px DM Sans';
+  var step = Math.max(1, Math.floor(rows.length / 6));
+  for (var xi = 0; xi < rows.length; xi += step) {
+    ctx.fillText(rows[xi].num, pad.l + xi * gap + gap / 2, H - pad.b + 16);
+  }
+
+  // Legend
+  var legendX = pad.l;
+  var legendY = 12;
+  var legends = [
+    { color: '#2E75B6', label: 'Capital' },
+    { color: '#F59E0B', label: 'Interés' },
+    { color: '#059669', label: 'Abono extra' }
+  ];
+  ctx.font = '10px DM Sans';
+  for (var li = 0; li < legends.length; li++) {
+    ctx.fillStyle = legends[li].color;
+    ctx.fillRect(legendX, legendY - 7, 10, 10);
+    ctx.fillStyle = '#6B7280';
+    ctx.fillText(legends[li].label, legendX + 14, legendY + 2);
+    legendX += ctx.measureText(legends[li].label).width + 26;
+  }
+}
+
+function shortCOP(n) {
+  if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return '$' + (n / 1e3).toFixed(0) + 'K';
+  return '$' + Math.round(n);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   EXPORTAR A EXCEL
+   ══════════════════════════════════════════════════════════════ */
+
+function exportExcel() {
+  if (!lastResult || !lastResult.rows.length) return;
+
+  var wb = new ExcelJS.Workbook();
+  wb.creator = 'ExógenaDIAN';
+  var ws = wb.addWorksheet('Amortización');
+
+  // Título
+  ws.mergeCells('A1:G1');
+  var titleCell = ws.getCell('A1');
+  titleCell.value = 'Tabla de Amortización — ExógenaDIAN';
+  titleCell.font = { bold: true, size: 14, color: { argb: 'FF1B3A5C' } };
+  titleCell.alignment = { horizontal: 'center' };
+
+  // Info
+  var monto = parseMoney(document.getElementById('iMonto').value);
+  var tasaVal = document.getElementById('iTasa').value;
+  var sysNames = { frances: 'Cuota Fija (Francés)', aleman: 'Capital Constante (Alemán)', interes: 'Solo Intereses' };
+  ws.getCell('A3').value = 'Monto:';
+  ws.getCell('B3').value = monto;
+  ws.getCell('B3').numFmt = '$#,##0';
+  ws.getCell('A4').value = 'Tasa:';
+  ws.getCell('B4').value = tasaVal + '% ' + tasaTipo;
+  ws.getCell('A5').value = 'Plazo:';
+  ws.getCell('B5').value = lastResult.mesesReales + ' meses';
+  ws.getCell('A6').value = 'Sistema:';
+  ws.getCell('B6').value = sysNames[sistema];
+  ws.getCell('A7').value = 'Total intereses:';
+  ws.getCell('B7').value = lastResult.totalInteres;
+  ws.getCell('B7').numFmt = '$#,##0';
+  ws.getCell('A8').value = 'Costo total:';
+  ws.getCell('B8').value = lastResult.totalPagado;
+  ws.getCell('B8').numFmt = '$#,##0';
+
+  for (var ri = 3; ri <= 8; ri++) {
+    ws.getCell('A' + ri).font = { bold: true, size: 10, color: { argb: 'FF6B7280' } };
+  }
+
+  // Headers
+  var headerRow = 10;
+  var headers = ['#', 'Fecha', 'Cuota', 'Capital', 'Interés', 'Abono Extra', 'Saldo'];
+  var hRow = ws.getRow(headerRow);
+  for (var hi = 0; hi < headers.length; hi++) {
+    var cell = hRow.getCell(hi + 1);
+    cell.value = headers[hi];
+    cell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 10 };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1B3A5C' } };
+    cell.alignment = { horizontal: hi < 2 ? 'center' : 'right' };
+    cell.border = { bottom: { style: 'thin' } };
+  }
+
+  // Data
+  var fechaBase = document.getElementById('iFecha').value;
+  var fecha = fechaBase ? new Date(fechaBase + 'T00:00:00') : null;
+  var MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  var rows = lastResult.rows;
+
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    var row = ws.getRow(headerRow + 1 + i);
+    row.getCell(1).value = r.num;
+    row.getCell(1).alignment = { horizontal: 'center' };
+
+    if (fecha) {
+      var d = new Date(fecha);
+      d.setMonth(d.getMonth() + i);
+      row.getCell(2).value = MESES[d.getMonth()] + ' ' + d.getFullYear();
+    } else {
+      row.getCell(2).value = '';
+    }
+    row.getCell(2).alignment = { horizontal: 'center' };
+
+    row.getCell(3).value = r.cuota;
+    row.getCell(4).value = r.capital;
+    row.getCell(5).value = r.interes;
+    row.getCell(6).value = r.extra || 0;
+    row.getCell(7).value = r.saldo;
+
+    for (var ci = 3; ci <= 7; ci++) {
+      row.getCell(ci).numFmt = '$#,##0';
+      row.getCell(ci).alignment = { horizontal: 'right' };
+    }
+
+    // Striping
+    if (i % 2 === 1) {
+      for (var ci = 1; ci <= 7; ci++) {
+        row.getCell(ci).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF9FAFB' } };
+      }
+    }
+  }
+
+  // Total row
+  var totalRowNum = headerRow + 1 + rows.length;
+  var tRow = ws.getRow(totalRowNum);
+  tRow.getCell(1).value = '';
+  tRow.getCell(2).value = 'TOTAL';
+  tRow.getCell(2).font = { bold: true };
+  tRow.getCell(3).value = lastResult.totalCuota;
+  tRow.getCell(4).value = lastResult.totalCapital;
+  tRow.getCell(5).value = lastResult.totalInteres;
+  tRow.getCell(6).value = lastResult.totalExtra;
+  tRow.getCell(7).value = 0;
+  for (var ci = 3; ci <= 7; ci++) {
+    tRow.getCell(ci).numFmt = '$#,##0';
+    tRow.getCell(ci).font = { bold: true };
+    tRow.getCell(ci).alignment = { horizontal: 'right' };
+  }
+  for (var ci = 1; ci <= 7; ci++) {
+    tRow.getCell(ci).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1B3A5C' } };
+    tRow.getCell(ci).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+  }
+
+  // Column widths
+  ws.getColumn(1).width = 6;
+  ws.getColumn(2).width = 14;
+  ws.getColumn(3).width = 16;
+  ws.getColumn(4).width = 16;
+  ws.getColumn(5).width = 16;
+  ws.getColumn(6).width = 16;
+  ws.getColumn(7).width = 18;
+
+  // Download
+  wb.xlsx.writeBuffer().then(function(buffer) {
+    var blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'amortizacion_exogenadian.xlsx';
+    a.click();
+    URL.revokeObjectURL(url);
+    if (window.exoToast) window.exoToast('Excel descargado correctamente', 'success');
+  });
+}
+
+/* ── Resize charts on window resize ── */
+var resizeTimer;
+window.addEventListener('resize', function() {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function() {
+    if (lastResult) renderCharts(lastResult);
+  }, 200);
+});
+</script>
+
+<link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=2"></script>
+</body>
+</html>
