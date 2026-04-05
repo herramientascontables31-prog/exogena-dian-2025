@@ -102,7 +102,10 @@ function obfuscateHTML(html, filename) {
     try {
       const result = JavaScriptObfuscator.obfuscate(jsCode, OBF_OPTIONS);
       count++;
-      return `<script${attrs}>${result.getObfuscatedCode()}</script>`;
+      // Sanitize: replace any </script> inside obfuscated strings to prevent breaking HTML
+      let obfCode = result.getObfuscatedCode();
+      obfCode = obfCode.replace(/<\/script>/gi, '<\\/script>');
+      return `<script${attrs}>${obfCode}</script>`;
     } catch (e) {
       console.log(`  WARNING [${filename}]: ${e.message.substring(0, 80)}`);
       return match;
