@@ -70,6 +70,8 @@ PRIVACIDAD Y SEGURIDAD DE DATOS (CONOCE ESTO A FONDO — los usuarios preguntan 
 - Es tan seguro como trabajar en Excel: los datos nunca salen del computador.
 - Si el usuario expresa CUALQUIER duda sobre privacidad, seguridad, o si es seguro subir su balance, tranquilízalo con convicción y claridad. Esta es una preocupación legítima y debes responderla con total transparencia y seguridad.
 
+DEVOLUCIONES F1220: Persona natural comerciante SÍ requiere firma de contador en la Solicitud de Devolución (F1220), porque está obligada a llevar contabilidad (Art. 19 C.Co., Art. 773 ET). PN no comerciante: firma solo el contribuyente. No confundir con los topes de 100.000 UVT del Art. 596 ET que aplican a la firma del contador en la declaración de renta, NO en el F1220.
+
 REGLAS:
 1. Español colombiano siempre.
 2. Concisa: 1-3 párrafos, listas si es complejo.
@@ -83,7 +85,75 @@ REGLAS:
 10. Máximo 1 emoji por mensaje.
 11. WHATSAPP SOLO COMO ÚLTIMO RECURSO: NO ofrezcas WhatsApp de manera proactiva ni al principio de la conversación. Solo menciona WhatsApp cuando: (a) ya intentaste resolver la duda al menos 2 veces y no pudiste, (b) el tema claramente requiere revisión humana de documentos específicos del cliente, (c) es una cotización de servicio personalizado, o (d) hay un error técnico del portal que no puedes resolver. Cuando lo hagas, di algo como: "Para este caso específico te recomiendo que nos escribas por **[WhatsApp]({WHATSAPP_URL})** para que el equipo te ayude directamente."
 12. Si el usuario se despide o dice gracias, responde brevemente y recuerda que puede volver cuando quiera.
-13. PRIMERA RESPUESTA CORTA: cuando el historial tiene un solo mensaje del usuario, responde en máximo 2-3 líneas. No des contexto extra ni hagas preámbulos. Ve directo al grano.""",
+13. PRIMERA RESPUESTA CORTA: cuando el historial tiene un solo mensaje del usuario, responde en máximo 2-3 líneas. No des contexto extra ni hagas preámbulos. Ve directo al grano.
+14. JURISPRUDENCIA: Cuando la pregunta involucre temas controvertidos, requerimientos DIAN, sanciones, o interpretación de normas, CITA las sentencias relevantes del Consejo de Estado Sección Cuarta que conoces. Formato: "Sentencia CE Exp. XXXXX de YYYY". Esto da respaldo jurídico sólido a tus respuestas.""",
+        "cache_control": {"type": "ephemeral"},
+    },
+    {
+        "type": "text",
+        "text": """══ JURISPRUDENCIA — CONSEJO DE ESTADO SECCIÓN CUARTA (sentencias clave) ══
+
+Cuando respondas sobre estos temas, CITA la sentencia correspondiente para dar respaldo jurídico:
+
+1. BANCARIZACIÓN (Art. 771-5 ET) — CE Exp. 25512/2023, CP Piza Rodríguez:
+El límite de 100 UVT se refiere a cada transacción individual, no al acumulado anual con un mismo tercero. Cada pago en efectivo que supere 100 UVT pierde reconocimiento fiscal.
+
+2. CAUSALIDAD DEL GASTO (Art. 107 ET) — CE Exp. 25289/2022, CP Carvajal Basto:
+Para deducir: relación de causalidad con actividad productora de renta + necesidad (no inevitabilidad, sino utilidad real) + proporcionalidad. Carga de la prueba es del contribuyente.
+
+3. PLENA PRUEBA DE COSTOS — CE Exp. 23854/2021, CP Chaves García:
+La factura no es el único medio de prueba para costos/deducciones. Libertad probatoria: contratos, extractos bancarios, certificaciones son admisibles si demuestran la realidad de la transacción.
+
+4. SIMULACIÓN LABORAL (Arts. 107, 108 ET) — CE Exp. 23239/2020, CP Ramírez:
+Primacía de la realidad sobre la forma. Si contratista cumple horario fijo, usa herramientas del contratante, tiene exclusividad y subordinación = relación laboral con consecuencias en retención y aportes.
+
+5. FIRMEZA DECLARACIONES — 3 AÑOS (Art. 714 ET) — CE Exp. 26553/2023, CP Ramos Girón:
+Firmeza se cuenta desde el vencimiento del plazo para declarar (no desde la presentación anticipada). Si la DIAN no notificó requerimiento especial dentro de 3 años = declaración inmodificable.
+
+6. RECHAZO POR NO RETENER (Art. 177 ET) — CE Exp. 22392/2019, CP Piza Rodríguez:
+Si el beneficiario declaró y pagó el impuesto del ingreso sobre el cual no se retuvo, procede la deducción porque la finalidad fiscal se cumplió por otra vía.
+
+7. CORRECCIÓN DE DECLARACIONES (Arts. 588, 589 ET) — CE Exp. 24878/2022, CP Carvajal Basto:
+Sanción de corrección: 10% voluntaria, 20% provocada por emplazamiento. Considerar corregir antes de que la DIAN actúe.
+
+8. FAVORABILIDAD EN SANCIONES (Art. 640 ET) — CE Exp. 24260/2021, CP Chaves García:
+Si durante el proceso entra norma más favorable, el contribuyente tiene derecho a que se aplique. Gradualidad Art. 640: 75%, 50%, 25% reducción acumulable.
+
+9. EXÓGENA ERRÓNEA vs. NO ENVIADA (Art. 651 ET) — CE Exp. 25043/2022, CP Ramírez:
+Si la exógena SÍ se presentó pero con errores: tarifa 0.7% sobre el valor erróneo, NO 1% sobre todo lo reportado. La DIAN no puede aplicar tarifa de "no envío" a información presentada con errores.
+
+10. IVA DESCONTABLE (Arts. 485, 488 ET) — CE Exp. 26001/2023, CP Ramos Girón:
+Requisitos: (1) IVA pagado en adquisiciones gravadas, (2) computable como costo/gasto, (3) destinado a operaciones gravadas, (4) factura electrónica válida. Para operaciones mixtas: proporcionalidad Art. 490.
+
+11. NOTIFICACIÓN DE ACTOS — VALIDEZ (Arts. 563, 565, 566-1 ET) — CE Exp. 23651/2020, CP Piza:
+Notificación por correo electrónico solo válida si se envía al correo del RUT. Si es a otro correo o sin acuse de recibo = notificación inválida, términos no corren.
+
+12. ELUSIÓN vs. PLANEACIÓN LEGÍTIMA (Art. 869 ET) — CE Exp. 26789/2023, CP Carvajal Basto:
+Planeación tributaria legítima NO es abuso. La DIAN debe demostrar que la operación carece de sustancia económica real. Siempre documentar la razón de negocios.
+
+13. RESPONSABILIDAD AGENTE RETENEDOR (Arts. 370, 371 ET) — CE Exp. 24105/2021, CP Chaves García:
+Si el beneficiario del pago declaró y pagó el impuesto correspondiente, la responsabilidad solidaria del agente retenedor cesa.
+
+14. PRECIOS DE TRANSFERENCIA (Arts. 260-1, 260-3 ET) — CE Exp. 25198/2022, CP Ramírez:
+Carga de la prueba inicial es del contribuyente. Pero si la DIAN ajusta, debe demostrar que sus comparables son más apropiados que los del contribuyente.
+
+15. BENEFICIO DE AUDITORÍA (Art. 689-2 ET) — CE Exp. 23445/2020, CP Carvajal Basto:
+Firmeza acelerada. Comparar impuesto neto de renta (no impuesto a cargo) con el año anterior. Si la DIAN no notifica requerimiento dentro del término reducido = declaración en firme.
+
+16. PRINCIPIO DE CORRESPONDENCIA (Arts. 711, 712 ET) — CE Exp. 27001/2023, CP Ramos Girón:
+La liquidación oficial NO puede contener glosas nuevas que no estaban en el requerimiento especial. Puntos nuevos = nulidad.
+
+17. INTERESES MORATORIOS (Arts. 634, 635 ET) — CE Exp. 22788/2019, CP Ramírez:
+Intereses día a día, tasa usura - 2pp. NO se aplican intereses sobre intereses (anatocismo prohibido). NO se cobran intereses sobre sanciones, solo sobre el impuesto.
+
+18. PAGOS AL EXTERIOR — RETENCIÓN (Arts. 121, 408 ET) — CE Exp. 24450/2021, CP Piza Rodríguez:
+Deducción requiere retención (generalmente 20%). Si existe CDI vigente, se aplica tarifa convencional menor. Sin retención y sin CDI = rechazo total.
+
+19. INEXACTITUD — DIFERENCIA DE CRITERIOS (Arts. 647, 648 ET) — CE Exp. 25567/2022, CP Chaves García:
+Si el desacuerdo es sobre interpretación de normas (no datos falsos), NO procede sanción por inexactitud. Demostrar buena fe y fundamento jurídico razonable.
+
+20. PRESCRIPCIÓN COBRO — 5 AÑOS (Arts. 817, 818 ET) — CE Exp. 26234/2023, CP Carvajal Basto:
+Acción de cobro prescribe en 5 años desde exigibilidad. Se interrumpe con notificación del mandamiento de pago, pero el nuevo término tampoco puede exceder 5 años.""",
         "cache_control": {"type": "ephemeral"},
     }
 ]
@@ -216,6 +286,58 @@ class ChatRateLimiter:
 
 rate_limiter = ChatRateLimiter()
 
+# ─── PRO rate limiter (por clave PRO, 200 msgs/hora) ───
+
+PRO_RATE_LIMIT = int(os.getenv("PRO_RATE_LIMIT", "200"))
+PRO_VALIDATION_URL = os.getenv(
+    "PRO_VALIDATION_URL",
+    "https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec",
+)
+
+
+class ProRateLimiter:
+    def __init__(self):
+        self.requests: dict[str, list[float]] = defaultdict(list)
+        self.validated_keys: dict[str, tuple[bool, float]] = {}  # key → (valid, timestamp)
+
+    def check(self, key: str) -> tuple[bool, int]:
+        now = datetime.now(timezone.utc).timestamp()
+        window = now - 3600
+        reqs = self.requests[key]
+        self.requests[key] = reqs = [t for t in reqs if t > window]
+        remaining = PRO_RATE_LIMIT - len(reqs)
+        return remaining > 0, max(0, remaining)
+
+    def consume(self, key: str):
+        self.requests[key].append(datetime.now(timezone.utc).timestamp())
+
+    async def is_valid_pro(self, key: str, device_id: str = "") -> bool:
+        """Validate PRO key against Apps Script with 1-hour server-side cache."""
+        now = datetime.now(timezone.utc).timestamp()
+        cached = self.validated_keys.get(key)
+        if cached and (now - cached[1]) < 3600:
+            return cached[0]
+
+        try:
+            async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+                resp = await client.get(
+                    PRO_VALIDATION_URL,
+                    params={"action": "validateKey", "key": key, "device": device_id},
+                )
+                data = resp.json()
+                valid = data.get("valid", False)
+                self.validated_keys[key] = (valid, now)
+                return valid
+        except Exception as e:
+            logger.warning("PRO validation failed: %s", e)
+            # On network error, trust cached value if available
+            if cached:
+                return cached[0]
+            return False
+
+
+pro_rate_limiter = ProRateLimiter()
+
 
 # ─── Request model ───
 
@@ -251,15 +373,30 @@ async def chat(body: ChatRequest, request: Request):
         return {"error": BUDGET_EXCEEDED_MSG}
 
     ip = _get_client_ip(request)
-    allowed, remaining = rate_limiter.check(ip)
+    pro_key = request.headers.get("x-pro-key", "")
+    device_id = request.headers.get("x-device-id", "")
 
-    if not allowed:
-        return {
-            "error": "Has alcanzado el límite de mensajes por hora. Intenta de nuevo en unos minutos.",
-            "whatsapp": WHATSAPP_URL,
-        }
+    # Check PRO status for higher rate limits
+    is_pro = False
+    if pro_key:
+        is_pro = await pro_rate_limiter.is_valid_pro(pro_key, device_id)
 
-    rate_limiter.consume(ip)
+    if is_pro:
+        allowed, remaining = pro_rate_limiter.check(pro_key)
+        if allowed:
+            pro_rate_limiter.consume(pro_key)
+        else:
+            return {
+                "error": "Has alcanzado el límite PRO de mensajes por hora. Intenta de nuevo en unos minutos.",
+            }
+    else:
+        allowed, remaining = rate_limiter.check(ip)
+        if not allowed:
+            return {
+                "error": "Has alcanzado el límite de mensajes por hora. Intenta de nuevo en unos minutos.",
+                "whatsapp": WHATSAPP_URL,
+            }
+        rate_limiter.consume(ip)
 
     messages = [{"role": m.role, "content": m.content} for m in body.messages[-10:]]
 
