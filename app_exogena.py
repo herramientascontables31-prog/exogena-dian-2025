@@ -161,9 +161,9 @@ def cargar_directorio_central():
         return {}, str(e)
 
 # === CONSTANTES ===
-UVT = 49799
-C3UVT = 149397
-C12UVT = 597588
+UVT = 52374
+C3UVT = 157122
+C12UVT = 628488
 NM = "222222222"
 TDM = "43"
 

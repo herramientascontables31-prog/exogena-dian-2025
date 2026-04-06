@@ -5,7 +5,7 @@ Página de inicio con navegación a los módulos.
 import streamlit as st
 
 st.set_page_config(
-    page_title="Exógena DIAN AG 2025",
+    page_title="Exógena DIAN AG 2026",
     page_icon="📊",
     layout="wide"
 )
@@ -30,7 +30,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.markdown('<p class="big-title">📊 Exógena DIAN</p>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Año Gravable 2025 — Generación y validación de información exógena</p>',
+st.markdown('<p class="subtitle">Año Gravable 2026 — Generación y validación de información exógena</p>',
             unsafe_allow_html=True)
 
 st.divider()
