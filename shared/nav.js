@@ -53,11 +53,11 @@
     .btn-green{background:#059669;color:#fff}
     .btn-green:hover{background:#047857;transform:translateY(-1px);box-shadow:0 25px 60px -12px rgba(5,150,105,.15)}
     .btn-sm{padding:8px 16px;font-size:.82rem;border-radius:10px}
-    .hamburger{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:8px;color:#374151}
+    .hamburger{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;padding:8px;color:#374151;flex-shrink:0;z-index:101}
     @media(max-width:900px){
-      nav#nav{padding:12px 20px}
-      .hamburger{display:block}
-      .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;padding:16px 20px;flex-direction:column;gap:12px;border-top:1px solid #E5E7EB;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+      nav#nav{padding:12px 20px;flex-wrap:nowrap}
+      .hamburger{display:block!important}
+      .nav-links{display:none;position:absolute;top:100%;left:0;right:0;width:100%;background:#fff;padding:16px 20px;flex-direction:column;gap:12px;border-top:1px solid #E5E7EB;box-shadow:0 8px 20px rgba(0,0,0,.08);z-index:100;max-height:80vh;overflow-y:auto}
       .nav-links.open{display:flex}
     }
     /* ===== MEGA MENU ===== */
