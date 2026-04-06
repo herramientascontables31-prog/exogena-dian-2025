@@ -105,7 +105,7 @@ else:
                 st.rerun()
             else:
                 st.error("❌ Clave inválida o inactiva")
-    st.sidebar.markdown("[💳 Suscribirse PRO →](https://exogenadian.com/#planes)")
+    st.sidebar.markdown("[💳 Suscribirse PRO →](https://exogenadian.com/precios.html)")
 st.sidebar.markdown("[← Volver a ExógenaDIAN](https://exogenadian.com)")
 
 # === ESTILOS ===
@@ -1169,7 +1169,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         ws_pro = wb.create_sheet("F1001 Pagos (PRO)", 0)
         ws_pro.append(["⚠️ El formato F1001 Pagos requiere suscripción PRO"])
         ws_pro.append([""])
-        ws_pro.append(["Suscríbete en: https://exogenadian.com/#planes"])
+        ws_pro.append(["Suscríbete en: https://exogenadian.com/precios.html"])
         ws_pro.append(["Precio: $14.500/mes — Acceso a todas las herramientas"])
         ws_pro.append([""])
         ws_pro.append([f"Se detectaron {len(final)} registros para el F1001 que se generarán con PRO."])
@@ -1645,7 +1645,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         ws_pro2 = wb.create_sheet("F2276 Rentas Trabajo (PRO)")
         ws_pro2.append(["⚠️ El formato F2276 Rentas de Trabajo requiere suscripción PRO"])
         ws_pro2.append([""])
-        ws_pro2.append(["Suscríbete en: https://exogenadian.com/#planes"])
+        ws_pro2.append(["Suscríbete en: https://exogenadian.com/precios.html"])
         ws_pro2.append(["Precio: $14.500/mes — Acceso a todas las herramientas"])
         ws_pro2.append([""])
         ws_pro2.append([f"Se detectaron {len(dic26)} registros para el F2276 que se generarán con PRO."])

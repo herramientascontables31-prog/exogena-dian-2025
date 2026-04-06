@@ -359,7 +359,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
       <button id="btnDescargar" onclick="btnLoading(this,descargarPro)" class="btn btn-success" style="padding:8px 20px;margin-top:8px">Descargar Excel</button>
       <div id="proError" style="margin-top:6px;font-size:.75rem;color:var(--red)"></div>
-      <div id="proSubscribeLink" style="margin-top:8px"><a href="index.html#planes" style="font-size:.78rem;color:#059669;font-weight:600;text-decoration:none">¿No tienes clave? Suscríbete PRO →</a></div>
+      <div id="proSubscribeLink" style="margin-top:8px"><a href="precios.html" style="font-size:.78rem;color:#059669;font-weight:600;text-decoration:none">¿No tienes clave? Suscríbete PRO →</a></div>
     </div>
   </div>
 </div>
@@ -1208,7 +1208,7 @@ function cerrarSesionPro(){
   document.getElementById('proActive').style.display='none';
   document.getElementById('proKeyBox').style.display='';
   document.getElementById('proKey').value='';
-  document.getElementById('proSubscribeLink').innerHTML='<a href="index.html#planes" style="font-size:.78rem;color:#059669;font-weight:600;text-decoration:none">¿No tienes cuenta? Suscríbete PRO →</a>';
+  document.getElementById('proSubscribeLink').innerHTML='<a href="precios.html" style="font-size:.78rem;color:#059669;font-weight:600;text-decoration:none">¿No tienes cuenta? Suscríbete PRO →</a>';
 }
 
 // Validar contra el servidor (email o clave)

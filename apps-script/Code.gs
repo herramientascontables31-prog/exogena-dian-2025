@@ -365,7 +365,7 @@ function enviarEmailRecordatorio(email, clave, diasRestantes, fechaVenc) {
   var body = 'Hola,\n\n'
     + 'Tu clave PRO (' + clave + ') vence el ' + fechaVenc + '.\n\n'
     + 'Para seguir usando las funciones PRO sin interrupción, renueva tu suscripción en:\n'
-    + 'https://exogenadian.com/#planes\n\n'
+    + 'https://exogenadian.com/precios.html\n\n'
     + 'Si ya renovaste, ignora este mensaje.\n\n'
     + 'Gracias por usar ExógenaDIAN.\n'
     + '---\nExógenaDIAN · exogenadian.com';
@@ -382,7 +382,7 @@ function enviarEmailExpiracion(email, clave) {
   var body = 'Hola,\n\n'
     + 'Tu clave PRO (' + clave + ') ha expirado.\n\n'
     + 'Las funciones PRO están bloqueadas hasta que renueves.\n'
-    + 'Renueva aquí: https://exogenadian.com/#planes\n\n'
+    + 'Renueva aquí: https://exogenadian.com/precios.html\n\n'
     + 'Si tienes alguna pregunta, escríbenos por WhatsApp.\n\n'
     + 'Gracias por usar ExógenaDIAN.\n'
     + '---\nExógenaDIAN · exogenadian.com';

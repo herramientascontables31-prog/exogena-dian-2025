@@ -889,7 +889,7 @@ function renderResults() {
   p += '</table></div></div>';
   document.getElementById('rPanels').innerHTML = p;
   if (needsPay) {
-    document.getElementById('payZone').innerHTML = `<div class="paywall"><h3>🔒 Tu archivo tiene ${total} filas (gratis: ${FREE_LIMIT})</h3><p>Se muestran las primeras ${FREE_LIMIT} partidas. Suscríbete a PRO para conciliar sin límite de filas y descargar el Excel completo.</p><a href="https://exogenadian.com/#planes" class="btn btn-primary" style="display:inline-block;padding:12px 24px;text-decoration:none;color:#fff;text-align:center">Suscribirse PRO — $19.900/mes</a></div>`;
+    document.getElementById('payZone').innerHTML = `<div class="paywall"><h3>🔒 Tu archivo tiene ${total} filas (gratis: ${FREE_LIMIT})</h3><p>Se muestran las primeras ${FREE_LIMIT} partidas. Suscríbete a PRO para conciliar sin límite de filas y descargar el Excel completo.</p><a href="precios.html" class="btn btn-primary" style="display:inline-block;padding:12px 24px;text-decoration:none;color:#fff;text-align:center">Suscribirse PRO — $19.900/mes</a></div>`;
     document.getElementById('btnXls').style.display = 'none';
   } else {
     document.getElementById('payZone').innerHTML = '';

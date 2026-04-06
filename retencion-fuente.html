@@ -678,7 +678,7 @@ async function exportarExcel(){
     const saved=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');
     if(saved){const v=await validarPro(saved);if(v){proUnlocked=true}}
     if(!proUnlocked){
-      $('proExportMsg').innerHTML='<div class="alert alert-warn">&#128274; La exportación a Excel es exclusiva para suscriptores PRO. <a href="index.html#planes" style="color:#92400E;font-weight:700">Suscríbete aquí</a> o ingresa tu email PRO abajo:<br><br><input type="email" id="proEmailExport" placeholder="Email PRO" style="padding:6px 12px;border:1px solid #D97706;border-radius:8px;font-size:.85rem;width:200px"> <button onclick="activarProExport()" style="padding:6px 14px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer">Activar</button></div>';
+      $('proExportMsg').innerHTML='<div class="alert alert-warn">&#128274; La exportación a Excel es exclusiva para suscriptores PRO. <a href="precios.html" style="color:#92400E;font-weight:700">Suscríbete aquí</a> o ingresa tu email PRO abajo:<br><br><input type="email" id="proEmailExport" placeholder="Email PRO" style="padding:6px 12px;border:1px solid #D97706;border-radius:8px;font-size:.85rem;width:200px"> <button onclick="activarProExport()" style="padding:6px 14px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:.82rem;font-weight:700;cursor:pointer">Activar</button></div>';
       return;
     }
   }
