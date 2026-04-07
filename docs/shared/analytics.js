@@ -27,6 +27,26 @@ var exoTrack = {
   scroll75: false
 };
 
+/* ═══ Error Tracking — captura errores JS y los envía a GA4 ═══ */
+window.addEventListener('error', function(e) {
+  var msg = e.message || 'Unknown error';
+  var source = (e.filename || '').split('/').pop() || 'unknown';
+  var line = e.lineno || 0;
+  gtag('event', 'js_error', {
+    error_message: msg.substring(0, 150),
+    error_source: source + ':' + line,
+    page: location.pathname
+  });
+});
+window.addEventListener('unhandledrejection', function(e) {
+  var msg = e.reason ? (e.reason.message || String(e.reason)) : 'Promise rejected';
+  gtag('event', 'js_error', {
+    error_message: msg.substring(0, 150),
+    error_source: 'promise',
+    page: location.pathname
+  });
+});
+
 /* Scroll depth 75% — mide engagement real */
 window.addEventListener('scroll', function() {
   if (exoTrack.scroll75) return;
