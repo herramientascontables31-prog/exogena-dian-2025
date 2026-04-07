@@ -155,6 +155,7 @@
   '        <a href="sanciones.html">⚖️ Sanciones Exógena</a>'+
   '        <a href="sanciones-dian.html">⚖️ Sanciones DIAN</a>'+
   '        <a href="intereses.html">% Intereses de Mora</a>'+
+  '        <a href="decreto240.html">&#127793; Decreto 0240/2026</a>'+
   '      </div>'+
   '    </div>'+
        /* Laboral */
@@ -230,6 +231,7 @@
   '          <a href="sanciones.html"><div class="dd-icon" style="background:#FFFBEB">⚖️</div> Sanciones Exógena</a>'+
   '          <a href="sanciones-dian.html"><div class="dd-icon" style="background:#EFF6FF">⚖️</div> Sanciones DIAN</a>'+
   '          <a href="intereses.html"><div class="dd-icon" style="background:#FFF1F2">%</div> Intereses de Mora</a>'+
+  '          <a href="decreto240.html"><div class="dd-icon" style="background:#D1FAE5">&#127793;</div> Decreto 0240/2026</a>'+
   '        </div>'+
            /* ── Col 4: Laboral + Consultas ── */
   '        <div class="mega-col">'+

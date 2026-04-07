@@ -44,6 +44,7 @@ const HTML_FILES = [
   'ia-inconsistencias.html',
   'ia-asistente.html',
   'ia-respuesta-requerimiento.html',
+  'decreto240.html',
 ];
 
 // ─── Directorios/archivos estáticos a copiar tal cual ───
