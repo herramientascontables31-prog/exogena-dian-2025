@@ -27,24 +27,35 @@ var exoTrack = {
   scroll75: false
 };
 
-/* ═══ Error Tracking — captura errores JS y los envía a GA4 ═══ */
-window.addEventListener('error', function(e) {
-  var msg = e.message || 'Unknown error';
-  var source = (e.filename || '').split('/').pop() || 'unknown';
-  var line = e.lineno || 0;
+/* ═══ Error Tracking — GA4 + alerta email vía Apps Script ═══ */
+var _errHook = 'https://script.google.com/macros/s/AKfycbyxVQmTgAoJGoWgmuDZHZQbT44nbn7i6fCg_faSAv4DZDfRhO-gNYzRlpCn7hOpoOAS/exec';
+var _errSent = {};
+function _reportError(msg, source) {
+  var key = msg + source;
+  if (_errSent[key]) return;
+  _errSent[key] = true;
   gtag('event', 'js_error', {
     error_message: msg.substring(0, 150),
-    error_source: source + ':' + line,
+    error_source: source,
     page: location.pathname
   });
+  try {
+    navigator.sendBeacon(_errHook, JSON.stringify({
+      message: msg.substring(0, 300),
+      source: source,
+      page: location.pathname,
+      ua: navigator.userAgent.substring(0, 150)
+    }));
+  } catch(x) {}
+}
+window.addEventListener('error', function(e) {
+  var msg = e.message || 'Unknown error';
+  var source = ((e.filename || '').split('/').pop() || 'unknown') + ':' + (e.lineno || 0);
+  _reportError(msg, source);
 });
 window.addEventListener('unhandledrejection', function(e) {
   var msg = e.reason ? (e.reason.message || String(e.reason)) : 'Promise rejected';
-  gtag('event', 'js_error', {
-    error_message: msg.substring(0, 150),
-    error_source: 'promise',
-    page: location.pathname
-  });
+  _reportError(msg, 'promise');
 });
 
 /* Scroll depth 75% — mide engagement real */
