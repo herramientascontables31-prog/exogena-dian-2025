@@ -1488,6 +1488,10 @@ const FMT_HEADERS={
 
 function generarFormatos(){
   formatos={};
+  const cfg=getCompanyConfig();
+  const cDir=cfg.dir||'';
+  const cDp=cfg.dp||'';
+  const cMp=cfg.mp||'';
 
   // Pre-calcular retenciones por NIT para F1001
   const retFtePorNit={}, retIvaPorNit={}, gastosPorNit={};
@@ -1550,7 +1554,7 @@ function generarFormatos(){
       }
     }
   }
-  formatos['F1001']=Object.values(final1).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.ded),Math.round(v.noDed),Math.round(v.retFte),0,Math.round(v.retIva),0]);
+  formatos['F1001']=Object.values(final1).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.ded),Math.round(v.noDed),Math.round(v.retFte),0,Math.round(v.retIva),0]);
 
   // ── F1003: Retenciones ──
   const dic3={};
@@ -1561,7 +1565,7 @@ function generarFormatos(){
     // Valor retención: crédito del balance (o débito si ya se cruzó)
     dic3[k].ret+=r.cre>0?r.cre:r.deb;
   }
-  formatos['F1003']=Object.values(dic3).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',0,Math.round(v.ret)]);
+  formatos['F1003']=Object.values(dic3).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',0,Math.round(v.ret)]);
 
   // ── F1005: IVA Descontable ──
   const dic5={};
@@ -1595,7 +1599,7 @@ function generarFormatos(){
     else final7[k]=v;
   }
   Object.assign(final7,men7);
-  formatos['F1007']=Object.values(final7).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.val),0]);
+  formatos['F1007']=Object.values(final7).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.val),0]);
 
   // ── F1008: CxC ──
   const dic8={};
@@ -1611,7 +1615,7 @@ function generarFormatos(){
     else final8[k]=v;
   }
   Object.assign(final8,men8);
-  formatos['F1008']=Object.values(final8).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.val)]);
+  formatos['F1008']=Object.values(final8).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.val)]);
 
   // ── F1009: CxP ──
   const dic9={};
@@ -1637,7 +1641,7 @@ function generarFormatos(){
     else final9[k]=v;
   }
   Object.assign(final9,men9);
-  formatos['F1009']=Object.values(final9).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.val)]);
+  formatos['F1009']=Object.values(final9).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.val)]);
 
   // ── F1010: Socios ──
   const dic10={};
@@ -1647,7 +1651,7 @@ function generarFormatos(){
     dic10[r.nit].val+=Math.max(r.cre-r.deb,0);
   }
   const capTotal=Object.values(dic10).reduce((s,v)=>s+v.val,0);
-  formatos['F1010']=Object.values(dic10).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.val),capTotal>0?(v.val/capTotal*100).toFixed(2)+'%':'0%']);
+  formatos['F1010']=Object.values(dic10).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.val),capTotal>0?(v.val/capTotal*100).toFixed(2)+'%':'0%']);
 
   // ── F1012: Inversiones y Bancos ──
   const dic12={};
@@ -1667,7 +1671,7 @@ function generarFormatos(){
     if(!dic12[k])dic12[k]={concepto:r.concepto,nit,razon:r.razon,val:0};
     dic12[k].val+=r.val;
   }
-  formatos['F1012']=Object.values(dic12).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',Math.round(v.val)]);
+  formatos['F1012']=Object.values(dic12).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.val)]);
 
   // ── F2276: Rentas de Trabajo (v4 — 45 columnas) ──
   const dic26={};
@@ -1715,7 +1719,7 @@ function generarFormatos(){
       v.prestSociales+v.viaticos+v.gastosRepres+v.compCoop+v.apoyosEcon+v.otrosPagos+
       v.cesantiasIntPag+v.cesantiasConsigFondo+v.cesantiasRegTrad+v.pensiones;
   }
-  formatos['F2276']=Object.values(dic26).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,'','','','169',
+  formatos['F2276']=Object.values(dic26).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',
     Math.round(v.salarios),Math.round(v.emolEclesiast),Math.round(v.bonosElectr),Math.round(v.excesoAlim41),
     Math.round(v.honorarios),Math.round(v.servicios),Math.round(v.comisiones),Math.round(v.prestSociales),
     Math.round(v.viaticos),Math.round(v.gastosRepres),Math.round(v.compCoop),Math.round(v.apoyosEcon),Math.round(v.otrosPagos),
