@@ -173,6 +173,7 @@
   '        <a href="consultanit.html">🔍 Consulta NIT</a>'+
   '        <a href="vencimientos.html">📅 Calendario Tributario</a>'+
   '        <a href="uvt.html">🔢 Conversor UVT</a>'+
+  '        <a href="estatutos.html">🏛️ Estatutos Municipales</a>'+
   '      </div>'+
   '    </div>'+
        /* IA dropdown */
@@ -245,6 +246,7 @@
   '          <a href="consultanit.html"><div class="dd-icon" style="background:#F5F3FF">🔍</div> Consulta NIT</a>'+
   '          <a href="vencimientos.html"><div class="dd-icon" style="background:#FFF1F2">📅</div> Calendario Tributario</a>'+
   '          <a href="uvt.html"><div class="dd-icon" style="background:#ECFEFF">🔢</div> Conversor UVT</a>'+
+  '          <a href="estatutos.html"><div class="dd-icon" style="background:#D6E4F0">🏛️</div> Estatutos Municipales</a>'+
   '        </div>'+
            /* ── Col 5: IA Contable ── */
   '        <div class="mega-col">'+
