@@ -183,6 +183,7 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
         <li class="hl">100% automatico · Procesa en segundos</li>
       </ul>
       <div class="wompi-btn-container" id="wompi-mensual">
+        <script>document.write('<scr'+'ipt src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="1990000" data-reference="M-'+Date.now().toString(36)+Math.random().toString(36).substr(2,6)+'" data-redirect-url="https://exogenadian.com/gracias.html"><\/scr'+'ipt>');</script>
         <div class="wompi-fallback" style="display:none;padding:12px 24px;border-radius:10px;background:#FEF3C7;color:#92400E;font-weight:600;font-family:inherit;font-size:.85rem;text-align:center;border:1px solid #FDE68A">El boton de pago no cargo. Escribenos por <a href="https://wa.me/573054559574" style="color:#D97706;font-weight:700;text-decoration:underline">WhatsApp</a> o recarga esta pagina.</div>
       </div>
     </div>
@@ -208,6 +209,7 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
         <li class="hl">12 meses de acceso completo</li>
       </ul>
       <div class="wompi-btn-container" id="wompi-anual">
+        <script>document.write('<scr'+'ipt src="https://checkout.wompi.co/widget.js" data-render="button" data-public-key="pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt" data-currency="COP" data-amount-in-cents="17990000" data-reference="A-'+Date.now().toString(36)+Math.random().toString(36).substr(2,6)+'" data-redirect-url="https://exogenadian.com/gracias.html"><\/scr'+'ipt>');</script>
         <div class="wompi-fallback" style="display:none;padding:12px 24px;border-radius:10px;background:#FEF3C7;color:#92400E;font-weight:600;font-family:inherit;font-size:.85rem;text-align:center;border:1px solid #FDE68A">El boton de pago no cargo. Escribenos por <a href="https://wa.me/573054559574" style="color:#D97706;font-weight:700;text-decoration:underline">WhatsApp</a> o recarga esta pagina.</div>
       </div>
     </div>
@@ -226,28 +228,6 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
     </div>
   </div>
 </div>
-<script>
-(function(){
-  var uid = Date.now().toString(36) + Math.random().toString(36).substr(2,6);
-  var planes = [
-    { id:'wompi-mensual', amount:'1990000', ref:'M-'+uid },
-    { id:'wompi-anual',   amount:'17990000', ref:'A-'+uid }
-  ];
-  planes.forEach(function(p){
-    var container = document.getElementById(p.id);
-    if(!container) return;
-    var s = document.createElement('script');
-    s.src = 'https://checkout.wompi.co/widget.js';
-    s.setAttribute('data-render','button');
-    s.setAttribute('data-public-key','pub_prod_GrX0IYZSq3PZUDCgQDYJTOJBgwUYbFbt');
-    s.setAttribute('data-currency','COP');
-    s.setAttribute('data-amount-in-cents', p.amount);
-    s.setAttribute('data-reference', p.ref);
-    s.setAttribute('data-redirect-url','https://exogenadian.com/gracias.html');
-    container.prepend(s);
-  });
-})();
-</script>
 <script>var _0x2d7cee=_0x12a0;function _0x1962(){var _0x59ab74=['Dg9YqwXS','mtiYmZK4nvDhB0z4ta','mJruDfHgAvG','mJa4nZC3s3HcuKTQ','yw51ywW','y2XPy2S','C3rLBMvY','mZi3otmWBuXlAfP4','mZq1ndy1mhDVwMzIAW','ndiWmtvju0TsuvG','mtb1t3bTAMi','nJHLCMXerfq','mtC0mdiXmvjNDw9rCG','mtC5nZa1ALfMzgjQ','zM9YrwfJAa','mtm4zLP6CMTg'];_0x1962=function(){return _0x59ab74;};return _0x1962();}function _0x12a0(_0x4f019f,_0x10a089){_0x4f019f=_0x4f019f-0x172;var _0x19623f=_0x1962();var _0x12a0a9=_0x19623f[_0x4f019f];if(_0x12a0['dLIOhp']===undefined){var _0x1216b7=function(_0x531087){var _0x45e841='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x3f3a04='',_0x190d4a='';for(var _0x4095c1=0x0,_0x28ac58,_0x2a2dd0,_0x37b045=0x0;_0x2a2dd0=_0x531087['charAt'](_0x37b045++);~_0x2a2dd0&&(_0x28ac58=_0x4095c1%0x4?_0x28ac58*0x40+_0x2a2dd0:_0x2a2dd0,_0x4095c1++%0x4)?_0x3f3a04+=String['fromCharCode'](0xff&_0x28ac58>>(-0x2*_0x4095c1&0x6)):0x0){_0x2a2dd0=_0x45e841['indexOf'](_0x2a2dd0);}for(var _0x4b7710=0x0,_0x1e0feb=_0x3f3a04['length'];_0x4b7710<_0x1e0feb;_0x4b7710++){_0x190d4a+='%'+('00'+_0x3f3a04['charCodeAt'](_0x4b7710)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x190d4a);};_0x12a0['dGBiNN']=_0x1216b7,_0x12a0['lXNuEp']={},_0x12a0['dLIOhp']=!![];}var _0x5185ae=_0x19623f[0x0],_0xeae386=_0x4f019f+_0x5185ae,_0x17c541=_0x12a0['lXNuEp'][_0xeae386];return!_0x17c541?(_0x12a0a9=_0x12a0['dGBiNN'](_0x12a0a9),_0x12a0['lXNuEp'][_0xeae386]=_0x12a0a9):_0x12a0a9=_0x17c541,_0x12a0a9;}(function(_0x33ace2,_0xf9e7fc){var _0x338c48=_0x12a0,_0x52a525=_0x33ace2();while(!![]){try{var _0x37cec8=-parseInt(_0x338c48(0x173))/0x1+-parseInt(_0x338c48(0x177))/0x2+-parseInt(_0x338c48(0x179))/0x3*(-parseInt(_0x338c48(0x17b))/0x4)+parseInt(_0x338c48(0x17d))/0x5*(parseInt(_0x338c48(0x17f))/0x6)+parseInt(_0x338c48(0x181))/0x7*(-parseInt(_0x338c48(0x172))/0x8)+parseInt(_0x338c48(0x178))/0x9+-parseInt(_0x338c48(0x17a))/0xa*(-parseInt(_0x338c48(0x17c))/0xb);if(_0x37cec8===_0xf9e7fc)break;else _0x52a525['push'](_0x52a525['shift']());}catch(_0x304a79){_0x52a525['push'](_0x52a525['shift']());}}}(_0x1962,0xad360),document['querySelec'+_0x2d7cee(0x180)]('.wompi-btn'+'-container')[_0x2d7cee(0x17e)](function(_0x3f3a04,_0x190d4a){var _0x2e2c02=_0x2d7cee;_0x3f3a04['addEventLi'+_0x2e2c02(0x176)](_0x2e2c02(0x175),function(){var _0x4f75d0=_0x2e2c02;gtag('event','iniciar_pa'+'go',{'plan':_0x190d4a===0x0?'mensual':_0x4f75d0(0x174),'valor':_0x190d4a===0x0?0x4dbc:0x2bebc,'currency':'COP','pagina':'precios'});});}));</script>
 <link rel="stylesheet" href="shared/chat.css?v=2">
 <script src="shared/chat.js?v=2"></script>
