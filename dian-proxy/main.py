@@ -30,7 +30,7 @@ load_dotenv()
 
 # ─── Config ───
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://exogenadian.com").split(",")
-CACHE_TTL_DAYS = int(os.getenv("CACHE_TTL_DAYS", "7"))
+CACHE_TTL_DAYS = int(os.getenv("CACHE_TTL_DAYS", "30"))
 PORT = int(os.getenv("PORT", "8080"))
 STATS_API_KEY = os.getenv("STATS_API_KEY", "")
 FREE_DIAN_QUERIES_PER_DAY = 10
@@ -156,11 +156,16 @@ def _get_client_ip(request: Request) -> str:
 
 def _build_response(raw: dict) -> dict:
     nit = str(raw.get("nit", ""))
+    estado = raw.get("estado_rut", "")
+    # Si el estado viene de una fuente no oficial (fallback), no mostrarlo
+    # para evitar mostrar "CANCELADO" erróneamente
+    if raw.get("_estado_no_oficial"):
+        estado = ""
     return {
         "nit": nit,
         "dv": raw.get("dv") or _calc_dv(nit),
         "razon_social": raw.get("razon_social", ""),
-        "estado_rut": raw.get("estado_rut", ""),
+        "estado_rut": estado,
         "tipo_persona": raw.get("tipo_persona", ""),
         "responsabilidades": raw.get("responsabilidades", []),
         "direccion": raw.get("direccion", raw.get("dir", "")),

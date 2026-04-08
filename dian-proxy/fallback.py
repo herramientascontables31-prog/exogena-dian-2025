@@ -1,8 +1,8 @@
 """
 Fuentes de fallback para cuando DIAN MUISCA no responde.
-Consulta en cascada: RUES → datos.gov.co (Pymes) → web search.
-Adaptado de 1_Generar_Formatos.py:buscar_info_terceros()
+Consulta en cascada: RegistroNIT → datos.gov.co → Einforma → DuckDuckGo.
 """
+import asyncio
 import logging
 import re
 import httpx
@@ -26,54 +26,79 @@ def _calc_dv(nit: str) -> int:
     return 11 - mod if mod >= 2 else mod
 
 
-async def buscar_rues(nit: str) -> dict | None:
-    """Consultar RUES (Registro Único Empresarial y Social)."""
+async def buscar_registronit(nit: str) -> dict | None:
+    """Consultar registronit.com — directorio público de NITs colombianos."""
     try:
-        async with httpx.AsyncClient(timeout=12) as client:
+        async with httpx.AsyncClient(timeout=12, follow_redirects=True) as client:
             resp = await client.get(
-                "https://www.rues.org.co/RM/ConsultaNit_Api",
-                params={"nit": str(nit), "tipo": "N"},
-                headers={
-                    **HEADERS,
-                    "Referer": "https://www.rues.org.co/",
-                    "X-Requested-With": "XMLHttpRequest",
-                    "Accept": "application/json",
-                },
+                f"https://www.registronit.com/{nit}",
+                headers=HEADERS,
             )
             if resp.status_code != 200:
                 return None
 
-            data = resp.json()
-            registros = data if isinstance(data, list) else \
-                data.get("registros", data.get("data", [])) if isinstance(data, dict) else []
+            texto = resp.text
+            info = {"nit": nit, "fuente": "RegistroNIT"}
 
-            if not registros:
-                return None
+            # Razón social desde <h1>
+            h1 = re.findall(r'<h1[^>]*>([^<]+)</h1>', texto, re.IGNORECASE)
+            if h1:
+                rs = h1[0].strip()
+                if len(rs) > 3 and "no encontrado" not in rs.lower():
+                    info["razon_social"] = rs.upper()
 
-            reg = registros[0] if isinstance(registros, list) else registros
-            return _extraer_info_dict(reg, "RUES")
+            # Dirección comercial
+            dir_match = re.search(
+                r'[Dd]irecci[oó]n\s+comercial\s+es\s+([^.]{5,100})',
+                texto,
+            )
+            if dir_match:
+                info["direccion"] = dir_match.group(1).strip().rstrip(".")
+
+            # Estado — NO confiable desde fuentes externas, solo informativo
+            # Solo DIAN MUISCA es fuente oficial del estado del RUT
+            estado_match = re.search(r'en\s+estado\s+(ACTIVA|CANCELADA|INACTIVA)', texto, re.IGNORECASE)
+            if estado_match:
+                raw_estado = estado_match.group(1).upper()
+                # Normalizar terminación femenina → masculina (DIAN usa masculino)
+                estado_map = {"ACTIVA": "ACTIVO", "CANCELADA": "CANCELADO", "INACTIVA": "INACTIVO"}
+                info["estado_rut"] = estado_map.get(raw_estado, raw_estado)
+                info["_estado_no_oficial"] = True  # Marcar como no verificado en DIAN
+
+            if info.get("razon_social"):
+                info["dv"] = _calc_dv(nit)
+                return info
     except Exception as e:
-        logger.debug("RUES lookup failed for %s: %s", nit, e)
-        return None
+        logger.debug("registronit.com lookup failed for %s: %s", nit, e)
+    return None
 
 
 async def buscar_datos_gov(nit: str) -> dict | None:
-    """Consultar datos.gov.co — dataset Pymes de Colombia."""
+    """Consultar datos.gov.co — múltiples datasets de empresas colombianas."""
+    clean_nit = re.sub(r'[^0-9]', '', nit)
+    datasets = [
+        # Base de datos de NITs empresas con actividad comercial (Confecámaras)
+        ("rtt5-cgkk", f"nit='{clean_nit}'"),
+        # Base de datos NIT y Actividad Económica
+        ("cas9-r54x", f"nit='{clean_nit}'"),
+        # Dataset Pymes (original)
+        ("gskn-y6cz", f"nit='{clean_nit}' OR identificacion='{clean_nit}'"),
+    ]
     try:
         async with httpx.AsyncClient(timeout=15) as client:
-            # Dataset Pymes
-            resp = await client.get(
-                "https://www.datos.gov.co/resource/gskn-y6cz.json",
-                params={
-                    "$where": f"nit='{re.sub(r'[^0-9]', '', nit)}' OR identificacion='{re.sub(r'[^0-9]', '', nit)}'",
-                    "$limit": 5,
-                },
-                headers=HEADERS,
-            )
-            if resp.status_code == 200:
-                data = resp.json()
-                if data and isinstance(data, list) and len(data) > 0:
-                    return _extraer_info_dict(data[0], "datos.gov.co")
+            for dataset_id, where_clause in datasets:
+                try:
+                    resp = await client.get(
+                        f"https://www.datos.gov.co/resource/{dataset_id}.json",
+                        params={"$where": where_clause, "$limit": 5},
+                        headers=HEADERS,
+                    )
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        if data and isinstance(data, list) and len(data) > 0:
+                            return _extraer_info_dict(data[0], "datos.gov.co")
+                except Exception:
+                    continue
     except Exception as e:
         logger.debug("datos.gov.co lookup failed for %s: %s", nit, e)
     return None
@@ -139,8 +164,9 @@ async def buscar_web(nit: str) -> dict | None:
             texto = re.sub(r"\s+", " ", texto)
 
             patrones = [
-                r'(?:NIT|Nit|nit)[\s.:]*' + re.escape(str(nit)) + r'[\s\-–—:,.]+([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s&.,]+)',
-                r'([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s&.,]{5,50}?)[\s\-–—:,.]+(?:NIT|Nit|nit)[\s.:]*' + re.escape(str(nit)),
+                r'(?:NIT|Nit|nit)[\s.:]*' + re.escape(str(nit)) + r'[\s\-–—:,.]+([A-Za-záéíóúñÁÉÍÓÚÑ][A-Za-záéíóúñÁÉÍÓÚÑ\s&.,]+)',
+                r'([A-Za-záéíóúñÁÉÍÓÚÑ][A-Za-záéíóúñÁÉÍÓÚÑ\s&.,]{5,50}?)[\s\-–—:,.]+(?:NIT|Nit|nit)[\s.:]*' + re.escape(str(nit)),
+                r'([A-Za-záéíóúñÁÉÍÓÚÑ][A-Za-záéíóúñÁÉÍÓÚÑ\s&.,]{3,60}?)\s*-\s*' + re.escape(str(nit)),
             ]
             # Palabras que indican basura en la razón social
             RUIDO = {
@@ -158,12 +184,15 @@ async def buscar_web(nit: str) -> dict | None:
                     palabras = rs.lower().split()
                     ruido_count = sum(1 for p in palabras if p in RUIDO)
                     if 3 < len(rs) < 80 and ruido_count < 2 and len(palabras) <= 10:
-                        return {
-                            "nit": nit,
-                            "razon_social": rs.upper(),
-                            "dv": _calc_dv(nit),
-                            "fuente": "Búsqueda web",
-                        }
+                        # Limpiar sufijos de sitios web
+                        rs = re.sub(r'\s*[-–]\s*(edirectorio|registronit|einforma|empresite).*$', '', rs, flags=re.IGNORECASE)
+                        if len(rs.strip()) > 3:
+                            return {
+                                "nit": nit,
+                                "razon_social": rs.strip().upper(),
+                                "dv": _calc_dv(nit),
+                                "fuente": "Búsqueda web",
+                            }
     except Exception as e:
         logger.debug("Web search failed for %s: %s", nit, e)
     return None
@@ -176,11 +205,18 @@ def _extraer_info_dict(emp: dict, fuente: str) -> dict | None:
 
     info = {"fuente": fuente}
 
+    # NIT
+    for campo in ["nit", "Nit", "NIT", "numero_identificacion", "NumeroIdentificacion"]:
+        val = emp.get(campo, "")
+        if val:
+            info["nit"] = str(val).strip()
+            break
+
     # Razón social
     for campo in [
-        "razon_social", "Razon_Social", "nombre", "Nombre", "razonSocial",
-        "RazonSocial", "nombre_razon_social", "NombreEstablecimiento",
-        "organizacion", "nombre_empresa", "empresa",
+        "razon_social", "Razon_Social", "RazonSocial", "razonSocial",
+        "nombre", "Nombre", "nombre_razon_social", "NombreEstablecimiento",
+        "organizacion", "nombre_empresa", "empresa", "nombre_propio",
     ]:
         val = emp.get(campo, "")
         if val:
@@ -208,7 +244,7 @@ def _extraer_info_dict(emp: dict, fuente: str) -> dict | None:
             info["departamento"] = str(val).strip()
             break
 
-    for campo in ["municipio", "codigo_municipio", "ciudad"]:
+    for campo in ["municipio", "codigo_municipio", "ciudad", "mun_comercial", "MunicipioComercial"]:
         val = emp.get(campo, "")
         if val:
             info["municipio"] = str(val).strip()
@@ -221,34 +257,28 @@ def _extraer_info_dict(emp: dict, fuente: str) -> dict | None:
 
 async def consultar_fallback(nit: str) -> dict:
     """
-    Consultar todas las fuentes de fallback en cascada.
-    Retorna el primer resultado exitoso.
+    Consultar todas las fuentes de fallback en PARALELO.
+    Retorna el mejor resultado (prioridad: RegistroNIT > datos.gov > Einforma > web).
     """
     nit = str(nit).strip()
 
-    # 1. RUES
-    result = await buscar_rues(nit)
-    if result:
-        result["nit"] = nit
-        result.setdefault("dv", _calc_dv(nit))
-        return result
+    # Lanzar todas las fuentes en paralelo
+    results = await asyncio.gather(
+        buscar_registronit(nit),
+        buscar_datos_gov(nit),
+        buscar_einforma(nit),
+        buscar_web(nit),
+        return_exceptions=True,
+    )
 
-    # 2. datos.gov.co
-    result = await buscar_datos_gov(nit)
-    if result:
-        result["nit"] = nit
-        result.setdefault("dv", _calc_dv(nit))
-        return result
-
-    # 3. Einforma
-    result = await buscar_einforma(nit)
-    if result:
-        return result
-
-    # 4. Búsqueda web
-    result = await buscar_web(nit)
-    if result:
-        return result
+    # Retornar el primer resultado exitoso por orden de prioridad
+    for result in results:
+        if isinstance(result, Exception) or result is None:
+            continue
+        if result.get("razon_social"):
+            result["nit"] = nit
+            result.setdefault("dv", _calc_dv(nit))
+            return result
 
     # Nada encontrado
     return {

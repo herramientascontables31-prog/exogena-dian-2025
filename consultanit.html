@@ -381,9 +381,49 @@ function lookupNIT(nit) {
   };
 }
 
+// ─── Result cache (localStorage, 30 days TTL) ───
+const RESULT_CACHE_KEY = 'nit_results';
+const RESULT_CACHE_TTL = 30 * 24 * 3600 * 1000; // 30 días en ms
+
+function getCachedResult(nit) {
+  try {
+    const cache = JSON.parse(localStorage.getItem(RESULT_CACHE_KEY) || '{}');
+    const entry = cache[nit];
+    if (!entry) return null;
+    if (Date.now() - entry._ts > RESULT_CACHE_TTL) {
+      delete cache[nit];
+      localStorage.setItem(RESULT_CACHE_KEY, JSON.stringify(cache));
+      return null;
+    }
+    return entry.data;
+  } catch { return null; }
+}
+
+function setCachedResult(nit, data) {
+  try {
+    const cache = JSON.parse(localStorage.getItem(RESULT_CACHE_KEY) || '{}');
+    cache[nit] = { data, _ts: Date.now() };
+    // Limitar a 500 entradas para no llenar localStorage
+    const keys = Object.keys(cache);
+    if (keys.length > 500) {
+      keys.sort((a, b) => (cache[a]._ts || 0) - (cache[b]._ts || 0));
+      for (let i = 0; i < keys.length - 500; i++) delete cache[keys[i]];
+    }
+    localStorage.setItem(RESULT_CACHE_KEY, JSON.stringify(cache));
+  } catch { /* localStorage lleno o no disponible */ }
+}
+
 // ─── Backend API ───
 async function consultarBackend(nit) {
   if (!BACKEND_AVAILABLE) return null;
+
+  // Revisar caché local primero
+  const cached = getCachedResult(nit);
+  if (cached) {
+    cached._from_cache = true;
+    return cached;
+  }
+
   try {
     const resp = await fetch(`${API_URL}/api/nit/${nit}`, { signal: AbortSignal.timeout(45000) });
     if (!resp.ok) return null;
@@ -394,6 +434,10 @@ async function consultarBackend(nit) {
       q.used = DAILY_LIMIT - data._free_remaining;
       localStorage.setItem('nit_quota', JSON.stringify(q));
       renderQuota();
+    }
+    // Cachear resultado exitoso
+    if (data && !data.error && data.razon_social) {
+      setCachedResult(nit, data);
     }
     return data;
   } catch (e) {
@@ -462,10 +506,11 @@ async function consultarSingle() {
     const el = document.getElementById('singleResult');
     el.innerHTML += '<div id="dianLoading" style="margin-top:12px;padding:10px 16px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;font-size:.82rem;color:#1E40AF;display:flex;align-items:center;gap:8px"><span class="spinner"></span> Consultando estado RUT en DIAN MUISCA...</div>';
 
-    consumeQuota();
     const online = await consultarBackend(input);
     const loading = document.getElementById('dianLoading');
     if (loading) loading.remove();
+    // Solo consumir cuota si realmente fue al backend (no caché local)
+    if (!online?._from_cache) consumeQuota();
 
     if (online && !online.error) {
       r = mergeResults(r, online);

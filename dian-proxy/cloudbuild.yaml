@@ -34,7 +34,7 @@ steps:
       - '--concurrency'
       - '10'
       - '--min-instances'
-      - '0'
+      - '1'
       - '--max-instances'
       - '2'
       - '--set-env-vars'
