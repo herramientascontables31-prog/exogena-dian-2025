@@ -889,6 +889,11 @@ PARAM_1001_RANGOS = [
     ("5055", "5115", "5115", True), ("5006", "5305", "5305", True),
     ("5101", "530540", "530540", True), ("5007", "1435", "1499", True),
     ("5010", "1504", "1699", True), ("5010", "1520", "1540", True),
+    # v11 AG2025: nuevos conceptos Res. 000233/2025
+    ("5089", "5305", "5399", True),   # Enajenación acciones/cuotas - pagos
+    ("5090", "5305", "5399", True),   # Enajenación acciones/cuotas - abonos
+    ("5091", "6135", "6199", True),   # Enajenación acciones/cuotas - costos
+    ("5102", "5105", "5199", True),   # Apoyos económicos no reembolsables
 ]
 
 PARAM_1003 = [
@@ -913,6 +918,9 @@ PARAM_1007 = [
     ("4001", "4101", "4199"),
     ("4001", "4135", "4135"),
     ("4002", "4201", "4299"),    # No operacionales (genérico → después)
+    # v9 AG2025: venta cuotas/partes interés social
+    ("4020", "4145", "4149"),    # Ingresos venta cuotas/acciones
+    ("4021", "4150", "4199"),    # Ingresos venta partes interés social
 ]
 
 # =====================================================================
@@ -994,6 +1002,13 @@ KEYWORDS_1001 = [
                      "casino", "restaurante", "representacion", "suscripcion", "afiliacion",
                      "publicidad", "propaganda", "seminario", "elemento de aseo", "diversos"]),
     ("5007", True, ["inventario", "compra de", "mercancia", "materia prima", "material", "insumo", "repuesto"]),
+    # v11 AG2025: nuevos conceptos Res. 000233/2025
+    ("5089", True, ["enajenacion acciones", "enajenacion cuotas", "venta acciones", "venta cuotas",
+                     "partes de interes social", "cesion cuotas"]),
+    ("5090", True, ["abono acciones", "abono cuotas", "abono partes interes"]),
+    ("5091", True, ["costo acciones", "costo cuotas", "costo enajenacion acciones"]),
+    ("5102", True, ["apoyo economico", "apoyo no reembolsable", "beca icetex", "icetex",
+                     "colfuturo", "minciencias", "beca educativa"]),
 ]
 
 KEYWORDS_1007 = [
@@ -1003,6 +1018,10 @@ KEYWORDS_1007 = [
     ("4001", ["venta", "comercio", "producto", "mercancia"]),
     ("4002", ["ingreso no operacional", "extraordinario", "recuperacion"]),
     ("4003", ["arrendamiento recibido", "arriendo recibido", "canon recibido"]),
+    # v9 AG2025: venta cuotas/partes interés social
+    ("4020", ["venta acciones", "venta cuotas", "enajenacion acciones", "enajenacion cuotas",
+              "cesion cuotas", "venta partes interes"]),
+    ("4021", ["venta participacion", "venta parte social", "cesion participacion"]),
 ]
 
 KEYWORDS_1003 = [
@@ -2030,7 +2049,7 @@ def procesar_balance(df_balance, df_directorio=None, col_map=None, cierra_impues
         "Esta herramienta es un ASISTENTE. Los resultados son un BORRADOR que requiere revisión profesional.",
         "Es responsabilidad del CONTADOR PÚBLICO y/o CONTRIBUYENTE verificar y validar toda la información.",
         "Ni el desarrollador ni la herramienta se hacen responsables por errores, omisiones o sanciones.",
-        "El uso implica la aceptación total de estos términos. Art. 631 ET — Resolución DIAN 000227 de 2025.",
+        "El uso implica la aceptación total de estos términos. Art. 631 ET — Res. DIAN 000227/2025 mod. Res. 000233 y 000237/2025.",
     ]
     for i, texto in enumerate(disclaimer_lines):
         bg = ROJO_CLARO if i % 2 == 0 else BLANCO
@@ -2629,7 +2648,7 @@ if uploaded_file:
     <div style="background: #fff3cd; border-radius: 10px; padding: 1rem; margin-top: 1rem; border-left: 4px solid #ffc107;">
         <strong>⚠️ Recuerde:</strong> Esta herramienta genera un <strong>borrador</strong>.
         El Contador Público debe verificar y validar toda la información antes de presentarla a la DIAN.
-        <br><em>Art. 631 ET — Resolución DIAN 000227 de 2025 — Sanción Art. 651 ET.</em>
+        <br><em>Art. 631 ET — Res. DIAN 000227/2025 mod. Res. 000233 y 000237/2025 — Sanción Art. 651 ET.</em>
     </div>
     """, unsafe_allow_html=True)
 

@@ -25,12 +25,13 @@ router = APIRouter(prefix="/api/chat", tags=["chat"])
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 CHAT_MODEL = os.getenv("CHAT_MODEL", "claude-sonnet-4-20250514")
-CHAT_MAX_TOKENS = int(os.getenv("CHAT_MAX_TOKENS", "800"))
+CHAT_MAX_TOKENS = int(os.getenv("CHAT_MAX_TOKENS", "2048"))
 CHAT_RATE_LIMIT = int(os.getenv("CHAT_RATE_LIMIT", "20"))  # msgs/hora
 WHATSAPP_URL = os.getenv("WHATSAPP_URL", "https://wa.me/573054559574")
 CHAT_MONTHLY_BUDGET = float(os.getenv("CHAT_MONTHLY_BUDGET", "5.0"))  # USD
 ALERT_EMAIL = os.getenv("ALERT_EMAIL", "soporte@exogenadian.com")
 ALERT_WEBHOOK_URL = os.getenv("ALERT_WEBHOOK_URL", "")  # Google Apps Script URL
+CHAT_LOG_WEBHOOK = os.getenv("CHAT_LOG_WEBHOOK", "https://script.google.com/macros/s/AKfycbyxVQmTgAoJGoWgmuDZHZQbT44nbn7i6fCg_faSAv4DZDfRhO-gNYzRlpCn7hOpoOAS/exec")
 
 # Precios Sonnet (USD por millón de tokens)
 PRICE_INPUT = 3.0
@@ -74,7 +75,7 @@ DEVOLUCIONES F1220: Persona natural comerciante SÍ requiere firma de contador e
 
 REGLAS:
 1. Español colombiano siempre.
-2. Concisa: 1-3 párrafos, listas si es complejo.
+2. Concisa pero COMPLETA: 2-4 párrafos, listas si es complejo. Nunca cortes la respuesta a mitad.
 3. Herramientas con link: **[Nombre]({BASE}/ruta)** — descripción.
 4. Cálculos: paso a paso con fórmulas y resultado.
 5. Si excede el chat → redirige a herramienta.
@@ -85,7 +86,7 @@ REGLAS:
 10. Máximo 1 emoji por mensaje.
 11. WHATSAPP SOLO COMO ÚLTIMO RECURSO: NO ofrezcas WhatsApp de manera proactiva ni al principio de la conversación. Solo menciona WhatsApp cuando: (a) ya intentaste resolver la duda al menos 2 veces y no pudiste, (b) el tema claramente requiere revisión humana de documentos específicos del cliente, (c) es una cotización de servicio personalizado, o (d) hay un error técnico del portal que no puedes resolver. Cuando lo hagas, di algo como: "Para este caso específico te recomiendo que nos escribas por **[WhatsApp]({WHATSAPP_URL})** para que el equipo te ayude directamente."
 12. Si el usuario se despide o dice gracias, responde brevemente y recuerda que puede volver cuando quiera.
-13. PRIMERA RESPUESTA CORTA: cuando el historial tiene un solo mensaje del usuario, responde en máximo 2-3 líneas. No des contexto extra ni hagas preámbulos. Ve directo al grano.
+13. Ve directo al grano sin preámbulos, pero da respuestas completas con la información que el usuario necesita.
 14. JURISPRUDENCIA: Cuando la pregunta involucre temas controvertidos, requerimientos DIAN, sanciones, o interpretación de normas, CITA las sentencias relevantes del Consejo de Estado Sección Cuarta que conoces. Formato: "Sentencia CE Exp. XXXXX de YYYY". Esto da respaldo jurídico sólido a tus respuestas.""",
         "cache_control": {"type": "ephemeral"},
     },
@@ -233,6 +234,24 @@ class CostTracker:
 
 
 cost_tracker = CostTracker()
+
+
+async def _log_chat(ip: str, question: str, is_pro: bool):
+    """Enviar pregunta del usuario a Google Sheet via Apps Script (fire & forget)."""
+    if not CHAT_LOG_WEBHOOK:
+        return
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            await client.post(CHAT_LOG_WEBHOOK, json={
+                "type": "chat_log",
+                "question": question[:500],
+                "ip": ip[:20],
+                "pro": is_pro,
+                "page": "chatbot",
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            })
+    except Exception:
+        pass  # No bloquear el chat si falla el log
 
 
 async def _send_budget_alert():
@@ -399,6 +418,12 @@ async def chat(body: ChatRequest, request: Request):
         rate_limiter.consume(ip)
 
     messages = [{"role": m.role, "content": m.content} for m in body.messages[-10:]]
+
+    # Log última pregunta del usuario (fire & forget)
+    last_user_msg = next((m["content"] for m in reversed(messages) if m["role"] == "user"), "")
+    if last_user_msg:
+        import asyncio
+        asyncio.create_task(_log_chat(ip, last_user_msg, is_pro))
 
     # Track tokens across the stream
     usage_input = 0

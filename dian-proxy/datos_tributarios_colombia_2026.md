@@ -318,7 +318,7 @@ Indemnizaciones laborales (ingresos > 204 UVT): 20%.
 
 ### C. TOPES DE EXOGENA POR FORMATO (AG 2025, presentar en 2026)
 
-**Resolucion:** 000227 de 2025 (Resolucion Unica), modificada por Res. 000233 de 2025.
+**Resolucion:** 000227 de 2025 (Resolucion Unica), modificada por Res. 000233 de 2025 y corregida por Res. 000237 de 2025.
 
 Fuente: SiempreAlDia (https://siemprealdia.co/colombia/impuestos/informacion-exogena/), DIAN (https://www.dian.gov.co/impuestos/sociedades/ExogenaTributaria/Presentacion/Paginas/default.aspx)
 
@@ -353,6 +353,37 @@ Fuente: SiempreAlDia (https://siemprealdia.co/colombia/impuestos/informacion-exo
 **Cuantias menores:** Los valores por tercero que no superen 3 UVT se acumulan bajo NIT 222222222 "Cuantias menores" (tipo documento 43).
 
 **Total formatos:** 69 formatos para AG 2025 (se adicionaron 13 nuevos formatos via Resoluciones 000162/2023, 000188/2024, 000233/2025, incluyendo criptoactivos, economía digital, plataformas de pago).
+
+#### C.2b. Cambios de version en formatos existentes (AG 2025, Res. 000233/2025)
+
+| Formato | Version anterior | Version nueva | Cambios principales |
+|---|---|---|---|
+| 1001 | v10 | v11 | Conceptos 5089-5091 (enajenacion acciones/cuotas), 5101 (GMF directo banco), 5102 (apoyos Icetex/Colfuturo), 5103 (costos mandatarios) |
+| 1003 | v7 | v7 | Aclaracion: concepto 1309 base = valor IVA, no pago total |
+| 1005 | v8 | v9 | Supresion campo IVA mayor valor costo/gasto |
+| 1007 | v8 | v9 | Conceptos 4020-4021 (venta cuotas/partes interes social). PH excluida cuotas admin |
+| 1004 | v7 | v8 | Item 25 descuento donaciones bancos alimentos (concepto 8340, Ley 2380/2024) |
+| 1011 | v5 | v6 | Items 80-84 deducciones energia eficiente/hidrogeno verde (8426-8430). Items 13-14 PPE |
+| 2276 | v3 | v4 | Apoyos economicos no reembolsables por empleador |
+| 5247-5252 | v1 | v2 | Obligacion NIESPJ contratos colaboracion empresarial |
+
+#### C.2c. 13 Formatos nuevos AG 2025
+
+| Formato | Descripcion | Obligados |
+|---|---|---|
+| 2820 | Plataformas digitales - trabajadores | Empresas operadoras plataformas reparto |
+| 2821 | Plataformas digitales - empresas | Empresas operadoras plataformas reparto |
+| 2823 | Retenciones fuente practicadas | Agentes retencion especiales |
+| 2824 | Retenciones fuente asumidas | Agentes retencion especiales |
+| 2825 | Retenciones IVA practicadas | Responsables IVA |
+| 2826 | Retenciones IVA asumidas | Responsables IVA |
+| 2827 | IVA generado operaciones gravadas | Responsables IVA |
+| 2828 | IVA descontable operaciones gravadas | Responsables IVA |
+| 2829 | Ingresos recibidos para terceros | Intermediarios |
+| 2830 | IVA generado responsables | Responsables IVA |
+| 2833 | Enajenacion acciones/cuotas sociales | Socios enajenantes >= 5.000 UVT ($248.995.000) |
+| 2834-2835 | Excedentes entidades sin animo lucro | ESAL con ingresos > 20.000 UVT |
+| 2854 | Recaudo ingresos terceros exterior | Telecomunicaciones, pasarelas pago, agregadores |
 
 #### C.3. Plazos de presentacion exogena 2026
 

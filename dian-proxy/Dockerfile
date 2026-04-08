@@ -48,13 +48,9 @@ RUN playwright install chromium
 # Copiar código
 COPY . .
 
-# Crear usuario no-root para seguridad
-RUN useradd -m -s /bin/bash appuser && chown -R appuser:appuser /app
-USER appuser
-
 # Puerto
 ENV PORT=8080
 EXPOSE 8080
 
 # Ejecutar con uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "4"]

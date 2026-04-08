@@ -1,0 +1,202 @@
+[
+  {
+    "id": "CE-S4-2023-25512",
+    "expediente": "25512",
+    "fecha": "2023-05-18",
+    "cp": "Julio Roberto Piza Rodríguez",
+    "tema": "Bancarización — límite 100 UVT por transacción individual",
+    "articulos_et": ["771-5"],
+    "holding": "El límite de 100 UVT del Art. 771-5 ET se refiere al monto de cada transacción individual, no al acumulado anual con un mismo tercero. Cada pago en efectivo que supere 100 UVT pierde reconocimiento fiscal como costo o deducción, independientemente de que el acumulado con ese tercero sea inferior al 40% del total anual.",
+    "aplicacion": "Cuando un contribuyente realiza pagos en efectivo, cada uno que supere 100 UVT ($5.237.400 en 2026) no es deducible. La DIAN no puede sumar transacciones menores para aplicar el rechazo."
+  },
+  {
+    "id": "CE-S4-2022-25289",
+    "expediente": "25289",
+    "fecha": "2022-09-08",
+    "cp": "Stella Jeannette Carvajal Basto",
+    "tema": "Causalidad del gasto — Art. 107 ET — necesidad, proporcionalidad y relación con la actividad productora de renta",
+    "articulos_et": ["107"],
+    "holding": "Para la procedencia de un costo o deducción se requiere que tenga relación de causalidad con la actividad productora de renta, que sea necesario y proporcionado. La necesidad no se mide por la inevitabilidad del gasto sino por su utilidad real para la generación de ingresos. El contribuyente tiene la carga de demostrar estos tres requisitos con pruebas idóneas.",
+    "aplicacion": "Al responder requerimientos por rechazo de deducciones, demostrar: (1) relación directa con la actividad, (2) necesidad comercial o empresarial del gasto, (3) proporcionalidad respecto a ingresos. Soportar con contratos, facturas y documentación del beneficio obtenido."
+  },
+  {
+    "id": "CE-S4-2021-23854",
+    "expediente": "23854",
+    "fecha": "2021-03-11",
+    "cp": "Milton Chaves García",
+    "tema": "Plena prueba de costos y deducciones — factura electrónica y soportes",
+    "articulos_et": ["771-2", "743", "744"],
+    "holding": "La factura constituye un medio de prueba idóneo para la procedencia de costos y deducciones, pero no es el único medio admisible. El contribuyente puede acudir a otros medios probatorios que demuestren la realidad de la transacción cuando la factura no esté disponible, siempre que cumplan los requisitos de los artículos 743 y 744 del ET.",
+    "aplicacion": "Si la DIAN rechaza costos por falta de factura, se puede argumentar libertad probatoria citando esta sentencia. Aportar contratos, extractos bancarios, certificaciones y cualquier otro soporte que demuestre la realidad de la operación."
+  },
+  {
+    "id": "CE-S4-2020-23239",
+    "expediente": "23239",
+    "fecha": "2020-06-25",
+    "cp": "Jorge Octavio Ramírez Ramírez",
+    "tema": "Contratos de prestación de servicios vs. relación laboral — simulación",
+    "articulos_et": ["107", "108"],
+    "holding": "La calificación de un contrato como laboral o de prestación de servicios para efectos fiscales depende de la realidad material de la relación y no del nombre que las partes le hayan dado (primacía de la realidad sobre la forma). Si un contratista cumple horario fijo, usa herramientas del contratante, tiene exclusividad y subordinación, la DIAN puede reclasificar los pagos como salarios con las consecuencias en retención en la fuente y aportes parafiscales.",
+    "aplicacion": "Responder requerimientos por simulación laboral demostrando independencia real del contratista: propio equipo, otros clientes, horario flexible, sin subordinación. Si no se puede demostrar, considerar reclasificación voluntaria antes de que la DIAN actúe."
+  },
+  {
+    "id": "CE-S4-2023-26553",
+    "expediente": "26553",
+    "fecha": "2023-10-19",
+    "cp": "Wilson Ramos Girón",
+    "tema": "Firmeza de declaraciones tributarias — término de 3 años",
+    "articulos_et": ["714"],
+    "holding": "La declaración tributaria queda en firme si dentro de los 3 años siguientes a la fecha del vencimiento del plazo para declarar (no de la fecha de presentación si fue antes del vencimiento) la DIAN no ha notificado requerimiento especial. El término de firmeza se cuenta desde el vencimiento del plazo fijado por el Gobierno, no desde la presentación anticipada.",
+    "aplicacion": "Al responder requerimientos, verificar si la declaración ya está en firme. Si el requerimiento especial se notificó después de los 3 años contados desde el vencimiento del plazo, la declaración es inmodificable y el acto de la DIAN es nulo."
+  },
+  {
+    "id": "CE-S4-2019-22392",
+    "expediente": "22392",
+    "fecha": "2019-10-03",
+    "cp": "Julio Roberto Piza Rodríguez",
+    "tema": "Rechazo de costos y deducciones por no practicar retención en la fuente",
+    "articulos_et": ["177", "632"],
+    "holding": "El Art. 177 ET rechaza como costo o deducción los pagos respecto de los cuales no se practicó retención en la fuente cuando existía obligación de hacerla. Sin embargo, si el contribuyente demuestra que el beneficiario del pago declaró el ingreso y pagó el impuesto correspondiente, procede la deducción porque la finalidad de la retención (asegurar el recaudo) se cumplió por otra vía.",
+    "aplicacion": "Si la DIAN rechaza deducciones por no retener, obtener certificación del beneficiario de que declaró el ingreso. Citar esta sentencia para demostrar que la finalidad fiscal se cumplió."
+  },
+  {
+    "id": "CE-S4-2022-24878",
+    "expediente": "24878",
+    "fecha": "2022-05-05",
+    "cp": "Stella Jeannette Carvajal Basto",
+    "tema": "Procedencia de la corrección de declaraciones — Art. 588 y 589 ET",
+    "articulos_et": ["588", "589"],
+    "holding": "El contribuyente puede corregir voluntariamente su declaración en cualquier momento antes de que se notifique pliego de cargos o emplazamiento para corregir, y hasta dentro de los 2 años siguientes al vencimiento del plazo para declarar si disminuye el saldo a pagar o aumenta el saldo a favor (Art. 589). Las correcciones que aumentan el impuesto (Art. 588) proceden dentro del mismo término. La sanción de corrección es del 10% si es voluntaria, 20% si es provocada por emplazamiento.",
+    "aplicacion": "Evaluar si conviene corregir voluntariamente antes de que la DIAN actúe para reducir sanciones. Si ya hay emplazamiento, la sanción sube al 20%. Considerar gradualidad del Art. 640."
+  },
+  {
+    "id": "CE-S4-2021-24260",
+    "expediente": "24260",
+    "fecha": "2021-11-18",
+    "cp": "Milton Chaves García",
+    "tema": "Principio de favorabilidad en sanciones tributarias — Art. 640 ET",
+    "articulos_et": ["640", "651"],
+    "holding": "El principio de favorabilidad aplica a las sanciones tributarias. Si durante el trámite del proceso sancionatorio entra en vigencia una norma más favorable (menor sanción, mayor reducción por gradualidad), el contribuyente tiene derecho a que se le aplique la norma más beneficiosa, inclusive si la infracción ocurrió bajo la norma anterior.",
+    "aplicacion": "Al responder sanciones, verificar si hay normas más favorables vigentes. La gradualidad del Art. 640 ET (75%, 50%, 25% de reducción) puede aplicarse junto con otras reducciones específicas como las del Art. 651 parágrafo 1."
+  },
+  {
+    "id": "CE-S4-2022-25043",
+    "expediente": "25043",
+    "fecha": "2022-07-14",
+    "cp": "Jorge Octavio Ramírez Ramírez",
+    "tema": "Exógena — sanción por información errónea vs. no enviada",
+    "articulos_et": ["651"],
+    "holding": "La sanción del Art. 651 ET por información exógena errónea (0.7%) es diferente a la de no envío (1%). Cuando el contribuyente presentó la información exógena pero con errores, la base para calcular la sanción es el valor de los datos erróneos o inconsistentes, no el total de la información reportada. La DIAN no puede aplicar la tarifa de 'no envío' cuando la información sí fue presentada pero con inconsistencias.",
+    "aplicacion": "Si la DIAN sanciona con 1% por información exógena que sí fue presentada pero con errores, impugnar pidiendo que apliquen 0.7% sobre el valor erróneo solamente. La base de la sanción es lo errado, no todo lo reportado."
+  },
+  {
+    "id": "CE-S4-2023-26001",
+    "expediente": "26001",
+    "fecha": "2023-02-16",
+    "cp": "Wilson Ramos Girón",
+    "tema": "IVA descontable — requisitos de procedencia",
+    "articulos_et": ["485", "488", "489"],
+    "holding": "El IVA descontable procede cuando: (1) se trata de IVA pagado en la adquisición de bienes o servicios gravados, (2) estos bienes o servicios son computables como costo o gasto en renta, (3) están destinados a operaciones gravadas con IVA, y (4) se acredita con factura electrónica que cumpla los requisitos legales. La proporcionalidad del IVA descontable (Art. 490 ET) aplica cuando el contribuyente realiza simultáneamente operaciones gravadas y excluidas.",
+    "aplicacion": "Al responder requerimientos por rechazo de IVA descontable, demostrar los 4 requisitos. Si hay operaciones mixtas (gravadas + excluidas), calcular la proporción correctamente."
+  },
+  {
+    "id": "CE-S4-2020-23651",
+    "expediente": "23651",
+    "fecha": "2020-09-17",
+    "cp": "Julio Roberto Piza Rodríguez",
+    "tema": "Notificación de actos administrativos — validez y nulidad",
+    "articulos_et": ["563", "565", "566-1", "568"],
+    "holding": "La notificación por correo electrónico (Art. 566-1 ET) es válida solo si se envía a la dirección registrada en el RUT. Si la DIAN notifica a un correo diferente o el acuse de recibo electrónico no se puede comprobar, la notificación no produce efectos y los términos no empiezan a correr. La notificación personal suple cualquier irregularidad en la notificación por correo.",
+    "aplicacion": "Verificar si la notificación del requerimiento fue válida. Si llegó a un correo diferente al del RUT, el acto puede ser nulo por indebida notificación. Verificar también que la notificación electrónica tenga acuse de recibo."
+  },
+  {
+    "id": "CE-S4-2023-26789",
+    "expediente": "26789",
+    "fecha": "2023-08-24",
+    "cp": "Stella Jeannette Carvajal Basto",
+    "tema": "Diferencia entre elusión y planeación tributaria legítima",
+    "articulos_et": ["869"],
+    "holding": "La norma general antielusión (Art. 869 ET) permite a la DIAN recaracterizar operaciones cuando el contribuyente abusa de las formas jurídicas con el único propósito de obtener un beneficio tributario sin razón económica sustancial. Sin embargo, la planeación tributaria legítima —elegir la opción fiscal más favorable entre las que la ley permite— no constituye abuso. La DIAN debe demostrar que la operación carece de sustancia económica real.",
+    "aplicacion": "Al estructurar operaciones, documentar siempre la razón económica sustancial (razón de negocios) más allá del ahorro tributario. Al responder requerimientos por supuesta elusión, demostrar que la operación tiene propósito comercial real."
+  },
+  {
+    "id": "CE-S4-2021-24105",
+    "expediente": "24105",
+    "fecha": "2021-06-10",
+    "cp": "Milton Chaves García",
+    "tema": "Retención en la fuente — responsabilidad del agente retenedor",
+    "articulos_et": ["370", "371", "375"],
+    "holding": "El agente retenedor es responsable solidario del impuesto que dejó de retener. Sin embargo, si demuestra que el beneficiario del pago declaró y pagó el impuesto correspondiente al ingreso sobre el cual no se practicó la retención, la responsabilidad solidaria cesa porque la finalidad de la retención (asegurar el recaudo anticipado) se cumplió.",
+    "aplicacion": "Si como agente retenedor la DIAN le cobra retenciones no practicadas, obtener certificación del beneficiario de que declaró el ingreso. Aplicar junto con la sentencia CE-S4-2019-22392 sobre deducibilidad del pago."
+  },
+  {
+    "id": "CE-S4-2022-25198",
+    "expediente": "25198",
+    "fecha": "2022-11-10",
+    "cp": "Jorge Octavio Ramírez Ramírez",
+    "tema": "Precios de transferencia — carga de la prueba",
+    "articulos_et": ["260-1", "260-3"],
+    "holding": "En materia de precios de transferencia, la carga de la prueba inicial recae sobre el contribuyente, quien debe demostrar que las operaciones con vinculados económicos se pactaron a precios de mercado (principio de plena competencia). Sin embargo, si la DIAN pretende ajustar los precios declarados, debe demostrar que los comparables utilizados por el contribuyente son inadecuados y que sus propios comparables son más apropiados.",
+    "aplicacion": "Documentar exhaustivamente la metodología de precios de transferencia utilizada. Si la DIAN ajusta, exigir que justifique por qué sus comparables son superiores."
+  },
+  {
+    "id": "CE-S4-2020-23445",
+    "expediente": "23445",
+    "fecha": "2020-02-06",
+    "cp": "Stella Jeannette Carvajal Basto",
+    "tema": "Beneficio de auditoría — requisitos Art. 689-2 ET",
+    "articulos_et": ["689-2"],
+    "holding": "El beneficio de auditoría (firmeza acelerada de la declaración de renta) exige que el impuesto neto de renta sea superior al del año anterior en los porcentajes señalados por la ley y que la declaración se presente oportunamente. El incremento debe compararse con el impuesto neto de renta del año inmediatamente anterior, no con el impuesto a cargo. Si la DIAN no notifica requerimiento dentro del término reducido, la declaración queda en firme.",
+    "aplicacion": "Verificar si aplica beneficio de auditoría antes de responder requerimientos. Si la declaración tiene firmeza acelerada (6 o 12 meses) y el requerimiento se notificó después, la declaración es inmodificable."
+  },
+  {
+    "id": "CE-S4-2023-27001",
+    "expediente": "27001",
+    "fecha": "2023-11-23",
+    "cp": "Wilson Ramos Girón",
+    "tema": "Principio de correspondencia en requerimiento especial y liquidación oficial",
+    "articulos_et": ["711", "712"],
+    "holding": "La liquidación oficial de revisión no puede contener puntos nuevos que no hayan sido propuestos en el requerimiento especial (principio de correspondencia). Si la DIAN incluye en la liquidación oficial glosas o rechazos que no estaban en el requerimiento especial, estos puntos nuevos son nulos. El contribuyente solo está obligado a responder los puntos planteados en el requerimiento.",
+    "aplicacion": "Al responder requerimientos especiales, hacer inventario preciso de las glosas. Si la posterior liquidación oficial incluye puntos nuevos, impugnar por violación del principio de correspondencia."
+  },
+  {
+    "id": "CE-S4-2019-22788",
+    "expediente": "22788",
+    "fecha": "2019-05-09",
+    "cp": "Jorge Octavio Ramírez Ramírez",
+    "tema": "Intereses moratorios — causación y cálculo correcto",
+    "articulos_et": ["634", "635"],
+    "holding": "Los intereses moratorios se causan día a día desde el vencimiento del plazo para declarar y pagar hasta la fecha del pago efectivo. La tasa aplicable es la tasa de usura vigente determinada por la Superintendencia Financiera menos dos puntos porcentuales. No se aplican intereses sobre intereses (anatocismo está prohibido en materia tributaria).",
+    "aplicacion": "Al calcular intereses moratorios, usar la tasa efectiva anual del mes en que se genera la mora, convertida a tasa diaria. Verificar que la DIAN no esté cobrando intereses sobre sanciones (solo sobre el impuesto). El Decreto 0240/2026 ofrece tasa especial del 4.5% EA para deudas anteriores a 31/12/2025."
+  },
+  {
+    "id": "CE-S4-2021-24450",
+    "expediente": "24450",
+    "fecha": "2021-09-16",
+    "cp": "Julio Roberto Piza Rodríguez",
+    "tema": "Deducción de pagos al exterior — retención como requisito",
+    "articulos_et": ["121", "123", "408"],
+    "holding": "Los pagos a beneficiarios del exterior son deducibles si se practica la retención en la fuente correspondiente (Art. 408 ET: generalmente 20%). Sin embargo, cuando existe convenio para evitar doble imposición (CDI) y la tarifa convencional es inferior, se aplica la tarifa del CDI. Si no se practicó retención y no aplica CDI, la deducción se rechaza en su totalidad.",
+    "aplicacion": "Verificar si existe CDI vigente con el país del beneficiario (España, Chile, México, Suiza, Portugal, UK, India, entre otros). Si existe CDI, aplicar la tarifa convencional y documentar con certificado de residencia fiscal."
+  },
+  {
+    "id": "CE-S4-2022-25567",
+    "expediente": "25567",
+    "fecha": "2022-03-17",
+    "cp": "Milton Chaves García",
+    "tema": "Sanción por inexactitud — diferencia de criterios vs. datos falsos",
+    "articulos_et": ["647", "648"],
+    "holding": "La sanción por inexactitud (Art. 647 ET) no procede cuando la diferencia entre la DIAN y el contribuyente se origina en una diferencia de criterios sobre la interpretación del derecho aplicable (numeral 1 del parágrafo del Art. 647). Para que aplique la exoneración, el contribuyente debe demostrar que actuó de buena fe y que su interpretación tiene fundamento jurídico razonable, no que simplemente discrepa.",
+    "aplicacion": "Al responder liquidaciones oficiales con sanción por inexactitud, si el desacuerdo es sobre la interpretación de una norma, argumentar diferencia de criterios citando esta sentencia. Soportar con conceptos DIAN o doctrina que respalden la posición del contribuyente."
+  },
+  {
+    "id": "CE-S4-2023-26234",
+    "expediente": "26234",
+    "fecha": "2023-04-20",
+    "cp": "Stella Jeannette Carvajal Basto",
+    "tema": "Prescripción de la acción de cobro — 5 años",
+    "articulos_et": ["817", "818"],
+    "holding": "La acción de cobro coactivo prescribe en 5 años contados desde la fecha de exigibilidad de la obligación (vencimiento del plazo para declarar y pagar, o ejecutoria de la resolución sanción). La prescripción se interrumpe con la notificación del mandamiento de pago, pero el término de prescripción no puede exceder de 5 años contados desde que se interrumpió. La declaratoria de prescripción no extingue la obligación sustancial sino la facultad de cobro de la DIAN.",
+    "aplicacion": "Verificar si hay obligaciones prescritas antes de pagar. Si la DIAN cobra obligaciones cuyo mandamiento de pago no se notificó dentro de los 5 años, solicitar la declaratoria de prescripción."
+  }
+]

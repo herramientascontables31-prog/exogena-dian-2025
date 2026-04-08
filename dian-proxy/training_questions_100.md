@@ -123,19 +123,19 @@
 ## 4. EXÓGENA (Formatos, plazos, sanciones) — 10 preguntas
 
 **4.1** ¿Quiénes están obligados a presentar información exógena ante la DIAN?
-> Están obligados: agentes de retención, entidades financieras, bolsas de valores, comisionistas, personas jurídicas con ingresos superiores a 100.000.000 COP (o el tope que fije la resolución anual), entre otros. La Resolución de exógena del año respectivo (ej. Res. 000162 de 2023 para AG 2024) define los obligados.
+> Están obligados: agentes de retención, entidades financieras, bolsas de valores, comisionistas, personas jurídicas con ingresos superiores a 2.400 UVT ($119.518.000 en 2025), personas naturales con ingresos superiores a 11.800 UVT ($587.628.000 en 2025), entre otros. Para AG 2025, la resolución vigente es la Res. 000227 de 2025, modificada por Res. 000233 y 000237 de 2025. Nuevos obligados: socios que enajenen acciones no listadas ≥5.000 UVT y proveedores de activos digitales >1.400 UVT.
 
 **4.2** ¿Cuáles son los formatos principales de información exógena que debo presentar?
-> Los más comunes son: Formato 1001 (pagos y retenciones a terceros), 1003 (retenciones practicadas), 1005 (IVA descontable), 1006 (IVA generado), 1007 (ingresos recibidos de terceros), 1008 (saldos de cuentas por cobrar), 1009 (saldos de cuentas por pagar), 1010 (socios). Resolución de exógena del año aplicable.
+> Los más comunes son: Formato 1001 v11 (pagos y retenciones a terceros — nuevos conceptos 5089-5091 enajenación acciones, 5101 GMF, 5102 apoyos Icetex), 1003 v7 (retenciones practicadas), 1005 v9 (IVA descontable), 1006 (IVA generado), 1007 v9 (ingresos — nuevos conceptos 4020-4021 venta cuotas sociales), 1008 (cuentas por cobrar), 1009 (cuentas por pagar), 1010 (socios), 2276 v4 (rentas de trabajo). Para AG 2025 se adicionaron 13 formatos nuevos (F2820-2854). Res. 000227/2025 mod. Res. 000233 y 000237/2025.
 
 **4.3** ¿Cuál es la sanción por no presentar la información exógena?
-> La sanción es de hasta el 5% de las sumas sobre las cuales no se suministró información, o se suministró erróneamente, sin exceder 15.000 UVT. Si es extemporánea, la sanción es del 1% por cada mes o fracción de retardo. Art. 651 del E.T.
+> Según Art. 651 ET (actualizado por Ley 2277/2022): No presentar: 1% de las sumas no informadas. Información errónea: 0,7% de las sumas reportadas incorrectamente. Presentación extemporánea: 0,5% de las sumas reportadas tarde. Sanción máxima: 7.500 UVT ($392.805.000 en 2026). Sanción mínima: 10 UVT (Art. 639). Si se corrige antes del pliego de cargos, la sanción se reduce al 10% (Parágrafo 1, Art. 651).
 
 **4.4** ¿Puedo corregir la información exógena después de presentada?
 > Sí, se puede corregir en cualquier momento. Si la DIAN no ha enviado pliego de cargos, se puede corregir sin sanción. Si ya envió pliego de cargos, la corrección reduce la sanción al 10% o 20% del valor propuesto según la etapa. Art. 651 parágrafo del E.T.
 
 **4.5** ¿Desde qué monto debo reportar pagos a terceros en el formato 1001?
-> La cuantía mínima a reportar depende de la resolución de cada año. Generalmente, se reportan acumulados anuales iguales o superiores a $100.000 por beneficiario. Los pagos que tengan retención se reportan sin importar la cuantía.
+> Para AG 2025 (Res. 000227/2025), la cuantía mínima del F1001 es 3 UVT ($149.397 en 2025) acumulados por beneficiario durante el año. Los pagos con retención se reportan sin importar la cuantía. Montos inferiores a 3 UVT se acumulan bajo NIT 222222222 "Cuantías menores" (tipo documento 43).
 
 **4.6** ¿Las personas naturales están obligadas a presentar exógena?
 > Sí, si en el año gravable anterior obtuvieron ingresos brutos superiores al tope fijado por la resolución (actualmente $500.000.000 para personas naturales) y son agentes de retención. Verificar la resolución de exógena del año.

@@ -166,11 +166,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <script src="shared/pro.js"></script>
 <script src="shared/toast.js"></script>
 <script src="shared/nav.js"></script>
+<script src="shared/pro-banner.js"></script>
 <main id="main" role="main">
 <div class="container">
   <div class="header"><div>
     <h1><span>EXÓGENA</span> Generador Automático · 10 Formatos DIAN</h1>
-    <p>Generador automático de los 10 formatos · AG 2025 · Res. 000227</p>
+    <p>Generador automático de los 10 formatos · AG 2025 · Res. 000227 mod. 000233 y 000237</p>
   </div><div class="header-right">100% en navegador<br>Tus datos no salen de tu equipo</div></div>
 
   <!-- PRO bar -->
@@ -183,6 +184,55 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <input type="email" id="proKeyInput" placeholder="Email PRO" aria-label="Email para activar suscripcion PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:180px">
       <button onclick="activarPro()" class="btn btn-primary" style="padding:6px 16px;font-size:.82rem">Activar</button>
       <a href="precios.html" target="_blank" style="font-size:.78rem;color:var(--pri2);text-decoration:none" title="PRO: $19.900/mes — Exógena completa, notas EEFF, comparativos">Suscribirse → <span style="font-size:.7rem;color:var(--muted)">$19.900/mes</span></a>
+    </div>
+  </div>
+
+  <!-- ═══ NOVEDADES AG 2025 ═══ -->
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px;border-left:4px solid #f59e0b">
+    <div onclick="document.getElementById('novedadesBody').style.display=document.getElementById('novedadesBody').style.display==='none'?'block':'none';this.querySelector('.nov-arrow').textContent=document.getElementById('novedadesBody').style.display==='none'?'▸':'▾'" style="padding:16px 24px;cursor:pointer;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:1.1rem">⚠️</span>
+        <span style="font-weight:700;font-size:.92rem;color:#b45309">Novedades Exógena AG 2025 — Res. 000233 y 000237</span>
+        <span style="background:#f59e0b;color:#fff;padding:2px 10px;border-radius:12px;font-size:.68rem;font-weight:700">NUEVO</span>
+      </div>
+      <span class="nov-arrow" style="color:var(--muted);font-size:.9rem">▸</span>
+    </div>
+    <div id="novedadesBody" style="display:none;padding:0 24px 20px">
+      <div style="font-size:.82rem;line-height:1.7;color:var(--text)">
+        <p style="margin:12px 0 8px"><strong>Resoluciones modificatorias:</strong></p>
+        <ul style="margin:0;padding-left:20px">
+          <li><strong>Res. 000233/2025</strong> (oct 30): Ajustes economía digital, plataformas y criptoactivos</li>
+          <li><strong>Res. 000237/2025</strong> (dic 3): Correcciones formales a la Res. 000233</li>
+        </ul>
+        <p style="margin:12px 0 8px"><strong>F1001 actualizado a v11 — Nuevos conceptos:</strong></p>
+        <ul style="margin:0;padding-left:20px">
+          <li><strong>5089-5091:</strong> Enajenación de acciones, cuotas o partes de interés social (pagos, abonos, costos)</li>
+          <li><strong>5101:</strong> Gravamen a Movimientos Financieros (GMF) — ahora se reporta directamente al banco</li>
+          <li><strong>5102:</strong> Apoyos económicos no reembolsables (Icetex, Colfuturo, MinCiencias)</li>
+        </ul>
+        <p style="margin:12px 0 8px"><strong>F1007 actualizado a v9 — Nuevos conceptos:</strong></p>
+        <ul style="margin:0;padding-left:20px">
+          <li><strong>4020-4021:</strong> Ingresos por venta de cuotas o partes de interés social</li>
+        </ul>
+        <p style="margin:12px 0 8px"><strong>Otros formatos con cambios:</strong></p>
+        <ul style="margin:0;padding-left:20px">
+          <li><strong>F1005</strong> v8→v9: Supresión campo IVA mayor valor costo/gasto</li>
+          <li><strong>F1011</strong> v6: Ítems 80-84 deducciones energía eficiente e hidrógeno verde (conceptos 8426-8430)</li>
+          <li><strong>F1004</strong> v8: Ítem 25 descuento donaciones bancos de alimentos (concepto 8340, Ley 2380/2024)</li>
+          <li><strong>F2276</strong> v4: Apoyos económicos no reembolsables por empleador</li>
+          <li><strong>F5247-5252</strong> v2: Obligación NIESPJ en contratos colaboración empresarial</li>
+        </ul>
+        <p style="margin:12px 0 8px"><strong>13 formatos nuevos (no generados por esta herramienta aún):</strong></p>
+        <ul style="margin:0;padding-left:20px">
+          <li><strong>F2820-2821:</strong> Plataformas digitales de reparto</li>
+          <li><strong>F2823-2830:</strong> Retenciones y operaciones IVA detalladas</li>
+          <li><strong>F2833:</strong> Enajenación acciones por socios (≥5.000 UVT)</li>
+          <li><strong>F2834-2835:</strong> Excedentes entidades sin ánimo de lucro</li>
+          <li><strong>F2839-2840:</strong> Fondos auxilios/donaciones y certificaciones primer empleo</li>
+          <li><strong>F2854:</strong> Recaudo ingresos para terceros del exterior</li>
+        </ul>
+        <p style="margin:12px 0 4px;font-size:.75rem;color:var(--muted)">Fuente: <a href="https://www.dian.gov.co/normatividad/Normatividad/Resoluci%C3%B3n%20000213%20de%2023-05-2025.pdf" target="_blank" style="color:var(--pri2)">DIAN — Resolución 000227/2025 y sus modificaciones</a></p>
+      </div>
     </div>
   </div>
 
@@ -255,7 +305,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
           </table>
         </div>
       </div>
-      <div style="margin-top:10px;font-size:.72rem;color:var(--muted);text-align:right">Fuente: <a href="https://www.dian.gov.co/impuestos/sociedades/ExogenaTributaria/CalendarioExogena/Paginas/vigencia-2025.aspx" target="_blank" style="color:var(--pri2)">DIAN — Res. 000162/2023 mod. Res. 000188/2024</a></div>
+      <div style="margin-top:10px;font-size:.72rem;color:var(--muted);text-align:right">Fuente: <a href="https://www.dian.gov.co/impuestos/sociedades/ExogenaTributaria/CalendarioExogena/Paginas/vigencia-2025.aspx" target="_blank" style="color:var(--pri2)">DIAN — Res. 000227/2025 mod. Res. 000233 y 000237/2025</a></div>
     </div>
   </div>
 
@@ -387,6 +437,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div id="clasifStats" class="stats"></div>
       <div class="alert alert-success hidden" id="clasifOk"><span>✅</span><div id="clasifOkText"></div></div>
       <div class="alert alert-warn hidden" id="clasifWarn"><span>⚠️</span><div id="clasifWarnText"></div></div>
+      <!-- Sugerencias tributarias AG 2025 -->
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;margin-top:12px;font-size:.8rem;line-height:1.6;color:#1e40af">
+        <strong>Sugerencias tributarias AG 2025:</strong>
+        <ul style="margin:6px 0 0;padding-left:18px">
+          <li><strong>GMF (5101):</strong> Desde AG 2025 se reporta directamente al banco en F1001, no a la DIAN. Verifique que el NIT sea el de la entidad financiera.</li>
+          <li><strong>Acciones/cuotas (5089-5091):</strong> Si su empresa tuvo enajenación de acciones o cuotas sociales, revise que se clasifiquen en los nuevos conceptos.</li>
+          <li><strong>Apoyos educativos (5102):</strong> Pagos de Icetex, Colfuturo o MinCiencias van en concepto 5102 del F1001.</li>
+          <li><strong>F1007 — Ingresos:</strong> Ventas de cuotas/partes de interés social ahora van en conceptos 4020-4021, no en 4001.</li>
+          <li><strong>Propiedad horizontal:</strong> No reportar cuotas de administración ordinarias ni extraordinarias en F1007.</li>
+          <li><strong>F1003 — Retenciones:</strong> Concepto 1309: la base es el valor del IVA, no el pago total.</li>
+          <li><strong>Sanciones Art. 651:</strong> No presentar: 1% sumas · Errónea: 0,7% · Extemporánea: 0,5% · Máximo 7.500 UVT ($392.805.000).</li>
+        </ul>
+      </div>
     </div>
     <div class="card">
       <div class="card-title"><span>📊</span> Resumen por Formato</div>
@@ -454,7 +517,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
     <div class="card">
       <div style="padding:12px;background:var(--pri3);border-radius:8px;font-size:.8rem;color:var(--pri)">
-        <strong>Normatividad:</strong> Art. 631 E.T. · Res. 000227/2025 · UVT AG2025 $49.799 · 3 UVT $149.397<br>
+        <strong>Normatividad:</strong> Art. 631 E.T. · Res. 000227/2025 mod. Res. 000233 y 000237/2025 · UVT AG2025 $49.799 · 3 UVT $149.397<br>
         <strong>Nota:</strong> Este borrador es un punto de partida. El contador debe validar, ajustar y prevalidar en el MUISCA antes de enviar a la DIAN.
       </div>
     </div>
@@ -1140,6 +1203,8 @@ const PARAM_1001_RANGOS=[
   ['5016','5235','5249'],['5016','5295','5299'],
   ['5006','5305','5305'],['5101','530540','530540'],
   ['5007','1435','1499'],['5010','1504','1699'],['5010','1520','1540'],
+  /* v11 AG2025 — Res. 000233/2025 */
+  ['5089','5305','5399'],['5090','5305','5399'],['5091','6135','6199'],['5102','5105','5199'],
 ];
 const PARAM_1001_NOMINA_SUB={
   '5001':['06','07','08','09','10','15','27','30','33','36','39','42','45'],
@@ -1156,6 +1221,8 @@ const PARAM_1003=[
 ];
 const PARAM_1007=[
   ['4003','4210','4210'],['4001','4101','4199'],['4001','4135','4135'],['4002','4201','4299'],
+  /* v9 AG2025 — venta cuotas/partes interés social */
+  ['4020','4145','4149'],['4021','4150','4199'],
 ];
 const PARAM_1008=[
   ['1315','1305','1305'],['1316','1380','1399'],['1317','1330','1340'],['1317','1365','1365'],
@@ -1196,11 +1263,19 @@ const KW_1001=[
            'aseo','cafeteria','papeleria','utiles','fotocopia','parqueadero','publicidad',
            'propaganda','suscripcion','diversos']],
   ['5007',['inventario','compra de','mercancia','materia prima','material','insumo','repuesto']],
+  /* v11 AG2025 — Res. 000233/2025 */
+  ['5089',['enajenacion acciones','enajenacion cuotas','venta acciones','venta cuotas','partes de interes social','cesion cuotas']],
+  ['5090',['abono acciones','abono cuotas','abono partes interes']],
+  ['5091',['costo acciones','costo cuotas','costo enajenacion acciones']],
+  ['5102',['apoyo economico','apoyo no reembolsable','beca icetex','icetex','colfuturo','minciencias','beca educativa']],
 ];
 const KW_1007=[
   ['4001',['ingreso operacional','consultoria','asesoria','outsourcing','servicio','venta','comercio','producto']],
   ['4002',['ingreso no operacional','extraordinario','recuperacion']],
   ['4003',['arrendamiento recibido','arriendo recibido','rendimiento financiero']],
+  /* v9 AG2025 — venta cuotas/partes interés social */
+  ['4020',['venta acciones','venta cuotas','enajenacion acciones','enajenacion cuotas','cesion cuotas','venta partes interes']],
+  ['4021',['venta participacion','venta parte social','cesion participacion']],
 ];
 const KW_1003=[
   ['1301',['retencion honorario','retfte honorario']],

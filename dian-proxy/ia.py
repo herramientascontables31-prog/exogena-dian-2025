@@ -37,7 +37,7 @@ DEEPSEEK_MODEL = "deepseek/deepseek-chat-v3.1"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 MAX_TOKENS_ANALYSIS = 4096
-MAX_TOKENS_CHAT = 1500
+MAX_TOKENS_CHAT = 4096
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -155,7 +155,21 @@ Equipo cómputo: 5 años (20%) | Vehículos: 10 años (10%) | Equipo médico: 8 
 ══ RESOLUCIONES DIAN CLAVE ══
 Res. 000227/2025 (sep): Resolución Única Tributaria (compila TODA normativa anterior)
 Res. 000233/2025 (oct): Modifica exógena — economía digital, criptoactivos, plataformas
+Res. 000237/2025 (dic 3): Correcciones formales a Res. 000233
 Res. 000238/2025 (dic): UVT 2026 = $52.374
+
+══ NOVEDADES EXÓGENA AG 2025 (Res. 000233 y 000237/2025) ══
+F1001 v10→v11: Conceptos nuevos 5089-5091 (enajenación acciones/cuotas), 5101 (GMF directo banco), 5102 (apoyos Icetex/Colfuturo), 5103 (costos mandatarios/consorcios)
+F1007 v8→v9: Conceptos 4020-4021 (venta cuotas/partes interés social). Propiedad horizontal NO reporta cuotas administración
+F1005 v8→v9: Supresión campo IVA mayor valor costo/gasto
+F1003 v7: Concepto 1309 — base = valor IVA, NO pago total
+F1011 v6: Ítems 80-84 deducciones energía eficiente/hidrógeno verde (8426-8430). Ítems 13-14 propiedad planta equipo (1527-1528)
+F1004 v8: Ítem 25 descuento donaciones bancos alimentos (8340, Ley 2380/2024)
+F2276 v4: Apoyos económicos no reembolsables por empleador
+F5247-5252 v1→v2: NIESPJ contratos colaboración empresarial
+13 FORMATOS NUEVOS AG2025: F2820-2821 (plataformas digitales), F2823-2830 (retenciones/IVA), F2833 (enajenación acciones ≥5.000 UVT), F2834-2835 (sin ánimo lucro), F2839-2840 (auxilios/primer empleo), F2854 (recaudo exterior)
+Nuevos obligados: Socios enajenantes acciones no listadas ≥5.000 UVT. Proveedores activos digitales >1.400 UVT (obligatorio AG2026)
+Sanciones Art. 651 ET: No presentar 1% | Errónea 0,7% | Extemporánea 0,5% | Máximo 7.500 UVT ($392.805.000 en 2026) | Mínima 10 UVT
 Res. 000165/2023 (nov): Facturación electrónica y documento soporte
 Res. 000124/2021 (oct): Nómina electrónica
 Decreto 0572/2025 (may): Retención servicios base bajó a 2 UVT
@@ -172,7 +186,7 @@ ICA deducción 100% en renta desde AG 2023 (ya NO descuento — Ley 2277 Art. 19
 
 ══ NORMATIVA VIGENTE ══
 ET actualizado 2026 | Ley 2277/2022 (reforma) | DUR 1625/2016
-Res. 000227/2025 (exógena) | Decreto 1474/2025 (beneficios pago) | Decreto 0240/2026 (intereses)
+Res. 000227/2025 (exógena) mod. Res. 000233/2025 y Res. 000237/2025 | Decreto 1474/2025 (beneficios pago) | Decreto 0240/2026 (intereses)
 """
 
 SYSTEM_ANALISIS_BALANCE = """Eres un funcionario experto de la División de Fiscalización de la DIAN con 20 años de experiencia auditando contribuyentes colombianos. Actúas como Auditor Tributario para ExógenaDIAN. Tu rol es revisar el balance del contribuyente con la misma mirada crítica que usaría la DIAN en una auditoría real, pero con el objetivo de AYUDAR al contador a corregir antes de que la DIAN lo detecte.
@@ -400,10 +414,10 @@ Fuentes: Art. 19 C.Co. / Art. 773 ET / Art. 596 ET / DUR 1625 Art. 1.6.1.21.13 y
 7. Después de las fuentes: "⚠️ Este concepto es orientativo y no reemplaza la asesoría de un contador público o abogado tributarista."
 8. Español colombiano, claro, sin tecnicismos innecesarios.
 9. Si no estás seguro, dilo. NUNCA inventes un artículo o un número de decreto.
-10. Conciso: 2-4 párrafos, listas si es complejo.
+10. Conciso pero COMPLETO: 2-5 párrafos, listas si es complejo. Da respuestas completas, nunca cortes a mitad.
 11. Sanciones: SIEMPRE muestra la fórmula paso a paso con números.
 12. Montos en UVT: muestra siempre también el valor en pesos.
-13. Primera respuesta corta (2-3 líneas) si el historial tiene 1 solo mensaje."""
+13. Si los artículos del ET relevantes incluyen un enlace, cítalo como [Art. X ET](url) para que el usuario pueda consultarlo directamente."""
 
 SYSTEM_INCONSISTENCIAS = """Eres un experto tributarista colombiano de ExógenaDIAN, especializado en cruces de información que realiza la DIAN mediante sus programas de fiscalización automatizada.
 
@@ -712,13 +726,17 @@ async def _build_rag_context(query: str) -> str:
 
     parts = ["\n══ ARTÍCULOS DEL ET RELEVANTES (texto real verificado) ══"]
     for r in results:
+        url = r.get('url', '')
+        url_line = f"\nEnlace: {url}" if url else ""
         parts.append(
             f"\n--- Art. {r['numero']} ET: {r['titulo']} (relevancia: {r['score']}) ---\n"
-            f"{r['texto']}"
+            f"{r['texto']}{url_line}"
         )
     parts.append("\n══ FIN ARTÍCULOS ET ══")
     parts.append("INSTRUCCIÓN: Usa el texto REAL de los artículos anteriores para fundamentar tu respuesta. "
-                 "Cita textualmente cuando sea relevante. Si la pregunta requiere artículos que NO están arriba, "
+                 "Cita textualmente cuando sea relevante. Cuando cites un artículo que tenga Enlace, "
+                 "inclúyelo como [Art. X ET](enlace) para que el usuario pueda consultarlo. "
+                 "Si la pregunta requiere artículos que NO están arriba, "
                  "responde con tu conocimiento pero aclara que el usuario debe verificar en la norma.")
     return "\n".join(parts)
 

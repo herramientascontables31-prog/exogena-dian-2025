@@ -3,57 +3,52 @@ ExógenaDIAN — Backend Proxy para Consulta de NIT en DIAN MUISCA
 FastAPI + Playwright + CapSolver + Caché + Rate Limiting + Circuit Breaker
 
 Límites:
-  10 consultas DIAN/día por IP (gratis, sin PRO)
+  GRATIS: 3 consultas DIAN/día por IP + listas offline hasta 10 NITs
+  PRO:    Ilimitado, masivo hasta 2,000 NITs por consulta, Excel export
 
 Endpoints:
   GET  /api/nit/{nit}         — Consulta individual
-  GET  /api/remaining         — Consultas restantes hoy
+  POST /api/nit/bulk          — Consulta masiva (PRO: hasta 2,000)
   GET  /api/health            — Health check + estado circuit breaker
   GET  /api/stats             — Estadísticas
 """
-import logging
+import asyncio
 import os
+import time
 from collections import defaultdict
 from datetime import datetime, timezone
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 from cache import get_cache
-from dian_scraper import consultar_dian, circuit_breaker
+from dian_scraper import consultar_dian, circuit_breaker, browser_pool
 from fallback import consultar_fallback, _calc_dv
-
-logger = logging.getLogger("exogenadian")
 
 load_dotenv()
 
 # ─── Config ───
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://exogenadian.com").split(",")
-CACHE_TTL_DAYS = int(os.getenv("CACHE_TTL_DAYS", "30"))
+CACHE_TTL_DAYS = int(os.getenv("CACHE_TTL_DAYS", "7"))
 PORT = int(os.getenv("PORT", "8080"))
-STATS_API_KEY = os.getenv("STATS_API_KEY", "")
+
+# Claves PRO válidas — en producción esto vendría de tu base de datos/Google Sheet
+# Por ahora usa las mismas claves PRO que ya manejas en el frontend
+PRO_KEYS_URL = os.getenv("PRO_KEYS_URL", "")  # URL de Google Sheet con claves activas
+
+# Límites
 FREE_DIAN_QUERIES_PER_DAY = 10
-
-# ─── Lifespan ───
-from contextlib import asynccontextmanager
-
-
-@asynccontextmanager
-async def lifespan(app):
-    # Cargar motor de búsqueda semántica del ET (RAG)
-    from et_search import et_engine
-    et_engine.load()
-    yield
-    cache.flush()
-
+FREE_MAX_BULK = 10
+PRO_MAX_BULK = 2000
+PRO_DIAN_CREDITS_PER_MONTH = 500  # Consultas DIAN en vivo incluidas con PRO
 
 # ─── App ───
 app = FastAPI(
     title="ExógenaDIAN — Consulta NIT API",
     description="Proxy para consultar NITs contra el portal MUISCA de la DIAN",
-    version="3.0.0",
-    lifespan=lifespan,
+    version="1.1.0",
 )
 
 app.add_middleware(
@@ -61,49 +56,14 @@ app.add_middleware(
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type", "X-Device-Id", "X-Pro-Key"],
+    allow_headers=["*", "X-Pro-Key"],
 )
-
-# ─── Chat router ───
-from chat import router as chat_router
-app.include_router(chat_router)
-
-# ─── IA router (ExógenaDIAN IA) ───
-from ia import router as ia_router
-app.include_router(ia_router)
-
-
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import Response
-
-
-class SecurityHeadersMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        response: Response = await call_next(request)
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["X-Frame-Options"] = "DENY"
-        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
-        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
-        response.headers["Content-Security-Policy"] = (
-            "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.googletagmanager.com https://checkout.wompi.co; "
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-            "font-src 'self' https://fonts.gstatic.com; "
-            "img-src 'self' data: https:; "
-            "connect-src 'self' https://exogenadian.com https://*.run.app https://api.anthropic.com; "
-            "frame-src https://checkout.wompi.co"
-        )
-        return response
-
-
-app.add_middleware(SecurityHeadersMiddleware)
 
 cache = get_cache(CACHE_TTL_DAYS)
 
 
 # ═══════════════════════════════════════════════════════════════
-#  RATE LIMITER (por IP, reset diario)
+#  RATE LIMITER (por IP, resets diario)
 # ═══════════════════════════════════════════════════════════════
 
 class RateLimiter:
@@ -124,6 +84,7 @@ class RateLimiter:
         return remaining > 0, max(0, remaining)
 
     def consume(self, ip: str):
+        """Consumir 1 consulta para esta IP."""
         today = self._today()
         entry = self.usage[ip]
         if entry["date"] != today:
@@ -142,6 +103,82 @@ class RateLimiter:
 rate_limiter = RateLimiter()
 
 
+# ═══════════════════════════════════════════════════════════════
+#  CRÉDITOS PRO (consultas DIAN mensuales)
+# ═══════════════════════════════════════════════════════════════
+
+class ProCredits:
+    """Controla créditos de consultas DIAN por clave PRO, reset mensual."""
+    def __init__(self, monthly_limit: int = 500):
+        self.monthly_limit = monthly_limit
+        self.usage: dict[str, dict] = defaultdict(lambda: {"count": 0, "month": ""})
+
+    def _month(self) -> str:
+        return datetime.now(timezone.utc).strftime("%Y-%m")
+
+    def get_remaining(self, key: str) -> int:
+        month = self._month()
+        entry = self.usage[key]
+        if entry["month"] != month:
+            return self.monthly_limit
+        return max(0, self.monthly_limit - entry["count"])
+
+    def consume(self, key: str, amount: int = 1):
+        month = self._month()
+        entry = self.usage[key]
+        if entry["month"] != month:
+            entry["count"] = 0
+            entry["month"] = month
+        entry["count"] += amount
+
+    def can_consume(self, key: str, amount: int = 1) -> bool:
+        return self.get_remaining(key) >= amount
+
+
+pro_credits = ProCredits(PRO_DIAN_CREDITS_PER_MONTH)
+
+# Cache de claves PRO validadas
+pro_keys_cache: dict[str, float] = {}
+PRO_KEY_CACHE_TTL = 3600
+
+
+def is_pro(key: str | None) -> bool:
+    """Verificar si una clave PRO es válida."""
+    if not key or not key.strip():
+        return False
+    key = key.strip()
+    if key in pro_keys_cache:
+        if time.time() - pro_keys_cache[key] < PRO_KEY_CACHE_TTL:
+            return True
+    # TODO: Validar contra Google Sheet o base de datos
+    if key.startswith("PRO-") and len(key) > 8:
+        pro_keys_cache[key] = time.time()
+        return True
+    return False
+
+
+# ─── Models ───
+class BulkRequest(BaseModel):
+    nits: list[str]
+    pro_key: str = ""
+
+
+class NITResponse(BaseModel):
+    nit: str
+    dv: int | str | None = None
+    razon_social: str = ""
+    estado_rut: str = ""
+    tipo_persona: str = ""
+    responsabilidades: list[str] = []
+    direccion: str = ""
+    departamento: str = ""
+    municipio: str = ""
+    fuente: str = ""
+    cached: bool = False
+    error: str = ""
+    timestamp: str = ""
+
+
 # ─── Helpers ───
 def _clean_nit(nit: str) -> str:
     return nit.strip().replace(".", "").replace(" ", "").split("-")[0]
@@ -156,16 +193,11 @@ def _get_client_ip(request: Request) -> str:
 
 def _build_response(raw: dict) -> dict:
     nit = str(raw.get("nit", ""))
-    estado = raw.get("estado_rut", "")
-    # Si el estado viene de una fuente no oficial (fallback), no mostrarlo
-    # para evitar mostrar "CANCELADO" erróneamente
-    if raw.get("_estado_no_oficial"):
-        estado = ""
     return {
         "nit": nit,
         "dv": raw.get("dv") or _calc_dv(nit),
         "razon_social": raw.get("razon_social", ""),
-        "estado_rut": estado,
+        "estado_rut": raw.get("estado_rut", ""),
         "tipo_persona": raw.get("tipo_persona", ""),
         "responsabilidades": raw.get("responsabilidades", []),
         "direccion": raw.get("direccion", raw.get("dir", "")),
@@ -179,7 +211,7 @@ def _build_response(raw: dict) -> dict:
 
 
 async def _consultar_nit(nit: str, use_dian: bool = True) -> dict:
-    """Flujo completo: caché -> DIAN -> fallback."""
+    """Flujo completo: caché → DIAN → fallback."""
     nit = _clean_nit(nit)
     if not nit or not nit.isdigit() or len(nit) < 6 or len(nit) > 15:
         return _build_response({"nit": nit, "error": "NIT inválido (debe tener 6-15 dígitos)"})
@@ -189,7 +221,7 @@ async def _consultar_nit(nit: str, use_dian: bool = True) -> dict:
     if cached:
         return _build_response(cached)
 
-    # 2. DIAN MUISCA
+    # 2. DIAN MUISCA (si permitido)
     if use_dian:
         try:
             dian_result = await consultar_dian(nit)
@@ -197,8 +229,8 @@ async def _consultar_nit(nit: str, use_dian: bool = True) -> dict:
                 dian_result["dv"] = _calc_dv(nit)
                 cache.set(nit, dian_result)
                 return _build_response(dian_result)
-        except Exception as e:
-            logger.warning("DIAN query failed for %s: %s", nit, e)
+        except Exception:
+            pass
 
     # 3. Fallback (RUES, datos.gov.co, Einforma, web)
     try:
@@ -207,8 +239,7 @@ async def _consultar_nit(nit: str, use_dian: bool = True) -> dict:
             cache.set(nit, fb_result)
         return _build_response(fb_result)
     except Exception as e:
-        logger.error("Fallback failed for %s: %s", nit, e)
-        return _build_response({"nit": nit, "error": "No se pudo consultar este NIT.", "fuente": "Error"})
+        return _build_response({"nit": nit, "error": f"Error: {str(e)[:200]}", "fuente": "Error"})
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -216,35 +247,160 @@ async def _consultar_nit(nit: str, use_dian: bool = True) -> dict:
 # ═══════════════════════════════════════════════════════════════
 
 @app.get("/api/nit/{nit}")
-async def consultar_nit_individual(nit: str, request: Request):
+async def consultar_nit_individual(
+    nit: str,
+    request: Request,
+    x_pro_key: str | None = Header(None),
+):
     """
     Consultar un NIT individual.
-    10 consultas DIAN/día por IP. Siempre retorna DV + cruce offline.
+    Gratis: 3 consultas DIAN/día. PRO: ilimitado.
+    Siempre retorna al menos DV + cruce offline.
     """
     ip = _get_client_ip(request)
-    allowed, remaining = rate_limiter.check(ip)
+    user_is_pro = is_pro(x_pro_key)
 
-    if allowed:
-        rate_limiter.consume(ip)
-        result = await _consultar_nit(nit, use_dian=True)
-        result["_free_remaining"] = remaining - 1
-        return result
+    if user_is_pro:
+        # PRO: consulta completa sin límite
+        return await _consultar_nit(nit, use_dian=True)
     else:
-        # Límite alcanzado: solo fallback (sin DIAN en vivo)
-        result = await _consultar_nit(nit, use_dian=False)
-        result["_free_remaining"] = 0
-        result["_limit_reached"] = True
-        return result
+        # Free: verificar límite diario
+        allowed, remaining = rate_limiter.check(ip)
+        if allowed:
+            rate_limiter.consume(ip)
+            result = await _consultar_nit(nit, use_dian=True)
+            result["_free_remaining"] = remaining - 1
+            return result
+        else:
+            # Límite alcanzado: solo fallback (sin DIAN)
+            result = await _consultar_nit(nit, use_dian=False)
+            result["_free_remaining"] = 0
+            result["_limit_reached"] = True
+            return result
+
+
+@app.post("/api/nit/bulk")
+async def consultar_nit_masivo(req: BulkRequest, request: Request):
+    """
+    Consulta masiva de NITs.
+    Gratis: máximo 10 NITs, solo offline.
+    PRO: hasta 2,000 NITs. DIAN en vivo usa créditos mensuales (500/mes incluidos).
+    Flujo PRO: caché → listas/fallback → DIAN (solo los no encontrados, gasta créditos).
+    """
+    user_is_pro = is_pro(req.pro_key)
+
+    if not req.nits:
+        raise HTTPException(status_code=400, detail="Lista de NITs vacía")
+
+    max_allowed = PRO_MAX_BULK if user_is_pro else FREE_MAX_BULK
+
+    if len(req.nits) > max_allowed:
+        if user_is_pro:
+            raise HTTPException(status_code=400, detail=f"Máximo {PRO_MAX_BULK} NITs por consulta")
+        else:
+            raise HTTPException(
+                status_code=403,
+                detail={
+                    "message": f"Plan gratuito: máximo {FREE_MAX_BULK} NITs. Activa PRO para consultar hasta {PRO_MAX_BULK}.",
+                    "upgrade_required": True,
+                    "free_limit": FREE_MAX_BULK,
+                    "pro_limit": PRO_MAX_BULK,
+                },
+            )
+
+    # Deduplicar y limpiar
+    clean_nits = list(dict.fromkeys(_clean_nit(n) for n in req.nits if _clean_nit(n)))
+
+    results = []
+    pending_offline = []
+
+    # Fase 1: buscar en caché
+    for nit in clean_nits:
+        cached = cache.get(nit)
+        if cached:
+            results.append(_build_response(cached))
+        else:
+            pending_offline.append(nit)
+
+    # Fase 2: consultar faltantes por fallback offline (gratis, no gasta créditos)
+    pending_dian = []
+    if pending_offline:
+        semaphore = asyncio.Semaphore(50)
+
+        async def _offline(nit):
+            async with semaphore:
+                return await _consultar_nit(nit, use_dian=False)
+
+        offline_results = await asyncio.gather(*[_offline(n) for n in pending_offline])
+        for r in offline_results:
+            if r.get("razon_social"):
+                results.append(r)
+            else:
+                pending_dian.append(r["nit"])
+
+    # Fase 3: PRO — consultar DIAN en vivo los que no se encontraron (gasta créditos)
+    dian_consulted = 0
+    if user_is_pro and pending_dian:
+        credits_available = pro_credits.get_remaining(req.pro_key)
+        # Limitar a créditos disponibles
+        nits_for_dian = pending_dian[:credits_available]
+        skipped = pending_dian[credits_available:]
+
+        if nits_for_dian:
+            semaphore = asyncio.Semaphore(3)
+
+            async def _dian(nit):
+                async with semaphore:
+                    return await _consultar_nit(nit, use_dian=True)
+
+            dian_results = await asyncio.gather(*[_dian(n) for n in nits_for_dian])
+            results.extend(dian_results)
+            dian_consulted = len(nits_for_dian)
+            pro_credits.consume(req.pro_key, dian_consulted)
+
+        # Los que no se pudieron consultar por falta de créditos
+        for nit in skipped:
+            results.append(_build_response({
+                "nit": nit,
+                "dv": _calc_dv(nit),
+                "error": "Sin créditos DIAN disponibles este mes",
+                "fuente": "Sin créditos",
+            }))
+    elif not user_is_pro and pending_dian:
+        # Free: agregar los no encontrados sin DIAN
+        for nit in pending_dian:
+            results.append(_build_response({
+                "nit": nit,
+                "dv": _calc_dv(nit),
+                "fuente": "No encontrado (activa PRO para consultar DIAN)",
+            }))
+
+    credits_remaining = pro_credits.get_remaining(req.pro_key) if user_is_pro else 0
+
+    return {
+        "total": len(results),
+        "cached": sum(1 for r in results if r.get("cached")),
+        "dian_consulted": dian_consulted,
+        "credits_remaining": credits_remaining,
+        "is_pro": user_is_pro,
+        "results": results,
+    }
 
 
 @app.get("/api/remaining")
-async def get_remaining(request: Request):
-    """Consultar cuántas consultas DIAN quedan hoy."""
+async def get_remaining(request: Request, x_pro_key: str | None = Header(None)):
+    """Consultar cuántas consultas DIAN quedan (gratis por día, PRO por mes)."""
     ip = _get_client_ip(request)
-    return {
+    user_is_pro = is_pro(x_pro_key)
+    result = {
         "remaining": rate_limiter.get_remaining(ip),
         "daily_limit": FREE_DIAN_QUERIES_PER_DAY,
+        "is_pro": user_is_pro,
     }
+    if user_is_pro:
+        result["credits_remaining"] = pro_credits.get_remaining(x_pro_key)
+        result["credits_monthly"] = PRO_DIAN_CREDITS_PER_MONTH
+    return result
 
 
 @app.get("/api/health")
@@ -262,11 +418,7 @@ async def health_check():
 
 
 @app.get("/api/stats")
-async def stats(request: Request):
-    # Proteger con API key — enviar como header X-Stats-Key
-    key = request.headers.get("x-stats-key", "")
-    if not STATS_API_KEY or key != STATS_API_KEY:
-        return {"error": "Unauthorized", "detail": "API key requerida en header X-Stats-Key"}
+async def stats():
     from captcha_solver import get_balance
     try:
         balance = await get_balance()
@@ -278,6 +430,50 @@ async def stats(request: Request):
         "circuit_breaker": circuit_breaker.get_status(),
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
+
+
+@app.get("/api/debug/{nit}")
+async def debug_nit(nit: str):
+    """Debug: probar cada fuente por separado para diagnosticar."""
+    import traceback
+    results = {}
+
+    # 1. DIAN
+    try:
+        dian_result = await consultar_dian(nit)
+        results["dian"] = dian_result
+    except Exception as e:
+        results["dian"] = {"error": str(e), "traceback": traceback.format_exc()[-500:]}
+
+    # 2. Fallback sources individually
+    from fallback import buscar_rues, buscar_datos_gov, buscar_einforma, buscar_web
+    try:
+        results["rues"] = await buscar_rues(nit) or {"result": "not found"}
+    except Exception as e:
+        results["rues"] = {"error": str(e)}
+
+    try:
+        results["datos_gov"] = await buscar_datos_gov(nit) or {"result": "not found"}
+    except Exception as e:
+        results["datos_gov"] = {"error": str(e)}
+
+    try:
+        results["einforma"] = await buscar_einforma(nit) or {"result": "not found"}
+    except Exception as e:
+        results["einforma"] = {"error": str(e)}
+
+    try:
+        results["web"] = await buscar_web(nit) or {"result": "not found"}
+    except Exception as e:
+        results["web"] = {"error": str(e)}
+
+    return results
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    cache.flush()
+    await browser_pool.shutdown()
 
 
 if __name__ == "__main__":
