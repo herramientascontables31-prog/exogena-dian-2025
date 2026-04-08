@@ -108,6 +108,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 
 <div id="nav-container"></div>
 <script src="shared/nav.js"></script>
+<script src="shared/pro-banner.js"></script>
 
 <div class="container">
 
@@ -240,7 +241,8 @@ function buscar(){
   matches.forEach(function(m){
     var statusCls=m.l?'yes':'no';
     var statusTxt=m.l?'Disponible':'Pendiente';
-    var onclick=m.l?'window.open(\"'+m.l+'\",\"_blank\")':'expandDept(\"'+m.dc+'\")';
+    var safeLink=m.l?m.l.replace(/&/g,'&amp;').replace(/'/g,'&#39;'):'';
+    var onclick=m.l?'window.open(&#39;'+safeLink+'&#39;,&#39;_blank&#39;)':'expandDept(&#39;'+m.dc+'&#39;)';
     html+='<div class="sr-item" onclick="'+onclick+'">';
     html+='<div><div class="name">'+m.n+'</div><div class="dept">'+m.d+' &middot; '+m.c+'</div></div>';
     html+='<span class="status '+statusCls+'">'+statusTxt+'</span>';
