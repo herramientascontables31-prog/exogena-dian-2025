@@ -467,7 +467,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 
 <div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
   <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">Exógena DIAN</a> &middot; Herramienta de asistencia &mdash; El contador debe validar antes de presentar a la DIAN<br>
-  &#128274; Tus archivos se procesan 100% en tu navegador &middot; Nunca se env&iacute;an a servidores &middot; Sin IA &middot; Sin almacenamiento &middot; <a href="https://exogenadian.com/politica-privacidad.html" style="color:#059669">Pol&iacute;tica de privacidad</a> &middot; <a href="https://exogenadian.com/#seguridad" style="color:#059669">C&oacute;mo protegemos tus datos</a>
+  &#128274; Tus archivos se procesan 100% en tu navegador &middot; Nunca se env&iacute;an a servidores &middot; Sin IA &middot; Sin almacenamiento &middot; <a href="https://exogenadian.com/politica-privacidad.html" style="color:#059669">Pol&iacute;tica de privacidad</a> &middot; <a href="https://exogenadian.com/politica-privacidad.html" style="color:#059669">C&oacute;mo protegemos tus datos</a>
 </div>
 
 <script>
@@ -1470,8 +1470,8 @@ let formatos={};
 const FMT_HEADERS={
   'F1001':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Pago Deducible','Pago No Deducible','Ret Fte Practicada Renta','Ret Fte Asumida Renta','Ret Fte Practicada IVA','Ret Fte Asumida IVA'],
   'F1003':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Base Retencion','Retencion Practicada'],
-  'F1005':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','IVA Descontable','Pais Residencia'],
-  'F1006':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','IVA Generado','Pais Residencia'],
+  'F1005':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Impuesto Descontable','IVA Resultante Devoluciones Ventas Anuladas'],
+  'F1006':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Impuesto Generado','IVA Recuperado Devoluciones Compras Anuladas','Impuesto Nacional al Consumo'],
   'F1007':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Ingresos Brutos','Devoluciones'],
   'F1008':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo CxC Dic31'],
   'F1009':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo CxP Dic31'],
@@ -1574,7 +1574,7 @@ function generarFormatos(){
     if(!dic5[r.nit])dic5[r.nit]={nit:r.nit,razon:r.razon,val:0};
     dic5[r.nit].val+=r.deb;
   }
-  formatos['F1005']=Object.values(dic5).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,Math.round(v.val),'169']);
+  formatos['F1005']=Object.values(dic5).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,Math.round(v.val),0]);
 
   // ── F1006: IVA Generado ──
   const dic6={};
@@ -1583,7 +1583,7 @@ function generarFormatos(){
     if(!dic6[r.nit])dic6[r.nit]={nit:r.nit,razon:r.razon,val:0};
     dic6[r.nit].val+=r.cre;
   }
-  formatos['F1006']=Object.values(dic6).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,Math.round(v.val),'169']);
+  formatos['F1006']=Object.values(dic6).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,Math.round(v.val),0,0]);
 
   // ── F1007: Ingresos ──
   const dic7={};
