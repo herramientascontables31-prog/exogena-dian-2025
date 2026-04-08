@@ -7,6 +7,7 @@
  *   ?action=generateKey&transactionId=X&ref=Y  → Verifica pago Wompi y genera clave
  *   ?action=validateKey&key=X&device=FP         → Valida clave PRO (privado)
  *   ?action=validateEmail&email=X&device=FP     → Valida por email (público)
+ *   ?action=wompiSignature&ref=X&amount=Y       → Genera firma de integridad Wompi
  *
  * Configurar:
  *   1. Pegar este código en Google Apps Script
@@ -18,9 +19,11 @@
 // ── CONFIGURACIÓN ──
 // ⚠️ Las credenciales se leen de PropertiesService (Script Properties).
 //   Configurar en: Apps Script → ⚙️ Project Settings → Script Properties:
-//     WOMPI_PRIVATE_KEY = tu clave privada de Wompi producción
-//     SPREADSHEET_ID    = ID de la hoja de Google Sheets
+//     WOMPI_PRIVATE_KEY      = tu clave privada de Wompi producción
+//     WOMPI_INTEGRITY_SECRET = secreto de integridad Wompi (Dashboard → Desarrolladores)
+//     SPREADSHEET_ID         = ID de la hoja de Google Sheets
 const WOMPI_PRIVATE_KEY = PropertiesService.getScriptProperties().getProperty('WOMPI_PRIVATE_KEY');
+const WOMPI_INTEGRITY_SECRET = PropertiesService.getScriptProperties().getProperty('WOMPI_INTEGRITY_SECRET');
 const SPREADSHEET_ID = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
 const SHEET_NAME = 'Claves';
 const MONTO_MINIMO_COP = 1990000; // $19,900 en centavos
@@ -46,6 +49,9 @@ function doGet(e) {
         break;
       case 'sendAlert':
         result = handleSendAlert(e.parameter);
+        break;
+      case 'wompiSignature':
+        result = handleWompiSignature(e.parameter);
         break;
       default:
         result = { success: false, error: 'Acción no válida' };
@@ -482,4 +488,28 @@ function setupSheet() {
   // NO hardcodear claves en el código fuente.
 
   Logger.log('Sheet configurado correctamente. Agrega la clave admin manualmente desde la hoja.');
+}
+
+// ═══════════════════════════════════════════════════════════
+// FIRMA DE INTEGRIDAD WOMPI
+// ═══════════════════════════════════════════════════════════
+function handleWompiSignature(params) {
+  var ref = params.ref || '';
+  var amount = params.amount || '';
+  var currency = params.currency || 'COP';
+
+  if (!ref || !amount) {
+    return { success: false, error: 'Faltan parámetros ref y amount' };
+  }
+  if (!WOMPI_INTEGRITY_SECRET) {
+    return { success: false, error: 'WOMPI_INTEGRITY_SECRET no configurado' };
+  }
+
+  var cadena = ref + amount + currency + WOMPI_INTEGRITY_SECRET;
+  var hash = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, cadena);
+  var signature = hash.map(function(b) {
+    return ('0' + ((b < 0 ? b + 256 : b).toString(16))).slice(-2);
+  }).join('');
+
+  return { success: true, signature: signature };
 }
