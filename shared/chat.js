@@ -245,17 +245,19 @@
         signal: abortCtrl.signal,
       });
 
+      // Leer contenido según content-type
+      var contentType = resp.headers.get('content-type') || '';
+
       if (!resp.ok) {
         var errData;
         try { errData = await resp.json(); } catch (e) { errData = {}; }
-        // Si el rate limit incluye whatsapp, mostrar link
         if (errData.whatsapp) {
-          throw new Error(errData.error + ' [WhatsApp](' + errData.whatsapp + ')');
+          throw new Error((errData.error || 'Error') + ' [WhatsApp](' + errData.whatsapp + ')');
         }
-        throw new Error(errData.error || 'Error ' + resp.status);
+        throw new Error(errData.error || 'Error del servidor (' + resp.status + ')');
       }
 
-      var contentType = resp.headers.get('content-type') || '';
+      // Backend puede devolver JSON directo (budget exceeded, error) con status 200
       if (contentType.includes('application/json')) {
         var jsonResp = await resp.json();
         if (jsonResp.error) {
@@ -263,6 +265,13 @@
           if (jsonResp.whatsapp) errMsg += ' Escríbenos por [WhatsApp](' + jsonResp.whatsapp + ').';
           throw new Error(errMsg);
         }
+        // Si no es error pero es JSON, no hay stream que leer
+        throw new Error('Respuesta inesperada del servidor. Intenta de nuevo.');
+      }
+
+      // Verificar que el body sea streameable antes de intentar leerlo
+      if (!resp.body) {
+        throw new Error('Error de conexión. El servidor no envió respuesta.');
       }
 
       hideTyping();
@@ -303,9 +312,14 @@
     } catch (err) {
       hideTyping();
       isError = true;
-      var errorText = err.name === 'AbortError'
-        ? '(Mensaje cancelado)'
-        : (err.message || 'Error de conexión. Intenta de nuevo.');
+      var errorText;
+      if (err && err.name === 'AbortError') {
+        errorText = '(Mensaje cancelado)';
+      } else if (err && err.message) {
+        errorText = err.message;
+      } else {
+        errorText = 'Error de conexión. Verifica tu internet e intenta de nuevo.';
+      }
       if (!fullText) {
         var lastBubble = messagesEl.querySelector('.exa-msg.assistant:last-child');
         if (!lastBubble) lastBubble = addBubble('assistant', '');
