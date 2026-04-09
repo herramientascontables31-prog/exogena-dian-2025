@@ -444,7 +444,9 @@ async def consultar_dian(nit: str) -> dict:
 
         try:
             # 1. Navegar al portal
+            logger.info("[DIAN %s] Navegando a %s", nit, DIAN_URL)
             response = await page.goto(DIAN_URL, wait_until="domcontentloaded", timeout=45000)
+            logger.info("[DIAN %s] Respuesta HTTP %s", nit, response.status if response else "None")
 
             # 2. Verificar bloqueo inmediato
             if response and response.status in (403, 503, 429):
@@ -453,13 +455,16 @@ async def consultar_dian(nit: str) -> dict:
 
             block = await _check_page_blocked(page)
             if block:
+                logger.warning("[DIAN %s] Bloqueado: %s", nit, block)
                 circuit_breaker.record_failure(block)
                 return {"nit": nit, "error": block, "fuente": "DIAN MUISCA"}
 
             # 3. Buscar y resolver Turnstile
             sitekey = await _extract_turnstile_sitekey(page)
+            logger.info("[DIAN %s] Turnstile sitekey: %s", nit, sitekey[:20] if sitekey else "None")
             if sitekey:
                 token = await solve_turnstile(sitekey, DIAN_URL)
+                logger.info("[DIAN %s] CAPTCHA resuelto: %s", nit, "OK" if token else "FAIL")
                 if token:
                     await _inject_turnstile_token(page, token)
                     await asyncio.sleep(2)
@@ -468,9 +473,12 @@ async def consultar_dian(nit: str) -> dict:
                     return {"nit": nit, "error": "No se pudo resolver el CAPTCHA", "fuente": "DIAN MUISCA"}
 
             # 4. Esperar a que el campo NIT esté visible y llenar
+            logger.info("[DIAN %s] Buscando campo NIT...", nit)
             try:
                 await page.wait_for_selector(SEL_NIT_INPUT, state="visible", timeout=15000)
-            except Exception:
+                logger.info("[DIAN %s] Campo NIT encontrado", nit)
+            except Exception as wait_err:
+                logger.warning("[DIAN %s] Campo NIT no encontrado con selector principal: %s", nit, str(wait_err)[:100])
                 alt_selectors = [
                     'input[id*="numNit"]',
                     'input[type="text"][maxlength]',
@@ -495,11 +503,14 @@ async def consultar_dian(nit: str) -> dict:
 
             await page.fill(SEL_NIT_INPUT, nit)
             await page.keyboard.press("Enter")
+            logger.info("[DIAN %s] NIT enviado, esperando resultado...", nit)
 
             # 5. Parsear resultado
             result = await _parse_resultado(page)
             result["nit"] = nit
             result["fuente"] = "DIAN MUISCA"
+            logger.info("[DIAN %s] Resultado: estado=%s, nombre=%s, error=%s",
+                        nit, result.get("estado_rut", ""), result.get("razon_social", "")[:50], result.get("error", ""))
 
             # 6. Circuit breaker: registrar éxito o fallo
             if result.get("_blocked"):
@@ -514,6 +525,7 @@ async def consultar_dian(nit: str) -> dict:
 
         except Exception as e:
             error_msg = str(e)[:200]
+            logger.error("[DIAN %s] EXCEPCIÓN: %s", nit, error_msg)
             circuit_breaker.record_failure(error_msg)
             return {
                 "nit": nit,

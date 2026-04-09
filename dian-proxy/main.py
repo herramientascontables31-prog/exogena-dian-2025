@@ -29,6 +29,9 @@ from ia import router as ia_router
 from dian_scraper import consultar_dian, circuit_breaker, browser_pool
 from fallback import consultar_fallback, _calc_dv
 
+import logging
+logger = logging.getLogger("exogenadian.main")
+
 load_dotenv()
 
 # ─── Config ───
@@ -230,12 +233,16 @@ async def _consultar_nit(nit: str, use_dian: bool = True) -> dict:
     if use_dian:
         try:
             dian_result = await consultar_dian(nit)
-            if dian_result and not dian_result.get("error") and not dian_result.get("_circuit_open"):
-                dian_result["dv"] = _calc_dv(nit)
-                cache.set(nit, dian_result)
-                return _build_response(dian_result)
-        except Exception:
-            pass
+            if dian_result:
+                dian_error = dian_result.get("error", "")
+                if dian_error:
+                    logger.warning("[NIT %s] DIAN error: %s", nit, dian_error[:200])
+                if not dian_error and not dian_result.get("_circuit_open"):
+                    dian_result["dv"] = _calc_dv(nit)
+                    cache.set(nit, dian_result)
+                    return _build_response(dian_result)
+        except Exception as e:
+            logger.error("[NIT %s] DIAN exception: %s", nit, str(e)[:200])
 
     # 3. Fallback (RUES, datos.gov.co, Einforma, web)
     try:
@@ -468,11 +475,11 @@ async def debug_nit(nit: str):
         results["dian"] = {"error": str(e), "traceback": traceback.format_exc()[-500:]}
 
     # 2. Fallback sources individually
-    from fallback import buscar_rues, buscar_datos_gov, buscar_einforma, buscar_web
+    from fallback import buscar_registronit, buscar_datos_gov, buscar_einforma, buscar_web
     try:
-        results["rues"] = await buscar_rues(nit) or {"result": "not found"}
+        results["registronit"] = await buscar_registronit(nit) or {"result": "not found"}
     except Exception as e:
-        results["rues"] = {"error": str(e)}
+        results["registronit"] = {"error": str(e)}
 
     try:
         results["datos_gov"] = await buscar_datos_gov(nit) or {"result": "not found"}
