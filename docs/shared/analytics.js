@@ -54,8 +54,19 @@ window.addEventListener('error', function(e) {
   _reportError(msg, source);
 });
 window.addEventListener('unhandledrejection', function(e) {
-  var msg = e.reason ? (e.reason.message || String(e.reason)) : 'Promise rejected';
-  _reportError(msg, 'promise');
+  var reason = e.reason;
+  var msg;
+  if (reason && reason.message) {
+    msg = reason.message;
+  } else if (reason && typeof reason === 'string') {
+    msg = reason;
+  } else if (reason) {
+    try { msg = JSON.stringify(reason).substring(0, 200); } catch(x) { msg = 'Promise rejected (unserializable)'; }
+  } else {
+    msg = 'Promise rejected (sin detalle)';
+  }
+  var source = (reason && reason.stack) ? reason.stack.split('\n')[1] || 'promise' : 'promise';
+  _reportError(msg, source.trim().substring(0, 100));
 });
 
 /* Scroll depth 75% — mide engagement real */

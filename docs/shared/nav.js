@@ -61,10 +61,10 @@
       .nav-links.open{display:flex}
     }
     /* ===== MEGA MENU ===== */
-    .mega-menu{display:none;position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--white,#fff);border:1.5px solid var(--gray-200,#E5E7EB);border-radius:16px;padding:20px 24px;width:820px;max-width:calc(100vw - 32px);box-shadow:0 16px 48px rgba(0,0,0,.12);z-index:200}
-    .nav-dropdown.open .mega-menu{display:grid;grid-template-columns:repeat(5,1fr);gap:20px}
-    .mega-col h6{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400,#9CA3AF);margin-bottom:10px;padding:0 10px}
-    .mega-col a{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;text-decoration:none;color:var(--gray-600,#4B5563);font-size:.84rem;font-weight:500;transition:all .15s;white-space:nowrap}
+    .mega-menu{display:none;position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--white,#fff);border:1.5px solid var(--gray-200,#E5E7EB);border-radius:16px;padding:20px 24px;width:920px;max-width:calc(100vw - 32px);box-shadow:0 16px 48px rgba(0,0,0,.12);z-index:200;overflow:hidden}
+    .nav-dropdown.open .mega-menu{display:grid;grid-template-columns:1fr 1fr 1fr 1.2fr 1fr;gap:12px}
+    .mega-col h6{font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--gray-400,#9CA3AF);margin-bottom:10px;padding:0 8px}
+    .mega-col a{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;text-decoration:none;color:var(--gray-600,#4B5563);font-size:.8rem;font-weight:500;transition:all .15s;white-space:normal;line-height:1.3;overflow:hidden}
     .mega-col a:hover{background:var(--green-50,#ECFDF5);color:var(--green-700,#047857)}
     .mega-col a .dd-icon{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;font-size:.8rem;flex-shrink:0}
     .mega-col .mega-divider{height:1px;background:var(--gray-100,#F3F4F6);margin:6px 10px}
@@ -75,8 +75,8 @@
     .tn-cat-btn:hover,.tn-cat.open .tn-cat-btn{background:#ECFDF5;border-color:#059669;color:#047857}
     .tn-cat-btn svg{width:12px;height:12px;transition:transform .2s}
     .tn-cat.open .tn-cat-btn svg{transform:rotate(180deg)}
-    .tn-dd{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:6px;min-width:180px;max-width:calc(100vw - 20px);box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:200}
-    .tn-cat:nth-last-child(-n+2) .tn-dd{left:auto;right:0}
+    .tn-dd{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:6px;min-width:200px;max-width:calc(100vw - 20px);box-shadow:0 8px 24px rgba(0,0,0,.1);z-index:200}
+    .tn-cat:nth-last-child(-n+3) .tn-dd{left:auto;right:0}
     .tn-cat.open .tn-dd{display:block}
     .tn-dd a{display:block;padding:7px 12px;border-radius:6px;text-decoration:none;color:#4B5563;font-size:.82rem;font-weight:500;transition:all .12s;white-space:nowrap}
     .tn-dd a:hover{background:#ECFDF5;color:#047857}
@@ -182,7 +182,7 @@
   '        <a href="ia-analisis-balance.html">🛡️ Auditor DIAN</a>'+
   '        <a href="ia-chat-et.html">📖 Estatuto Tributario</a>'+
   '        <a href="ia-asistente.html">🤖 Asistente Contable</a>'+
-  '        <a href="ia-respuesta-requerimiento.html">📝 Responder Requerimiento</a>'+
+  '        <a href="ia-respuesta-requerimiento.html">📝 Requerimientos</a>'+
   '        <a href="ia.html" style="font-weight:700;color:#059669">✨ Ver todas</a>'+
   '      </div>'+
   '    </div>'+
@@ -254,7 +254,7 @@
   '          <a href="ia-analisis-balance.html"><div class="dd-icon" style="background:#ECFDF5">🛡️</div> Auditor DIAN</a>'+
   '          <a href="ia-chat-et.html"><div class="dd-icon" style="background:#ECFDF5">📖</div> Estatuto Tributario</a>'+
   '          <a href="ia-asistente.html"><div class="dd-icon" style="background:#ECFDF5">🤖</div> Asistente Contable</a>'+
-  '          <a href="ia-respuesta-requerimiento.html"><div class="dd-icon" style="background:#ECFDF5">📝</div> Responder Requerimiento</a>'+
+  '          <a href="ia-respuesta-requerimiento.html"><div class="dd-icon" style="background:#ECFDF5">📝</div> Requerimientos</a>'+
   '          <div class="mega-divider"></div>'+
   '          <a href="ia.html"><div class="dd-icon" style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5)">✨</div> <strong>Ver todas</strong></a>'+
   '        </div>'+
