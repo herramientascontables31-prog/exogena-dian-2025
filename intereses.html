@@ -173,8 +173,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div class="form-group" style="justify-content:flex-end">
       <div id="decretoToggle" class="toggle-row hidden">
         <input type="checkbox" id="decretoCheck">
-        <span>Aplicar beneficio <strong>Decreto 0240 de 2026</strong> (tasa especial 4.5% EA)</span>
+        <span>Aplicar beneficio <strong>Decreto 0240 de 2026</strong> (tasa especial 4.5% EA) <span id="decreto240DiasIntereses"></span></span>
       </div>
+      <script>
+      (function(){
+        var v=new Date('2026-04-30T23:59:59'),h=new Date(),d=Math.ceil((v-h)/86400000),el=document.getElementById('decreto240DiasIntereses');
+        if(!el)return;
+        if(d<=0){el.innerHTML='<span style="background:#DC2626;color:#fff;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700">Vencido</span>';
+          var t=document.getElementById('decretoToggle');if(t){t.classList.add('hidden')}
+        }else if(d<=5){el.innerHTML='<span style="background:#DC2626;color:#fff;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700">🚨 ¡'+d+' días!</span>'}
+        else if(d<=15){el.innerHTML='<span style="background:#92400E;color:#fff;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700">⏳ '+d+' días</span>'}
+        else{el.innerHTML='<span style="background:#065F46;color:#fff;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:700">⏳ '+d+' días restantes</span>'}
+      })();
+      </script>
     </div>
   </div>
 

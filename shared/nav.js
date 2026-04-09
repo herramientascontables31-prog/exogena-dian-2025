@@ -456,4 +456,17 @@
     }
   }
 
+  /* ─── Barra de compatibilidad (tool pages only) ─── */
+  if(variant!=='full'){
+    var SKIP_COMPAT=['ia.html','ia-asistente.html','ia-chat-et.html','ia-analisis-balance.html','ia-respuesta-requerimiento.html','ia-resumen-declaracion.html','ia-inconsistencias.html','404.html','terminos.html','politica-privacidad.html'];
+    if(SKIP_COMPAT.indexOf(page)===-1){
+      var compat=document.createElement('div');
+      compat.style.cssText='padding:12px 20px;text-align:center;font-size:.78rem;color:#64748B;border-top:1px solid #e2e8f0;background:#f9fafb;font-family:Outfit,DM Sans,sans-serif';
+      compat.innerHTML='Compatible con <strong>Siigo</strong> · <strong>World Office</strong> · <strong>Helisa</strong> · <strong>Alegra</strong> · <strong>MidaSoft</strong> · <strong>ZEUS</strong> · <strong>Contai</strong> · <strong>SAP</strong> &mdash; <a href="precios.html" style="color:#059669;font-weight:600;text-decoration:none">Ver planes PRO &rarr;</a>';
+      var mainEl=document.querySelector('main')||document.querySelector('#main');
+      if(mainEl&&mainEl.nextSibling)mainEl.parentNode.insertBefore(compat,mainEl.nextSibling);
+      else document.body.appendChild(compat);
+    }
+  }
+
 })();

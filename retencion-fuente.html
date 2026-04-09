@@ -226,8 +226,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <!-- PROCEDIMIENTO 2: 12 MESES -->
 <div class="card hidden" id="cardP2">
   <div class="card-title">&#128197; Promedio 12 meses — Procedimiento 2 (Art. 386 ET)</div>
-  <div class="alert alert-info">Ingrese los ingresos brutos de cada uno de los 12 meses anteriores. El sistema calcula el promedio y aplica la depuración sobre ese promedio.</div>
+  <div class="alert alert-info">Ingrese los ingresos brutos de cada uno de los 12 meses anteriores. El sistema calcula el promedio y aplica la depuración sobre ese promedio.<br><button onclick="replicarMeses()" style="background:none;border:none;color:#22C55E;font-size:.78rem;font-weight:600;cursor:pointer;padding:0;margin-top:4px;font-family:inherit">↓ Replicar Mes 1 en todos los meses</button></div>
   <div class="p2-grid" id="p2Grid"></div>
+  <div style="margin-top:8px;padding:10px 14px;background:rgba(5,150,105,.08);border:1px solid rgba(5,150,105,.2);border-radius:8px;font-size:.8rem;color:#059669;line-height:1.5">
+    📌 <strong>Importante:</strong> El porcentaje calculado con Procedimiento 2 se aplica de manera uniforme durante el <strong>semestre siguiente</strong> (Art. 386 ET). Si calculó con datos jul-dic del año anterior → aplica ene-jun. Si calculó con datos ene-jun → aplica jul-dic. El porcentaje se mantiene fijo durante todo el semestre independientemente de variaciones en el salario.
+  </div>
+  <script>
+  function replicarMeses(){
+    var m1=document.querySelector('#p2Grid input');
+    if(!m1||!m1.value){if(window.exoToast)exoToast('Ingresa primero el valor del Mes 1','warning');return}
+    var inputs=document.querySelectorAll('#p2Grid input');
+    inputs.forEach(function(inp){inp.value=m1.value;inp.dispatchEvent(new Event('input'))});
+    if(window.exoToast)exoToast('Valor replicado en los 12 meses','success');
+  }
+  </script>
   <div style="text-align:right;font-size:.85rem;font-weight:700;color:var(--pri)">Promedio: <span id="p2Prom" style="font-family:'JetBrains Mono',monospace">$0</span></div>
 </div>
 
