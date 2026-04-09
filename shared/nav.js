@@ -284,22 +284,6 @@
     document.body.insertAdjacentHTML('afterbegin',html);
   }
 
-  /* ─── Banner Decreto 0240/2026 — vence 30 abril 2026 ─── */
-  (function(){
-    var venc=new Date('2026-04-30T23:59:59');
-    var hoy=new Date();
-    var dias=Math.ceil((venc-hoy)/86400000);
-    if(dias<=0||page==='decreto240.html')return; // Vencido o estamos en la misma página
-    if(sessionStorage.getItem('decreto240_cerrado'))return;
-    var bg=dias<=5?'#DC2626':dias<=15?'#92400E':'#065F46';
-    var txt=dias<=5?'🚨 ¡ÚLTIMOS '+dias+' DÍAS!':'⏳ Faltan '+dias+' días';
-    var b=document.createElement('div');
-    b.id='decreto240-banner';
-    b.style.cssText='background:'+bg+';color:#fff;padding:8px 16px;text-align:center;font-size:.82rem;font-family:Outfit,DM Sans,sans-serif;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;z-index:201;position:relative';
-    b.innerHTML='<span>'+txt+' — <strong>Decreto 0240:</strong> Ahorra hasta 95% en sanciones DIAN pagando antes del 30 de abril</span><a href="decreto240.html" style="color:#fff;font-weight:700;text-decoration:underline">Calcular mi ahorro →</a><button onclick="sessionStorage.setItem(\'decreto240_cerrado\',\'1\');this.parentElement.remove()" style="background:none;border:none;color:rgba(255,255,255,.7);cursor:pointer;font-size:1.1rem;padding:0 4px">✕</button>';
-    document.body.insertBefore(b,document.body.firstChild);
-  })();
-
   /* ─── Add body padding for fixed nav on tool pages ─── */
   if(variant==='full'&&page!=='index.html'&&page!=='blog.html'&&page!==''){
     document.body.style.paddingTop='64px';
