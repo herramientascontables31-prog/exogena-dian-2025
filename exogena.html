@@ -1299,10 +1299,13 @@ const PARAM_1001_RANGOS=[
   ['5016','5125','5125'],['5016','5135','5139'],
   ['5016','5140','5199'],['5016','5210','5219'],
   ['5016','5235','5249'],['5016','5295','5299'],
-  ['5006','5305','5305'],['5101','530540','530540'],
+  ['5006','5305','5305'],['5101','5305','5305'],
   ['5007','1435','1499'],['5010','1504','1699'],['5010','1520','1540'],
   /* v11 AG2025 — Res. 000233/2025 */
-  ['5089','5305','5399'],['5090','5305','5399'],['5091','6135','6199'],['5102','5105','5199'],
+  /* 5089/5090 se diferencian por keyword (enajenacion vs abono); rango solo para 5089 como default */
+  ['5089','5306','5399'],['5091','6135','6199'],['5102','5105','5199'],
+  /* Clase 6: costos de ventas generales */
+  ['5007','6100','6134'],['5016','6200','6999'],
 ];
 const PARAM_1001_NOMINA_SUB={
   '5001':['06','07','08','09','10','15','27','30','33','36','39','42','45'],
@@ -1324,6 +1327,9 @@ const PARAM_1007=[
 ];
 const PARAM_1008=[
   ['1315','1305','1305'],['1316','1380','1399'],['1317','1330','1340'],['1317','1365','1365'],
+  ['1317','1310','1329'],['1317','1345','1364'],['1317','1370','1379'],
+  /* Anticipos y otros deudores reportables */
+  ['1317','1405','1499'],['1317','1505','1599'],['1317','1605','1699'],
 ];
 const PARAM_1009=[
   ['2202','2105','2199'],['2201','2205','2295'],['2204','2305','2334'],
@@ -1582,10 +1588,13 @@ function clasificarCuentas(){
         clasificacion.push({...r,formato,concepto,descripcion,val});continue;}
     }
 
-    // F1008 — CxC (Clase 1, excepto 1355)
-    if(cta[0]==='1'&&!cta.startsWith('1355')&&!cta.startsWith('1105')&&!cta.startsWith('1110')&&!cta.startsWith('12')){
+    // F1008 — CxC (Clase 1, excepto 1355, 1105, 1110, 12xx, 1101-1104 efectivo)
+    if(cta[0]==='1'&&!cta.startsWith('1355')&&!cta.startsWith('1105')&&!cta.startsWith('1110')&&!cta.startsWith('12')&&!cta.startsWith('1101')&&!cta.startsWith('1102')&&!cta.startsWith('1103')&&!cta.startsWith('1104')){
       const c=buscarConcepto(cta,PARAM_1008,nom,null);
       if(c){formato='F1008';concepto=c;descripcion='Cuentas por Cobrar';
+        clasificacion.push({...r,formato,concepto,descripcion,val});continue;}
+      // Fallback: cualquier cuenta clase 1 no clasificada que tenga saldo → F1008 concepto 1317
+      if(val>0){formato='F1008';concepto='1317';descripcion='Cuentas por Cobrar';
         clasificacion.push({...r,formato,concepto,descripcion,val});continue;}
     }
 
@@ -1641,7 +1650,24 @@ function renderClasificacion(sinClasificar){
   }
   if(sinClasificar>0){
     document.getElementById('clasifWarn').classList.remove('hidden');
-    document.getElementById('clasifWarnText').innerHTML=`<strong>${sinClasificar} registros</strong> no fueron clasificados. Esto es normal — no todas las cuentas del balance aplican para exogena (ej: clase 3 patrimonio distinto de socios, cuentas de orden, etc.)`;
+    // Desglose de sin clasificar por clase PUC
+    const sinClasifPorClase={};
+    for(const r of clasificacion){
+      if(r.formato!=='—')continue;
+      const clase=r.code[0];
+      const claseNom={'1':'Activos','2':'Pasivos','3':'Patrimonio','4':'Ingresos','5':'Gastos','6':'Costos','7':'Costos produccion','8':'Cuentas orden deudoras','9':'Cuentas orden acreedoras','0':'Otras'}[clase]||'Otra';
+      if(!sinClasifPorClase[clase])sinClasifPorClase[clase]={nombre:claseNom,count:0,total:0,ejemplo:''};
+      sinClasifPorClase[clase].count++;
+      sinClasifPorClase[clase].total+=r.val;
+      if(!sinClasifPorClase[clase].ejemplo)sinClasifPorClase[clase].ejemplo=r.code+' '+r.name;
+    }
+    let detalle=`<strong>${sinClasificar} registros</strong> no fueron clasificados en ningun formato. Desglose por clase PUC:<br><div style="margin-top:8px;font-size:.8rem">`;
+    for(const[cl,d] of Object.entries(sinClasifPorClase).sort((a,b)=>b[1].count-a[1].count)){
+      const esNormal=['3','7','8','9','0'].includes(cl);
+      detalle+=`<div style="margin:3px 0;${esNormal?'color:var(--muted)':'color:#92400E'}"><strong>Clase ${cl} (${d.nombre}):</strong> ${d.count} reg · $${fN(d.total)} ${esNormal?'<em>— normal, no aplica para exogena</em>':'<em>— verificar si deberian clasificarse</em>'} <span style="font-size:.72rem;color:var(--muted)">Ej: ${d.ejemplo.substring(0,40)}</span></div>`;
+    }
+    detalle+='</div>';
+    document.getElementById('clasifWarnText').innerHTML=detalle;
   }
 
   // Format summary table
@@ -1923,7 +1949,7 @@ function generarFormatos(){
       }
     }
   }
-  formatos['F1001']=Object.values(final1).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',Math.round(v.ded),Math.round(v.noDed),Math.round(v.retFte),0,Math.round(v.retIva),0]});
+  formatos['F1001']=Object.values(final1).filter(v=>Math.round(v.ded)+Math.round(v.noDed)+Math.round(v.retFte)+Math.round(v.retIva)>0).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',Math.round(v.ded),Math.round(v.noDed),Math.round(v.retFte),0,Math.round(v.retIva),0]});
 
   // ── F1003: Retenciones ──
   const dic3={};
@@ -1934,7 +1960,11 @@ function generarFormatos(){
     // Valor retención: crédito del balance (o débito si ya se cruzó)
     dic3[k].ret+=r.cre>0?r.cre:r.deb;
   }
-  formatos['F1003']=Object.values(dic3).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',0,Math.round(v.ret)]});
+  // Calcular base retención desde gastos del tercero
+  for(const[k,v] of Object.entries(dic3)){
+    v.base=gastosPorNit[v.nit]||0;
+  }
+  formatos['F1003']=Object.values(dic3).filter(v=>Math.round(v.ret)>0).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',Math.round(v.base),Math.round(v.ret)]});
 
   // ── F1005: IVA Descontable ──
   const dic5={};
@@ -1943,7 +1973,7 @@ function generarFormatos(){
     if(!dic5[r.nit])dic5[r.nit]={nit:r.nit,razon:r.razon,val:0};
     dic5[r.nit].val+=r.deb;
   }
-  formatos['F1005']=Object.values(dic5).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,Math.round(v.val),0]});
+  formatos['F1005']=Object.values(dic5).filter(v=>Math.round(v.val)>0).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,Math.round(v.val),0]});
 
   // ── F1006: IVA Generado ──
   const dic6={};
@@ -1952,7 +1982,7 @@ function generarFormatos(){
     if(!dic6[r.nit])dic6[r.nit]={nit:r.nit,razon:r.razon,val:0};
     dic6[r.nit].val+=r.cre;
   }
-  formatos['F1006']=Object.values(dic6).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,Math.round(v.val),0,0]});
+  formatos['F1006']=Object.values(dic6).filter(v=>Math.round(v.val)>0).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,Math.round(v.val),0,0]});
 
   // ── F1007: Ingresos ──
   const dic7={};
@@ -2247,12 +2277,10 @@ async function exportExcel(){
   const sumFmt=(f,colIdx)=>(formatos[f]||[]).reduce((s,r)=>typeof r[colIdx]==='number'?s+r[colIdx]:s,0);
   const sumBal=(prefijo)=>parsedData.filter(r=>r.code.startsWith(prefijo)).reduce((s,r)=>s+Math.abs(r.deb-r.cre),0);
   const checks=[
-    ['F1007 Ingresos',sumFmt('F1007',13),sumBal('4')],
-    ['F1001 Pagos',sumFmt('F1001',13)+sumFmt('F1001',14),sumBal('5')+sumBal('6')],
-    ['F1008 CxC',sumFmt('F1008',12),parsedData.filter(r=>r.code.startsWith('13')&&!r.code.startsWith('1355')).reduce((s,r)=>s+Math.abs(r.saldo||0),0)],
-    ['F1009 CxP',sumFmt('F1009',12),parsedData.filter(r=>r.code.startsWith('2')).reduce((s,r)=>s+Math.abs(r.saldo||0),0)],
-    ['F1005 IVA Desc.',sumFmt('F1005',8),parsedData.filter(r=>r.code.startsWith('2408')).reduce((s,r)=>s+r.deb,0)],
-    ['F1006 IVA Gen.',sumFmt('F1006',8),parsedData.filter(r=>r.code.startsWith('2408')).reduce((s,r)=>s+r.cre,0)],
+    ['F1007 Ingresos vs Clase 4',sumFmt('F1007',13),sumBal('4')],
+    ['F1001 Pagos vs Clases 5+6',sumFmt('F1001',13)+sumFmt('F1001',14),sumBal('5')+sumBal('6')],
+    ['F1005 IVA Descontable vs Debitos 2408',sumFmt('F1005',8),parsedData.filter(r=>r.code.startsWith('2408')).reduce((s,r)=>s+r.deb,0)],
+    ['F1006 IVA Generado vs Creditos 2408',sumFmt('F1006',8),parsedData.filter(r=>r.code.startsWith('2408')).reduce((s,r)=>s+r.cre,0)],
   ];
   const alertas=[];
   for(const[nombre,valExo,valBal] of checks){
@@ -2262,8 +2290,40 @@ async function exportExcel(){
       alertas.push(`${nombre}: Exogena $${fN(valExo)} vs Balance $${fN(valBal)} (${pct.toFixed(1)}% diferencia)`);
     }
   }
+  // Validaciones DIAN adicionales
+  const retFtePracticada1001=sumFmt('F1001',15);
+  const retFteRecibida1003=(formatos['F1003']||[]).reduce((s,r)=>typeof r[14]==='number'?s+r[14]:s,0);
+  if(retFtePracticada1001>0&&retFteRecibida1003>0){
+    const pctRet=Math.abs((retFtePracticada1001-retFteRecibida1003)/Math.max(retFtePracticada1001,retFteRecibida1003)*100);
+    if(pctRet>10)alertas.push(`F1001 RetFte Practicada ($${fN(retFtePracticada1001)}) vs F1003 Retenciones Recibidas ($${fN(retFteRecibida1003)}) — ${pctRet.toFixed(1)}% diferencia. La DIAN cruza estos valores.`);
+  }
+  // F1010 Socios vs Patrimonio clase 3
+  const totalSocios=(formatos['F1010']||[]).reduce((s,r)=>typeof r[12]==='number'?s+r[12]:s,0);
+  const totalPatrimonio=parsedData.filter(r=>r.code.startsWith('31')).reduce((s,r)=>s+Math.max(r.cre-r.deb,0),0);
+  if(totalPatrimonio>0&&totalSocios>0){
+    const pctPat=Math.abs((totalSocios-totalPatrimonio)/totalPatrimonio*100);
+    if(pctPat>5)alertas.push(`F1010 Socios ($${fN(totalSocios)}) vs Patrimonio Clase 31 ($${fN(totalPatrimonio)}) — ${pctPat.toFixed(1)}% diferencia.`);
+  }
+  // F2276 total bruto vs gastos nomina
+  const totalNomExo=(formatos['F2276']||[]).reduce((s,r)=>typeof r[31]==='number'?s+r[31]:s,0);
+  const totalNomBal=parsedData.filter(r=>r.code.startsWith('5105')).reduce((s,r)=>s+Math.abs(r.deb-r.cre),0);
+  if(totalNomBal>0&&totalNomExo>0){
+    const pctNom=Math.abs((totalNomExo-totalNomBal)/totalNomBal*100);
+    if(pctNom>10)alertas.push(`F2276 Total Bruto ($${fN(totalNomExo)}) vs Gastos Nomina 5105 ($${fN(totalNomBal)}) — ${pctNom.toFixed(1)}% diferencia.`);
+  }
+  // Registros sin razon social ni nombres
+  let sinNombre=0;
+  for(const f of ['F1001','F1003','F1007','F1008','F1009']){
+    for(const row of (formatos[f]||[])){
+      const rsIdx=f==='F1005'||f==='F1006'||f==='F1010'?7:8;
+      const a1Idx=f==='F1005'||f==='F1006'||f==='F1010'?3:4;
+      if(!row[rsIdx]&&!row[a1Idx])sinNombre++;
+    }
+  }
+  if(sinNombre>0)alertas.push(`${sinNombre} registros sin razon social ni apellidos — pueden ser rechazados por el prevalidador DIAN.`);
+
   if(alertas.length>0){
-    const msg='⚠️ DISCREPANCIAS DETECTADAS:\n\n'+alertas.join('\n')+'\n\nEstas diferencias pueden generar requerimientos de la DIAN.\n\n¿Desea descargar de todas formas?';
+    const msg='⚠️ VALIDACIONES DETECTADAS:\n\n'+alertas.join('\n\n')+'\n\nEstas diferencias pueden generar requerimientos de la DIAN (Art. 651 E.T.).\n\n¿Desea descargar de todas formas?';
     if(!confirm(msg))return;
   }
 
