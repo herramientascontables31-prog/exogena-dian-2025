@@ -9,7 +9,7 @@ import httpx
 CAPSOLVER_API = "https://api.capsolver.com"
 
 
-async def solve_turnstile(site_key: str, page_url: str, timeout: int = 60, retries: int = 2) -> str | None:
+async def solve_turnstile(site_key: str, page_url: str, timeout: int = 45, retries: int = 1) -> str | None:
     """
     Enviar tarea a CapSolver para resolver Cloudflare Turnstile.
     Retorna el token resuelto o None si falla.
