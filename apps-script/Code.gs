@@ -462,6 +462,108 @@ function buscarPorClave(sheet, clave) {
 }
 
 // ═══════════════════════════════════════════════════════════
+// MONITOR — Verificar que los servicios de IA estén activos
+// Configurar trigger cada 5 minutos: monitorHealth
+// ═══════════════════════════════════════════════════════════
+var BACKEND_URL = 'https://dian-proxy-337146111457.southamerica-east1.run.app';
+var ALERT_EMAIL = 'soporte@exogenadian.com';
+
+/**
+ * Ejecutar cada 5 minutos con trigger.
+ * 1. Llama a /api/health y verifica que todos los servicios estén OK.
+ * 2. Hace un POST ligero a cada endpoint de IA para confirmar que responden (no 404/500).
+ * 3. Si algo falla, envía email. No repite la alerta si ya se envió en las últimas 2 horas.
+ */
+function monitorHealth() {
+  var props = PropertiesService.getScriptProperties();
+  var lastAlert = Number(props.getProperty('MONITOR_LAST_ALERT') || '0');
+  var now = new Date().getTime();
+  var cooldown = 2 * 60 * 60 * 1000; // 2 horas entre alertas
+
+  var errores = [];
+
+  // 1. Health check general
+  try {
+    var resp = UrlFetchApp.fetch(BACKEND_URL + '/api/health', { muteHttpExceptions: true });
+    var code = resp.getResponseCode();
+    if (code !== 200) {
+      errores.push('Health endpoint retornó HTTP ' + code);
+    } else {
+      var data = JSON.parse(resp.getContentText());
+      if (data.status !== 'ok') {
+        errores.push('Health status: ' + data.status);
+      }
+      // Verificar cada servicio
+      var services = data.services || {};
+      for (var svc in services) {
+        if (!services[svc]) {
+          errores.push('Servicio caído: ' + svc);
+        }
+      }
+    }
+  } catch (e) {
+    errores.push('Health check falló: ' + e.message);
+  }
+
+  // 2. Verificar que los endpoints de IA respondan (POST mínimo, esperamos 400/422, NO 404)
+  var endpoints = [
+    { name: 'Chat Exa', path: '/api/chat' },
+    { name: 'IA Asistente', path: '/api/ia/asistente' },
+    { name: 'IA Balance', path: '/api/ia/analisis-balance' },
+    { name: 'IA Chat ET', path: '/api/ia/chat-et' },
+    { name: 'IA Inconsistencias', path: '/api/ia/inconsistencias' },
+    { name: 'IA Resumen', path: '/api/ia/resumen-declaracion' },
+    { name: 'IA Requerimiento', path: '/api/ia/respuesta-requerimiento' },
+    { name: 'IA Verificar Artículos', path: '/api/ia/verificar-articulos' }
+  ];
+
+  for (var i = 0; i < endpoints.length; i++) {
+    try {
+      var r = UrlFetchApp.fetch(BACKEND_URL + endpoints[i].path, {
+        method: 'POST',
+        contentType: 'application/json',
+        payload: JSON.stringify({}),
+        muteHttpExceptions: true
+      });
+      var status = r.getResponseCode();
+      // 404 o 500+ = endpoint no registrado o servidor roto
+      if (status === 404 || status >= 500) {
+        errores.push(endpoints[i].name + ' (' + endpoints[i].path + ') → HTTP ' + status);
+      }
+      // 422 (validation error) o 400 es esperado con body vacío = endpoint existe
+    } catch (e) {
+      errores.push(endpoints[i].name + ' no responde: ' + e.message);
+    }
+  }
+
+  // 3. Si hay errores, enviar alerta (respetando cooldown)
+  if (errores.length > 0) {
+    Logger.log('Monitor detectó ' + errores.length + ' error(es): ' + errores.join('; '));
+
+    if (now - lastAlert > cooldown) {
+      var subject = '🚨 ExógenaDIAN — Servicios caídos (' + errores.length + ' errores)';
+      var body = 'El monitor automático detectó los siguientes problemas:\n\n'
+        + errores.map(function(e, i) { return (i+1) + '. ' + e; }).join('\n')
+        + '\n\nURL backend: ' + BACKEND_URL
+        + '\nRevisa Cloud Run: https://console.cloud.google.com/run'
+        + '\n\nFecha: ' + new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
+
+      try {
+        MailApp.sendEmail(ALERT_EMAIL, subject, body);
+        props.setProperty('MONITOR_LAST_ALERT', String(now));
+        Logger.log('Alerta enviada a ' + ALERT_EMAIL);
+      } catch (e) {
+        Logger.log('Error enviando alerta: ' + e.message);
+      }
+    } else {
+      Logger.log('Cooldown activo, no se reenvía alerta.');
+    }
+  } else {
+    Logger.log('Monitor OK — todos los servicios activos.');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 // SETUP — solo ejecutar si necesitas recrear headers
 // ═══════════════════════════════════════════════════════════
 function setupSheet() {

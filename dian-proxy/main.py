@@ -24,6 +24,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from cache import get_cache
+from chat import router as chat_router
+from ia import router as ia_router
 from dian_scraper import consultar_dian, circuit_breaker, browser_pool
 from fallback import consultar_fallback, _calc_dv
 
@@ -60,6 +62,9 @@ app.add_middleware(
 )
 
 cache = get_cache(CACHE_TTL_DAYS)
+
+app.include_router(chat_router)
+app.include_router(ia_router)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -405,12 +410,29 @@ async def get_remaining(request: Request, x_pro_key: str | None = Header(None)):
 
 @app.get("/api/health")
 async def health_check():
-    """Health check + estado del circuit breaker."""
+    """Health check + estado del circuit breaker + servicios."""
     cb_status = circuit_breaker.get_status()
     dian_ok = cb_status["state"] != "OPEN"
+
+    # Verificar que todos los módulos críticos estén conectados
+    registered = [r.path for r in app.routes]
+    chat_ok = any("/api/chat" in p for p in registered)
+    ia_ok = any("/api/ia" in p for p in registered)
+    anthropic_ok = bool(os.getenv("ANTHROPIC_API_KEY"))
+    gemini_ok = bool(os.getenv("GEMINI_API_KEY"))
+
+    services = {
+        "chat_router": chat_ok,
+        "ia_router": ia_ok,
+        "anthropic_key": anthropic_ok,
+        "gemini_key": gemini_ok,
+    }
+    all_ok = all(services.values())
+
     return {
-        "status": "ok" if dian_ok else "degraded",
+        "status": "ok" if (dian_ok and all_ok) else "degraded",
         "dian_available": dian_ok,
+        "services": services,
         "circuit_breaker": cb_status,
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "cache": cache.stats(),
