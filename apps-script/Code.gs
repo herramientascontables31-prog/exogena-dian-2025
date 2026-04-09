@@ -564,6 +564,91 @@ function monitorHealth() {
 }
 
 // ═══════════════════════════════════════════════════════════
+// MONITOR DIAN — Detectar cambios en el portal MUISCA
+// Configurar trigger diario: monitorDIAN
+// ═══════════════════════════════════════════════════════════
+/**
+ * Verifica que el portal MUISCA de la DIAN no haya cambiado su estructura.
+ * Consulta un NIT conocido (DIAN misma: 800197268) y verifica que el scraper
+ * pueda extraer razón social y estado. Si falla, envía alerta.
+ * Ejecutar 1 vez al día con trigger.
+ */
+function monitorDIAN() {
+  var props = PropertiesService.getScriptProperties();
+  var lastAlert = Number(props.getProperty('DIAN_MONITOR_LAST_ALERT') || '0');
+  var now = new Date().getTime();
+  var cooldown = 12 * 60 * 60 * 1000; // 12 horas entre alertas
+
+  // NIT de prueba: la DIAN misma
+  var testNit = '800197268';
+  var errores = [];
+
+  try {
+    var resp = UrlFetchApp.fetch(BACKEND_URL + '/api/debug/' + testNit, {
+      muteHttpExceptions: true,
+      headers: { 'Origin': 'https://exogenadian.com' }
+    });
+    var code = resp.getResponseCode();
+
+    if (code !== 200) {
+      errores.push('Debug endpoint retornó HTTP ' + code);
+    } else {
+      var data = JSON.parse(resp.getContentText());
+      var dian = data.dian || {};
+
+      // Verificar que el scraper DIAN funcione
+      if (dian.error) {
+        errores.push('Scraper DIAN error: ' + (dian.error || '').substring(0, 200));
+      }
+      if (!dian.razon_social || dian.razon_social.length < 3) {
+        errores.push('Scraper DIAN no extrajo razón social para NIT ' + testNit);
+      }
+      if (!dian.estado_rut) {
+        errores.push('Scraper DIAN no extrajo estado RUT para NIT ' + testNit);
+      }
+
+      // Si la razón social cambió, podría ser un falso positivo pero vale alertar
+      if (dian.razon_social && dian.razon_social.indexOf('IMPUESTOS') === -1 && dian.razon_social.indexOf('DIAN') === -1) {
+        errores.push('Razón social inesperada para NIT DIAN: ' + dian.razon_social);
+      }
+    }
+  } catch (e) {
+    errores.push('Error consultando debug endpoint: ' + e.message);
+  }
+
+  if (errores.length > 0) {
+    Logger.log('Monitor DIAN detectó ' + errores.length + ' problema(s): ' + errores.join('; '));
+
+    if (now - lastAlert > cooldown) {
+      var subject = '🔴 ExógenaDIAN — Scraper DIAN posiblemente roto';
+      var body = 'El monitor diario detectó que el scraper de DIAN MUISCA puede estar fallando:\n\n'
+        + errores.map(function(e, i) { return (i+1) + '. ' + e; }).join('\n')
+        + '\n\nPosibles causas:'
+        + '\n  - La DIAN cambió la estructura del portal MUISCA'
+        + '\n  - Cloudflare actualizó el Turnstile/CAPTCHA'
+        + '\n  - CapSolver no puede resolver el nuevo tipo de CAPTCHA'
+        + '\n\nAcciones:'
+        + '\n  1. Verificar manualmente: https://muisca.dian.gov.co/WebRutMuisca/DefConsultaEstadoRUT.faces'
+        + '\n  2. Revisar logs: https://console.cloud.google.com/run?project=exogenadian-492122'
+        + '\n  3. Si la DIAN cambió, actualizar los selectores en dian_scraper.py'
+        + '\n\nFecha: ' + new Date().toLocaleString('es-CO', { timeZone: 'America/Bogota' });
+
+      try {
+        MailApp.sendEmail(ALERT_EMAIL, subject, body);
+        props.setProperty('DIAN_MONITOR_LAST_ALERT', String(now));
+        Logger.log('Alerta DIAN enviada a ' + ALERT_EMAIL);
+      } catch (e) {
+        Logger.log('Error enviando alerta DIAN: ' + e.message);
+      }
+    } else {
+      Logger.log('Cooldown DIAN activo, no se reenvía alerta.');
+    }
+  } else {
+    Logger.log('Monitor DIAN OK — scraper funcionando correctamente.');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 // SETUP — solo ejecutar si necesitas recrear headers
 // ═══════════════════════════════════════════════════════════
 function setupSheet() {

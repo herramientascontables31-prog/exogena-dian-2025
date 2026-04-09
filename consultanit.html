@@ -517,9 +517,17 @@ async function consultarSingle() {
       r = mergeResults(r, online);
       renderSingleResult(r);
     } else if (online && online.error) {
-      el.innerHTML += '<div style="margin-top:8px;font-size:.72rem;color:var(--f400)">DIAN: ' + esc(online.error) + '</div>';
+      el.innerHTML += '<div style="margin-top:10px;padding:12px 16px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;font-size:.82rem;color:#92400E;line-height:1.5">'
+        + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-weight:700">&#9888;&#65039; No se pudo consultar en DIAN MUISCA</div>'
+        + '<div style="font-size:.78rem;margin-bottom:8px">El portal MUISCA de la DIAN realiza cambios frecuentes en su plataforma que pueden afectar temporalmente nuestra consulta automática. Trabajamos constantemente para mantener la herramienta actualizada.</div>'
+        + '<div style="font-size:.78rem">Puedes consultar directamente en: <a href="https://muisca.dian.gov.co/WebRutMuisca/DefConsultaEstadoRUT.faces" target="_blank" rel="noopener" style="color:#1E40AF;font-weight:600;text-decoration:underline">Portal MUISCA DIAN &rarr;</a></div>'
+        + '</div>';
     } else if (!online) {
-      el.innerHTML += '<div style="margin-top:10px;padding:10px 16px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;font-size:.82rem;color:#92400E;display:flex;align-items:center;gap:8px">&#9888;&#65039; La página de la DIAN no está respondiendo en este momento. Por favor intenta de nuevo en unos minutos. Los resultados mostrados provienen de las listas offline.</div>';
+      el.innerHTML += '<div style="margin-top:10px;padding:12px 16px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;font-size:.82rem;color:#92400E;line-height:1.5">'
+        + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-weight:700">&#9888;&#65039; La página de la DIAN no está respondiendo</div>'
+        + '<div style="font-size:.78rem;margin-bottom:8px">El portal MUISCA de la DIAN realiza cambios frecuentes en su plataforma. Los resultados mostrados provienen de las listas offline. Intenta de nuevo en unos minutos.</div>'
+        + '<div style="font-size:.78rem">Consulta directamente en: <a href="https://muisca.dian.gov.co/WebRutMuisca/DefConsultaEstadoRUT.faces" target="_blank" rel="noopener" style="color:#1E40AF;font-weight:600;text-decoration:underline">Portal MUISCA DIAN &rarr;</a></div>'
+        + '</div>';
     }
   } else if (remaining <= 0 && BACKEND_AVAILABLE) {
     const el = document.getElementById('singleResult');
