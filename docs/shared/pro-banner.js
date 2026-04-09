@@ -10,22 +10,22 @@
   /* ─── Tool config: page → { free, pro, icon } ─── */
   var TOOLS = {
     'exogena.html':               { free:'3 formatos incluidos',        pro:'10 formatos completos',              icon:'📋' },
-    'renta110.html':              { free:'Borrador en pantalla',         pro:'Excel con depuracion completa',      icon:'📄' },
-    'iva300.html':                { free:'Formulario completo',          pro:'+ Cruce con facturacion electronica',icon:'🧾' },
+    'renta110.html':              { free:'Borrador en pantalla',         pro:'Excel con depuración completa',      icon:'📄' },
+    'iva300.html':                { free:'Formulario completo',          pro:'+ Cruce con facturación electrónica',icon:'🧾' },
     'retencion350.html':          { free:'Formulario completo',          pro:'+ Excel formulado descargable',      icon:'🧾' },
     'estadosfinancieros.html':    { free:'ESF + Estado de Resultados',   pro:'+ Notas, comparativo, flujo, patrimonio', icon:'📊' },
-    'conciliacion.html':          { free:'Hasta 100 movimientos',        pro:'Sin limite de movimientos',          icon:'🏦' },
-    'consultanit.html':           { free:'10 consultas por dia',         pro:'Consultas ilimitadas',               icon:'🔍' },
-    'dashboard.html':             { free:'Vista basica',                 pro:'Dashboard completo con graficos',    icon:'📈' },
-    'formato220.html':            { free:'Certificado basico',           pro:'Todas las modalidades',              icon:'📜' },
-    'credito.html':               { free:'Simulacion basica',            pro:'Exportacion y comparativo',          icon:'💳' },
-    'decreto240.html':            { free:'Consulta basica',              pro:'Busqueda avanzada y exportacion',    icon:'📑' },
-    'ia-analisis-balance.html':   { free:'3 analisis por dia',           pro:'30 analisis por dia',                icon:'🤖', dark:true },
-    'ia-chat-et.html':            { free:'3 consultas por dia',          pro:'50 consultas por dia',               icon:'⚖️', dark:true },
-    'ia-asistente.html':          { free:'3 consultas por dia',          pro:'50 consultas por dia',               icon:'💬', dark:true },
-    'ia-respuesta-requerimiento.html': { free:'3 consultas por dia',     pro:'50 consultas por dia',               icon:'📨', dark:true },
-    'ia-resumen-declaracion.html':{ free:'3 consultas por dia',          pro:'50 consultas por dia',               icon:'📝', dark:true },
-    'ia-inconsistencias.html':    { free:'3 consultas por dia',          pro:'50 consultas por dia',               icon:'🔎', dark:true }
+    'conciliacion.html':          { free:'Hasta 100 movimientos',        pro:'Sin límite de movimientos',          icon:'🏦' },
+    'consultanit.html':           { free:'10 consultas por día',         pro:'Consultas ilimitadas',               icon:'🔍' },
+    'dashboard.html':             { free:'Vista básica',                 pro:'Dashboard completo con gráficos',    icon:'📈' },
+    'formato220.html':            { free:'Certificado básico',           pro:'Todas las modalidades',              icon:'📜' },
+    'credito.html':               { free:'Simulación básica',            pro:'Exportación y comparativo',          icon:'💳' },
+    'decreto240.html':            { free:'Consulta básica',              pro:'Búsqueda avanzada y exportación',    icon:'📑' },
+    'ia-analisis-balance.html':   { free:'3 análisis por día',           pro:'30 análisis por día',                icon:'🤖', dark:true },
+    'ia-chat-et.html':            { free:'3 consultas por día',          pro:'50 consultas por día',               icon:'⚖️', dark:true },
+    'ia-asistente.html':          { free:'3 consultas por día',          pro:'50 consultas por día',               icon:'💬', dark:true },
+    'ia-respuesta-requerimiento.html': { free:'3 consultas por día',     pro:'50 consultas por día',               icon:'📨', dark:true },
+    'ia-resumen-declaracion.html':{ free:'3 consultas por día',          pro:'50 consultas por día',               icon:'📝', dark:true },
+    'ia-inconsistencias.html':    { free:'3 consultas por día',          pro:'50 consultas por día',               icon:'🔎', dark:true }
   };
 
   /* ─── Skip pages that don't need a banner ─── */
@@ -205,14 +205,14 @@
     var banner = document.createElement('div');
     banner.className = 'pro-status-banner';
     banner.setAttribute('role', 'status');
-    banner.setAttribute('aria-label', 'Estado de suscripcion');
+    banner.setAttribute('aria-label', 'Estado de suscripción');
 
     if (isFreeOnly) {
       /* ── Herramienta 100% gratuita ── */
       if (isPro) return; // PRO users don't need to see "free" badge
       banner.classList.add('free-tool');
       banner.innerHTML = '<span class="psb-badge-gratis">✓ Herramienta gratuita</span>' +
-        '<span class="psb-limits">Sin limites ni suscripcion</span>';
+        '<span class="psb-limits">Sin límites ni suscripción</span>';
     } else if (isPro) {
       /* ── PRO activo ── */
       var theme = tool.dark ? 'dark' : 'light';

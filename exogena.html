@@ -149,18 +149,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 <!-- Onboarding modal -->
 <div class="onboard-overlay" id="onboardModal">
   <div class="onboard-box">
-    <h2>Bienvenido a Exogena DIAN</h2>
-    <p>Genera automaticamente los 10 formatos de informacion exogena desde tu balance de prueba en 5 pasos:</p>
+    <h2>Bienvenido a Exógena DIAN</h2>
+    <p>Genera automáticamente los 10 formatos de información exógena desde tu balance de prueba en 5 pasos:</p>
     <ol class="onboard-steps">
-      <li><span class="step-num">1</span><div><strong>Sube tu balance de prueba por terceros</strong><br>Archivo Excel (.xlsx/.xls) exportado desde Siigo, World Office, Helisa, Alegra u otro software. Debe tener: Codigo cuenta, NIT tercero, Debitos y Creditos del ano completo (ene-dic).</div></li>
-      <li><span class="step-num">2</span><div><strong>Configura los datos de tu empresa</strong><br>NIT, razon social, direccion, departamento, municipio y representante legal.</div></li>
-      <li><span class="step-num">3</span><div><strong>Verifica el mapeo de columnas</strong><br>La herramienta detecta automaticamente tus columnas. Solo verifica que esten correctas.</div></li>
-      <li><span class="step-num">4</span><div><strong>Revisa la clasificacion por formato</strong><br>Cada cuenta se clasifica en el formato DIAN correspondiente (F1001 Pagos, F1003 Retenciones, F1007 Ingresos, etc.). Puedes ajustar si algo quedo mal.</div></li>
+      <li><span class="step-num">1</span><div><strong>Sube tu balance de prueba por terceros</strong><br>Archivo Excel (.xlsx/.xls) exportado desde Siigo, World Office, Helisa, Alegra u otro software. Debe tener: Código cuenta, NIT tercero, Débitos y Créditos del año completo (ene-dic).</div></li>
+      <li><span class="step-num">2</span><div><strong>Configura los datos de tu empresa</strong><br>NIT, razón social, direccion, departamento, municipio y representante legal.</div></li>
+      <li><span class="step-num">3</span><div><strong>Verifica el mapeo de columnas</strong><br>La herramienta detecta automáticamente tus columnas. Solo verifica que estén correctas.</div></li>
+      <li><span class="step-num">4</span><div><strong>Revisa la clasificación por formato</strong><br>Cada cuenta se clasifica en el formato DIAN correspondiente (F1001 Pagos, F1003 Retenciones, F1007 Ingresos, etc.). Puedes ajustar si algo quedó mal.</div></li>
       <li><span class="step-num">5</span><div><strong>Descarga el Excel y genera los XML</strong><br>Descargas un Excel con 10 hojas (una por formato). Luego usas el Prevalidador DIAN para generar los XML que subes al MUISCA.</div></li>
     </ol>
     <div style="background:#FEF3C7;border:1px solid #FDE68A;border-radius:8px;padding:10px 14px;margin:12px 0 8px;font-size:.8rem;color:#92400E">
-      <strong>Version gratuita:</strong> genera 3 formatos (F1003, F1007, F2276).<br>
-      <strong>Version PRO ($19.900/mes):</strong> genera los 10 formatos completos sin restriccion.
+      <strong>Versión gratuita:</strong> genera 3 formatos (F1003, F1007, F2276).<br>
+      <strong>Versión PRO ($19.900/mes):</strong> genera los 10 formatos completos sin restricción.
     </div>
     <p style="font-size:.82rem;color:var(--green)">Tus datos se procesan 100% en tu navegador. Nunca salen de tu equipo.</p>
     <button class="onboard-close" onclick="cerrarOnboarding()">Entendido, comenzar</button>
@@ -183,10 +183,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <div style="display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;margin-bottom:16px">
     <div style="display:flex;align-items:center;gap:12px">
       <span id="proBadge"></span>
-      <span style="font-size:.85rem;color:var(--muted)" id="proStatus">Version gratuita</span>
+      <span style="font-size:.85rem;color:var(--muted)" id="proStatus">Versión gratuita</span>
     </div>
     <div style="display:flex;gap:8px;align-items:center" id="proActivation">
-      <input type="email" id="proKeyInput" placeholder="Email PRO" aria-label="Email para activar suscripcion PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:180px">
+      <input type="email" id="proKeyInput" placeholder="Email PRO" aria-label="Email para activar suscripción PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;width:180px">
       <button onclick="activarPro()" class="btn btn-primary" style="padding:6px 16px;font-size:.82rem">Activar</button>
       <a href="precios.html" target="_blank" style="font-size:.78rem;color:var(--pri2);text-decoration:none" title="PRO: $19.900/mes — Exógena completa, notas EEFF, comparativos">Suscribirse → <span style="font-size:.7rem;color:var(--muted)">$19.900/mes</span></a>
     </div>
@@ -354,7 +354,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <div class="steps">
     <div class="step-pill" id="sp1" onclick="goStep(1)" style="cursor:pointer"><span class="num">1</span> Inicio</div>
     <div class="step-pill" id="sp2" onclick="goStep(2)" style="cursor:pointer"><span class="num">2</span> Columnas</div>
-    <div class="step-pill" id="sp3" onclick="goStep(3)" style="cursor:pointer"><span class="num">3</span> Clasificacion</div>
+    <div class="step-pill" id="sp3" onclick="goStep(3)" style="cursor:pointer"><span class="num">3</span> Clasificación</div>
     <div class="step-pill" id="sp4" onclick="goStep(4)" style="cursor:pointer"><span class="num">4</span> Formatos</div>
     <div class="step-pill" id="sp5" onclick="goStep(5)" style="cursor:pointer"><span class="num">5</span> Descargar</div>
   </div>
@@ -362,8 +362,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <!-- ═══ STEP 1: INICIO ═══ -->
   <div id="step1">
     <div class="card">
-      <div class="card-title"><span>📊</span> Balance de Prueba por Terceros <button class="help-btn" title="Ayuda" onclick="exoToast('Necesitas un balance de prueba con auxiliar por tercero del ano gravable completo (ene-dic). Debe tener minimo: Codigo PUC, Nombre cuenta, NIT tercero, Debitos y Creditos. Lo puedes exportar desde Siigo, World Office, Helisa, Alegra u otro software contable.','info')">?</button></div>
-      <div class="alert alert-info"><span>💡</span><div>Sube el <strong>balance de prueba por terceros</strong> con las clases 1 a 6. Debe incluir <strong>codigo de cuenta, nombre, NIT del tercero, debitos y creditos</strong>. Compatible con cualquier software contable.</div></div>
+      <div class="card-title"><span>📊</span> Balance de Prueba por Terceros <button class="help-btn" title="Ayuda" onclick="exoToast('Necesitas un balance de prueba con auxiliar por tercero del año gravable completo (ene-dic). Debe tener mínimo: Codigo PUC, Nombre cuenta, NIT tercero, Débitos y Créditos. Lo puedes exportar desde Siigo, World Office, Helisa, Alegra u otro software contable.','info')">?</button></div>
+      <div class="alert alert-info"><span>💡</span><div>Sube el <strong>balance de prueba por terceros</strong> con las clases 1 a 6. Debe incluir <strong>código de cuenta, nombre, NIT del tercero, débitos y créditos</strong>. Compatible con cualquier software contable.</div></div>
 
       <!-- Checklist de requisitos -->
       <div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:16px 20px;margin-bottom:16px">
@@ -371,25 +371,25 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
           <span style="font-size:1.1rem">&#9745;</span> Antes de subir tu archivo, verifica que tenga:
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;font-size:.82rem;color:#78350F;line-height:1.6">
-          <div>&#9989; <strong>Codigo de cuenta PUC</strong> (4, 6 u 8 digitos)</div>
+          <div>&#9989; <strong>Código de cuenta PUC</strong> (4, 6 u 8 dígitos)</div>
           <div>&#9989; <strong>Nombre de la cuenta</strong></div>
-          <div>&#9989; <strong>NIT del tercero</strong> (sin digito de verificacion)</div>
-          <div>&#9989; <strong>Nombre del tercero</strong> (razon social)</div>
-          <div>&#9989; <strong>Debitos y Creditos del ano</strong> (ene-dic completo)</div>
+          <div>&#9989; <strong>NIT del tercero</strong> (sin dígito de verificación)</div>
+          <div>&#9989; <strong>Nombre del tercero</strong> (razón social)</div>
+          <div>&#9989; <strong>Débitos y Créditos del año</strong> (ene-dic completo)</div>
           <div>&#9989; <strong>Formato Excel</strong> (.xlsx o .xls, no PDF)</div>
         </div>
         <div style="margin-top:10px;font-size:.78rem;color:#92400E;line-height:1.5;border-top:1px solid #FDE68A;padding-top:10px">
-          <strong>Errores comunes:</strong> subir balance sin auxiliar por tercero (solo totales por cuenta) · NIT con puntos o guiones (se limpian automaticamente) · archivo en PDF (debe ser Excel) · balance de un solo mes en vez del ano completo · cuentas de orden sin movimiento.
+          <strong>Errores comunes:</strong> subir balance sin auxiliar por tercero (solo totales por cuenta) · NIT con puntos o guiones (se limpian automáticamente) · archivo en PDF (debe ser Excel) · balance de un solo mes en vez del año completo · cuentas de orden sin movimiento.
         </div>
         <div style="margin-top:8px;font-size:.78rem;color:#92400E">
-          <strong>&#128161; Tip:</strong> En Siigo ve a <em>Informes → Contables → Balance de Prueba → Por tercero</em>. En World Office: <em>Contabilidad → Informes → Balance de comprobacion por tercero</em>. En Helisa: <em>Informes → Balances → Balance de terceros</em>.
+          <strong>&#128161; Tip:</strong> En Siigo ve a <em>Informes → Contables → Balance de Prueba → Por tercero</em>. En World Office: <em>Contabilidad → Informes → Balance de comprobación por tercero</em>. En Helisa: <em>Informes → Balances → Balance de terceros</em>.
         </div>
       </div>
 
       <div class="drop-zone" id="dz">
         <input type="file" accept=".xlsx,.xls,.csv" id="fileInput" aria-label="Seleccionar archivo de balance de prueba">
         <span class="dz-icon">📊</span>
-        <div class="dz-title">Arrastra tu archivo aqui o haz clic</div>
+        <div class="dz-title">Arrastra tu archivo aquí o haz clic</div>
         <div class="dz-hint">Excel (.xlsx, .xls) o CSV — Siigo, MidaSoft, World Office, Helisa, Alegra, otros</div>
         <div class="dz-file" id="fileName"></div>
       </div>
@@ -406,12 +406,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div class="card-title" style="justify-content:space-between"><div style="display:flex;align-items:center;gap:8px"><span>🏢</span> Datos del Declarante</div><button onclick="limpiarDeclarante()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:.72rem;color:var(--muted);cursor:pointer;font-family:inherit">Limpiar datos</button></div>
       <div class="config-grid" style="margin-bottom:16px">
         <div class="config-item"><label>NIT de la empresa <span id="nitDvBadge"></span></label><input type="text" id="cfgNit" placeholder="Ej: 901234567" oninput="validarNitRealtime()"></div>
-        <div class="config-item"><label>Razon social</label><input type="text" id="cfgEmpresa" placeholder="Ej: MI EMPRESA S.A.S"></div>
-        <div class="config-item"><label>Ano gravable</label><input type="number" id="cfgYear" value="2025" min="2020" max="2035"></div>
-        <div class="config-item"><label>Tipo persona</label><select id="cfgTipoPersona" onchange="onTipoPersonaChange()"><option value="31">Persona Juridica (NIT)</option><option value="13">Persona Natural (CC)</option></select></div>
+        <div class="config-item"><label>Razón social</label><input type="text" id="cfgEmpresa" placeholder="Ej: MI EMPRESA S.A.S"></div>
+        <div class="config-item"><label>Año gravable</label><input type="number" id="cfgYear" value="2025" min="2020" max="2035"></div>
+        <div class="config-item"><label>Tipo persona</label><select id="cfgTipoPersona" onchange="onTipoPersonaChange()"><option value="31">Persona Jurídica (NIT)</option><option value="13">Persona Natural (CC)</option></select></div>
       </div>
       <div class="config-grid" style="margin-bottom:16px">
-        <div class="config-item" style="grid-column:span 2"><label>Direccion</label><input type="text" id="cfgDir" placeholder="Ej: Calle 100 # 15-20 Oficina 301"></div>
+        <div class="config-item" style="grid-column:span 2"><label>Dirección</label><input type="text" id="cfgDir" placeholder="Ej: Calle 100 # 15-20 Oficina 301"></div>
       </div>
       <div class="config-grid" style="margin-bottom:16px">
         <div class="config-item"><label>Departamento</label><select id="cfgDpto" onchange="onDptoChange()"><option value="">— Seleccionar —</option></select></div>
@@ -433,14 +433,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <div id="step2" class="hidden">
     <div class="card">
       <div class="card-title"><span>🔧</span> Verificar Columnas del Archivo <span id="softwareBadge"></span></div>
-      <div class="alert alert-info"><span>💡</span><div>Se detectaron las columnas automaticamente. <strong>Verifica que sean correctas</strong> y ajusta si es necesario.</div></div>
+      <div class="alert alert-info"><span>💡</span><div>Se detectaron las columnas automáticamente. <strong>Verifica que sean correctas</strong> y ajusta si es necesario.</div></div>
       <div class="hdr-selector">
         <label>📌 Fila de encabezados:</label>
         <select id="hdrRowSelect" onchange="onHeaderRowChange()"></select>
         <span class="hdr-preview" id="hdrPreviewText"></span>
       </div>
       <div class="raw-preview" id="rawPreview"></div>
-      <div style="margin:20px 0 8px;font-weight:700;font-size:.9rem;color:var(--pri)">📋 Asignacion de columnas <span style="font-weight:400;color:var(--muted);font-size:.8rem">(<span style="color:var(--red)">*</span> = obligatoria)</span></div>
+      <div style="margin:20px 0 8px;font-weight:700;font-size:.9rem;color:var(--pri)">📋 Asignación de columnas <span style="font-weight:400;color:var(--muted);font-size:.8rem">(<span style="color:var(--red)">*</span> = obligatoria)</span></div>
       <div class="col-mapper" id="colMapper"></div>
       <div class="actions">
         <button class="btn btn-outline" onclick="goStep(1)">← Cambiar archivo</button>
@@ -453,14 +453,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div class="alert alert-warn hidden" id="alertNoData"><span>⚠️</span><div id="alertNoDataText"></div></div>
       <div class="alert alert-success hidden" id="alertOk"><span>✅</span><div id="alertOkText"></div></div>
       <div class="scroll-box" id="previewTable"></div>
-      <div class="actions"><button class="btn btn-primary" onclick="irAClasificacion()">Continuar a Clasificacion →</button></div>
+      <div class="actions"><button class="btn btn-primary" onclick="irAClasificacion()">Continuar a Clasificación →</button></div>
     </div>
   </div>
 
   <!-- ═══ STEP 3: CLASIFICACION ═══ -->
   <div id="step3" class="hidden">
     <div class="card">
-      <div class="card-title"><span>📋</span> Clasificacion por Formato <button class="help-btn" title="Ayuda" onclick="exoToast('La herramienta clasifica automaticamente cada cuenta del balance en el formato DIAN correspondiente segun el codigo PUC y el nombre de la cuenta. Las cuentas de clase 3 (patrimonio) y de orden generalmente no aplican para exogena.','info')">?</button></div>
+      <div class="card-title"><span>📋</span> Clasificación por Formato <button class="help-btn" title="Ayuda" onclick="exoToast('La herramienta clasifica automáticamente cada cuenta del balance en el formato DIAN correspondiente según el código PUC y el nombre de la cuenta. Las cuentas de clase 3 (patrimonio) y de orden generalmente no aplican para exogena.','info')">?</button></div>
       <div id="clasifStats" class="stats"></div>
       <div class="alert alert-success hidden" id="clasifOk"><span>✅</span><div id="clasifOkText"></div></div>
       <div class="alert alert-warn hidden" id="clasifWarn"><span>⚠️</span><div id="clasifWarnText"></div></div>
@@ -483,19 +483,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div id="formatSummary"></div>
     </div>
     <div class="card">
-      <div class="card-title"><span>🔍</span> Detalle de Clasificacion</div>
+      <div class="card-title"><span>🔍</span> Detalle de Clasificación</div>
       <!-- Guia de formatos -->
       <div style="background:#f0f4f8;border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-bottom:16px;font-size:.78rem;line-height:1.7;color:var(--text)">
-        <div style="font-weight:700;font-size:.85rem;color:var(--pri);margin-bottom:8px">&#128218; ¿Que es cada formato?</div>
+        <div style="font-weight:700;font-size:.85rem;color:var(--pri);margin-bottom:8px">&#128218; ¿Qué es cada formato?</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px">
           <div><span class="fmt-badge fmt-1001" style="font-size:.68rem">F1001</span> <strong>Pagos y abonos a terceros</strong> — Art. 631 lit. b) E.T. Todos los pagos o abonos en cuenta a proveedores, empleados y terceros ≥ $100.000</div>
-          <div><span class="fmt-badge fmt-1003" style="font-size:.68rem">F1003</span> <strong>Retenciones practicadas</strong> — Art. 631 lit. b) E.T. Retenciones en la fuente que le practicaron a la empresa durante el ano</div>
+          <div><span class="fmt-badge fmt-1003" style="font-size:.68rem">F1003</span> <strong>Retenciones practicadas</strong> — Art. 631 lit. b) E.T. Retenciones en la fuente que le practicaron a la empresa durante el año</div>
           <div><span class="fmt-badge fmt-1005" style="font-size:.68rem">F1005</span> <strong>IVA descontable</strong> — Art. 631 lit. c) E.T. IVA pagado en compras que se tomo como descontable</div>
           <div><span class="fmt-badge fmt-1006" style="font-size:.68rem">F1006</span> <strong>IVA generado</strong> — Art. 631 lit. d) E.T. IVA cobrado en ventas de bienes y servicios gravados</div>
-          <div><span class="fmt-badge fmt-1007" style="font-size:.68rem">F1007</span> <strong>Ingresos recibidos</strong> — Art. 631 lit. a) E.T. Todos los ingresos operacionales y no operacionales recibidos en el ano</div>
+          <div><span class="fmt-badge fmt-1007" style="font-size:.68rem">F1007</span> <strong>Ingresos recibidos</strong> — Art. 631 lit. a) E.T. Todos los ingresos operacionales y no operacionales recibidos en el año</div>
           <div><span class="fmt-badge fmt-1008" style="font-size:.68rem">F1008</span> <strong>Cuentas por cobrar</strong> — Art. 631 lit. f) E.T. Saldos de deudores a 31 de diciembre</div>
           <div><span class="fmt-badge fmt-1009" style="font-size:.68rem">F1009</span> <strong>Cuentas por pagar</strong> — Art. 631 lit. g) E.T. Saldos de acreedores a 31 de diciembre</div>
-          <div><span class="fmt-badge fmt-1010" style="font-size:.68rem">F1010</span> <strong>Socios y accionistas</strong> — Art. 631 lit. h) E.T. Aportes de socios y su participacion patrimonial</div>
+          <div><span class="fmt-badge fmt-1010" style="font-size:.68rem">F1010</span> <strong>Socios y accionistas</strong> — Art. 631 lit. h) E.T. Aportes de socios y su participación patrimonial</div>
           <div><span class="fmt-badge fmt-1012" style="font-size:.68rem">F1012</span> <strong>Inversiones y cuentas bancarias</strong> — Saldos en bancos e inversiones a 31 de diciembre</div>
           <div><span class="fmt-badge fmt-2276" style="font-size:.68rem">F2276</span> <strong>Rentas de trabajo</strong> — Art. 631-3 E.T. Certificado de ingresos y retenciones de cada empleado</div>
         </div>
@@ -522,21 +522,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
     <!-- ═══ COMPLETAR DATOS DE TERCEROS ═══ -->
     <div class="card" id="tercerosDatosCard" style="display:none">
-      <div class="card-title"><span>👥</span> Completar Datos de Terceros <button class="help-btn" title="Ayuda" onclick="exoToast('La DIAN exige direccion para cada tercero en la mayoria de formatos. Las personas naturales (CC) deben tener apellidos y nombres separados, no todo en razon social. Aqui puedes completar los datos que faltan. Los terceros conocidos (bancos, EPS, DIAN, etc.) se autocompletaron.','info')">?</button></div>
-      <div class="alert alert-info"><span>💡</span><div>Revisa y completa los datos faltantes de los terceros mas relevantes. Los terceros conocidos (bancos, EPS, AFP, entidades del Estado) ya tienen direccion autocompletada. <strong>Las personas naturales se separaron automaticamente en apellidos y nombres.</strong></div></div>
+      <div class="card-title"><span>👥</span> Completar Datos de Terceros <button class="help-btn" title="Ayuda" onclick="exoToast('La DIAN exige dirección para cada tercero en la mayoria de formatos. Las personas naturales (CC) deben tener apellidos y nombres separados, no todo en razón social. Aqui puedes completar los datos que faltan. Los terceros conocidos (bancos, EPS, DIAN, etc.) se autocompletaron.','info')">?</button></div>
+      <div class="alert alert-info"><span>💡</span><div>Revisa y completa los datos faltantes de los terceros más relevantes. Los terceros conocidos (bancos, EPS, AFP, entidades del Estado) ya tienen dirección autocompletada. <strong>Las personas naturales se separaron automáticamente en apellidos y nombres.</strong></div></div>
       <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
         <select id="tercFiltro" onchange="filtrarTerceros()" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;font-family:inherit">
-          <option value="sinDir">Sin direccion</option>
+          <option value="sinDir">Sin dirección</option>
           <option value="pn">Personas naturales (CC)</option>
           <option value="todos">Todos los terceros</option>
-          <option value="conDir">Con direccion (completados)</option>
+          <option value="conDir">Con dirección (completados)</option>
         </select>
         <span id="tercCount" style="font-size:.78rem;color:var(--muted)"></span>
         <button class="btn btn-outline" onclick="exportTercerosCSV()" style="padding:4px 12px;font-size:.75rem;margin-left:auto">📥 Exportar lista</button>
       </div>
       <div class="scroll-box" style="max-height:400px" id="tercerosTable"></div>
       <div style="margin-top:12px;padding:10px 14px;background:var(--amber2);border:1px solid #FDE68A;border-radius:8px;font-size:.8rem;color:#92400E">
-        <strong>Nota:</strong> Los cambios que hagas aqui se reflejan automaticamente al generar los formatos. No es obligatorio completar todos — la DIAN acepta direccion vacia en algunos casos, pero es recomendable tenerla para evitar rechazos en el prevalidador.
+        <strong>Nota:</strong> Los cambios que hagas aquí se reflejan automáticamente al generar los formatos. No es obligatorio completar todos — la DIAN acepta dirección vacía en algunos casos, pero es recomendable tenerla para evitar rechazos en el prevalidador.
       </div>
     </div>
 
@@ -561,7 +561,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div id="fmtPanels" style="padding:16px"></div>
     </div>
     <div class="actions">
-      <button class="btn btn-outline" onclick="goStep(3)">← Volver a Clasificacion</button>
+      <button class="btn btn-outline" onclick="goStep(3)">← Volver a Clasificación</button>
       <button class="btn btn-primary" onclick="irADescargar()">Descargar Excel →</button>
     </div>
   </div>
@@ -578,10 +578,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div style="display:flex;align-items:flex-start;gap:12px">
         <span style="font-size:1.2rem;flex-shrink:0">&#9888;&#65039;</span>
         <div style="font-size:.85rem;line-height:1.6">
-          <strong style="color:#92400E">Version gratuita — 3 de 10 formatos</strong><br>
+          <strong style="color:#92400E">Versión gratuita — 3 de 10 formatos</strong><br>
           Con la version gratuita se generan: <strong>F1003</strong> (Retenciones), <strong>F1007</strong> (Ingresos) y <strong>F2276</strong> (Nomina).<br>
           Los otros 7 formatos (F1001, F1005, F1006, F1008, F1009, F1010, F1012) requieren <a href="precios.html" style="color:var(--pri2);font-weight:600">PRO — $19.900/mes</a>.<br>
-          <span style="color:var(--muted);font-size:.8rem">Si ya pagaste, activa tu suscripcion con tu email en la barra de arriba.</span>
+          <span style="color:var(--muted);font-size:.8rem">Si ya pagaste, activa tu suscripción con tu email en la barra de arriba.</span>
         </div>
       </div>
     </div>
@@ -604,12 +604,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
       <p style="font-size:.82rem;color:var(--muted)">Un libro Excel con una hoja por formato, formateado profesional.<br>Revisa los datos y luego usa el Prevalidador para generar los XML que subes al MUISCA.</p>
       <div style="margin-top:16px;padding:12px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:.82rem;color:#166534;text-align:left">
-        <strong>&#128073; Siguiente paso despues de descargar:</strong><br>
+        <strong>&#128073; Siguiente paso después de descargar:</strong><br>
         1. Abre el Excel y revisa cada hoja (un formato por hoja).<br>
         2. Valida NIT, razones sociales y valores contra tu contabilidad.<br>
         3. Descarga el <strong>Prevalidador DIAN</strong> desde el MUISCA.<br>
         4. Carga cada formato en el Prevalidador para generar los XML.<br>
-        5. Sube los XML al MUISCA en la opcion "Presentacion de informacion por envio de archivos".
+        5. Sube los XML al MUISCA en la opcion "Presentación de información por envío de archivos".
       </div>
     </div>
     <div class="card">
@@ -714,7 +714,7 @@ const BANCOS_COLOMBIANOS={
 };
 
 /* ── DIRECTORIO DE TERCEROS: 150+ entidades colombianas con direcciones ── */
-/* Campos: rs=razon social, cat=categoria, dir=direccion, dp=cod depto, mp=cod municipio */
+/* Campos: rs=razón social, cat=categoria, dir=direccion, dp=cod depto, mp=cod municipio */
 const DIRECTORIO={
   // ── Bancos (19) ──
   '890903938':{rs:'BANCOLOMBIA S.A.',cat:'Banco',dir:'Carrera 48 # 26-85',dp:'05',mp:'001'},
@@ -1059,12 +1059,12 @@ const HEADER_HINTS={
   cre:[/^cr[eé]dito/i,/^abono/i,/^haber$/i,/^mov.*cr[eé]/i]
 };
 const COL_FIELDS=[
-  {key:'code',label:'Codigo Cuenta',required:true},
+  {key:'code',label:'Código Cuenta',required:true},
   {key:'name',label:'Nombre Cuenta',required:true},
   {key:'nit',label:'NIT Tercero',required:true},
   {key:'razon',label:'Nombre Tercero',required:false},
-  {key:'deb',label:'Debitos',required:true},
-  {key:'cre',label:'Creditos',required:true}
+  {key:'deb',label:'Débitos',required:true},
+  {key:'cre',label:'Créditos',required:true}
 ];
 
 /* ── Onboarding (solo primera visita) ── */
@@ -1253,7 +1253,7 @@ function processData(){
     if(deb===0&&cre===0){skipped++;continue}
     const nit=sanitizarNit(norm(row[colMap.nit]));
     let razon='razon' in colMap?norm(row[colMap.razon]):'';
-    // Auto-completar razon social desde directorio si el balance no la trae
+    // Auto-completar razón social desde directorio si el balance no la trae
     if(!razon&&nit&&DIRECTORIO[nit])razon=DIRECTORIO[nit].rs;
     parsedData.push({
       code,
@@ -1291,7 +1291,7 @@ function showPreview(skipped){
 
   if(total===0){
     document.getElementById('alertNoData').classList.remove('hidden');
-    document.getElementById('alertNoDataText').innerHTML='<strong>No se encontraron registros validos.</strong> Verifica que el archivo sea un balance de prueba por terceros con codigo PUC, NIT, debitos y creditos.';
+    document.getElementById('alertNoDataText').innerHTML='<strong>No se encontraron registros validos.</strong> Verifica que el archivo sea un balance de prueba por terceros con codigo PUC, NIT, débitos y créditos.';
   }else{
     document.getElementById('alertOk').classList.remove('hidden');
     document.getElementById('alertOkText').innerHTML=`Se procesaron <strong>${total.toLocaleString()}</strong> registros de <strong>${terceros.toLocaleString()}</strong> terceros.${skipped>0?' ('+skipped+' filas omitidas sin codigo o sin movimiento)':''}`;
@@ -1565,7 +1565,7 @@ function infoTercero(nit,razon,dirEmpresa,dpEmpresa,mpEmpresa){
   const mp=saved.mp||dirEntry.mp||mpEmpresa||'';
 
   if(td==='31'||td==='43'||td==='44'||td==='50'||nit===NM){
-    // Persona juridica, extranjero, o cuantias menores → todo a razon social
+    // Persona juridica, extranjero, o cuantias menores → todo a razón social
     return{a1:'',a2:'',n1:'',n2:'',rs:razon||'',dir,dp,mp};
   }else{
     // Persona natural (CC=13, CE=22, etc.) → separar nombre
@@ -1762,7 +1762,7 @@ function renderClasificacion(sinClasificar){
         <option value="F1005">F1005 IVA Desc.</option><option value="F1006">F1006 IVA Gen.</option>
         <option value="F1007">F1007 Ingresos</option><option value="F1008">F1008 CxC</option>
         <option value="F1009">F1009 CxP</option><option value="F1010">F1010 Socios</option>
-        <option value="F1012">F1012 Inversiones</option><option value="F2276">F2276 Nomina</option>
+        <option value="F1012">F1012 Inversiones</option><option value="F2276">F2276 Nómina</option>
       </select></td><td class="mono">${r.concepto}</td><td class="mono">${r.code}</td><td>${esc(r.name).substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
     }else{
       const badge=`<span class="fmt-badge fmt-${r.formato.substring(1)}">${r.formato}</span>`;
@@ -1867,7 +1867,7 @@ function filtrarTerceros(){
   countEl.textContent=lista.length+' de '+todos.length+' terceros'+(filtro==='sinDir'?' sin direccion':'');
 
   let h='<table class="map-table"><thead><tr><th>#</th><th>NIT</th><th>Tipo</th>';
-  h+='<th>1er Apellido</th><th>2do Apellido</th><th>1er Nombre</th><th>Otros</th><th>Razon Social</th>';
+  h+='<th>1er Apellido</th><th>2do Apellido</th><th>1er Nombre</th><th>Otros</th><th>Razón Social</th>';
   h+='<th>Direccion</th><th>Depto</th><th>Municipio</th><th>Formatos</th></tr></thead><tbody>';
 
   const maxShow=Math.min(lista.length,80);
@@ -1934,7 +1934,7 @@ function updateMpioSelect(dpSelect,nit){
 
 function exportTercerosCSV(){
   const todos=getTercerosUnicos();
-  let csv='NIT,Tipo Doc,Razon Social / Nombre,Primer Apellido,Segundo Apellido,Primer Nombre,Otros Nombres,Direccion,Cod Depto,Cod Municipio,Formatos\n';
+  let csv='NIT,Tipo Doc,Razón Social / Nombre,Primer Apellido,Segundo Apellido,Primer Nombre,Otros Nombres,Direccion,Cod Depto,Cod Municipio,Formatos\n';
   for(const t of todos){
     csv+=`${t.nit},${t.td==='31'?'NIT':'CC'},"${t.razon}","${t.a1}","${t.a2}","${t.n1}","${t.n2}","${t.dir}",${t.dp},${t.mp},"${[...t.formatos].join(' ')}"\n`;
   }
@@ -1955,16 +1955,16 @@ let formatos={};
 let uvtExcluidos={}; // {F1001:{count:0,total:0,umbral:'3 UVT'}, ...}
 
 const FMT_HEADERS={
-  'F1001':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Pago Deducible','Pago No Deducible','Ret Fte Practicada Renta','Ret Fte Asumida Renta','Ret Fte Practicada IVA','Ret Fte Asumida IVA'],
-  'F1003':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Base Retencion','Retencion Practicada'],
-  'F1005':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Impuesto Descontable','IVA Resultante Devoluciones Ventas Anuladas'],
-  'F1006':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Impuesto Generado','IVA Recuperado Devoluciones Compras Anuladas','Impuesto Nacional al Consumo'],
-  'F1007':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Ingresos Brutos','Devoluciones'],
-  'F1008':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo CxC Dic31'],
-  'F1009':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo CxP Dic31'],
-  'F1010':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Valor Patrimonial','% Participacion'],
-  'F1012':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo Dic31'],
-  'F2276':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais',
+  'F1001':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razón Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Pago Deducible','Pago No Deducible','Ret Fte Practicada Renta','Ret Fte Asumida Renta','Ret Fte Practicada IVA','Ret Fte Asumida IVA'],
+  'F1003':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razón Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Base Retencion','Retencion Practicada'],
+  'F1005':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razón Social','Impuesto Descontable','IVA Resultante Devoluciones Ventas Anuladas'],
+  'F1006':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razón Social','Impuesto Generado','IVA Recuperado Devoluciones Compras Anuladas','Impuesto Nacional al Consumo'],
+  'F1007':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razón Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Ingresos Brutos','Devoluciones'],
+  'F1008':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razón Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo CxC Dic31'],
+  'F1009':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razón Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo CxP Dic31'],
+  'F1010':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razón Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Valor Patrimonial','% Participacion'],
+  'F1012':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razón Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Saldo Dic31'],
+  'F2276':['Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razón Social','Direccion','Cod Depto','Cod Municipio','Pais',
     'Salarios','Emolumentos Eclesiast','Bonos Electrónicos','Exceso Alimentacion >41 UVT','Honorarios','Servicios','Comisiones','Prestaciones Sociales','Viaticos','Gastos Representacion','Compensacion Coop','Apoyos Economicos','Otros Pagos',
     'Cesantias e Int Pagadas','Cesantias Consignadas Fondo','Cesantias Reg Tradicional','Pensiones Jub/Vejez/Inv',
     'Total Ingresos Brutos',
@@ -2280,19 +2280,19 @@ function renderFormatos(){
     let sinRazon=0,sinDv=0,nitNM=0;
     for(const row of rows){
       const tdIdx=row.indexOf('31')!==-1||row.indexOf('13')!==-1?0:-1;
-      // Buscar NIT y razon social en la fila
+      // Buscar NIT y razón social en la fila
       for(let i=0;i<row.length;i++){
         if(String(row[i])===NM)nitNM++;
       }
-      // Razon social vacia (buscar string vacio en posiciones tipicas)
+      // Razón social vacia (buscar string vacio en posiciones tipicas)
       const rsIdx=f==='F1001'||f==='F1003'||f==='F1007'||f==='F1008'||f==='F1009'||f==='F1012'?8:7;
       if(rsIdx<row.length&&(!row[rsIdx]||row[rsIdx]===''))sinRazon++;
       // DV vacio
       const dvIdx=3;
       if(dvIdx<row.length&&(!row[dvIdx]||row[dvIdx]===''))sinDv++;
     }
-    if(sinRazon>0)warnings.push(`<strong>${f}:</strong> ${sinRazon} registros sin razon social — revise el balance o complete manualmente`);
-    if(sinDv>0)warnings.push(`<strong>${f}:</strong> ${sinDv} registros sin digito de verificacion`);
+    if(sinRazon>0)warnings.push(`<strong>${f}:</strong> ${sinRazon} registros sin razón social — revise el balance o complete manualmente`);
+    if(sinDv>0)warnings.push(`<strong>${f}:</strong> ${sinDv} registros sin dígito de verificación`);
     if(nitNM>0)warnings.push(`<strong>${f}:</strong> ${nitNM} registros agrupados en cuantias menores (NIT ${NM})`);
   }
   if(warnings.length>0){
@@ -2385,8 +2385,8 @@ async function exportExcel(){
   const checks=[
     ['F1007 Ingresos vs Clase 4',sumFmt('F1007',13),sumBal('4')],
     ['F1001 Pagos vs Clases 5+6',sumFmt('F1001',13)+sumFmt('F1001',14),sumBal('5')+sumBal('6')],
-    ['F1005 IVA Descontable vs Debitos 2408',sumFmt('F1005',8),parsedData.filter(r=>r.code.startsWith('2408')).reduce((s,r)=>s+r.deb,0)],
-    ['F1006 IVA Generado vs Creditos 2408',sumFmt('F1006',8),parsedData.filter(r=>r.code.startsWith('2408')).reduce((s,r)=>s+r.cre,0)],
+    ['F1005 IVA Descontable vs Débitos 2408',sumFmt('F1005',8),parsedData.filter(r=>r.code.startsWith('2408')).reduce((s,r)=>s+r.deb,0)],
+    ['F1006 IVA Generado vs Créditos 2408',sumFmt('F1006',8),parsedData.filter(r=>r.code.startsWith('2408')).reduce((s,r)=>s+r.cre,0)],
   ];
   const alertas=[];
   for(const[nombre,valExo,valBal] of checks){
@@ -2417,7 +2417,7 @@ async function exportExcel(){
     const pctNom=Math.abs((totalNomExo-totalNomBal)/totalNomBal*100);
     if(pctNom>10)alertas.push(`F2276 Total Bruto ($${fN(totalNomExo)}) vs Gastos Nomina 5105 ($${fN(totalNomBal)}) — ${pctNom.toFixed(1)}% diferencia.`);
   }
-  // Registros sin razon social ni nombres
+  // Registros sin razón social ni nombres
   let sinNombre=0;
   for(const f of ['F1001','F1003','F1007','F1008','F1009']){
     for(const row of (formatos[f]||[])){
@@ -2426,7 +2426,7 @@ async function exportExcel(){
       if(!row[rsIdx]&&!row[a1Idx])sinNombre++;
     }
   }
-  if(sinNombre>0)alertas.push(`${sinNombre} registros sin razon social ni apellidos — pueden ser rechazados por el prevalidador DIAN.`);
+  if(sinNombre>0)alertas.push(`${sinNombre} registros sin razón social ni apellidos — pueden ser rechazados por el prevalidador DIAN.`);
 
   if(alertas.length>0){
     const msg='⚠️ VALIDACIONES DETECTADAS:\n\n'+alertas.join('\n\n')+'\n\nEstas diferencias pueden generar requerimientos de la DIAN (Art. 651 E.T.).\n\n¿Desea descargar de todas formas?';

@@ -260,7 +260,7 @@
         if (fetchErr && fetchErr.name === 'AbortError') {
           throw { _type: 'abort' };
         }
-        throw { _type: 'network', message: 'No se pudo conectar al servidor. Verifica tu conexion a internet.' };
+        throw { _type: 'network', message: 'No se pudo conectar al servidor. Verifica tu conexión a internet.' };
       }
       clearTimeout(timeoutId);
 
@@ -332,7 +332,7 @@
 
       // Si el stream termino sin texto, algo salio mal
       if (!fullText) {
-        throw { _type: 'stream', message: 'El asistente no genero respuesta. Intenta de nuevo.' };
+        throw { _type: 'stream', message: 'El asistente no generó respuesta. Intenta de nuevo.' };
       }
 
     } catch (err) {
@@ -348,11 +348,11 @@
       } else if (err && err._type === 'stream') {
         errorText = err.message;
       } else if (err && err.name === 'AbortError') {
-        errorText = 'Tiempo de espera agotado. Intenta con una pregunta mas corta.';
+        errorText = 'Tiempo de espera agotado. Intenta con una pregunta más corta.';
       } else if (err && err.message) {
         errorText = err.message;
       } else {
-        errorText = 'Error de conexion. Verifica tu internet e intenta de nuevo.';
+        errorText = 'Error de conexión. Verifica tu internet e intenta de nuevo.';
       }
 
       if (!fullText) {
