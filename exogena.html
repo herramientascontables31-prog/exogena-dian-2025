@@ -403,9 +403,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
 
     <div class="card">
-      <div class="card-title"><span>🏢</span> Datos del Declarante</div>
+      <div class="card-title" style="justify-content:space-between"><div style="display:flex;align-items:center;gap:8px"><span>🏢</span> Datos del Declarante</div><button onclick="limpiarDeclarante()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:.72rem;color:var(--muted);cursor:pointer;font-family:inherit">Limpiar datos</button></div>
       <div class="config-grid" style="margin-bottom:16px">
-        <div class="config-item"><label>NIT de la empresa</label><input type="text" id="cfgNit" placeholder="Ej: 901234567"></div>
+        <div class="config-item"><label>NIT de la empresa <span id="nitDvBadge"></span></label><input type="text" id="cfgNit" placeholder="Ej: 901234567" oninput="validarNitRealtime()"></div>
         <div class="config-item"><label>Razon social</label><input type="text" id="cfgEmpresa" placeholder="Ej: MI EMPRESA S.A.S"></div>
         <div class="config-item"><label>Ano gravable</label><input type="number" id="cfgYear" value="2025" min="2020" max="2035"></div>
         <div class="config-item"><label>Tipo persona</label><select id="cfgTipoPersona" onchange="onTipoPersonaChange()"><option value="31">Persona Juridica (NIT)</option><option value="13">Persona Natural (CC)</option></select></div>
@@ -432,7 +432,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
   <!-- ═══ STEP 2: COLUMNAS ═══ -->
   <div id="step2" class="hidden">
     <div class="card">
-      <div class="card-title"><span>🔧</span> Verificar Columnas del Archivo</div>
+      <div class="card-title"><span>🔧</span> Verificar Columnas del Archivo <span id="softwareBadge"></span></div>
       <div class="alert alert-info"><span>💡</span><div>Se detectaron las columnas automaticamente. <strong>Verifica que sean correctas</strong> y ajusta si es necesario.</div></div>
       <div class="hdr-selector">
         <label>📌 Fila de encabezados:</label>
@@ -1145,6 +1145,7 @@ function renderStep2(){
   // Column mapper
   autoDetectColumns();
   renderColMapper();
+  renderSoftwareBadge();
 }
 
 function onHeaderRowChange(){
@@ -1152,6 +1153,17 @@ function onHeaderRowChange(){
   renderRawPreview();
   autoDetectColumns();
   renderColMapper();
+  renderSoftwareBadge();
+}
+
+function renderSoftwareBadge(){
+  const el=document.getElementById('softwareBadge');
+  if(!el)return;
+  if(detectedSoftware){
+    el.innerHTML=`<span style="background:#DBEAFE;color:#1E40AF;padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:700;margin-left:8px">Detectado: ${detectedSoftware}</span>`;
+  }else{
+    el.innerHTML='<span style="background:var(--border);color:var(--muted);padding:3px 10px;border-radius:10px;font-size:.72rem;font-weight:600;margin-left:8px">Software no identificado</span>';
+  }
 }
 
 function renderRawPreview(){
@@ -1165,9 +1177,22 @@ function renderRawPreview(){
   document.getElementById('rawPreview').innerHTML=h;
 }
 
+let detectedSoftware='';
 function autoDetectColumns(){
   colMap={};
+  detectedSoftware='';
   const hdrs=rawData[headerRow]||[];
+  const hdrStr=hdrs.map(h=>norm(h).toLowerCase()).join('|');
+
+  // Fingerprinting de software contable
+  if(hdrStr.includes('cuenta puc')||hdrStr.includes('auxiliar')||hdrStr.includes('nit tercero'))detectedSoftware='Siigo';
+  else if(hdrStr.includes('cod. cuenta')||hdrStr.includes('cod cuenta')||hdrStr.match(/descripcion.*cuenta/))detectedSoftware='Helisa';
+  else if(hdrStr.match(/cuentas.*mayor/i)||hdrStr.match(/^cuentas$/i)||hdrStr.includes('debitos periodo'))detectedSoftware='World Office';
+  else if(hdrStr.includes('cuenta contable')&&hdrStr.includes('tercero'))detectedSoftware='Alegra';
+  else if(hdrStr.includes('codigo')||hdrStr.includes('codigo cuenta'))detectedSoftware='MidaSoft';
+  else if(hdrStr.includes('account')&&hdrStr.includes('debit'))detectedSoftware='SAP';
+  else if(hdrStr.includes('cuenta')&&hdrStr.includes('nit'))detectedSoftware='Contai';
+
   for(const f of COL_FIELDS){
     for(let ci=0;ci<hdrs.length;ci++){
       const cell=norm(hdrs[ci]).toLowerCase().substring(0,50);
@@ -1638,11 +1663,30 @@ function renderClasificacion(sinClasificar){
   const nFormatos=Object.keys(formatos).length;
   const totalReg=clasificacion.filter(r=>r.formato!=='—').length;
 
+  const pctClasif=clasificacion.length>0?Math.round(totalReg/clasificacion.length*100):0;
+  const totalValClasif=clasificacion.filter(r=>r.formato!=='—').reduce((s,r)=>s+r.val,0);
+  const totalValBalance=clasificacion.reduce((s,r)=>s+r.val,0);
+  const pctValor=totalValBalance>0?Math.round(totalValClasif/totalValBalance*100):0;
+  const barColor=pctValor>=90?'var(--green)':pctValor>=70?'var(--amber)':'var(--red)';
+
   document.getElementById('clasifStats').innerHTML=`
     <div class="stat-card blue"><div class="val">${totalReg.toLocaleString()}</div><div class="lbl">Registros clasificados</div></div>
     <div class="stat-card green"><div class="val">${nFormatos}</div><div class="lbl">Formatos con datos</div></div>
     <div class="stat-card amber"><div class="val">${sinClasificar}</div><div class="lbl">Sin clasificar</div></div>
     <div class="stat-card red"><div class="val">${clasificacion.filter(r=>CONCEPTOS_NOMINA.has(r.concepto)).length}</div><div class="lbl">Registros nomina</div></div>`;
+
+  // Barra de cobertura
+  document.getElementById('clasifStats').innerHTML+=`
+    <div style="grid-column:span 4;margin-top:4px">
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px">
+        <span style="font-weight:600;color:var(--pri)">Cobertura del balance</span>
+        <span style="font-weight:700;color:${barColor}">${pctValor}% del valor · ${pctClasif}% de registros</span>
+      </div>
+      <div style="background:var(--border);border-radius:6px;height:10px;overflow:hidden">
+        <div style="background:${barColor};height:100%;width:${pctValor}%;border-radius:6px;transition:width .5s"></div>
+      </div>
+      <div style="font-size:.72rem;color:var(--muted);margin-top:4px">Clasificados: $${fN(totalValClasif)} de $${fN(totalValBalance)} totales en el balance${pctValor<85?' — <strong style="color:var(--amber)">revise las cuentas sin clasificar abajo</strong>':' — <strong style="color:var(--green)">buena cobertura</strong>'}</div>
+    </div>`;
 
   if(totalReg>0){
     document.getElementById('clasifOk').classList.remove('hidden');
@@ -1693,12 +1737,42 @@ function renderClasificacion(sinClasificar){
   const show=clasificacion.slice(0,100);
   for(let i=0;i<show.length;i++){
     const r=show[i];
-    const badge=r.formato!=='—'?`<span class="fmt-badge fmt-${r.formato.substring(1)}">${r.formato}</span>`:'<span style="color:var(--muted)">—</span>';
-    h+=`<tr><td>${i+1}</td><td>${badge}</td><td class="mono">${r.concepto}</td><td class="mono">${r.code}</td><td>${r.name.substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
+    if(r.formato==='—'){
+      // Editor inline para sin clasificar
+      h+=`<tr style="background:#FFF8E1"><td>${i+1}</td><td><select onchange="reclasificar(${i},this.value)" style="padding:2px 4px;font-size:.75rem;border:1px solid var(--amber);border-radius:4px;background:#fff">
+        <option value="">Sin clasificar</option>
+        <option value="F1001">F1001 Pagos</option><option value="F1003">F1003 Retenciones</option>
+        <option value="F1005">F1005 IVA Desc.</option><option value="F1006">F1006 IVA Gen.</option>
+        <option value="F1007">F1007 Ingresos</option><option value="F1008">F1008 CxC</option>
+        <option value="F1009">F1009 CxP</option><option value="F1010">F1010 Socios</option>
+        <option value="F1012">F1012 Inversiones</option><option value="F2276">F2276 Nomina</option>
+      </select></td><td class="mono">${r.concepto}</td><td class="mono">${r.code}</td><td>${esc(r.name).substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
+    }else{
+      const badge=`<span class="fmt-badge fmt-${r.formato.substring(1)}">${r.formato}</span>`;
+      h+=`<tr><td>${i+1}</td><td>${badge}</td><td class="mono">${r.concepto}</td><td class="mono">${r.code}</td><td>${esc(r.name).substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
+    }
   }
   if(clasificacion.length>100)h+=`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">... y ${clasificacion.length-100} registros mas</td></tr>`;
   h+='</tbody></table>';
   document.getElementById('clasifTable').innerHTML=h;
+}
+
+/* ── Reclasificar registro manualmente ── */
+function reclasificar(idx,nuevoFormato){
+  if(!nuevoFormato){clasificacion[idx].formato='—';clasificacion[idx].descripcion='Sin clasificar';return}
+  const fmtNames={'F1001':'Pagos','F1003':'Retenciones','F1005':'IVA Descontable','F1006':'IVA Generado','F1007':'Ingresos','F1008':'CxC','F1009':'CxP','F1010':'Socios','F1012':'Inversiones','F2276':'Nomina'};
+  const conceptoDefault={'F1001':'5016','F1003':'1308','F1005':'','F1006':'','F1007':'4001','F1008':'1317','F1009':'2210','F1010':'','F1012':'8309','F2276':'5001'};
+  clasificacion[idx].formato=nuevoFormato;
+  clasificacion[idx].concepto=conceptoDefault[nuevoFormato]||'';
+  clasificacion[idx].descripcion=fmtNames[nuevoFormato]||'';
+  exoToast(`Cuenta ${clasificacion[idx].code} reclasificada a ${nuevoFormato}`,'success');
+  // Recalcular stats sin re-render completo
+  const sinClasificar=clasificacion.filter(r=>r.formato==='—').length;
+  const totalReg=clasificacion.length-sinClasificar;
+  const nFormatos=new Set(clasificacion.filter(r=>r.formato!=='—').map(r=>r.formato)).size;
+  document.querySelector('.stat-card.blue .val').textContent=totalReg.toLocaleString();
+  document.querySelector('.stat-card.green .val').textContent=nFormatos;
+  document.querySelector('.stat-card.amber .val').textContent=sinClasificar;
 }
 
 function filtrarClasificacion(){
@@ -1861,6 +1935,7 @@ function exportTercerosCSV(){
 
 const PREFIJOS_DIAN_F1009=['2365','2367','2368','2370','2404','2408','2412'];
 let formatos={};
+let uvtExcluidos={}; // {F1001:{count:0,total:0,umbral:'3 UVT'}, ...}
 
 const FMT_HEADERS={
   'F1001':['Concepto','Tipo Doc','No ID','DV','Primer Apellido','Segundo Apellido','Primer Nombre','Otros Nombres','Razon Social','Direccion','Cod Depto','Cod Municipio','Pais Residencia','Pago Deducible','Pago No Deducible','Ret Fte Practicada Renta','Ret Fte Asumida Renta','Ret Fte Practicada IVA','Ret Fte Asumida IVA'],
@@ -1930,6 +2005,8 @@ function generarFormatos(){
   }
   // Cuantias menores F1001
   const final1={},men1={};
+  uvtExcluidos={};
+  uvtExcluidos['F1001']={count:0,total:0,umbral:'3 UVT ($'+fN(C3UVT)+')'};
   for(const[k,v] of Object.entries(dic1)){
     const total=v.ded+v.noDed;
     const tieneRet=v.retFte>0||v.retIva>0;
@@ -1937,6 +2014,7 @@ function generarFormatos(){
       const mk=v.concepto+'|'+NM;
       if(!men1[mk])men1[mk]={concepto:v.concepto,nit:NM,razon:'CUANTIAS MENORES',ded:0,noDed:0,retFte:0,retIva:0};
       men1[mk].ded+=v.ded;men1[mk].noDed+=v.noDed;
+      uvtExcluidos['F1001'].count++;uvtExcluidos['F1001'].total+=total;
     }else{final1[k]=v}
   }
   Object.assign(final1,men1);
@@ -1993,8 +2071,9 @@ function generarFormatos(){
     dic7[k].val+=r.val;
   }
   const final7={},men7={};
+  uvtExcluidos['F1007']={count:0,total:0,umbral:'3 UVT ($'+fN(C3UVT)+')'};
   for(const[k,v] of Object.entries(dic7)){
-    if(v.val<C3UVT){const mk=v.concepto+'|'+NM;if(!men7[mk])men7[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men7[mk].val+=v.val}
+    if(v.val<C3UVT){const mk=v.concepto+'|'+NM;if(!men7[mk])men7[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men7[mk].val+=v.val;uvtExcluidos['F1007'].count++;uvtExcluidos['F1007'].total+=v.val}
     else final7[k]=v;
   }
   Object.assign(final7,men7);
@@ -2009,8 +2088,9 @@ function generarFormatos(){
     dic8[k].val+=r.val;
   }
   const final8={},men8={};
+  uvtExcluidos['F1008']={count:0,total:0,umbral:'12 UVT ($'+fN(C12UVT)+')'};
   for(const[k,v] of Object.entries(dic8)){
-    if(v.val<C12UVT){const mk=v.concepto+'|'+NM;if(!men8[mk])men8[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men8[mk].val+=v.val}
+    if(v.val<C12UVT){const mk=v.concepto+'|'+NM;if(!men8[mk])men8[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men8[mk].val+=v.val;uvtExcluidos['F1008'].count++;uvtExcluidos['F1008'].total+=v.val}
     else final8[k]=v;
   }
   Object.assign(final8,men8);
@@ -2033,10 +2113,11 @@ function generarFormatos(){
   }
   // Solo saldos credito y cuantias menores
   const final9={},men9={};
+  uvtExcluidos['F1009']={count:0,total:0,umbral:'12 UVT ($'+fN(C12UVT)+')'};
   for(const[k,v] of Object.entries(dic9)){
     if(v.val<=0)continue;
     if(v.nit===NIT_DIAN){final9[k]=v}
-    else if(v.val<C12UVT){const mk=v.concepto+'|'+NM;if(!men9[mk])men9[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men9[mk].val+=v.val}
+    else if(v.val<C12UVT){const mk=v.concepto+'|'+NM;if(!men9[mk])men9[mk]={...v,nit:NM,razon:'CUANTIAS MENORES'};else men9[mk].val+=v.val;uvtExcluidos['F1009'].count++;uvtExcluidos['F1009'].total+=v.val}
     else final9[k]=v;
   }
   Object.assign(final9,men9);
@@ -2239,14 +2320,22 @@ function renderDescargar(){
     <div class="stat-card blue"><div class="val">${totalReg.toLocaleString()}</div><div class="lbl">Registros</div></div>
     <div class="stat-card amber"><div class="val">2</div><div class="lbl">Archivos</div></div>
     <div class="stat-card green"><div class="val">✓</div><div class="lbl">Listo</div></div>`;
-  let s='<table class="map-table"><thead><tr><th>Formato</th><th>Registros</th><th>Estado</th></tr></thead><tbody>';
+  let s='<table class="map-table"><thead><tr><th>Formato</th><th>Registros</th><th>Cuantias Menores</th><th>Estado</th></tr></thead><tbody>';
   for(const f of fmtOrder){
     const rows=formatos[f]||[];
     const badge=`<span class="fmt-badge fmt-${f.substring(1)}">${f}</span>`;
-    if(rows.length>0)s+=`<tr><td>${badge} ${fmtNames[f]}</td><td class="text-right mono">${rows.length}</td><td style="color:var(--green)">✓ Listo</td></tr>`;
-    else s+=`<tr><td style="color:var(--muted)">${badge} ${fmtNames[f]}</td><td class="text-right mono" style="color:var(--muted)">0</td><td style="color:var(--muted)">Sin datos</td></tr>`;
+    const uvt=uvtExcluidos[f];
+    const uvtInfo=uvt&&uvt.count>0?`<span style="font-size:.75rem;color:var(--amber)" title="${uvt.count} terceros agrupados en cuantias menores por ser < ${uvt.umbral}">${uvt.count} terceros → NIT ${NM}<br><span style="font-size:.7rem;color:var(--muted)">Umbral: ${uvt.umbral}</span></span>`:'<span style="color:var(--muted);font-size:.75rem">—</span>';
+    if(rows.length>0)s+=`<tr><td>${badge} ${fmtNames[f]}</td><td class="text-right mono">${rows.length}</td><td>${uvtInfo}</td><td style="color:var(--green)">✓ Listo</td></tr>`;
+    else s+=`<tr><td style="color:var(--muted)">${badge} ${fmtNames[f]}</td><td class="text-right mono" style="color:var(--muted)">0</td><td>${uvtInfo}</td><td style="color:var(--muted)">Sin datos</td></tr>`;
   }
   s+='</tbody></table>';
+  // Nota explicativa cuantías menores
+  const totalExcl=Object.values(uvtExcluidos).reduce((s,u)=>s+u.count,0);
+  if(totalExcl>0){
+    s+=`<div style="margin-top:12px;padding:10px 14px;background:var(--amber2);border:1px solid #FDE68A;border-radius:8px;font-size:.8rem;color:#92400E">
+      <strong>Cuantias menores (Art. 631 E.T.):</strong> ${totalExcl} terceros fueron agrupados en el NIT generico ${NM} porque sus montos individuales no superaron el umbral minimo. Esto es correcto — la DIAN permite agrupar operaciones menores a 3 UVT (F1001/F1007) o 12 UVT (F1008/F1009) bajo cuantias menores. Los valores no se pierden, se suman al registro 222222222.</div>`;
+  }
   document.getElementById('dlSummary').innerHTML=s;
 }
 
@@ -2608,6 +2697,78 @@ initPro();
 /* ── INIT ── */
 populateDptos();
 onTipoPersonaChange();
+
+/* ═══ #1: VALIDACION NIT DV EN TIEMPO REAL ═══ */
+function validarNitRealtime(){
+  const inp=document.getElementById('cfgNit');
+  const badge=document.getElementById('nitDvBadge');
+  const nit=sanitizarNit(inp.value);
+  if(!nit||nit.length<5){badge.innerHTML='';return}
+  const dv=calcDv(nit);
+  if(dv!==''){
+    badge.innerHTML=`<span style="background:#059669;color:#fff;padding:1px 8px;border-radius:10px;font-size:.7rem;font-weight:700;margin-left:4px">DV: ${dv}</span>`;
+  }else{
+    badge.innerHTML=`<span style="background:var(--red);color:#fff;padding:1px 8px;border-radius:10px;font-size:.7rem;font-weight:700;margin-left:4px">NIT invalido</span>`;
+  }
+  guardarDeclarante();
+}
+
+/* ═══ #7: PERSISTENCIA DATOS DECLARANTE ═══ */
+const DECL_KEY='exo_declarante';
+function guardarDeclarante(){
+  const data={
+    nit:document.getElementById('cfgNit').value,
+    empresa:document.getElementById('cfgEmpresa').value,
+    year:document.getElementById('cfgYear').value,
+    tipoPersona:document.getElementById('cfgTipoPersona').value,
+    dir:document.getElementById('cfgDir').value,
+    dpto:document.getElementById('cfgDpto').value,
+    mpio:document.getElementById('cfgMpio').value,
+    ape1:document.getElementById('cfgApe1').value,
+    ape2:document.getElementById('cfgApe2').value,
+    nom1:document.getElementById('cfgNom1').value,
+    nom2:document.getElementById('cfgNom2').value,
+  };
+  localStorage.setItem(DECL_KEY,JSON.stringify(data));
+}
+function cargarDeclarante(){
+  const raw=localStorage.getItem(DECL_KEY);
+  if(!raw)return;
+  try{
+    const d=JSON.parse(raw);
+    if(d.nit)document.getElementById('cfgNit').value=d.nit;
+    if(d.empresa)document.getElementById('cfgEmpresa').value=d.empresa;
+    if(d.year)document.getElementById('cfgYear').value=d.year;
+    if(d.tipoPersona)document.getElementById('cfgTipoPersona').value=d.tipoPersona;
+    if(d.dir)document.getElementById('cfgDir').value=d.dir;
+    if(d.dpto){document.getElementById('cfgDpto').value=d.dpto;onDptoChange()}
+    if(d.mpio)setTimeout(()=>{document.getElementById('cfgMpio').value=d.mpio},100);
+    if(d.ape1)document.getElementById('cfgApe1').value=d.ape1;
+    if(d.ape2)document.getElementById('cfgApe2').value=d.ape2;
+    if(d.nom1)document.getElementById('cfgNom1').value=d.nom1;
+    if(d.nom2)document.getElementById('cfgNom2').value=d.nom2;
+    onTipoPersonaChange();
+    validarNitRealtime();
+    exoToast('Datos del declarante restaurados de sesion anterior','info');
+  }catch(e){}
+}
+function limpiarDeclarante(){
+  localStorage.removeItem(DECL_KEY);
+  ['cfgNit','cfgEmpresa','cfgDir','cfgApe1','cfgApe2','cfgNom1','cfgNom2'].forEach(id=>{document.getElementById(id).value=''});
+  document.getElementById('nitDvBadge').innerHTML='';
+  exoToast('Datos del declarante limpiados','info');
+}
+// Guardar al cambiar cualquier campo del declarante
+['cfgEmpresa','cfgYear','cfgDir','cfgApe1','cfgApe2','cfgNom1','cfgNom2'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('input',guardarDeclarante);
+});
+['cfgTipoPersona','cfgDpto','cfgMpio'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('change',guardarDeclarante);
+});
+// Cargar al iniciar
+cargarDeclarante();
 
 // Wrapper: deshabilitar boton mientras genera archivo
 async function btnLoading(btn,fn){
