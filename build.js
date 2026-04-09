@@ -102,52 +102,23 @@ function copyRecursive(src, dest) {
   }
 }
 
-function minifyJS(code) {
-  // Aggressive minification: remove comments, collapse whitespace, encode strings
-  let m = code
-    .replace(/\/\*[\s\S]*?\*\//g, '')     // multi-line comments
-    .replace(/\/\/(?![^\n]*['"`])(?![^\n]*http)[^\n]*/g, '') // single-line comments (careful with URLs/strings)
-    .replace(/\n\s*\n/g, '\n')            // blank lines
-    .replace(/^\s+/gm, '')               // leading whitespace
-    .replace(/\s+$/gm, '')               // trailing whitespace
-    .replace(/\n/g, ' ')                  // newlines to spaces
-    .replace(/\s{2,}/g, ' ')             // multiple spaces
-    .trim();
-  // Encode function names to make less readable (prefix with _$)
-  const fnNames = new Set();
-  m.replace(/function\s+([a-z][a-zA-Z0-9_]*)\s*\(/g, (_, name) => { fnNames.add(name); });
-  // Don't rename: event handlers, global APIs, DOM methods
-  const KEEP = new Set(['esc','fN','norm','toNum','r1000','cellStr','goStep','exoToast','calcular',
-    'activarPro','activarProFromPaywall','initPro','updateProUI','validarPro','revalidarPro',
-    'getDeviceFingerprint','btnLoading','gtag']);
-  return m;
-}
-
 function obfuscateHTML(html, filename) {
   if (!JavaScriptObfuscator) return { html, count: 0 };
   let count = 0;
   html = html.replace(/<script(?![^>]*\bsrc\b)([^>]*)>([\s\S]*?)<\/script>/gi, (match, attrs, jsCode) => {
     if (jsCode.trim().length < 50) return match;
+    if (attrs.includes('data-render')) return match;
     if (attrs.includes('application/ld+json')) return match;
-    // data-render blocks: minify only (obfuscator can't handle template literals)
-    if (attrs.includes('data-render')) {
-      const minified = minifyJS(jsCode);
-      const cleanAttrs = attrs.replace(/\s*data-render\s*/g, '');
-      count++;
-      return `<script${cleanAttrs}>${minified}</script>`;
-    }
     try {
       const result = JavaScriptObfuscator.obfuscate(jsCode, OBF_OPTIONS);
       count++;
+      // Sanitize: replace any </script> inside obfuscated strings to prevent breaking HTML
       let obfCode = result.getObfuscatedCode();
       obfCode = obfCode.replace(/<\/script>/gi, '<\\/script>');
       return `<script${attrs}>${obfCode}</script>`;
     } catch (e) {
-      // Fallback: minify if obfuscation fails
-      console.log(`  WARNING [${filename}]: ${e.message.substring(0, 80)} — minifying instead`);
-      const minified = minifyJS(jsCode);
-      count++;
-      return `<script${attrs}>${minified}</script>`;
+      console.log(`  WARNING [${filename}]: ${e.message.substring(0, 80)}`);
+      return match;
     }
   });
   return { html, count };

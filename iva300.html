@@ -913,8 +913,7 @@ function updateHdrPreview(){
   const txt=row.map(c=>cellStr(c)).filter(Boolean).join(' · ');
   document.getElementById('hdrPreviewText').textContent=txt.substring(0,120)+(txt.length>120?'…':'');
 }
-</script>
-<script data-render>
+
 function renderRawPreview(){
   const hdr=detectedHeaderRow;
   // Mostrar desde la fila de headers + 5 filas de datos (no metadata arriba)
@@ -998,8 +997,7 @@ function onColChange(key,val){
     card.classList.toggle('required',field?.required&&v<0);
   }
 }
-</script>
-<script>
+
 /* ═══ CONFIRM & PROCESS ═══ */
 function confirmColumns(){
   // Si tiene saldo final, deb y cre no son obligatorios
@@ -1046,8 +1044,7 @@ function isF300Account(code,name){
 
 // Saldos de cuentas padre para conciliación
 let saldosContables={};
-</script>
-<script data-render>
+
 function processData(){
   parsedAccounts=[];
   saldosContables={};
@@ -1400,10 +1397,9 @@ function reclasificarIngresos(){
     }
   });
 }
-</script>
-<script>
+
 function renderMappingRows(){
-  const opts=CONCEPTO_OPTIONS.map(o=>'<option value="'+o.value+'">'+o.label+'</option>').join('');
+  const opts=CONCEPTO_OPTIONS.map(o=>`<option value="${o.value}">${o.label}</option>`).join('');
   const body=document.getElementById('mapBody');body.innerHTML='';
   let nGen=0,nDesc=0,nRet=0;
   mappings.forEach((m,idx)=>{
@@ -1605,8 +1601,7 @@ function calc300(){
 
   result300={cas,regimen};
 }
-</script>
-<script data-render>
+
 function render300(){
   const c=result300.cas;
   const regimen=result300.regimen||'comun_bim';
