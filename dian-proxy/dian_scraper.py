@@ -506,7 +506,15 @@ async def consultar_dian(nit: str) -> dict:
                 await page.wait_for_selector(SEL_NIT_INPUT, state="visible", timeout=15000)
                 logger.info("[DIAN %s] Campo NIT encontrado", nit)
             except Exception as wait_err:
-                logger.warning("[DIAN %s] Campo NIT no encontrado con selector principal: %s", nit, str(wait_err)[:100])
+                # Diagnosticar: qué ve realmente el browser
+                try:
+                    title = await page.title()
+                    url = page.url
+                    html_snippet = (await page.content())[:500]
+                    logger.warning("[DIAN %s] Campo NIT no encontrado. title=%s url=%s html=%s",
+                                   nit, title, url, html_snippet)
+                except Exception:
+                    logger.warning("[DIAN %s] Campo NIT no encontrado: %s", nit, str(wait_err)[:100])
                 alt_selectors = [
                     'input[id*="numNit"]',
                     'input[type="text"][maxlength]',
