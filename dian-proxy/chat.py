@@ -31,7 +31,7 @@ WHATSAPP_URL = os.getenv("WHATSAPP_URL", "https://wa.me/573054559574")
 CHAT_MONTHLY_BUDGET = float(os.getenv("CHAT_MONTHLY_BUDGET", "5.0"))  # USD
 ALERT_EMAIL = os.getenv("ALERT_EMAIL", "soporte@exogenadian.com")
 ALERT_WEBHOOK_URL = os.getenv("ALERT_WEBHOOK_URL", "")  # Google Apps Script URL
-CHAT_LOG_WEBHOOK = os.getenv("CHAT_LOG_WEBHOOK", "https://script.google.com/macros/s/AKfycbyxVQmTgAoJGoWgmuDZHZQbT44nbn7i6fCg_faSAv4DZDfRhO-gNYzRlpCn7hOpoOAS/exec")
+CHAT_LOG_WEBHOOK = os.getenv("CHAT_LOG_WEBHOOK", "")  # Desactivado: usar webhook separado para chat logs, no el de errores JS
 
 # Precios Sonnet (USD por millón de tokens)
 PRICE_INPUT = 3.0
