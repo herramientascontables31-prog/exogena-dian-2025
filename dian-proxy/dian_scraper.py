@@ -51,11 +51,23 @@ class BrowserPool:
         self._request_count = 0
         self._max_requests_before_restart = 200
 
-    async def _ensure_browser(self):
-        if self._browser and self._browser.is_connected():
-            return
-        if self._playwright is None:
-            self._playwright = await async_playwright().start()
+    async def _start_playwright(self):
+        """Iniciar o reiniciar Playwright completamente."""
+        # Cerrar todo lo anterior
+        try:
+            if self._browser:
+                await self._browser.close()
+        except Exception:
+            pass
+        try:
+            if self._playwright:
+                await self._playwright.stop()
+        except Exception:
+            pass
+        self._browser = None
+        self._playwright = None
+
+        self._playwright = await async_playwright().start()
         self._browser = await self._playwright.chromium.launch(
             headless=True,
             args=[
@@ -70,6 +82,17 @@ class BrowserPool:
         self._request_count = 0
         logger.info("[BrowserPool] Browser Chromium iniciado")
 
+    async def _ensure_browser(self):
+        if self._browser:
+            try:
+                if self._browser.is_connected():
+                    return
+            except Exception:
+                pass
+            # Browser muerto — reiniciar todo
+            logger.warning("[BrowserPool] Browser desconectado, reiniciando...")
+        await self._start_playwright()
+
     async def get_context(self):
         """Obtener un context aislado. Usar con 'async with pool.acquire():'."""
         async with self._lock:
@@ -77,22 +100,27 @@ class BrowserPool:
             self._request_count += 1
             if self._request_count > self._max_requests_before_restart:
                 logger.info("[BrowserPool] Reiniciando browser (límite de requests)")
-                await self._restart_browser()
-        context = await self._browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                       "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            locale="es-CO",
-        )
-        return context
+                await self._start_playwright()
+        try:
+            context = await self._browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                           "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                locale="es-CO",
+            )
+            return context
+        except Exception as e:
+            logger.error("[BrowserPool] Error creando context: %s — reiniciando", str(e)[:100])
+            async with self._lock:
+                await self._start_playwright()
+            context = await self._browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                           "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                locale="es-CO",
+            )
+            return context
 
     async def _restart_browser(self):
-        try:
-            if self._browser:
-                await self._browser.close()
-        except Exception:
-            pass
-        self._browser = None
-        await self._ensure_browser()
+        await self._start_playwright()
 
     async def shutdown(self):
         try:
