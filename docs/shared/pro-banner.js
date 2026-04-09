@@ -15,7 +15,7 @@
     'retencion350.html':          { free:'Formulario completo',          pro:'+ Excel formulado descargable',      icon:'🧾' },
     'estadosfinancieros.html':    { free:'ESF + Estado de Resultados',   pro:'+ Notas, comparativo, flujo, patrimonio', icon:'📊' },
     'conciliacion.html':          { free:'Hasta 100 movimientos',        pro:'Sin límite de movimientos',          icon:'🏦' },
-    'consultanit.html':           { free:'10 consultas por día',         pro:'Consultas ilimitadas',               icon:'🔍' },
+    'consultanit.html':           { free:'10 consultas DIAN por día',    pro:'Consultas ilimitadas',               icon:'🔍' },
     'dashboard.html':             { free:'Vista básica',                 pro:'Dashboard completo con gráficos',    icon:'📈' },
     'formato220.html':            { free:'Certificado básico',           pro:'Todas las modalidades',              icon:'📜' },
     'credito.html':               { free:'Simulación básica',            pro:'Exportación y comparativo',          icon:'💳' },
