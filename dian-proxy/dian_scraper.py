@@ -53,19 +53,25 @@ class BrowserPool:
 
     async def _start_playwright(self):
         """Iniciar o reiniciar Playwright completamente."""
-        # Cerrar todo lo anterior
-        try:
-            if self._browser:
-                await self._browser.close()
-        except Exception:
-            pass
-        try:
-            if self._playwright:
-                await self._playwright.stop()
-        except Exception:
-            pass
+        # Cerrar todo lo anterior — ignorar errores
+        old_browser = self._browser
+        old_pw = self._playwright
         self._browser = None
         self._playwright = None
+
+        for cleanup in [
+            lambda: old_browser.close() if old_browser else None,
+            lambda: old_pw.stop() if old_pw else None,
+        ]:
+            try:
+                result = cleanup()
+                if result:
+                    await result
+            except Exception:
+                pass
+
+        # Esperar breve para que los procesos zombie se limpien
+        await asyncio.sleep(0.5)
 
         self._playwright = await async_playwright().start()
         self._browser = await self._playwright.chromium.launch(
@@ -75,12 +81,11 @@ class BrowserPool:
                 "--disable-setuid-sandbox",
                 "--disable-dev-shm-usage",
                 "--disable-gpu",
-                "--single-process",
                 "--disable-extensions",
             ],
         )
         self._request_count = 0
-        logger.info("[BrowserPool] Browser Chromium iniciado")
+        logger.info("[BrowserPool] Browser Chromium iniciado (pid check: connected=%s)", self._browser.is_connected())
 
     async def _ensure_browser(self):
         if self._browser:
