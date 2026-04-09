@@ -67,7 +67,12 @@ gtag('config', 'G-S7SM6ST4CC');
     {"@type":"Question","name":"¿Puedo cancelar PRO en cualquier momento?","acceptedAnswer":{"@type":"Answer","text":"Sí, sin penalidad ni preguntas. Tu suscripción PRO no tiene permanencia mínima. Si decides no renovar, simplemente no se cobra el siguiente mes y sigues usando todas las herramientas gratuitas sin límite."}},
     {"@type":"Question","name":"¿Qué incluye PRO que no tenga la versión gratis?","acceptedAnswer":{"@type":"Answer","text":"Con PRO desbloqueas: exógena completa (los 10 formatos sin restricción), estados financieros con notas, comparativos y flujo de efectivo, renta 110 con descarga Excel, conciliación bancaria ilimitada, y exportaciones avanzadas en Word y Excel."}},
     {"@type":"Question","name":"¿Funciona con mi software contable?","acceptedAnswer":{"@type":"Answer","text":"Sí. Solo necesitas exportar tu balance de prueba en Excel desde cualquier software contable. Funciona con Siigo, World Office, Helisa GW, Alegra, MidaSoft, ZEUS y cualquier otro que exporte a Excel."}},
-    {"@type":"Question","name":"¿Los formatos son compatibles con el prevalidador DIAN?","acceptedAnswer":{"@type":"Answer","text":"Sí, 100%. Los archivos Excel que genera ExógenaDIAN siguen la estructura exacta que exige el prevalidador MUISCA de la DIAN: mismos encabezados, formato de celdas y tipos de dato."}}
+    {"@type":"Question","name":"¿Los formatos son compatibles con el prevalidador DIAN?","acceptedAnswer":{"@type":"Answer","text":"Sí, 100%. Los archivos Excel que genera ExógenaDIAN siguen la estructura exacta que exige el prevalidador MUISCA de la DIAN: mismos encabezados, formato de celdas y tipos de dato."}},
+    {"@type":"Question","name":"¿Puedo subir el balance directo desde Siigo, World Office o Helisa?","acceptedAnswer":{"@type":"Answer","text":"Sí, sin modificar nada. La herramienta reconoce automáticamente más de 80 nombres de columnas distintos. Solo exporta tu balance de prueba por tercero a Excel, arrástralo a la herramienta y listo."}},
+    {"@type":"Question","name":"¿Los XML quedan listos para subir al MUISCA?","acceptedAnswer":{"@type":"Answer","text":"La herramienta genera un Excel con los 10 formatos. Luego debes cargar ese Excel en el Prevalidador DIAN para generar los XML finales que subes al MUISCA. El flujo es: ExógenaDIAN → Excel → Prevalidador DIAN → XML → MUISCA."}},
+    {"@type":"Question","name":"¿Qué balance de prueba necesito exactamente?","acceptedAnswer":{"@type":"Answer","text":"Un balance de prueba con auxiliar por tercero del año gravable completo (enero a diciembre). Debe tener: código de cuenta PUC, nombre de cuenta, NIT del tercero, débitos y créditos. No sirve un balance resumido solo por cuentas sin terceros."}},
+    {"@type":"Question","name":"¿Mapea los conceptos DIAN automáticamente?","acceptedAnswer":{"@type":"Answer","text":"Sí, todo es automático. La herramienta lee el código PUC y el nombre de cada cuenta y la clasifica en el formato y concepto DIAN correcto. Tú solo revisas el resultado y ajustas si algo quedó mal clasificado."}},
+    {"@type":"Question","name":"¿Qué formatos genera la versión gratuita y cuáles son PRO?","acceptedAnswer":{"@type":"Answer","text":"Gratis: F1003 (Retenciones), F1007 (Ingresos) y F2276 (Rentas de trabajo). PRO ($19.900/mes): los 10 formatos completos. La clasificación y previsualización funciona completa en la versión gratis."}}
   ]
 }
 </script>
@@ -755,6 +760,66 @@ footer{padding:32px 48px 24px;background:var(--gray-900);color:var(--gray-400)}
       </button>
       <div class="sec-faq-a">
         <p><strong>S&iacute;, 100%.</strong> Los archivos Excel que genera Ex&oacute;genaDIAN siguen la estructura exacta que exige el prevalidador MUISCA de la DIAN: mismos encabezados, formato de celdas y tipos de dato. Solo tienes que descargar, abrir el prevalidador y cargar el archivo.</p>
+      </div>
+    </div>
+
+    <div class="sec-faq-item">
+      <button class="sec-faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <h3>&iquest;Puedo subir el balance directo desde Siigo, World Office o Helisa?</h3>
+        <svg class="faq-chev" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </button>
+      <div class="sec-faq-a">
+        <p><strong>S&iacute;, sin modificar nada.</strong> La herramienta reconoce autom&aacute;ticamente m&aacute;s de 80 nombres de columnas distintos (Cuenta, Cta, PUC, Cod Cuenta, NIT, Identificaci&oacute;n, D&eacute;bitos, Cr&eacute;ditos, etc.). Solo exporta tu &ldquo;Balance de prueba por tercero&rdquo; a Excel desde tu software contable, arr&aacute;stralo a la herramienta y listo. Funciona con Siigo, World Office, Helisa, Alegra, Contai, MidaSoft, ZEUS, SAP y cualquier otro que exporte a Excel.</p>
+      </div>
+    </div>
+
+    <div class="sec-faq-item">
+      <button class="sec-faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <h3>&iquest;Los XML quedan listos para subir al MUISCA o hay que hacer algo m&aacute;s?</h3>
+        <svg class="faq-chev" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </button>
+      <div class="sec-faq-a">
+        <p>La herramienta genera un <strong>Excel con los 10 formatos</strong> (uno por hoja), listos para que los revises y ajustes. Luego debes cargar ese Excel en el <strong>Prevalidador DIAN</strong> (que descargas desde el MUISCA) para generar los archivos XML finales. Esos XML son los que subes al MUISCA en &ldquo;Presentaci&oacute;n de informaci&oacute;n por env&iacute;o de archivos&rdquo;. El flujo es: <strong>ExógenaDIAN → Excel → Prevalidador DIAN → XML → MUISCA</strong>.</p>
+      </div>
+    </div>
+
+    <div class="sec-faq-item">
+      <button class="sec-faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <h3>&iquest;Qu&eacute; balance de prueba necesito exactamente?</h3>
+        <svg class="faq-chev" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </button>
+      <div class="sec-faq-a">
+        <p>Necesitas un <strong>balance de prueba CON AUXILIAR POR TERCERO</strong> del a&ntilde;o gravable completo (enero a diciembre). Debe tener m&iacute;nimo: c&oacute;digo de cuenta PUC, nombre de cuenta, NIT del tercero, d&eacute;bitos y cr&eacute;ditos. <strong>No sirve</strong> un balance resumido solo por cuentas (sin terceros), ni un balance de un solo mes. Si tu archivo viene con NIT con puntos o guiones (900.123.456-1), la herramienta los limpia autom&aacute;ticamente. Puedes descargar un archivo de ejemplo desde la herramienta.</p>
+      </div>
+    </div>
+
+    <div class="sec-faq-item">
+      <button class="sec-faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <h3>&iquest;Mapea los conceptos DIAN autom&aacute;ticamente o tengo que hacerlo yo?</h3>
+        <svg class="faq-chev" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </button>
+      <div class="sec-faq-a">
+        <p><strong>Todo es autom&aacute;tico.</strong> La herramienta lee el c&oacute;digo PUC y el nombre de cada cuenta, y la clasifica en el formato y concepto DIAN correcto. Por ejemplo: la cuenta 5105 (Gastos de personal — Salarios) va al F1001 concepto 5001, y tambi&eacute;n al F2276. La cuenta 135515 (Retefuente) va al F1003 concepto 1308. T&uacute; solo revisas el resultado y ajustas si algo qued&oacute; mal clasificado.</p>
+      </div>
+    </div>
+
+    <div class="sec-faq-item">
+      <button class="sec-faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <h3>&iquest;Qu&eacute; pasa si tengo sucursales o varias empresas?</h3>
+        <svg class="faq-chev" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </button>
+      <div class="sec-faq-a">
+        <p>Procesa <strong>una empresa a la vez</strong>. Si manejas varias empresas o NIT, sube el balance de cada una por separado y genera los formatos individualmente. La herramienta no guarda datos entre sesiones (todo se procesa en tu navegador), as&iacute; que puedes procesar tantas empresas como necesites sin mezclar informaci&oacute;n.</p>
+      </div>
+    </div>
+
+    <div class="sec-faq-item">
+      <button class="sec-faq-q" onclick="this.parentElement.classList.toggle('open')">
+        <h3>&iquest;Qu&eacute; formatos genera la versi&oacute;n gratuita y cu&aacute;les son PRO?</h3>
+        <svg class="faq-chev" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+      </button>
+      <div class="sec-faq-a">
+        <p><strong>Gratis:</strong> F1003 (Retenciones), F1007 (Ingresos) y F2276 (Rentas de trabajo/n&oacute;mina) — 3 formatos sin restricci&oacute;n. <strong>PRO ($19.900/mes):</strong> los 10 formatos completos: F1001 (Pagos), F1003, F1005 (IVA descontable), F1006 (IVA generado), F1007, F1008 (CxC), F1009 (CxP), F1010 (Socios), F1012 (Inversiones) y F2276. Puedes probar con tu balance real antes de suscribirte — la clasificaci&oacute;n y previsualizaci&oacute;n funciona completa en la versi&oacute;n gratis.</p>
       </div>
     </div>
 
