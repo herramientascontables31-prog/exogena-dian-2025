@@ -520,6 +520,26 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
       <div class="scroll-box" id="clasifTable"></div>
     </div>
+    <!-- ═══ COMPLETAR DATOS DE TERCEROS ═══ -->
+    <div class="card" id="tercerosDatosCard" style="display:none">
+      <div class="card-title"><span>👥</span> Completar Datos de Terceros <button class="help-btn" title="Ayuda" onclick="exoToast('La DIAN exige direccion para cada tercero en la mayoria de formatos. Las personas naturales (CC) deben tener apellidos y nombres separados, no todo en razon social. Aqui puedes completar los datos que faltan. Los terceros conocidos (bancos, EPS, DIAN, etc.) se autocompletaron.','info')">?</button></div>
+      <div class="alert alert-info"><span>💡</span><div>Revisa y completa los datos faltantes de los terceros mas relevantes. Los terceros conocidos (bancos, EPS, AFP, entidades del Estado) ya tienen direccion autocompletada. <strong>Las personas naturales se separaron automaticamente en apellidos y nombres.</strong></div></div>
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+        <select id="tercFiltro" onchange="filtrarTerceros()" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;font-family:inherit">
+          <option value="sinDir">Sin direccion</option>
+          <option value="pn">Personas naturales (CC)</option>
+          <option value="todos">Todos los terceros</option>
+          <option value="conDir">Con direccion (completados)</option>
+        </select>
+        <span id="tercCount" style="font-size:.78rem;color:var(--muted)"></span>
+        <button class="btn btn-outline" onclick="exportTercerosCSV()" style="padding:4px 12px;font-size:.75rem;margin-left:auto">📥 Exportar lista</button>
+      </div>
+      <div class="scroll-box" style="max-height:400px" id="tercerosTable"></div>
+      <div style="margin-top:12px;padding:10px 14px;background:var(--amber2);border:1px solid #FDE68A;border-radius:8px;font-size:.8rem;color:#92400E">
+        <strong>Nota:</strong> Los cambios que hagas aqui se reflejan automaticamente al generar los formatos. No es obligatorio completar todos — la DIAN acepta direccion vacia en algunos casos, pero es recomendable tenerla para evitar rechazos en el prevalidador.
+      </div>
+    </div>
+
     <div class="actions">
       <button class="btn btn-outline" onclick="goStep(2)">← Volver a Columnas</button>
       <button class="btn btn-primary" onclick="irAFormatos()">Generar Formatos →</button>
@@ -693,148 +713,149 @@ const BANCOS_COLOMBIANOS={
   'lulo bank':['901352782','LULO BANK S.A.'],
 };
 
-/* ── DIRECTORIO DE TERCEROS: 150+ entidades colombianas (sin duplicados) ── */
+/* ── DIRECTORIO DE TERCEROS: 150+ entidades colombianas con direcciones ── */
+/* Campos: rs=razon social, cat=categoria, dir=direccion, dp=cod depto, mp=cod municipio */
 const DIRECTORIO={
   // ── Bancos (19) ──
-  '890903938':{rs:'BANCOLOMBIA S.A.',cat:'Banco'},
-  '860034313':{rs:'BANCO DAVIVIENDA S.A.',cat:'Banco'},
-  '860002964':{rs:'BANCO DE BOGOTA S.A.',cat:'Banco'},
-  '890300279':{rs:'BANCO DE OCCIDENTE S.A.',cat:'Banco'},
-  '860007738':{rs:'BANCO POPULAR S.A.',cat:'Banco'},
-  '860003020':{rs:'BBVA COLOMBIA S.A.',cat:'Banco'},
-  '890903937':{rs:'SCOTIABANK COLPATRIA S.A.',cat:'Banco'},
-  '860035827':{rs:'BANCO AV VILLAS S.A.',cat:'Banco'},
-  '860007335':{rs:'BANCO CAJA SOCIAL S.A.',cat:'Banco'},
-  '800037800':{rs:'BANCO AGRARIO DE COLOMBIA S.A.',cat:'Banco'},
-  '900215071':{rs:'BANCAMIA S.A.',cat:'Banco'},
-  '860050750':{rs:'GNB SUDAMERIS S.A.',cat:'Banco'},
-  '890200756':{rs:'BANCO PICHINCHA S.A.',cat:'Banco'},
-  '900047981':{rs:'BANCO FALABELLA S.A.',cat:'Banco'},
-  '860043186':{rs:'BANCO SERFINANZA S.A.',cat:'Banco'},
-  '860051135':{rs:'CITIBANK COLOMBIA S.A.',cat:'Banco'},
-  '900378212':{rs:'BANCO W S.A.',cat:'Banco'},
-  '860051894':{rs:'BANCO FINANDINA S.A.',cat:'Banco'},
-  '890203088':{rs:'BANCO COOPCENTRAL',cat:'Banco'},
+  '890903938':{rs:'BANCOLOMBIA S.A.',cat:'Banco',dir:'Carrera 48 # 26-85',dp:'05',mp:'001'},
+  '860034313':{rs:'BANCO DAVIVIENDA S.A.',cat:'Banco',dir:'Avenida El Dorado # 68C-61',dp:'11',mp:'001'},
+  '860002964':{rs:'BANCO DE BOGOTA S.A.',cat:'Banco',dir:'Calle 36 # 7-47',dp:'11',mp:'001'},
+  '890300279':{rs:'BANCO DE OCCIDENTE S.A.',cat:'Banco',dir:'Carrera 4 # 7-61',dp:'76',mp:'001'},
+  '860007738':{rs:'BANCO POPULAR S.A.',cat:'Banco',dir:'Calle 17 # 7-35',dp:'11',mp:'001'},
+  '860003020':{rs:'BBVA COLOMBIA S.A.',cat:'Banco',dir:'Carrera 9 # 72-21',dp:'11',mp:'001'},
+  '890903937':{rs:'SCOTIABANK COLPATRIA S.A.',cat:'Banco',dir:'Carrera 7 # 24-89',dp:'11',mp:'001'},
+  '860035827':{rs:'BANCO AV VILLAS S.A.',cat:'Banco',dir:'Carrera 13 # 27-47',dp:'11',mp:'001'},
+  '860007335':{rs:'BANCO CAJA SOCIAL S.A.',cat:'Banco',dir:'Calle 57 # 9-07',dp:'11',mp:'001'},
+  '800037800':{rs:'BANCO AGRARIO DE COLOMBIA S.A.',cat:'Banco',dir:'Carrera 8 # 15-43',dp:'11',mp:'001'},
+  '900215071':{rs:'BANCAMIA S.A.',cat:'Banco',dir:'Calle 67 # 7-35',dp:'11',mp:'001'},
+  '860050750':{rs:'GNB SUDAMERIS S.A.',cat:'Banco',dir:'Carrera 7 # 75-51',dp:'11',mp:'001'},
+  '890200756':{rs:'BANCO PICHINCHA S.A.',cat:'Banco',dir:'Carrera 7 # 73-55',dp:'11',mp:'001'},
+  '900047981':{rs:'BANCO FALABELLA S.A.',cat:'Banco',dir:'Calle 100 # 7A-81',dp:'11',mp:'001'},
+  '860043186':{rs:'BANCO SERFINANZA S.A.',cat:'Banco',dir:'Carrera 54 # 72-80',dp:'08',mp:'001'},
+  '860051135':{rs:'CITIBANK COLOMBIA S.A.',cat:'Banco',dir:'Carrera 9A # 99-02',dp:'11',mp:'001'},
+  '900378212':{rs:'BANCO W S.A.',cat:'Banco',dir:'Carrera 5 # 15-09',dp:'76',mp:'001'},
+  '860051894':{rs:'BANCO FINANDINA S.A.',cat:'Banco',dir:'Calle 72 # 10-71',dp:'11',mp:'001'},
+  '890203088':{rs:'BANCO COOPCENTRAL',cat:'Banco',dir:'Calle 99 # 9A-54',dp:'11',mp:'001'},
   // ── EPS (11) ──
-  '900156264':{rs:'NUEVA EPS S.A.',cat:'EPS'},
-  '800088702':{rs:'EPS SURA',cat:'EPS'},
-  '800251440':{rs:'EPS SANITAS S.A.',cat:'EPS'},
-  '830003564':{rs:'FAMISANAR LTDA. EPS',cat:'EPS'},
-  '900226715':{rs:'COMPENSAR EPS',cat:'EPS'},
-  '800130907':{rs:'SALUD TOTAL S.A. EPS',cat:'EPS'},
-  '900226846':{rs:'COOSALUD EPS S.A.',cat:'EPS'},
-  '806008394':{rs:'MUTUAL SER EPS',cat:'EPS'},
-  '830113831':{rs:'ALIANSALUD EPS S.A.',cat:'EPS'},
-  '890399010':{rs:'COMFENALCO VALLE EPS',cat:'EPS'},
-  '900298372':{rs:'CAPITAL SALUD EPS S.A.S.',cat:'EPS'},
+  '900156264':{rs:'NUEVA EPS S.A.',cat:'EPS',dir:'Calle 26 # 69B-45',dp:'11',mp:'001'},
+  '800088702':{rs:'EPS SURA',cat:'EPS',dir:'Carrera 43A # 1A Sur 100',dp:'05',mp:'001'},
+  '800251440':{rs:'EPS SANITAS S.A.',cat:'EPS',dir:'Autopista Norte # 108-27',dp:'11',mp:'001'},
+  '830003564':{rs:'FAMISANAR LTDA. EPS',cat:'EPS',dir:'Carrera 16A # 77A-11',dp:'11',mp:'001'},
+  '900226715':{rs:'COMPENSAR EPS',cat:'EPS',dir:'Avenida 68 # 49A-47',dp:'11',mp:'001'},
+  '800130907':{rs:'SALUD TOTAL S.A. EPS',cat:'EPS',dir:'Calle 100 # 11B-67',dp:'11',mp:'001'},
+  '900226846':{rs:'COOSALUD EPS S.A.',cat:'EPS',dir:'Carrera 3 # 6-80',dp:'13',mp:'001'},
+  '806008394':{rs:'MUTUAL SER EPS',cat:'EPS',dir:'Carrera 20 # 33-56',dp:'13',mp:'001'},
+  '830113831':{rs:'ALIANSALUD EPS S.A.',cat:'EPS',dir:'Carrera 13A # 29-24',dp:'11',mp:'001'},
+  '890399010':{rs:'COMFENALCO VALLE EPS',cat:'EPS',dir:'Calle 5 # 6-63',dp:'76',mp:'001'},
+  '900298372':{rs:'CAPITAL SALUD EPS S.A.S.',cat:'EPS',dir:'Calle 66 # 15-41',dp:'11',mp:'001'},
   // ── AFP (5) ──
-  '800144331':{rs:'PORVENIR S.A.',cat:'AFP'},
-  '800138188':{rs:'PROTECCION S.A.',cat:'AFP'},
-  '800144467':{rs:'COLFONDOS S.A.',cat:'AFP'},
-  '800224808':{rs:'OLD MUTUAL SKANDIA',cat:'AFP'},
-  '900336004':{rs:'COLPENSIONES',cat:'AFP'},
+  '800144331':{rs:'PORVENIR S.A.',cat:'AFP',dir:'Calle 100 # 19A-30',dp:'11',mp:'001'},
+  '800138188':{rs:'PROTECCION S.A.',cat:'AFP',dir:'Carrera 43A # 3 Sur 130',dp:'05',mp:'001'},
+  '800144467':{rs:'COLFONDOS S.A.',cat:'AFP',dir:'Calle 72 # 10-07',dp:'11',mp:'001'},
+  '800224808':{rs:'OLD MUTUAL SKANDIA',cat:'AFP',dir:'Carrera 7 # 75-66',dp:'11',mp:'001'},
+  '900336004':{rs:'COLPENSIONES',cat:'AFP',dir:'Calle 45 # 45-28',dp:'11',mp:'001'},
   // ── ARL (5) ──
-  '890903790':{rs:'ARL SURA',cat:'ARL'},
-  '860011153':{rs:'POSITIVA COMPANIA DE SEGUROS S.A.',cat:'ARL'},
-  '860002503':{rs:'MAPFRE SEGUROS (COLMENA ARL)',cat:'ARL'},
-  '890903037':{rs:'SEGUROS BOLIVAR S.A.',cat:'Aseguradora'},
-  '860524654':{rs:'ALFA S.A. ARL',cat:'ARL'},
+  '890903790':{rs:'ARL SURA',cat:'ARL',dir:'Carrera 43A # 5A-113',dp:'05',mp:'001'},
+  '860011153':{rs:'POSITIVA COMPANIA DE SEGUROS S.A.',cat:'ARL',dir:'Calle 37 # 8-43',dp:'11',mp:'001'},
+  '860002503':{rs:'MAPFRE SEGUROS (COLMENA ARL)',cat:'ARL',dir:'Carrera 7 # 26-20',dp:'11',mp:'001'},
+  '890903037':{rs:'SEGUROS BOLIVAR S.A.',cat:'Aseguradora',dir:'Carrera 7 # 24-89',dp:'11',mp:'001'},
+  '860524654':{rs:'ALFA S.A. ARL',cat:'ARL',dir:'Calle 72 # 10-07',dp:'11',mp:'001'},
   // ── Cajas de Compensacion (7) ──
-  '860066942':{rs:'COMPENSAR',cat:'Caja'},
-  '860007336':{rs:'COLSUBSIDIO',cat:'Caja'},
-  '860013570':{rs:'CAFAM',cat:'Caja'},
-  '890900842':{rs:'COMFAMA',cat:'Caja'},
-  '890300466':{rs:'COMFANDI',cat:'Caja'},
-  '890900650':{rs:'COMFENALCO ANTIOQUIA',cat:'Caja'},
-  '890102044':{rs:'COMBARRANQUILLA',cat:'Caja'},
+  '860066942':{rs:'COMPENSAR',cat:'Caja',dir:'Avenida 68 # 49A-47',dp:'11',mp:'001'},
+  '860007336':{rs:'COLSUBSIDIO',cat:'Caja',dir:'Calle 26 # 25-50',dp:'11',mp:'001'},
+  '860013570':{rs:'CAFAM',cat:'Caja',dir:'Avenida Calle 57 # 8-91',dp:'11',mp:'001'},
+  '890900842':{rs:'COMFAMA',cat:'Caja',dir:'Calle 45 # 49-24',dp:'05',mp:'001'},
+  '890300466':{rs:'COMFANDI',cat:'Caja',dir:'Calle 5 # 6-63',dp:'76',mp:'001'},
+  '890900650':{rs:'COMFENALCO ANTIOQUIA',cat:'Caja',dir:'Calle 50 # 46-36',dp:'05',mp:'001'},
+  '890102044':{rs:'COMBARRANQUILLA',cat:'Caja',dir:'Carrera 53 # 68-10',dp:'08',mp:'001'},
   // ── Aseguradoras (7) ──
-  '860025639':{rs:'ALLIANZ SEGUROS S.A.',cat:'Aseguradora'},
-  '860024414':{rs:'SEGUROS DEL ESTADO S.A.',cat:'Aseguradora'},
-  '860002183':{rs:'AXA COLPATRIA SEGUROS S.A.',cat:'Aseguradora'},
-  '860009578':{rs:'MUNDIAL DE SEGUROS S.A.',cat:'Aseguradora'},
-  '860037013':{rs:'PREVISORA S.A. COMPANIA DE SEGUROS',cat:'Aseguradora'},
-  '800149923':{rs:'QBE SEGUROS S.A.',cat:'Aseguradora'},
+  '860025639':{rs:'ALLIANZ SEGUROS S.A.',cat:'Aseguradora',dir:'Carrera 13 # 29-24',dp:'11',mp:'001'},
+  '860024414':{rs:'SEGUROS DEL ESTADO S.A.',cat:'Aseguradora',dir:'Carrera 11 # 90-20',dp:'11',mp:'001'},
+  '860002183':{rs:'AXA COLPATRIA SEGUROS S.A.',cat:'Aseguradora',dir:'Carrera 7 # 24-89',dp:'11',mp:'001'},
+  '860009578':{rs:'MUNDIAL DE SEGUROS S.A.',cat:'Aseguradora',dir:'Calle 72 # 10-07',dp:'11',mp:'001'},
+  '860037013':{rs:'PREVISORA S.A. COMPANIA DE SEGUROS',cat:'Aseguradora',dir:'Calle 57 # 9-07',dp:'11',mp:'001'},
+  '800149923':{rs:'QBE SEGUROS S.A.',cat:'Aseguradora',dir:'Carrera 7 # 76-35',dp:'11',mp:'001'},
   // ── Fiduciarias (5) ──
-  '800150280':{rs:'FIDUCIARIA BANCOLOMBIA S.A.',cat:'Fiduciaria'},
-  '800142383':{rs:'FIDUCIARIA BOGOTA S.A.',cat:'Fiduciaria'},
-  '800171372':{rs:'FIDUCIARIA DAVIVIENDA S.A.',cat:'Fiduciaria'},
-  '830053105':{rs:'FIDUCIARIA COLPATRIA S.A.',cat:'Fiduciaria'},
-  '800182281':{rs:'FIDUCIARIA CORFICOLOMBIANA S.A.',cat:'Fiduciaria'},
+  '800150280':{rs:'FIDUCIARIA BANCOLOMBIA S.A.',cat:'Fiduciaria',dir:'Carrera 48 # 26-85',dp:'05',mp:'001'},
+  '800142383':{rs:'FIDUCIARIA BOGOTA S.A.',cat:'Fiduciaria',dir:'Calle 36 # 7-47',dp:'11',mp:'001'},
+  '800171372':{rs:'FIDUCIARIA DAVIVIENDA S.A.',cat:'Fiduciaria',dir:'Avenida El Dorado # 68C-61',dp:'11',mp:'001'},
+  '830053105':{rs:'FIDUCIARIA COLPATRIA S.A.',cat:'Fiduciaria',dir:'Carrera 7 # 24-89',dp:'11',mp:'001'},
+  '800182281':{rs:'FIDUCIARIA CORFICOLOMBIANA S.A.',cat:'Fiduciaria',dir:'Carrera 13 # 26-45',dp:'11',mp:'001'},
   // ── Entidades del Estado (10) ──
-  '800197268':{rs:'DIAN',cat:'Estado'},
-  '900373788':{rs:'UGPP',cat:'Estado'},
-  '899999090':{rs:'MINISTERIO DE HACIENDA Y CREDITO PUBLICO',cat:'Estado'},
-  '899999067':{rs:'CONTRALORIA GENERAL DE LA REPUBLICA',cat:'Estado'},
-  '899999034':{rs:'ICBF',cat:'Estado'},
-  '899999239':{rs:'SENA',cat:'Estado'},
-  '899999001':{rs:'MINISTERIO DE TRABAJO',cat:'Estado'},
-  '899999053':{rs:'SUPERINTENDENCIA DE SOCIEDADES',cat:'Estado'},
-  '899999007':{rs:'SUPERINTENDENCIA DE INDUSTRIA Y COMERCIO',cat:'Estado'},
-  '899999063':{rs:'SECRETARIA DISTRITAL DE HACIENDA BOGOTA',cat:'Estado'},
+  '800197268':{rs:'DIAN',cat:'Estado',dir:'Carrera 8 # 6C-38',dp:'11',mp:'001'},
+  '900373788':{rs:'UGPP',cat:'Estado',dir:'Calle 26 # 69-76',dp:'11',mp:'001'},
+  '899999090':{rs:'MINISTERIO DE HACIENDA Y CREDITO PUBLICO',cat:'Estado',dir:'Carrera 8 # 6-64',dp:'11',mp:'001'},
+  '899999067':{rs:'CONTRALORIA GENERAL DE LA REPUBLICA',cat:'Estado',dir:'Calle 17 # 9-82',dp:'11',mp:'001'},
+  '899999034':{rs:'ICBF',cat:'Estado',dir:'Avenida Carrera 68 # 64C-75',dp:'11',mp:'001'},
+  '899999239':{rs:'SENA',cat:'Estado',dir:'Calle 57 # 8-69',dp:'11',mp:'001'},
+  '899999001':{rs:'MINISTERIO DE TRABAJO',cat:'Estado',dir:'Carrera 14 # 99-33',dp:'11',mp:'001'},
+  '899999053':{rs:'SUPERINTENDENCIA DE SOCIEDADES',cat:'Estado',dir:'Avenida El Dorado # 51-80',dp:'11',mp:'001'},
+  '899999007':{rs:'SUPERINTENDENCIA DE INDUSTRIA Y COMERCIO',cat:'Estado',dir:'Carrera 13 # 27-00',dp:'11',mp:'001'},
+  '899999063':{rs:'SECRETARIA DISTRITAL DE HACIENDA BOGOTA',cat:'Estado',dir:'Carrera 30 # 25-90',dp:'11',mp:'001'},
   // ── Camaras de Comercio (4) ──
-  '860007386':{rs:'CAMARA DE COMERCIO DE BOGOTA',cat:'Camara'},
-  '890904713':{rs:'CAMARA DE COMERCIO DE MEDELLIN',cat:'Camara'},
-  '890399011':{rs:'CAMARA DE COMERCIO DE CALI',cat:'Camara'},
-  '890102018':{rs:'CAMARA DE COMERCIO DE BARRANQUILLA',cat:'Camara'},
+  '860007386':{rs:'CAMARA DE COMERCIO DE BOGOTA',cat:'Camara',dir:'Avenida El Dorado # 68D-35',dp:'11',mp:'001'},
+  '890904713':{rs:'CAMARA DE COMERCIO DE MEDELLIN',cat:'Camara',dir:'Calle 53 # 45-77',dp:'05',mp:'001'},
+  '890399011':{rs:'CAMARA DE COMERCIO DE CALI',cat:'Camara',dir:'Calle 8 # 3-14',dp:'76',mp:'001'},
+  '890102018':{rs:'CAMARA DE COMERCIO DE BARRANQUILLA',cat:'Camara',dir:'Via 40 # 36-135',dp:'08',mp:'001'},
   // ── Servicios Publicos (10) ──
-  '830095213':{rs:'ENEL COLOMBIA S.A. E.S.P. (CODENSA)',cat:'Servicios'},
-  '890904996':{rs:'EMPRESAS PUBLICAS DE MEDELLIN E.S.P.',cat:'Servicios'},
-  '890399003':{rs:'EMCALI E.I.C.E. E.S.P.',cat:'Servicios'},
-  '900582006':{rs:'AIR-E S.A.S. E.S.P.',cat:'Servicios'},
-  '900464562':{rs:'VANTI S.A. E.S.P.',cat:'Servicios'},
-  '899999094':{rs:'ACUEDUCTO DE BOGOTA E.S.P.',cat:'Servicios'},
-  '830037248':{rs:'EMPRESA DE ENERGIA DE BOGOTA S.A. E.S.P.',cat:'Servicios'},
-  '800130625':{rs:'ISAGEN S.A. E.S.P.',cat:'Servicios'},
-  '800199498':{rs:'CELSIA S.A. E.S.P.',cat:'Servicios'},
-  '890903180':{rs:'GASES DE OCCIDENTE S.A. E.S.P.',cat:'Servicios'},
+  '830095213':{rs:'ENEL COLOMBIA S.A. E.S.P. (CODENSA)',cat:'Servicios',dir:'Carrera 13A # 93-66',dp:'11',mp:'001'},
+  '890904996':{rs:'EMPRESAS PUBLICAS DE MEDELLIN E.S.P.',cat:'Servicios',dir:'Carrera 58 # 42-125',dp:'05',mp:'001'},
+  '890399003':{rs:'EMCALI E.I.C.E. E.S.P.',cat:'Servicios',dir:'Avenida 2 Norte # 10-54',dp:'76',mp:'001'},
+  '900582006':{rs:'AIR-E S.A.S. E.S.P.',cat:'Servicios',dir:'Carrera 54 # 72-80',dp:'08',mp:'001'},
+  '900464562':{rs:'VANTI S.A. E.S.P.',cat:'Servicios',dir:'Calle 71A # 5-38',dp:'11',mp:'001'},
+  '899999094':{rs:'ACUEDUCTO DE BOGOTA E.S.P.',cat:'Servicios',dir:'Avenida Calle 24 # 37-15',dp:'11',mp:'001'},
+  '830037248':{rs:'EMPRESA DE ENERGIA DE BOGOTA S.A. E.S.P.',cat:'Servicios',dir:'Carrera 9 # 73-44',dp:'11',mp:'001'},
+  '800130625':{rs:'ISAGEN S.A. E.S.P.',cat:'Servicios',dir:'Carrera 48 # 26-85',dp:'05',mp:'001'},
+  '800199498':{rs:'CELSIA S.A. E.S.P.',cat:'Servicios',dir:'Calle 5 # 6-63',dp:'76',mp:'001'},
+  '890903180':{rs:'GASES DE OCCIDENTE S.A. E.S.P.',cat:'Servicios',dir:'Calle 5 # 36A-35',dp:'76',mp:'001'},
   // ── Telecomunicaciones (5) ──
-  '899999115':{rs:'COMCEL S.A. (CLARO)',cat:'Telecom'},
-  '830122566':{rs:'COLOMBIA TELECOMUNICACIONES S.A. E.S.P. (MOVISTAR)',cat:'Telecom'},
-  '900092385':{rs:'COLOMBIA MOVIL S.A. E.S.P. (TIGO)',cat:'Telecom'},
-  '800092200':{rs:'ETB S.A. E.S.P.',cat:'Telecom'},
-  '805003209':{rs:'DIRECTV COLOMBIA LTDA.',cat:'Telecom'},
+  '899999115':{rs:'COMCEL S.A. (CLARO)',cat:'Telecom',dir:'Carrera 68B # 25B-86',dp:'11',mp:'001'},
+  '830122566':{rs:'COLOMBIA TELECOMUNICACIONES S.A. E.S.P. (MOVISTAR)',cat:'Telecom',dir:'Transversal 60 # 114A-55',dp:'11',mp:'001'},
+  '900092385':{rs:'COLOMBIA MOVIL S.A. E.S.P. (TIGO)',cat:'Telecom',dir:'Carrera 11A # 93-52',dp:'11',mp:'001'},
+  '800092200':{rs:'ETB S.A. E.S.P.',cat:'Telecom',dir:'Calle 19 # 4-44',dp:'11',mp:'001'},
+  '805003209':{rs:'DIRECTV COLOMBIA LTDA.',cat:'Telecom',dir:'Carrera 7 # 76-35',dp:'11',mp:'001'},
   // ── Transporte y Logistica (5) ──
-  '890100813':{rs:'AVIANCA S.A.',cat:'Transporte'},
-  '900918936':{rs:'LATAM AIRLINES COLOMBIA S.A.S.',cat:'Transporte'},
-  '860512330':{rs:'SERVIENTREGA S.A.',cat:'Logistica'},
-  '890301884':{rs:'COORDINADORA MERCANTIL S.A.',cat:'Logistica'},
-  '890300225':{rs:'TCC S.A.S.',cat:'Logistica'},
+  '890100813':{rs:'AVIANCA S.A.',cat:'Transporte',dir:'Avenida Calle 26 # 59-15',dp:'11',mp:'001'},
+  '900918936':{rs:'LATAM AIRLINES COLOMBIA S.A.S.',cat:'Transporte',dir:'Avenida Calle 26 # 59-15',dp:'11',mp:'001'},
+  '860512330':{rs:'SERVIENTREGA S.A.',cat:'Logistica',dir:'Diagonal 23 # 69-60',dp:'11',mp:'001'},
+  '890301884':{rs:'COORDINADORA MERCANTIL S.A.',cat:'Logistica',dir:'Carrera 48 # 12 Sur 70',dp:'05',mp:'001'},
+  '890300225':{rs:'TCC S.A.S.',cat:'Logistica',dir:'Calle 5 # 34A-16',dp:'76',mp:'001'},
   // ── Comercio (5) ──
-  '890900608':{rs:'ALMACENES EXITO S.A.',cat:'Comercio'},
-  '900017447':{rs:'FALABELLA DE COLOMBIA S.A.',cat:'Comercio'},
-  '800242106':{rs:'SODIMAC COLOMBIA S.A. (HOMECENTER)',cat:'Comercio'},
-  '890900943':{rs:'COLOMBIANA DE COMERCIO S.A. (ALKOSTO)',cat:'Comercio'},
-  '900059238':{rs:'MAKRO SUPERMAYORISTA S.A.S.',cat:'Comercio'},
+  '890900608':{rs:'ALMACENES EXITO S.A.',cat:'Comercio',dir:'Carrera 48 # 32B Sur 139',dp:'05',mp:'266'},
+  '900017447':{rs:'FALABELLA DE COLOMBIA S.A.',cat:'Comercio',dir:'Calle 100 # 7A-81',dp:'11',mp:'001'},
+  '800242106':{rs:'SODIMAC COLOMBIA S.A. (HOMECENTER)',cat:'Comercio',dir:'Calle 80 # 69P-50',dp:'11',mp:'001'},
+  '890900943':{rs:'COLOMBIANA DE COMERCIO S.A. (ALKOSTO)',cat:'Comercio',dir:'Avenida 68 # 75A-50',dp:'11',mp:'001'},
+  '900059238':{rs:'MAKRO SUPERMAYORISTA S.A.S.',cat:'Comercio',dir:'Autopista Sur # 71-35',dp:'11',mp:'001'},
   // ── Grandes Empresas / Industria (14) ──
-  '890900266':{rs:'GRUPO NUTRESA S.A.',cat:'Industria'},
-  '890101815':{rs:'ECOPETROL S.A.',cat:'Energia'},
-  '890900148':{rs:'GRUPO ARGOS S.A.',cat:'Industria'},
-  '890101998':{rs:'INTERCONEXION ELECTRICA S.A. ISA',cat:'Energia'},
-  '860075557':{rs:'CEMENTOS ARGOS S.A.',cat:'Industria'},
-  '890300406':{rs:'TECNOQUIMICAS S.A.',cat:'Industria'},
-  '860001022':{rs:'BAVARIA S.A.',cat:'Industria'},
-  '860037648':{rs:'ORGANIZACION TERPEL S.A.',cat:'Combustibles'},
-  '890900159':{rs:'COMPANIA NACIONAL DE CHOCOLATES S.A.',cat:'Industria'},
-  '860000656':{rs:'ALPINA PRODUCTOS ALIMENTICIOS S.A.',cat:'Industria'},
-  '860003216':{rs:'COLGATE PALMOLIVE COMPANIA S.A.',cat:'Industria'},
-  '860007759':{rs:'BAYER S.A.',cat:'Industria'},
-  '860002554':{rs:'NESTLE DE COLOMBIA S.A.',cat:'Industria'},
-  '860035992':{rs:'JOHNSON & JOHNSON DE COLOMBIA S.A.',cat:'Industria'},
+  '890900266':{rs:'GRUPO NUTRESA S.A.',cat:'Industria',dir:'Carrera 52 # 2-38',dp:'05',mp:'001'},
+  '890101815':{rs:'ECOPETROL S.A.',cat:'Energia',dir:'Carrera 13 # 36-24',dp:'11',mp:'001'},
+  '890900148':{rs:'GRUPO ARGOS S.A.',cat:'Industria',dir:'Carrera 43A # 1A Sur 143',dp:'05',mp:'001'},
+  '890101998':{rs:'INTERCONEXION ELECTRICA S.A. ISA',cat:'Energia',dir:'Calle 12 Sur # 18-168',dp:'05',mp:'001'},
+  '860075557':{rs:'CEMENTOS ARGOS S.A.',cat:'Industria',dir:'Carrera 43A # 1A Sur 143',dp:'05',mp:'001'},
+  '890300406':{rs:'TECNOQUIMICAS S.A.',cat:'Industria',dir:'Calle 23 # 7-39',dp:'76',mp:'001'},
+  '860001022':{rs:'BAVARIA S.A.',cat:'Industria',dir:'Carrera 53A # 127-35',dp:'11',mp:'001'},
+  '860037648':{rs:'ORGANIZACION TERPEL S.A.',cat:'Combustibles',dir:'Calle 100 # 7A-81',dp:'11',mp:'001'},
+  '890900159':{rs:'COMPANIA NACIONAL DE CHOCOLATES S.A.',cat:'Industria',dir:'Carrera 52 # 2-38',dp:'05',mp:'001'},
+  '860000656':{rs:'ALPINA PRODUCTOS ALIMENTICIOS S.A.',cat:'Industria',dir:'Km 3 Via Briceño',dp:'25',mp:'799'},
+  '860003216':{rs:'COLGATE PALMOLIVE COMPANIA S.A.',cat:'Industria',dir:'Calle 100 # 7A-81',dp:'11',mp:'001'},
+  '860007759':{rs:'BAYER S.A.',cat:'Industria',dir:'Calle 100 # 15-20',dp:'11',mp:'001'},
+  '860002554':{rs:'NESTLE DE COLOMBIA S.A.',cat:'Industria',dir:'Carrera 7 # 75-51',dp:'11',mp:'001'},
+  '860035992':{rs:'JOHNSON & JOHNSON DE COLOMBIA S.A.',cat:'Industria',dir:'Carrera 9 # 115-06',dp:'11',mp:'001'},
   // ── Tecnologia (7) ──
-  '900459739':{rs:'RAPPI S.A.S.',cat:'Tecnologia'},
-  '900418656':{rs:'GOOGLE COLOMBIA S.A.S.',cat:'Tecnologia'},
-  '830073623':{rs:'MICROSOFT COLOMBIA INC',cat:'Tecnologia'},
-  '900347473':{rs:'AMAZON WEB SERVICES COLOMBIA S.A.S.',cat:'Tecnologia'},
-  '900503795':{rs:'META PLATFORMS COLOMBIA S.A.S.',cat:'Tecnologia'},
-  '800058016':{rs:'HEWLETT PACKARD COLOMBIA LTDA.',cat:'Tecnologia'},
-  '900116795':{rs:'ORACLE COLOMBIA LTDA.',cat:'Tecnologia'},
+  '900459739':{rs:'RAPPI S.A.S.',cat:'Tecnologia',dir:'Carrera 7 # 116-50',dp:'11',mp:'001'},
+  '900418656':{rs:'GOOGLE COLOMBIA S.A.S.',cat:'Tecnologia',dir:'Carrera 11A # 94A-56',dp:'11',mp:'001'},
+  '830073623':{rs:'MICROSOFT COLOMBIA INC',cat:'Tecnologia',dir:'Carrera 7 # 71-21',dp:'11',mp:'001'},
+  '900347473':{rs:'AMAZON WEB SERVICES COLOMBIA S.A.S.',cat:'Tecnologia',dir:'Carrera 7 # 71-21',dp:'11',mp:'001'},
+  '900503795':{rs:'META PLATFORMS COLOMBIA S.A.S.',cat:'Tecnologia',dir:'Carrera 7 # 71-21',dp:'11',mp:'001'},
+  '800058016':{rs:'HEWLETT PACKARD COLOMBIA LTDA.',cat:'Tecnologia',dir:'Carrera 7 # 71-21',dp:'11',mp:'001'},
+  '900116795':{rs:'ORACLE COLOMBIA LTDA.',cat:'Tecnologia',dir:'Carrera 9 # 115-06',dp:'11',mp:'001'},
   // ── Universidades (6) ──
-  '860012357':{rs:'UNIVERSIDAD NACIONAL DE COLOMBIA',cat:'Universidad'},
-  '860351894':{rs:'UNIVERSIDAD DE LOS ANDES',cat:'Universidad'},
-  '860013720':{rs:'PONTIFICIA UNIVERSIDAD JAVERIANA',cat:'Universidad'},
-  '890901389':{rs:'UNIVERSIDAD EAFIT',cat:'Universidad'},
-  '890980040':{rs:'UNIVERSIDAD DE ANTIOQUIA',cat:'Universidad'},
-  '860007590':{rs:'UNIVERSIDAD EXTERNADO DE COLOMBIA',cat:'Universidad'},
+  '860012357':{rs:'UNIVERSIDAD NACIONAL DE COLOMBIA',cat:'Universidad',dir:'Carrera 45 # 26-85',dp:'11',mp:'001'},
+  '860351894':{rs:'UNIVERSIDAD DE LOS ANDES',cat:'Universidad',dir:'Carrera 1 # 18A-12',dp:'11',mp:'001'},
+  '860013720':{rs:'PONTIFICIA UNIVERSIDAD JAVERIANA',cat:'Universidad',dir:'Carrera 7 # 40-62',dp:'11',mp:'001'},
+  '890901389':{rs:'UNIVERSIDAD EAFIT',cat:'Universidad',dir:'Carrera 49 # 7 Sur 50',dp:'05',mp:'001'},
+  '890980040':{rs:'UNIVERSIDAD DE ANTIOQUIA',cat:'Universidad',dir:'Calle 67 # 53-108',dp:'05',mp:'001'},
+  '860007590':{rs:'UNIVERSIDAD EXTERNADO DE COLOMBIA',cat:'Universidad',dir:'Calle 12 # 1-17 Este',dp:'11',mp:'001'},
   // ── Municipios principales para ICA (20) ──
   '899999061':{rs:'BOGOTA D.C.',cat:'Municipio'},
   '890905211':{rs:'MUNICIPIO DE MEDELLIN',cat:'Municipio'},
@@ -956,10 +977,10 @@ const DIRECTORIO={
   '800052487':{rs:'DELL COLOMBIA INC',cat:'Tecnologia'},
   '830095498':{rs:'ADOBE SYSTEMS COLOMBIA S.A.S.',cat:'Tecnologia'},
   // ── Mas entidades del Estado ──
-  '899999734':{rs:'SUPERINTENDENCIA FINANCIERA DE COLOMBIA',cat:'Estado'},
-  '860016627':{rs:'SUPERINTENDENCIA DE SERVICIOS PUBLICOS',cat:'Estado'},
-  '800247281':{rs:'SUPERINTENDENCIA NACIONAL DE SALUD',cat:'Estado'},
-  '860015536':{rs:'CONTADURIA GENERAL DE LA NACION',cat:'Estado'},
+  '899999734':{rs:'SUPERINTENDENCIA FINANCIERA DE COLOMBIA',cat:'Estado',dir:'Calle 7 # 4-49',dp:'11',mp:'001'},
+  '860016627':{rs:'SUPERINTENDENCIA DE SERVICIOS PUBLICOS',cat:'Estado',dir:'Carrera 18 # 84-35',dp:'11',mp:'001'},
+  '800247281':{rs:'SUPERINTENDENCIA NACIONAL DE SALUD',cat:'Estado',dir:'Carrera 7 # 32-16',dp:'11',mp:'001'},
+  '860015536':{rs:'CONTADURIA GENERAL DE LA NACION',cat:'Estado',dir:'Calle 26 # 69-76',dp:'11',mp:'001'},
   '899999027':{rs:'MINISTERIO DE COMERCIO INDUSTRIA Y TURISMO',cat:'Estado'},
   '899999054':{rs:'PROCURADURIA GENERAL DE LA NACION',cat:'Estado'},
   '899999092':{rs:'DEFENSORIA DEL PUEBLO',cat:'Estado'},
@@ -1440,6 +1461,71 @@ function detectarTipoDoc(nit){
   return'13';
 }
 
+/* ── SEPARADOR DE NOMBRES PARA PERSONAS NATURALES ── */
+function splitNombrePN(nombreCompleto){
+  // Para personas naturales (CC tipo doc 13): separar en apellidos y nombres
+  // Patron tipico: "GOMEZ LOPEZ JUAN CARLOS" → a1=GOMEZ a2=LOPEZ n1=JUAN n2=CARLOS
+  // "GARCIA MARIA" → a1=GARCIA a2='' n1=MARIA n2=''
+  // "DE LA CRUZ MARTINEZ PEDRO" → a1=DE LA CRUZ a2=MARTINEZ n1=PEDRO n2=''
+  const r={a1:'',a2:'',n1:'',n2:'',rs:''};
+  if(!nombreCompleto)return r;
+  const full=nombreCompleto.toString().trim().toUpperCase();
+  if(!full)return r;
+
+  // Preposiciones que forman parte de un apellido compuesto
+  const PREPS=new Set(['DE','DEL','DE LA','DE LOS','DE LAS','VAN','VON','DA','DOS','DI','LA','LO','LE','EL','LAS','LOS','MC','MAC','O','AL','BEN','SAN','SANTA']);
+
+  const words=full.split(/\s+/);
+  if(words.length===0)return r;
+
+  // Construir tokens agrupando preposiciones con la palabra siguiente
+  const tokens=[];
+  let i=0;
+  while(i<words.length){
+    // Verificar combinaciones de 2 y 3 palabras como preposicion
+    if(i+2<words.length && PREPS.has(words[i]+' '+words[i+1])){
+      tokens.push(words[i]+' '+words[i+1]+' '+(words[i+2]||''));
+      i+=3;
+    }else if(i+1<words.length && PREPS.has(words[i])){
+      tokens.push(words[i]+' '+words[i+1]);
+      i+=2;
+    }else{
+      tokens.push(words[i]);
+      i++;
+    }
+  }
+
+  if(tokens.length===1){r.a1=tokens[0]}
+  else if(tokens.length===2){r.a1=tokens[0];r.n1=tokens[1]}
+  else if(tokens.length===3){r.a1=tokens[0];r.a2=tokens[1];r.n1=tokens[2]}
+  else if(tokens.length>=4){r.a1=tokens[0];r.a2=tokens[1];r.n1=tokens[2];r.n2=tokens.slice(3).join(' ')}
+
+  return r;
+}
+
+/* ── INFO TERCERO: devuelve {a1,a2,n1,n2,rs,dir,dp,mp} segun tipo doc y directorio ── */
+// tercerosDatos: store global para direcciones/nombres editados por el usuario
+let tercerosDatos={};
+
+function infoTercero(nit,razon,dirEmpresa,dpEmpresa,mpEmpresa){
+  const td=detectarTipoDoc(nit);
+  const saved=tercerosDatos[nit]||{};
+  const dirEntry=DIRECTORIO[nit]||{};
+  // Direccion: 1) editada por usuario, 2) directorio, 3) empresa
+  const dir=saved.dir||dirEntry.dir||dirEmpresa||'';
+  const dp=saved.dp||dirEntry.dp||dpEmpresa||'';
+  const mp=saved.mp||dirEntry.mp||mpEmpresa||'';
+
+  if(td==='31'||td==='43'||td==='44'||td==='50'||nit===NM){
+    // Persona juridica, extranjero, o cuantias menores → todo a razon social
+    return{a1:'',a2:'',n1:'',n2:'',rs:razon||'',dir,dp,mp};
+  }else{
+    // Persona natural (CC=13, CE=22, etc.) → separar nombre
+    const nombres=saved.a1?saved:splitNombrePN(razon);
+    return{a1:nombres.a1||'',a2:nombres.a2||'',n1:nombres.n1||'',n2:nombres.n2||'',rs:'',dir,dp,mp};
+  }
+}
+
 /* ── CLASIFICADOR PRINCIPAL ── */
 let clasificacion=[];
 
@@ -1608,7 +1694,138 @@ function filtrarClasificacion(){
 /* ── Conectar Step 2 → Step 3 ── */
 function irAClasificacion(){
   clasificarCuentas();
+  renderTerceros();
   goStep(3);
+}
+
+/* ═══ FASE C-bis: COMPLETAR DATOS DE TERCEROS ═══ */
+function getTercerosUnicos(){
+  const mapa={};
+  for(const r of clasificacion){
+    if(!r.nit||r.nit===NM)continue;
+    if(!mapa[r.nit]){
+      const td=detectarTipoDoc(r.nit);
+      const dirEntry=DIRECTORIO[r.nit]||{};
+      const saved=tercerosDatos[r.nit]||{};
+      const esPN=td==='13'||td==='22';
+      const nombres=esPN?splitNombrePN(r.razon):{a1:'',a2:'',n1:'',n2:''};
+      mapa[r.nit]={
+        nit:r.nit,
+        td,
+        razon:r.razon||dirEntry.rs||'',
+        esPN,
+        a1:saved.a1||nombres.a1||'',
+        a2:saved.a2||nombres.a2||'',
+        n1:saved.n1||nombres.n1||'',
+        n2:saved.n2||nombres.n2||'',
+        dir:saved.dir||dirEntry.dir||'',
+        dp:saved.dp||dirEntry.dp||'',
+        mp:saved.mp||dirEntry.mp||'',
+        enDirectorio:!!dirEntry.rs,
+        formatos:new Set()
+      };
+    }
+    mapa[r.nit].formatos.add(r.formato);
+  }
+  return Object.values(mapa);
+}
+
+function renderTerceros(){
+  const terceros=getTercerosUnicos();
+  if(terceros.length===0)return;
+  document.getElementById('tercerosDatosCard').style.display='block';
+  filtrarTerceros();
+}
+
+function filtrarTerceros(){
+  const filtro=document.getElementById('tercFiltro').value;
+  const todos=getTercerosUnicos();
+  let lista;
+  if(filtro==='sinDir')lista=todos.filter(t=>!t.dir);
+  else if(filtro==='pn')lista=todos.filter(t=>t.esPN);
+  else if(filtro==='conDir')lista=todos.filter(t=>!!t.dir);
+  else lista=todos;
+
+  const countEl=document.getElementById('tercCount');
+  countEl.textContent=lista.length+' de '+todos.length+' terceros'+(filtro==='sinDir'?' sin direccion':'');
+
+  let h='<table class="map-table"><thead><tr><th>#</th><th>NIT</th><th>Tipo</th>';
+  h+='<th>1er Apellido</th><th>2do Apellido</th><th>1er Nombre</th><th>Otros</th><th>Razon Social</th>';
+  h+='<th>Direccion</th><th>Depto</th><th>Municipio</th><th>Formatos</th></tr></thead><tbody>';
+
+  const maxShow=Math.min(lista.length,80);
+  for(let i=0;i<maxShow;i++){
+    const t=lista[i];
+    const tipoLabel=t.td==='31'?'NIT':'CC';
+    const dirClass=t.dir?'':'style="background:#FFF8E1"';
+    const fmts=[...t.formatos].join(', ');
+    // Generar selects de depto/municipio inline
+    let dpOpts='<option value="">--</option>';
+    for(const[c,n] of Object.entries(DPTOS).sort((a,b)=>a[1].localeCompare(b[1]))){
+      dpOpts+=`<option value="${c}"${c===t.dp?' selected':''}>${c}</option>`;
+    }
+    let mpOpts='<option value="">--</option>';
+    if(t.dp&&MPIOS_PRINCIPALES[t.dp]){
+      for(const[c,n] of Object.entries(MPIOS_PRINCIPALES[t.dp])){
+        mpOpts+=`<option value="${c}"${c===t.mp?' selected':''}>${c}-${n}</option>`;
+      }
+    }
+
+    h+=`<tr ${dirClass}>`;
+    h+=`<td>${i+1}</td>`;
+    h+=`<td class="mono" style="font-size:.78rem">${t.nit}</td>`;
+    h+=`<td><span style="background:${t.esPN?'#DBEAFE':'#E2EFDA'};padding:1px 6px;border-radius:4px;font-size:.7rem;font-weight:600">${tipoLabel}</span></td>`;
+    if(t.esPN){
+      h+=`<td><input type="text" value="${esc(t.a1)}" onchange="saveTercero('${t.nit}','a1',this.value)" style="width:90px;padding:2px 4px;font-size:.78rem;border:1px solid var(--border);border-radius:4px"></td>`;
+      h+=`<td><input type="text" value="${esc(t.a2)}" onchange="saveTercero('${t.nit}','a2',this.value)" style="width:90px;padding:2px 4px;font-size:.78rem;border:1px solid var(--border);border-radius:4px"></td>`;
+      h+=`<td><input type="text" value="${esc(t.n1)}" onchange="saveTercero('${t.nit}','n1',this.value)" style="width:80px;padding:2px 4px;font-size:.78rem;border:1px solid var(--border);border-radius:4px"></td>`;
+      h+=`<td><input type="text" value="${esc(t.n2)}" onchange="saveTercero('${t.nit}','n2',this.value)" style="width:80px;padding:2px 4px;font-size:.78rem;border:1px solid var(--border);border-radius:4px"></td>`;
+      h+=`<td style="color:var(--muted);font-size:.75rem">—</td>`;
+    }else{
+      h+=`<td colspan="4" style="color:var(--muted);font-size:.75rem;text-align:center">— Persona juridica —</td>`;
+      h+=`<td style="font-size:.78rem">${esc(t.razon).substring(0,30)}</td>`;
+    }
+    h+=`<td><input type="text" value="${esc(t.dir)}" onchange="saveTercero('${t.nit}','dir',this.value)" placeholder="Direccion" style="width:160px;padding:2px 4px;font-size:.78rem;border:1px solid var(--border);border-radius:4px"></td>`;
+    h+=`<td><select onchange="saveTercero('${t.nit}','dp',this.value);updateMpioSelect(this,'${t.nit}')" style="width:55px;padding:2px;font-size:.75rem;border:1px solid var(--border);border-radius:4px">${dpOpts}</select></td>`;
+    h+=`<td><select id="mp_${t.nit}" onchange="saveTercero('${t.nit}','mp',this.value)" style="width:100px;padding:2px;font-size:.75rem;border:1px solid var(--border);border-radius:4px">${mpOpts}</select></td>`;
+    h+=`<td style="font-size:.7rem;color:var(--muted)">${fmts}</td>`;
+    h+=`</tr>`;
+  }
+  if(lista.length>maxShow)h+=`<tr><td colspan="12" style="text-align:center;color:var(--muted);padding:12px">... y ${lista.length-maxShow} terceros mas (usa Exportar para verlos todos)</td></tr>`;
+  h+='</tbody></table>';
+  document.getElementById('tercerosTable').innerHTML=h;
+}
+
+function saveTercero(nit,campo,valor){
+  if(!tercerosDatos[nit])tercerosDatos[nit]={};
+  tercerosDatos[nit][campo]=valor.trim().toUpperCase();
+}
+
+function updateMpioSelect(dpSelect,nit){
+  const dp=dpSelect.value;
+  const mpSel=document.getElementById('mp_'+nit);
+  if(!mpSel)return;
+  let opts='<option value="">--</option>';
+  if(dp&&MPIOS_PRINCIPALES[dp]){
+    for(const[c,n] of Object.entries(MPIOS_PRINCIPALES[dp])){
+      opts+=`<option value="${c}">${c}-${n}</option>`;
+    }
+  }
+  mpSel.innerHTML=opts;
+  saveTercero(nit,'mp','');
+}
+
+function exportTercerosCSV(){
+  const todos=getTercerosUnicos();
+  let csv='NIT,Tipo Doc,Razon Social / Nombre,Primer Apellido,Segundo Apellido,Primer Nombre,Otros Nombres,Direccion,Cod Depto,Cod Municipio,Formatos\n';
+  for(const t of todos){
+    csv+=`${t.nit},${t.td==='31'?'NIT':'CC'},"${t.razon}","${t.a1}","${t.a2}","${t.n1}","${t.n2}","${t.dir}",${t.dp},${t.mp},"${[...t.formatos].join(' ')}"\n`;
+  }
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='Terceros_Exogena_'+ANO_GRAVABLE+'.csv';a.click();
+  URL.revokeObjectURL(url);
+  exoToast('Lista de terceros exportada','success');
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1706,7 +1923,7 @@ function generarFormatos(){
       }
     }
   }
-  formatos['F1001']=Object.values(final1).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.ded),Math.round(v.noDed),Math.round(v.retFte),0,Math.round(v.retIva),0]);
+  formatos['F1001']=Object.values(final1).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',Math.round(v.ded),Math.round(v.noDed),Math.round(v.retFte),0,Math.round(v.retIva),0]});
 
   // ── F1003: Retenciones ──
   const dic3={};
@@ -1717,7 +1934,7 @@ function generarFormatos(){
     // Valor retención: crédito del balance (o débito si ya se cruzó)
     dic3[k].ret+=r.cre>0?r.cre:r.deb;
   }
-  formatos['F1003']=Object.values(dic3).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',0,Math.round(v.ret)]);
+  formatos['F1003']=Object.values(dic3).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',0,Math.round(v.ret)]});
 
   // ── F1005: IVA Descontable ──
   const dic5={};
@@ -1726,7 +1943,7 @@ function generarFormatos(){
     if(!dic5[r.nit])dic5[r.nit]={nit:r.nit,razon:r.razon,val:0};
     dic5[r.nit].val+=r.deb;
   }
-  formatos['F1005']=Object.values(dic5).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,Math.round(v.val),0]);
+  formatos['F1005']=Object.values(dic5).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,Math.round(v.val),0]});
 
   // ── F1006: IVA Generado ──
   const dic6={};
@@ -1735,7 +1952,7 @@ function generarFormatos(){
     if(!dic6[r.nit])dic6[r.nit]={nit:r.nit,razon:r.razon,val:0};
     dic6[r.nit].val+=r.cre;
   }
-  formatos['F1006']=Object.values(dic6).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,Math.round(v.val),0,0]);
+  formatos['F1006']=Object.values(dic6).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,Math.round(v.val),0,0]});
 
   // ── F1007: Ingresos ──
   const dic7={};
@@ -1751,7 +1968,7 @@ function generarFormatos(){
     else final7[k]=v;
   }
   Object.assign(final7,men7);
-  formatos['F1007']=Object.values(final7).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.val),0]);
+  formatos['F1007']=Object.values(final7).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',Math.round(v.val),0]});
 
   // ── F1008: CxC ──
   const dic8={};
@@ -1767,7 +1984,7 @@ function generarFormatos(){
     else final8[k]=v;
   }
   Object.assign(final8,men8);
-  formatos['F1008']=Object.values(final8).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.val)]);
+  formatos['F1008']=Object.values(final8).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',Math.round(v.val)]});
 
   // ── F1009: CxP ──
   const dic9={};
@@ -1793,7 +2010,7 @@ function generarFormatos(){
     else final9[k]=v;
   }
   Object.assign(final9,men9);
-  formatos['F1009']=Object.values(final9).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.val)]);
+  formatos['F1009']=Object.values(final9).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',Math.round(v.val)]});
 
   // ── F1010: Socios ──
   const dic10={};
@@ -1803,7 +2020,7 @@ function generarFormatos(){
     dic10[r.nit].val+=Math.max(r.cre-r.deb,0);
   }
   const capTotal=Object.values(dic10).reduce((s,v)=>s+v.val,0);
-  formatos['F1010']=Object.values(dic10).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.val),capTotal>0?(v.val/capTotal*100).toFixed(2)+'%':'0%']);
+  formatos['F1010']=Object.values(dic10).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',Math.round(v.val),capTotal>0?(v.val/capTotal*100).toFixed(2)+'%':'0%']});
 
   // ── F1012: Inversiones y Bancos ──
   const dic12={};
@@ -1823,7 +2040,7 @@ function generarFormatos(){
     if(!dic12[k])dic12[k]={concepto:r.concepto,nit,razon:r.razon,val:0};
     dic12[k].val+=r.val;
   }
-  formatos['F1012']=Object.values(dic12).map(v=>[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',Math.round(v.val)]);
+  formatos['F1012']=Object.values(dic12).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[v.concepto,detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',Math.round(v.val)]});
 
   // ── F2276: Rentas de Trabajo (v4 — 45 columnas) ──
   const dic26={};
@@ -1871,7 +2088,7 @@ function generarFormatos(){
       v.prestSociales+v.viaticos+v.gastosRepres+v.compCoop+v.apoyosEcon+v.otrosPagos+
       v.cesantiasIntPag+v.cesantiasConsigFondo+v.cesantiasRegTrad+v.pensiones;
   }
-  formatos['F2276']=Object.values(dic26).map(v=>[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),'','','','',v.razon,cDir,cDp,cMp,'169',
+  formatos['F2276']=Object.values(dic26).map(v=>{const t=infoTercero(v.nit,v.razon,cDir,cDp,cMp);return[detectarTipoDoc(v.nit),v.nit,calcDv(v.nit),t.a1,t.a2,t.n1,t.n2,t.rs,t.dir,t.dp,t.mp,'169',
     Math.round(v.salarios),Math.round(v.emolEclesiast),Math.round(v.bonosElectr),Math.round(v.excesoAlim41),
     Math.round(v.honorarios),Math.round(v.servicios),Math.round(v.comisiones),Math.round(v.prestSociales),
     Math.round(v.viaticos),Math.round(v.gastosRepres),Math.round(v.compCoop),Math.round(v.apoyosEcon),Math.round(v.otrosPagos),
@@ -1879,7 +2096,7 @@ function generarFormatos(){
     Math.round(v.bruto),
     Math.round(v.apSalud),Math.round(v.apPension),Math.round(v.cotVolRAIS),Math.round(v.aporVolPens),Math.round(v.aportesAFC),Math.round(v.aportesAVC),
     Math.round(v.retFteRentas),Math.round(v.ivaMayorValor),Math.round(v.retFteIVA),Math.round(v.alimHasta41),Math.round(v.ingLabProm6m),
-    '','','','','']);
+    '','','','','']});
 
   renderFormatos();
 }
