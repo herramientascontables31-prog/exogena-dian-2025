@@ -190,7 +190,7 @@
 
   function esc(s) {
     var d = document.createElement('div');
-    d.textContent = s;
+    d.textContent = s || '';
     return d.innerHTML;
   }
 
@@ -216,9 +216,16 @@
     if (el) el.remove();
   }
 
+  function showError(msg) {
+    hideTyping();
+    var lastBubble = messagesEl.querySelector('.exa-msg.assistant:last-child');
+    if (!lastBubble) lastBubble = addBubble('assistant', '');
+    lastBubble.innerHTML = '<em style="color:#F87171">' + md(msg || 'Error inesperado.') + '</em>';
+  }
+
   // ─── Send message ───
   async function sendMessage() {
-    var text = inputEl.value.trim();
+    var text = (inputEl.value || '').trim();
     if (!text || isStreaming) return;
 
     isStreaming = true;
@@ -238,102 +245,127 @@
     abortCtrl = new AbortController();
 
     try {
-      var resp = await fetch(CFG.apiUrl + '/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: apiMessages }),
-        signal: abortCtrl.signal,
-      });
+      // ── 1. FETCH con timeout de 60s ──
+      var timeoutId = setTimeout(function () { if (abortCtrl) abortCtrl.abort(); }, 60000);
+      var resp;
+      try {
+        resp = await fetch(CFG.apiUrl + '/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: apiMessages }),
+          signal: abortCtrl.signal,
+        });
+      } catch (fetchErr) {
+        clearTimeout(timeoutId);
+        if (fetchErr && fetchErr.name === 'AbortError') {
+          throw { _type: 'abort' };
+        }
+        throw { _type: 'network', message: 'No se pudo conectar al servidor. Verifica tu conexion a internet.' };
+      }
+      clearTimeout(timeoutId);
 
-      // Leer contenido según content-type
-      var contentType = resp.headers.get('content-type') || '';
+      // ── 2. LEER RESPUESTA ──
+      var contentType = (resp.headers.get('content-type') || '').toLowerCase();
 
+      // 2a. Error HTTP (4xx, 5xx)
       if (!resp.ok) {
-        var errData;
-        try { errData = await resp.json(); } catch (e) { errData = {}; }
-        if (errData.whatsapp) {
-          throw new Error((errData.error || 'Error') + ' [WhatsApp](' + errData.whatsapp + ')');
-        }
-        throw new Error(errData.error || 'Error del servidor (' + resp.status + ')');
+        var errData = {};
+        try { errData = await resp.json(); } catch (e) { /* body no era JSON */ }
+        var errMsg = errData.error || 'Error del servidor (' + resp.status + ')';
+        if (errData.whatsapp) errMsg += ' Escribenos por [WhatsApp](' + errData.whatsapp + ').';
+        throw { _type: 'server', message: errMsg };
       }
 
-      // Backend puede devolver JSON directo (budget exceeded, error) con status 200
-      if (contentType.includes('application/json')) {
-        var jsonResp = await resp.json();
+      // 2b. Respuesta JSON directa (budget exceeded, rate limit, error con status 200)
+      if (contentType.indexOf('application/json') !== -1) {
+        var jsonResp = {};
+        try { jsonResp = await resp.json(); } catch (e) { /* body corrupto */ }
         if (jsonResp.error) {
-          var errMsg = jsonResp.error;
-          if (jsonResp.whatsapp) errMsg += ' Escríbenos por [WhatsApp](' + jsonResp.whatsapp + ').';
-          throw new Error(errMsg);
+          var msg = jsonResp.error;
+          if (jsonResp.whatsapp) msg += ' Escribenos por [WhatsApp](' + jsonResp.whatsapp + ').';
+          throw { _type: 'server', message: msg };
         }
-        // Si no es error pero es JSON, no hay stream que leer
-        throw new Error('Respuesta inesperada del servidor. Intenta de nuevo.');
+        throw { _type: 'server', message: 'Respuesta inesperada del servidor.' };
       }
 
-      // Verificar que el body sea streameable antes de intentar leerlo
-      if (!resp.body) {
-        throw new Error('Error de conexión. El servidor no envió respuesta.');
+      // 2c. Verificar que sea streameable
+      if (!resp.body || typeof resp.body.getReader !== 'function') {
+        throw { _type: 'server', message: 'Tu navegador no soporta streaming. Actualiza tu navegador.' };
       }
 
+      // ── 3. LEER STREAM SSE ──
       hideTyping();
       var bubble = addBubble('assistant', '');
-
       var reader = resp.body.getReader();
       var decoder = new TextDecoder();
       var buffer = '';
 
-      while (true) {
-        var result = await reader.read();
-        if (result.done) break;
+      try {
+        while (true) {
+          var result = await reader.read();
+          if (result.done) break;
 
-        buffer += decoder.decode(result.value, { stream: true });
-        var lines = buffer.split('\n');
-        buffer = lines.pop() || '';
+          buffer += decoder.decode(result.value, { stream: true });
+          var lines = buffer.split('\n');
+          buffer = lines.pop() || '';
 
-        for (var i = 0; i < lines.length; i++) {
-          var line = lines[i];
-          if (!line.startsWith('data: ')) continue;
-          var data;
-          try { data = JSON.parse(line.slice(6)); } catch (e) { continue; }
+          for (var i = 0; i < lines.length; i++) {
+            var line = lines[i];
+            if (!line.startsWith('data: ')) continue;
+            var data;
+            try { data = JSON.parse(line.slice(6)); } catch (e) { continue; }
 
-          if (data.type === 'text') {
-            fullText += data.text;
-            bubble.innerHTML = md(fullText);
-            scrollToBottom();
-          } else if (data.type === 'error') {
-            if (!fullText) {
-              fullText = data.error;
-              bubble.innerHTML = '<em style="color:#F87171">' + esc(data.error) + '</em>';
+            if (data.type === 'text' && data.text) {
+              fullText += data.text;
+              bubble.innerHTML = md(fullText);
+              scrollToBottom();
+            } else if (data.type === 'error') {
+              throw { _type: 'stream', message: data.error || 'Error del asistente.' };
+            } else if (data.type === 'done') {
+              break;
             }
-          } else if (data.type === 'done') {
-            break;
           }
         }
+      } finally {
+        try { reader.cancel(); } catch (e) { /* ya cerrado */ }
       }
+
+      // Si el stream termino sin texto, algo salio mal
+      if (!fullText) {
+        throw { _type: 'stream', message: 'El asistente no genero respuesta. Intenta de nuevo.' };
+      }
+
     } catch (err) {
-      hideTyping();
       isError = true;
       var errorText;
-      if (err && err.name === 'AbortError') {
+
+      if (err && err._type === 'abort') {
         errorText = '(Mensaje cancelado)';
+      } else if (err && err._type === 'network') {
+        errorText = err.message;
+      } else if (err && err._type === 'server') {
+        errorText = err.message;
+      } else if (err && err._type === 'stream') {
+        errorText = err.message;
+      } else if (err && err.name === 'AbortError') {
+        errorText = 'Tiempo de espera agotado. Intenta con una pregunta mas corta.';
       } else if (err && err.message) {
         errorText = err.message;
       } else {
-        errorText = 'Error de conexión. Verifica tu internet e intenta de nuevo.';
+        errorText = 'Error de conexion. Verifica tu internet e intenta de nuevo.';
       }
+
       if (!fullText) {
-        var lastBubble = messagesEl.querySelector('.exa-msg.assistant:last-child');
-        if (!lastBubble) lastBubble = addBubble('assistant', '');
-        lastBubble.innerHTML = '<em style="color:#F87171">' + esc(errorText) + '</em>';
+        showError(errorText);
       }
     }
 
-    // Solo guardar respuestas exitosas (no errores) para no contaminar historial
+    // Solo guardar respuestas exitosas para no contaminar historial
     if (fullText && !isError) {
       messages.push({ role: 'assistant', content: fullText });
       saveHistory();
     } else if (isError) {
-      // Quitar también el mensaje del usuario que causó el error
-      messages.pop();
+      messages.pop(); // Quitar mensaje del usuario que fallo
       saveHistory();
     }
 
