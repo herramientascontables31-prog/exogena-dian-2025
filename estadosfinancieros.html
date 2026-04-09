@@ -469,45 +469,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 
 <script>
 function esc(s){return(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-/* ═══ PRO VALIDATION ═══ */
-const APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec';
+/* ═══ PRO VALIDATION (usa shared/pro.js — sin duplicar lógica) ═══ */
 let proUnlocked=false;
-
-function getDeviceFingerprint(){
-  let uid=localStorage.getItem('exogenadian_device_id');
-  if(!uid){uid='D-'+(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).substr(2,9)+'-'+Math.random().toString(36).substr(2,9)).split('-').slice(0,2).join('');localStorage.setItem('exogenadian_device_id',uid)}
-  return uid;
-}
-
-async function validarPro(valor){
-  try{
-    const fp=getDeviceFingerprint();
-    const isEmail=valor.includes('@');
-    const action=isEmail?'validateEmail':'validateKey';
-    const param=isEmail?'email':'key';
-    const url=APPS_SCRIPT_URL+'?action='+action+'&'+param+'='+encodeURIComponent(valor)+'&device='+encodeURIComponent(fp);
-    const resp=await fetch(url);
-    const data=await resp.json();
-    if(data.valid) return true;
-    if(data.reason)console.warn('PRO rechazado:',data.reason);
-  }catch(e){console.error('Error validando PRO:',e)}
-  return false;
-}
-
-async function revalidarPro(){
-  const k=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');
-  if(!k||!proUnlocked)return false;
-  return await validarPro(k);
-}
-
-async function initPro(){
-  const saved=localStorage.getItem('exogenadian_pro_email')||localStorage.getItem('exogenadian_pro_key');
-  if(saved){
-    const valid=await validarPro(saved);
-    if(valid){proUnlocked=true;updateProUI();return}
-    else{localStorage.removeItem('exogenadian_pro_email');localStorage.removeItem('exogenadian_pro_key')}
-  }
-}
 
 function updateProUI(){
   const badge=document.getElementById('proBadge');
@@ -535,18 +498,19 @@ async function _activar(inputId){
   if(inp) inp.disabled=true;
   const t0=Date.now();
   try{
-    const valid=await validarPro(val);
+    const valid=await exoPro.activate(val);
     const elapsed=Date.now()-t0;
     if(elapsed<1000) await new Promise(r=>setTimeout(r,1000-elapsed));
     if(valid){
       proUnlocked=true;
-      if(val.includes('@')){localStorage.setItem('exogenadian_pro_email',val)}
-      else{localStorage.setItem('exogenadian_pro_key',val)}
       updateProUI();
       exoToast('PRO activado correctamente','success');
     }else{
       exoToast('No hay suscripción activa para este email. Verifica o suscríbete en exogenadian.com','warning');
     }
+  }catch(e){
+    console.error('Error activando PRO:',e);
+    exoToast('Error de conexión verificando PRO. Intenta de nuevo.','error');
   }finally{
     if(inp) inp.disabled=false;
     if(btn){btn.textContent=btnText;btn.disabled=false}
@@ -555,8 +519,22 @@ async function _activar(inputId){
 async function activarPro(){return _activar('proKeyInput')}
 async function activarProFromPaywall(){return _activar('proKeyInputPaywall')}
 
-// Init PRO on load
-(function(){if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){initPro()})}else{initPro()}})();
+async function revalidarPro(){
+  if(!proUnlocked) return false;
+  return await exoPro.revalidate();
+}
+
+// Init PRO on load — usa exoPro.check() (con caché, sin borrar credenciales en error de red)
+(function(){
+  function _init(){
+    if(typeof exoPro==='undefined'){setTimeout(_init,50);return}
+    exoPro.check().then(function(isPro){
+      proUnlocked=isPro;
+      updateProUI();
+    });
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',_init)}else{_init()}
+})();
 
 /* ═══ GLOBALS ═══ */
 let rawData=[], classifiedAccounts=[], esfData={}, eriData={}, efeData={}, ecpData=[];
@@ -607,18 +585,28 @@ dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if
 function loadFile(file){
   var MAX_FILE_SIZE=20*1024*1024;
   if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el límite de 20 MB.','warning');return}
+  var ext=file.name.split('.').pop().toLowerCase();
+  if(['xlsx','xls','csv'].indexOf(ext)===-1){exoToast('Formato no soportado. Usa Excel (.xlsx, .xls) o CSV.','warning');return}
   document.getElementById('fileName').textContent='✓ '+file.name;
   const reader=new FileReader();
-  reader.onerror=function(){L.classList.remove('active')};
+  var L=document.getElementById('loadingOverlay');
+  reader.onerror=function(){L.classList.remove('active');exoToast('Error leyendo el archivo. Intenta de nuevo.','error')};
   reader.onload=function(e){
     try{
-    const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});
-    rawData=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
-    extractMeta();
-    detectedHeaderRow=autoDetectHeaderRow();
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});
+      if(!wb.SheetNames||!wb.SheetNames.length){exoToast('El archivo no tiene hojas de datos.','error');return}
+      rawData=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+      if(!rawData.length){exoToast('El archivo está vacío o no se pudo leer.','warning');return}
+      extractMeta();
+      detectedHeaderRow=autoDetectHeaderRow();
+      exoToast('Balance cargado: '+rawData.length+' filas detectadas.','success');
+    }catch(err){
+      console.error('Error procesando archivo:',err);
+      exoToast('No se pudo leer el archivo. Verifica que sea un Excel válido con datos de balance.','error');
+      document.getElementById('fileName').textContent='';
     }finally{L.classList.remove('active')}
   };
-  var L=document.getElementById('loadingOverlay');L.classList.add('active');
+  L.classList.add('active');
   reader.readAsArrayBuffer(file);
 }
 
