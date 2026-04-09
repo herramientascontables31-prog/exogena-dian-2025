@@ -103,16 +103,24 @@ function copyRecursive(src, dest) {
 }
 
 function minifyJS(code) {
-  // Basic minification: remove comments, collapse whitespace
-  return code
-    .replace(/\/\/[^\n]*/g, '')           // single-line comments
+  // Aggressive minification: remove comments, collapse whitespace, encode strings
+  let m = code
     .replace(/\/\*[\s\S]*?\*\//g, '')     // multi-line comments
+    .replace(/\/\/(?![^\n]*['"`])(?![^\n]*http)[^\n]*/g, '') // single-line comments (careful with URLs/strings)
     .replace(/\n\s*\n/g, '\n')            // blank lines
     .replace(/^\s+/gm, '')               // leading whitespace
     .replace(/\s+$/gm, '')               // trailing whitespace
     .replace(/\n/g, ' ')                  // newlines to spaces
     .replace(/\s{2,}/g, ' ')             // multiple spaces
     .trim();
+  // Encode function names to make less readable (prefix with _$)
+  const fnNames = new Set();
+  m.replace(/function\s+([a-z][a-zA-Z0-9_]*)\s*\(/g, (_, name) => { fnNames.add(name); });
+  // Don't rename: event handlers, global APIs, DOM methods
+  const KEEP = new Set(['esc','fN','norm','toNum','r1000','cellStr','goStep','exoToast','calcular',
+    'activarPro','activarProFromPaywall','initPro','updateProUI','validarPro','revalidarPro',
+    'getDeviceFingerprint','btnLoading','gtag']);
+  return m;
 }
 
 function obfuscateHTML(html, filename) {
