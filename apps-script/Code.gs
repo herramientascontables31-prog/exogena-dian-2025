@@ -53,6 +53,9 @@ function doGet(e) {
       case 'wompiSignature':
         result = handleWompiSignature(e.parameter);
         break;
+      case 'newsletter':
+        result = handleNewsletter(e.parameter);
+        break;
       default:
         result = { success: false, error: 'Acción no válida' };
     }
@@ -675,6 +678,44 @@ function setupSheet() {
   // NO hardcodear claves en el código fuente.
 
   Logger.log('Sheet configurado correctamente. Agrega la clave admin manualmente desde la hoja.');
+}
+
+// ═══════════════════════════════════════════════════════════
+// NEWSLETTER — Guardar emails de suscriptores
+// ═══════════════════════════════════════════════════════════
+function handleNewsletter(params) {
+  var email = (params.email || '').trim().toLowerCase();
+  if (!email || email.indexOf('@') === -1) {
+    return { success: false, error: 'Email inválido' };
+  }
+
+  var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  var sheet = ss.getSheetByName('Newsletter');
+
+  // Crear hoja si no existe
+  if (!sheet) {
+    sheet = ss.insertSheet('Newsletter');
+    sheet.getRange(1, 1, 1, 3).setValues([['Email', 'Fecha', 'Origen']]);
+    sheet.getRange(1, 1, 1, 3).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+  }
+
+  // Verificar duplicado
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]).trim().toLowerCase() === email) {
+      return { success: true, message: 'Ya estás suscrito' };
+    }
+  }
+
+  // Guardar
+  sheet.appendRow([
+    email,
+    Utilities.formatDate(new Date(), 'America/Bogota', 'yyyy-MM-dd HH:mm'),
+    'web'
+  ]);
+
+  return { success: true, message: 'Suscrito correctamente' };
 }
 
 // ═══════════════════════════════════════════════════════════
