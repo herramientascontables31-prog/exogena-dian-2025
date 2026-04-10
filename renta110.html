@@ -347,6 +347,30 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 
   <!-- RESUMEN -->
   <div class="stats" id="resumen" style="margin-top:12px"></div>
+
+  <!-- CRUCE CON LISTADO DIAN -->
+  <div class="card hidden" id="cruceDianCard" style="border:2px solid #2563EB">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="card-title" style="margin-bottom:0"><span>🔍</span> Comparar con Facturaci&oacute;n Electr&oacute;nica DIAN</div>
+      <button class="btn btn-outline" onclick="document.getElementById('cruceDianCard').classList.add('hidden')" style="padding:4px 12px;font-size:.78rem">&times; Cerrar</button>
+    </div>
+    <div class="alert alert-info"><span>&#128161;</span><div>Sube el listado de facturaci&oacute;n electr&oacute;nica de la DIAN para verificar que tus ingresos, costos y gastos coincidan con lo reportado. <strong>Desc&aacute;rgalo de: Portal DIAN &rarr; Facturaci&oacute;n &rarr; Consulta de documentos &rarr; Exportar.</strong></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+      <div class="drop-zone" id="dzDianRenta" style="padding:20px">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileDianRenta">
+        <span class="dz-icon" style="font-size:1.8rem">&#128203;</span>
+        <div class="dz-title" style="font-size:.9rem">Listado DIAN</div>
+        <div class="dz-hint">Archivo .xlsx de facturaci&oacute;n electr&oacute;nica</div>
+        <div class="dz-file" id="fileNameDianRenta"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:8px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid var(--border)">
+        <div class="config-item"><label>A&ntilde;o gravable</label><input type="number" id="dianRentaYear" value="2026" min="2020" max="2035" style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:.85rem;font-family:inherit"></div>
+        <button class="btn btn-primary" onclick="compararDianRenta()" style="padding:10px 20px;font-size:.88rem;width:100%">Comparar &rarr;</button>
+      </div>
+    </div>
+    <div id="cruceDianResultado"></div>
+  </div>
+
   <div style="text-align:center;margin-bottom:12px">
     <div id="excelProLock" style="display:inline-block;padding:16px 28px;background:#f8fafc;border:2px dashed var(--border);border-radius:12px">
       <div style="font-size:.85rem;font-weight:600;color:var(--muted);margin-bottom:6px">📊 Descargar Excel con Fórmulas</div>
@@ -1178,7 +1202,147 @@ function recalcular(){
     <div class="stat-card blue"><div class="val">${fN(rlg)}</div><div class="lbl">Renta Liquida Gravable</div></div>
     <div class="stat-card amber"><div class="val">${fN(c96)}</div><div class="lbl">Total Impuesto a Cargo</div></div>
     <div class="stat-card ${v('c110')>0?'red':'green'}"><div class="val">${fN(v('c110'))}</div><div class="lbl">Saldo a Pagar</div></div>
-    <div class="stat-card green"><div class="val">${fN(v('c111'))}</div><div class="lbl">Saldo a Favor</div></div>`;
+    <div class="stat-card green"><div class="val">${fN(v('c111'))}</div><div class="lbl">Saldo a Favor</div></div>
+    <div style="grid-column:1/-1;text-align:center;padding:8px 0"><button onclick="document.getElementById('cruceDianCard').classList.remove('hidden');this.style.display='none'" style="padding:8px 20px;background:#2563EB;color:#fff;border:none;border-radius:8px;font-weight:600;font-size:.82rem;cursor:pointer;font-family:inherit">\uD83D\uDD0D Comparar con listado DIAN (facturaci\u00f3n electr\u00f3nica)</button></div>`;
+}
+
+// ── CRUCE CON LISTADO DIAN ──
+function cellStr(v){return v==null?'':String(v).trim()}
+function toNum(v){if(typeof v==='number')return v;var s=String(v||'').replace(/[^0-9.,\-]/g,'');if(!s)return 0;if(s.includes(',')&&s.includes('.')){if(s.lastIndexOf(',')>s.lastIndexOf('.'))s=s.replace(/\./g,'').replace(',','.');else s=s.replace(/,/g,'')}else if(s.includes(',')){s=s.replace(/,/g,'.')}return parseFloat(s)||0}
+var dianRentaRaw=null;
+
+document.getElementById('fileDianRenta').addEventListener('change',function(e){
+  var file=e.target.files[0];if(!file)return;
+  document.getElementById('fileNameDianRenta').textContent='\u2713 '+file.name;
+  var reader=new FileReader();
+  reader.onload=function(ev){
+    var wb=XLSX.read(new Uint8Array(ev.target.result),{type:'array',cellDates:true});
+    dianRentaRaw=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+    exoToast('Listado DIAN cargado: '+dianRentaRaw.length+' filas','success');
+  };
+  reader.readAsArrayBuffer(file);
+});
+var dzDR=document.getElementById('dzDianRenta');
+dzDR.addEventListener('dragover',function(e){e.preventDefault();dzDR.classList.add('drag')});
+dzDR.addEventListener('dragleave',function(){dzDR.classList.remove('drag')});
+dzDR.addEventListener('drop',function(e){e.preventDefault();dzDR.classList.remove('drag');if(e.dataTransfer.files[0]){var dt=new DataTransfer();dt.items.add(e.dataTransfer.files[0]);document.getElementById('fileDianRenta').files=dt.files;document.getElementById('fileDianRenta').dispatchEvent(new Event('change'))}});
+
+function compararDianRenta(){
+  if(!dianRentaRaw||dianRentaRaw.length<2){exoToast('Carga el listado DIAN primero','warning');return}
+  var yearFiltro=parseInt(document.getElementById('dianRentaYear').value);
+
+  // Detectar headers
+  var hdr=0;
+  for(var i=0;i<Math.min(5,dianRentaRaw.length);i++){
+    var row=dianRentaRaw[i];if(!row)continue;
+    var rn=row.map(function(c){return cellStr(c).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')});
+    if(rn.some(function(h){return h.includes('tipo de documento')||h.includes('cufe')||h.includes('folio')})){hdr=i;break}
+  }
+  var headers=dianRentaRaw[hdr].map(function(c){return cellStr(c).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').trim()});
+
+  var col={
+    tipo:headers.findIndex(function(h){return h.includes('tipo de documento')||h==='tipo'}),
+    fecha:headers.findIndex(function(h){return h.includes('fecha emision')||h.includes('fecha')}),
+    nitEmisor:headers.findIndex(function(h){return h.includes('nit emisor')}),
+    nitReceptor:headers.findIndex(function(h){return h.includes('nit receptor')}),
+    subtotal:headers.findIndex(function(h){return h==='subtotal'||h.includes('base')||h.includes('valor antes')}),
+    iva:headers.findIndex(function(h){return h==='iva'||h.includes('impuesto')}),
+    total:headers.findIndex(function(h){return h==='total'||h.includes('valor total')}),
+    grupo:headers.findIndex(function(h){return h.includes('grupo')}),
+  };
+
+  // NIT de la empresa (del F110)
+  var nitEmpresa=cellStr(document.getElementById('cfgNit')?.value||'').replace(/\D/g,'');
+
+  var totalEmitido=0, totalRecibido=0, facturasEmitidas=0, facturasRecibidas=0;
+
+  for(var i=hdr+1;i<dianRentaRaw.length;i++){
+    var row=dianRentaRaw[i];if(!row)continue;
+    var tipo=cellStr(row[col.tipo]).toLowerCase();
+
+    // Filtrar por año
+    var fechaRaw=row[col.fecha];
+    var fecha=null;
+    if(fechaRaw instanceof Date){fecha=fechaRaw}
+    else{var fs=cellStr(fechaRaw);if(fs){fecha=new Date(fs)}}
+    if(fecha&&fecha.getFullYear()!==yearFiltro)continue;
+
+    // Ignorar notas crédito/débito por ahora (solo facturas)
+    if(tipo.includes('nota'))continue;
+
+    var valCol=col.subtotal>=0?col.subtotal:(col.total>=0?col.total:-1);
+    if(valCol<0)continue;
+    var valor=Math.abs(toNum(row[valCol]));
+
+    var nitE=cellStr(row[col.nitEmisor]).replace(/\D/g,'');
+    var nitR=cellStr(row[col.nitReceptor]).replace(/\D/g,'');
+
+    if(nitE===nitEmpresa){
+      // Factura emitida = ingreso
+      totalEmitido+=valor;
+      facturasEmitidas++;
+    } else if(nitR===nitEmpresa){
+      // Factura recibida = costo/gasto
+      totalRecibido+=valor;
+      facturasRecibidas++;
+    }
+  }
+
+  // Comparar con valores del F110
+  var ingBalance=Math.abs(v('c58'));  // Total ingresos brutos
+  var costGasBalance=Math.abs(v('c67')); // Total costos y gastos
+
+  var diffIng=ingBalance-totalEmitido;
+  var diffCG=costGasBalance-totalRecibido;
+  var pctIng=totalEmitido?((diffIng/totalEmitido)*100):0;
+  var pctCG=totalRecibido?((diffCG/totalRecibido)*100):0;
+
+  var okIng=Math.abs(pctIng)<2;
+  var okCG=Math.abs(pctCG)<2;
+
+  var el=document.getElementById('cruceDianResultado');
+  var h='<div style="margin-top:12px">';
+  h+='<table style="width:100%;border-collapse:collapse;font-size:.88rem">';
+  h+='<thead><tr style="background:#1B3A5C;color:#fff"><th style="padding:8px 12px;text-align:left">Concepto</th><th style="padding:8px 12px;text-align:right">Balance (F110)</th><th style="padding:8px 12px;text-align:right">DIAN (Fact. Electr.)</th><th style="padding:8px 12px;text-align:right">Diferencia</th><th style="padding:8px 12px;text-align:center">Estado</th></tr></thead>';
+  h+='<tbody>';
+  h+='<tr><td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;font-weight:600">Ingresos brutos</td>';
+  h+='<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;text-align:right;font-family:monospace">'+fN(ingBalance)+'</td>';
+  h+='<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;text-align:right;font-family:monospace">'+fN(totalEmitido)+'</td>';
+  h+='<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;text-align:right;font-family:monospace;color:'+(Math.abs(diffIng)>0?'#DC2626':'#059669')+'">'+fN(diffIng)+' ('+Math.abs(pctIng).toFixed(1)+'%)</td>';
+  h+='<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;text-align:center">'+(okIng?'<span style="background:#D1FAE5;color:#065F46;padding:2px 10px;border-radius:12px;font-size:.78rem;font-weight:700">\u2713 OK</span>':'<span style="background:#FEE2E2;color:#991B1B;padding:2px 10px;border-radius:12px;font-size:.78rem;font-weight:700">\u26A0 Revisar</span>')+'</td></tr>';
+
+  h+='<tr><td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;font-weight:600">Costos y gastos</td>';
+  h+='<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;text-align:right;font-family:monospace">'+fN(costGasBalance)+'</td>';
+  h+='<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;text-align:right;font-family:monospace">'+fN(totalRecibido)+'</td>';
+  h+='<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;text-align:right;font-family:monospace;color:'+(Math.abs(diffCG)>0?'#DC2626':'#059669')+'">'+fN(diffCG)+' ('+Math.abs(pctCG).toFixed(1)+'%)</td>';
+  h+='<td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;text-align:center">'+(okCG?'<span style="background:#D1FAE5;color:#065F46;padding:2px 10px;border-radius:12px;font-size:.78rem;font-weight:700">\u2713 OK</span>':'<span style="background:#FEE2E2;color:#991B1B;padding:2px 10px;border-radius:12px;font-size:.78rem;font-weight:700">\u26A0 Revisar</span>')+'</td></tr>';
+  h+='</tbody></table>';
+
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">';
+  h+='<div style="padding:10px 14px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-size:.82rem"><strong>'+facturasEmitidas+'</strong> facturas emitidas en '+yearFiltro+'</div>';
+  h+='<div style="padding:10px 14px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-size:.82rem"><strong>'+facturasRecibidas+'</strong> facturas recibidas en '+yearFiltro+'</div>';
+  h+='</div>';
+
+  if(!okIng||!okCG){
+    h+='<div style="margin-top:12px;padding:12px 16px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;font-size:.82rem;color:#92400E;line-height:1.5">';
+    h+='<strong>\u26A0 Diferencias detectadas.</strong> Posibles causas:<br>';
+    h+='&bull; Ingresos/gastos sin factura electr\u00f3nica (arrendamientos, n\u00f3mina, depreciaci\u00f3n)<br>';
+    h+='&bull; Notas cr\u00e9dito/d\u00e9bito no incluidas en el cruce<br>';
+    h+='&bull; Ingresos/gastos de per\u00edodos anteriores contabilizados en '+yearFiltro+'<br>';
+    h+='&bull; Ajustes contables sin soporte en facturaci\u00f3n electr\u00f3nica';
+    h+='</div>';
+  } else {
+    h+='<div style="margin-top:12px;padding:12px 16px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:8px;font-size:.82rem;color:#065F46;line-height:1.5">';
+    h+='<strong>\u2713 Los valores del balance coinciden</strong> con la facturaci\u00f3n electr\u00f3nica DIAN (diferencia menor al 2%).';
+    h+='</div>';
+  }
+
+  h+='<div style="margin-top:10px;font-size:.75rem;color:#9CA3AF;line-height:1.5">';
+  h+='<strong>Nota:</strong> Este cruce es orientativo. El listado DIAN solo incluye facturaci\u00f3n electr\u00f3nica. Gastos como n\u00f3mina, depreciaci\u00f3n, amortizaciones y provisiones no aparecen en el listado DIAN y generan diferencias normales. Los apartados de patrimonio, retenciones y dem\u00e1s casillas deben ser diligenciados manualmente.';
+  h+='</div></div>';
+
+  el.innerHTML=h;
+  if(typeof exoTrack!=='undefined'&&exoTrack.toolUsed)exoTrack.toolUsed('renta110_cruce_dian');
 }
 
 // ── VALIDACION PRO ──
@@ -1539,6 +1703,7 @@ setTimeout(function(){
 </script>
 
 <link rel="stylesheet" href="shared/chat.css?v=2">
-<script src="shared/chat.js?v=2"></script>
+<script src="shared/chat.js?v=3"></script>
+<script src="shared/guide.js?v=1"></script>
 </body>
 </html>
