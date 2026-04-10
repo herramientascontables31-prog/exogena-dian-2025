@@ -136,6 +136,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 .eeff-doc .doc-header h3{font-size:13px;font-weight:700;margin:4px 0;text-transform:uppercase;color:#1a3c6e}
 .eeff-doc .doc-header p{font-size:11px;color:#555;margin:2px 0}
 .eeff-row{display:grid;grid-template-columns:40px 1fr 160px;font-size:11px;min-height:26px;align-items:center}
+.eeff-comp .eeff-row{grid-template-columns:20px 1fr 130px 110px 110px}
 .eeff-row:hover{background:#f5f8fc}
 .eeff-row .eeff-indent{padding-left:20px}
 .eeff-row .eeff-indent2{padding-left:40px}
@@ -1104,6 +1105,7 @@ function onCorrienteChange(idx,val){classifiedAccounts[idx].corriente=val}
 function generateEEFF(){
   buildESFData();
   buildERIData();
+  processCompData();
   buildEFEData();
   buildECPData();
   renderESF();
@@ -1118,6 +1120,91 @@ function sumByGrupo(grupo){
   let total=0;
   classifiedAccounts.filter(a=>a.grupo===grupo).forEach(a=>{total+=getDisplayValue(a)});
   return Math.round(total);
+}
+
+function sumByGrupoComp(grupo){
+  let total=0;
+  compClassified.filter(a=>a.grupo===grupo).forEach(a=>{total+=getDisplayValue(a)});
+  return Math.round(total);
+}
+
+function processCompData(){
+  if(!hasComparative||!compRawData.length){compClassified=[];compEsfData={};compEriData={};return}
+  // Auto-detect header row in comp file
+  let compHeaderRow=-1;
+  for(let i=0;i<Math.min(15,compRawData.length);i++){
+    const row=compRawData[i];if(!row)continue;
+    let matches=0;
+    for(let j=0;j<row.length;j++){
+      const v=String(row[j]||'').toLowerCase().trim();
+      if(/c.{0,2}digo|cuenta|puc|codigo/i.test(v))matches++;
+      if(/saldo|final|d.bito|cr.dito|nombre/i.test(v))matches++;
+    }
+    if(matches>=2){compHeaderRow=i;break}
+  }
+  if(compHeaderRow<0)compHeaderRow=0;
+
+  // Auto-detect columns using same hints as main file
+  let compColMap={code:-1,name:-1,saldoFin:-1,deb:-1,cre:-1,saldoIni:-1};
+  const hdrRow=compRawData[compHeaderRow]||[];
+  for(let j=0;j<hdrRow.length;j++){
+    const v=String(hdrRow[j]||'').toLowerCase().trim();
+    if(compColMap.code<0&&/c.{0,2}digo|puc|cuenta.*c.d/i.test(v))compColMap.code=j;
+    else if(compColMap.name<0&&/nombre|descripci|detalle/i.test(v))compColMap.name=j;
+    else if(compColMap.saldoFin<0&&/saldo.*fin|final/i.test(v))compColMap.saldoFin=j;
+    else if(compColMap.deb<0&&/d.bito|debito/i.test(v))compColMap.deb=j;
+    else if(compColMap.cre<0&&/cr.dito|credito/i.test(v))compColMap.cre=j;
+    else if(compColMap.saldoIni<0&&/saldo.*ini|inicial/i.test(v))compColMap.saldoIni=j;
+  }
+  // Fallback: use same colMap as main file if auto-detect fails
+  if(compColMap.code<0) compColMap=Object.assign({},colMap);
+
+  // Build classified accounts from comp data
+  compClassified=[];
+  const allCodes=new Set();
+  for(let i=compHeaderRow+1;i<compRawData.length;i++){
+    const row=compRawData[i];if(!row)continue;
+    const code=cellStr(row[compColMap.code]).replace(/\\s/g,'');
+    if(code&&/^\\d{2,}$/.test(code))allCodes.add(code);
+  }
+  function isParent(code){for(const o of allCodes){if(o!==code&&o.startsWith(code)&&o.length>code.length)return true}return false}
+
+  for(let i=compHeaderRow+1;i<compRawData.length;i++){
+    const row=compRawData[i];if(!row)continue;
+    const code=cellStr(row[compColMap.code]).replace(/\\s/g,'');
+    if(!code||!/^\\d{2,}$/.test(code))continue;
+    if(/^(total|procesado|elaborado)/i.test(cellStr(row[compColMap.name]||'')))continue;
+    if(isParent(code))continue;
+
+    const name=compColMap.name>=0?cellStr(row[compColMap.name]):'';
+    let saldoFin=compColMap.saldoFin>=0?toNum(row[compColMap.saldoFin]):0;
+    const deb=compColMap.deb>=0?toNum(row[compColMap.deb]):0;
+    const cre=compColMap.cre>=0?toNum(row[compColMap.cre]):0;
+    const saldoIni=compColMap.saldoIni>=0?toNum(row[compColMap.saldoIni]):0;
+
+    if(compColMap.saldoFin<0&&saldoFin===0&&(deb!==0||cre!==0)){
+      const firstDigit=code[0];
+      if(['1','5','6','7'].includes(firstDigit)) saldoFin=deb-cre+saldoIni;
+      else saldoFin=cre-deb+saldoIni;
+    }
+    if(saldoFin===0)continue;
+
+    const cls=classifyAccount(code,name);
+    compClassified.push({code,name,saldoFin,deb,cre,saldoIni,clase:cls.clase,seccion:cls.seccion,corriente:cls.corriente,grupo:cls.grupo});
+  }
+
+  // Build ESF/ERI data for comp
+  compEsfData={};
+  const esfKeys=['efectivo','inv_cp','cxc','deterioro_cartera','inventarios','diferidos_act','otros_act','ppe','depreciacion','intangibles','amortizacion','inv_lp','otros_act_nc','valorizaciones','oblig_fin_cp','proveedores','cxp','impuestos','laborales','provisiones','otros_pas_c','oblig_fin_lp','diferidos_pas','otros_pas','capital','superavit_cap','reservas','revalorizacion','resultado_ej','resultados_ant','superavit_val','otros_pat'];
+  esfKeys.forEach(function(k){compEsfData[k]=sumByGrupoComp(k)});
+  // Resultado del periodo comparativo
+  var cIngOp=sumByGrupoComp('ing_operacionales'),cDevV=sumByGrupoComp('dev_ventas'),cIngNoOp=sumByGrupoComp('ing_no_operacionales'),cOtrosIng=sumByGrupoComp('otros_ing');
+  var cCosto=sumByGrupoComp('costo_ventas')+sumByGrupoComp('costo_prod'),cGAdmin=sumByGrupoComp('gtos_admin'),cGVtas=sumByGrupoComp('gtos_ventas'),cGNoOp=sumByGrupoComp('gtos_no_op'),cImpR=sumByGrupoComp('imp_renta'),cGyp=sumByGrupoComp('gyp');
+  var cTotIng=cIngOp-cDevV+cIngNoOp+cOtrosIng;
+  var cTotGtos=cCosto+cGAdmin+cGVtas+cGNoOp+cImpR+cGyp;
+  compEsfData.resultado_periodo=(cTotIng!==0||cTotGtos!==0)?Math.round(cTotIng-cTotGtos):0;
+
+  compEriData={ing_operacionales:cIngOp,dev_ventas:cDevV,costo_ventas:sumByGrupoComp('costo_ventas'),costo_prod:sumByGrupoComp('costo_prod'),gtos_admin:cGAdmin,gtos_ventas:cGVtas,ing_no_operacionales:cIngNoOp,otros_ing:cOtrosIng,gtos_no_op:cGNoOp,imp_renta:cImpR,gyp:cGyp};
 }
 
 function buildESFData(){
@@ -1206,9 +1293,12 @@ function esfVal(key){return esfData[key]||0}
 
 function buildESFHtml(){
   const year=document.getElementById('cfgYear').value;
+  const yearAnt=String(Number(year)-1);
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
   const nit=document.getElementById('cfgNit').value||'000.000.000-0';
   const moneda=document.getElementById('cfgMoneda').value;
+  const comp=hasComparative&&Object.keys(compEsfData).length>0;
+  function compVal(key){return compEsfData[key]||0}
 
   // Compute totals
   const totalActCorr=esfVal('efectivo')+esfVal('inv_cp')+esfVal('cxc')+esfVal('deterioro_cartera')+esfVal('inventarios')+esfVal('diferidos_act')+esfVal('otros_act');
@@ -1221,32 +1311,65 @@ function buildESFHtml(){
   const totalPasPatr=totalPasivos+totalPatrimonio;
   const balanced=Math.abs(totalActivos-totalPasPatr)<=1;
 
-  function row(label,key,indent,isSub){
-    const v=esfData[key]||0;
-    const cls=indent===2?'eeff-indent2':indent===1?'eeff-indent':'';
-    const neg=v<0?'eeff-negative':'';
-    return `<div class="eeff-row ${isSub?'eeff-subtotal':''}">
-      <div></div><div class="${cls}">${label}</div>
-      <div class="eeff-val"><input type="text" value="${fN(v)}" data-key="${key}" onchange="onEsfEdit(this)" class="${neg}"></div>
-    </div>`;
-  }
-  function totalRow(label,val){
-    const neg=val<0?'eeff-negative':'';
-    return `<div class="eeff-row eeff-total"><div></div><div style="font-weight:700">${label}</div><div class="eeff-val ${neg}" style="font-weight:700;font-family:'JetBrains Mono',monospace">${fN(val)}</div></div>`;
-  }
-  function subtotalRow(label,val){
-    const neg=val<0?'eeff-negative':'';
-    return `<div class="eeff-row eeff-subtotal"><div></div><div style="font-weight:600">${label}</div><div class="eeff-val ${neg}" style="font-weight:600;font-family:'JetBrains Mono',monospace">${fN(val)}</div></div>`;
+  // Comp totals
+  var cTotalActCorr=0,cTotalActNoCorr=0,cTotalPasCorr=0,cTotalPasNoCorr=0,cTotalPatrimonio=0;
+  if(comp){
+    cTotalActCorr=compVal('efectivo')+compVal('inv_cp')+compVal('cxc')+compVal('deterioro_cartera')+compVal('inventarios')+compVal('diferidos_act')+compVal('otros_act');
+    cTotalActNoCorr=compVal('ppe')+compVal('depreciacion')+compVal('intangibles')+compVal('amortizacion')+compVal('inv_lp')+compVal('otros_act_nc')+compVal('valorizaciones');
+    cTotalPasCorr=compVal('oblig_fin_cp')+compVal('proveedores')+compVal('cxp')+compVal('impuestos')+compVal('laborales')+compVal('provisiones')+compVal('otros_pas_c');
+    cTotalPasNoCorr=compVal('oblig_fin_lp')+compVal('diferidos_pas')+compVal('otros_pas');
+    cTotalPatrimonio=compVal('capital')+compVal('superavit_cap')+compVal('reservas')+compVal('revalorizacion')+compVal('resultado_ej')+compVal('resultados_ant')+compVal('superavit_val')+compVal('otros_pat')+compVal('resultado_periodo');
   }
 
-  let h=`<div class="eeff-doc">
-    <div class="doc-header">
-      <h2>${empresa}</h2>
-      <p>NIT: ${nit}</p>
-      <h3>Estado de Situación Financiera</h3>
-      <p>Al 31 de diciembre de ${year}</p>
-      <p style="font-size:10px;color:#888">(Cifras expresadas en ${moneda==='COP'?'pesos colombianos':'dólares estadounidenses'})</p>
-    </div>`;
+  function varHtml(v1,v2){
+    if(!comp)return '';
+    var diff=v1-v2;
+    var pct=v2!==0?((diff/Math.abs(v2))*100):0;
+    var color=diff>0?'#059669':diff<0?'#DC2626':'#9CA3AF';
+    var arrow=diff>0?'\u25B2':diff<0?'\u25BC':'';
+    return '<div class="eeff-val" style="font-size:10px;color:'+color+'">'+arrow+' '+fN(Math.abs(diff))+(v2!==0?' ('+Math.abs(pct).toFixed(1)+'%)':'')+'</div>';
+  }
+  function compColHtml(v){
+    if(!comp)return '';
+    var neg=v<0?'eeff-negative':'';
+    return '<div class="eeff-val '+neg+'" style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:#6B7280">'+fN(v)+'</div>';
+  }
+
+  function row(label,key,indent,isSub){
+    const v=esfData[key]||0;
+    const cv=comp?compVal(key):0;
+    const cls=indent===2?'eeff-indent2':indent===1?'eeff-indent':'';
+    const neg=v<0?'eeff-negative':'';
+    return '<div class="eeff-row '+(isSub?'eeff-subtotal':'')+'">'
+      +'<div></div><div class="'+cls+'">'+label+'</div>'
+      +'<div class="eeff-val"><input type="text" value="'+fN(v)+'" data-key="'+key+'" onchange="onEsfEdit(this)" class="'+neg+'"></div>'
+      +compColHtml(cv)+varHtml(v,cv)
+      +'</div>';
+  }
+  function totalRow(label,val,cval){
+    const neg=val<0?'eeff-negative':'';
+    return '<div class="eeff-row eeff-total"><div></div><div style="font-weight:700">'+label+'</div><div class="eeff-val '+neg+'" style="font-weight:700;font-family:\'JetBrains Mono\',monospace">'+fN(val)+'</div>'
+      +(comp?compColHtml(cval||0):'')+varHtml(val,cval||0)+'</div>';
+  }
+  function subtotalRow(label,val,cval){
+    const neg=val<0?'eeff-negative':'';
+    return '<div class="eeff-row eeff-subtotal"><div></div><div style="font-weight:600">'+label+'</div><div class="eeff-val '+neg+'" style="font-weight:600;font-family:\'JetBrains Mono\',monospace">'+fN(val)+'</div>'
+      +(comp?compColHtml(cval||0):'')+varHtml(val,cval||0)+'</div>';
+  }
+
+  let h='<div class="eeff-doc'+(comp?' eeff-comp':'')+'">'
+    +'<div class="doc-header">'
+    +'<h2>'+empresa+'</h2>'
+    +'<p>NIT: '+nit+'</p>'
+    +'<h3>Estado de Situaci\u00f3n Financiera'+(comp?' Comparativo':'')+'</h3>'
+    +'<p>Al 31 de diciembre de '+year+(comp?' (con comparativo '+yearAnt+')':'')+'</p>'
+    +'<p style="font-size:10px;color:#888">(Cifras expresadas en '+(moneda==='COP'?'pesos colombianos':'d\u00f3lares estadounidenses')+')</p>'
+    +'</div>';
+
+  // Column headers for comparative
+  if(comp){
+    h+='<div class="eeff-row" style="font-weight:700;font-size:11px;color:#6B7280;border-bottom:2px solid #E5E7EB;padding:8px 0"><div></div><div></div><div class="eeff-val">'+year+'</div><div class="eeff-val">'+yearAnt+'</div><div class="eeff-val">Variaci\u00f3n</div></div>';
+  }
 
   h+=`<div class="eeff-section">ACTIVOS</div>`;
   h+=`<div class="eeff-subsection">Activos Corrientes</div>`;
@@ -1257,7 +1380,7 @@ function buildESFHtml(){
   h+=row('Inventarios','inventarios',1);
   h+=row('Diferidos / Otros activos corrientes','diferidos_act',1);
   h+=row('Otros activos corrientes','otros_act',1);
-  h+=subtotalRow('TOTAL ACTIVOS CORRIENTES',totalActCorr);
+  h+=subtotalRow('TOTAL ACTIVOS CORRIENTES',totalActCorr,cTotalActCorr);
 
   h+=`<div class="eeff-subsection">Activos No Corrientes</div>`;
   h+=row('Propiedad, planta y equipo','ppe',1);
@@ -1267,9 +1390,9 @@ function buildESFHtml(){
   h+=row('Inversiones a largo plazo','inv_lp',1);
   h+=row('Otros activos no corrientes','otros_act_nc',1);
   h+=row('Valorizaciones','valorizaciones',1);
-  h+=subtotalRow('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr);
+  h+=subtotalRow('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr,cTotalActNoCorr);
 
-  h+=totalRow('TOTAL ACTIVOS',totalActivos);
+  h+=totalRow('TOTAL ACTIVOS',totalActivos,comp?cTotalActCorr+cTotalActNoCorr:0);
 
   h+=`<div class="eeff-section">PASIVOS</div>`;
   h+=`<div class="eeff-subsection">Pasivos Corrientes</div>`;
@@ -1280,15 +1403,16 @@ function buildESFHtml(){
   h+=row('Obligaciones laborales','laborales',1);
   h+=row('Pasivos estimados / Provisiones','provisiones',1);
   h+=row('Otros pasivos corrientes','otros_pas_c',1);
-  h+=subtotalRow('TOTAL PASIVOS CORRIENTES',totalPasCorr);
+  h+=subtotalRow('TOTAL PASIVOS CORRIENTES',totalPasCorr,cTotalPasCorr);
 
   h+=`<div class="eeff-subsection">Pasivos No Corrientes</div>`;
   h+=row('Obligaciones financieras LP','oblig_fin_lp',1);
   h+=row('Diferidos pasivo','diferidos_pas',1);
   h+=row('Otros pasivos no corrientes','otros_pas',1);
-  h+=subtotalRow('TOTAL PASIVOS NO CORRIENTES',totalPasNoCorr);
+  h+=subtotalRow('TOTAL PASIVOS NO CORRIENTES',totalPasNoCorr,cTotalPasNoCorr);
 
-  h+=totalRow('TOTAL PASIVOS',totalPasivos);
+  var cTotalPasivos=comp?cTotalPasCorr+cTotalPasNoCorr:0;
+  h+=totalRow('TOTAL PASIVOS',totalPasivos,cTotalPasivos);
 
   h+=`<div class="eeff-section">PATRIMONIO</div>`;
   h+=row('Capital social','capital',1);
@@ -1300,15 +1424,18 @@ function buildESFHtml(){
   h+=row('Superávit por valorizaciones','superavit_val',1);
   h+=row('Otros componentes patrimonio','otros_pat',1);
   if(esfVal('resultado_periodo')!==0){
-    h+=`<div class="eeff-row" style="background:#E3F2FD">
-      <div></div><div class="eeff-indent" style="font-style:italic;color:var(--pri)">Resultado del período (Ingresos - Gastos)</div>
-      <div class="eeff-val" style="font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--pri)">${fN(esfVal('resultado_periodo'))}</div>
-    </div>`;
+    var rpComp=comp?compVal('resultado_periodo'):0;
+    h+='<div class="eeff-row" style="background:#E3F2FD">'
+      +'<div></div><div class="eeff-indent" style="font-style:italic;color:var(--pri)">Resultado del per\u00edodo (Ingresos - Gastos)</div>'
+      +'<div class="eeff-val" style="font-family:\'JetBrains Mono\',monospace;font-weight:600;color:var(--pri)">'+fN(esfVal('resultado_periodo'))+'</div>'
+      +(comp?compColHtml(rpComp):'')+varHtml(esfVal('resultado_periodo'),rpComp)
+      +'</div>';
   }
-  h+=totalRow('TOTAL PATRIMONIO',totalPatrimonio);
+  h+=totalRow('TOTAL PATRIMONIO',totalPatrimonio,cTotalPatrimonio);
 
-  h+=`<div style="height:8px"></div>`;
-  h+=totalRow('TOTAL PASIVOS + PATRIMONIO',totalPasPatr);
+  h+='<div style="height:8px"></div>';
+  var cTotalPasPatr=comp?cTotalPasivos+cTotalPatrimonio:0;
+  h+=totalRow('TOTAL PASIVOS + PATRIMONIO',totalPasPatr,cTotalPasPatr);
 
   // Validation
   if(balanced){
@@ -1355,9 +1482,12 @@ function onEsfEdit(el){
 
 function buildERIHtml(){
   const year=document.getElementById('cfgYear').value;
+  const yearAnt=String(Number(year)-1);
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
   const nit=document.getElementById('cfgNit').value||'000.000.000-0';
   const moneda=document.getElementById('cfgMoneda').value;
+  const comp=hasComparative&&Object.keys(compEriData).length>0;
+  function cVal(key){return compEriData[key]||0}
 
   const ingOp=eriData.ing_operacionales||0;
   const devVtas=eriData.dev_ventas||0;
@@ -1373,49 +1503,82 @@ function buildERIHtml(){
   const impRenta=eriData.imp_renta||0;
   const utilNeta=utilAntesImp-impRenta;
 
+  function varHtml(v1,v2){
+    if(!comp)return '';
+    var diff=v1-v2;
+    var pct=v2!==0?((diff/Math.abs(v2))*100):0;
+    var color=diff>0?'#059669':diff<0?'#DC2626':'#9CA3AF';
+    var arrow=diff>0?'\u25B2':diff<0?'\u25BC':'';
+    return '<div class="eeff-val" style="font-size:10px;color:'+color+'">'+arrow+' '+fN(Math.abs(diff))+(v2!==0?' ('+Math.abs(pct).toFixed(1)+'%)':'')+'</div>';
+  }
+  function compColHtml(v){
+    if(!comp)return '';
+    var neg=v<0?'eeff-negative':'';
+    return '<div class="eeff-val '+neg+'" style="font-family:\'JetBrains Mono\',monospace;font-size:11px;color:#6B7280">'+fN(v)+'</div>';
+  }
+
+  // Comp ERI calculated totals
+  var cIngNetos=0,cUtilBruta=0,cUtilOp=0,cUtilAntesImp=0,cUtilNeta=0;
+  if(comp){
+    cIngNetos=cVal('ing_operacionales')-cVal('dev_ventas');
+    var cCostoVtas=cVal('costo_ventas')+cVal('costo_prod');
+    cUtilBruta=cIngNetos-cCostoVtas;
+    cUtilOp=cUtilBruta-cVal('gtos_admin')-cVal('gtos_ventas');
+    var cOtrosIng=cVal('ing_no_operacionales')+cVal('otros_ing');
+    cUtilAntesImp=cUtilOp+cOtrosIng-cVal('gtos_no_op');
+    cUtilNeta=cUtilAntesImp-cVal('imp_renta');
+  }
+
   function eriRow(label,key,indent,hint){
     const v=eriData[key]||0;
+    const cv=comp?cVal(key):0;
     const cls=indent===2?'eeff-indent2':indent===1?'eeff-indent':'';
     const neg=v<0?'eeff-negative':'';
-    const hintHtml=hint?`<span style="font-size:9px;color:#999;margin-left:8px">(${hint})</span>`:'';
-    return `<div class="eeff-row">
-      <div></div><div class="${cls}">${label}${hintHtml}</div>
-      <div class="eeff-val"><input type="text" value="${fN(v)}" data-erikey="${key}" onchange="onEriEdit(this)" class="${neg}"></div>
-    </div>`;
+    const hintHtml=hint?'<span style="font-size:9px;color:#999;margin-left:8px">('+hint+')</span>':'';
+    return '<div class="eeff-row">'
+      +'<div></div><div class="'+cls+'">'+label+hintHtml+'</div>'
+      +'<div class="eeff-val"><input type="text" value="'+fN(v)+'" data-erikey="'+key+'" onchange="onEriEdit(this)" class="'+neg+'"></div>'
+      +(comp?compColHtml(cv):'')+varHtml(v,cv)
+      +'</div>';
   }
-  function calcRow(label,val,bold){
+  function calcRow(label,val,bold,cval){
     const neg=val<0?'eeff-negative':'';
     const bld=bold?'font-weight:700;':'font-weight:600;';
     const cls=bold?'eeff-total':'eeff-subtotal';
-    return `<div class="eeff-row ${cls}"><div></div><div style="${bld}">${label}</div><div class="eeff-val ${neg}" style="${bld}font-family:'JetBrains Mono',monospace">${fN(val)}</div></div>`;
+    return '<div class="eeff-row '+cls+'"><div></div><div style="'+bld+'">'+label+'</div><div class="eeff-val '+neg+'" style="'+bld+'font-family:\'JetBrains Mono\',monospace">'+fN(val)+'</div>'
+      +(comp?compColHtml(cval||0):'')+varHtml(val,cval||0)+'</div>';
   }
 
-  let h=`<div class="eeff-doc">
-    <div class="doc-header">
-      <h2>${empresa}</h2>
-      <p>NIT: ${nit}</p>
-      <h3>Estado de Resultados Integral</h3>
-      <p>${getPeriodoERI()}</p>
-      <p style="font-size:10px;color:#888">(Cifras expresadas en ${moneda==='COP'?'pesos colombianos':'dólares estadounidenses'})</p>
-    </div>`;
+  let h='<div class="eeff-doc'+(comp?' eeff-comp':'')+'">'
+    +'<div class="doc-header">'
+    +'<h2>'+empresa+'</h2>'
+    +'<p>NIT: '+nit+'</p>'
+    +'<h3>Estado de Resultados Integral'+(comp?' Comparativo':'')+'</h3>'
+    +'<p>'+getPeriodoERI()+'</p>'
+    +'<p style="font-size:10px;color:#888">(Cifras expresadas en '+(moneda==='COP'?'pesos colombianos':'d\u00f3lares estadounidenses')+')</p>'
+    +'</div>';
+
+  if(comp){
+    h+='<div class="eeff-row" style="font-weight:700;font-size:11px;color:#6B7280;border-bottom:2px solid #E5E7EB;padding:8px 0"><div></div><div></div><div class="eeff-val">'+year+'</div><div class="eeff-val">'+yearAnt+'</div><div class="eeff-val">Variaci\u00f3n</div></div>';
+  }
 
   h+=eriRow('Ingresos de actividades ordinarias','ing_operacionales',0,'41xx');
   h+=eriRow('(-) Devoluciones, rebajas y descuentos','dev_ventas',0,'4175');
-  h+=calcRow('= INGRESOS NETOS',ingNetos,false);
-  h+=`<div style="height:4px"></div>`;
+  h+=calcRow('= INGRESOS NETOS',ingNetos,false,cIngNetos);
+  h+='<div style="height:4px"></div>';
   h+=eriRow('(-) Costo de ventas','costo_ventas',0,'61xx+62xx');
-  h+=calcRow('= UTILIDAD BRUTA',utilBruta,false);
-  h+=`<div style="height:4px"></div>`;
+  h+=calcRow('= UTILIDAD BRUTA',utilBruta,false,cUtilBruta);
+  h+='<div style="height:4px"></div>';
   h+=eriRow('(-) Gastos de administración','gtos_admin',0,'51xx');
   h+=eriRow('(-) Gastos de ventas','gtos_ventas',0,'52xx');
-  h+=calcRow('= UTILIDAD OPERACIONAL',utilOp,false);
-  h+=`<div style="height:4px"></div>`;
+  h+=calcRow('= UTILIDAD OPERACIONAL',utilOp,false,cUtilOp);
+  h+='<div style="height:4px"></div>';
   h+=eriRow('(+) Otros ingresos','ing_no_operacionales',0,'42xx');
   h+=eriRow('(-) Otros gastos','gtos_no_op',0,'53xx');
-  h+=calcRow('= UTILIDAD ANTES DE IMPUESTOS',utilAntesImp,false);
-  h+=`<div style="height:4px"></div>`;
+  h+=calcRow('= UTILIDAD ANTES DE IMPUESTOS',utilAntesImp,false,cUtilAntesImp);
+  h+='<div style="height:4px"></div>';
   h+=eriRow('(-) Impuesto de renta','imp_renta',0,'54xx');
-  h+=calcRow('= UTILIDAD NETA DEL EJERCICIO',utilNeta,true);
+  h+=calcRow('= UTILIDAD NETA DEL EJERCICIO',utilNeta,true,cUtilNeta);
 
   h+=`<div style="text-align:center;font-size:9px;color:#999;margin-top:16px;font-style:italic">Las notas son parte integral de los estados financieros</div>`;
 
