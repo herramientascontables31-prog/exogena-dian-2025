@@ -202,7 +202,7 @@
        /* Consultas */
   '    <div class="tn-cat"><button class="tn-cat-btn" onclick="toggleTnCat(this)">Consultas '+chevron+'</button>'+
   '      <div class="tn-dd">'+
-  '        <a href="consultanit.html">🔍 Consulta NIT</a>'+
+  '        <a href="consultanit.html">🔍 Consulta NIT DIAN</a>'+
   '        <a href="vencimientos.html">📅 Calendario Tributario</a>'+
   '        <a href="uvt.html">🔢 Conversor UVT</a>'+
   '        <a href="estatutos.html">🏛️ Estatutos Municipales</a>'+
@@ -236,7 +236,7 @@
        /* Links directos de alto tráfico */
   '    <a href="exogena.html">Exógena</a>'+
   '    <a href="renta110.html">Renta F110</a>'+
-  '    <a href="consultanit.html">Consulta NIT</a>'+
+  '    <a href="consultanit.html">Consulta NIT DIAN</a>'+
        /* Mega-menu dropdown */
   '    <div class="nav-dropdown" id="navDropdown">'+
   '      <button class="nav-dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-label="Abrir menú de herramientas" onclick="var dd=document.getElementById(\'navDropdown\');dd.classList.toggle(\'open\');this.setAttribute(\'aria-expanded\',dd.classList.contains(\'open\'))">'+
@@ -276,7 +276,7 @@
   '          <a href="retencion-fuente.html"><div class="dd-icon" style="background:#F5F3FF">💰</div> Retención por Salarios</a>'+
   '          <div class="mega-divider"></div>'+
   '          <h6>Consultas</h6>'+
-  '          <a href="consultanit.html"><div class="dd-icon" style="background:#F5F3FF">🔍</div> Consulta NIT</a>'+
+  '          <a href="consultanit.html"><div class="dd-icon" style="background:#F5F3FF">🔍</div> Consulta NIT DIAN</a>'+
   '          <a href="vencimientos.html"><div class="dd-icon" style="background:#FFF1F2">📅</div> Calendario Tributario</a>'+
   '          <a href="uvt.html"><div class="dd-icon" style="background:#ECFEFF">🔢</div> Conversor UVT</a>'+
   '          <a href="estatutos.html"><div class="dd-icon" style="background:#D6E4F0">🏛️</div> Estatutos Municipales</a>'+
