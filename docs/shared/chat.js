@@ -1,28 +1,236 @@
-/* ═══ ExógenaDIAN — Exa Chat Widget ═══
+/* ═══ ExógenaDIAN — Exa Chat Widget v2 ═══
    Uso:
      <link rel="stylesheet" href="shared/chat.css">
      <script src="shared/chat.js"></script>
 
    Config (opcional, antes del script):
      window.EXA_CONFIG = { apiUrl: 'https://tu-backend.com' };
+
+   v2: Chat contextual — Exa sabe en qué página estás,
+       ofrece ayuda específica y sugiere acciones relevantes.
 */
 (function () {
   'use strict';
 
   var WA = 'https://wa.me/573054559574';
+  var BASE = 'https://exogenadian.com';
 
   // ─── Config ───
   var CFG = Object.assign({
     apiUrl: 'https://dian-proxy-337146111457.southamerica-east1.run.app',
-    maxHistory: 10,       // mensajes enviados a la API (reducido para ahorrar tokens)
+    maxHistory: 10,
     storageKey: 'exa_chat_history',
     whatsapp: WA,
   }, window.EXA_CONFIG || {});
 
+  // ═══════════════════════════════════════════════════════════════
+  //  CONTEXTO DE PÁGINA — Exa sabe dónde estás
+  // ═══════════════════════════════════════════════════════════════
+
+  var PAGE_CONTEXT = {
+    'index': {
+      id: 'inicio',
+      name: 'Inicio',
+      greeting: 'Hola, soy **Exa** — tu asistente contable con IA. Cuéntame qué necesitas hacer y te llevo a la herramienta exacta.',
+      suggestions: [
+        '¿Cómo genero la exógena?',
+        '¿Qué herramientas son gratis?',
+        '¿Cuándo vence la exógena?',
+        '¿Qué incluye PRO?'
+      ],
+      placeholder: 'Cuéntame qué necesitas hacer...'
+    },
+    'exogena': {
+      id: 'exogena',
+      name: 'Exógena DIAN',
+      greeting: 'Estás en el **generador de exógena**. Te puedo ayudar con la carga de tu balance, clasificación de cuentas o cualquier duda sobre los formatos F1001-F2276.',
+      suggestions: [
+        '¿Qué formato necesito para mi balance?',
+        '¿Cómo clasifico gastos de representación?',
+        'Error en el NIT de un tercero',
+        '¿Qué cuentas van en F1001?'
+      ],
+      placeholder: 'Pregunta sobre exógena, formatos, clasificación...'
+    },
+    'iva300': {
+      id: 'iva300',
+      name: 'Formulario 300 IVA',
+      greeting: 'Estás en el **formulario 300 de IVA**. Te ayudo con la clasificación de IVA descontable/generado, tarifas o cualquier casilla del formulario.',
+      suggestions: [
+        '¿Qué tarifa de IVA aplica a...?',
+        '¿Cómo funciona el IVA proporcional?',
+        '¿Cuándo soy bimestral vs cuatrimestral?',
+        'IVA en servicios del exterior'
+      ],
+      placeholder: 'Pregunta sobre IVA, tarifas, casillas...'
+    },
+    'retencion350': {
+      id: 'retencion350',
+      name: 'Retención 350',
+      greeting: 'Estás en el **formulario 350 de retención**. Te ayudo con bases, tarifas de retención o la clasificación de conceptos.',
+      suggestions: [
+        '¿Cuál es la base para servicios?',
+        'Retención a no declarantes',
+        '¿Cuándo aplica autorretención?',
+        'Tarifa de honorarios personas naturales'
+      ],
+      placeholder: 'Pregunta sobre retención, bases, tarifas...'
+    },
+    'renta110': {
+      id: 'renta110',
+      name: 'Renta 110',
+      greeting: 'Estás en la **declaración de renta (F110)**. Te ayudo con rentas exentas, deducciones, depreciación fiscal o cálculo del impuesto.',
+      suggestions: [
+        '¿Qué gastos son deducibles?',
+        'Límite de rentas exentas PN',
+        '¿Cómo funciona la depreciación fiscal?',
+        'Tasa mínima de tributación 15%'
+      ],
+      placeholder: 'Pregunta sobre renta, deducciones, impuesto...'
+    },
+    'estadosfinancieros': {
+      id: 'estadosfinancieros',
+      name: 'Estados Financieros NIIF',
+      greeting: 'Estás en los **estados financieros NIIF**. Te ayudo con clasificación de cuentas, revelaciones, políticas contables o el flujo de efectivo.',
+      suggestions: [
+        '¿Qué revelaciones son obligatorias?',
+        '¿Cómo clasifico un leasing?',
+        'Método indirecto del flujo de efectivo',
+        'Políticas contables para PYMES'
+      ],
+      placeholder: 'Pregunta sobre NIIF, revelaciones, estados...'
+    },
+    'conciliacion': {
+      id: 'conciliacion',
+      name: 'Conciliación Bancaria',
+      greeting: 'Estás en la **conciliación bancaria**. Te ayudo a identificar partidas conciliatorias o diferencias entre tu contabilidad y el extracto.',
+      suggestions: [
+        '¿Cómo trato cheques pendientes?',
+        'Notas débito/crédito no registradas',
+        '¿Cada cuánto conciliar?',
+        'Diferencias en GMF'
+      ],
+      placeholder: 'Pregunta sobre conciliación, partidas...'
+    },
+    'consultanit': {
+      id: 'consultanit',
+      name: 'Consulta NIT',
+      greeting: 'Estás en **consulta NIT**. Te ayudo a verificar información de terceros, razón social, DV o estado del RUT.',
+      suggestions: [
+        '¿Cómo calculo el dígito de verificación?',
+        '¿Qué es un autorretenedor?',
+        '¿Cómo verifico un gran contribuyente?',
+        'NIT de proveedores ficticios'
+      ],
+      placeholder: 'Pregunta sobre NIT, RUT, verificación...'
+    },
+    'vencimientos': {
+      id: 'vencimientos',
+      name: 'Calendario Tributario',
+      greeting: 'Estás en el **calendario de vencimientos 2026**. Te ayudo con fechas específicas según tu tipo de contribuyente y último dígito del NIT.',
+      suggestions: [
+        '¿Cuándo vence mi exógena?',
+        'Vencimiento renta personas naturales',
+        '¿Cuándo presento el IVA bimestral?',
+        'Fechas de retención mensual'
+      ],
+      placeholder: 'Pregunta sobre vencimientos, plazos, fechas...'
+    },
+    'sanciones': {
+      id: 'sanciones',
+      name: 'Sanciones Exógena',
+      greeting: 'Estás en **sanciones por exógena** (Art. 651 ET). Te ayudo a calcular multas, revisar reducciones o entender la gradualidad.',
+      suggestions: [
+        '¿Cuánto es la multa por no presentar?',
+        'Reducción de sanciones Art. 640',
+        '¿Puedo corregir sin sanción?',
+        'Sanción mínima 2026'
+      ],
+      placeholder: 'Pregunta sobre sanciones, multas, reducción...'
+    },
+    'sanciones-dian': {
+      id: 'sanciones-dian',
+      name: 'Sanciones DIAN',
+      greeting: 'Estás en **sanciones DIAN**. Te ayudo con extemporaneidad, inexactitud, correcciones o reducción de sanciones según Art. 640 ET.',
+      suggestions: [
+        'Sanción por extemporaneidad',
+        '¿Cómo funciona el Art. 640?',
+        'Sanción por corrección voluntaria',
+        'Sanción por inexactitud'
+      ],
+      placeholder: 'Pregunta sobre sanciones, correcciones...'
+    },
+    'intereses': {
+      id: 'intereses',
+      name: 'Intereses de Mora',
+      greeting: 'Estás en el **calculador de intereses de mora**. Te ayudo con las tasas vigentes, períodos de cálculo o el Decreto 0240/2026.',
+      suggestions: [
+        '¿Cuál es la tasa de mora actual?',
+        '¿Se pagan intereses sobre sanciones?',
+        '¿Cómo funciona el Decreto 0240?',
+        'Facilidades de pago DIAN'
+      ],
+      placeholder: 'Pregunta sobre intereses, mora, tasas...'
+    },
+    'liquidador': {
+      id: 'liquidador',
+      name: 'Liquidador Laboral',
+      greeting: 'Estás en el **liquidador laboral**. Te ayudo con prestaciones, indemnización, seguridad social o cualquier cálculo laboral.',
+      suggestions: [
+        '¿Cómo liquido las cesantías?',
+        'Indemnización por despido sin justa causa',
+        '¿Cuándo pago prima de servicios?',
+        'Dotación: ¿quién tiene derecho?'
+      ],
+      placeholder: 'Pregunta sobre liquidación, prestaciones...'
+    },
+    'ia': {
+      id: 'ia',
+      name: 'Herramientas IA',
+      greeting: 'Bienvenido a las **herramientas de IA**. Tenemos un auditor de balance, chat con el Estatuto Tributario y detector de inconsistencias. ¿Cuál necesitas?',
+      suggestions: [
+        '¿Qué hace el auditor de balance?',
+        'Quiero consultar el Estatuto Tributario',
+        '¿Cómo detecta inconsistencias?',
+        '¿Cuántas consultas tengo gratis?'
+      ],
+      placeholder: 'Pregunta sobre las herramientas de IA...'
+    },
+    'precios': {
+      id: 'precios',
+      name: 'Precios',
+      greeting: 'Estás en la página de **precios**. Te ayudo a entender qué incluye cada plan y cuál te conviene según tu volumen de trabajo.',
+      suggestions: [
+        '¿Qué incluye el plan gratis?',
+        '¿Puedo cancelar en cualquier momento?',
+        '¿El pago es seguro?',
+        '¿Qué diferencia hay entre mensual y anual?'
+      ],
+      placeholder: 'Pregunta sobre planes, precios, pagos...'
+    }
+  };
+
+  // Detectar página actual
+  function detectPage() {
+    var path = location.pathname.replace(/^\/|\.html$/g, '').replace(/\/+$/, '') || 'index';
+    // Limpiar /docs/ prefix si existe
+    path = path.replace(/^docs\//, '');
+    // Buscar coincidencia exacta o parcial
+    if (PAGE_CONTEXT[path]) return PAGE_CONTEXT[path];
+    // Buscar por prefijo (ia-analisis-balance → ia)
+    var prefix = path.split('-')[0];
+    if (PAGE_CONTEXT[prefix]) return PAGE_CONTEXT[prefix];
+    // Fallback al contexto de inicio
+    return PAGE_CONTEXT['index'];
+  }
+
+  var currentPage = null;
+  var isPro = false; // Se actualiza al init con exoPro.check()
+
   // ─── State ───
   var isOpen = false;
   var isStreaming = false;
-  var messages = [];   // {role, content}
+  var messages = [];
   var abortCtrl = null;
 
   // ─── Minimal markdown → HTML ───
@@ -53,7 +261,6 @@
       var data = localStorage.getItem(CFG.storageKey);
       if (data) {
         var parsed = JSON.parse(data);
-        // Filtrar mensajes válidos
         messages = parsed.filter(function (m) {
           return m && (m.role === 'user' || m.role === 'assistant')
             && typeof m.content === 'string' && m.content.length > 0 && m.content.length <= 4000;
@@ -80,7 +287,16 @@
 
   // ─── Build UI ───
   function init() {
+    currentPage = detectPage();
     loadHistory();
+
+    // Check PRO status — contextual features only for PRO
+    if (typeof exoPro !== 'undefined' && exoPro.check) {
+      exoPro.check().then(function (pro) {
+        isPro = pro;
+        if (pro && messages.length === 0) renderMessages(); // Re-render with suggestions
+      });
+    }
 
     // Inject CSS if not already linked
     if (!document.querySelector('link[href*="chat.css"]')) {
@@ -119,7 +335,7 @@
       '</div>' +
       '<div class="exa-messages"></div>' +
       '<div class="exa-input-area">' +
-        '<textarea class="exa-input" placeholder="Pregunta sobre impuestos, sanciones, exógena..." rows="1" maxlength="500"></textarea>' +
+        '<textarea class="exa-input" placeholder="' + esc(currentPage.placeholder) + '" rows="1" maxlength="500"></textarea>' +
         '<button class="exa-send" aria-label="Enviar" disabled>' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
         '</button>' +
@@ -166,18 +382,48 @@
     requestAnimationFrame(function () { messagesEl.scrollTop = messagesEl.scrollHeight; });
   }
 
-  // ─── Greeting precargado (no gasta tokens) ───
-  var GREETING = 'Hola, soy **Exa** — tu asistente contable. Pregunta lo que necesites sobre normas tributarias, sanciones, vencimientos o herramientas del portal.';
+  // ═══════════════════════════════════════════════════════════════
+  //  SUGERENCIAS CONTEXTUALES — botones rápidos según la página
+  // ═══════════════════════════════════════════════════════════════
+
+  function renderSuggestions() {
+    if (!currentPage.suggestions || !currentPage.suggestions.length) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'exa-quick-wrap';
+    var inner = document.createElement('div');
+    inner.className = 'exa-quick';
+    currentPage.suggestions.forEach(function (text) {
+      var btn = document.createElement('button');
+      btn.textContent = text;
+      btn.onclick = function () {
+        inputEl.value = text;
+        sendMessage();
+        // Quitar sugerencias después de usar una
+        var allWraps = messagesEl.querySelectorAll('.exa-quick-wrap');
+        allWraps.forEach(function (w) { w.remove(); });
+      };
+      inner.appendChild(btn);
+    });
+    wrap.appendChild(inner);
+    messagesEl.appendChild(wrap);
+  }
+
+  var GENERIC_GREETING = 'Hola, soy **Exa** \u2014 tu asistente contable. Pregunta lo que necesites sobre normas tributarias, sanciones, vencimientos o herramientas del portal.';
+  var GENERIC_PLACEHOLDER = 'Pregunta sobre impuestos, sanciones, ex\u00f3gena...';
 
   // ─── Render ───
   function renderMessages() {
     if (messages.length === 0) {
       messagesEl.innerHTML = '';
-      // Burbuja precargada de Exa (no se guarda en historial API)
       var greet = document.createElement('div');
       greet.className = 'exa-msg assistant';
-      greet.innerHTML = md(GREETING);
+      // PRO: greeting contextual de la página. Free: greeting genérico.
+      greet.innerHTML = md(isPro ? currentPage.greeting : GENERIC_GREETING);
       messagesEl.appendChild(greet);
+      // Solo PRO ve sugerencias contextuales
+      if (isPro) renderSuggestions();
+      // Actualizar placeholder según PRO
+      if (inputEl) inputEl.placeholder = isPro ? currentPage.placeholder : GENERIC_PLACEHOLDER;
       return;
     }
 
@@ -236,11 +482,14 @@
     inputEl.value = '';
     inputEl.style.height = 'auto';
 
+    // Quitar sugerencias al enviar primer mensaje
+    var allWraps = messagesEl.querySelectorAll('.exa-quick-wrap');
+    allWraps.forEach(function (w) { w.remove(); });
+
     messages.push({ role: 'user', content: text });
     addBubble('user', text);
     showTyping();
 
-    // Solo últimos N mensajes para la API (ahorra tokens)
     var apiMessages = messages.slice(-CFG.maxHistory);
 
     var fullText = '';
@@ -248,14 +497,17 @@
     abortCtrl = new AbortController();
 
     try {
-      // ── 1. FETCH con timeout de 60s ──
       var timeoutId = setTimeout(function () { if (abortCtrl) abortCtrl.abort(); }, 60000);
       var resp;
       try {
         resp = await fetch(CFG.apiUrl + '/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: apiMessages }),
+          body: JSON.stringify({
+            messages: apiMessages,
+            page: isPro ? currentPage.id : null,
+            page_name: isPro ? currentPage.name : null,
+          }),
           signal: abortCtrl.signal,
         });
       } catch (fetchErr) {
@@ -267,10 +519,8 @@
       }
       clearTimeout(timeoutId);
 
-      // ── 2. LEER RESPUESTA ──
       var contentType = (resp.headers.get('content-type') || '').toLowerCase();
 
-      // 2a. Error HTTP (4xx, 5xx)
       if (!resp.ok) {
         var errData = {};
         try { errData = await resp.json(); } catch (e) { /* body no era JSON */ }
@@ -279,7 +529,6 @@
         throw { _type: 'server', message: errMsg };
       }
 
-      // 2b. Respuesta JSON directa (budget exceeded, rate limit, error con status 200)
       if (contentType.indexOf('application/json') !== -1) {
         var jsonResp = {};
         try { jsonResp = await resp.json(); } catch (e) { /* body corrupto */ }
@@ -291,12 +540,10 @@
         throw { _type: 'server', message: 'Respuesta inesperada del servidor.' };
       }
 
-      // 2c. Verificar que sea streameable
       if (!resp.body || typeof resp.body.getReader !== 'function') {
         throw { _type: 'server', message: 'Tu navegador no soporta streaming. Actualiza tu navegador.' };
       }
 
-      // ── 3. LEER STREAM SSE ──
       hideTyping();
       var bubble = addBubble('assistant', '');
       var reader = resp.body.getReader();
@@ -333,7 +580,6 @@
         try { reader.cancel(); } catch (e) { /* ya cerrado */ }
       }
 
-      // Si el stream termino sin texto, algo salio mal
       if (!fullText) {
         throw { _type: 'stream', message: 'El asistente no generó respuesta. Intenta de nuevo.' };
       }
@@ -363,12 +609,11 @@
       }
     }
 
-    // Solo guardar respuestas exitosas para no contaminar historial
     if (fullText && !isError) {
       messages.push({ role: 'assistant', content: fullText });
       saveHistory();
     } else if (isError) {
-      messages.pop(); // Quitar mensaje del usuario que fallo
+      messages.pop();
       saveHistory();
     }
 

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Doctor de Errores DIAN — Diagnóstico XML Prevalidador | ExógenaDIAN</title>
+  <meta name="description" content="Pega los errores del prevalidador DIAN y obtén un diagnóstico exacto con solución paso a paso. Herramienta PRO de ExógenaDIAN.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://exogenadian.com/ia-errores-xml.html">
+  <meta property="og:title" content="Doctor de Errores DIAN — ExógenaDIAN">
+  <meta property="og:description" content="Diagnóstico inteligente de errores del prevalidador DIAN. Pega tus errores XML y obtén la solución exacta.">
+  <meta property="og:url" content="https://exogenadian.com/ia-errores-xml.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://exogenadian.com/og-image.png">
+  <meta property="og:site_name" content="ExógenaDIAN">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="shared/cookie-consent.js"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-S7SM6ST4CC');</script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;overflow-x:hidden}
+    :root{
+      --bg:#0B1410;--bg-card:#131F1A;--bg-card-hover:#1A2D24;--bg-input:#0F1B15;
+      --border:#1E2D24;--border-hover:#059669;
+      --accent:#059669;--accent-dim:#047857;--accent-glow:rgba(5,150,105,.25);
+      --text:#E0F0E8;--text-dim:#8FB8A0;--text-muted:#5F826B;
+      --green:#10B981;--green-bg:rgba(16,185,129,.12);
+      --yellow:#F59E0B;--yellow-bg:rgba(245,158,11,.12);
+      --red:#EF4444;--red-bg:rgba(239,68,68,.12);
+      --blue:#3B82F6;--blue-bg:rgba(59,130,246,.12);
+      --radius:14px;--radius-sm:10px;
+    }
+    body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;min-height:100vh}
+
+    /* HEADER */
+    .ia-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 40px;background:rgba(11,20,16,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .ia-header-left{display:flex;align-items:center;gap:14px}
+    .ia-back{display:inline-flex;align-items:center;gap:6px;color:var(--text-dim);text-decoration:none;font-size:.85rem;font-weight:500;padding:6px 12px;border-radius:8px;transition:all .2s}
+    .ia-back:hover{color:var(--accent);background:var(--accent-glow)}
+    .ia-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .ia-brand-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#34D399);display:grid;place-items:center;color:#fff;font-size:.8rem;font-weight:900}
+    .ia-brand-text{font-weight:800;font-size:1.15rem;color:var(--text);letter-spacing:-.02em}
+    .ia-brand-text small{display:block;font-weight:400;font-size:.6rem;color:var(--text-muted);letter-spacing:.04em;margin-top:-2px}
+    .ia-badge-pro{background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff;font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:.04em;display:none}
+
+    /* CONTAINER */
+    .container{max-width:860px;margin:0 auto;padding:32px 20px 64px}
+    .hero-section{text-align:center;margin-bottom:32px}
+    .hero-icon{width:64px;height:64px;border-radius:18px;background:var(--red-bg);border:1px solid rgba(239,68,68,.2);display:grid;place-items:center;margin:0 auto 16px}
+    .hero-icon svg{width:30px;height:30px;color:var(--red)}
+    .hero-title{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+    .hero-desc{color:var(--text-dim);font-size:.95rem;max-width:520px;margin:0 auto;line-height:1.6}
+
+    /* FORM */
+    .input-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+    .input-card h3{font-size:1rem;font-weight:700;margin-bottom:4px}
+    .input-card p{font-size:.82rem;color:var(--text-muted);margin-bottom:16px;line-height:1.5}
+    textarea{width:100%;min-height:200px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.82rem;padding:16px;resize:vertical;transition:border-color .2s;line-height:1.6}
+    textarea:focus{outline:none;border-color:var(--accent)}
+    textarea::placeholder{color:var(--text-muted)}
+    .btn-row{display:flex;gap:10px;margin-top:16px}
+    .btn-primary{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,var(--accent),#10B981);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;transition:all .2s}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 20px var(--accent-glow)}
+    .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+    .btn-secondary{display:inline-flex;align-items:center;gap:6px;padding:12px 20px;background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .2s}
+    .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* PRO WALL */
+    .pro-wall{display:none;background:var(--bg-card);border:1.5px solid rgba(245,158,11,.3);border-radius:var(--radius);padding:32px;text-align:center;margin-bottom:24px}
+    .pro-wall.show{display:block}
+    .pro-wall h3{font-size:1.1rem;font-weight:700;color:var(--yellow);margin-bottom:8px}
+    .pro-wall p{color:var(--text-dim);font-size:.88rem;margin-bottom:16px;line-height:1.5}
+    .pro-wall .btn-pro{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Outfit',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;text-decoration:none;transition:all .2s}
+    .pro-wall .btn-pro:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(245,158,11,.3)}
+
+    /* RESULTS */
+    .results{display:none}
+    .results.show{display:block}
+    .result-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px}
+    .summary-icon{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:1.5rem;flex-shrink:0}
+    .summary-icon.ok{background:var(--green-bg);border:1px solid rgba(16,185,129,.2)}
+    .summary-icon.warn{background:var(--yellow-bg);border:1px solid rgba(245,158,11,.2)}
+    .summary-icon.err{background:var(--red-bg);border:1px solid rgba(239,68,68,.2)}
+    .summary-text h3{font-size:1rem;font-weight:700;margin-bottom:2px}
+    .summary-text p{font-size:.85rem;color:var(--text-dim)}
+
+    .error-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:12px;transition:border-color .2s}
+    .error-card:hover{border-color:var(--border-hover)}
+    .error-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+    .error-badge{padding:4px 10px;border-radius:6px;font-size:.72rem;font-weight:700;letter-spacing:.03em;flex-shrink:0}
+    .error-badge.critical{background:var(--red-bg);color:var(--red)}
+    .error-badge.warning{background:var(--yellow-bg);color:var(--yellow)}
+    .error-badge.info{background:var(--blue-bg);color:var(--blue)}
+    .error-original{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--text-muted);background:rgba(255,255,255,.03);padding:8px 12px;border-radius:8px;margin-bottom:12px;word-break:break-all;border:1px solid rgba(255,255,255,.04)}
+    .error-diagnosis h4{font-size:.9rem;font-weight:700;color:var(--green);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .error-diagnosis p{font-size:.84rem;color:var(--text-dim);line-height:1.6}
+    .error-fix{margin-top:12px;padding:12px 16px;background:var(--green-bg);border:1px solid rgba(16,185,129,.15);border-radius:var(--radius-sm)}
+    .error-fix h4{font-size:.82rem;font-weight:700;color:var(--green);margin-bottom:4px}
+    .error-fix p,.error-fix li{font-size:.82rem;color:var(--text-dim);line-height:1.55}
+    .error-fix ol,.error-fix ul{padding-left:18px;margin-top:4px}
+    .error-fix li{margin-bottom:3px}
+
+    /* SKELETON */
+    .skeleton{display:none;margin-top:20px}
+    .skeleton.show{display:block}
+    .skel-line{height:14px;background:linear-gradient(90deg,var(--bg-card) 25%,var(--bg-card-hover) 50%,var(--bg-card) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;margin-bottom:10px}
+    @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* LIMIT BANNER */
+    .limit-banner{display:none;background:var(--yellow-bg);border:1px solid rgba(245,158,11,.2);border-radius:var(--radius-sm);padding:12px 18px;margin-bottom:16px;font-size:.85rem;color:var(--yellow)}
+    .limit-banner.show{display:block}
+    .limit-banner a{color:var(--yellow);font-weight:700}
+
+    /* MOBILE */
+    @media(max-width:900px){
+      .ia-header{padding:12px 16px}
+      .container{padding:20px 16px 48px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="ia-header">
+  <div class="ia-header-left">
+    <a href="ia.html" class="ia-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      IA
+    </a>
+    <a href="/" class="ia-brand">
+      <div class="ia-brand-icon">E</div>
+      <div class="ia-brand-text">ExógenaDIAN<small>Herramientas contables</small></div>
+    </a>
+  </div>
+  <span class="ia-badge-pro" id="proBadge">PRO</span>
+</header>
+
+<main class="container">
+  <!-- HERO -->
+  <div class="hero-section">
+    <div class="hero-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </div>
+    <h1 class="hero-title">Doctor de Errores DIAN</h1>
+    <p class="hero-desc">Pega los errores del prevalidador DIAN o del MUISCA y obt&eacute;n un diagn&oacute;stico con la soluci&oacute;n exacta paso a paso.</p>
+  </div>
+
+  <!-- PRO WALL -->
+  <div class="pro-wall" id="proWall">
+    <h3>Herramienta exclusiva PRO</h3>
+    <p>El Doctor de Errores DIAN est&aacute; disponible para suscriptores PRO. Diagn&oacute;sticos ilimitados de errores del prevalidador y MUISCA con soluci&oacute;n paso a paso.</p>
+    <a href="precios.html" class="btn-pro">Activar PRO &mdash; $19.900/mes &rarr;</a>
+  </div>
+
+  <!-- INPUT -->
+  <div class="input-card" id="inputCard">
+    <h3>Pega los errores del prevalidador</h3>
+    <p>Copia los errores que muestra el prevalidador DIAN, el MUISCA, o nuestro generador de ex&oacute;gena. Pega todo aqu&iacute; &mdash; el doctor los analiza uno por uno.</p>
+    <textarea id="errorInput" placeholder="Ejemplo:
+Error fila 15: DV incorrecto NIT 900123456: tiene '3', debe ser '1'
+Error fila 28: Tipo doc '99' invalido para NIT 800456789
+Warn fila 42: Direccion vacia - NIT 1234567890
+Error: El concepto 5089 no es valido para el formato 1001 version 10
+Error estructura: campo 'vlr_ret' no es numerico"></textarea>
+    <div class="btn-row">
+      <button class="btn-primary" id="btnDiagnose" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        Diagnosticar errores
+      </button>
+      <button class="btn-secondary" id="btnClear" style="display:none">Limpiar</button>
+    </div>
+  </div>
+
+  <!-- LIMIT -->
+  <div class="limit-banner" id="limitBanner"><span id="limitText"></span></div>
+
+  <!-- SKELETON -->
+  <div class="skeleton" id="skeleton">
+    <div class="skel-line" style="width:70%"></div>
+    <div class="skel-line" style="width:100%;height:80px"></div>
+    <div class="skel-line" style="width:85%"></div>
+    <div class="skel-line" style="width:100%;height:80px"></div>
+    <div class="skel-line" style="width:60%"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results"></div>
+</main>
+
+<!-- PRO + CHAT -->
+<script src="shared/pro.js"></script>
+<link rel="stylesheet" href="shared/chat.css?v=2">
+<script src="shared/chat.js?v=3"></script>
+
+<script>
+(function(){
+  'use strict';
+
+  // ═══════════════════════════════════════════════════════════════
+  //  BASE DE CONOCIMIENTO — diagnósticos rules-based ($0 costo)
+  // ═══════════════════════════════════════════════════════════════
+
+  var DIAGNOSTICS = [
+    {
+      pattern: /DV incorrecto.*NIT\s*(\d+).*tiene\s*'?(\d+)'?.*debe ser\s*'?(\d+)'?/i,
+      severity: 'critical',
+      title: 'D\u00edgito de verificaci\u00f3n incorrecto',
+      diagnose: function(m) {
+        return 'El NIT <strong>' + m[1] + '</strong> tiene DV <strong>' + m[2] + '</strong> pero el correcto es <strong>' + m[3] + '</strong>. Esto genera rechazo en el MUISCA.';
+      },
+      fix: '<ol><li>Abre tu archivo Excel de ex\u00f3gena</li><li>Busca el NIT ' + '{1}' + ' en la columna de NIT</li><li>Cambia el DV de <strong>{2}</strong> a <strong>{3}</strong></li><li>Si no sabes el DV correcto, usa nuestra <a href="consultanit.html" style="color:#10B981">Consulta NIT</a></li><li>Vuelve a cargar el archivo en el prevalidador</li></ol>'
+    },
+    {
+      pattern: /Tipo doc(?:umento)?\s*'?(\w+)'?\s*(?:inv[aá]lido|no v[aá]lido).*NIT\s*(\d+)/i,
+      severity: 'critical',
+      title: 'Tipo de documento inv\u00e1lido',
+      diagnose: function(m) {
+        var tips = {'11':'Registro civil','12':'Tarjeta identidad','13':'C\u00e9dula','21':'Tarjeta extranjer\u00eda','22':'C\u00e9dula extranjer\u00eda','31':'NIT','41':'Pasaporte','42':'Doc. extranjero','43':'Sin identificaci\u00f3n exterior'};
+        return 'El tipo de documento <strong>' + m[1] + '</strong> no es v\u00e1lido para el NIT <strong>' + m[2] + '</strong>. Los tipos v\u00e1lidos DIAN son: ' + Object.keys(tips).map(function(k){return '<strong>' + k + '</strong> (' + tips[k] + ')'}).join(', ') + '.';
+      },
+      fix: '<ol><li>Verifica si el tercero es persona natural (13=C\u00e9dula) o jur\u00eddica (31=NIT)</li><li>Para extranjeros sin NIT usa tipo <strong>42</strong> o <strong>43</strong></li><li>Corrige el tipo de documento en tu archivo Excel</li></ol>'
+    },
+    {
+      pattern: /(?:Primer\s*)?apellido\s*vac[ií]o.*NIT\s*(\d+)/i,
+      severity: 'warning',
+      title: 'Primer apellido vac\u00edo',
+      diagnose: function(m) {
+        return 'El tercero con NIT <strong>' + m[1] + '</strong> no tiene primer apellido. Si es persona natural, el campo es obligatorio. Si es persona jur\u00eddica, debe tener raz\u00f3n social en su lugar.';
+      },
+      fix: '<ol><li>Si es <strong>persona natural</strong>: agrega el primer apellido en la columna correspondiente</li><li>Si es <strong>persona jur\u00eddica</strong>: verifica que tenga raz\u00f3n social. El prevalidador la tomar\u00e1 de all\u00ed</li><li>Puedes verificar el nombre correcto en <a href="consultanit.html" style="color:#10B981">Consulta NIT</a></li></ol>'
+    },
+    {
+      pattern: /(?:Raz[oó]n\s*social|rs)\s*vac[ií]a.*NIT\s*(\d+)/i,
+      severity: 'warning',
+      title: 'Raz\u00f3n social vac\u00eda',
+      diagnose: function(m) {
+        return 'El tercero con NIT <strong>' + m[1] + '</strong> no tiene raz\u00f3n social. Para personas jur\u00eddicas (tipo doc 31), este campo es obligatorio.';
+      },
+      fix: '<ol><li>Busca la raz\u00f3n social correcta del NIT en <a href="consultanit.html" style="color:#10B981">Consulta NIT</a></li><li>Agr\u00e9gala en la columna de raz\u00f3n social de tu archivo</li><li>Si es persona natural, verifica que tenga nombres y apellidos completos</li></ol>'
+    },
+    {
+      pattern: /[Dd]irecci[oó]n\s*vac[ií]a.*NIT\s*(\d+)/i,
+      severity: 'info',
+      title: 'Direcci\u00f3n vac\u00eda',
+      diagnose: function(m) {
+        return 'El tercero con NIT <strong>' + m[1] + '</strong> no tiene direcci\u00f3n registrada. El prevalidador usar\u00e1 la direcci\u00f3n de tu empresa como fallback, pero es mejor tener la direcci\u00f3n real.';
+      },
+      fix: '<ol><li>Si tienes la direcci\u00f3n del tercero, agr\u00e9gala en tu archivo</li><li>Si no la tienes, el sistema usar\u00e1 la direcci\u00f3n de tu empresa autom\u00e1ticamente</li><li>Esto <strong>no bloquea</strong> la generaci\u00f3n del XML</li></ol>'
+    },
+    {
+      pattern: /[Mm]unicipio\s*'?(\d+)'?\s*no\s*(?:existe|v[aá]lido).*(?:DIVIPOLA)?/i,
+      severity: 'critical',
+      title: 'C\u00f3digo de municipio inv\u00e1lido (DIVIPOLA)',
+      diagnose: function(m) {
+        return 'El c\u00f3digo de municipio <strong>' + m[1] + '</strong> no existe en la tabla DIVIPOLA del DANE. Los c\u00f3digos DIVIPOLA tienen 5 d\u00edgitos: 2 de departamento + 3 de municipio (ej: 11001 = Bogot\u00e1).';
+      },
+      fix: '<ol><li>Verifica el c\u00f3digo DIVIPOLA correcto del municipio</li><li>Bogot\u00e1: <strong>11001</strong> | Medell\u00edn: <strong>05001</strong> | Cali: <strong>76001</strong> | Barranquilla: <strong>08001</strong></li><li>Consulta la tabla completa en la p\u00e1gina del DANE</li><li>Corrige el c\u00f3digo en tu archivo Excel</li></ol>'
+    },
+    {
+      pattern: /[Vv]alor\s*(?:no\s*num[eé]rico|inv[aá]lido).*(?:en\s+)?(\w+).*(?:NIT\s*(\d+))?/i,
+      severity: 'critical',
+      title: 'Valor no num\u00e9rico en campo de monto',
+      diagnose: function(m) {
+        return 'El campo <strong>' + (m[1]||'de valor') + '</strong> contiene texto o caracteres inv\u00e1lidos en lugar de un n\u00famero. ' + (m[2] ? 'NIT afectado: <strong>' + m[2] + '</strong>.' : '') + ' Los campos de valor solo aceptan n\u00fameros enteros sin puntos, comas ni signos de pesos.';
+      },
+      fix: '<ol><li>Busca la celda del campo <strong>' + ('{1}'||'de valor') + '</strong> en tu Excel</li><li>Elimina cualquier signo $, puntos de miles o comas decimales</li><li>El formato correcto es un n\u00famero entero: <strong>1500000</strong> (no $1.500.000)</li><li>Verifica que la celda est\u00e9 formateada como <strong>N\u00famero</strong>, no como Texto</li></ol>'
+    },
+    {
+      pattern: /[Vv]alor\s*negativo.*(?:en\s+)?(\w+).*(?:NIT\s*(\d+))?/i,
+      severity: 'warning',
+      title: 'Valor negativo en campo de monto',
+      diagnose: function(m) {
+        return 'El campo <strong>' + (m[1]||'de valor') + '</strong> tiene un valor negativo. ' + (m[2] ? 'NIT: <strong>' + m[2] + '</strong>. ' : '') + 'Los formatos de ex\u00f3gena DIAN <strong>no aceptan valores negativos</strong>. Si hay una devoluci\u00f3n o nota cr\u00e9dito, debe restarse del valor bruto.';
+      },
+      fix: '<ol><li>Revisa si el valor negativo corresponde a una devoluci\u00f3n o nota cr\u00e9dito</li><li>Neto el valor: resta la devoluci\u00f3n del valor bruto y reporta solo el neto positivo</li><li>Si el neto es negativo (m\u00e1s devoluciones que compras), reporta <strong>0</strong></li><li>Art. 631 ET: se reportan valores netos positivos</li></ol>'
+    },
+    {
+      pattern: /[Cc]oncepto\s*'?(\d+)'?\s*no\s*(?:es\s*v[aá]lido|est[aá]\s*en\s*lista).*(?:formato\s*)?(\d+)?/i,
+      severity: 'critical',
+      title: 'C\u00f3digo de concepto no v\u00e1lido',
+      diagnose: function(m) {
+        return 'El concepto <strong>' + m[1] + '</strong> no es v\u00e1lido' + (m[2] ? ' para el formato <strong>F' + m[2] + '</strong>' : '') + '. Cada formato DIAN tiene una lista cerrada de conceptos permitidos. Los conceptos 5089-5091, 5101-5103 son nuevos de la Res. 000233/2025 y solo aplican para la versi\u00f3n 11 del F1001.';
+      },
+      fix: '<ol><li>Verifica que est\u00e9s usando la <strong>versi\u00f3n correcta</strong> del formato (Res. 000233/2025)</li><li>Consulta la lista de conceptos v\u00e1lidos en la resoluci\u00f3n</li><li>Si usas un concepto nuevo (5089, 5101, etc.), aseg\u00farate de que el formato sea <strong>v11</strong></li><li>Nuestra herramienta de <a href="exogena.html" style="color:#10B981">Ex\u00f3gena</a> ya incluye todos los conceptos actualizados</li></ol>'
+    },
+    {
+      pattern: /[Dd]pto?\s*'?(\d+)'?\s*no\s*reconocido/i,
+      severity: 'warning',
+      title: 'C\u00f3digo de departamento no reconocido',
+      diagnose: function(m) {
+        return 'El c\u00f3digo de departamento <strong>' + m[1] + '</strong> no es v\u00e1lido. Los departamentos colombianos usan c\u00f3digos DANE de 2 d\u00edgitos (ej: 11=Bogot\u00e1 D.C., 05=Antioquia, 76=Valle del Cauca).';
+      },
+      fix: '<ol><li>Verifica que el c\u00f3digo sea de 2 d\u00edgitos del DANE</li><li>Principales: <strong>11</strong>=Bogot\u00e1, <strong>05</strong>=Antioquia, <strong>76</strong>=Valle, <strong>08</strong>=Atl\u00e1ntico, <strong>25</strong>=Cundinamarca</li><li>Corrige en tu archivo Excel y vuelve a procesar</li></ol>'
+    },
+    {
+      pattern: /[Mm]unicipio\s*(\d+)\s*no\s*corresponde\s*(?:al\s*)?(?:dpto|departamento)\s*(\d+)/i,
+      severity: 'warning',
+      title: 'Municipio no corresponde al departamento',
+      diagnose: function(m) {
+        return 'El municipio <strong>' + m[1] + '</strong> no pertenece al departamento <strong>' + m[2] + '</strong>. Los 2 primeros d\u00edgitos del c\u00f3digo de municipio deben coincidir con el departamento.';
+      },
+      fix: '<ol><li>Verifica que el c\u00f3digo del municipio empiece con los d\u00edgitos del departamento</li><li>Ejemplo: si el dpto es <strong>05</strong> (Antioquia), el municipio debe empezar por 05 (ej: <strong>05001</strong>=Medell\u00edn)</li><li>Corrige el departamento o el municipio seg\u00fan corresponda</li></ol>'
+    },
+    {
+      pattern: /[Pp]a[ií]s\s*(?:vac[ií]o|Colombia).*(?:tercero\s*)?exterior.*NIT\s*(\d+)/i,
+      severity: 'warning',
+      title: 'Pa\u00eds incorrecto para tercero del exterior',
+      diagnose: function(m) {
+        return 'El tercero con NIT <strong>' + m[1] + '</strong> est\u00e1 marcado como del exterior pero tiene pa\u00eds Colombia o vac\u00edo. Los terceros del exterior deben tener el c\u00f3digo ISO del pa\u00eds real.';
+      },
+      fix: '<ol><li>Identifica el pa\u00eds real del tercero</li><li>Usa el c\u00f3digo ISO de 2 letras: <strong>US</strong>=Estados Unidos, <strong>PA</strong>=Panam\u00e1, <strong>MX</strong>=M\u00e9xico, etc.</li><li>Si el tercero es realmente colombiano, cambia el tipo de documento a <strong>13</strong> (C\u00e9dula) o <strong>31</strong> (NIT)</li></ol>'
+    }
+  ];
+
+  // Diagnóstico genérico para errores no reconocidos
+  function genericDiagnosis(line) {
+    return {
+      severity: 'warning',
+      title: 'Error no catalogado',
+      diagnosis: 'Este error no est\u00e1 en nuestra base de conocimiento rules-based. Lee el mensaje con cuidado \u2014 generalmente indica qu\u00e9 campo y qu\u00e9 NIT est\u00e1 afectado.',
+      fix: '<ol><li>Identifica el NIT mencionado en el error</li><li>Busca ese NIT en tu archivo Excel</li><li>Revisa el campo mencionado (DV, tipo doc, direcci\u00f3n, etc.)</li><li>Si no puedes resolverlo, preg\u00fantale a <strong>Exa</strong> en el chat (bot\u00f3n verde abajo a la derecha)</li></ol>'
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  DOM & STATE
+  // ═══════════════════════════════════════════════════════════════
+
+  var errorInput = document.getElementById('errorInput');
+  var btnDiagnose = document.getElementById('btnDiagnose');
+  var btnClear = document.getElementById('btnClear');
+  var skeleton = document.getElementById('skeleton');
+  var resultsEl = document.getElementById('results');
+  var proWall = document.getElementById('proWall');
+  var inputCard = document.getElementById('inputCard');
+  var proBadge = document.getElementById('proBadge');
+  var limitBanner = document.getElementById('limitBanner');
+  var limitText = document.getElementById('limitText');
+
+  var isPro = false;
+  var IA_LIMIT_KEY = 'exogenadian_ia_errores';
+  var IA_LIMIT_KEY_PRO = 'exogenadian_ia_errores_pro';
+  var MAX_FREE = 0; // PRO only
+  var MAX_PRO = 50;
+
+  // Enable button when text entered
+  errorInput.addEventListener('input', function() {
+    btnDiagnose.disabled = !errorInput.value.trim();
+  });
+
+  // ─── PRO CHECK ───
+  if (typeof exoPro !== 'undefined') {
+    exoPro.check().then(function(pro) {
+      isPro = pro;
+      if (pro) {
+        proBadge.style.display = '';
+        proWall.classList.remove('show');
+        inputCard.style.display = '';
+      } else {
+        proWall.classList.add('show');
+        inputCard.style.display = 'none';
+      }
+    });
+  } else {
+    proWall.classList.add('show');
+    inputCard.style.display = 'none';
+  }
+
+  // ─── RATE LIMIT ───
+  function checkLimit() {
+    if (!isPro) return { allowed: false, count: 0, max: 0 };
+    var key = IA_LIMIT_KEY_PRO;
+    var data = JSON.parse(localStorage.getItem(key) || '{}');
+    var today = new Date().toISOString().slice(0, 10);
+    if (data.date !== today) return { allowed: true, count: 0, max: MAX_PRO };
+    return { allowed: data.count < MAX_PRO, count: data.count, max: MAX_PRO };
+  }
+
+  function consumeLimit() {
+    var key = IA_LIMIT_KEY_PRO;
+    var today = new Date().toISOString().slice(0, 10);
+    var data = JSON.parse(localStorage.getItem(key) || '{}');
+    if (data.date !== today) { data.date = today; data.count = 0; }
+    data.count++;
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  DIAGNOSE — parse + match rules
+  // ═══════════════════════════════════════════════════════════════
+
+  function parseErrors(text) {
+    // Split by newlines, filter empty
+    return text.split(/\n/).map(function(l){ return l.trim(); }).filter(function(l){ return l.length > 5; });
+  }
+
+  function diagnoseError(line) {
+    for (var i = 0; i < DIAGNOSTICS.length; i++) {
+      var rule = DIAGNOSTICS[i];
+      var match = line.match(rule.pattern);
+      if (match) {
+        var fix = rule.fix;
+        // Replace {1}, {2}, {3} placeholders with match groups
+        for (var j = 1; j < match.length; j++) {
+          fix = fix.replace(new RegExp('\\{' + j + '\\}', 'g'), match[j] || '');
+        }
+        return {
+          original: line,
+          severity: rule.severity,
+          title: rule.title,
+          diagnosis: rule.diagnose(match),
+          fix: fix
+        };
+      }
+    }
+    // No match — generic
+    var g = genericDiagnosis(line);
+    g.original = line;
+    return g;
+  }
+
+  function renderResults(diagnostics) {
+    var criticals = diagnostics.filter(function(d){ return d.severity === 'critical'; }).length;
+    var warnings = diagnostics.filter(function(d){ return d.severity === 'warning'; }).length;
+    var infos = diagnostics.filter(function(d){ return d.severity === 'info'; }).length;
+
+    var summaryClass = criticals > 0 ? 'err' : warnings > 0 ? 'warn' : 'ok';
+    var summaryIcon = criticals > 0 ? '\u274C' : warnings > 0 ? '\u26A0\uFE0F' : '\u2705';
+    var summaryTitle = criticals > 0
+      ? criticals + ' error' + (criticals > 1 ? 'es' : '') + ' cr\u00edtico' + (criticals > 1 ? 's' : '') + ' encontrado' + (criticals > 1 ? 's' : '')
+      : warnings > 0
+        ? warnings + ' advertencia' + (warnings > 1 ? 's' : '') + ' \u2014 revisa antes de subir al MUISCA'
+        : 'Sin errores cr\u00edticos \u2014 tu archivo se ve bien';
+    var summaryDesc = 'Se analizaron <strong>' + diagnostics.length + '</strong> l\u00edneas: ' + criticals + ' cr\u00edtico' + (criticals !== 1 ? 's' : '') + ', ' + warnings + ' advertencia' + (warnings !== 1 ? 's' : '') + ', ' + infos + ' informativo' + (infos !== 1 ? 's' : '') + '.';
+
+    var html = '<div class="result-summary"><div class="summary-icon ' + summaryClass + '">' + summaryIcon + '</div><div class="summary-text"><h3>' + summaryTitle + '</h3><p>' + summaryDesc + '</p></div></div>';
+
+    diagnostics.forEach(function(d) {
+      var badgeLabel = d.severity === 'critical' ? 'CR\u00cdTICO' : d.severity === 'warning' ? 'ADVERTENCIA' : 'INFO';
+      html += '<div class="error-card">' +
+        '<div class="error-header"><span class="error-badge ' + d.severity + '">' + badgeLabel + '</span><strong style="font-size:.9rem">' + d.title + '</strong></div>' +
+        '<div class="error-original">' + escapeHtml(d.original) + '</div>' +
+        '<div class="error-diagnosis"><h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Diagn\u00f3stico</h4><p>' + d.diagnosis + '</p></div>' +
+        '<div class="error-fix"><h4>Soluci\u00f3n paso a paso</h4>' + d.fix + '</div>' +
+        '</div>';
+    });
+
+    resultsEl.innerHTML = html;
+    resultsEl.classList.add('show');
+  }
+
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  SUBMIT
+  // ═══════════════════════════════════════════════════════════════
+
+  btnDiagnose.addEventListener('click', function() {
+    var text = errorInput.value.trim();
+    if (!text) return;
+
+    var lim = checkLimit();
+    if (!lim.allowed) {
+      limitText.innerHTML = 'Has alcanzado el l\u00edmite de <strong>' + lim.max + '</strong> diagn\u00f3sticos hoy. Se renueva ma\u00f1ana.';
+      limitBanner.classList.add('show');
+      return;
+    }
+
+    // Show skeleton briefly for perceived intelligence
+    skeleton.classList.add('show');
+    resultsEl.classList.remove('show');
+    btnDiagnose.disabled = true;
+    btnClear.style.display = '';
+
+    setTimeout(function() {
+      var lines = parseErrors(text);
+      var diagnostics = lines.map(diagnoseError);
+
+      skeleton.classList.remove('show');
+      renderResults(diagnostics);
+      consumeLimit();
+      btnDiagnose.disabled = false;
+
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'doctor_errores_diagnostico', {
+          total_errores: diagnostics.length,
+          criticos: diagnostics.filter(function(d){return d.severity==='critical'}).length
+        });
+      }
+    }, 600); // Brief delay for UX
+  });
+
+  btnClear.addEventListener('click', function() {
+    errorInput.value = '';
+    resultsEl.innerHTML = '';
+    resultsEl.classList.remove('show');
+    btnClear.style.display = 'none';
+    btnDiagnose.disabled = true;
+  });
+
+})();
+</script>
+</body>
+</html>

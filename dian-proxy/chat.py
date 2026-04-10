@@ -1,12 +1,14 @@
 """
 ExógenaDIAN — Chat endpoint: "Exa", asistente contable IA
-Anthropic API con prompt caching + streaming SSE.
+DeepSeek V3 via OpenRouter + streaming SSE + contexto de página.
 
 Features:
-  - Prompt caching (90% cheaper on system prompt)
-  - Rate limit: 20 msgs/hora por IP
+  - DeepSeek V3: 10x más barato que Sonnet, excelente en español
+  - Contexto de página: Exa sabe en qué herramienta está el usuario
+  - Rate limit: 20 msgs/hora por IP (200 PRO)
   - Cost tracker: acumula gasto mensual, alerta al 80%, bloquea al 100%
-  - Budget: configurable via CHAT_MONTHLY_BUDGET (default $5 USD)
+  - Budget: configurable via CHAT_MONTHLY_BUDGET (default $15 USD)
+  - Fallback: si DeepSeek falla, intenta con Anthropic si la API key existe
 """
 import json
 import logging
@@ -23,27 +25,31 @@ logger = logging.getLogger("exogenadian.chat")
 
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 
+# ─── Primary: DeepSeek via OpenRouter (10x cheaper) ───
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+CHAT_MODEL = os.getenv("CHAT_MODEL", "deepseek/deepseek-chat-v3-0324")
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+
+# ─── Fallback: Anthropic (si OpenRouter falla) ───
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-CHAT_MODEL = os.getenv("CHAT_MODEL", "claude-sonnet-4-20250514")
+ANTHROPIC_FALLBACK_MODEL = "claude-sonnet-4-20250514"
+
 CHAT_MAX_TOKENS = int(os.getenv("CHAT_MAX_TOKENS", "2048"))
 CHAT_RATE_LIMIT = int(os.getenv("CHAT_RATE_LIMIT", "20"))  # msgs/hora
 WHATSAPP_URL = os.getenv("WHATSAPP_URL", "https://wa.me/573054559574")
-CHAT_MONTHLY_BUDGET = float(os.getenv("CHAT_MONTHLY_BUDGET", "5.0"))  # USD
+CHAT_MONTHLY_BUDGET = float(os.getenv("CHAT_MONTHLY_BUDGET", "15.0"))  # USD — mucho más con DeepSeek
 ALERT_EMAIL = os.getenv("ALERT_EMAIL", "soporte@exogenadian.com")
-ALERT_WEBHOOK_URL = os.getenv("ALERT_WEBHOOK_URL", "")  # Google Apps Script URL
-CHAT_LOG_WEBHOOK = os.getenv("CHAT_LOG_WEBHOOK", "")  # Desactivado: usar webhook separado para chat logs, no el de errores JS
+ALERT_WEBHOOK_URL = os.getenv("ALERT_WEBHOOK_URL", "")
+CHAT_LOG_WEBHOOK = os.getenv("CHAT_LOG_WEBHOOK", "")
 
-# Precios Sonnet (USD por millón de tokens)
-PRICE_INPUT = 3.0
-PRICE_CACHED_INPUT = 0.30
-PRICE_OUTPUT = 15.0
+# Precios DeepSeek V3 via OpenRouter (USD por millón de tokens)
+PRICE_INPUT = 0.50
+PRICE_CACHED_INPUT = 0.10
+PRICE_OUTPUT = 2.18
 
 BASE = "https://exogenadian.com"
 
-SYSTEM_BLOCKS = [
-    {
-        "type": "text",
-        "text": f"""Eres Exa, asistente contable de ExógenaDIAN ({BASE}). Experta en normativa tributaria y laboral colombiana. Tono profesional pero cercano.
+SYSTEM_PROMPT = f"""Eres Exa, asistente contable de ExógenaDIAN ({BASE}). Experta en normativa tributaria y laboral colombiana. Tono profesional pero cercano.
 
 HERRAMIENTAS:
 Tributarias: Exógena DIAN→{BASE}/exogena (10 formatos F1001-F2276) | Renta F110→{BASE}/renta | IVA 300→{BASE}/iva | Retención 350→{BASE}/retencion
@@ -87,12 +93,11 @@ REGLAS:
 11. WHATSAPP SOLO COMO ÚLTIMO RECURSO: NO ofrezcas WhatsApp de manera proactiva ni al principio de la conversación. Solo menciona WhatsApp cuando: (a) ya intentaste resolver la duda al menos 2 veces y no pudiste, (b) el tema claramente requiere revisión humana de documentos específicos del cliente, (c) es una cotización de servicio personalizado, o (d) hay un error técnico del portal que no puedes resolver. Cuando lo hagas, di algo como: "Para este caso específico te recomiendo que nos escribas por **[WhatsApp]({WHATSAPP_URL})** para que el equipo te ayude directamente."
 12. Si el usuario se despide o dice gracias, responde brevemente y recuerda que puede volver cuando quiera.
 13. Ve directo al grano sin preámbulos, pero da respuestas completas con la información que el usuario necesita.
-14. JURISPRUDENCIA: Cuando la pregunta involucre temas controvertidos, requerimientos DIAN, sanciones, o interpretación de normas, CITA las sentencias relevantes del Consejo de Estado Sección Cuarta que conoces. Formato: "Sentencia CE Exp. XXXXX de YYYY". Esto da respaldo jurídico sólido a tus respuestas.""",
-        "cache_control": {"type": "ephemeral"},
-    },
-    {
-        "type": "text",
-        "text": """══ JURISPRUDENCIA — CONSEJO DE ESTADO SECCIÓN CUARTA (sentencias clave) ══
+14. JURISPRUDENCIA: Cuando la pregunta involucre temas controvertidos, requerimientos DIAN, sanciones, o interpretación de normas, CITA las sentencias relevantes del Consejo de Estado Sección Cuarta que conoces. Formato: "Sentencia CE Exp. XXXXX de YYYY". Esto da respaldo jurídico sólido a tus respuestas.
+15. CONTEXTO DE PÁGINA: El frontend te envía en qué herramienta está el usuario. Usa este contexto para dar respuestas más específicas y relevantes. Si el usuario está en la herramienta de exógena y pregunta algo genérico, relacónalo con el proceso de exógena. Si está en IVA, con el IVA. Esto te hace MEJOR que un chatbot genérico."""
+
+# Jurisprudencia como segundo bloque (se cachea aparte en OpenRouter)
+JURISPRUDENCIA_BLOCK = """══ JURISPRUDENCIA — CONSEJO DE ESTADO SECCIÓN CUARTA (sentencias clave) ══
 
 Cuando respondas sobre estos temas, CITA la sentencia correspondiente para dar respaldo jurídico:
 
@@ -154,10 +159,35 @@ Deducción requiere retención (generalmente 20%). Si existe CDI vigente, se apl
 Si el desacuerdo es sobre interpretación de normas (no datos falsos), NO procede sanción por inexactitud. Demostrar buena fe y fundamento jurídico razonable.
 
 20. PRESCRIPCIÓN COBRO — 5 AÑOS (Arts. 817, 818 ET) — CE Exp. 26234/2023, CP Carvajal Basto:
-Acción de cobro prescribe en 5 años desde exigibilidad. Se interrumpe con notificación del mandamiento de pago, pero el nuevo término tampoco puede exceder 5 años.""",
-        "cache_control": {"type": "ephemeral"},
-    }
-]
+Acción de cobro prescribe en 5 años desde exigibilidad. Se interrumpe con notificación del mandamiento de pago, pero el nuevo término tampoco puede exceder 5 años."""
+
+
+# ─── Contexto por página — inyectado dinámicamente al system prompt ───
+PAGE_CONTEXT_HINTS = {
+    "exogena": "El usuario está en el GENERADOR DE EXÓGENA. Prioriza ayuda con: carga de balance, clasificación de cuentas PUC a conceptos DIAN, formatos F1001-F2276, errores comunes del prevalidador. Si pregunta algo genérico, relaciónalo con exógena.",
+    "iva300": "El usuario está en el FORMULARIO 300 DE IVA. Prioriza: tarifas IVA, casillas del formulario, IVA descontable vs generado, proporcionalidad Art. 490, períodos bimestrales/cuatrimestrales.",
+    "retencion350": "El usuario está en el FORMULARIO 350 DE RETENCIÓN. Prioriza: bases mínimas de retención, tarifas por concepto, declarantes vs no declarantes, autorretención especial.",
+    "renta110": "El usuario está en la DECLARACIÓN DE RENTA F110. Prioriza: rentas exentas, deducciones, depreciación fiscal, tasa mínima de tributación 15%, tabla Art. 241.",
+    "estadosfinancieros": "El usuario está en ESTADOS FINANCIEROS NIIF. Prioriza: clasificación de cuentas, revelaciones obligatorias, políticas contables, flujo de efectivo método indirecto.",
+    "conciliacion": "El usuario está en CONCILIACIÓN BANCARIA. Prioriza: partidas conciliatorias, cheques pendientes, notas débito/crédito, diferencias en GMF.",
+    "consultanit": "El usuario está en CONSULTA NIT. Prioriza: verificación de terceros, dígito de verificación, estado del RUT, autorretenedores, grandes contribuyentes.",
+    "vencimientos": "El usuario está en CALENDARIO TRIBUTARIO. Prioriza: fechas exactas según último dígito del NIT, tipo de contribuyente, plazos de exógena/renta/IVA/retención.",
+    "sanciones": "El usuario está en SANCIONES EXÓGENA (Art. 651 ET). Prioriza: tarifas de sanción, reducción Art. 640, diferencia entre no presentar/errónea/extemporánea.",
+    "sanciones-dian": "El usuario está en SANCIONES DIAN. Prioriza: extemporaneidad, inexactitud, correcciones, gradualidad Art. 640, beneficio de pago.",
+    "intereses": "El usuario está en INTERESES DE MORA. Prioriza: tasa vigente, Decreto 0240/2026, cálculo día a día, facilidades de pago.",
+    "liquidador": "El usuario está en LIQUIDADOR LABORAL. Prioriza: prestaciones sociales, indemnizaciones, dotación, seguridad social, PILA.",
+    "ia": "El usuario está en las HERRAMIENTAS DE IA. Explica qué hace cada herramienta: auditor de balance, chat ET, detector de inconsistencias.",
+    "precios": "El usuario está en la PÁGINA DE PRECIOS. Ayúdale a entender qué plan le conviene. Sé honesto sobre qué es gratis y qué es PRO. No presiones la venta.",
+}
+
+
+def _build_system_prompt(page_id: str | None = None) -> str:
+    """Construye el system prompt con contexto de página opcional."""
+    parts = [SYSTEM_PROMPT]
+    if page_id and page_id in PAGE_CONTEXT_HINTS:
+        parts.append(f"\n══ CONTEXTO ACTUAL ══\n{PAGE_CONTEXT_HINTS[page_id]}")
+    parts.append(JURISPRUDENCIA_BLOCK)
+    return "\n\n".join(parts)
 
 BUDGET_EXCEEDED_MSG = (
     "En este momento estoy en mantenimiento. Mientras tanto, puedes consultar "
@@ -367,6 +397,8 @@ class ChatMessage(BaseModel):
 
 class ChatRequest(BaseModel):
     messages: list[ChatMessage] = Field(max_length=20)
+    page: str | None = Field(default=None, max_length=50)
+    page_name: str | None = Field(default=None, max_length=100)
 
 
 # ─── Helpers ───
@@ -417,6 +449,8 @@ async def chat(body: ChatRequest, request: Request):
             }
         rate_limiter.consume(ip)
 
+    # Construir system prompt con contexto de página
+    system_prompt = _build_system_prompt(body.page)
     messages = [{"role": m.role, "content": m.content} for m in body.messages[-10:]]
 
     # Log última pregunta del usuario (fire & forget)
@@ -430,7 +464,73 @@ async def chat(body: ChatRequest, request: Request):
     usage_cached = 0
     usage_output = 0
 
-    async def event_stream():
+    async def openrouter_stream():
+        """Stream via OpenRouter (DeepSeek V3 — formato OpenAI)."""
+        nonlocal usage_input, usage_cached, usage_output
+        try:
+            api_messages = [{"role": "system", "content": system_prompt}] + messages
+            async with httpx.AsyncClient(timeout=60.0) as client:
+                async with client.stream(
+                    "POST",
+                    OPENROUTER_URL,
+                    headers={
+                        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                        "Content-Type": "application/json",
+                        "HTTP-Referer": BASE,
+                        "X-Title": "ExógenaDIAN Chat",
+                    },
+                    json={
+                        "model": CHAT_MODEL,
+                        "max_tokens": CHAT_MAX_TOKENS,
+                        "messages": api_messages,
+                        "stream": True,
+                    },
+                ) as resp:
+                    if resp.status_code != 200:
+                        error_body = await resp.aread()
+                        logger.error("OpenRouter API error %s: %s", resp.status_code, error_body[:500])
+                        yield None  # Signal to try fallback
+                        return
+
+                    has_content = False
+                    async for line in resp.aiter_lines():
+                        if not line.startswith("data: "):
+                            continue
+                        data_str = line[6:].strip()
+                        if data_str == "[DONE]":
+                            if has_content:
+                                yield f"data: {json.dumps({'type': 'done'})}\n\n"
+                            break
+                        try:
+                            event = json.loads(data_str)
+                        except json.JSONDecodeError:
+                            continue
+
+                        # OpenAI streaming format
+                        choices = event.get("choices", [])
+                        if choices:
+                            delta = choices[0].get("delta", {})
+                            text = delta.get("content", "")
+                            if text:
+                                has_content = True
+                                yield f"data: {json.dumps({'type': 'text', 'text': text})}\n\n"
+
+                        # Capture usage if present
+                        u = event.get("usage")
+                        if u:
+                            usage_input = u.get("prompt_tokens", 0)
+                            usage_cached = u.get("prompt_tokens_details", {}).get("cached_tokens", 0)
+                            usage_output = u.get("completion_tokens", 0)
+
+                    if not has_content:
+                        yield None  # Signal to try fallback
+
+        except (httpx.TimeoutException, httpx.ConnectError, Exception) as e:
+            logger.warning("OpenRouter stream failed: %s", e)
+            yield None  # Signal to try fallback
+
+    async def anthropic_fallback_stream():
+        """Fallback a Anthropic si DeepSeek falla."""
         nonlocal usage_input, usage_cached, usage_output
         try:
             async with httpx.AsyncClient(timeout=60.0) as client:
@@ -440,20 +540,19 @@ async def chat(body: ChatRequest, request: Request):
                     headers={
                         "x-api-key": ANTHROPIC_API_KEY,
                         "anthropic-version": "2023-06-01",
-                        "anthropic-beta": "prompt-caching-2024-07-31",
                         "content-type": "application/json",
                     },
                     json={
-                        "model": CHAT_MODEL,
+                        "model": ANTHROPIC_FALLBACK_MODEL,
                         "max_tokens": CHAT_MAX_TOKENS,
-                        "system": SYSTEM_BLOCKS,
+                        "system": system_prompt,
                         "messages": messages,
                         "stream": True,
                     },
                 ) as resp:
                     if resp.status_code != 200:
                         error_body = await resp.aread()
-                        logger.error("Anthropic API error %s: %s", resp.status_code, error_body[:500])
+                        logger.error("Anthropic fallback error %s: %s", resp.status_code, error_body[:500])
                         yield f"data: {json.dumps({'type': 'error', 'error': 'Error al procesar tu mensaje. Intenta de nuevo.'})}\n\n"
                         return
 
@@ -469,53 +568,60 @@ async def chat(body: ChatRequest, request: Request):
                             continue
 
                         etype = event.get("type", "")
-
-                        # Capture usage from message_start
                         if etype == "message_start":
-                            msg = event.get("message", {})
-                            u = msg.get("usage", {})
+                            u = event.get("message", {}).get("usage", {})
                             usage_input = u.get("input_tokens", 0)
                             usage_cached = u.get("cache_read_input_tokens", 0)
-
                         elif etype == "content_block_delta":
                             delta = event.get("delta", {})
                             if delta.get("type") == "text_delta":
                                 text = delta.get("text", "")
                                 if text:
                                     yield f"data: {json.dumps({'type': 'text', 'text': text})}\n\n"
-
-                        # Capture output tokens from message_delta
                         elif etype == "message_delta":
                             u = event.get("usage", {})
                             usage_output = u.get("output_tokens", 0)
-
                         elif etype == "message_stop":
                             yield f"data: {json.dumps({'type': 'done'})}\n\n"
 
-                        elif etype == "error":
-                            yield f"data: {json.dumps({'type': 'error', 'error': 'Error interno.'})}\n\n"
-
-        except httpx.TimeoutException:
-            yield f"data: {json.dumps({'type': 'error', 'error': 'Tiempo de espera agotado.'})}\n\n"
         except Exception as e:
-            logger.error("Chat stream error: %s", e)
+            logger.error("Anthropic fallback error: %s", e)
             yield f"data: {json.dumps({'type': 'error', 'error': 'Error inesperado.'})}\n\n"
 
-    async def tracked_stream():
-        """Wrapper que rastrea costos después del stream."""
-        async for chunk in event_stream():
-            yield chunk
+    async def smart_stream():
+        """Intenta OpenRouter primero, fallback a Anthropic si falla."""
+        used_fallback = False
 
-        # Después de que el stream termine, registrar costo
-        if usage_input > 0 or usage_output > 0:
-            cost_tracker.add(usage_input, usage_cached, usage_output)
+        if OPENROUTER_API_KEY:
+            async for chunk in openrouter_stream():
+                if chunk is None:
+                    # OpenRouter falló, intentar fallback
+                    logger.info("OpenRouter failed, trying Anthropic fallback")
+                    used_fallback = True
+                    break
+                yield chunk
 
-            # Enviar alerta si estamos al 80%+
-            if cost_tracker.should_alert():
-                await _send_budget_alert()
+            if not used_fallback:
+                # OpenRouter funcionó, registrar costo y salir
+                if usage_input > 0 or usage_output > 0:
+                    cost_tracker.add(usage_input, usage_cached, usage_output)
+                    if cost_tracker.should_alert():
+                        await _send_budget_alert()
+                return
+
+        # Fallback a Anthropic (o único path si no hay OpenRouter key)
+        if ANTHROPIC_API_KEY:
+            async for chunk in anthropic_fallback_stream():
+                yield chunk
+            if usage_input > 0 or usage_output > 0:
+                cost_tracker.add(usage_input, usage_cached, usage_output)
+                if cost_tracker.should_alert():
+                    await _send_budget_alert()
+        else:
+            yield f"data: {json.dumps({'type': 'error', 'error': 'Chat no configurado.'})}\n\n"
 
     return StreamingResponse(
-        tracked_stream(),
+        smart_stream(),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",

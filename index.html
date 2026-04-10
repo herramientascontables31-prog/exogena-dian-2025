@@ -371,11 +371,12 @@ footer{padding:32px 48px 24px;background:var(--gray-900);color:var(--gray-400)}
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-text">
-      <div class="hero-pill"><div class="pill-dot"></div> AG 2025 · Res. 000227 mod. 000233 y 000237 · UVT $49.799</div>
-      <h1>Todas tus herramientas <em>contables</em> en un solo lugar</h1>
-      <p class="hero-desc">Exógena DIAN, calculadoras tributarias, estados financieros y más. Todo lo que un contador colombiano necesita en su día a día.</p>
+      <div class="hero-pill"><div class="pill-dot"></div> Vencimientos ex&oacute;gena desde el 28 de abril &middot; AG 2025 &middot; Res. 000227</div>
+      <h1>Genera tu ex&oacute;gena DIAN en <em>minutos</em>, no en d&iacute;as</h1>
+      <p class="hero-desc">Sube tu balance de prueba y descarga los 10 formatos listos para prevalidar en el MUISCA. Sin instalar nada. Sin macros. Sin dolores de cabeza.</p>
       <div class="hero-btns">
-        <a href="exogena.html" class="btn btn-green" style="font-size:1.1rem;padding:16px 36px;box-shadow:0 8px 24px rgba(5,150,105,.3)" onclick="gtag('event','clic_cta_hero',{cta:'procesar_exogena'})">Procesar mi ex&oacute;gena ahora →</a>
+        <a href="exogena.html" class="btn btn-green" style="font-size:1.1rem;padding:16px 36px;box-shadow:0 8px 24px rgba(5,150,105,.3)" onclick="gtag('event','clic_cta_hero',{cta:'subir_balance'})">Subir mi balance de prueba →</a>
+        <a href="#tools" class="btn btn-ghost" onclick="gtag('event','clic_cta_hero',{cta:'ver_herramientas'})">Ver herramientas</a>
       </div>
       <p style="margin-top:10px;font-size:.85rem;color:var(--gray-400)">Gratis &middot; Sin registro &middot; Tus datos no salen de tu equipo</p>
 
@@ -412,6 +413,61 @@ footer{padding:32px 48px 24px;background:var(--gray-900);color:var(--gray-400)}
     </div>
   </div>
 </section>
+
+<!-- ===== WIZARD NAVEGADOR — ¿Qué necesitas hacer? ===== -->
+<section class="fade-in" id="wizard" style="padding:40px 20px;background:linear-gradient(135deg,#ECFDF5 0%,#fff 40%,#F0FFF4 100%)">
+  <div style="max-width:680px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:var(--white);border:1.5px solid var(--green-300);border-radius:100px;padding:6px 18px;font-size:.82rem;font-weight:700;color:var(--green-700);margin-bottom:12px;box-shadow:0 2px 8px rgba(5,150,105,.08)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green-500)"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Encuentra tu herramienta
+      </div>
+      <h2 style="font-family:'Fraunces',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:var(--gray-900);margin-bottom:8px">¿Qué necesitas hacer?</h2>
+      <p style="color:var(--gray-500);font-size:.95rem">Selecciona tu necesidad y te llevamos a la herramienta exacta</p>
+    </div>
+    <div id="wizard-options" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <button onclick="wizardGo('exogena.html','procesar_exogena')" style="background:var(--white);border:1.5px solid var(--green-300);border-radius:14px;padding:18px 16px;cursor:pointer;text-align:left;transition:all .25s;font-family:'Outfit',sans-serif;display:flex;align-items:flex-start;gap:12px" onmouseover="this.style.borderColor='var(--green-500)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(5,150,105,.1)'" onmouseout="this.style.borderColor='var(--green-300)';this.style.transform='none';this.style.boxShadow='none'">
+        <span style="font-size:1.5rem;line-height:1">📊</span>
+        <div><strong style="font-size:.92rem;color:var(--gray-800);display:block;margin-bottom:2px">Presentar la ex&oacute;gena</strong><span style="font-size:.78rem;color:var(--gray-400);line-height:1.3">Generar formatos F1001 a F2276 desde mi balance</span></div>
+      </button>
+      <button onclick="wizardGo('renta110.html','declarar_renta')" style="background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;padding:18px 16px;cursor:pointer;text-align:left;transition:all .25s;font-family:'Outfit',sans-serif;display:flex;align-items:flex-start;gap:12px" onmouseover="this.style.borderColor='var(--purple-500)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(139,92,246,.1)'" onmouseout="this.style.borderColor='var(--gray-200)';this.style.transform='none';this.style.boxShadow='none'">
+        <span style="font-size:1.5rem;line-height:1">📑</span>
+        <div><strong style="font-size:.92rem;color:var(--gray-800);display:block;margin-bottom:2px">Declarar renta</strong><span style="font-size:.78rem;color:var(--gray-400);line-height:1.3">Formulario 110 con depuraci&oacute;n autom&aacute;tica</span></div>
+      </button>
+      <button onclick="wizardGo('iva300.html','liquidar_iva')" style="background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;padding:18px 16px;cursor:pointer;text-align:left;transition:all .25s;font-family:'Outfit',sans-serif;display:flex;align-items:flex-start;gap:12px" onmouseover="this.style.borderColor='var(--amber-500)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(245,158,11,.1)'" onmouseout="this.style.borderColor='var(--gray-200)';this.style.transform='none';this.style.boxShadow='none'">
+        <span style="font-size:1.5rem;line-height:1">📋</span>
+        <div><strong style="font-size:.92rem;color:var(--gray-800);display:block;margin-bottom:2px">Liquidar IVA</strong><span style="font-size:.78rem;color:var(--gray-400);line-height:1.3">Formulario 300 bimestral o cuatrimestral</span></div>
+      </button>
+      <button onclick="wizardGo('retencion350.html','retencion')" style="background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;padding:18px 16px;cursor:pointer;text-align:left;transition:all .25s;font-family:'Outfit',sans-serif;display:flex;align-items:flex-start;gap:12px" onmouseover="this.style.borderColor='var(--blue-500)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(59,130,246,.1)'" onmouseout="this.style.borderColor='var(--gray-200)';this.style.transform='none';this.style.boxShadow='none'">
+        <span style="font-size:1.5rem;line-height:1">🧮</span>
+        <div><strong style="font-size:.92rem;color:var(--gray-800);display:block;margin-bottom:2px">Retenci&oacute;n en la fuente</strong><span style="font-size:.78rem;color:var(--gray-400);line-height:1.3">Formulario 350 mensual desde balance</span></div>
+      </button>
+      <button onclick="wizardGo('estadosfinancieros.html','estados_niif')" style="background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;padding:18px 16px;cursor:pointer;text-align:left;transition:all .25s;font-family:'Outfit',sans-serif;display:flex;align-items:flex-start;gap:12px" onmouseover="this.style.borderColor='var(--green-500)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(5,150,105,.1)'" onmouseout="this.style.borderColor='var(--gray-200)';this.style.transform='none';this.style.boxShadow='none'">
+        <span style="font-size:1.5rem;line-height:1">📄</span>
+        <div><strong style="font-size:.92rem;color:var(--gray-800);display:block;margin-bottom:2px">Estados financieros NIIF</strong><span style="font-size:.78rem;color:var(--gray-400);line-height:1.3">ESF, ERI, notas, flujo de efectivo</span></div>
+      </button>
+      <button onclick="wizardGo('sanciones.html','calcular_sancion')" style="background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;padding:18px 16px;cursor:pointer;text-align:left;transition:all .25s;font-family:'Outfit',sans-serif;display:flex;align-items:flex-start;gap:12px" onmouseover="this.style.borderColor='var(--rose-500)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(244,63,94,.1)'" onmouseout="this.style.borderColor='var(--gray-200)';this.style.transform='none';this.style.boxShadow='none'">
+        <span style="font-size:1.5rem;line-height:1">&#9878;&#65039;</span>
+        <div><strong style="font-size:.92rem;color:var(--gray-800);display:block;margin-bottom:2px">Calcular una sanci&oacute;n</strong><span style="font-size:.78rem;color:var(--gray-400);line-height:1.3">Extemporaneidad, inexactitud, ex&oacute;gena</span></div>
+      </button>
+      <button onclick="wizardGo('vencimientos.html','ver_vencimientos')" style="background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;padding:18px 16px;cursor:pointer;text-align:left;transition:all .25s;font-family:'Outfit',sans-serif;display:flex;align-items:flex-start;gap:12px" onmouseover="this.style.borderColor='#F59E0B';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(245,158,11,.1)'" onmouseout="this.style.borderColor='var(--gray-200)';this.style.transform='none';this.style.boxShadow='none'">
+        <span style="font-size:1.5rem;line-height:1">📅</span>
+        <div><strong style="font-size:.92rem;color:var(--gray-800);display:block;margin-bottom:2px">Ver vencimientos</strong><span style="font-size:.78rem;color:var(--gray-400);line-height:1.3">Calendario tributario 2026 por NIT</span></div>
+      </button>
+      <button onclick="wizardGo('liquidador.html','liquidar_empleado')" style="background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;padding:18px 16px;cursor:pointer;text-align:left;transition:all .25s;font-family:'Outfit',sans-serif;display:flex;align-items:flex-start;gap:12px" onmouseover="this.style.borderColor='var(--purple-500)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(139,92,246,.1)'" onmouseout="this.style.borderColor='var(--gray-200)';this.style.transform='none';this.style.boxShadow='none'">
+        <span style="font-size:1.5rem;line-height:1">👷</span>
+        <div><strong style="font-size:.92rem;color:var(--gray-800);display:block;margin-bottom:2px">Liquidar un empleado</strong><span style="font-size:.78rem;color:var(--gray-400);line-height:1.3">Prestaciones, indemnizaci&oacute;n, costos</span></div>
+      </button>
+    </div>
+    <p style="text-align:center;margin-top:16px;font-size:.82rem;color:var(--gray-400)">¿No encuentras lo que buscas? <a href="#" onclick="event.preventDefault();document.querySelector('.exa-fab')&&document.querySelector('.exa-fab').click()" style="color:var(--green-600);font-weight:600;text-decoration:underline">Preg&uacute;ntale a Exa</a></p>
+  </div>
+</section>
+<script>
+function wizardGo(url, eventName) {
+  if (typeof gtag !== 'undefined') gtag('event', 'wizard_select', { herramienta: eventName });
+  window.location.href = url;
+}
+</script>
 
 <!-- ===== NOVEDADES AG 2025 ===== -->
 <section class="fade-in" style="padding:40px 20px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7)">
@@ -494,6 +550,16 @@ footer{padding:32px 48px 24px;background:var(--gray-900);color:var(--gray-400)}
         </div>
         <h3 style="font-family:'Outfit',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:8px">Responder Requerimiento DIAN</h3>
         <p style="color:#A2B8AE;font-size:.88rem;line-height:1.55">Pega el requerimiento y la IA genera un borrador de respuesta con fundamento normativo del ET.</p>
+      </a>
+      <!-- Doctor de Errores DIAN -->
+      <a href="ia-errores-xml.html" style="background:#111C18;border:1px solid rgba(239,68,68,.15);border-radius:16px;padding:20px 24px;text-decoration:none;color:#EFF5F2;transition:all .3s;display:flex;align-items:center;gap:16px;grid-column:1/-1">
+        <div style="width:44px;height:44px;border-radius:12px;background:rgba(239,68,68,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div>
+          <h3 style="font-family:'Outfit',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:4px">Doctor de Errores DIAN <span style="background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff;font-size:.58rem;font-weight:700;padding:2px 8px;border-radius:5px;margin-left:6px;vertical-align:middle">PRO</span></h3>
+          <p style="color:#A2B8AE;font-size:.88rem;line-height:1.4;margin:0">Pega los errores del prevalidador. Diagn&oacute;stico + soluci&oacute;n paso a paso.</p>
+        </div>
       </a>
     </div>
 
@@ -1102,7 +1168,7 @@ try{
 
 <!-- Exa: Asistente contable IA -->
 <link rel="stylesheet" href="shared/chat.css?v=2">
-<script src="shared/chat.js?v=2"></script>
+<script src="shared/chat.js?v=3"></script>
 </main>
 
 </body>
