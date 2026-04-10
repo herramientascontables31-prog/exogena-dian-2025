@@ -40,7 +40,7 @@ load_dotenv()
 
 # ─── Config ───
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://exogenadian.com").split(",")
-CACHE_TTL_DAYS = int(os.getenv("CACHE_TTL_DAYS", "7"))
+CACHE_TTL_DAYS = int(os.getenv("CACHE_TTL_DAYS", "30"))
 PORT = int(os.getenv("PORT", "8080"))
 
 # Claves PRO válidas — en producción esto vendría de tu base de datos/Google Sheet

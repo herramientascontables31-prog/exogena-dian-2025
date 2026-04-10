@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 
 CACHE_FILE = Path(__file__).parent / "cache_data.json"
-DEFAULT_TTL = 7 * 24 * 3600  # 7 días en segundos
+DEFAULT_TTL = 30 * 24 * 3600  # 30 días en segundos
 
 
 class NITCache:
