@@ -501,23 +501,42 @@ async function consultarSingle() {
 
   // Tier 1: Resultado offline (instantáneo, siempre funciona)
   let r = lookupNIT(input);
-  renderSingleResult(r);
+  const willQueryDIAN = BACKEND_AVAILABLE && remaining > 0;
+
+  // Si no hay razón social offline y vamos a consultar DIAN, mostrar loading en vez de "No encontrado"
+  if (!r.razonSocial && willQueryDIAN) {
+    const el = document.getElementById('singleResult');
+    el.innerHTML = '<div style="margin-top:12px;padding:20px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;text-align:center">'
+      + '<div style="display:flex;align-items:center;justify-content:center;gap:10px;color:#1E40AF;font-size:.95rem;font-weight:600;margin-bottom:8px"><span class="spinner"></span> Consultando NIT en la DIAN...</div>'
+      + '<div style="font-size:.8rem;color:#3B82F6;line-height:1.5">La DIAN protege su portal con verificaciones de seguridad.<br>Esto puede tomar entre 5 y 15 segundos.</div>'
+      + '</div>';
+  } else {
+    renderSingleResult(r);
+  }
 
   // Tier 2: Consulta DIAN en vivo (si hay cuota y backend disponible)
-  if (BACKEND_AVAILABLE && remaining > 0) {
+  if (willQueryDIAN) {
     const el = document.getElementById('singleResult');
-    el.innerHTML += '<div id="dianLoading" style="margin-top:12px;padding:10px 16px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;font-size:.82rem;color:#1E40AF;display:flex;align-items:center;gap:8px"><span class="spinner"></span> Consultando estado RUT en DIAN MUISCA...</div>';
+    // Solo agregar loading extra si ya mostramos resultado offline
+    if (r.razonSocial) {
+      el.innerHTML += '<div id="dianLoading" style="margin-top:12px;padding:10px 16px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;font-size:.82rem;color:#1E40AF;display:flex;align-items:center;gap:8px"><span class="spinner"></span> Consultando estado RUT en DIAN MUISCA...</div>';
+    }
 
     const online = await consultarBackend(input);
-    const loading = document.getElementById('dianLoading');
-    if (loading) loading.remove();
     // Solo consumir cuota si realmente fue al backend (no caché local)
     if (!online?._from_cache) consumeQuota();
+    const hadOffline = !!r.razonSocial;
 
     if (online && !online.error) {
       r = mergeResults(r, online);
       renderSingleResult(r);
-    } else if (online && online.error) {
+    } else if (!hadOffline) {
+      // No teníamos offline ni DIAN — mostrar resultado base + error
+      renderSingleResult(r);
+    }
+    const loading = document.getElementById('dianLoading');
+    if (loading) loading.remove();
+    if (online && online.error) {
       el.innerHTML += '<div style="margin-top:10px;padding:12px 16px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;font-size:.82rem;color:#92400E;line-height:1.5">'
         + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-weight:700">&#9888;&#65039; No se pudo consultar en DIAN MUISCA</div>'
         + '<div style="font-size:.78rem;margin-bottom:8px">El portal MUISCA de la DIAN realiza cambios frecuentes en su plataforma que pueden afectar temporalmente nuestra consulta automática. Trabajamos constantemente para mantener la herramienta actualizada.</div>'
