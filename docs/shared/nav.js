@@ -486,13 +486,15 @@
     }
   }
 
-  /* ─── Standard footer disclaimer (all pages without footer) ─── */
-  var existingFooter=document.querySelector('footer');
-  if(!existingFooter){
+  /* ─── Standard footer disclaimer (all pages without footer, after DOM ready) ─── */
+  function _injectFooter(){
+    if(document.querySelector('footer'))return;
     var stdFooter=document.createElement('footer');
     stdFooter.style.cssText='padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.75rem;color:#9ca3af;line-height:1.7;font-family:Outfit,sans-serif';
     stdFooter.innerHTML='\u26A0\uFE0F Herramienta de asistencia. El contador debe validar antes de presentar a la DIAN.<br>\u00A9 2026 Aziendale S.A.S. \u00B7 <a href="terminos.html" style="color:#9ca3af">T\u00E9rminos</a> \u00B7 <a href="politica-privacidad.html" style="color:#9ca3af">Privacidad</a>';
     document.body.appendChild(stdFooter);
   }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',_injectFooter)}
+  else{_injectFooter()}
 
 })();
