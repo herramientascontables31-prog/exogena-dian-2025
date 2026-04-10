@@ -2489,9 +2489,13 @@ function buildPoliciesWordHtml(){
 
 function buildEsfWordHtml(){
   const year=document.getElementById('cfgYear').value;
+  const yearAnt=String(Number(year)-1);
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
   const nit=document.getElementById('cfgNit').value||'';
   const moneda=document.getElementById('cfgMoneda').value;
+  const comp=hasComparative&&Object.keys(compEsfData).length>0;
+  function cv(k){return compEsfData[k]||0}
+  const cols=comp?4:2;
 
   const totalActCorr=esfVal('efectivo')+esfVal('inv_cp')+esfVal('cxc')+esfVal('deterioro_cartera')+esfVal('inventarios')+esfVal('diferidos_act')+esfVal('otros_act');
   const totalActNoCorr=esfVal('ppe')+esfVal('depreciacion')+esfVal('intangibles')+esfVal('amortizacion')+esfVal('inv_lp')+esfVal('otros_act_nc')+esfVal('valorizaciones');
@@ -2500,65 +2504,80 @@ function buildEsfWordHtml(){
   const totalPasNoCorr=esfVal('oblig_fin_lp')+esfVal('diferidos_pas')+esfVal('otros_pas');
   const totalPasivos=totalPasCorr+totalPasNoCorr;
   const totalPatrimonio=esfVal('capital')+esfVal('superavit_cap')+esfVal('reservas')+esfVal('revalorizacion')+esfVal('resultado_ej')+esfVal('resultados_ant')+esfVal('superavit_val')+esfVal('otros_pat')+esfVal('resultado_periodo');
-
-  function r(label,val,cls){return `<tr${cls?' class="'+cls+'"':''}><td>${label}</td><td class="num">${fN(val)}</td></tr>`}
-  let h=`<p style="text-align:center;font-weight:bold">${empresa}<br>NIT: ${nit}<br>ESTADO DE SITUACIÓN FINANCIERA<br>Al 31 de diciembre de ${year}<br><span style="font-size:9pt;color:#888">(Cifras en ${moneda==='COP'?'pesos colombianos':'dólares'})</span></p>`;
-  h+=`<table><tr><th colspan="2">ACTIVOS</th></tr>`;
-  h+=`<tr><th colspan="2" style="background:#E2EFDA;font-size:9pt">Activos Corrientes</th></tr>`;
-  h+=r('Efectivo y equivalentes de efectivo',esfVal('efectivo'));
-  if(esfVal('inv_cp'))h+=r('Inversiones a corto plazo',esfVal('inv_cp'));
-  h+=r('Deudores comerciales y otras CxC',esfVal('cxc'));
-  if(esfVal('deterioro_cartera'))h+=r('(-) Deterioro de cartera',esfVal('deterioro_cartera'));
-  if(esfVal('inventarios'))h+=r('Inventarios',esfVal('inventarios'));
-  if(esfVal('diferidos_act'))h+=r('Diferidos y otros activos corrientes',esfVal('diferidos_act'));
-  h+=r('TOTAL ACTIVOS CORRIENTES',totalActCorr,'subtotal');
-  h+=`<tr><th colspan="2" style="background:#E2EFDA;font-size:9pt">Activos No Corrientes</th></tr>`;
-  if(esfVal('ppe'))h+=r('Propiedad, planta y equipo',esfVal('ppe'));
-  if(esfVal('depreciacion'))h+=r('(-) Depreciación acumulada',esfVal('depreciacion'));
-  if(esfVal('intangibles'))h+=r('Activos intangibles',esfVal('intangibles'));
-  if(esfVal('amortizacion'))h+=r('(-) Amortización acumulada',esfVal('amortizacion'));
-  if(esfVal('inv_lp'))h+=r('Inversiones a largo plazo',esfVal('inv_lp'));
-  if(esfVal('otros_act_nc'))h+=r('Otros activos no corrientes',esfVal('otros_act_nc'));
-  if(esfVal('valorizaciones'))h+=r('Valorizaciones',esfVal('valorizaciones'));
-  h+=r('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr,'subtotal');
-  h+=r('TOTAL ACTIVOS',totalActivos,'total');
-
-  h+=`<tr><th colspan="2">PASIVOS</th></tr>`;
-  h+=`<tr><th colspan="2" style="background:#E2EFDA;font-size:9pt">Pasivos Corrientes</th></tr>`;
-  if(esfVal('oblig_fin_cp'))h+=r('Obligaciones financieras CP',esfVal('oblig_fin_cp'));
-  if(esfVal('proveedores'))h+=r('Proveedores',esfVal('proveedores'));
-  if(esfVal('cxp'))h+=r('Cuentas por pagar',esfVal('cxp'));
-  if(esfVal('impuestos'))h+=r('Impuestos por pagar',esfVal('impuestos'));
-  if(esfVal('laborales'))h+=r('Obligaciones laborales',esfVal('laborales'));
-  if(esfVal('provisiones'))h+=r('Pasivos estimados y provisiones',esfVal('provisiones'));
-  h+=r('TOTAL PASIVOS CORRIENTES',totalPasCorr,'subtotal');
-  if(totalPasNoCorr){
-    h+=`<tr><th colspan="2" style="background:#E2EFDA;font-size:9pt">Pasivos No Corrientes</th></tr>`;
-    if(esfVal('oblig_fin_lp'))h+=r('Obligaciones financieras LP',esfVal('oblig_fin_lp'));
-    if(esfVal('diferidos_pas'))h+=r('Diferidos pasivo',esfVal('diferidos_pas'));
-    h+=r('TOTAL PASIVOS NO CORRIENTES',totalPasNoCorr,'subtotal');
+  var cAC=0,cANC=0,cPC=0,cPNC=0,cPat=0;
+  if(comp){
+    cAC=cv('efectivo')+cv('inv_cp')+cv('cxc')+cv('deterioro_cartera')+cv('inventarios')+cv('diferidos_act')+cv('otros_act');
+    cANC=cv('ppe')+cv('depreciacion')+cv('intangibles')+cv('amortizacion')+cv('inv_lp')+cv('otros_act_nc')+cv('valorizaciones');
+    cPC=cv('oblig_fin_cp')+cv('proveedores')+cv('cxp')+cv('impuestos')+cv('laborales')+cv('provisiones')+cv('otros_pas_c');
+    cPNC=cv('oblig_fin_lp')+cv('diferidos_pas')+cv('otros_pas');
+    cPat=cv('capital')+cv('superavit_cap')+cv('reservas')+cv('revalorizacion')+cv('resultado_ej')+cv('resultados_ant')+cv('superavit_val')+cv('otros_pat')+cv('resultado_periodo');
   }
-  h+=r('TOTAL PASIVOS',totalPasivos,'total');
 
-  h+=`<tr><th colspan="2">PATRIMONIO</th></tr>`;
-  if(esfVal('capital'))h+=r('Capital social',esfVal('capital'));
-  if(esfVal('reservas'))h+=r('Reservas',esfVal('reservas'));
-  if(esfVal('resultado_ej'))h+=r('Resultado del ejercicio',esfVal('resultado_ej'));
-  if(esfVal('resultados_ant'))h+=r('Resultados de ejercicios anteriores',esfVal('resultados_ant'));
-  if(esfVal('resultado_periodo'))h+=r('Resultado del período (Ingresos - Gastos)',esfVal('resultado_periodo'));
-  h+=r('TOTAL PATRIMONIO',totalPatrimonio,'total');
-  h+=r('TOTAL PASIVOS + PATRIMONIO',totalPasivos+totalPatrimonio,'total');
-  h+=`</table>`;
-  h+=`<p class="footer">Las notas son parte integral de los estados financieros</p>`;
+  function r(label,val,cls,cval){
+    var s='<tr'+(cls?' class="'+cls+'"':'')+'><td>'+label+'</td><td class="num">'+fN(val)+'</td>';
+    if(comp){var d=val-(cval||0);s+='<td class="num">'+fN(cval||0)+'</td><td class="num" style="font-size:8pt;color:'+(d>=0?'#059669':'#DC2626')+'">'+fN(d)+'</td>'}
+    return s+'</tr>';
+  }
+  let h='<p style="text-align:center;font-weight:bold">'+empresa+'<br>NIT: '+nit+'<br>ESTADO DE SITUACI\u00d3N FINANCIERA'+(comp?' COMPARATIVO':'')+'<br>Al 31 de diciembre de '+year+(comp?' (con comparativo '+yearAnt+')':'')+'<br><span style="font-size:9pt;color:#888">(Cifras en '+(moneda==='COP'?'pesos colombianos':'d\u00f3lares')+')</span></p>';
+  h+='<table>';
+  if(comp)h+='<tr><th></th><th class="num">'+year+'</th><th class="num">'+yearAnt+'</th><th class="num">Var.</th></tr>';
+  h+='<tr><th colspan="'+cols+'">ACTIVOS</th></tr>';
+  h+='<tr><th colspan="'+cols+'" style="background:#E2EFDA;font-size:9pt">Activos Corrientes</th></tr>';
+  h+=r('Efectivo y equivalentes de efectivo',esfVal('efectivo'),'',cv('efectivo'));
+  if(esfVal('inv_cp')||cv('inv_cp'))h+=r('Inversiones a corto plazo',esfVal('inv_cp'),'',cv('inv_cp'));
+  h+=r('Deudores comerciales y otras CxC',esfVal('cxc'),'',cv('cxc'));
+  if(esfVal('deterioro_cartera')||cv('deterioro_cartera'))h+=r('(-) Deterioro de cartera',esfVal('deterioro_cartera'),'',cv('deterioro_cartera'));
+  if(esfVal('inventarios')||cv('inventarios'))h+=r('Inventarios',esfVal('inventarios'),'',cv('inventarios'));
+  if(esfVal('diferidos_act')||cv('diferidos_act'))h+=r('Diferidos y otros activos corrientes',esfVal('diferidos_act'),'',cv('diferidos_act'));
+  h+=r('TOTAL ACTIVOS CORRIENTES',totalActCorr,'subtotal',cAC);
+  h+='<tr><th colspan="'+cols+'" style="background:#E2EFDA;font-size:9pt">Activos No Corrientes</th></tr>';
+  if(esfVal('ppe')||cv('ppe'))h+=r('Propiedad, planta y equipo',esfVal('ppe'),'',cv('ppe'));
+  if(esfVal('depreciacion')||cv('depreciacion'))h+=r('(-) Depreciaci\u00f3n acumulada',esfVal('depreciacion'),'',cv('depreciacion'));
+  if(esfVal('intangibles')||cv('intangibles'))h+=r('Activos intangibles',esfVal('intangibles'),'',cv('intangibles'));
+  if(esfVal('amortizacion')||cv('amortizacion'))h+=r('(-) Amortizaci\u00f3n acumulada',esfVal('amortizacion'),'',cv('amortizacion'));
+  if(esfVal('inv_lp')||cv('inv_lp'))h+=r('Inversiones a largo plazo',esfVal('inv_lp'),'',cv('inv_lp'));
+  if(esfVal('otros_act_nc')||cv('otros_act_nc'))h+=r('Otros activos no corrientes',esfVal('otros_act_nc'),'',cv('otros_act_nc'));
+  if(esfVal('valorizaciones')||cv('valorizaciones'))h+=r('Valorizaciones',esfVal('valorizaciones'),'',cv('valorizaciones'));
+  h+=r('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr,'subtotal',cANC);
+  h+=r('TOTAL ACTIVOS',totalActivos,'total',cAC+cANC);
+  h+='<tr><th colspan="'+cols+'">PASIVOS</th></tr>';
+  h+='<tr><th colspan="'+cols+'" style="background:#E2EFDA;font-size:9pt">Pasivos Corrientes</th></tr>';
+  if(esfVal('oblig_fin_cp')||cv('oblig_fin_cp'))h+=r('Obligaciones financieras CP',esfVal('oblig_fin_cp'),'',cv('oblig_fin_cp'));
+  if(esfVal('proveedores')||cv('proveedores'))h+=r('Proveedores',esfVal('proveedores'),'',cv('proveedores'));
+  if(esfVal('cxp')||cv('cxp'))h+=r('Cuentas por pagar',esfVal('cxp'),'',cv('cxp'));
+  if(esfVal('impuestos')||cv('impuestos'))h+=r('Impuestos por pagar',esfVal('impuestos'),'',cv('impuestos'));
+  if(esfVal('laborales')||cv('laborales'))h+=r('Obligaciones laborales',esfVal('laborales'),'',cv('laborales'));
+  if(esfVal('provisiones')||cv('provisiones'))h+=r('Pasivos estimados y provisiones',esfVal('provisiones'),'',cv('provisiones'));
+  h+=r('TOTAL PASIVOS CORRIENTES',totalPasCorr,'subtotal',cPC);
+  if(totalPasNoCorr||cPNC){
+    h+='<tr><th colspan="'+cols+'" style="background:#E2EFDA;font-size:9pt">Pasivos No Corrientes</th></tr>';
+    if(esfVal('oblig_fin_lp')||cv('oblig_fin_lp'))h+=r('Obligaciones financieras LP',esfVal('oblig_fin_lp'),'',cv('oblig_fin_lp'));
+    if(esfVal('diferidos_pas')||cv('diferidos_pas'))h+=r('Diferidos pasivo',esfVal('diferidos_pas'),'',cv('diferidos_pas'));
+    h+=r('TOTAL PASIVOS NO CORRIENTES',totalPasNoCorr,'subtotal',cPNC);
+  }
+  h+=r('TOTAL PASIVOS',totalPasivos,'total',cPC+cPNC);
+  h+='<tr><th colspan="'+cols+'">PATRIMONIO</th></tr>';
+  if(esfVal('capital')||cv('capital'))h+=r('Capital social',esfVal('capital'),'',cv('capital'));
+  if(esfVal('reservas')||cv('reservas'))h+=r('Reservas',esfVal('reservas'),'',cv('reservas'));
+  if(esfVal('resultado_ej')||cv('resultado_ej'))h+=r('Resultado del ejercicio',esfVal('resultado_ej'),'',cv('resultado_ej'));
+  if(esfVal('resultados_ant')||cv('resultados_ant'))h+=r('Resultados de ejercicios anteriores',esfVal('resultados_ant'),'',cv('resultados_ant'));
+  if(esfVal('resultado_periodo')||cv('resultado_periodo'))h+=r('Resultado del per\u00edodo',esfVal('resultado_periodo'),'',cv('resultado_periodo'));
+  h+=r('TOTAL PATRIMONIO',totalPatrimonio,'total',cPat);
+  h+=r('TOTAL PASIVOS + PATRIMONIO',totalPasivos+totalPatrimonio,'total',cPC+cPNC+cPat);
+  h+='</table>';
+  h+='<p class="footer">Las notas son parte integral de los estados financieros</p>';
   return h;
 }
 
 function buildEriWordHtml(){
   const year=document.getElementById('cfgYear').value;
+  const yearAnt=String(Number(year)-1);
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
   const nit=document.getElementById('cfgNit').value||'';
   const moneda=document.getElementById('cfgMoneda').value;
   const periodo=getPeriodoERI();
+  const comp=hasComparative&&Object.keys(compEriData).length>0;
+  function cV(k){return compEriData[k]||0}
 
   const ingOp=eriData.ing_operacionales||0;
   const devVtas=eriData.dev_ventas||0;
@@ -2573,25 +2592,40 @@ function buildEriWordHtml(){
   const utilAntesImp=utilOp+otrosIng-otrosGtos;
   const impRenta=eriData.imp_renta||0;
   const utilNeta=utilAntesImp-impRenta;
+  var cIngNetos=0,cUtilBruta=0,cCostoVtas=0,cUtilOp=0,cOtrosIng=0,cUtilAntesImp=0,cUtilNeta=0;
+  if(comp){
+    cIngNetos=cV('ing_operacionales')-cV('dev_ventas');
+    cCostoVtas=cV('costo_ventas')+cV('costo_prod');
+    cUtilBruta=cIngNetos-cCostoVtas;
+    cUtilOp=cUtilBruta-cV('gtos_admin')-cV('gtos_ventas');
+    cOtrosIng=cV('ing_no_operacionales')+cV('otros_ing');
+    cUtilAntesImp=cUtilOp+cOtrosIng-cV('gtos_no_op');
+    cUtilNeta=cUtilAntesImp-cV('imp_renta');
+  }
 
-  function r(label,val,cls){return `<tr${cls?' class="'+cls+'"':''}><td>${label}</td><td class="num">${fN(val)}</td></tr>`}
-  let h=`<p style="text-align:center;font-weight:bold">${empresa}<br>NIT: ${nit}<br>ESTADO DE RESULTADOS INTEGRAL<br>${periodo}<br><span style="font-size:9pt;color:#888">(Cifras en ${moneda==='COP'?'pesos colombianos':'dólares'})</span></p>`;
-  h+=`<table>`;
-  h+=r('Ingresos de actividades ordinarias',ingOp);
-  if(devVtas)h+=r('(-) Devoluciones, rebajas y descuentos',devVtas);
-  h+=r('INGRESOS NETOS',ingNetos,'subtotal');
-  if(costoVtas)h+=r('(-) Costo de ventas',costoVtas);
-  h+=r('UTILIDAD BRUTA',utilBruta,'subtotal');
-  h+=r('(-) Gastos de administración',gtosAdmin);
-  if(gtosVentas)h+=r('(-) Gastos de ventas',gtosVentas);
-  h+=r('UTILIDAD OPERACIONAL',utilOp,'total');
-  if(otrosIng)h+=r('(+) Otros ingresos',otrosIng);
-  if(otrosGtos)h+=r('(-) Otros gastos',otrosGtos);
-  h+=r('UTILIDAD ANTES DE IMPUESTOS',utilAntesImp,'subtotal');
-  if(impRenta)h+=r('(-) Impuesto de renta',impRenta);
-  h+=r('UTILIDAD NETA DEL EJERCICIO',utilNeta,'total');
-  h+=`</table>`;
-  h+=`<p class="footer">Las notas son parte integral de los estados financieros</p>`;
+  function r(label,val,cls,cval){
+    var s='<tr'+(cls?' class="'+cls+'"':'')+'><td>'+label+'</td><td class="num">'+fN(val)+'</td>';
+    if(comp){var d=val-(cval||0);s+='<td class="num">'+fN(cval||0)+'</td><td class="num" style="font-size:8pt;color:'+(d>=0?'#059669':'#DC2626')+'">'+fN(d)+'</td>'}
+    return s+'</tr>';
+  }
+  let h='<p style="text-align:center;font-weight:bold">'+empresa+'<br>NIT: '+nit+'<br>ESTADO DE RESULTADOS INTEGRAL'+(comp?' COMPARATIVO':'')+'<br>'+periodo+'<br><span style="font-size:9pt;color:#888">(Cifras en '+(moneda==='COP'?'pesos colombianos':'d\u00f3lares')+')</span></p>';
+  h+='<table>';
+  if(comp)h+='<tr><th></th><th class="num">'+year+'</th><th class="num">'+yearAnt+'</th><th class="num">Var.</th></tr>';
+  h+=r('Ingresos de actividades ordinarias',ingOp,'',cV('ing_operacionales'));
+  if(devVtas||cV('dev_ventas'))h+=r('(-) Devoluciones, rebajas y descuentos',devVtas,'',cV('dev_ventas'));
+  h+=r('INGRESOS NETOS',ingNetos,'subtotal',cIngNetos);
+  if(costoVtas||cCostoVtas)h+=r('(-) Costo de ventas',costoVtas,'',cCostoVtas);
+  h+=r('UTILIDAD BRUTA',utilBruta,'subtotal',cUtilBruta);
+  h+=r('(-) Gastos de administraci\u00f3n',gtosAdmin,'',cV('gtos_admin'));
+  if(gtosVentas||cV('gtos_ventas'))h+=r('(-) Gastos de ventas',gtosVentas,'',cV('gtos_ventas'));
+  h+=r('UTILIDAD OPERACIONAL',utilOp,'total',cUtilOp);
+  if(otrosIng||cOtrosIng)h+=r('(+) Otros ingresos',otrosIng,'',cOtrosIng);
+  if(otrosGtos||cV('gtos_no_op'))h+=r('(-) Otros gastos',otrosGtos,'',cV('gtos_no_op'));
+  h+=r('UTILIDAD ANTES DE IMPUESTOS',utilAntesImp,'subtotal',cUtilAntesImp);
+  if(impRenta||cV('imp_renta'))h+=r('(-) Impuesto de renta',impRenta,'',cV('imp_renta'));
+  h+=r('UTILIDAD NETA DEL EJERCICIO',utilNeta,'total',cUtilNeta);
+  h+='</table>';
+  h+='<p class="footer">Las notas son parte integral de los estados financieros</p>';
   return h;
 }
 
@@ -3256,18 +3290,76 @@ function buildNotasHtml(){
 
   function acctsByGrupo(g){return classifiedAccounts.filter(a=>a.grupo===g)}
   function acctsByGrupos(gs){return classifiedAccounts.filter(a=>gs.includes(a.grupo))}
+  function compAcctsByGrupo(g){return compClassified.filter(a=>a.grupo===g)}
   function acctTable(accts){
-    if(!accts.length) return '<p style="color:#999;font-style:italic">No se encontraron cuentas en esta categoría.</p>';
-    let total=0;
-    let h='<table style="width:100%;border-collapse:collapse;font-size:11px;margin:8px 0">';
-    h+='<thead><tr style="background:#D6E4F0"><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;color:#1B3A5C;font-weight:700">Código</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:left;color:#1B3A5C;font-weight:700">Nombre de la cuenta</th><th style="border:1px solid #ccc;padding:6px 10px;text-align:right;color:#1B3A5C;font-weight:700">Valor ($)</th></tr></thead><tbody>';
+    if(!accts.length) return '<p style="color:#999;font-style:italic">No se encontraron cuentas en esta categor\u00eda.</p>';
+    const comp=hasComparative&&compClassified.length>0;
+    const compAccts=comp?compClassified:[];
+    const bdr='border:1px solid #e2e8f0;';
+    const bdrH='border:1px solid #ccc;';
+    const mono="font-family:'JetBrains Mono',monospace;";
+    const thStyle=bdrH+'padding:6px 10px;text-align:left;color:#1B3A5C;font-weight:700';
+    const thR=bdrH+'padding:6px 10px;text-align:right;color:#1B3A5C;font-weight:700';
+
+    // Group by 4-digit subcuenta
+    const groups={};
     accts.forEach(a=>{
-      const v=getDisplayValue(a);
-      total+=v;
-      h+=`<tr><td style="border:1px solid #e2e8f0;padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:10px">${a.code}</td><td style="border:1px solid #e2e8f0;padding:4px 10px">${a.name}</td><td style="border:1px solid #e2e8f0;padding:4px 10px;text-align:right;font-family:'JetBrains Mono',monospace;${v<0?'color:var(--red)':''}">${fN(v)}</td></tr>`;
+      const sub=a.code.substring(0,4);
+      if(!groups[sub])groups[sub]={code:sub,name:'',accts:[],total:0};
+      groups[sub].accts.push(a);
+      groups[sub].total+=getDisplayValue(a);
+      if(!groups[sub].name&&a.name)groups[sub].name=a.name;
     });
-    h+=`<tr style="background:#f0f2f5;font-weight:700"><td style="border:1px solid #ccc;padding:6px 10px" colspan="2">Total</td><td style="border:1px solid #ccc;padding:6px 10px;text-align:right;font-family:'JetBrains Mono',monospace">${fN(total)}</td></tr>`;
-    h+='</tbody></table>';
+    // Comp groups
+    const compGroups={};
+    if(comp){
+      compAccts.forEach(a=>{
+        const sub=a.code.substring(0,4);
+        if(!compGroups[sub])compGroups[sub]=0;
+        compGroups[sub]+=getDisplayValue(a);
+      });
+    }
+
+    let grandTotal=0,grandTotalComp=0;
+    let h='<table style="width:100%;border-collapse:collapse;font-size:11px;margin:8px 0">';
+    h+='<thead><tr style="background:#D6E4F0"><th style="'+thStyle+'">C\u00f3digo</th><th style="'+thStyle+'">Nombre de la cuenta</th><th style="'+thR+'">'+year+'</th>';
+    if(comp)h+='<th style="'+thR+'">'+yearAnt+'</th><th style="'+thR+'">Var.</th>';
+    h+='</tr></thead><tbody>';
+
+    Object.keys(groups).sort().forEach(sub=>{
+      const g=groups[sub];
+      const cTotal=comp?(compGroups[sub]||0):0;
+      grandTotal+=g.total;
+      grandTotalComp+=cTotal;
+      const diff=g.total-cTotal;
+
+      if(g.accts.length===1){
+        // Single account — show directly
+        const a=g.accts[0];const v=getDisplayValue(a);
+        h+='<tr><td style="'+bdr+'padding:4px 10px;'+mono+'font-size:10px">'+a.code+'</td><td style="'+bdr+'padding:4px 10px">'+a.name+'</td><td style="'+bdr+'padding:4px 10px;text-align:right;'+mono+(v<0?'color:#DC2626':'')+'">'+fN(v)+'</td>';
+        if(comp)h+='<td style="'+bdr+'padding:4px 10px;text-align:right;'+mono+'color:#6B7280">'+fN(cTotal)+'</td><td style="'+bdr+'padding:4px 10px;text-align:right;font-size:10px;color:'+(diff>=0?'#059669':'#DC2626')+'">'+fN(diff)+'</td>';
+        h+='</tr>';
+      } else {
+        // Subcuenta header (4 digits)
+        h+='<tr style="background:#f8fafc"><td style="'+bdr+'padding:5px 10px;'+mono+'font-weight:700;font-size:10px">'+sub+'</td><td style="'+bdr+'padding:5px 10px;font-weight:600" colspan="1">'+(g.name||'Subcuenta '+sub)+'</td><td style="'+bdr+'padding:5px 10px;text-align:right;'+mono+'font-weight:700">'+fN(g.total)+'</td>';
+        if(comp)h+='<td style="'+bdr+'padding:5px 10px;text-align:right;'+mono+'color:#6B7280;font-weight:600">'+fN(cTotal)+'</td><td style="'+bdr+'padding:5px 10px;text-align:right;font-size:10px;color:'+(diff>=0?'#059669':'#DC2626')+'">'+fN(diff)+'</td>';
+        h+='</tr>';
+        // Detail rows
+        g.accts.forEach(a=>{
+          const v=getDisplayValue(a);
+          const ca=comp?compAccts.find(c=>c.code===a.code):null;
+          const cv=ca?getDisplayValue(ca):0;
+          const dv=v-cv;
+          h+='<tr><td style="'+bdr+'padding:3px 10px 3px 24px;'+mono+'font-size:9px;color:#9CA3AF">'+a.code+'</td><td style="'+bdr+'padding:3px 10px;font-size:10px;color:#6B7280">'+a.name+'</td><td style="'+bdr+'padding:3px 10px;text-align:right;'+mono+'font-size:10px;color:#6B7280;'+(v<0?'color:#DC2626':'')+'">'+fN(v)+'</td>';
+          if(comp)h+='<td style="'+bdr+'padding:3px 10px;text-align:right;'+mono+'font-size:10px;color:#9CA3AF">'+fN(cv)+'</td><td style="'+bdr+'padding:3px 10px;text-align:right;font-size:9px;color:'+(dv>=0?'#059669':'#DC2626')+'">'+fN(dv)+'</td>';
+          h+='</tr>';
+        });
+      }
+    });
+
+    h+='<tr style="background:#f0f2f5;font-weight:700"><td style="'+bdrH+'padding:6px 10px" colspan="2">Total</td><td style="'+bdrH+'padding:6px 10px;text-align:right;'+mono+'">'+fN(grandTotal)+'</td>';
+    if(comp)h+='<td style="'+bdrH+'padding:6px 10px;text-align:right;'+mono+'color:#6B7280">'+fN(grandTotalComp)+'</td><td style="'+bdrH+'padding:6px 10px;text-align:right;'+mono+'color:'+(grandTotal-grandTotalComp>=0?'#059669':'#DC2626')+'">'+fN(grandTotal-grandTotalComp)+'</td>';
+    h+='</tr></tbody></table>';
     return h;
   }
 
