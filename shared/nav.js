@@ -296,8 +296,8 @@
   '    <a href="ia.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:linear-gradient(135deg,#059669,#10B981);color:#fff;border-radius:12px;font-size:.9rem;font-weight:800;text-decoration:none;transition:all .2s;box-shadow:0 3px 12px rgba(5,150,105,.35);letter-spacing:.02em;animation:iaGlow 3s ease-in-out infinite"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 8.89 3.89"/><path d="m17 3-2 2 2 2"/><path d="m22 6-2 2 2 2"/></svg>IA Contable</a>'+
        /* PRO Login */
   '    <div id="proNavLogin" style="display:flex;align-items:center;gap:6px">'+
-  '      <input type="email" id="proNavKey" placeholder="Email PRO" style="padding:5px 10px;border:1px solid var(--gray-200);border-radius:8px;font-size:.78rem;font-family:inherit;width:170px;text-align:center">'+
-  '      <button onclick="activarProNav()" style="padding:5px 10px;background:var(--green-600);color:#fff;border:none;border-radius:8px;font-size:.75rem;font-weight:600;cursor:pointer">Activar</button>'+
+  '      <input type="email" id="proNavKey" placeholder="Email PRO" style="padding:5px 10px;border:1.5px solid #cbd5e1;border-radius:8px;font-size:.78rem;font-family:inherit;width:170px;text-align:center;background:#f8fafc">'+
+  '      <button onclick="activarProNav()" style="padding:5px 10px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer">Activar</button>'+
   '    </div>'+
   '    <div id="proNavActive" style="display:none;align-items:center;gap:8px">'+
   '      <span style="background:var(--green-100);color:var(--green-700);padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:700">PRO</span>'+
