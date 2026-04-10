@@ -2712,9 +2712,9 @@ function updateProUI(){
   const badge=document.getElementById('proBadge');
   if(badge) badge.innerHTML=proUnlocked?'<span style="background:#059669;color:#fff;padding:4px 12px;border-radius:20px;font-size:.75rem;font-weight:700">PRO activo</span>':'';
   const status=document.getElementById('proStatus');
-  if(status) status.textContent=proUnlocked?'Todas las funciones desbloqueadas':'Versión gratuita — Algunas funciones requieren PRO';
-  const input=document.getElementById('proKeyInput');
-  if(input&&proUnlocked) input.closest('.card')?.querySelector('[onclick]')?.setAttribute('disabled','true');
+  if(status) status.textContent=proUnlocked?'Todas las funciones desbloqueadas':'Versi\u00f3n gratuita';
+  const activation=document.getElementById('proActivation');
+  if(activation) activation.style.display=proUnlocked?'none':'flex';
 }
 
 async function activarPro(){
