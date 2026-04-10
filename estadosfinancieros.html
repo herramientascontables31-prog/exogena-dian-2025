@@ -2764,12 +2764,16 @@ ${firmaBlock}
 /* ═══ PDF EXPORT (legacy) ═══ */
 function exportPdfEEFF(){
   const year=document.getElementById('cfgYear').value;
+  const yearAnt=String(Number(year)-1);
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
   const nit=document.getElementById('cfgNit').value||'000.000.000-0';
   const moneda=document.getElementById('cfgMoneda').value;
-  const monedaLabel=moneda==='COP'?'pesos colombianos':'dólares estadounidenses';
+  const monedaLabel=moneda==='COP'?'pesos colombianos':'d\u00f3lares estadounidenses';
+  const comp=hasComparative&&Object.keys(compEsfData).length>0;
+  function cv(k){return compEsfData[k]||0}
+  function ceri(k){return compEriData[k]||0}
+  const cols=comp?4:2;
 
-  // Compute totals
   const totalActCorr=esfVal('efectivo')+esfVal('inv_cp')+esfVal('cxc')+esfVal('deterioro_cartera')+esfVal('inventarios')+esfVal('diferidos_act')+esfVal('otros_act');
   const totalActNoCorr=esfVal('ppe')+esfVal('depreciacion')+esfVal('intangibles')+esfVal('amortizacion')+esfVal('inv_lp')+esfVal('otros_act_nc')+esfVal('valorizaciones');
   const totalActivos=totalActCorr+totalActNoCorr;
@@ -2778,149 +2782,124 @@ function exportPdfEEFF(){
   const totalPasivos=totalPasCorr+totalPasNoCorr;
   const totalPatrimonio=esfVal('capital')+esfVal('superavit_cap')+esfVal('reservas')+esfVal('revalorizacion')+esfVal('resultado_ej')+esfVal('resultados_ant')+esfVal('superavit_val')+esfVal('otros_pat')+esfVal('resultado_periodo');
   const totalPasPatr=totalPasivos+totalPatrimonio;
+  var cAC=0,cANC=0,cPC=0,cPNC=0,cPat=0;
+  if(comp){cAC=cv('efectivo')+cv('inv_cp')+cv('cxc')+cv('deterioro_cartera')+cv('inventarios')+cv('diferidos_act')+cv('otros_act');cANC=cv('ppe')+cv('depreciacion')+cv('intangibles')+cv('amortizacion')+cv('inv_lp')+cv('otros_act_nc')+cv('valorizaciones');cPC=cv('oblig_fin_cp')+cv('proveedores')+cv('cxp')+cv('impuestos')+cv('laborales')+cv('provisiones')+cv('otros_pas_c');cPNC=cv('oblig_fin_lp')+cv('diferidos_pas')+cv('otros_pas');cPat=cv('capital')+cv('superavit_cap')+cv('reservas')+cv('revalorizacion')+cv('resultado_ej')+cv('resultados_ant')+cv('superavit_val')+cv('otros_pat')+cv('resultado_periodo')}
 
-  // ERI
-  const ingOp=eriData.ing_operacionales||0;
-  const devVtas=eriData.dev_ventas||0;
-  const ingNetos=ingOp-devVtas;
-  const costoVtas=(eriData.costo_ventas||0)+(eriData.costo_prod||0);
-  const utilBruta=ingNetos-costoVtas;
-  const gtosAdmin=eriData.gtos_admin||0;
-  const gtosVentas=eriData.gtos_ventas||0;
-  const utilOp=utilBruta-gtosAdmin-gtosVentas;
-  const otrosIng=(eriData.ing_no_operacionales||0)+(eriData.otros_ing||0);
-  const otrosGtos=eriData.gtos_no_op||0;
-  const utilAntesImp=utilOp+otrosIng-otrosGtos;
-  const impRenta=eriData.imp_renta||0;
-  const utilNeta=utilAntesImp-impRenta;
+  const ingOp=eriData.ing_operacionales||0,devVtas=eriData.dev_ventas||0,ingNetos=ingOp-devVtas;
+  const costoVtas=(eriData.costo_ventas||0)+(eriData.costo_prod||0),utilBruta=ingNetos-costoVtas;
+  const gtosAdmin=eriData.gtos_admin||0,gtosVentas=eriData.gtos_ventas||0,utilOp=utilBruta-gtosAdmin-gtosVentas;
+  const otrosIng=(eriData.ing_no_operacionales||0)+(eriData.otros_ing||0),otrosGtos=eriData.gtos_no_op||0;
+  const utilAntesImp=utilOp+otrosIng-otrosGtos,impRenta=eriData.imp_renta||0,utilNeta=utilAntesImp-impRenta;
+  var cIngNetos=0,cUtilBruta=0,cCostoVtas=0,cUtilOp=0,cOtrosIng=0,cUtilAntesImp=0,cUtilNeta=0;
+  if(comp){cIngNetos=ceri('ing_operacionales')-ceri('dev_ventas');cCostoVtas=ceri('costo_ventas')+ceri('costo_prod');cUtilBruta=cIngNetos-cCostoVtas;cUtilOp=cUtilBruta-ceri('gtos_admin')-ceri('gtos_ventas');cOtrosIng=ceri('ing_no_operacionales')+ceri('otros_ing');cUtilAntesImp=cUtilOp+cOtrosIng-ceri('gtos_no_op');cUtilNeta=cUtilAntesImp-ceri('imp_renta')}
 
-  function pdfRow(label,val,indent,bold,isTotal){
-    const pad=indent?'padding-left:'+(indent*24)+'px':'';
-    const fw=bold?'font-weight:700':'';
-    const bb=isTotal?'border-top:2px solid #000;border-bottom:1px solid #000':'border-bottom:1px solid #eee';
-    const bg=isTotal?'background:#f0f2f5':'';
-    return `<tr style="${bg}"><td style="${pad};${fw};${bb};padding:4px 8px">${label}</td><td style="text-align:right;${fw};${bb};padding:4px 8px;font-family:monospace;width:160px">${fN(val)}</td></tr>`;
+  function pdfRow(label,val,indent,bold,isTotal,cval){
+    var pad=indent?'padding-left:'+(indent*24)+'px':'';
+    var fw=bold?'font-weight:700':'';
+    var bb=isTotal?'border-top:2px solid #000;border-bottom:1px solid #000':'border-bottom:1px solid #eee';
+    var bg=isTotal?'background:#f0f2f5':'';
+    var s='<tr style="'+bg+'"><td style="'+pad+';'+fw+';'+bb+';padding:4px 8px">'+label+'</td><td style="text-align:right;'+fw+';'+bb+';padding:4px 8px;font-family:monospace;width:130px">'+fN(val)+'</td>';
+    if(comp){var d=val-(cval||0);s+='<td style="text-align:right;'+fw+';'+bb+';padding:4px 8px;font-family:monospace;width:130px;color:#555">'+fN(cval||0)+'</td><td style="text-align:right;'+bb+';padding:4px 8px;font-family:monospace;width:100px;font-size:9px;color:'+(d>=0?'#059669':'#DC2626')+'">'+fN(d)+'</td>'}
+    return s+'</tr>';
   }
+  function secRow(label){return '<tr><td colspan="'+cols+'" style="background:#d4e6f1;font-weight:700;text-transform:uppercase;color:#1a3c6e;padding:6px 8px">'+label+'</td></tr>'}
+  function subSecRow(label){return '<tr><td colspan="'+cols+'" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">'+label+'</td></tr>'}
+  function spaceRow(){return '<tr><td colspan="'+cols+'" style="height:8px"></td></tr>'}
+  function hdrRow(){return comp?'<tr style="font-weight:700;font-size:9px;color:#555;border-bottom:2px solid #ccc"><td></td><td style="text-align:right;padding:4px 8px">'+year+'</td><td style="text-align:right;padding:4px 8px">'+yearAnt+'</td><td style="text-align:right;padding:4px 8px">Var.</td></tr>':''}
 
   const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><title>EEFF - ${empresa}</title>
-  <style>
-    @page{margin:2cm;size:letter}
-    body{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#000;line-height:1.5;margin:0;padding:20px}
-    .page{page-break-after:always}
-    .header{text-align:center;margin-bottom:20px}
-    .header h2{font-size:14px;margin:4px 0;text-transform:uppercase}
-    .header h3{font-size:13px;margin:4px 0;text-transform:uppercase}
-    .header p{font-size:10px;color:#555;margin:2px 0}
-    table{width:100%;border-collapse:collapse;font-size:10.5px}
-    td{padding:3px 8px}
-    .footer{text-align:center;font-size:9px;color:#888;margin-top:24px;font-style:italic;padding-top:12px;border-top:1px solid #ddd}
-    .signatures{display:flex;justify-content:space-between;margin-top:60px;padding-top:20px}
-    .sig{text-align:center;width:200px}
-    .sig-line{border-top:1px solid #000;padding-top:4px;font-size:9px}
-  </style></head><body>
-  <div class="page">
-    <div class="header">
-      <h2>${empresa}</h2>
-      <p>NIT: ${nit}</p>
-      <h3>Estado de Situación Financiera</h3>
-      <p>Al 31 de diciembre de ${year}</p>
-      <p>(Cifras expresadas en ${monedaLabel})</p>
-    </div>
-    <table>
-      <tr><td colspan="2" style="background:#d4e6f1;font-weight:700;text-transform:uppercase;color:#1a3c6e;padding:6px 8px">ACTIVOS</td></tr>
-      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Activos Corrientes</td></tr>
-      ${pdfRow('Efectivo y equivalentes de efectivo',esfVal('efectivo'),1)}
-      ${pdfRow('Inversiones a corto plazo',esfVal('inv_cp'),1)}
-      ${pdfRow('Deudores comerciales y otras CxC',esfVal('cxc'),1)}
-      ${pdfRow('(-) Deterioro de cartera',esfVal('deterioro_cartera'),1)}
-      ${pdfRow('Inventarios',esfVal('inventarios'),1)}
-      ${pdfRow('Diferidos / Otros activos corrientes',esfVal('diferidos_act'),1)}
-      ${pdfRow('Otros activos corrientes',esfVal('otros_act'),1)}
-      ${pdfRow('TOTAL ACTIVOS CORRIENTES',totalActCorr,0,true,true)}
-      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Activos No Corrientes</td></tr>
-      ${pdfRow('Propiedad, planta y equipo',esfVal('ppe'),1)}
-      ${pdfRow('(-) Depreciación acumulada',esfVal('depreciacion'),1)}
-      ${pdfRow('Activos intangibles',esfVal('intangibles'),1)}
-      ${pdfRow('(-) Amortización acumulada',esfVal('amortizacion'),1)}
-      ${pdfRow('Inversiones a largo plazo',esfVal('inv_lp'),1)}
-      ${pdfRow('Otros activos no corrientes',esfVal('otros_act_nc'),1)}
-      ${pdfRow('Valorizaciones',esfVal('valorizaciones'),1)}
-      ${pdfRow('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr,0,true,true)}
-      ${pdfRow('TOTAL ACTIVOS',totalActivos,0,true,true)}
-      <tr><td colspan="2" style="height:8px"></td></tr>
-      <tr><td colspan="2" style="background:#d4e6f1;font-weight:700;text-transform:uppercase;color:#1a3c6e;padding:6px 8px">PASIVOS</td></tr>
-      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Pasivos Corrientes</td></tr>
-      ${pdfRow('Obligaciones financieras CP',esfVal('oblig_fin_cp'),1)}
-      ${pdfRow('Proveedores',esfVal('proveedores'),1)}
-      ${pdfRow('Cuentas por pagar',esfVal('cxp'),1)}
-      ${pdfRow('Impuestos por pagar',esfVal('impuestos'),1)}
-      ${pdfRow('Obligaciones laborales',esfVal('laborales'),1)}
-      ${pdfRow('Pasivos estimados / Provisiones',esfVal('provisiones'),1)}
-      ${pdfRow('Otros pasivos corrientes',esfVal('otros_pas_c'),1)}
-      ${pdfRow('TOTAL PASIVOS CORRIENTES',totalPasCorr,0,true,true)}
-      <tr><td colspan="2" style="background:#eef3f8;font-weight:700;color:#2E75B6;padding:4px 8px">Pasivos No Corrientes</td></tr>
-      ${pdfRow('Obligaciones financieras LP',esfVal('oblig_fin_lp'),1)}
-      ${pdfRow('Diferidos pasivo',esfVal('diferidos_pas'),1)}
-      ${pdfRow('Otros pasivos no corrientes',esfVal('otros_pas'),1)}
-      ${pdfRow('TOTAL PASIVOS NO CORRIENTES',totalPasNoCorr,0,true,true)}
-      ${pdfRow('TOTAL PASIVOS',totalPasivos,0,true,true)}
-      <tr><td colspan="2" style="height:8px"></td></tr>
-      <tr><td colspan="2" style="background:#d4e6f1;font-weight:700;text-transform:uppercase;color:#1a3c6e;padding:6px 8px">PATRIMONIO</td></tr>
-      ${pdfRow('Capital social',esfVal('capital'),1)}
-      ${pdfRow('Superávit de capital',esfVal('superavit_cap'),1)}
-      ${pdfRow('Reservas',esfVal('reservas'),1)}
-      ${pdfRow('Revalorización del patrimonio',esfVal('revalorizacion'),1)}
-      ${pdfRow('Resultado del ejercicio',esfVal('resultado_ej'),1)}
-      ${pdfRow('Resultados de ejercicios anteriores',esfVal('resultados_ant'),1)}
-      ${pdfRow('Superávit por valorizaciones',esfVal('superavit_val'),1)}
-      ${pdfRow('Otros componentes patrimonio',esfVal('otros_pat'),1)}
-      ${pdfRow('TOTAL PATRIMONIO',totalPatrimonio,0,true,true)}
-      <tr><td colspan="2" style="height:8px"></td></tr>
-      ${pdfRow('TOTAL PASIVOS + PATRIMONIO',totalPasPatr,0,true,true)}
-    </table>
-    <div class="signatures">
-      <div class="sig"><div class="sig-line">Representante Legal</div></div>
-      <div class="sig"><div class="sig-line">Contador Público<br>T.P. No. ___________</div></div>
-      <div class="sig"><div class="sig-line">Revisor Fiscal<br>T.P. No. ___________</div></div>
-    </div>
-    <div class="footer">Las notas son parte integral de los estados financieros</div>
-  </div>
+  w.document.write('<!DOCTYPE html><html><head><title>EEFF - '+empresa+'</title>'
+  +'<style>'
+  +'@page{margin:2cm;size:letter}'
+  +'body{font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#000;line-height:1.5;margin:0;padding:20px}'
+  +'.page{page-break-after:always}'
+  +'.header{text-align:center;margin-bottom:20px}'
+  +'.header h2{font-size:14px;margin:4px 0;text-transform:uppercase}'
+  +'.header h3{font-size:13px;margin:4px 0;text-transform:uppercase}'
+  +'.header p{font-size:10px;color:#555;margin:2px 0}'
+  +'table{width:100%;border-collapse:collapse;font-size:10.5px}'
+  +'td{padding:3px 8px}'
+  +'.footer{text-align:center;font-size:9px;color:#888;margin-top:24px;font-style:italic;padding-top:12px;border-top:1px solid #ddd}'
+  +'.signatures{display:flex;justify-content:space-between;margin-top:60px;padding-top:20px}'
+  +'.sig{text-align:center;width:200px}'
+  +'.sig-line{border-top:1px solid #000;padding-top:4px;font-size:9px}'
+  +'</style></head><body>'
+  +'<div class="page">'
+  +'<div class="header"><h2>'+empresa+'</h2><p>NIT: '+nit+'</p><h3>Estado de Situaci\u00f3n Financiera'+(comp?' Comparativo':'')+'</h3><p>Al 31 de diciembre de '+year+(comp?' (con comparativo '+yearAnt+')':'')+'</p><p>(Cifras expresadas en '+monedaLabel+')</p></div>'
+  +'<table>'+hdrRow()
+  +secRow('ACTIVOS')+subSecRow('Activos Corrientes')
+  +pdfRow('Efectivo y equivalentes de efectivo',esfVal('efectivo'),1,0,0,cv('efectivo'))
+  +pdfRow('Inversiones a corto plazo',esfVal('inv_cp'),1,0,0,cv('inv_cp'))
+  +pdfRow('Deudores comerciales y otras CxC',esfVal('cxc'),1,0,0,cv('cxc'))
+  +pdfRow('(-) Deterioro de cartera',esfVal('deterioro_cartera'),1,0,0,cv('deterioro_cartera'))
+  +pdfRow('Inventarios',esfVal('inventarios'),1,0,0,cv('inventarios'))
+  +pdfRow('Diferidos / Otros activos corrientes',esfVal('diferidos_act'),1,0,0,cv('diferidos_act'))
+  +pdfRow('Otros activos corrientes',esfVal('otros_act'),1,0,0,cv('otros_act'))
+  +pdfRow('TOTAL ACTIVOS CORRIENTES',totalActCorr,0,true,true,cAC)
+  +subSecRow('Activos No Corrientes')
+  +pdfRow('Propiedad, planta y equipo',esfVal('ppe'),1,0,0,cv('ppe'))
+  +pdfRow('(-) Depreciaci\u00f3n acumulada',esfVal('depreciacion'),1,0,0,cv('depreciacion'))
+  +pdfRow('Activos intangibles',esfVal('intangibles'),1,0,0,cv('intangibles'))
+  +pdfRow('(-) Amortizaci\u00f3n acumulada',esfVal('amortizacion'),1,0,0,cv('amortizacion'))
+  +pdfRow('Inversiones a largo plazo',esfVal('inv_lp'),1,0,0,cv('inv_lp'))
+  +pdfRow('Otros activos no corrientes',esfVal('otros_act_nc'),1,0,0,cv('otros_act_nc'))
+  +pdfRow('Valorizaciones',esfVal('valorizaciones'),1,0,0,cv('valorizaciones'))
+  +pdfRow('TOTAL ACTIVOS NO CORRIENTES',totalActNoCorr,0,true,true,cANC)
+  +pdfRow('TOTAL ACTIVOS',totalActivos,0,true,true,cAC+cANC)
+  +spaceRow()+secRow('PASIVOS')+subSecRow('Pasivos Corrientes')
+  +pdfRow('Obligaciones financieras CP',esfVal('oblig_fin_cp'),1,0,0,cv('oblig_fin_cp'))
+  +pdfRow('Proveedores',esfVal('proveedores'),1,0,0,cv('proveedores'))
+  +pdfRow('Cuentas por pagar',esfVal('cxp'),1,0,0,cv('cxp'))
+  +pdfRow('Impuestos por pagar',esfVal('impuestos'),1,0,0,cv('impuestos'))
+  +pdfRow('Obligaciones laborales',esfVal('laborales'),1,0,0,cv('laborales'))
+  +pdfRow('Pasivos estimados / Provisiones',esfVal('provisiones'),1,0,0,cv('provisiones'))
+  +pdfRow('Otros pasivos corrientes',esfVal('otros_pas_c'),1,0,0,cv('otros_pas_c'))
+  +pdfRow('TOTAL PASIVOS CORRIENTES',totalPasCorr,0,true,true,cPC)
+  +subSecRow('Pasivos No Corrientes')
+  +pdfRow('Obligaciones financieras LP',esfVal('oblig_fin_lp'),1,0,0,cv('oblig_fin_lp'))
+  +pdfRow('Diferidos pasivo',esfVal('diferidos_pas'),1,0,0,cv('diferidos_pas'))
+  +pdfRow('Otros pasivos no corrientes',esfVal('otros_pas'),1,0,0,cv('otros_pas'))
+  +pdfRow('TOTAL PASIVOS NO CORRIENTES',totalPasNoCorr,0,true,true,cPNC)
+  +pdfRow('TOTAL PASIVOS',totalPasivos,0,true,true,cPC+cPNC)
+  +spaceRow()+secRow('PATRIMONIO')
+  +pdfRow('Capital social',esfVal('capital'),1,0,0,cv('capital'))
+  +pdfRow('Super\u00e1vit de capital',esfVal('superavit_cap'),1,0,0,cv('superavit_cap'))
+  +pdfRow('Reservas',esfVal('reservas'),1,0,0,cv('reservas'))
+  +pdfRow('Revalorizaci\u00f3n del patrimonio',esfVal('revalorizacion'),1,0,0,cv('revalorizacion'))
+  +pdfRow('Resultado del ejercicio',esfVal('resultado_ej'),1,0,0,cv('resultado_ej'))
+  +pdfRow('Resultados de ejercicios anteriores',esfVal('resultados_ant'),1,0,0,cv('resultados_ant'))
+  +pdfRow('Super\u00e1vit por valorizaciones',esfVal('superavit_val'),1,0,0,cv('superavit_val'))
+  +pdfRow('Otros componentes patrimonio',esfVal('otros_pat'),1,0,0,cv('otros_pat'))
+  +pdfRow('TOTAL PATRIMONIO',totalPatrimonio,0,true,true,cPat)
+  +spaceRow()
+  +pdfRow('TOTAL PASIVOS + PATRIMONIO',totalPasPatr,0,true,true,cPC+cPNC+cPat)
+  +'</table>'
+  +'<div class="signatures"><div class="sig"><div class="sig-line">Representante Legal</div></div><div class="sig"><div class="sig-line">Contador P\u00fablico<br>T.P. No. ___________</div></div><div class="sig"><div class="sig-line">Revisor Fiscal<br>T.P. No. ___________</div></div></div>'
+  +'<div class="footer">Las notas son parte integral de los estados financieros</div></div>'
 
-  <div class="page">
-    <div class="header">
-      <h2>${empresa}</h2>
-      <p>NIT: ${nit}</p>
-      <h3>Estado de Resultados Integral</h3>
-      <p>${getPeriodoERI()}</p>
-      <p>(Cifras expresadas en ${monedaLabel})</p>
-    </div>
-    <table>
-      ${pdfRow('Ingresos de actividades ordinarias',ingOp,0)}
-      ${pdfRow('(-) Devoluciones, rebajas y descuentos',devVtas,0)}
-      ${pdfRow('= INGRESOS NETOS',ingNetos,0,true,true)}
-      <tr><td colspan="2" style="height:6px"></td></tr>
-      ${pdfRow('(-) Costo de ventas',costoVtas,0)}
-      ${pdfRow('= UTILIDAD BRUTA',utilBruta,0,true,true)}
-      <tr><td colspan="2" style="height:6px"></td></tr>
-      ${pdfRow('(-) Gastos de administración',gtosAdmin,0)}
-      ${pdfRow('(-) Gastos de ventas',gtosVentas,0)}
-      ${pdfRow('= UTILIDAD OPERACIONAL',utilOp,0,true,true)}
-      <tr><td colspan="2" style="height:6px"></td></tr>
-      ${pdfRow('(+) Otros ingresos',otrosIng,0)}
-      ${pdfRow('(-) Otros gastos',otrosGtos,0)}
-      ${pdfRow('= UTILIDAD ANTES DE IMPUESTOS',utilAntesImp,0,true,true)}
-      <tr><td colspan="2" style="height:6px"></td></tr>
-      ${pdfRow('(-) Impuesto de renta',impRenta,0)}
-      ${pdfRow('= UTILIDAD NETA DEL EJERCICIO',utilNeta,0,true,true)}
-    </table>
-    <div class="signatures">
-      <div class="sig"><div class="sig-line">Representante Legal</div></div>
-      <div class="sig"><div class="sig-line">Contador Público<br>T.P. No. ___________</div></div>
-      <div class="sig"><div class="sig-line">Revisor Fiscal<br>T.P. No. ___________</div></div>
-    </div>
-    <div class="footer">Las notas son parte integral de los estados financieros</div>
-  </div>
+  +'<div class="page">'
+  +'<div class="header"><h2>'+empresa+'</h2><p>NIT: '+nit+'</p><h3>Estado de Resultados Integral'+(comp?' Comparativo':'')+'</h3><p>'+getPeriodoERI()+'</p><p>(Cifras expresadas en '+monedaLabel+')</p></div>'
+  +'<table>'+hdrRow()
+  +pdfRow('Ingresos de actividades ordinarias',ingOp,0,0,0,ceri('ing_operacionales'))
+  +pdfRow('(-) Devoluciones, rebajas y descuentos',devVtas,0,0,0,ceri('dev_ventas'))
+  +pdfRow('= INGRESOS NETOS',ingNetos,0,true,true,cIngNetos)
+  +spaceRow()
+  +pdfRow('(-) Costo de ventas',costoVtas,0,0,0,cCostoVtas)
+  +pdfRow('= UTILIDAD BRUTA',utilBruta,0,true,true,cUtilBruta)
+  +spaceRow()
+  +pdfRow('(-) Gastos de administraci\u00f3n',gtosAdmin,0,0,0,ceri('gtos_admin'))
+  +pdfRow('(-) Gastos de ventas',gtosVentas,0,0,0,ceri('gtos_ventas'))
+  +pdfRow('= UTILIDAD OPERACIONAL',utilOp,0,true,true,cUtilOp)
+  +spaceRow()
+  +pdfRow('(+) Otros ingresos',otrosIng,0,0,0,cOtrosIng)
+  +pdfRow('(-) Otros gastos',otrosGtos,0,0,0,ceri('gtos_no_op'))
+  +pdfRow('= UTILIDAD ANTES DE IMPUESTOS',utilAntesImp,0,true,true,cUtilAntesImp)
+  +spaceRow()
+  +pdfRow('(-) Impuesto de renta',impRenta,0,0,0,ceri('imp_renta'))
+  +pdfRow('= UTILIDAD NETA DEL EJERCICIO',utilNeta,0,true,true,cUtilNeta)
+  +'</table>'
+  +'<div class="signatures"><div class="sig"><div class="sig-line">Representante Legal</div></div><div class="sig"><div class="sig-line">Contador P\u00fablico<br>T.P. No. ___________</div></div><div class="sig"><div class="sig-line">Revisor Fiscal<br>T.P. No. ___________</div></div></div>'
+  +'<div class="footer">Las notas son parte integral de los estados financieros</div></div>'
   <link rel="stylesheet" href="shared/chat.css?v=2">
 <script src="shared/chat.js?v=2"><\/script>
 </body></html>`);
