@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="shared/cookie-consent.js"></script>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
 <script>
@@ -289,6 +290,9 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
       if(fb) fb.style.display='block';
     });
   });
+
+  // GA4: view_pricing event
+  gtag('event','view_pricing',{page_location:location.href});
 
   // GA4: track clicks
   document.querySelectorAll('.wompi-btn-container').forEach(function(c,i){

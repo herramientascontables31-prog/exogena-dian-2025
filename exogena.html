@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="shared/cookie-consent.js"></script>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
 <script>
@@ -2378,6 +2379,16 @@ function getCompanyConfig(){
 }
 
 async function exportExcel(){
+  // ── Hard gate: FREE users only get 3 formats ──
+  const FREE_FMTS=['F1003','F1007','F2276'];
+  if(!proUnlocked){
+    const proFmts=Object.keys(formatos).filter(f=>!FREE_FMTS.includes(f)&&(formatos[f]||[]).length>0);
+    if(proFmts.length>0){
+      showProGate(proFmts);
+      if(typeof exoTrack!=='undefined'&&exoTrack.ctaClick)exoTrack.ctaClick('exogena_limit_hit','precios');
+    }
+  }
+
   // Validación cruzada: formatos vs balance
   const cruces=[];
   const sumFmt=(f,colIdx)=>(formatos[f]||[]).reduce((s,r)=>typeof r[colIdx]==='number'?s+r[colIdx]:s,0);
@@ -2440,7 +2451,9 @@ async function exportExcel(){
   const thinBorder={top:{style:'thin',color:{argb:'FF808080'}},bottom:{style:'thin',color:{argb:'FF808080'}},left:{style:'thin',color:{argb:'FF808080'}},right:{style:'thin',color:{argb:'FF808080'}}};
 
   const fmtOrder=['F1001','F1003','F1005','F1006','F1007','F1008','F1009','F1010','F1012','F2276'];
+  const allowedFmts=proUnlocked?fmtOrder:FREE_FMTS;
   for(const f of fmtOrder){
+    if(!allowedFmts.includes(f))continue;
     const rows=formatos[f];if(!rows||rows.length===0)continue;
     const hdrs=FMT_HEADERS[f];
     const ws=wb.addWorksheet(f);
@@ -2636,6 +2649,29 @@ async function descargarEjemplo(){
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='Ejemplo_Exogena_ExogenaDIAN.xlsx';a.click();
   URL.revokeObjectURL(url);
+}
+
+/* ═══ PRO GATE MODAL ═══ */
+function showProGate(lockedFmts){
+  if(document.getElementById('proGateOverlay'))return;
+  const fmtNames={'F1001':'Pagos','F1005':'IVA Descontable','F1006':'IVA Generado','F1008':'CxC','F1009':'CxP','F1010':'Socios','F1012':'Inversiones'};
+  const list=lockedFmts.map(f=>'<li>'+f+' — '+(fmtNames[f]||f)+'</li>').join('');
+  const ov=document.createElement('div');
+  ov.id='proGateOverlay';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+  ov.innerHTML=
+    '<div style="background:#fff;border-radius:16px;padding:32px;max-width:480px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.2)">'+
+    '<div style="font-size:2.5rem;margin-bottom:12px">\uD83D\uDD12</div>'+
+    '<h3 style="font-family:Fraunces,serif;font-size:1.3rem;color:#111827;margin-bottom:8px">Formatos bloqueados</h3>'+
+    '<p style="color:#6B7280;font-size:.9rem;margin-bottom:16px">Tu balance gener\u00f3 datos para <strong>'+lockedFmts.length+' formatos adicionales</strong> que requieren PRO:</p>'+
+    '<ul style="text-align:left;color:#374151;font-size:.88rem;margin:0 auto 20px;max-width:280px;line-height:1.8">'+list+'</ul>'+
+    '<p style="color:#6B7280;font-size:.82rem;margin-bottom:20px">El Excel gratuito incluir\u00e1 solo <strong>F1003, F1007 y F2276</strong>.</p>'+
+    '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+
+    '<a href="precios.html" style="display:inline-flex;align-items:center;gap:6px;padding:12px 28px;background:#059669;color:#fff;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;transition:all .2s">Desbloquear 10 formatos \u2014 $19.900/mes</a>'+
+    '<button onclick="document.getElementById(\'proGateOverlay\').remove()" style="padding:12px 20px;background:transparent;border:1.5px solid #E5E7EB;border-radius:12px;color:#6B7280;font-weight:600;font-size:.88rem;cursor:pointer">Continuar con 3</button>'+
+    '</div></div>';
+  document.body.appendChild(ov);
+  ov.addEventListener('click',function(e){if(e.target===ov)ov.remove()});
 }
 
 /* ═══ PRO VALIDATION ═══ */

@@ -24,7 +24,41 @@ var exoTrack = {
   newsletter: function() {
     gtag('event', 'newsletter_signup', { page: location.pathname });
   },
-  scroll75: false
+  scroll75: false,
+
+  /* ═══ Conversion Events ═══ */
+  ctaClick: function(toolName, destination) {
+    gtag('event', 'cta_click', {
+      page_location: location.href,
+      tool_name: toolName || 'unknown',
+      destination: destination || ''
+    });
+  },
+  toolUsed: function(toolName) {
+    gtag('event', 'tool_used', {
+      page_location: location.href,
+      tool_name: toolName || location.pathname.replace(/\.html$/, '').split('/').pop()
+    });
+  },
+  pdfDownloaded: function(toolName) {
+    gtag('event', 'pdf_downloaded', {
+      page_location: location.href,
+      tool_name: toolName || location.pathname.replace(/\.html$/, '').split('/').pop()
+    });
+  },
+  nitConsulted: function(nit) {
+    gtag('event', 'nit_consulted', {
+      page_location: location.href,
+      tool_name: 'consultanit',
+      nit_prefix: nit ? String(nit).substring(0, 3) + '***' : ''
+    });
+  },
+  emailCaptured: function(source) {
+    gtag('event', 'email_captured', {
+      page_location: location.href,
+      tool_name: source || 'unknown'
+    });
+  }
 };
 
 /* ═══ Error Tracking — GA4 + alerta email vía Apps Script ═══ */
@@ -67,6 +101,19 @@ window.addEventListener('unhandledrejection', function(e) {
   }
   var source = (reason && reason.stack) ? reason.stack.split('\n')[1] || 'promise' : 'promise';
   _reportError(msg, source.trim().substring(0, 100));
+});
+
+/* ═══ Auto-track CTA clicks (links to /registro, /pricing, /precios, /planes) ═══ */
+document.addEventListener('click', function(e) {
+  var link = e.target.closest('a[href]');
+  if (!link) return;
+  var href = link.getAttribute('href') || '';
+  if (/registro|pricing|precios|planes/.test(href)) {
+    exoTrack.ctaClick(
+      link.textContent.trim().substring(0, 40),
+      href.replace(/\.html$/, '').split('/').pop()
+    );
+  }
 });
 
 /* Scroll depth 75% — mide engagement real */

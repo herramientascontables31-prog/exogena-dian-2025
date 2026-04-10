@@ -21,7 +21,11 @@ from datetime import datetime, timezone
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 from pydantic import BaseModel
+
+import httpx
 
 from cache import get_cache
 from chat import router as chat_router
@@ -56,12 +60,26 @@ app = FastAPI(
     version="1.1.0",
 )
 
+# ─── Security headers middleware ───
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response: Response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        if request.url.scheme == "https":
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        return response
+
+app.add_middleware(SecurityHeadersMiddleware)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
     allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["*", "X-Pro-Key"],
+    allow_headers=["Content-Type", "X-Pro-Key", "X-Debug-Key", "X-Device-Id"],
 )
 
 cache = get_cache(CACHE_TTL_DAYS)
@@ -145,24 +163,44 @@ class ProCredits:
 
 pro_credits = ProCredits(PRO_DIAN_CREDITS_PER_MONTH)
 
-# Cache de claves PRO validadas
-pro_keys_cache: dict[str, float] = {}
+# Cache de claves PRO validadas: key → (valid: bool, timestamp: float)
+pro_keys_cache: dict[str, tuple[bool, float]] = {}
 PRO_KEY_CACHE_TTL = 3600
 
+PRO_VALIDATION_URL = os.getenv(
+    "PRO_VALIDATION_URL",
+    "https://script.google.com/macros/s/AKfycbwT5ofExiwOKKLnBlwH6Uqhs4cdDpaieSiLn2dYf5D-6yPIdJ_9XEWeIGYyq1ViNKiasQ/exec",
+)
 
-def is_pro(key: str | None) -> bool:
-    """Verificar si una clave PRO es válida."""
+
+async def is_pro(key: str | None) -> bool:
+    """Verificar si una clave PRO es válida contra Google Sheets."""
     if not key or not key.strip():
         return False
     key = key.strip()
-    if key in pro_keys_cache:
-        if time.time() - pro_keys_cache[key] < PRO_KEY_CACHE_TTL:
-            return True
-    # TODO: Validar contra Google Sheet o base de datos
-    if key.startswith("PRO-") and len(key) > 8:
-        pro_keys_cache[key] = time.time()
-        return True
-    return False
+    # Check cache first
+    cached = pro_keys_cache.get(key)
+    if cached:
+        valid, ts = cached
+        if time.time() - ts < PRO_KEY_CACHE_TTL:
+            return valid
+    # Validate against Google Sheets
+    try:
+        async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+            resp = await client.get(
+                PRO_VALIDATION_URL,
+                params={"action": "validateKey", "key": key},
+            )
+            data = resp.json()
+            valid = data.get("valid", False)
+            pro_keys_cache[key] = (valid, time.time())
+            return valid
+    except Exception as e:
+        logger.warning("PRO validation error: %s", e)
+        # On error, trust cache if available
+        if cached:
+            return cached[0]
+        return False
 
 
 # ─── Models ───
@@ -270,7 +308,7 @@ async def consultar_nit_individual(
     Siempre retorna al menos DV + cruce offline.
     """
     ip = _get_client_ip(request)
-    user_is_pro = is_pro(x_pro_key)
+    user_is_pro = await is_pro(x_pro_key)
 
     if user_is_pro:
         # PRO: consulta completa sin límite
@@ -299,7 +337,7 @@ async def consultar_nit_masivo(req: BulkRequest, request: Request):
     PRO: hasta 2,000 NITs. DIAN en vivo usa créditos mensuales (500/mes incluidos).
     Flujo PRO: caché → listas/fallback → DIAN (solo los no encontrados, gasta créditos).
     """
-    user_is_pro = is_pro(req.pro_key)
+    user_is_pro = await is_pro(req.pro_key)
 
     if not req.nits:
         raise HTTPException(status_code=400, detail="Lista de NITs vacía")
@@ -403,7 +441,7 @@ async def consultar_nit_masivo(req: BulkRequest, request: Request):
 async def get_remaining(request: Request, x_pro_key: str | None = Header(None)):
     """Consultar cuántas consultas DIAN quedan (gratis por día, PRO por mes)."""
     ip = _get_client_ip(request)
-    user_is_pro = is_pro(x_pro_key)
+    user_is_pro = await is_pro(x_pro_key)
     result = {
         "remaining": rate_limiter.get_remaining(ip),
         "daily_limit": FREE_DIAN_QUERIES_PER_DAY,
@@ -416,12 +454,22 @@ async def get_remaining(request: Request, x_pro_key: str | None = Header(None)):
 
 
 @app.get("/api/health")
-async def health_check():
-    """Health check + estado del circuit breaker + servicios."""
+async def health_check(x_debug_key: str | None = Header(None)):
+    """Health check. Público: solo status. Con DEBUG_KEY: detalle completo."""
+    debug_secret = os.getenv("DEBUG_KEY", "")
+    is_admin = debug_secret and x_debug_key == debug_secret
+
     cb_status = circuit_breaker.get_status()
     dian_ok = cb_status["state"] != "OPEN"
 
-    # Verificar que todos los módulos críticos estén conectados
+    # Respuesta pública: solo status
+    if not is_admin:
+        return {
+            "status": "ok" if dian_ok else "degraded",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+        }
+
+    # Respuesta admin: detalle completo
     registered = [r.path for r in app.routes]
     chat_ok = any("/api/chat" in p for p in registered)
     ia_ok = any("/api/ia" in p for p in registered)
@@ -447,7 +495,11 @@ async def health_check():
 
 
 @app.get("/api/stats")
-async def stats():
+async def stats(x_debug_key: str | None = Header(None)):
+    """Stats protegido — requiere DEBUG_KEY."""
+    debug_secret = os.getenv("DEBUG_KEY", "")
+    if not debug_secret or x_debug_key != debug_secret:
+        raise HTTPException(status_code=404, detail="Not found")
     from captcha_solver import get_balance
     try:
         balance = await get_balance()
@@ -462,8 +514,11 @@ async def stats():
 
 
 @app.get("/api/debug/{nit}")
-async def debug_nit(nit: str):
+async def debug_nit(nit: str, x_debug_key: str | None = Header(None)):
     """Debug: probar cada fuente por separado para diagnosticar."""
+    debug_secret = os.getenv("DEBUG_KEY", "")
+    if not debug_secret or x_debug_key != debug_secret:
+        raise HTTPException(status_code=404, detail="Not found")
     import traceback
     results = {}
 
@@ -507,4 +562,4 @@ async def shutdown_event():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=PORT, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=PORT)

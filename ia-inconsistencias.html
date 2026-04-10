@@ -26,7 +26,8 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- GA -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+  <script src="shared/cookie-consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-S7SM6ST4CC');</script>
 
   <style>
@@ -740,8 +741,8 @@
     });
 
     // Disclaimer
-    var disc = data.disclaimer || 'Este análisis es orientativo. El contador debe validar antes de presentar a la DIAN.';
-    disclaimer.innerHTML = '<strong>Aviso importante:</strong> ' + escapeHTML(disc);
+    var disc = data.disclaimer || 'Este an\u00e1lisis es generado por inteligencia artificial y puede contener errores o informaci\u00f3n desactualizada. No constituye asesor\u00eda contable, tributaria ni legal. Verifique siempre con la normativa oficial DIAN y consulte con un contador p\u00fablico.';
+    disclaimer.innerHTML = '<strong style="color:#F59E0B">\u26A0 Aviso:</strong> ' + escapeHTML(disc);
 
     // Show
     results.classList.add('show');

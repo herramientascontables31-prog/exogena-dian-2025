@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="shared/cookie-consent.js"></script>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
 <script>
@@ -247,6 +248,13 @@ gtag('config', 'G-S7SM6ST4CC');
   gtag('event','pago_completado',{
     transaction_id: transactionId,
     referencia: referencia
+  });
+  // GA4: standard purchase event for native reports
+  gtag('event','purchase',{
+    transaction_id: transactionId,
+    value: 19900,
+    currency: 'COP',
+    items: [{item_name:'PRO ExógenaDIAN',item_category:'subscription',price:19900,quantity:1}]
   });
 
   if (referencia) {

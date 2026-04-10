@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="shared/cookie-consent.js"></script>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
 <script>
@@ -862,8 +863,8 @@ body {
     document.getElementById('recoSection').innerHTML = recoHTML;
 
     // Disclaimer
-    var disc = data.disclaimer || 'Este an\u00e1lisis es generado por inteligencia artificial con fines orientativos. No reemplaza la asesor\u00eda de un contador p\u00fablico.';
-    document.getElementById('disclaimerBox').innerHTML = '<p><strong>Aviso:</strong> ' + esc(disc) + '</p>';
+    var disc = data.disclaimer || 'Este an\u00e1lisis es generado por inteligencia artificial y puede contener errores o informaci\u00f3n desactualizada. No constituye asesor\u00eda contable, tributaria ni legal. Verifique siempre con la normativa oficial DIAN y consulte con un contador p\u00fablico.';
+    document.getElementById('disclaimerBox').innerHTML = '<p><strong style="color:#F59E0B">\u26A0 Aviso:</strong> ' + esc(disc) + '</p>';
 
     showSection('results');
   }

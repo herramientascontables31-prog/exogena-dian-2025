@@ -532,5 +532,4 @@ async def chat_remaining(request: Request):
     return {
         "remaining": remaining,
         "limit": CHAT_RATE_LIMIT,
-        "budget": cost_tracker.stats(),
     }

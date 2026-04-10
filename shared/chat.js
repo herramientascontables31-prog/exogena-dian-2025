@@ -34,7 +34,10 @@
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.+?)\*/g, '<em>$1</em>')
       .replace(/`(.+?)`/g, '<code>$1</code>')
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, function(_, label, url) {
+        if (/^https?:\/\/|^\//.test(url)) return '<a href="' + url + '" target="_blank" rel="noopener">' + label + '</a>';
+        return label;
+      })
       .replace(/^[•\-]\s+(.+)$/gm, '<li>$1</li>')
       .replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>')
       .replace(/\n\n/g, '</p><p>')
@@ -220,7 +223,7 @@
     hideTyping();
     var lastBubble = messagesEl.querySelector('.exa-msg.assistant:last-child');
     if (!lastBubble) lastBubble = addBubble('assistant', '');
-    lastBubble.innerHTML = '<em style="color:#F87171">' + md(msg || 'Error inesperado.') + '</em>';
+    lastBubble.innerHTML = '<em style="color:#F87171">' + esc(msg || 'Error inesperado.') + '</em>';
   }
 
   // ─── Send message ───
