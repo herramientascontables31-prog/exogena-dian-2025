@@ -46,9 +46,7 @@ gtag('config', 'G-S7SM6ST4CC');
 :root{--g700:#1B3A5C;--g600:#2E75B6;--g500:#4A90D9;--g400:#7CB9F0;--g200:#B8D8F8;--g100:#D6E8FC;--g50:#EBF3FE;--w:#FFF;--f50:#F9FAFB;--f100:#F3F4F6;--f200:#E5E7EB;--f300:#D1D5DB;--f400:#9CA3AF;--f500:#6B7280;--f600:#4B5563;--f700:#374151;--f800:#1F2937;--f900:#111827;--blue:#3B82F6;--amber:#F59E0B;--red:#EF4444;--r:14px}
 *{margin:0;padding:0;box-sizing:border-box}body{font-family:'DM Sans',sans-serif;background:var(--f50);color:var(--f900);min-height:100vh}
 .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 32px;background:var(--w);border-bottom:1px solid var(--f200)}.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--f900);font-weight:800;font-size:1.1rem}.nav-mark{width:30px;height:30px;background:linear-gradient(135deg,#1B3A5C,#2E75B6);border-radius:8px;display:grid;place-items:center;color:#fff;font-size:.75rem;font-weight:900}.nav-logo small{font-weight:400;font-size:.6rem;color:var(--f400);display:block}
-.container{max-width:780px;margin:0 auto;padding:32px 24px}.page-header{margin-bottom:28px}.page-header h1{font-family:'DM Sans',sans-serif;font-size:1.8rem;font-weight:700;margin-bottom:6px}.page-header p{color:var(--f500);font-size:.95rem;line-height:1.55}
-.page-badge{display:inline-flex;align-items:center;gap:6px;background:var(--g50);border:1px solid var(--g200);padding:4px 12px;border-radius:8px;font-size:.75rem;font-weight:600;color:var(--g700);margin-bottom:12px}.page-badge::before{content:'🔍';font-size:.85rem}
-.security{display:flex;align-items:flex-start;gap:14px;padding:18px 20px;background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border:1px solid #FDE68A;border-radius:14px;margin-bottom:24px}.sec-icon{font-size:1.6rem;flex-shrink:0;margin-top:2px}.sec-content strong{font-size:.9rem;color:#78350F;display:block;margin-bottom:4px}.sec-content p{font-size:.8rem;color:#92400E;line-height:1.55;margin:0}
+.container{max-width:780px;margin:0 auto;padding:20px 24px}
 .card{background:var(--w);border-radius:var(--r);border:1px solid var(--f200);padding:24px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,.03)}.card-title{font-size:1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;justify-content:space-between}
 
 /* Input area */
@@ -63,7 +61,6 @@ gtag('config', 'G-S7SM6ST4CC');
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:12px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.9rem;transition:all .2s;cursor:pointer;border:none;text-decoration:none}.btn-primary{background:var(--g600);color:#fff}.btn-primary:hover{background:var(--g700);transform:translateY(-1px);box-shadow:0 4px 14px rgba(27,58,92,.25)}.btn-primary:disabled{background:var(--f300);cursor:not-allowed;transform:none;box-shadow:none}
 
 /* Lists status */
-.lists-status{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
 .list-chip{background:var(--w);border:1px solid var(--f200);border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:8px;font-size:.78rem}
 .list-chip .lc-icon{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
 .list-chip .lc-name{font-weight:600;color:var(--f700);line-height:1.2}
@@ -113,7 +110,6 @@ gtag('config', 'G-S7SM6ST4CC');
 .cta-banner .btn{font-size:.88rem}
 
 /* Footer */
-.disclaimer-footer{margin-top:20px;padding:14px 18px;background:var(--f50);border:1px solid var(--f200);border-radius:10px;text-align:center}.disclaimer-footer p{font-size:.76rem;color:var(--f400);margin:0;line-height:1.5}
 .footer{padding:36px 32px;background:var(--f900);color:var(--f400);margin-top:40px}
 .footer-inner{max-width:1200px;margin:0 auto}
 .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:30px}
@@ -147,41 +143,16 @@ gtag('config', 'G-S7SM6ST4CC');
 
 <div class="container">
 
-<!-- HEADER -->
-<div class="page-header">
-  <div class="page-badge">Consulta de NIT — Validador de Terceros DIAN</div>
-  <h1>Consulta un NIT gratis al instante</h1>
-  <p>Verifica si un tercero es Gran Contribuyente, Proveedor Ficticio o si su RUT está activo. Calcula el dígito de verificación automáticamente. <strong>10 consultas gratis por día.</strong></p>
-</div>
-
-<!-- SECURITY -->
-<div class="security">
-  <div class="sec-icon">🔒</div>
-  <div class="sec-content">
-    <strong>100% privado — Funciona en tu navegador</strong>
-    <p>Las listas DIAN se cargan una vez y la validación ocurre localmente. No almacenamos ni transmitimos tu información.</p>
-  </div>
-</div>
-
-<!-- STATUS LISTAS CARGADAS -->
-<div class="lists-status" id="listsStatus">
-  <div class="list-chip lc-gc"><div class="lc-icon">👑</div><div><div class="lc-name">Gran Contribuyentes</div><div class="lc-count" id="countGC">Cargando...</div></div></div>
-  <div class="list-chip lc-pf"><div class="lc-icon">⛔</div><div><div class="lc-name">Proveedores Ficticios</div><div class="lc-count" id="countPF">Cargando...</div></div></div>
-  <div class="list-chip lc-gc"><div class="lc-icon">📍</div><div><div class="lc-name">Directorio</div><div class="lc-count" id="countDir">Cargando...</div></div></div>
-</div>
-<!-- Hidden counters for lists still loaded but not shown -->
-<span id="countAR" class="hidden"></span><span id="countIV" class="hidden"></span>
-
-<!-- INPUT CARD -->
-<div class="card" id="inputCard">
-  <div class="card-title">
-    <div style="display:flex;align-items:center;gap:8px"><span>🔍</span> Consultar NIT</div>
+<!-- INPUT CARD — lo primero que ve el usuario -->
+<div class="card" id="inputCard" style="margin-top:8px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <h1 style="font-size:1.35rem;font-weight:700;display:flex;align-items:center;gap:8px;margin:0">🔍 Consulta de NIT</h1>
     <span id="backendBadge" style="font-size:.72rem;font-weight:600;color:var(--f400)">Conectando...</span>
   </div>
 
   <div class="nit-single-row">
     <div class="nit-input-wrap">
-      <label>NIT (sin dígito de verificación)</label>
+      <label>NIT (sin d&iacute;gito de verificaci&oacute;n)</label>
       <input type="text" class="nit-input" id="nitSingle" placeholder="Ej: 890903938" maxlength="15" autocomplete="off" inputmode="numeric" onkeydown="if(event.key==='Enter')consultarSingle()">
     </div>
     <button class="btn btn-primary" onclick="consultarSingle()" id="btnSingle">Consultar</button>
@@ -192,25 +163,26 @@ gtag('config', 'G-S7SM6ST4CC');
   <!-- Quota indicator -->
   <div class="quota-bar">
     <div>
-      <span class="q-label">Consultas hoy:</span>
+      <span class="q-label">Consultas DIAN hoy:</span>
       <span class="q-count" id="quotaCount">10 restantes</span>
     </div>
     <div class="quota-pips" id="quotaPips"></div>
   </div>
 </div>
 
-<!-- CTA BANNER -->
-<div class="cta-banner">
-  <h3>¿Necesitas más herramientas contables?</h3>
-  <p>Genera la Exógena DIAN, Declaración de Renta, IVA 300, Estados Financieros y más — todo desde tu navegador.</p>
-  <a href="index.html#herramientas" class="btn btn-primary">Ver herramientas gratuitas →</a>
+<!-- INFO COMPACTA — debajo del resultado -->
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+  <div class="list-chip lc-gc" style="flex:1;min-width:140px"><div class="lc-icon">👑</div><div><div class="lc-name">Gran Contribuyentes</div><div class="lc-count" id="countGC">Cargando...</div></div></div>
+  <div class="list-chip lc-pf" style="flex:1;min-width:140px"><div class="lc-icon">&#9940;</div><div><div class="lc-name">Prov. Ficticios</div><div class="lc-count" id="countPF">Cargando...</div></div></div>
+  <div class="list-chip lc-gc" style="flex:1;min-width:140px"><div class="lc-icon">📍</div><div><div class="lc-name">Directorio</div><div class="lc-count" id="countDir">Cargando...</div></div></div>
 </div>
+<span id="countAR" class="hidden"></span><span id="countIV" class="hidden"></span>
 
-<!-- DISCLAIMER -->
-<div class="disclaimer-footer">
-  <p>⚠️ Herramienta de asistencia. Las listas se actualizan periódicamente desde los PDF oficiales publicados por la DIAN.<br>
-  El contador debe verificar directamente en <a href="https://muisca.dian.gov.co/WebRutMuisca/DefConsultaEstadoRUT.faces" target="_blank" rel="noopener" style="color:var(--g600)">MUISCA</a> para confirmar el estado actual del RUT.<br>
-  🔒 Ley 1581/2012 · Hecho con 💚 para contadores colombianos</p>
+<!-- CTA -->
+<div class="cta-banner">
+  <h3>&iquest;Necesitas m&aacute;s herramientas contables?</h3>
+  <p>Ex&oacute;gena DIAN, Renta, IVA 300, Estados Financieros y m&aacute;s &mdash; todo gratis desde tu navegador.</p>
+  <a href="index.html" class="btn btn-primary">Ver herramientas &rarr;</a>
 </div>
 
 </div><!-- /container -->
