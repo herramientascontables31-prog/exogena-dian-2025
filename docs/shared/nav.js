@@ -170,6 +170,7 @@
   '        <a href="renta110.html">📑 Renta F110</a>'+
   '        <a href="iva300.html">📋 IVA 300</a>'+
   '        <a href="retencion350.html">🧮 Retención 350</a>'+
+  '        <a href="retencion-dividendos.html">💰 Retención Dividendos</a>'+
   '      </div>'+
   '    </div>'+
        /* Financieras */
@@ -250,6 +251,7 @@
   '          <a href="renta110.html"><div class="dd-icon" style="background:#F5F3FF">📑</div> Renta F110</a>'+
   '          <a href="iva300.html"><div class="dd-icon" style="background:#FFFBEB">📋</div> IVA 300</a>'+
   '          <a href="retencion350.html"><div class="dd-icon" style="background:#EFF6FF">🧮</div> Retención 350</a>'+
+  '          <a href="retencion-dividendos.html"><div class="dd-icon" style="background:#F5F3FF">💰</div> Retención Dividendos</a>'+
   '        </div>'+
            /* ── Col 2: Financieras ── */
   '        <div class="mega-col">'+
