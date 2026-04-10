@@ -461,6 +461,39 @@ function mergeResults(offline, online) {
   };
 }
 
+// ─── Waiting tips (mientras consulta DIAN) ───
+var _tipTimer = null;
+var _waitTips = [
+  '\uD83D\uDCCA <strong>Ex\u00f3gena DIAN:</strong> Sube tu balance de prueba y genera los 10 formatos en 60 segundos. <a href="exogena.html" style="color:#059669;font-weight:700">Probar gratis \u2192</a>',
+  '\uD83D\uDCDD <strong>Renta F110:</strong> Genera el borrador del formulario 110 autom\u00e1ticamente desde tu balance. <a href="renta110.html" style="color:#059669;font-weight:700">Probar gratis \u2192</a>',
+  '\uD83E\uDDEE <strong>Intereses de Mora:</strong> Calcula intereses moratorios Art. 634 E.T. con tasas actualizadas. <a href="intereses.html" style="color:#059669;font-weight:700">Calcular \u2192</a>',
+  '\uD83D\uDCCB <strong>IVA 300:</strong> Genera el borrador del formulario 300 desde tu balance de prueba. <a href="iva300.html" style="color:#059669;font-weight:700">Probar gratis \u2192</a>',
+  '\u2696\uFE0F <strong>Sanciones DIAN:</strong> Calcula sanciones por extemporaneidad, correcci\u00f3n o no presentar. <a href="sanciones.html" style="color:#059669;font-weight:700">Calcular \u2192</a>',
+  '\uD83E\uDD16 <strong>IA Contable:</strong> Pregunta sobre el Estatuto Tributario o analiza tu balance con IA. <a href="ia.html" style="color:#059669;font-weight:700">Probar \u2192</a>',
+  '\uD83D\uDCC4 <strong>Estados Financieros:</strong> Genera ESF + Estado de Resultados NIIF desde tu balance. <a href="estadosfinancieros.html" style="color:#059669;font-weight:700">Probar gratis \u2192</a>',
+  '\uD83D\uDCC5 <strong>Calendario Tributario:</strong> Consulta las fechas de vencimiento seg\u00fan tu NIT. <a href="vencimientos.html" style="color:#059669;font-weight:700">Ver fechas \u2192</a>'
+];
+function startWaitingTips() {
+  stopWaitingTips();
+  var idx = 0;
+  function show() {
+    var el = document.getElementById('waitingTip');
+    if (!el) { stopWaitingTips(); return; }
+    el.style.opacity = '0';
+    setTimeout(function() {
+      if (!document.getElementById('waitingTip')) return;
+      el.innerHTML = _waitTips[idx % _waitTips.length];
+      el.style.opacity = '1';
+      idx++;
+    }, 300);
+  }
+  show();
+  _tipTimer = setInterval(show, 4000);
+}
+function stopWaitingTips() {
+  if (_tipTimer) { clearInterval(_tipTimer); _tipTimer = null; }
+}
+
 // ─── UI: Single consultation ───
 async function consultarSingle() {
   const input = document.getElementById('nitSingle').value.trim().replace(/\D/g, '');
@@ -478,10 +511,12 @@ async function consultarSingle() {
   // Si no hay razón social offline y vamos a consultar DIAN, mostrar loading en vez de "No encontrado"
   if (!r.razonSocial && willQueryDIAN) {
     const el = document.getElementById('singleResult');
-    el.innerHTML = '<div style="margin-top:12px;padding:20px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;text-align:center">'
+    el.innerHTML = '<div id="dianLoading" style="margin-top:12px;padding:20px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;text-align:center">'
       + '<div style="display:flex;align-items:center;justify-content:center;gap:10px;color:#1E40AF;font-size:.95rem;font-weight:600;margin-bottom:8px"><span class="spinner"></span> Consultando NIT en la DIAN...</div>'
-      + '<div style="font-size:.8rem;color:#3B82F6;line-height:1.5">La DIAN protege su portal con verificaciones de seguridad.<br>Esto puede tomar entre 5 y 15 segundos.</div>'
+      + '<div style="font-size:.8rem;color:#3B82F6;line-height:1.5;margin-bottom:12px">La DIAN protege su portal con verificaciones de seguridad.<br>Esto puede tomar entre 5 y 15 segundos.</div>'
+      + '<div id="waitingTip" style="margin-top:4px;padding:12px 16px;background:#fff;border:1px solid #E2E8F0;border-radius:10px;font-size:.82rem;color:#374151;text-align:left;transition:opacity .3s"></div>'
       + '</div>';
+    startWaitingTips();
   } else {
     renderSingleResult(r);
   }
@@ -491,7 +526,8 @@ async function consultarSingle() {
     const el = document.getElementById('singleResult');
     // Solo agregar loading extra si ya mostramos resultado offline
     if (r.razonSocial) {
-      el.innerHTML += '<div id="dianLoading" style="margin-top:12px;padding:10px 16px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;font-size:.82rem;color:#1E40AF;display:flex;align-items:center;gap:8px"><span class="spinner"></span> Consultando estado RUT en DIAN MUISCA...</div>';
+      el.innerHTML += '<div id="dianLoading" style="margin-top:12px;padding:10px 16px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:10px;font-size:.82rem;color:#1E40AF;display:flex;align-items:center;gap:8px"><span class="spinner"></span> Consultando estado RUT en DIAN MUISCA...<div id="waitingTip" style="margin-left:auto;font-size:.78rem;color:#64748B;font-weight:400"></div></div>';
+      startWaitingTips();
     }
 
     const online = await consultarBackend(input);
@@ -508,6 +544,7 @@ async function consultarSingle() {
     }
     const loading = document.getElementById('dianLoading');
     if (loading) loading.remove();
+    stopWaitingTips();
     if (online && online.error) {
       el.innerHTML += '<div style="margin-top:10px;padding:12px 16px;background:#FEF3C7;border:1px solid #FDE68A;border-radius:10px;font-size:.82rem;color:#92400E;line-height:1.5">'
         + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-weight:700">&#9888;&#65039; No se pudo consultar en DIAN MUISCA</div>'
