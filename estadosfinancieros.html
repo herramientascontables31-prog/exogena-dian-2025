@@ -539,6 +539,8 @@ async function revalidarPro(){
 
 /* ═══ GLOBALS ═══ */
 let rawData=[], classifiedAccounts=[], esfData={}, eriData={}, efeData={}, ecpData=[];
+let compRawData=[], compClassified=[], compEsfData={}, compEriData={};
+let hasComparative=false;
 let detectedHeaderRow=-1;
 let colMap={code:-1,name:-1,saldoFin:-1,deb:-1,cre:-1,saldoIni:-1};
 
@@ -582,6 +584,39 @@ const dz=document.getElementById('dz');
 dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});
 dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
 dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files.length)loadFile(e.dataTransfer.files[0])});
+
+/* ═══ COMPARATIVE FILE LOADING (PRO) ═══ */
+document.getElementById('fileComp').addEventListener('change',e=>{if(e.target.files.length)loadCompFile(e.target.files[0])});
+const dzC=document.getElementById('dzComp');
+dzC.addEventListener('dragover',e=>{e.preventDefault();dzC.classList.add('drag')});
+dzC.addEventListener('dragleave',()=>dzC.classList.remove('drag'));
+dzC.addEventListener('drop',e=>{e.preventDefault();dzC.classList.remove('drag');if(!document.getElementById('fileComp').disabled&&e.dataTransfer.files.length)loadCompFile(e.dataTransfer.files[0])});
+
+function loadCompFile(file){
+  var MAX_FILE_SIZE=20*1024*1024;
+  if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el l\u00edmite de 20 MB.','warning');return}
+  var ext=file.name.split('.').pop().toLowerCase();
+  if(['xlsx','xls','csv'].indexOf(ext)===-1){exoToast('Formato no soportado. Usa Excel (.xlsx, .xls) o CSV.','warning');return}
+  document.getElementById('fileNameComp').textContent='\u2713 '+file.name;
+  const reader=new FileReader();
+  reader.onerror=function(){exoToast('Error leyendo el archivo comparativo.','error')};
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});
+      if(!wb.SheetNames||!wb.SheetNames.length){exoToast('El archivo no tiene hojas de datos.','error');return}
+      compRawData=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+      if(!compRawData.length){exoToast('El archivo comparativo est\u00e1 vac\u00edo.','warning');return}
+      hasComparative=true;
+      exoToast('Balance comparativo cargado: '+compRawData.length+' filas. Se usar\u00e1 para generar estados financieros comparativos.','success');
+    }catch(err){
+      console.error('Error procesando archivo comparativo:',err);
+      exoToast('No se pudo leer el archivo comparativo.','error');
+      document.getElementById('fileNameComp').textContent='';
+      hasComparative=false;
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
 
 function loadFile(file){
   var MAX_FILE_SIZE=20*1024*1024;
