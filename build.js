@@ -45,8 +45,10 @@ const HTML_FILES = [
   'ia-asistente.html',
   'ia-respuesta-requerimiento.html',
   'ia-resumen-declaracion.html',
+  'ia-errores-xml.html',
   'decreto240.html',
   'estatutos.html',
+  'retencion-dividendos.html',
   '404.html',
 ];
 
