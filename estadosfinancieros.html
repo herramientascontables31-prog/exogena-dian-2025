@@ -443,7 +443,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
         <button onclick="btnLoading(this,exportRevelacionesWord)" style="padding:12px 16px;background:#2563EB;color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s">&#128196; Word</button>
         <button onclick="btnLoading(this,exportExcelEEFF)" style="padding:12px 16px;background:#059669;color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s">&#128202; Excel</button>
-        <button onclick="exportPdfEEFF()" style="padding:12px 16px;background:#DC2626;color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s">&#128196; PDF</button>
+        <button onclick="exportRevelacionesPdf()" style="padding:12px 16px;background:#DC2626;color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.85rem;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s">&#128196; PDF</button>
       </div>
       <div style="margin-top:10px">
         <button onclick="btnLoading(this,exportRevelacionesWordPro)" style="padding:12px 16px;width:100%;background:linear-gradient(135deg,#1E40AF,#2563EB);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.88rem;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s">&#128196; Word Completo + Notas Detalladas <span style="font-size:.65rem;background:rgba(255,255,255,.25);padding:2px 8px;border-radius:4px;margin-left:4px">PRO</span></button>
@@ -3268,13 +3268,14 @@ th{background:#D6E4F0;font-weight:bold;color:#1B3A5C}
 /* ═══ NOTAS A LOS ESTADOS FINANCIEROS ═══ */
 function buildNotasHtml(){
   const year=document.getElementById('cfgYear').value;
+  const yearAnt=String(Number(year)-1);
   const empresa=document.getElementById('cfgEmpresa').value||'EMPRESA S.A.S';
   const nit=document.getElementById('cfgNit').value||'000.000.000-0';
-  const ciudad=document.getElementById('cfgCiudad').value||'Bogotá D.C.';
+  const ciudad=document.getElementById('cfgCiudad').value||'Bogot\u00e1 D.C.';
   const tipo=document.getElementById('cfgTipoEntidad').value;
   const tipoLabel=tipo==='pymes'?'NIIF para PYMES (Grupo 2)':tipo==='plenas'?'NIIF Plenas (Grupo 1)':'Contabilidad simplificada (Grupo 3)';
   const moneda=document.getElementById('cfgMoneda').value;
-  const monedaLabel=moneda==='COP'?'pesos colombianos':'dólares estadounidenses';
+  const monedaLabel=moneda==='COP'?'pesos colombianos':'d\u00f3lares estadounidenses';
   const grupos=new Set(classifiedAccounts.map(a=>a.grupo));
 
   function acctsByGrupo(g){return classifiedAccounts.filter(a=>a.grupo===g)}
