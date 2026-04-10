@@ -1162,15 +1162,15 @@ function processCompData(){
   const allCodes=new Set();
   for(let i=compHeaderRow+1;i<compRawData.length;i++){
     const row=compRawData[i];if(!row)continue;
-    const code=cellStr(row[compColMap.code]).replace(/\\s/g,'');
-    if(code&&/^\\d{2,}$/.test(code))allCodes.add(code);
+    const code=cellStr(row[compColMap.code]).replace(/\s/g,'');
+    if(code&&/^\d{2,}$/.test(code))allCodes.add(code);
   }
   function isParent(code){for(const o of allCodes){if(o!==code&&o.startsWith(code)&&o.length>code.length)return true}return false}
 
   for(let i=compHeaderRow+1;i<compRawData.length;i++){
     const row=compRawData[i];if(!row)continue;
-    const code=cellStr(row[compColMap.code]).replace(/\\s/g,'');
-    if(!code||!/^\\d{2,}$/.test(code))continue;
+    const code=cellStr(row[compColMap.code]).replace(/\s/g,'');
+    if(!code||!/^\d{2,}$/.test(code))continue;
     if(/^(total|procesado|elaborado)/i.test(cellStr(row[compColMap.name]||'')))continue;
     if(isParent(code))continue;
 
@@ -2625,6 +2625,22 @@ function buildEriWordHtml(){
   h+='</table>';
   h+='<p class="footer">Las notas son parte integral de los estados financieros</p>';
   return h;
+}
+
+function buildFirmaBlock(repLegal,contador,tpContador,revisor,tpRevisor){
+  return '<div style="margin-top:60pt;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20pt">'
+    +(repLegal?'<div style="text-align:center;width:45%"><p>________________________________</p><p style="font-weight:bold;margin:2pt 0">'+repLegal+'</p><p style="font-size:9pt;color:#666;margin:0">Representante Legal</p></div>':'')
+    +(contador?'<div style="text-align:center;width:45%"><p>________________________________</p><p style="font-weight:bold;margin:2pt 0">'+contador+'</p><p style="font-size:9pt;color:#666;margin:0">Contador P\u00fablico'+(tpContador?' \u2014 T.P. '+tpContador:'')+'</p></div>':'')
+    +'</div>'
+    +(revisor?'<div style="text-align:center;margin-top:30pt;width:45%;margin:30pt auto 0"><p>________________________________</p><p style="font-weight:bold;margin:2pt 0">'+revisor+'</p><p style="font-size:9pt;color:#666;margin:0">Revisor Fiscal'+(tpRevisor?' \u2014 T.P. '+tpRevisor:'')+'</p></div>':'');
+}
+
+function buildCoverSignatures(repLegal,contador,tpContador,revisor,tpRevisor){
+  return '<div style="margin-top:80pt;display:flex;justify-content:space-between;flex-wrap:wrap;gap:20pt">'
+    +(repLegal?'<div style="text-align:center;width:30%"><p>________________________________</p><p style="font-weight:bold;margin:2pt 0">'+repLegal+'</p><p style="font-size:9pt;color:#666">Representante Legal</p></div>':'')
+    +(contador?'<div style="text-align:center;width:30%"><p>________________________________</p><p style="font-weight:bold;margin:2pt 0">'+contador+'</p><p style="font-size:9pt;color:#666">Contador P\u00fablico'+(tpContador?' \u2014 T.P. '+tpContador:'')+'</p></div>':'')
+    +(revisor?'<div style="text-align:center;width:30%"><p>________________________________</p><p style="font-weight:bold;margin:2pt 0">'+revisor+'</p><p style="font-size:9pt;color:#666">Revisor Fiscal'+(tpRevisor?' \u2014 T.P. '+tpRevisor:'')+'</p></div>':'')
+    +'</div>';
 }
 
 function exportRevelacionesWord(){
