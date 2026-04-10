@@ -423,7 +423,7 @@
     if(window.exoPro){
       window.exoPro.activate(key).then(function(valid){
         if(valid){showProActive()}
-        else{exoToast('Clave PRO no válida o expirada','warning')}
+        else{exoToast('No se encontr\u00f3 suscripci\u00f3n activa para este email','warning')}
       });
       return;
     }
@@ -434,7 +434,7 @@
         localStorage.setItem('exogenadian_pro_email',key);
         showProActive();
       }else{
-        exoToast(d.message||'Clave PRO no válida o expirada','warning');
+        exoToast(d.message||'No se encontr\u00f3 suscripci\u00f3n activa para este email','warning');
       }
     }).catch(function(){exoToast('Error al verificar. Intenta de nuevo.','error')});
   };

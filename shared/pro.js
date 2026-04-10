@@ -151,6 +151,8 @@
   function activate(valor){
     if(!valor) return Promise.resolve(false);
     valor=valor.trim().toLowerCase();
+    // Limpiar estado previo para evitar conflictos con isLocallyExpired
+    clearPro();
     return validateAgainstServer(valor).then(function(valid){
       if(valid){
         if(valor.includes('@')){
@@ -158,10 +160,7 @@
         } else {
           localStorage.setItem(KEY_PRO, valor);
         }
-        // Guardar fecha de activación si no existe
-        if(!localStorage.getItem(KEY_ACTIVATED)){
-          localStorage.setItem(KEY_ACTIVATED, String(Date.now()));
-        }
+        localStorage.setItem(KEY_ACTIVATED, String(Date.now()));
       }
       return valid;
     });
