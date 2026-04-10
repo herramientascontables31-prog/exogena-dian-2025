@@ -653,41 +653,22 @@ const DPTOS={
   '95':'Guaviare','97':'Vaupes','99':'Vichada'
 };
 
-const MPIOS_PRINCIPALES={
-  '11':{'001':'Bogota D.C.'},
-  '05':{'001':'Medellin','045':'Apartado','088':'Bello','148':'Carmen de Viboral','212':'Copacabana','266':'Envigado','360':'Itagui','615':'Rionegro'},
-  '08':{'001':'Barranquilla','758':'Soledad','573':'Puerto Colombia'},
-  '13':{'001':'Cartagena'},
-  '15':{'001':'Tunja','238':'Duitama','759':'Sogamoso'},
-  '17':{'001':'Manizales'},
-  '19':{'001':'Popayan'},
-  '20':{'001':'Valledupar'},
-  '23':{'001':'Monteria'},
-  '25':{'126':'Cajica','175':'Chia','269':'Facatativata','286':'Funza','473':'Mosquera','754':'Soacha','799':'Zipaquira','307':'Girardot','290':'Fusagasuga','377':'La Calera','430':'Madrid'},
-  '41':{'001':'Neiva'},
-  '44':{'001':'Riohacha','430':'Maicao'},
-  '47':{'001':'Santa Marta'},
-  '50':{'001':'Villavicencio'},
-  '52':{'001':'Pasto'},
-  '54':{'001':'Cucuta'},
-  '63':{'001':'Armenia'},
-  '66':{'001':'Pereira','170':'Dosquebradas'},
-  '68':{'001':'Bucaramanga','081':'Barrancabermeja','276':'Floridablanca','307':'Giron','547':'Piedecuesta'},
-  '70':{'001':'Sincelejo'},
-  '73':{'001':'Ibague'},
-  '76':{'001':'Cali','109':'Buenaventura','111':'Guadalajara de Buga','147':'Cartago','520':'Palmira','834':'Tulua'},
-  '81':{'001':'Arauca'},
-  '85':{'001':'Yopal'},
-  '86':{'001':'Mocoa'},
-  '88':{'001':'San Andres'},
-  '91':{'001':'Leticia'},
-  '94':{'001':'Inirida'},
-  '95':{'001':'San Jose del Guaviare'},
-  '97':{'001':'Mitu'},
-  '99':{'001':'Puerto Carreno'},
-  '18':{'001':'Florencia'},
-  '27':{'001':'Quibdo'}
-};
+/* MPIOS_POR_DEPTO se llena desde municipios.json (todos los 1122 municipios DIVIPOLA) */
+let MPIOS_POR_DEPTO={};
+fetch('data/municipios.json').then(r=>r.json()).then(data=>{
+  for(const[cod,nombre] of Object.entries(data)){
+    const dp=cod.substring(0,2), mp=cod.substring(2);
+    if(!MPIOS_POR_DEPTO[dp])MPIOS_POR_DEPTO[dp]={};
+    MPIOS_POR_DEPTO[dp][mp]=nombre;
+  }
+}).catch(()=>{
+  console.warn('No se pudo cargar municipios.json, usando fallback');
+  MPIOS_POR_DEPTO={
+    '11':{'001':'Bogota D.C.'},'05':{'001':'Medellin'},'08':{'001':'Barranquilla'},
+    '13':{'001':'Cartagena'},'76':{'001':'Cali'},'68':{'001':'Bucaramanga'},
+    '25':{'754':'Soacha'},'73':{'001':'Ibague'},'54':{'001':'Cucuta'}
+  };
+});
 
 const BANCOS_COLOMBIANOS={
   'bancolombia':['890903938','BANCOLOMBIA S.A.'],
@@ -1041,7 +1022,7 @@ function onDptoChange(){
   const d=document.getElementById('cfgDpto').value;
   const sel=document.getElementById('cfgMpio');
   sel.innerHTML='<option value="">— Seleccionar —</option>';
-  const mpios=MPIOS_PRINCIPALES[d]||{};
+  const mpios=MPIOS_POR_DEPTO[d]||{};
   Object.entries(mpios).sort((a,b)=>a[1].localeCompare(b[1])).forEach(([c,n])=>{
     sel.innerHTML+=`<option value="${c}">${c} - ${n}</option>`;
   });
@@ -1883,8 +1864,8 @@ function filtrarTerceros(){
       dpOpts+=`<option value="${c}"${c===t.dp?' selected':''}>${c}</option>`;
     }
     let mpOpts='<option value="">--</option>';
-    if(t.dp&&MPIOS_PRINCIPALES[t.dp]){
-      for(const[c,n] of Object.entries(MPIOS_PRINCIPALES[t.dp])){
+    if(t.dp&&MPIOS_POR_DEPTO[t.dp]){
+      for(const[c,n] of Object.entries(MPIOS_POR_DEPTO[t.dp])){
         mpOpts+=`<option value="${c}"${c===t.mp?' selected':''}>${c}-${n}</option>`;
       }
     }
@@ -1924,8 +1905,8 @@ function updateMpioSelect(dpSelect,nit){
   const mpSel=document.getElementById('mp_'+nit);
   if(!mpSel)return;
   let opts='<option value="">--</option>';
-  if(dp&&MPIOS_PRINCIPALES[dp]){
-    for(const[c,n] of Object.entries(MPIOS_PRINCIPALES[dp])){
+  if(dp&&MPIOS_POR_DEPTO[dp]){
+    for(const[c,n] of Object.entries(MPIOS_POR_DEPTO[dp])){
       opts+=`<option value="${c}">${c}-${n}</option>`;
     }
   }
