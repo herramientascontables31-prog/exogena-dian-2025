@@ -214,7 +214,6 @@
   '      <div class="tn-dd">'+
   '        <a href="ia-analisis-balance.html">🛡️ Auditor DIAN</a>'+
   '        <a href="ia-chat-et.html">📖 Estatuto Tributario</a>'+
-  '        <a href="ia-asistente.html">🤖 Asistente Contable</a>'+
   '        <a href="ia-respuesta-requerimiento.html">📝 Requerimientos</a>'+
   '        <a href="ia.html" style="font-weight:700;color:#059669">✨ Ver todas</a>'+
   '      </div>'+
@@ -290,7 +289,6 @@
   '          <h6 style="color:#059669">IA Contable</h6>'+
   '          <a href="ia-analisis-balance.html"><div class="dd-icon" style="background:#ECFDF5">🛡️</div> Auditor DIAN</a>'+
   '          <a href="ia-chat-et.html"><div class="dd-icon" style="background:#ECFDF5">📖</div> Estatuto Tributario</a>'+
-  '          <a href="ia-asistente.html"><div class="dd-icon" style="background:#ECFDF5">🤖</div> Asistente Contable</a>'+
   '          <a href="ia-respuesta-requerimiento.html"><div class="dd-icon" style="background:#ECFDF5">📝</div> Requerimientos</a>'+
   '          <div class="mega-divider"></div>'+
   '          <a href="ia.html"><div class="dd-icon" style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5)">✨</div> <strong>Ver todas</strong></a>'+
