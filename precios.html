@@ -98,8 +98,11 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
 .pay-methods{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
 .pay-methods span{color:var(--gray-500);font-size:.72rem;padding:4px 10px;border:1px solid var(--gray-200);border-radius:8px;background:var(--gray-50)}
 
-@media(max-width:768px){
-  .price-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}
+@media(max-width:960px){
+  .price-grid{grid-template-columns:1fr 1fr!important;max-width:700px;margin:0 auto}
+}
+@media(max-width:600px){
+  .price-grid{grid-template-columns:1fr!important;max-width:400px;margin:0 auto}
   .price-card.pop{transform:scale(1);order:-1}
   .compare table{font-size:.82rem}
   .compare th,.compare td{padding:10px 12px}
@@ -173,6 +176,11 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
         <td class="limit">3 consultas/día</td>
         <td class="check">✓ Hasta 50 consultas/día</td>
       </tr>
+      <tr style="background:linear-gradient(90deg,#EEF2FF,#E0E7FF)">
+        <td><strong>Escuela Contable IA</strong> — 9 cursos, 54 módulos con referencias normativas</td>
+        <td class="limit">Solo curso IVA 300</td>
+        <td class="limit">+$29.900 único o <strong>gratis con Anual</strong></td>
+      </tr>
     </tbody>
   </table>
   <p style="text-align:center;font-size:.82rem;color:var(--gray-400);margin-top:16px;line-height:1.6">Las herramientas gratis no tienen límite de tiempo ni de uso dentro de sus funciones básicas.<br>PRO desbloquea funciones avanzadas, exportaciones en más formatos y mayor capacidad en IA.</p>
@@ -180,8 +188,8 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
 
 <!-- Planes -->
 <div class="price-section">
-  <div class="price-grid">
-    <!-- MENSUAL -->
+  <div class="price-grid" style="grid-template-columns:repeat(4,1fr)">
+    <!-- PRO MENSUAL -->
     <div class="price-card" style="position:relative">
       <span class="pop-badge" style="background:var(--gray-600)">33% OFF primer mes</span>
       <p class="price-label">Mensual</p>
@@ -190,48 +198,91 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
         <div class="price-val"><span class="price-sign">$</span><span class="price-num">19.900</span></div>
         <span style="font-size:1.1rem;color:var(--gray-400);text-decoration:line-through;font-weight:600">$29.900</span>
       </div>
-      <p class="price-per">primer mes · después $29.900/mes · Cancela cuando quieras</p>
+      <p class="price-per">primer mes &middot; despu&eacute;s $29.900/mes</p>
       <ul class="price-list">
-        <li>Información Exógena — 10 formatos Excel</li>
-        <li>Renta F110 — Excel con depuración completa</li>
-        <li>Formulario 300 IVA — Cruce facturación electrónica</li>
-        <li>Estados Financieros NIIF — Notas y comparativos</li>
-        <li>Retención 350 — Excel formulado</li>
-        <li>Conciliación bancaria — Sin límite de filas</li>
-        <li>Consulta NIT — MUISCA ilimitada</li>
-        <li class="hl" style="background:linear-gradient(90deg,#ECFDF5,#D1FAE5);color:#047857">ExógenaDIAN IA — Auditor DIAN + Estatuto + Asistente (50/dia)</li>
-        <li class="hl">100% automático · Procesa en segundos</li>
+        <li>Ex&oacute;gena &mdash; 10 formatos Excel</li>
+        <li>Renta F110 &mdash; Excel completo</li>
+        <li>IVA 300, Retenci&oacute;n 350, EEFF</li>
+        <li>Conciliaci&oacute;n ilimitada</li>
+        <li>Consulta NIT ilimitada</li>
+        <li class="hl">IA Contable (50/d&iacute;a)</li>
+        <li style="color:var(--gray-400)">Escuela no incluida</li>
       </ul>
       <div class="wompi-btn-container" id="wompi-mensual">
-        <div class="wompi-loading" style="padding:12px 24px;text-align:center;color:var(--gray-400);font-size:.85rem">Cargando botón de pago...</div>
-        <div class="wompi-fallback" style="display:none;padding:12px 24px;border-radius:10px;background:#FEF3C7;color:#92400E;font-weight:600;font-family:inherit;font-size:.85rem;text-align:center;border:1px solid #FDE68A">El botón de pago no cargó. Escribenos por <a href="https://wa.me/573054559574" style="color:#D97706;font-weight:700;text-decoration:underline">WhatsApp</a> o recarga esta página.</div>
+        <div class="wompi-loading" style="padding:12px 24px;text-align:center;color:var(--gray-400);font-size:.85rem">Cargando bot&oacute;n de pago...</div>
+        <div class="wompi-fallback" style="display:none;padding:12px 24px;border-radius:10px;background:#FEF3C7;color:#92400E;font-weight:600;font-family:inherit;font-size:.85rem;text-align:center;border:1px solid #FDE68A">El bot&oacute;n de pago no carg&oacute;. Escribenos por <a href="https://wa.me/573054559574" style="color:#D97706;font-weight:700;text-decoration:underline">WhatsApp</a> o recarga esta p&aacute;gina.</div>
       </div>
     </div>
-    <!-- ANUAL -->
+
+    <!-- SOLO ESCUELA -->
+    <div class="price-card" style="position:relative">
+      <span class="pop-badge" style="background:linear-gradient(135deg,#6366F1,#8B5CF6)">9 cursos</span>
+      <p class="price-label">Pago &uacute;nico</p>
+      <h3 class="price-name" style="color:#6366F1">Escuela Contable IA</h3>
+      <div class="price-val"><span class="price-sign">$</span><span class="price-num">49.900</span></div>
+      <p class="price-per">pago &uacute;nico &middot; acceso permanente</p>
+      <ul class="price-list">
+        <li class="hl">9 cursos (54 m&oacute;dulos)</li>
+        <li>IVA, Retenci&oacute;n, Renta, Ex&oacute;gena</li>
+        <li>Sanciones, N&oacute;mina, Procedimiento</li>
+        <li>ICA, NIIF</li>
+        <li>Referencias normativas ET</li>
+        <li>Actualizaciones incluidas</li>
+        <li class="hl">Incluye 1 mes PRO gratis</li>
+      </ul>
+      <div class="wompi-btn-container" id="wompi-escuela">
+        <div class="wompi-loading" style="padding:12px 24px;text-align:center;color:var(--gray-400);font-size:.85rem">Cargando bot&oacute;n de pago...</div>
+        <div class="wompi-fallback" style="display:none;padding:12px 24px;border-radius:10px;background:#FEF3C7;color:#92400E;font-weight:600;font-family:inherit;font-size:.85rem;text-align:center;border:1px solid #FDE68A">El bot&oacute;n de pago no carg&oacute;. Escribenos por <a href="https://wa.me/573054559574" style="color:#D97706;font-weight:700;text-decoration:underline">WhatsApp</a> o recarga esta p&aacute;gina.</div>
+      </div>
+    </div>
+
+    <!-- PRO + ESCUELA -->
+    <div class="price-card" style="position:relative">
+      <span class="pop-badge" style="background:linear-gradient(135deg,#059669,#6366F1)">PRO + Escuela</span>
+      <p class="price-label">Mensual + &uacute;nico</p>
+      <h3 class="price-name">PRO + Escuela</h3>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
+        <div class="price-val"><span class="price-sign">$</span><span class="price-num">29.900</span></div>
+        <span style="font-size:.85rem;color:var(--gray-400)">/mes</span>
+      </div>
+      <p class="price-per">+ $29.900 &uacute;nico por la Escuela</p>
+      <ul class="price-list">
+        <li class="hl">Todo PRO sin l&iacute;mites</li>
+        <li class="hl" style="background:linear-gradient(90deg,#EEF2FF,#E0E7FF);color:#4338CA">+ 9 cursos Escuela IA</li>
+        <li>54 m&oacute;dulos con refs. normativas</li>
+        <li>IA Contable (50/d&iacute;a)</li>
+        <li>Actualizaciones normativas</li>
+        <li>Futuros cursos incluidos</li>
+        <li>Cancela PRO cuando quieras</li>
+      </ul>
+      <div class="wompi-btn-container" id="wompi-pro-escuela">
+        <div class="wompi-loading" style="padding:12px 24px;text-align:center;color:var(--gray-400);font-size:.85rem">Cargando bot&oacute;n de pago...</div>
+        <div class="wompi-fallback" style="display:none;padding:12px 24px;border-radius:10px;background:#FEF3C7;color:#92400E;font-weight:600;font-family:inherit;font-size:.85rem;text-align:center;border:1px solid #FDE68A">El bot&oacute;n de pago no carg&oacute;. Escribenos por <a href="https://wa.me/573054559574" style="color:#D97706;font-weight:700;text-decoration:underline">WhatsApp</a> o recarga esta p&aacute;gina.</div>
+      </div>
+    </div>
+
+    <!-- PRO ANUAL -->
     <div class="price-card pop" style="position:relative">
-      <span class="pop-badge">Ahorra 50% vs mensual</span>
+      <span class="pop-badge">Escuela GRATIS + Ahorra 55%</span>
       <p class="price-label">Anual</p>
       <h3 class="price-name">PRO Anual</h3>
       <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:4px">
         <div class="price-val"><span class="price-sign">$</span><span class="price-num">179.900</span></div>
-        <span style="font-size:1.1rem;color:var(--gray-400);text-decoration:line-through;font-weight:600">$358.800</span>
+        <span style="font-size:1.1rem;color:var(--gray-400);text-decoration:line-through;font-weight:600">$408.700</span>
       </div>
-      <p class="price-per">pago único anual · equivale a $14.992/mes</p>
+      <p class="price-per">pago &uacute;nico anual &middot; equivale a $14.992/mes</p>
       <ul class="price-list">
-        <li>Información Exógena — 10 formatos Excel</li>
-        <li>Renta F110 — Excel con depuración completa</li>
-        <li>Formulario 300 IVA — Cruce facturación electrónica</li>
-        <li>Estados Financieros NIIF — Notas y comparativos</li>
-        <li>Retención 350 — Excel formulado</li>
-        <li>Conciliación bancaria — Sin límite de filas</li>
-        <li>Consulta NIT — MUISCA ilimitada</li>
-        <li class="hl" style="background:linear-gradient(90deg,#ECFDF5,#D1FAE5);color:#047857">ExógenaDIAN IA — Auditor DIAN + Estatuto + Asistente (50/dia)</li>
-        <li class="hl">100% automático · Procesa en segundos</li>
-        <li class="hl">12 meses de acceso completo</li>
+        <li class="hl">Todas las herramientas PRO 12 meses</li>
+        <li>Ex&oacute;gena, Renta, IVA, Retenci&oacute;n, EEFF</li>
+        <li>IA Contable (50/d&iacute;a)</li>
+        <li>Conciliaci&oacute;n y NIT ilimitados</li>
+        <li class="hl" style="background:linear-gradient(90deg,#EEF2FF,#E0E7FF);color:#4338CA">Escuela Contable IA GRATIS (9 cursos)</li>
+        <li class="hl">Futuros cursos incluidos</li>
+        <li>Mejor precio garantizado</li>
       </ul>
       <div class="wompi-btn-container" id="wompi-anual">
-        <div class="wompi-loading" style="padding:12px 24px;text-align:center;color:var(--gray-400);font-size:.85rem">Cargando botón de pago...</div>
-        <div class="wompi-fallback" style="display:none;padding:12px 24px;border-radius:10px;background:#FEF3C7;color:#92400E;font-weight:600;font-family:inherit;font-size:.85rem;text-align:center;border:1px solid #FDE68A">El botón de pago no cargó. Escribenos por <a href="https://wa.me/573054559574" style="color:#D97706;font-weight:700;text-decoration:underline">WhatsApp</a> o recarga esta página.</div>
+        <div class="wompi-loading" style="padding:12px 24px;text-align:center;color:var(--gray-400);font-size:.85rem">Cargando bot&oacute;n de pago...</div>
+        <div class="wompi-fallback" style="display:none;padding:12px 24px;border-radius:10px;background:#FEF3C7;color:#92400E;font-weight:600;font-family:inherit;font-size:.85rem;text-align:center;border:1px solid #FDE68A">El bot&oacute;n de pago no carg&oacute;. Escribenos por <a href="https://wa.me/573054559574" style="color:#D97706;font-weight:700;text-decoration:underline">WhatsApp</a> o recarga esta p&aacute;gina.</div>
       </div>
     </div>
   </div>
@@ -261,6 +312,8 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
   var uid=Date.now().toString(36)+Math.random().toString(36).substr(2,6);
   var planes=[
     {id:'wompi-mensual',amount:'1990000',ref:'M-'+uid},
+    {id:'wompi-escuela',amount:'4990000',ref:'E-'+uid},
+    {id:'wompi-pro-escuela',amount:'5980000',ref:'PE-'+uid},
     {id:'wompi-anual',amount:'17990000',ref:'A-'+uid}
   ];
 
