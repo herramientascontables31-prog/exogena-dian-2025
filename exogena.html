@@ -527,10 +527,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div class="alert alert-info"><span>💡</span><div>Revisa y completa los datos faltantes de los terceros más relevantes. Los terceros conocidos (bancos, EPS, AFP, entidades del Estado) ya tienen dirección autocompletada. <strong>Las personas naturales se separaron automáticamente en apellidos y nombres.</strong></div></div>
       <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
         <select id="tercFiltro" onchange="filtrarTerceros()" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;font-family:inherit">
-          <option value="sinDir">Sin dirección</option>
+          <option value="todos" selected>Todos los terceros</option>
+          <option value="sinDir">Sin direccion</option>
           <option value="pn">Personas naturales (CC)</option>
-          <option value="todos">Todos los terceros</option>
-          <option value="conDir">Con dirección (completados)</option>
+          <option value="conDir">Con direccion (completados)</option>
         </select>
         <span id="tercCount" style="font-size:.78rem;color:var(--muted)"></span>
         <button class="btn btn-outline" onclick="exportTercerosCSV()" style="padding:4px 12px;font-size:.75rem;margin-left:auto">📥 Exportar lista</button>
@@ -627,7 +627,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 </div>
 
 <div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
-  <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">Exógena DIAN</a> &middot; Herramienta de asistencia &mdash; El contador debe validar antes de presentar a la DIAN<br>
+  <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">Exógena DIAN</a> &middot; Los formatos generados son borradores que deben ser revisados y validados por un contador p&uacute;blico antes de presentarlos a la DIAN. Exógena DIAN es una herramienta de apoyo, no reemplaza el criterio profesional contable.<br>
   &#128274; Tus archivos se procesan 100% en tu navegador &middot; Nunca se env&iacute;an a servidores &middot; Sin IA &middot; Sin almacenamiento &middot; <a href="https://exogenadian.com/politica-privacidad.html" style="color:#059669">Pol&iacute;tica de privacidad</a> &middot; <a href="https://exogenadian.com/politica-privacidad.html" style="color:#059669">C&oacute;mo protegemos tus datos</a>
 </div>
 
@@ -1300,24 +1300,43 @@ const NITS_EXCLUIR_1003=new Set([NIT_DIAN,'899999090','899999063']);
 
 /* ── RANGOS PUC → CONCEPTO (portados del Python) ── */
 const PARAM_1001_RANGOS=[
+  /* 5005 Arrendamientos */
   ['5005','5120','5120'],['5005','5220','5220'],
-  ['5011','5230','5230'],['5011','5130','5130'],
-  ['5055','5115','5115'],['5004','5110','5110'],
-  ['5016','5125','5125'],['5016','5135','5139'],
-  ['5016','5140','5199'],['5016','5210','5219'],
-  ['5016','5235','5249'],['5016','5295','5299'],
-  ['5006','5305','5305'],['5101','5305','5305'],
-  ['5007','1435','1499'],['5010','1504','1699'],['5010','1520','1540'],
+  /* 5004 Servicios */
+  ['5004','5110','5110'],['5004','5130','5130'],['5004','5230','5230'],
+  /* 5055 Impuestos */
+  ['5055','5115','5115'],
+  /* 5016 Otros costos y deducciones */
+  ['5016','5125','5125'],['5016','5225','5225'],  /* Seguros */
+  ['5016','5135','5139'],['5016','5140','5149'],
+  ['5016','5150','5155'],['5016','5195','5199'],
+  ['5016','5210','5219'],['5016','5235','5249'],['5016','5295','5299'],
+  /* 5013 Donaciones */
+  ['5013','5170','5170'],['5013','5270','5270'],
+  /* 5006 Intereses y rendimientos financieros */
+  ['5006','5305','5305'],
+  /* 5101 GMF */
+  ['5101','511505','511505'],  /* GMF cuando tiene subcuenta especifica */
+  /* 5007 Compra activos movibles (mercancias, inventarios) */
+  ['5007','1435','1499'],
+  /* 5008 Compra activos fijos (PPE) */
+  ['5008','1504','1699'],['5008','1520','1540'],
+  /* 5009 Compra otros activos (intangibles, diferidos) */
+  ['5009','1610','1698'],['5009','1705','1799'],
+  /* 5160 Depreciaciones y amortizaciones → 5016 */
+  ['5016','5160','5160'],['5016','5260','5260'],
   /* v11 AG2025 — Res. 000233/2025 */
-  /* 5089/5090 se diferencian por keyword (enajenacion vs abono); rango solo para 5089 como default */
-  ['5089','5306','5399'],['5091','6135','6199'],['5102','5105','5199'],
+  ['5089','5306','5399'],['5091','6135','6199'],
+  /* 5102 — solo por keyword, NO por rango (el rango 5105-5199 era incorrecto) */
   /* Clase 6: costos de ventas generales */
   ['5007','6100','6134'],['5016','6200','6999'],
 ];
 const PARAM_1001_NOMINA_SUB={
   '5001':['06','07','08','09','10','15','27','30','33','36','39','42','45'],
-  '5002':['01','03','05'],'5024':['02'],'5025':['03'],'5027':['04'],
-  '5023':['68','72','75'],
+  '5002':['01'],'5003':['03','05'],
+  '5010':['69'],'5011':['68'],'5012':['70'],
+  '5024':['02'],'5025':['03'],'5027':['04'],
+  '5023':['72','75'],
 };
 const PARAM_1003=[
   ['1301','13551505','13551509'],['1301','13551510','13551514'],
@@ -1367,28 +1386,54 @@ const MAPEO_1012=[
 
 /* ── KEYWORDS POR NOMBRE DE CUENTA ── */
 const KW_1001=[
-  ['5001',['sueldo','salario','basico','jornal','hora extra','recargo','auxilio transporte','rodamiento']],
-  ['5002',['honorario','honorarios','comision','comisiones']],
-  ['5024',['aporte salud','aporte eps','aportes eps']],
-  ['5025',['aporte pension','aportes pension','fondo pension']],
-  ['5027',['arl','riesgo laboral','riesgos laborales']],
-  ['5023',['parafiscal','parafiscales','icbf','sena','caja de compensacion','compensacion familiar']],
-  ['5001',['vacacion','vacaciones','cesantia','cesantias','prima de servicio','prima servicio',
-           'dotacion','incapacidad','bonificacion']],
-  ['5011',['seguro','poliza','prima de seguro','todo riesgo']],
-  ['5005',['arriendo','arrendamiento','canon','alquiler']],
+  /* Multi-word first (more specific), then single word */
+  /* 5001 Salarios y prestaciones */
+  ['5001',['sueldo','salario','basico','jornal','hora extra','recargo','auxilio transporte','rodamiento',
+           'vacacion','vacaciones','cesantia','cesantias','prima de servicio','prima servicio',
+           'dotacion','incapacidad','bonificacion','indemnizacion laboral']],
+  /* 5002 Honorarios */
+  ['5002',['honorario','honorarios']],
+  /* 5003 Comisiones */
+  ['5003',['comision','comisiones']],
+  /* 5004 Servicios */
   ['5004',['acueducto','energia','telefono','internet','gas','servicio publico','vigilancia',
-           'transporte','flete','acarreo','mensajeria']],
+           'transporte','flete','acarreo','mensajeria','aseo','cafeteria','servicio contratado']],
+  /* 5005 Arrendamientos */
+  ['5005',['arriendo','arrendamiento','canon','alquiler']],
+  /* 5006 Intereses y rendimientos financieros */
+  ['5006',['interes bancario','comision bancaria','gasto financiero','diferencia en cambio']],
+  /* 5007 Compra activos movibles */
+  ['5007',['inventario','compra de mercancia','mercancia','materia prima','material','insumo','repuesto']],
+  /* 5008 Compra activos fijos */
+  ['5008',['activo fijo','activos fijos','propiedad planta','maquinaria','equipo de computo',
+           'equipo de oficina','terreno','edificio','construccion','herramienta','mobiliario']],
+  /* 5009 Compra otros activos */
+  ['5009',['intangible','marca','patente','licencia software','software','franquicia','derecho de autor',
+           'diferido','gastos pagados por anticipado']],
+  /* 5010 Pagos a EPS (aportes salud patronal) — ARUS */
+  ['5010',['aporte eps','aporte salud','aportes eps','entidad promotora de salud','cotizacion salud']],
+  /* 5011 Pagos a ARL (aportes riesgos laborales patronal) — ARUS */
+  ['5011',['aporte arl','aportes arl','administradora riesgos','riesgo laboral','riesgos laborales']],
+  /* 5012 Pagos a fondos de pensiones (aportes pension patronal) — ARUS */
+  ['5012',['aporte pension','aportes pension','fondo de pension','fondo pensiones','cotizacion pension']],
+  /* 5013 Donaciones */
+  ['5013',['donacion','donaciones']],
+  /* 5023 Parafiscales */
+  ['5023',['parafiscal','parafiscales','icbf','sena','caja de compensacion','compensacion familiar']],
+  /* 5024/5025/5027 — Certificados nomina (retenciones trabajador, usados en F2276) */
+  ['5024',['deduccion salud trabajador']],
+  ['5025',['deduccion pension trabajador']],
+  ['5027',['deduccion arl trabajador']],
+  /* 5055 Impuestos asumidos */
   ['5055',['impuesto','ica','industria y comercio','predial','vehiculo','timbre','estampilla']],
+  /* 5101 GMF */
   ['5101',['gmf','4x1000','gravamen a los movimientos','gravamen movimiento']],
-  ['5006',['interes bancario','comision bancaria','gasto financiero','gravamen',
-           'diferencia en cambio']],
-  ['5010',['gastos de personal','bienestar','medicina prepagada']],
-  ['5016',['viaje','viatico','pasaje','tiquete','hospedaje','mantenimiento','reparacion',
+  /* 5016 Otros costos y deducciones (cajón de sastre — al final para que sea fallback) */
+  ['5016',['seguro','poliza','prima de seguro','todo riesgo',
+           'viaje','viatico','pasaje','tiquete','hospedaje','mantenimiento','reparacion',
            'legal','notarial','registro','licencia','depreciacion','amortizacion','provision',
-           'aseo','cafeteria','papeleria','utiles','fotocopia','parqueadero','publicidad',
+           'papeleria','utiles','fotocopia','parqueadero','publicidad',
            'propaganda','suscripcion','diversos']],
-  ['5007',['inventario','compra de','mercancia','materia prima','material','insumo','repuesto']],
   /* v11 AG2025 — Res. 000233/2025 */
   ['5089',['enajenacion acciones','enajenacion cuotas','venta acciones','venta cuotas','partes de interes social','cesion cuotas']],
   ['5090',['abono acciones','abono cuotas','abono partes interes']],
@@ -1417,8 +1462,8 @@ const KW_1003=[
   ['1311',['autorretencion','auto retencion','autoretefte']],
 ];
 
-const CONCEPTOS_NOMINA=new Set(['5001','5024','5025','5027','5023']);
-const CONCEPTOS_SOLO_ENTIDADES=new Set(['5011','5012','5013','5023','5024','5025','5027']);
+const CONCEPTOS_NOMINA=new Set(['5001','5010','5011','5012','5024','5025','5027','5023']);
+const CONCEPTOS_SOLO_ENTIDADES=new Set(['5010','5011','5012','5013','5023','5024','5025','5027']);
 
 /* ── FUNCIONES DE CLASIFICACION ── */
 function enRango(cta,d,h){const n=d.length;return cta.substring(0,n)>=d&&cta.substring(0,n)<=h}
@@ -1447,13 +1492,13 @@ function clasificarPorNombre(nom,tabla){
 }
 
 function concepto1001(cta,nom){
-  // 5105 = Gastos de personal → subcuenta de nómina
+  // 5105 = Gastos de personal → subcuenta de nómina (subcuenta tiene prioridad sobre keyword)
   if(cta.startsWith('5105')){
-    const r=clasificarPorNombre(nom,KW_1001);if(r)return r;
     const sc=cta.length>=6?cta.substring(4,6):cta.substring(4);
     for(const[conc,subs] of Object.entries(PARAM_1001_NOMINA_SUB)){
       if(subs.includes(sc))return conc;
     }
+    const r=clasificarPorNombre(nom,KW_1001);if(r)return r;
     return'5001';
   }
   // Clases 51, 52, 53 = Gastos/Costos
@@ -1669,23 +1714,9 @@ function renderClasificacion(sinClasificar){
   const barColor=pctValor>=90?'var(--green)':pctValor>=70?'var(--amber)':'var(--red)';
 
   document.getElementById('clasifStats').innerHTML=`
-    <div class="stat-card blue"><div class="val">${totalReg.toLocaleString()}</div><div class="lbl">Registros clasificados</div></div>
-    <div class="stat-card green"><div class="val">${nFormatos}</div><div class="lbl">Formatos con datos</div></div>
-    <div class="stat-card amber"><div class="val">${sinClasificar}</div><div class="lbl">Sin clasificar</div></div>
-    <div class="stat-card red"><div class="val">${clasificacion.filter(r=>CONCEPTOS_NOMINA.has(r.concepto)).length}</div><div class="lbl">Registros nomina</div></div>`;
+    <div class="stat-card blue"><div class="val">${totalReg.toLocaleString()}</div><div class="lbl">Clasificados</div></div>
+    <div class="stat-card amber"><div class="val">${sinClasificar}</div><div class="lbl">Sin clasificar</div></div>`;
 
-  // Barra de cobertura
-  document.getElementById('clasifStats').innerHTML+=`
-    <div style="grid-column:span 4;margin-top:4px">
-      <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px">
-        <span style="font-weight:600;color:var(--pri)">Cobertura del balance</span>
-        <span style="font-weight:700;color:${barColor}">${pctValor}% del valor · ${pctClasif}% de registros</span>
-      </div>
-      <div style="background:var(--border);border-radius:6px;height:10px;overflow:hidden">
-        <div style="background:${barColor};height:100%;width:${pctValor}%;border-radius:6px;transition:width .5s"></div>
-      </div>
-      <div style="font-size:.72rem;color:var(--muted);margin-top:4px">Clasificados: $${fN(totalValClasif)} de $${fN(totalValBalance)} totales en el balance${pctValor<85?' — <strong style="color:var(--amber)">revise las cuentas sin clasificar abajo</strong>':' — <strong style="color:var(--green)">buena cobertura</strong>'}</div>
-    </div>`;
 
   if(totalReg>0){
     document.getElementById('clasifOk').classList.remove('hidden');
@@ -1732,7 +1763,7 @@ function renderClasificacion(sinClasificar){
   document.getElementById('formatSummary').innerHTML=sh;
 
   // Detail table (first 100)
-  let h='<table class="map-table"><thead><tr><th>#</th><th>Formato</th><th>Concepto</th><th>Cuenta</th><th>Nombre</th><th>NIT</th><th>Debito</th><th>Credito</th></tr></thead><tbody>';
+  let h='<table class="map-table"><thead><tr><th>#</th><th>Formato</th><th>Concepto</th><th>Cuenta</th><th>Nombre</th><th>NIT</th><th>Valor</th></tr></thead><tbody>';
   const show=clasificacion.slice(0,100);
   for(let i=0;i<show.length;i++){
     const r=show[i];
@@ -1745,13 +1776,15 @@ function renderClasificacion(sinClasificar){
         <option value="F1007">F1007 Ingresos</option><option value="F1008">F1008 CxC</option>
         <option value="F1009">F1009 CxP</option><option value="F1010">F1010 Socios</option>
         <option value="F1012">F1012 Inversiones</option><option value="F2276">F2276 Nómina</option>
-      </select></td><td class="mono">${r.concepto}</td><td class="mono">${r.code}</td><td>${esc(r.name).substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
+      </select></td><td class="mono">${r.concepto}</td><td class="mono">${r.code}</td><td>${esc(r.name).substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.val)}</td></tr>`;
     }else{
       const badge=`<span class="fmt-badge fmt-${r.formato.substring(1)}">${r.formato}</span>`;
-      h+=`<tr><td>${i+1}</td><td>${badge}</td><td class="mono">${r.concepto}</td><td class="mono">${r.code}</td><td>${esc(r.name).substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.deb)}</td><td class="text-right mono">${fN(r.cre)}</td></tr>`;
+      h+=`<tr><td>${i+1}</td><td>${badge}</td><td class="mono"><input type="text" value="${r.concepto}" onchange="cambiarConcepto(${i},this.value)" style="width:50px;padding:2px 4px;font-size:.75rem;border:1px solid var(--border);border-radius:4px;font-family:inherit;text-align:center"></td><td class="mono">${r.code}</td><td>${esc(r.name).substring(0,25)}</td><td class="mono">${r.nit}</td><td class="text-right mono">${fN(r.val)}</td></tr>`;
     }
   }
-  if(clasificacion.length>100)h+=`<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:12px">... y ${clasificacion.length-100} registros mas</td></tr>`;
+  if(clasificacion.length>100)h+=`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:12px">... y ${clasificacion.length-100} registros mas</td></tr>`;
+  const totalVal=clasificacion.reduce((s,r)=>s+r.val,0);
+  h+=`<tr style="background:#f0f9ff;font-weight:700"><td colspan="6" style="text-align:right;padding-right:12px">TOTAL</td><td class="text-right mono">${fN(totalVal)}</td></tr>`;
   h+='</tbody></table>';
   document.getElementById('clasifTable').innerHTML=h;
 }
@@ -1770,8 +1803,12 @@ function reclasificar(idx,nuevoFormato){
   const totalReg=clasificacion.length-sinClasificar;
   const nFormatos=new Set(clasificacion.filter(r=>r.formato!=='—').map(r=>r.formato)).size;
   document.querySelector('.stat-card.blue .val').textContent=totalReg.toLocaleString();
-  document.querySelector('.stat-card.green .val').textContent=nFormatos;
   document.querySelector('.stat-card.amber .val').textContent=sinClasificar;
+}
+
+function cambiarConcepto(idx,nuevoConcepto){
+  clasificacion[idx].concepto=nuevoConcepto.trim();
+  exoToast(`Concepto actualizado a ${nuevoConcepto} para ${clasificacion[idx].code}`,'success');
 }
 
 function filtrarClasificacion(){
@@ -1977,13 +2014,44 @@ function generarFormatos(){
     }
   }
 
+  // ── Reglas gastos NO deducibles (Art. 105, 177-1, 771-2, 771-5 ET) ──
+  const REGLAS_NO_DED_1001=[
+    {test:c=>/^5199/.test(c),desc:'Provisiones'},
+    {test:c=>/^530505/.test(c),desc:'Intereses moratorios DIAN'},
+    {test:c=>/^530525/.test(c),desc:'Multas y sanciones'},
+    {test:c=>/^530535/.test(c),desc:'Sanciones'},
+    {test:c=>/^5310/.test(c),desc:'Pérdida venta bienes'},
+    {test:c=>/^5315/.test(c),desc:'Gastos extraordinarios'},
+    {test:(c,n)=>/^511570/.test(c)||/donaci[oó]n.*sin.*requisito/i.test(n),desc:'Donaciones sin requisitos'},
+    {test:(c,n)=>/^513535/.test(c)||/impuesto.*patrimonio/i.test(n),desc:'Impuesto al patrimonio'},
+    {test:(c,n)=>/^511595/.test(c)||/parafiscal.*sin.*pago/i.test(n),desc:'Aportes parafiscales sin pago'},
+    {test:(c,n)=>/^516099/.test(c)||/depreciac.*exceso/i.test(n),desc:'Depreciación en exceso'},
+    {test:(c,n)=>/^519530/.test(c)||/regalo.*atenci[oó]n/i.test(n),desc:'Regalos y atenciones'},
+    {test:(c,n)=>/^519595/.test(c)||/gasto.*sin.*soporte/i.test(n),desc:'Gastos sin soporte'},
+    {test:(c,n)=>/^529505/.test(c)||/impuesto.*asumido.*no.*ded/i.test(n),desc:'Impuestos asumidos no deducibles'},
+    {test:(c,n)=>/^529510/.test(c)||/inter[eé]s.*presunt/i.test(n),desc:'Intereses presuntos'},
+    {test:(c,n)=>/^529595/.test(c)||/gasto.*ejercicio.*anterior/i.test(n),desc:'Gastos ejercicios anteriores'},
+    {test:(c,n)=>/^5295.*no.*ded/i.test(n),desc:'Gastos no deducibles'},
+    {test:(c,n)=>/gravamen.*financiero|gmf|4.*1000/i.test(n)&&/^5115/.test(c),desc:'GMF 50% no deducible',pct:0.5},
+  ];
+  function esNoDeducible1001(code,name){
+    for(const r of REGLAS_NO_DED_1001){
+      if(r.test(code,name||''))return r;
+    }
+    return null;
+  }
+
   // ── F1001: Pagos ──
   const dic1={};
   for(const r of clasificacion){
     if(r.formato!=='F1001')continue;
     const k=r.concepto+'|'+r.nit;
     if(!dic1[k])dic1[k]={concepto:r.concepto,nit:r.nit,razon:r.razon,ded:0,noDed:0,retFte:0,retIva:0};
-    dic1[k].ded+=r.val;
+    const regla=esNoDeducible1001(r.code,r.name);
+    if(regla){
+      if(regla.pct){dic1[k].ded+=r.val*(1-regla.pct);dic1[k].noDed+=r.val*regla.pct}
+      else{dic1[k].noDed+=r.val}
+    }else{dic1[k].ded+=r.val}
   }
   // Distribuir retenciones proporcionalmente
   const nitConceptos={};
@@ -2314,19 +2382,13 @@ function renderDescargar(){
     'F1007':'Ingresos','F1008':'CxC','F1009':'CxP','F1010':'Socios','F1012':'Inversiones','F2276':'Nomina'};
   let totalReg=0,totalFmt=0;
   for(const f of fmtOrder){if(formatos[f]&&formatos[f].length>0){totalReg+=formatos[f].length;totalFmt++}}
-  document.getElementById('dlStats').innerHTML=`
-    <div class="stat-card green"><div class="val">${totalFmt}</div><div class="lbl">Formatos</div></div>
-    <div class="stat-card blue"><div class="val">${totalReg.toLocaleString()}</div><div class="lbl">Registros</div></div>
-    <div class="stat-card amber"><div class="val">2</div><div class="lbl">Archivos</div></div>
-    <div class="stat-card green"><div class="val">✓</div><div class="lbl">Listo</div></div>`;
-  let s='<table class="map-table"><thead><tr><th>Formato</th><th>Registros</th><th>Cuantias Menores</th><th>Estado</th></tr></thead><tbody>';
+  document.getElementById('dlStats').innerHTML='';
+  let s='<table class="map-table"><thead><tr><th>Formato</th><th>Estado</th></tr></thead><tbody>';
   for(const f of fmtOrder){
     const rows=formatos[f]||[];
     const badge=`<span class="fmt-badge fmt-${f.substring(1)}">${f}</span>`;
-    const uvt=uvtExcluidos[f];
-    const uvtInfo=uvt&&uvt.count>0?`<span style="font-size:.75rem;color:var(--amber)" title="${uvt.count} terceros agrupados en cuantias menores por ser < ${uvt.umbral}">${uvt.count} terceros → NIT ${NM}<br><span style="font-size:.7rem;color:var(--muted)">Umbral: ${uvt.umbral}</span></span>`:'<span style="color:var(--muted);font-size:.75rem">—</span>';
-    if(rows.length>0)s+=`<tr><td>${badge} ${fmtNames[f]}</td><td class="text-right mono">${rows.length}</td><td>${uvtInfo}</td><td style="color:var(--green)">✓ Listo</td></tr>`;
-    else s+=`<tr><td style="color:var(--muted)">${badge} ${fmtNames[f]}</td><td class="text-right mono" style="color:var(--muted)">0</td><td>${uvtInfo}</td><td style="color:var(--muted)">Sin datos</td></tr>`;
+    if(rows.length>0)s+=`<tr><td>${badge} ${fmtNames[f]}</td><td style="color:var(--green)">✓ ${rows.length} registros</td></tr>`;
+    else s+=`<tr><td style="color:var(--muted)">${badge} ${fmtNames[f]}</td><td style="color:var(--muted)">Sin datos</td></tr>`;
   }
   s+='</tbody></table>';
   // Nota explicativa cuantías menores
