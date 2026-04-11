@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="../shared/cookie-consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S7SM6ST4CC');
+</script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta name="theme-color" content="#059669">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso IVA 300 &mdash; Escuela Contable IA | Ex&oacute;genaDIAN</title>
+<meta name="description" content="Aprende el formulario 300 de IVA haciendo. 6 m&oacute;dulos con referencias normativas del Estatuto Tributario, tips pr&aacute;cticos y herramienta real para procesar tu balance.">
+<link rel="canonical" href="https://exogenadian.com/escuela/iva300.html">
+<meta name="robots" content="index, follow">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-900:#064E3B;--green-800:#065F46;--green-700:#047857;--green-600:#059669;--green-500:#10B981;--green-400:#34D399;--green-300:#6EE7B7;--green-200:#A7F3D0;--green-100:#D1FAE5;--green-50:#ECFDF5;
+  --white:#FFF;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-500:#6B7280;--gray-600:#4B5563;--gray-700:#374151;--gray-800:#1F2937;--gray-900:#111827;
+  --amber-50:#FFFBEB;--amber-100:#FEF3C7;--amber-500:#F59E0B;--amber-700:#92400E;--amber-800:#78350F;
+  --blue-50:#EFF6FF;--blue-100:#DBEAFE;--blue-500:#3B82F6;--blue-700:#1D4ED8;
+  --purple-50:#F5F3FF;--purple-100:#EDE9FE;--purple-500:#8B5CF6;--purple-700:#6D28D9;
+  --rose-50:#FFF1F2;--rose-500:#F43F5E;--rose-700:#BE123C;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.6}
+
+/* ===== LAYOUT ===== */
+.curso-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+@media(max-width:900px){.curso-layout{grid-template-columns:1fr}}
+
+/* ===== SIDEBAR ===== */
+.sidebar{background:var(--white);border-right:1px solid var(--gray-200);padding:20px 0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.sidebar-header{padding:16px 20px;border-bottom:1px solid var(--gray-100)}
+.sidebar-header a{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--gray-800);font-weight:800;font-size:.9rem}
+.sidebar-header a div{width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900}
+.sidebar-header small{display:block;font-size:.72rem;color:var(--gray-400);font-weight:500;margin-top:2px}
+.sidebar-curso{padding:16px 20px;border-bottom:1px solid var(--gray-100)}
+.sidebar-curso h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--amber-700);margin-bottom:4px}
+.sidebar-curso p{font-size:.88rem;font-weight:700;color:var(--gray-800)}
+.sidebar-nav{padding:12px 0;flex:1}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:10px 20px;text-decoration:none;color:var(--gray-500);font-size:.85rem;font-weight:500;transition:all .15s;border-left:3px solid transparent}
+.sidebar-nav a:hover{background:var(--green-50);color:var(--green-700)}
+.sidebar-nav a.active{background:var(--green-50);color:var(--green-700);font-weight:700;border-left-color:var(--green-600)}
+.sidebar-nav a .nav-num{width:24px;height:24px;border-radius:50%;background:var(--gray-100);color:var(--gray-500);display:grid;place-items:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+.sidebar-nav a.active .nav-num{background:var(--green-600);color:#fff}
+.sidebar-nav a.completed .nav-num{background:var(--green-200);color:var(--green-700)}
+.sidebar-back{padding:16px 20px;border-top:1px solid var(--gray-100);margin-top:auto}
+.sidebar-back a{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--gray-400);font-size:.82rem;font-weight:500;transition:color .15s}
+.sidebar-back a:hover{color:var(--gray-700)}
+.sidebar-toggle{display:none;position:fixed;bottom:20px;left:20px;z-index:200;width:48px;height:48px;border-radius:50%;background:var(--green-600);color:#fff;border:none;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 16px rgba(5,150,105,.3)}
+@media(max-width:900px){
+  .sidebar{display:none;position:fixed;top:0;left:0;z-index:199;width:280px;box-shadow:4px 0 20px rgba(0,0,0,.1)}
+  .sidebar.open{display:flex}
+  .sidebar-toggle{display:block}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:198}
+  .sidebar-overlay.open{display:block}
+}
+
+/* ===== MAIN CONTENT ===== */
+.curso-main{padding:32px 40px 60px;max-width:860px}
+@media(max-width:900px){.curso-main{padding:20px 16px 80px}}
+
+/* Module header */
+.mod-header{margin-bottom:32px}
+.mod-breadcrumb{font-size:.78rem;color:var(--gray-400);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mod-breadcrumb a{color:var(--gray-400);text-decoration:none}
+.mod-breadcrumb a:hover{color:var(--green-600)}
+.mod-num{display:inline-flex;align-items:center;gap:8px;background:var(--amber-100);color:var(--amber-800);padding:4px 14px;border-radius:100px;font-size:.78rem;font-weight:700;margin-bottom:12px}
+.mod-header h1{font-family:'Fraunces',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px;line-height:1.2}
+.mod-header .mod-desc{font-size:1rem;color:var(--gray-500);max-width:600px;line-height:1.6}
+
+/* Content blocks */
+.content-block{margin-bottom:28px}
+.content-block h2{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;margin-bottom:12px;color:var(--gray-900);padding-bottom:8px;border-bottom:2px solid var(--green-200)}
+.content-block h3{font-size:1.05rem;font-weight:700;margin:20px 0 8px;color:var(--gray-800)}
+.content-block p{font-size:.92rem;color:var(--gray-600);line-height:1.7;margin-bottom:12px}
+.content-block ul,.content-block ol{margin:8px 0 16px 20px;display:flex;flex-direction:column;gap:6px}
+.content-block li{font-size:.9rem;color:var(--gray-600);line-height:1.6}
+
+/* Norma card */
+.norma{background:var(--amber-50);border:1.5px solid #FDE68A;border-radius:14px;padding:20px 24px;margin:20px 0}
+.norma-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.norma-icon{width:32px;height:32px;border-radius:8px;background:#FDE68A;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
+.norma-header h4{font-size:.92rem;font-weight:700;color:var(--amber-800)}
+.norma-header .norma-tag{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--amber-500);color:#fff;text-transform:uppercase;letter-spacing:.04em}
+.norma blockquote{font-size:.88rem;color:#78350F;line-height:1.65;padding:12px 16px;background:rgba(255,255,255,.6);border-radius:8px;border-left:3px solid var(--amber-500);margin:8px 0;font-style:italic}
+.norma blockquote strong{font-style:normal;color:var(--amber-800)}
+.norma p{font-size:.85rem;color:#78350F;line-height:1.6;margin:8px 0}
+.norma .norma-aplicacion{font-size:.82rem;color:var(--green-800);background:var(--green-50);padding:10px 14px;border-radius:8px;border:1px solid var(--green-200);margin-top:12px}
+.norma .norma-aplicacion strong{color:var(--green-700)}
+
+/* Tip card */
+.tip{background:var(--blue-50);border:1.5px solid #BFDBFE;border-radius:14px;padding:18px 22px;margin:20px 0}
+.tip-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tip-header h4{font-size:.88rem;font-weight:700;color:var(--blue-700)}
+.tip p{font-size:.88rem;color:#1E40AF;line-height:1.6}
+
+/* Error com&uacute;n */
+.error-comun{background:var(--rose-50);border:1.5px solid #FECACA;border-radius:14px;padding:18px 22px;margin:20px 0}
+.error-comun-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.error-comun-header h4{font-size:.88rem;font-weight:700;color:var(--rose-700)}
+.error-comun p{font-size:.88rem;color:#9F1239;line-height:1.6}
+
+/* Tabla normativa */
+.tabla-norm{width:100%;border-collapse:collapse;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--gray-200)}
+.tabla-norm th{background:var(--gray-100);padding:10px 14px;text-align:left;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-500)}
+.tabla-norm td{padding:10px 14px;font-size:.85rem;border-top:1px solid var(--gray-100);color:var(--gray-700)}
+.tabla-norm tr:hover{background:var(--green-50)}
+.tabla-norm code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--gray-100);padding:1px 6px;border-radius:4px}
+
+/* Ejemplo pr&aacute;ctico */
+.ejemplo{background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;overflow:hidden;margin:20px 0;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+.ejemplo-header{background:var(--gray-50);padding:12px 20px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;gap:8px}
+.ejemplo-header h4{font-size:.85rem;font-weight:700;color:var(--gray-700)}
+.ejemplo-body{padding:16px 20px}
+.ejemplo-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:.88rem}
+.ejemplo-row:last-child{border-bottom:none}
+.ejemplo-row .label{color:var(--gray-600)}
+.ejemplo-row .value{font-weight:700;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.ejemplo-row.total{border-top:2px solid var(--green-200);border-bottom:none;padding-top:12px;margin-top:4px}
+.ejemplo-row.total .label{font-weight:700;color:var(--gray-900)}
+.ejemplo-row.total .value{color:var(--green-700);font-size:.95rem}
+
+/* Navigation between modules */
+.mod-nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:2px solid var(--gray-200)}
+.mod-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:700;font-size:.92rem;transition:all .2s}
+.mod-nav .prev{background:var(--gray-100);color:var(--gray-700)}
+.mod-nav .prev:hover{background:var(--gray-200)}
+.mod-nav .next{background:var(--green-600);color:#fff;box-shadow:0 4px 12px rgba(5,150,105,.25)}
+.mod-nav .next:hover{background:var(--green-700);transform:translateY(-1px)}
+
+/* CTA practica */
+.cta-practica{background:linear-gradient(135deg,var(--green-50),#D1FAE5);border:2px solid var(--green-300);border-radius:16px;padding:28px 24px;text-align:center;margin:28px 0}
+.cta-practica h3{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;color:var(--green-800);margin-bottom:8px}
+.cta-practica p{font-size:.92rem;color:var(--green-700);margin-bottom:16px}
+.cta-practica a{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--green-600);color:#fff;border-radius:12px;font-weight:700;font-size:1rem;text-decoration:none;box-shadow:0 4px 16px rgba(5,150,105,.3);transition:all .2s}
+.cta-practica a:hover{background:var(--green-700);transform:translateY(-2px)}
+
+/* Progress */
+.progress-bar{height:4px;background:var(--gray-200);border-radius:2px;margin:12px 20px;overflow:hidden}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--green-500),var(--green-400));border-radius:2px;transition:width .3s}
+
+/* Expand/collapse */
+.expandible{margin:12px 0}
+.expandible-toggle{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;color:var(--gray-700);transition:all .15s;text-align:left}
+.expandible-toggle:hover{background:var(--gray-100)}
+.expandible-toggle svg{width:16px;height:16px;transition:transform .2s;flex-shrink:0}
+.expandible-content{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.expandible.open .expandible-content{max-height:2000px}
+.expandible.open .expandible-toggle svg{transform:rotate(180deg)}
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<div class="curso-layout">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html">
+        <div>E</div>
+        Ex&oacute;genaDIAN
+      </a>
+    </div>
+    <div class="sidebar-curso">
+      <h3>Escuela Contable IA</h3>
+      <p>Formulario 300 &mdash; IVA</p>
+    </div>
+    <div class="progress-bar"><div class="fill" id="progressFill" style="width:16%"></div></div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <a href="#modulo-1" class="active" onclick="navigateTo(1)">
+        <span class="nav-num">1</span> Responsables del IVA
+      </a>
+      <a href="#modulo-2" onclick="navigateTo(2)">
+        <span class="nav-num">2</span> IVA generado vs. descontable
+      </a>
+      <a href="#modulo-3" onclick="navigateTo(3)">
+        <span class="nav-num">3</span> Proporcionalidad del IVA
+      </a>
+      <a href="#modulo-4" onclick="navigateTo(4)">
+        <span class="nav-num">4</span> IVA en importaciones
+      </a>
+      <a href="#modulo-5" onclick="navigateTo(5)">
+        <span class="nav-num">5</span> Devoluciones y ajustes
+      </a>
+      <a href="#modulo-6" onclick="navigateTo(6)">
+        <span class="nav-num">6</span> Practica con tu balance
+      </a>
+    </nav>
+    <div class="sidebar-back">
+      <a href="../escuela.html">&larr; Volver a la Escuela</a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="curso-main">
+
+    <!-- ===================== M&Oacute;DULO 1 ===================== -->
+    <section id="modulo-1" class="modulo-section">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IVA 300</a> &rsaquo; M&oacute;dulo 1
+        </div>
+        <div class="mod-num">M&oacute;dulo 1 de 6</div>
+        <h1>Responsables del IVA: &iquest;qui&eacute;n declara y qui&eacute;n no?</h1>
+        <p class="mod-desc">Antes de tocar una sola casilla del formulario 300, necesitas saber si tu cliente est&aacute; obligado a declarar IVA y bajo qu&eacute; r&eacute;gimen. Este m&oacute;dulo te da las reglas claras.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>&iquest;Qui&eacute;nes son responsables del IVA?</h2>
+        <p>El IVA en Colombia grava la venta de bienes muebles e inmuebles, la prestaci&oacute;n de servicios en el territorio nacional, la importaci&oacute;n de bienes y la circulaci&oacute;n, venta u operaci&oacute;n de juegos de suerte y azar. Pero no todos los que realizan estas actividades son responsables.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art&iacute;culo 437 del Estatuto Tributario</h4>
+            <span class="norma-tag">Obligatorio</span>
+          </div>
+          <blockquote>
+            <strong>&ldquo;Son responsables del impuesto sobre las ventas</strong> los comerciantes, quienes presten servicios, los importadores, y quienes realicen operaciones de juegos de suerte y azar, salvo aquellos que realicen exclusivamente operaciones excluidas o no gravadas con el impuesto.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> Si tu cliente vende al menos un bien o servicio gravado con IVA, es responsable. No importa que tambi&eacute;n tenga ingresos excluidos &mdash; basta uno gravado.
+          </div>
+        </div>
+
+        <h3>Los que NO son responsables</h3>
+        <p>El Art. 437 par&aacute;grafo 3 establece que no son responsables del IVA las personas naturales comerciantes y artesanos que cumplan TODAS estas condiciones:</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 437 Par. 3 ET &mdash; Topes para NO responsables</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr>
+                <th>Requisito</th>
+                <th>L&iacute;mite AG 2025</th>
+                <th>En pesos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Ingresos brutos del a&ntilde;o anterior</td>
+                <td>&lt; 3.500 UVT</td>
+                <td>&lt; $174.296.500</td>
+              </tr>
+              <tr>
+                <td>Un solo establecimiento de comercio</td>
+                <td colspan="2">S&iacute;</td>
+              </tr>
+              <tr>
+                <td>No ser usuario aduanero</td>
+                <td colspan="2">S&iacute;</td>
+              </tr>
+              <tr>
+                <td>No explotar intangibles</td>
+                <td colspan="2">S&iacute;</td>
+              </tr>
+              <tr>
+                <td>No ser franquiciado</td>
+                <td colspan="2">S&iacute;</td>
+              </tr>
+              <tr>
+                <td>Consignaciones bancarias del a&ntilde;o anterior</td>
+                <td>&lt; 3.500 UVT</td>
+                <td>&lt; $174.296.500</td>
+              </tr>
+            </tbody>
+          </table>
+          <p><strong>UVT 2025:</strong> $49.799 (Dec. 2269/2024). Recuerda: UVT 2026 = $52.369 (Dec. 0242/2025) para obligaciones que se causan en 2026.</p>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>Las <strong>personas jur&iacute;dicas</strong> (SAS, LTDA, SA) son SIEMPRE responsables de IVA si realizan actividades gravadas, sin importar el monto de ingresos. Los topes del Art. 437 par. 3 solo aplican a personas naturales.</p>
+        </div>
+
+        <h3>R&eacute;gimen Simple (SIMPLE) y el IVA</h3>
+        <p>Los contribuyentes del R&eacute;gimen Simple de Tributaci&oacute;n (RST) tienen un tratamiento especial:</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 903 y 915 ET &mdash; IVA en R&eacute;gimen Simple</h4>
+          </div>
+          <blockquote>
+            Los contribuyentes del SIMPLE que desarrollen actividades de expendio de comidas y bebidas <strong>integran el IVA dentro del impuesto unificado</strong> (Art. 907 num. 4 ET). Los dem&aacute;s contribuyentes del SIMPLE <strong>s&iacute; deben declarar y pagar IVA</strong> de forma bimestral en el formulario 300.
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Error com&uacute;n:</strong> Asumir que por estar en SIMPLE no se declara IVA. Solo los de comidas y bebidas lo integran. Un consultor en SIMPLE s&iacute; presenta formulario 300.
+          </div>
+        </div>
+
+        <h3>Periodicidad de la declaraci&oacute;n</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 600 ET &mdash; Periodo gravable del IVA</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Periodo</th><th>Condici&oacute;n</th><th>Qui&eacute;nes</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Bimestral</strong></td>
+                <td>Ingresos brutos del a&ntilde;o anterior &ge; 92.000 UVT</td>
+                <td>Grandes contribuyentes, PJ con ingresos &ge; $4.581.508.000 (2025)</td>
+              </tr>
+              <tr>
+                <td><strong>Cuatrimestral</strong></td>
+                <td>Ingresos brutos del a&ntilde;o anterior &lt; 92.000 UVT</td>
+                <td>PJ y PN con ingresos &lt; $4.581.508.000 (2025)</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="norma-aplicacion">
+            <strong>Importante:</strong> La periodicidad se determina por los ingresos del a&ntilde;o <strong>anterior</strong>, no del a&ntilde;o corriente. Si un cliente creci&oacute; en 2025 y super&oacute; los 92.000 UVT, solo cambia a bimestral en <strong>2026</strong>.
+          </div>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Presentar declaraciones <strong>bimestrales cuando corresponde cuatrimestral</strong> (o viceversa). La DIAN cruza esto autom&aacute;ticamente con la declaraci&oacute;n de renta del a&ntilde;o anterior. Si presentas en periodo incorrecto, la declaraci&oacute;n se tiene como no presentada (Art. 580 ET).</p>
+        </div>
+
+        <h3>Bienes y servicios: gravados, excluidos y exentos</h3>
+        <p>Es fundamental diferenciar estos tres conceptos porque afectan directamente qu&eacute; IVA puedes descontar:</p>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Categor&iacute;a</th><th>IVA que cobra</th><th>IVA que descuenta</th><th>Norma ET</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Gravado 19%</strong></td>
+              <td>S&iacute; &mdash; 19%</td>
+              <td>S&iacute; &mdash; todo el IVA de compras relacionadas</td>
+              <td>Art. 468</td>
+            </tr>
+            <tr>
+              <td><strong>Gravado 5%</strong></td>
+              <td>S&iacute; &mdash; 5%</td>
+              <td>S&iacute; &mdash; todo el IVA de compras relacionadas</td>
+              <td>Art. 468-1</td>
+            </tr>
+            <tr>
+              <td><strong>Excluido</strong></td>
+              <td>No</td>
+              <td><strong>No</strong> &mdash; el IVA pagado va al costo/gasto</td>
+              <td>Arts. 424, 476</td>
+            </tr>
+            <tr>
+              <td><strong>Exento (tasa 0%)</strong></td>
+              <td>No (tasa 0%)</td>
+              <td><strong>S&iacute;</strong> &mdash; genera saldo a favor</td>
+              <td>Art. 477</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>La diferencia clave</h4>
+          </div>
+          <p><strong>Excluido vs. Exento:</strong> Ambos no cobran IVA al comprador. Pero el <strong>exento</strong> s&iacute; puede descontar el IVA pagado en sus compras (genera saldo a favor y puede pedir devoluci&oacute;n). El <strong>excluido</strong> no puede descontar nada &mdash; el IVA pagado se vuelve mayor valor del costo. Esta diferencia puede significar millones en flujo de caja.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Cuentas PUC relacionadas con responsabilidad IVA
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Cuenta</th><th>Nombre</th><th>Relaci&oacute;n con IVA</th></tr></thead>
+              <tbody>
+                <tr><td><code>2408</code></td><td>IVA generado</td><td>Cr&eacute;dito &rarr; IVA que cobras (casillas 27-29)</td></tr>
+                <tr><td><code>240805</code></td><td>IVA generado 19%</td><td>Tarifa general</td></tr>
+                <tr><td><code>240810</code></td><td>IVA generado 5%</td><td>Tarifa diferencial</td></tr>
+                <tr><td><code>2365</code></td><td>Retenci&oacute;n de IVA</td><td>IVA que te retuvieron (casilla 65)</td></tr>
+                <tr><td><code>2367</code></td><td>IVA retenido a terceros</td><td>IVA que retuviste (F350, no F300)</td></tr>
+                <tr><td><code>2404</code></td><td>IVA descontable (compras)</td><td>D&eacute;bito &rarr; IVA que descuentas (casillas 40-52)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <span></span>
+        <a href="#modulo-2" class="next" onclick="navigateTo(2)">M&oacute;dulo 2: IVA generado vs. descontable &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 2 ===================== -->
+    <section id="modulo-2" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IVA 300</a> &rsaquo; M&oacute;dulo 2
+        </div>
+        <div class="mod-num">M&oacute;dulo 2 de 6</div>
+        <h1>IVA generado vs. IVA descontable: c&oacute;mo se calcula el saldo</h1>
+        <p class="mod-desc">La esencia del formulario 300 es una resta: lo que cobraste de IVA menos lo que pagaste. Pero las reglas para descontar no son tan simples como parecen.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>IVA generado: lo que cobras</h2>
+        <p>El IVA generado es el impuesto que recaudas al vender bienes o prestar servicios gravados. Se registra en las cuentas del pasivo (2408xx) como un valor que le debes a la DIAN.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 447 ET &mdash; Base gravable general</h4>
+          </div>
+          <blockquote>
+            &ldquo;En la venta y prestaci&oacute;n de servicios, la base gravable ser&aacute; el <strong>valor total de la operaci&oacute;n</strong>, sea que esta se realice de contado o a cr&eacute;dito, incluyendo entre otros los gastos directos de financiaci&oacute;n ordinaria, extraordinaria, o moratoria, accesorios, acarreos, instalaciones, seguros, comisiones, garant&iacute;as y dem&aacute;s erogaciones complementarias&hellip;&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Clave:</strong> La base del IVA NO es solo el precio del producto. Incluye fletes, seguros, comisiones y cualquier otro cargo cobrado al comprador. Error com&uacute;n: facturar el flete por separado sin IVA cuando es parte de la venta gravada.
+          </div>
+        </div>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; C&aacute;lculo de IVA generado en el F300</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">Cas. 27 &mdash; Ingresos gravados a tarifa general (19%)</span><span class="value">$847.350.000</span></div>
+            <div class="ejemplo-row"><span class="label">Cas. 28 &mdash; IVA generado tarifa general</span><span class="value">$160.996.500</span></div>
+            <div class="ejemplo-row"><span class="label">Cas. 29 &mdash; Ingresos gravados tarifa 5%</span><span class="value">$23.400.000</span></div>
+            <div class="ejemplo-row"><span class="label">Cas. 30 &mdash; IVA generado tarifa 5%</span><span class="value">$1.170.000</span></div>
+            <div class="ejemplo-row total"><span class="label">Total IVA generado (Cas. 39)</span><span class="value">$162.166.500</span></div>
+          </div>
+        </div>
+
+        <h2>IVA descontable: lo que pagaste</h2>
+        <p>El IVA descontable es el impuesto que pagaste en tus compras de bienes y servicios necesarios para generar tus ingresos gravados. Se registra en las cuentas del activo (2404xx, 1705xx).</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 485 ET &mdash; Impuestos descontables</h4>
+          </div>
+          <blockquote>
+            &ldquo;Son descontables: <strong>a)</strong> El impuesto sobre las ventas facturado al responsable por la adquisici&oacute;n de bienes corporales muebles e inmuebles y servicios. <strong>b)</strong> El impuesto pagado en la importaci&oacute;n de bienes corporales muebles.&rdquo;
+          </blockquote>
+        </div>
+
+        <h3>Requisitos para que el IVA sea descontable</h3>
+        <p>No todo IVA pagado es autom&aacute;ticamente descontable. La DIAN exige estos requisitos:</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Arts. 483, 485, 488 y 771-2 ET &mdash; Requisitos acumulativos</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead><tr><th>#</th><th>Requisito</th><th>Norma</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Que la compra est&eacute; <strong>soportada con factura electr&oacute;nica</strong> o documento equivalente con los requisitos de ley</td><td>Art. 771-2 ET</td></tr>
+              <tr><td>2</td><td>Que el IVA est&eacute; <strong>discriminado</strong> en la factura</td><td>Art. 771-2 ET</td></tr>
+              <tr><td>3</td><td>Que el bien o servicio adquirido <strong>est&eacute; destinado a operaciones gravadas</strong> con IVA</td><td>Art. 488 ET</td></tr>
+              <tr><td>4</td><td>Que el gasto sea <strong>deducible</strong> en renta (relaci&oacute;n de causalidad)</td><td>Art. 488 ET</td></tr>
+              <tr><td>5</td><td>Que se impute en el <strong>periodo en que se haya facturado</strong> o en uno de los dos periodos siguientes</td><td>Art. 496 ET</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Descontar IVA de facturas que <strong>no son electr&oacute;nicas</strong> (Art. 616-1 ET). Desde 2020, la DIAN cruza autom&aacute;ticamente tu F300 con las facturas electr&oacute;nicas reportadas. Si descontaste IVA de un recibo de caja o una cuenta de cobro, lo detectan en el cruce y genera requerimiento.</p>
+        </div>
+
+        <h2>El saldo: a pagar o a favor</h2>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; Determinaci&oacute;n del saldo F300</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">Total IVA generado (Cas. 39)</span><span class="value">$162.166.500</span></div>
+            <div class="ejemplo-row"><span class="label">(-) IVA descontable compras (Cas. 52)</span><span class="value">$98.450.000</span></div>
+            <div class="ejemplo-row"><span class="label">(-) Retenciones de IVA que te practicaron (Cas. 65)</span><span class="value">$8.230.000</span></div>
+            <div class="ejemplo-row total"><span class="label">Saldo a pagar (Cas. 70)</span><span class="value">$55.486.500</span></div>
+          </div>
+        </div>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 484 ET &mdash; IVA en devoluciones</h4>
+          </div>
+          <blockquote>
+            &ldquo;Del total del impuesto generado por las operaciones gravadas se deducir&aacute; el impuesto en <strong>las operaciones anuladas, rescindidas o resueltas</strong>&hellip;&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Cuidado:</strong> Si emitiste una nota cr&eacute;dito, debes restar ese IVA del generado. La nota cr&eacute;dito debe ser electr&oacute;nica y referir la factura original. Si la nota cr&eacute;dito no cumple requisitos, la DIAN puede rechazar el ajuste.
+          </div>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Mapa de casillas del F300 relacionadas
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Secci&oacute;n</th><th>Casillas</th><th>Concepto</th></tr></thead>
+              <tbody>
+                <tr><td>IVA Generado</td><td>27-39</td><td>Ingresos gravados &times; tarifa = IVA cobrado</td></tr>
+                <tr><td>IVA Descontable</td><td>40-52</td><td>Compras gravadas = IVA pagado que descuentas</td></tr>
+                <tr><td>Retenciones</td><td>63-65</td><td>IVA que te retuvieron tus clientes</td></tr>
+                <tr><td>Saldo</td><td>66-70</td><td>Generado - Descontable - Retenciones = saldo</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-1" class="prev" onclick="navigateTo(1)">&larr; M&oacute;dulo 1</a>
+        <a href="#modulo-3" class="next" onclick="navigateTo(3)">M&oacute;dulo 3: Proporcionalidad &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 3 ===================== -->
+    <section id="modulo-3" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IVA 300</a> &rsaquo; M&oacute;dulo 3
+        </div>
+        <div class="mod-num">M&oacute;dulo 3 de 6</div>
+        <h1>Proporcionalidad del IVA: cuando tienes ingresos gravados y excluidos</h1>
+        <p class="mod-desc">Si tu cliente tiene ingresos gravados Y excluidos al mismo tiempo, no puede descontar el 100% del IVA pagado en sus compras. Aqu&iacute; calculamos cu&aacute;nto puede descontar realmente.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>&iquest;Qu&eacute; es el prorrateo de IVA?</h2>
+        <p>Cuando un responsable del IVA realiza operaciones gravadas y excluidas, y tiene compras comunes a ambas (arriendos, servicios p&uacute;blicos, papeler&iacute;a, etc.), solo puede descontar la proporci&oacute;n del IVA correspondiente a las operaciones gravadas.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 490 ET &mdash; Proporcionalidad del IVA descontable</h4>
+            <span class="norma-tag">Cr&iacute;tico</span>
+          </div>
+          <blockquote>
+            &ldquo;Cuando los bienes y servicios que otorgan derecho a descuento se destinen indistintamente a operaciones gravadas, excluidas o exentas, y no fuere posible establecer su imputaci&oacute;n directa, <strong>el c&oacute;mputo de dicho descuento se efectuar&aacute; en proporci&oacute;n al monto de tales operaciones</strong> del periodo fiscal correspondiente.&rdquo;
+          </blockquote>
+        </div>
+
+        <h3>C&oacute;mo se calcula la proporci&oacute;n</h3>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; Prorrateo de IVA descontable</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">Ingresos gravados del bimestre</span><span class="value">$400.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">Ingresos excluidos del bimestre</span><span class="value">$100.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">Total ingresos</span><span class="value">$500.000.000</span></div>
+            <div class="ejemplo-row" style="background:#ECFDF5;border-radius:6px;padding:8px"><span class="label"><strong>Proporci&oacute;n</strong> = Gravados / Total</span><span class="value" style="color:#047857">80%</span></div>
+            <div class="ejemplo-row"><span class="label">IVA pagado en compras comunes</span><span class="value">$15.000.000</span></div>
+            <div class="ejemplo-row total"><span class="label">IVA descontable (80% &times; $15M)</span><span class="value">$12.000.000</span></div>
+            <div class="ejemplo-row"><span class="label" style="color:var(--rose-500)">IVA no descontable &rarr; mayor valor del gasto</span><span class="value" style="color:var(--rose-500)">$3.000.000</span></div>
+          </div>
+        </div>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 486 ET &mdash; Ajuste de IVA de activos fijos</h4>
+          </div>
+          <blockquote>
+            El IVA descontable en la adquisici&oacute;n de <strong>activos fijos</strong> tambi&eacute;n se rige por la proporcionalidad. Si compras maquinaria que se usa para operaciones gravadas y excluidas, solo descuentas la proporci&oacute;n correspondiente a las gravadas.
+          </blockquote>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip de la herramienta</h4>
+          </div>
+          <p>Nuestra herramienta de IVA 300 calcula el prorrateo autom&aacute;ticamente si tu balance tiene ingresos en cuentas del grupo <code>41</code> (gravados) y del grupo <code>42</code> (no operacionales/excluidos). Revisa que las cuentas est&eacute;n bien clasificadas en tu PUC antes de procesar.</p>
+        </div>
+
+        <h3>IVA com&uacute;n vs. IVA directo</h3>
+        <p>Antes de aplicar proporcionalidad, separa:</p>
+        <ul>
+          <li><strong>IVA directo gravado:</strong> IVA de compras que se usan SOLO para operaciones gravadas &rarr; 100% descontable</li>
+          <li><strong>IVA directo excluido:</strong> IVA de compras que se usan SOLO para operaciones excluidas &rarr; 0% descontable (va al costo)</li>
+          <li><strong>IVA com&uacute;n:</strong> IVA de compras que se usan para ambas &rarr; aplica proporcionalidad</li>
+        </ul>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Descontar el 100% del IVA cuando hay ingresos excluidos. La DIAN cruza los ingresos del F300 (casilla 35 &mdash; operaciones excluidas) con el IVA descontable. Si reportaste ingresos excluidos pero descontaste todo el IVA, genera un requerimiento por improcedencia de descontables.</p>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-2" class="prev" onclick="navigateTo(2)">&larr; M&oacute;dulo 2</a>
+        <a href="#modulo-4" class="next" onclick="navigateTo(4)">M&oacute;dulo 4: IVA en importaciones &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 4 ===================== -->
+    <section id="modulo-4" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IVA 300</a> &rsaquo; M&oacute;dulo 4
+        </div>
+        <div class="mod-num">M&oacute;dulo 4 de 6</div>
+        <h1>IVA en importaciones y servicios del exterior</h1>
+        <p class="mod-desc">Cu&aacute;ndo se genera IVA por importar bienes, cu&aacute;ndo por contratar servicios del exterior, y c&oacute;mo se descuenta. Incluye retenci&oacute;n de IVA asumido.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>IVA en importaci&oacute;n de bienes</h2>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 459 ET &mdash; Base gravable en importaciones</h4>
+          </div>
+          <blockquote>
+            &ldquo;La base gravable sobre la cual se liquida el IVA en la importaci&oacute;n de bienes ser&aacute; la misma que se tiene en cuenta para liquidar los <strong>derechos de aduana</strong>, adicionados con el valor de este gravamen.&rdquo;
+          </blockquote>
+          <p>Es decir: <strong>Base IVA = Valor CIF + Arancel</strong>. El IVA se paga en la declaraci&oacute;n de importaci&oacute;n ante la DIAN (aduanas), no en el F300. Pero el IVA pagado en la importaci&oacute;n <strong>s&iacute;</strong> se lleva como descontable al F300.</p>
+        </div>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; IVA en importaci&oacute;n</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">Valor CIF de la mercac&iacute;a</span><span class="value">USD 50.000</span></div>
+            <div class="ejemplo-row"><span class="label">TRM del d&iacute;a de la declaraci&oacute;n</span><span class="value">$4.200</span></div>
+            <div class="ejemplo-row"><span class="label">Valor CIF en pesos</span><span class="value">$210.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">Arancel (10%)</span><span class="value">$21.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">Base IVA = CIF + Arancel</span><span class="value">$231.000.000</span></div>
+            <div class="ejemplo-row total"><span class="label">IVA importaci&oacute;n (19%)</span><span class="value">$43.890.000</span></div>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>El IVA pagado en importaciones se lleva a la <strong>casilla 50</strong> del F300 (IVA pagado en importaciones). El soporte no es una factura sino la <strong>Declaraci&oacute;n de Importaci&oacute;n</strong> y el recibo de pago. Aseg&uacute;rate de que tu auxiliar contable lo tenga separado en cuenta <code>240405</code> o similar.</p>
+        </div>
+
+        <h2>Servicios prestados desde el exterior</h2>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 437-2 Num. 3 ET &mdash; Retenci&oacute;n de IVA en servicios del exterior</h4>
+          </div>
+          <blockquote>
+            &ldquo;Act&uacute;an como agentes de retenci&oacute;n del impuesto sobre las ventas los responsables del IVA cuando adquieran <strong>bienes o servicios de personas sin residencia o domicilio en el pa&iacute;s</strong>.&rdquo;
+          </blockquote>
+          <p>Cuando contratas un servicio del exterior (consultor&iacute;a, software, publicidad digital), t&uacute; asumes el IVA. Lo declaras en el F300 como <strong>IVA generado</strong> (casilla 35) y simult&aacute;neamente como <strong>IVA descontable</strong> (casilla 50), si cumple requisitos de deducibilidad.</p>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>No declarar el IVA de servicios digitales del exterior (Google Ads, AWS, Meta Ads, licencias SaaS). Desde 2018, la DIAN tiene convenios con estas plataformas. Si tu empresa tiene gastos en estas cuentas pero no declara IVA asumido, es un cruce autom&aacute;tico. Registra el IVA en la cuenta <code>2408</code> (generado) y <code>2404</code> (descontable) simult&aacute;neamente.</p>
+        </div>
+
+        <h3>Plataformas digitales que ya recaudan IVA</h3>
+        <p>Con la Res. 000051/2022, algunas plataformas ya cobran y declaran el IVA directamente (Netflix, Spotify, etc.). En estos casos, el usuario final <strong>no</strong> debe autoliquidar el IVA. Pero si la plataforma NO est&aacute; registrada como recaudador, el responsable colombiano s&iacute; debe declarar el IVA asumido.</p>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Casillas del F300 para importaciones y servicios del exterior
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Casilla</th><th>Concepto</th><th>Aplica para</th></tr></thead>
+              <tbody>
+                <tr><td><strong>35</strong></td><td>IVA generado por servicios del exterior</td><td>IVA asumido</td></tr>
+                <tr><td><strong>49</strong></td><td>IVA descontable en importaci&oacute;n de bienes</td><td>Declaraci&oacute;n de importaci&oacute;n</td></tr>
+                <tr><td><strong>50</strong></td><td>IVA descontable en servicios del exterior</td><td>IVA asumido (si es deducible)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-3" class="prev" onclick="navigateTo(3)">&larr; M&oacute;dulo 3</a>
+        <a href="#modulo-5" class="next" onclick="navigateTo(5)">M&oacute;dulo 5: Devoluciones y ajustes &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 5 ===================== -->
+    <section id="modulo-5" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IVA 300</a> &rsaquo; M&oacute;dulo 5
+        </div>
+        <div class="mod-num">M&oacute;dulo 5 de 6</div>
+        <h1>Devoluciones, rescisiones y descuentos</h1>
+        <p class="mod-desc">Notas cr&eacute;dito, anulaciones de facturas y descuentos comerciales: c&oacute;mo afectan el IVA y c&oacute;mo se reflejan en el F300.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Ajustes al IVA generado</h2>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 484 ET &mdash; Impuesto en devoluciones y anulaciones</h4>
+          </div>
+          <blockquote>
+            &ldquo;Del total del impuesto generado por las operaciones gravadas se deducir&aacute; el impuesto en <strong>las operaciones anuladas, rescindidas o resueltas</strong> en el respectivo periodo.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> Si emitiste una factura por $10.000.000 + IVA $1.900.000 y luego el cliente devuelve la mercanc&iacute;a, emites una nota cr&eacute;dito y restas esos $1.900.000 del IVA generado en la casilla correspondiente.
+          </div>
+        </div>
+
+        <h3>Requisitos de la nota cr&eacute;dito</h3>
+        <ul>
+          <li>Debe ser <strong>electr&oacute;nica</strong> (nota cr&eacute;dito electr&oacute;nica &mdash; Art. 616-1 ET)</li>
+          <li>Debe <strong>referenciar la factura original</strong> (n&uacute;mero de factura, fecha)</li>
+          <li>Debe emitirse en el <strong>mismo periodo o en uno posterior</strong> al de la factura original</li>
+          <li>El ajuste se hace en el periodo en que se emite la nota cr&eacute;dito, no en el de la factura</li>
+        </ul>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>En tu balance de prueba, las notas cr&eacute;dito de ventas aparecen como <strong>d&eacute;bito en la cuenta 2408</strong> (reversi&oacute;n del IVA generado). Nuestra herramienta detecta estos d&eacute;bitos en las cuentas de IVA generado y los resta autom&aacute;ticamente del total de la casilla 39.</p>
+        </div>
+
+        <h2>Ajustes al IVA descontable</h2>
+        <p>Si recibes una nota cr&eacute;dito de un proveedor (devoluci&oacute;n de mercancia que compraste, descuento comercial posterior), debes <strong>restar</strong> ese IVA del descontable:</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 486 ET &mdash; Ajuste del IVA descontable</h4>
+          </div>
+          <blockquote>
+            &ldquo;El impuesto sobre las ventas descontable que haya sido rechazado, as&iacute; como <strong>el correspondiente a bienes devueltos</strong>, constituye un mayor valor del costo o gasto.&rdquo;
+          </blockquote>
+        </div>
+
+        <h3>Descuentos comerciales y su efecto en el IVA</h3>
+        <table class="tabla-norm">
+          <thead><tr><th>Tipo de descuento</th><th>Efecto en IVA</th><th>Tratamiento</th></tr></thead>
+          <tbody>
+            <tr><td>Descuento incluido en factura (pie de factura)</td><td>Reduce la base gravable</td><td>El IVA se calcula sobre el precio neto</td></tr>
+            <tr><td>Descuento posterior (nota cr&eacute;dito)</td><td>Reduce IVA del periodo de la NC</td><td>Ajustar en el F300 del periodo de la NC</td></tr>
+            <tr><td>Descuento financiero (pronto pago)</td><td>No afecta el IVA</td><td>Es un ingreso financiero, no ajusta base IVA</td></tr>
+          </tbody>
+        </table>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Tratar un <strong>descuento financiero</strong> (pronto pago) como ajuste a la base del IVA. El descuento por pronto pago es un ingreso/gasto financiero y <strong>no modifica</strong> la base gravable del IVA. Si tu balance tiene cuenta <code>421040</code> (descuentos comerciales condicionados), no debe afectar las casillas del F300.</p>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-4" class="prev" onclick="navigateTo(4)">&larr; M&oacute;dulo 4</a>
+        <a href="#modulo-6" class="next" onclick="navigateTo(6)">M&oacute;dulo 6: Practica con tu balance &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 6 ===================== -->
+    <section id="modulo-6" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IVA 300</a> &rsaquo; M&oacute;dulo 6
+        </div>
+        <div class="mod-num">M&oacute;dulo 6 de 6 &mdash; Pr&aacute;ctica</div>
+        <h1>Genera tu formulario 300 real desde tu balance</h1>
+        <p class="mod-desc">Llegaste al momento de la verdad. Sube tu balance de prueba real y genera el F300 con todo lo que aprendiste. Cada casilla ahora tiene sentido.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Antes de procesar: checklist</h2>
+        <p>Revisa que tu balance de prueba cumpla con esto:</p>
+
+        <table class="tabla-norm">
+          <thead><tr><th>#</th><th>Verificaci&oacute;n</th><th>Cuenta PUC</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>IVA generado separado por tarifa (19% y 5%)</td><td><code>240805</code>, <code>240810</code></td></tr>
+            <tr><td>2</td><td>IVA descontable identificado</td><td><code>2404xx</code></td></tr>
+            <tr><td>3</td><td>Retenciones de IVA que te practicaron</td><td><code>1355xx</code> o <code>2365xx</code></td></tr>
+            <tr><td>4</td><td>Ingresos gravados y excluidos separados</td><td><code>41xx</code> vs <code>42xx</code></td></tr>
+            <tr><td>5</td><td>Notas cr&eacute;dito registradas (d&eacute;bitos en 2408)</td><td><code>2408xx</code> DB</td></tr>
+            <tr><td>6</td><td>IVA de importaciones separado</td><td><code>240405</code> o auxiliar</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Lo que la herramienta hace autom&aacute;ticamente</h2>
+        <ul>
+          <li>Lee tu balance de prueba Excel (cualquier software contable)</li>
+          <li>Clasifica ingresos gravados vs. excluidos por c&oacute;digo PUC</li>
+          <li>Calcula IVA generado por tarifa (casillas 27-39)</li>
+          <li>Calcula IVA descontable y aplica proporcionalidad si hay ingresos excluidos (casillas 40-52)</li>
+          <li>Resta retenciones de IVA (casilla 65)</li>
+          <li>Determina saldo a pagar o a favor (casillas 66-70)</li>
+        </ul>
+
+        <h2>Lo que T&Uacute; verificas con lo que aprendiste</h2>
+        <ul>
+          <li><strong>M&oacute;dulo 1:</strong> &iquest;La periodicidad es correcta? &iquest;Es bimestral o cuatrimestral?</li>
+          <li><strong>M&oacute;dulo 2:</strong> &iquest;El IVA descontable cumple los 5 requisitos del Art. 485 ET?</li>
+          <li><strong>M&oacute;dulo 3:</strong> &iquest;Hay ingresos excluidos? &iquest;Se aplic&oacute; proporcionalidad?</li>
+          <li><strong>M&oacute;dulo 4:</strong> &iquest;Se incluy&oacute; el IVA de importaciones y servicios del exterior?</li>
+          <li><strong>M&oacute;dulo 5:</strong> &iquest;Las notas cr&eacute;dito ajustaron el IVA correctamente?</li>
+        </ul>
+
+        <div class="cta-practica">
+          <h3>Procesa tu F300 ahora</h3>
+          <p>Sube tu balance de prueba y genera el borrador del formulario 300. Ahora cada casilla tiene un porqu&eacute;.</p>
+          <a href="../iva300.html" onclick="gtag('event','clic_escuela_practica',{curso:'iva300'})">Abrir herramienta IVA 300 &rarr;</a>
+        </div>
+
+        <h2>Despu&eacute;s de procesar: qu&eacute; revisar</h2>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Cruces que la DIAN hace autom&aacute;ticamente</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead><tr><th>Cruce</th><th>Qu&eacute; compara</th><th>Riesgo si no cuadra</th></tr></thead>
+            <tbody>
+              <tr><td>F300 vs. Facturaci&oacute;n electr&oacute;nica</td><td>IVA generado vs. IVA en facturas emitidas</td><td>Requerimiento ordinario</td></tr>
+              <tr><td>F300 vs. Ex&oacute;gena F1005/F1006</td><td>IVA descontable/generado vs. formatos ex&oacute;gena</td><td>Sanci&oacute;n Art. 651 ET</td></tr>
+              <tr><td>F300 vs. F350</td><td>Retenciones de IVA practicadas vs. declaradas</td><td>Requerimiento especial</td></tr>
+              <tr><td>F300 vs. Renta F110</td><td>Ingresos IVA vs. ingresos renta</td><td>Investigaci&oacute;n por omisi&oacute;n</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tu siguiente paso</h4>
+          </div>
+          <p>Ahora que dominas el IVA 300, el siguiente curso natural es <strong>Retenci&oacute;n en la Fuente 350</strong>. La retenci&oacute;n de IVA que aprendiste en el M&oacute;dulo 4 se declara en el 350, y los cruces entre ambos formularios son de los m&aacute;s revisados por la DIAN.</p>
+        </div>
+
+        <div style="background:linear-gradient(135deg,#F5F3FF,#EDE9FE);border:2px solid #DDD6FE;border-radius:16px;padding:28px 24px;text-align:center;margin:28px 0">
+          <h3 style="font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;color:#6D28D9;margin-bottom:8px">Siguiente curso: Retenci&oacute;n 350</h3>
+          <p style="font-size:.9rem;color:#7C3AED;margin-bottom:16px">De la tabla de retenci&oacute;n a la declaraci&oacute;n. Cada concepto, base y tarifa con su fundamento legal.</p>
+          <a href="retencion350.html" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:#7C3AED;color:#fff;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;box-shadow:0 4px 16px rgba(124,58,237,.3);transition:all .2s" onmouseover="this.style.background='#6D28D9'" onmouseout="this.style.background='#7C3AED'">Ir al curso de Retenci&oacute;n 350 &rarr;</a>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-5" class="prev" onclick="navigateTo(5)">&larr; M&oacute;dulo 5</a>
+        <a href="../escuela.html" class="next" style="background:var(--gray-800)">Volver a la Escuela &rarr;</a>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Abrir men&uacute;">&#9776;</button>
+
+<script>
+/* Module navigation */
+var currentModule = 1;
+var totalModules = 6;
+
+function navigateTo(n) {
+  // Hide all modules
+  document.querySelectorAll('.modulo-section').forEach(function(s){ s.style.display = 'none'; });
+  // Show target
+  var target = document.getElementById('modulo-' + n);
+  if (target) target.style.display = 'block';
+  // Update sidebar
+  var links = document.querySelectorAll('.sidebar-nav a');
+  links.forEach(function(a, i) {
+    a.classList.remove('active');
+    if (i < n - 1) a.classList.add('completed');
+    if (i === n - 1) a.classList.add('active');
+  });
+  // Update progress
+  var pct = Math.round((n / totalModules) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  currentModule = n;
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  // Track
+  if (typeof gtag !== 'undefined') gtag('event', 'escuela_modulo', { curso: 'iva300', modulo: n });
+}
+
+/* Sidebar toggle for mobile */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+</script>
+</body>
+</html>

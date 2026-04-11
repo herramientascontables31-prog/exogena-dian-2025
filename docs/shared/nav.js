@@ -219,6 +219,8 @@
   '        <a href="ia.html" style="font-weight:700;color:#059669">✨ Ver todas</a>'+
   '      </div>'+
   '    </div>'+
+       /* Escuela link */
+  '    <a href="escuela.html" class="tn-cat-btn" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border-color:transparent;font-weight:800;box-shadow:0 2px 10px rgba(99,102,241,.25);text-decoration:none;font-size:.82rem">📖 Escuela</a>'+
   '  </div>'+
   '  <div style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:#ECFDF5;border:1px solid #A7F3D0;border-radius:8px;font-size:.75rem;font-weight:600;color:#047857;flex-shrink:0;white-space:nowrap" title="Tu archivo se procesa 100% en tu navegador. Nunca se env\u00eda a ning\u00fan servidor.">'+
   '    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" style="flex-shrink:0"><path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd"/></svg>'+
@@ -297,6 +299,8 @@
   '    </div>'+
        /* IA CTA */
   '    <a href="ia.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:linear-gradient(135deg,#059669,#10B981);color:#fff;border-radius:12px;font-size:.9rem;font-weight:800;text-decoration:none;transition:all .2s;box-shadow:0 3px 12px rgba(5,150,105,.35);letter-spacing:.02em;animation:iaGlow 3s ease-in-out infinite"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 8.89 3.89"/><path d="m17 3-2 2 2 2"/><path d="m22 6-2 2 2 2"/></svg>IA Contable</a>'+
+       /* Escuela CTA */
+  '    <a href="escuela.html" style="display:inline-flex;align-items:center;gap:6px;padding:8px 18px;background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;border-radius:12px;font-size:.9rem;font-weight:800;text-decoration:none;transition:all .2s;box-shadow:0 3px 12px rgba(99,102,241,.35);letter-spacing:.02em"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>Escuela</a>'+
        /* PRO Login */
   '    <div id="proNavLogin" style="display:flex;align-items:center;gap:6px">'+
   '      <input type="email" id="proNavKey" placeholder="Email PRO" style="padding:5px 10px;border:1.5px solid #cbd5e1;border-radius:8px;font-size:.78rem;font-family:inherit;width:170px;text-align:center;background:#f8fafc">'+
