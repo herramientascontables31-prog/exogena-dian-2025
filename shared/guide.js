@@ -254,18 +254,20 @@
         checkAndShowTip(pageTips);
       }, 2000);
 
-      // Observar cambios de paso
-      var observer = new MutationObserver(function () {
-        setTimeout(function () {
-          checkAndShowTip(pageTips);
-        }, 500);
-      });
-
-      observer.observe(document.body, {
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['class'],
-      });
+      // Observar cambios de paso (solo en step pills, no en todo el body)
+      var stepContainer = document.querySelector('.steps, .step-pills, [class*="step-nav"]');
+      if (stepContainer) {
+        var observer = new MutationObserver(function () {
+          setTimeout(function () {
+            checkAndShowTip(pageTips);
+          }, 500);
+        });
+        observer.observe(stepContainer, {
+          subtree: true,
+          attributes: true,
+          attributeFilter: ['class'],
+        });
+      }
     });
   }
 
