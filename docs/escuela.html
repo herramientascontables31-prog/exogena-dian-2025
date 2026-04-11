@@ -69,16 +69,16 @@ html{scroll-behavior:smooth;overflow-x:hidden}
 body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overflow-x:hidden;width:100%;max-width:100vw}
 
 /* ===== HERO ===== */
-.esc-hero{padding:120px 24px 70px;text-align:center;background:linear-gradient(170deg,#0B1210 0%,#111C18 40%,#0E1915 100%);position:relative;overflow:hidden}
-.esc-hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(5,150,105,.12) 0%,transparent 60%);pointer-events:none}
-.esc-hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(234,88,12,.12);border:1px solid rgba(234,88,12,.3);border-radius:100px;padding:6px 20px;font-size:.8rem;font-weight:700;color:#FB923C;margin-bottom:20px}
+.esc-hero{padding:120px 24px 70px;text-align:center;background:linear-gradient(170deg,#FFF7ED 0%,#FFEDD5 40%,#FFF7ED 100%);position:relative;overflow:hidden}
+.esc-hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(249,115,22,.06) 0%,transparent 60%);pointer-events:none}
+.esc-hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(234,88,12,.08);border:1px solid rgba(234,88,12,.2);border-radius:100px;padding:6px 20px;font-size:.8rem;font-weight:700;color:#EA580C;margin-bottom:20px}
 .esc-hero-pill .dot{width:8px;height:8px;background:#F97316;border-radius:50%;animation:pulse 2s infinite}
-.esc-hero h1{font-family:'Fraunces',serif;font-size:clamp(2.2rem,5vw,3.5rem);font-weight:700;color:#EFF5F2;margin-bottom:16px;letter-spacing:-.02em;line-height:1.15}
-.esc-hero h1 em{font-style:normal;background:linear-gradient(135deg,#F97316,#FDBA74);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.esc-hero .sub{color:#A2B8AE;font-size:1.15rem;max-width:620px;margin:0 auto 32px;line-height:1.65}
+.esc-hero h1{font-family:'Fraunces',serif;font-size:clamp(2.2rem,5vw,3.5rem);font-weight:700;color:#1F2937;margin-bottom:16px;letter-spacing:-.02em;line-height:1.15}
+.esc-hero h1 em{font-style:normal;background:linear-gradient(135deg,#EA580C,#F97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.esc-hero .sub{color:#6B7280;font-size:1.15rem;max-width:620px;margin:0 auto 32px;line-height:1.65}
 .esc-hero .anti{display:inline-flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-bottom:36px}
-.esc-hero .anti span{display:flex;align-items:center;gap:6px;color:#FDBA74;font-size:.88rem;font-weight:600}
-.esc-hero .anti span::before{content:'';width:20px;height:2px;background:#F43F5E;border-radius:2px;transform:rotate(-12deg)}
+.esc-hero .anti span{display:flex;align-items:center;gap:6px;color:#9CA3AF;font-size:.88rem;font-weight:600}
+.esc-hero .anti span::before{content:'';width:20px;height:2px;background:#EF4444;border-radius:2px;transform:rotate(-12deg)}
 
 /* ===== MANIFIESTO ===== */
 .manifiesto{padding:60px 24px;background:var(--white)}
@@ -87,12 +87,12 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
 .manifiesto-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .mani-card{padding:24px;border-radius:14px;border:1.5px solid var(--gray-200)}
 .mani-card.bad{background:#FFF5F5;border-color:#FECACA}
-.mani-card.good{background:var(--green-50);border-color:var(--green-200)}
+.mani-card.good{background:#FFF7ED;border-color:#FED7AA}
 .mani-card h3{font-size:1rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .mani-card ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:8px}
 .mani-card ul li{font-size:.88rem;color:var(--gray-600);line-height:1.5;padding-left:22px;position:relative}
 .mani-card.bad ul li::before{content:'x';position:absolute;left:0;color:#EF4444;font-weight:800;font-size:.8rem}
-.mani-card.good ul li::before{content:'\2713';position:absolute;left:0;color:var(--green-600);font-weight:800;font-size:.8rem}
+.mani-card.good ul li::before{content:'\2713';position:absolute;left:0;color:#EA580C;font-weight:800;font-size:.8rem}
 
 /* ===== DEMO NORMATIVA ===== */
 .demo-norm{padding:60px 24px;background:linear-gradient(170deg,var(--gray-50) 0%,var(--white) 100%)}
@@ -124,7 +124,7 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
 .cursos .sub{text-align:center;color:var(--gray-500);font-size:.95rem;margin-bottom:40px}
 .cursos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .curso-card{background:var(--white);border:2px solid var(--gray-200);border-radius:20px;padding:32px 28px;transition:all .3s;position:relative;overflow:hidden}
-.curso-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.08);border-color:var(--green-400)}
+.curso-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,.08);border-color:#FB923C}
 .curso-badge{position:absolute;top:16px;right:16px;padding:4px 12px;border-radius:100px;font-size:.7rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
 .curso-icon{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;margin-bottom:16px}
 .curso-card h3{font-size:1.2rem;font-weight:700;margin-bottom:6px}
@@ -137,12 +137,12 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
 .curso-normas p{font-size:.78rem;color:var(--gray-500);line-height:1.5}
 
 /* ===== METODOLOGIA ===== */
-.metodo{padding:60px 24px;background:linear-gradient(170deg,var(--green-50) 0%,var(--white) 100%)}
+.metodo{padding:60px 24px;background:linear-gradient(170deg,#FFF7ED 0%,var(--white) 100%)}
 .metodo-inner{max-width:900px;margin:0 auto}
 .metodo h2{font-family:'Fraunces',serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:700;text-align:center;margin-bottom:32px}
 .metodo-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.metodo-step{text-align:center;padding:24px 16px;background:var(--white);border-radius:14px;border:1.5px solid var(--green-200)}
-.metodo-step .step-num{width:40px;height:40px;border-radius:50%;background:var(--green-600);color:#fff;display:grid;place-items:center;font-weight:800;font-size:1rem;margin:0 auto 12px}
+.metodo-step{text-align:center;padding:24px 16px;background:var(--white);border-radius:14px;border:1.5px solid #FED7AA}
+.metodo-step .step-num{width:40px;height:40px;border-radius:50%;background:#EA580C;color:#fff;display:grid;place-items:center;font-weight:800;font-size:1rem;margin:0 auto 12px}
 .metodo-step h4{font-size:.92rem;font-weight:700;margin-bottom:6px}
 .metodo-step p{font-size:.8rem;color:var(--gray-500);line-height:1.5}
 
@@ -153,25 +153,25 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
 .esc-precio .sub{text-align:center;color:var(--gray-500);font-size:.95rem;margin-bottom:36px}
 .precio-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .precio-card{background:var(--white);border:2px solid var(--gray-200);border-radius:22px;padding:36px 26px 28px;display:flex;flex-direction:column;transition:all .35s;position:relative}
-.precio-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(0,0,0,.1);border-color:var(--green-400)}
-.precio-card.pop{background:var(--green-50);border-color:var(--green-400);transform:scale(1.03);box-shadow:0 12px 40px rgba(16,185,129,.12)}
+.precio-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(0,0,0,.1);border-color:#FB923C}
+.precio-card.pop{background:#FFF7ED;border-color:#FB923C;transform:scale(1.03);box-shadow:0 12px 40px rgba(249,115,22,.1)}
 .precio-card.pop:hover{transform:scale(1.03) translateY(-5px)}
-.precio-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--green-600),var(--green-500));color:#fff;font-size:.65rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 18px;border-radius:30px;white-space:nowrap;box-shadow:0 4px 14px rgba(52,211,153,.3)}
+.precio-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#EA580C,#F97316);color:#fff;font-size:.65rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:5px 18px;border-radius:30px;white-space:nowrap;box-shadow:0 4px 14px rgba(52,211,153,.3)}
 .precio-label{color:var(--gray-400);font-size:.82rem;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:4px;font-weight:600}
-.precio-name{color:var(--green-700);font-size:1.35rem;font-weight:700;margin-bottom:18px}
+.precio-name{color:#C2410C;font-size:1.35rem;font-weight:700;margin-bottom:18px}
 .precio-val{display:flex;align-items:baseline;gap:2px;margin-bottom:4px}
 .precio-sign{color:var(--gray-400);font-size:1rem;font-weight:700;align-self:flex-start;margin-top:6px}
 .precio-num{color:var(--gray-900);font-size:2.6rem;font-weight:800;line-height:1;letter-spacing:-2px}
 .precio-per{color:var(--gray-400);font-size:.78rem;margin-bottom:22px;padding-bottom:22px;border-bottom:1px solid var(--gray-200)}
 .precio-list{list-style:none;padding:0;margin:0 0 28px;flex:1}
 .precio-list li{color:var(--gray-600);font-size:.92rem;padding:5px 0;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
-.precio-list li::before{content:'\2713';color:var(--green-600);font-weight:700;flex-shrink:0}
+.precio-list li::before{content:'\2713';color:#EA580C;font-weight:700;flex-shrink:0}
 .precio-list li.hl{color:var(--green-700);font-weight:600}
 .precio-cta{display:block;width:100%;padding:14px 24px;border-radius:12px;font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;text-align:center;text-decoration:none;transition:all .25s;cursor:pointer;border:none}
-.precio-cta-green{background:linear-gradient(135deg,var(--green-400),var(--green-300));color:var(--green-900);box-shadow:0 4px 14px rgba(52,211,153,.3)}
-.precio-cta-green:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(52,211,153,.4)}
-.precio-cta-outline{background:var(--white);color:var(--green-700);border:2px solid var(--green-300)}
-.precio-cta-outline:hover{background:var(--green-50);border-color:var(--green-400)}
+.precio-cta-green{background:#EA580C;color:#fff;box-shadow:0 4px 14px rgba(234,88,12,.2)}
+.precio-cta-green:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(234,88,12,.3)}
+.precio-cta-outline{background:var(--white);color:#C2410C;border:2px solid #FED7AA}
+.precio-cta-outline:hover{background:#FFF7ED;border-color:#FB923C}
 
 /* ===== PARA QUIEN ===== */
 .para-quien{padding:60px 24px;background:var(--gray-50)}
@@ -197,10 +197,10 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
 .esc-faq-a p{font-size:.92rem;color:var(--gray-500);line-height:1.65}
 
 /* ===== CTA FINAL ===== */
-.esc-cta{padding:60px 24px;background:linear-gradient(170deg,#0B1210 0%,#111C18 100%);text-align:center;position:relative;overflow:hidden}
-.esc-cta::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(5,150,105,.12) 0%,transparent 60%);pointer-events:none}
-.esc-cta h2{font-family:'Fraunces',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:#EFF5F2;margin-bottom:12px}
-.esc-cta p{color:#A2B8AE;font-size:1rem;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
+.esc-cta{padding:60px 24px;background:linear-gradient(170deg,#FFF7ED 0%,#FFEDD5 100%);text-align:center;position:relative;overflow:hidden}
+.esc-cta::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(249,115,22,.06) 0%,transparent 60%);pointer-events:none}
+.esc-cta h2{font-family:'Fraunces',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;color:#1F2937;margin-bottom:12px}
+.esc-cta p{color:#6B7280;font-size:1rem;margin-bottom:28px;max-width:500px;margin-left:auto;margin-right:auto}
 
 /* ===== ANIMATIONS ===== */
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
@@ -242,8 +242,8 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
       <span>Teor&iacute;a sin aplicaci&oacute;n</span>
       <span>&ldquo;Abran ChatGPT&rdquo;</span>
     </div>
-    <a href="#cursos" style="display:inline-flex;align-items:center;gap:8px;padding:16px 36px;background:linear-gradient(135deg,#F97316,#FB923C);color:#fff;border-radius:14px;font-weight:800;font-size:1.1rem;text-decoration:none;box-shadow:0 8px 24px rgba(249,115,22,.3);transition:all .25s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(249,115,22,.4)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(249,115,22,.3)'" onclick="gtag('event','clic_escuela_hero',{cta:'ver_cursos'})">Ver los 9 cursos &darr;</a>
-    <p style="margin-top:14px;font-size:.82rem;color:#FDBA74">Acceso inmediato &middot; Herramientas reales &middot; Referencias normativas en cada paso</p>
+    <a href="#cursos" style="display:inline-flex;align-items:center;gap:8px;padding:16px 36px;background:#EA580C;color:#fff;border-radius:14px;font-weight:800;font-size:1.1rem;text-decoration:none;box-shadow:0 8px 24px rgba(234,88,12,.2);transition:all .25s" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(234,88,12,.3)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 8px 24px rgba(234,88,12,.2)'" onclick="gtag('event','clic_escuela_hero',{cta:'ver_cursos'})">Ver los 9 cursos &darr;</a>
+    <p style="margin-top:14px;font-size:.82rem;color:#9CA3AF">Acceso inmediato &middot; Herramientas reales &middot; Referencias normativas en cada paso</p>
   </div>
 </section>
 
@@ -630,8 +630,8 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
       </div>
     </div>
 
-    <div style="text-align:center;max-width:600px;margin:28px auto 0;padding:20px;background:var(--green-50);border:1px solid var(--green-200);border-radius:14px">
-      <p style="font-size:.88rem;color:var(--gray-600);line-height:1.6"><strong style="color:var(--green-700)">Curso de IVA 300 gratis:</strong> Empieza ahora sin pagar. El curso completo de IVA con 6 m&oacute;dulos y referencias normativas es 100% gratis. As&iacute; ves c&oacute;mo funciona la Escuela antes de decidir.</p>
+    <div style="text-align:center;max-width:600px;margin:28px auto 0;padding:20px;background:#FFF7ED;border:1px solid #FED7AA;border-radius:14px">
+      <p style="font-size:.88rem;color:var(--gray-600);line-height:1.6"><strong style="color:#EA580C">Cursos de IVA 300 y Ex&oacute;gena gratis:</strong> Empieza ahora sin pagar. El curso completo de IVA con 6 m&oacute;dulos y referencias normativas es 100% gratis. As&iacute; ves c&oacute;mo funciona la Escuela antes de decidir.</p>
     </div>
 
     <div style="text-align:center;margin-top:24px">
@@ -742,9 +742,9 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
 <!-- ===== CTA FINAL ===== -->
 <section class="esc-cta">
   <div style="position:relative;z-index:1">
-    <h2>Deja de memorizar normas.<br>Empieza a <span style="background:linear-gradient(135deg,#F97316,#FDBA74);-webkit-background-clip:text;-webkit-text-fill-color:transparent">entenderlas</span>.</h2>
+    <h2>Deja de memorizar normas.<br>Empieza a <span style="background:linear-gradient(135deg,#EA580C,#F97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent">entenderlas</span>.</h2>
     <p>9 cursos &middot; 54 m&oacute;dulos &middot; Herramientas reales &middot; Referencias normativas en cada paso.</p>
-    <a href="#precio" style="display:inline-flex;align-items:center;gap:8px;padding:16px 36px;background:linear-gradient(135deg,#F97316,#FB923C);color:#fff;border-radius:14px;font-weight:800;font-size:1.1rem;text-decoration:none;box-shadow:0 8px 24px rgba(249,115,22,.3);transition:all .25s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'" onclick="gtag('event','clic_escuela_cta_final',{cta:'ver_precios'})">Ver precios &rarr;</a>
+    <a href="#precio" style="display:inline-flex;align-items:center;gap:8px;padding:16px 36px;background:#EA580C;color:#fff;border-radius:14px;font-weight:800;font-size:1.1rem;text-decoration:none;box-shadow:0 8px 24px rgba(234,88,12,.2);transition:all .25s" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'" onclick="gtag('event','clic_escuela_cta_final',{cta:'ver_precios'})">Ver precios &rarr;</a>
   </div>
 </section>
 
