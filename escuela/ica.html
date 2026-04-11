@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="../shared/cookie-consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S7SM6ST4CC');
+</script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta name="theme-color" content="#059669">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso ICA Industria y Comercio &mdash; Escuela Contable IA | Ex&oacute;genaDIAN</title>
+<meta name="description" content="Aprende el impuesto de Industria y Comercio (ICA) desde cero. 6 m&oacute;dulos con normas, territorialidad, tarifas CIIU, ReteICA, descuento en renta y pr&aacute;ctica con estatutos municipales.">
+<link rel="canonical" href="https://exogenadian.com/escuela/ica.html">
+<meta name="robots" content="index, follow">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-900:#064E3B;--green-800:#065F46;--green-700:#047857;--green-600:#059669;--green-500:#10B981;--green-400:#34D399;--green-300:#6EE7B7;--green-200:#A7F3D0;--green-100:#D1FAE5;--green-50:#ECFDF5;
+  --white:#FFF;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-500:#6B7280;--gray-600:#4B5563;--gray-700:#374151;--gray-800:#1F2937;--gray-900:#111827;
+  --amber-50:#FFFBEB;--amber-100:#FEF3C7;--amber-500:#F59E0B;--amber-700:#92400E;--amber-800:#78350F;
+  --blue-50:#EFF6FF;--blue-100:#DBEAFE;--blue-500:#3B82F6;--blue-700:#1D4ED8;
+  --purple-50:#F5F3FF;--purple-100:#EDE9FE;--purple-500:#8B5CF6;--purple-700:#6D28D9;
+  --rose-50:#FFF1F2;--rose-500:#F43F5E;--rose-700:#BE123C;
+  --orange-50:#FFF7ED;--orange-100:#FFEDD5;--orange-200:#FED7AA;--orange-500:#F97316;--orange-700:#C2410C;--orange-800:#9A3412;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.6}
+
+/* ===== LAYOUT ===== */
+.curso-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+@media(max-width:900px){.curso-layout{grid-template-columns:1fr}}
+
+/* ===== SIDEBAR ===== */
+.sidebar{background:var(--white);border-right:1px solid var(--gray-200);padding:20px 0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.sidebar-header{padding:16px 20px;border-bottom:1px solid var(--gray-100)}
+.sidebar-header a{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--gray-800);font-weight:800;font-size:.9rem}
+.sidebar-header a div{width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900}
+.sidebar-header small{display:block;font-size:.72rem;color:var(--gray-400);font-weight:500;margin-top:2px}
+.sidebar-curso{padding:16px 20px;border-bottom:1px solid var(--gray-100)}
+.sidebar-curso h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--orange-700);margin-bottom:4px}
+.sidebar-curso p{font-size:.88rem;font-weight:700;color:var(--gray-800)}
+.sidebar-nav{padding:12px 0;flex:1}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:10px 20px;text-decoration:none;color:var(--gray-500);font-size:.85rem;font-weight:500;transition:all .15s;border-left:3px solid transparent}
+.sidebar-nav a:hover{background:var(--green-50);color:var(--green-700)}
+.sidebar-nav a.active{background:var(--green-50);color:var(--green-700);font-weight:700;border-left-color:var(--green-600)}
+.sidebar-nav a .nav-num{width:24px;height:24px;border-radius:50%;background:var(--gray-100);color:var(--gray-500);display:grid;place-items:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+.sidebar-nav a.active .nav-num{background:var(--green-600);color:#fff}
+.sidebar-nav a.completed .nav-num{background:var(--green-200);color:var(--green-700)}
+.sidebar-back{padding:16px 20px;border-top:1px solid var(--gray-100);margin-top:auto}
+.sidebar-back a{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--gray-400);font-size:.82rem;font-weight:500;transition:color .15s}
+.sidebar-back a:hover{color:var(--gray-700)}
+.sidebar-toggle{display:none;position:fixed;bottom:20px;left:20px;z-index:200;width:48px;height:48px;border-radius:50%;background:var(--green-600);color:#fff;border:none;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 16px rgba(5,150,105,.3)}
+@media(max-width:900px){
+  .sidebar{display:none;position:fixed;top:0;left:0;z-index:199;width:280px;box-shadow:4px 0 20px rgba(0,0,0,.1)}
+  .sidebar.open{display:flex}
+  .sidebar-toggle{display:block}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:198}
+  .sidebar-overlay.open{display:block}
+}
+
+/* ===== MAIN CONTENT ===== */
+.curso-main{padding:32px 40px 60px;max-width:860px}
+@media(max-width:900px){.curso-main{padding:20px 16px 80px}}
+
+/* Module header */
+.mod-header{margin-bottom:32px}
+.mod-breadcrumb{font-size:.78rem;color:var(--gray-400);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mod-breadcrumb a{color:var(--gray-400);text-decoration:none}
+.mod-breadcrumb a:hover{color:var(--green-600)}
+.mod-num{display:inline-flex;align-items:center;gap:8px;background:var(--orange-100);color:var(--orange-800);padding:4px 14px;border-radius:100px;font-size:.78rem;font-weight:700;margin-bottom:12px}
+.mod-header h1{font-family:'Fraunces',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px;line-height:1.2}
+.mod-header .mod-desc{font-size:1rem;color:var(--gray-500);max-width:600px;line-height:1.6}
+
+/* Content blocks */
+.content-block{margin-bottom:28px}
+.content-block h2{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;margin-bottom:12px;color:var(--gray-900);padding-bottom:8px;border-bottom:2px solid var(--green-200)}
+.content-block h3{font-size:1.05rem;font-weight:700;margin:20px 0 8px;color:var(--gray-800)}
+.content-block p{font-size:.92rem;color:var(--gray-600);line-height:1.7;margin-bottom:12px}
+.content-block ul,.content-block ol{margin:8px 0 16px 20px;display:flex;flex-direction:column;gap:6px}
+.content-block li{font-size:.9rem;color:var(--gray-600);line-height:1.6}
+
+/* Norma card */
+.norma{background:var(--amber-50);border:1.5px solid #FDE68A;border-radius:14px;padding:20px 24px;margin:20px 0}
+.norma-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.norma-icon{width:32px;height:32px;border-radius:8px;background:#FDE68A;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
+.norma-header h4{font-size:.92rem;font-weight:700;color:var(--amber-800)}
+.norma-header .norma-tag{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--amber-500);color:#fff;text-transform:uppercase;letter-spacing:.04em}
+.norma blockquote{font-size:.88rem;color:#78350F;line-height:1.65;padding:12px 16px;background:rgba(255,255,255,.6);border-radius:8px;border-left:3px solid var(--amber-500);margin:8px 0;font-style:italic}
+.norma blockquote strong{font-style:normal;color:var(--amber-800)}
+.norma p{font-size:.85rem;color:#78350F;line-height:1.6;margin:8px 0}
+.norma .norma-aplicacion{font-size:.82rem;color:var(--green-800);background:var(--green-50);padding:10px 14px;border-radius:8px;border:1px solid var(--green-200);margin-top:12px}
+.norma .norma-aplicacion strong{color:var(--green-700)}
+
+/* Tip card */
+.tip{background:var(--blue-50);border:1.5px solid #BFDBFE;border-radius:14px;padding:18px 22px;margin:20px 0}
+.tip-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tip-header h4{font-size:.88rem;font-weight:700;color:var(--blue-700)}
+.tip p{font-size:.88rem;color:#1E40AF;line-height:1.6}
+
+/* Error com&uacute;n */
+.error-comun{background:var(--rose-50);border:1.5px solid #FECACA;border-radius:14px;padding:18px 22px;margin:20px 0}
+.error-comun-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.error-comun-header h4{font-size:.88rem;font-weight:700;color:var(--rose-700)}
+.error-comun p{font-size:.88rem;color:#9F1239;line-height:1.6}
+
+/* Tabla normativa */
+.tabla-norm{width:100%;border-collapse:collapse;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--gray-200)}
+.tabla-norm th{background:var(--gray-100);padding:10px 14px;text-align:left;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-500)}
+.tabla-norm td{padding:10px 14px;font-size:.85rem;border-top:1px solid var(--gray-100);color:var(--gray-700)}
+.tabla-norm tr:hover{background:var(--green-50)}
+.tabla-norm code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--gray-100);padding:1px 6px;border-radius:4px}
+
+/* Ejemplo pr&aacute;ctico */
+.ejemplo{background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;overflow:hidden;margin:20px 0;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+.ejemplo-header{background:var(--gray-50);padding:12px 20px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;gap:8px}
+.ejemplo-header h4{font-size:.85rem;font-weight:700;color:var(--gray-700)}
+.ejemplo-body{padding:16px 20px}
+.ejemplo-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:.88rem}
+.ejemplo-row:last-child{border-bottom:none}
+.ejemplo-row .label{color:var(--gray-600)}
+.ejemplo-row .value{font-weight:700;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.ejemplo-row.total{border-top:2px solid var(--green-200);border-bottom:none;padding-top:12px;margin-top:4px}
+.ejemplo-row.total .label{font-weight:700;color:var(--gray-900)}
+.ejemplo-row.total .value{color:var(--green-700);font-size:.95rem}
+
+/* Navigation between modules */
+.mod-nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:2px solid var(--gray-200)}
+.mod-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:700;font-size:.92rem;transition:all .2s}
+.mod-nav .prev{background:var(--gray-100);color:var(--gray-700)}
+.mod-nav .prev:hover{background:var(--gray-200)}
+.mod-nav .next{background:var(--green-600);color:#fff;box-shadow:0 4px 12px rgba(5,150,105,.25)}
+.mod-nav .next:hover{background:var(--green-700);transform:translateY(-1px)}
+
+/* CTA practica */
+.cta-practica{background:linear-gradient(135deg,var(--green-50),#D1FAE5);border:2px solid var(--green-300);border-radius:16px;padding:28px 24px;text-align:center;margin:28px 0}
+.cta-practica h3{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;color:var(--green-800);margin-bottom:8px}
+.cta-practica p{font-size:.92rem;color:var(--green-700);margin-bottom:16px}
+.cta-practica a{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--green-600);color:#fff;border-radius:12px;font-weight:700;font-size:1rem;text-decoration:none;box-shadow:0 4px 16px rgba(5,150,105,.3);transition:all .2s}
+.cta-practica a:hover{background:var(--green-700);transform:translateY(-2px)}
+
+/* Progress */
+.progress-bar{height:4px;background:var(--gray-200);border-radius:2px;margin:12px 20px;overflow:hidden}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--green-500),var(--green-400));border-radius:2px;transition:width .3s}
+
+/* Expand/collapse */
+.expandible{margin:12px 0}
+.expandible-toggle{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;color:var(--gray-700);transition:all .15s;text-align:left}
+.expandible-toggle:hover{background:var(--gray-100)}
+.expandible-toggle svg{width:16px;height:16px;transition:transform .2s;flex-shrink:0}
+.expandible-content{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.expandible.open .expandible-content{max-height:2000px}
+.expandible.open .expandible-toggle svg{transform:rotate(180deg)}
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<div class="curso-layout">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html">
+        <div>E</div>
+        Ex&oacute;genaDIAN
+      </a>
+    </div>
+    <div class="sidebar-curso">
+      <h3>Escuela Contable IA</h3>
+      <p>Industria y Comercio &mdash; ICA</p>
+    </div>
+    <div class="progress-bar"><div class="fill" id="progressFill" style="width:16%"></div></div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <a href="#modulo-1" class="active" onclick="navigateTo(1)">
+        <span class="nav-num">1</span> Hecho generador y sujetos
+      </a>
+      <a href="#modulo-2" onclick="navigateTo(2)">
+        <span class="nav-num">2</span> Territorialidad (CORE)
+      </a>
+      <a href="#modulo-3" onclick="navigateTo(3)">
+        <span class="nav-num">3</span> Base gravable, tarifas y CIIU
+      </a>
+      <a href="#modulo-4" onclick="navigateTo(4)">
+        <span class="nav-num">4</span> ReteICA y autorretenci&oacute;n
+      </a>
+      <a href="#modulo-5" onclick="navigateTo(5)">
+        <span class="nav-num">5</span> ICA como descuento en renta
+      </a>
+      <a href="#modulo-6" onclick="navigateTo(6)">
+        <span class="nav-num">6</span> Pr&aacute;ctica con estatutos
+      </a>
+    </nav>
+    <div class="sidebar-back">
+      <a href="../escuela.html">&larr; Volver a la Escuela</a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="curso-main">
+
+    <!-- ===================== M&Oacute;DULO 1 ===================== -->
+    <section id="modulo-1" class="modulo-section">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">ICA</a> &rsaquo; M&oacute;dulo 1
+        </div>
+        <div class="mod-num">M&oacute;dulo 1 de 6</div>
+        <h1>Hecho generador y sujetos pasivos del ICA</h1>
+        <p class="mod-desc">El Impuesto de Industria y Comercio grava la realizaci&oacute;n de actividades industriales, comerciales o de servicios dentro de un municipio. Antes de liquidar, necesitas saber qu&eacute; actividad realiza tu cliente y d&oacute;nde la realiza.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>&iquest;Qu&eacute; grava el ICA?</h2>
+        <p>El ICA es un impuesto municipal que grava toda actividad industrial, comercial o de servicios que se realice dentro de la jurisdicci&oacute;n de un municipio o distrito. Su fundamento legal es la Ley 14 de 1983, que establece las reglas generales que cada municipio adopta y complementa en su estatuto tributario local.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Ley 14 de 1983 &mdash; Art&iacute;culo 32</h4>
+            <span class="norma-tag">Obligatorio</span>
+          </div>
+          <blockquote>
+            <strong>&ldquo;El Impuesto de Industria y Comercio recaer&aacute; sobre todas las actividades comerciales, industriales y de servicio</strong> que se ejerzan o realicen en las respectivas jurisdicciones municipales, directa o indirectamente, por personas naturales, jur&iacute;dicas o por sociedades de hecho, ya sea que se cumplan en forma permanente u ocasional, en inmuebles determinados, con establecimientos de comercio o sin ellos.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> El ICA es TERRITORIAL. Se paga en el municipio donde se realiza la actividad, no donde est&aacute; la sede principal. Un negocio con operaciones en 5 municipios puede tener 5 declaraciones de ICA diferentes.
+          </div>
+        </div>
+
+        <h3>Actividades industriales (Art. 33)</h3>
+        <p>Son actividades industriales las dedicadas a la producci&oacute;n, extracci&oacute;n, fabricaci&oacute;n, confeccci&oacute;n, preparaci&oacute;n, transformaci&oacute;n, reparaci&oacute;n, manufactura y ensamblaje de cualquier clase de materiales o bienes.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Ley 14/1983 &mdash; Art&iacute;culo 33 (Actividad industrial)</h4>
+          </div>
+          <blockquote>
+            &ldquo;Se consideran actividades industriales las dedicadas a la <strong>producci&oacute;n, extracci&oacute;n, fabricaci&oacute;n, confeccci&oacute;n, preparaci&oacute;n, transformaci&oacute;n, reparaci&oacute;n, manufactura y ensamblaje</strong> de cualquier clase de materiales o bienes.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Clave:</strong> La actividad industrial tributa en el municipio donde est&aacute; la f&aacute;brica o planta de producci&oacute;n, no donde se vende el producto terminado.
+          </div>
+        </div>
+
+        <h3>Actividades comerciales (Art. 34)</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Ley 14/1983 &mdash; Art&iacute;culo 34 (Actividad comercial)</h4>
+          </div>
+          <blockquote>
+            &ldquo;Se entienden por actividades comerciales las destinadas al <strong>expendio, compraventa, o distribuci&oacute;n de bienes</strong> o mercanc&iacute;as, tanto al por mayor como al por menor, y las dem&aacute;s definidas como tales por el C&oacute;digo de Comercio siempre y cuando no est&eacute;n consideradas por el mismo C&oacute;digo o por esta Ley como actividades industriales o de servicios.&rdquo;
+          </blockquote>
+        </div>
+
+        <h3>Actividades de servicio (Art. 35)</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Ley 14/1983 &mdash; Art&iacute;culo 35 (Actividad de servicios)</h4>
+          </div>
+          <blockquote>
+            &ldquo;Son actividades de servicios las dedicadas a <strong>satisfacer necesidades de la comunidad</strong> generando una contraprestaci&oacute;n en dinero o en especie. Se incluyen: transporte, publicidad, construcci&oacute;n, consultor&iacute;a, interventor&iacute;as, educaci&oacute;n privada, hoteler&iacute;a, restaurantes, cl&iacute;nicas, hospitales y dem&aacute;s del sector salud, entre otras.&rdquo;
+          </blockquote>
+        </div>
+
+        <h3>Base gravable general (Art. 36)</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Ley 14/1983 &mdash; Art&iacute;culo 36 (Base gravable)</h4>
+          </div>
+          <blockquote>
+            &ldquo;La base gravable del Impuesto de Industria y Comercio est&aacute; constituida por la totalidad de los <strong>ingresos ordinarios y extraordinarios percibidos en el respectivo a&ntilde;o gravable</strong>, incluidos los ingresos obtenidos por rendimientos financieros, comisiones y en general todos los que no est&eacute;n expresamente excluidos en este art&iacute;culo.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Importante:</strong> No confundir con la base gravable de renta. En ICA se parte de ingresos brutos obtenidos en el municipio, restando devoluciones, descuentos, exportaciones y actividades excluidas seg&uacute;n cada estatuto municipal.
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>El primer paso siempre es <strong>clasificar la actividad</strong> del cliente (industrial, comercial o de servicios) porque de eso depende d&oacute;nde se paga y qu&eacute; tarifa aplica. Un mismo contribuyente puede tener m&uacute;ltiples actividades con tarifas distintas en el mismo municipio.</p>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que genera sanciones</h4>
+          </div>
+          <p>Pagar ICA <strong>&uacute;nicamente en el municipio de la sede principal</strong> cuando la empresa tiene operaciones en otros municipios. Cada municipio donde se realiza la actividad tiene derecho al tributo. No declarar genera sanciones por extemporaneidad, intereses moratorios y posible cobro coactivo.</p>
+        </div>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Tipo de actividad</th><th>Art&iacute;culo Ley 14/1983</th><th>D&oacute;nde tributa</th><th>Ejemplo</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Industrial</strong></td>
+              <td>Art. 33</td>
+              <td>Municipio de la f&aacute;brica</td>
+              <td>Planta de confecciones en Itag&uuml;&iacute;</td>
+            </tr>
+            <tr>
+              <td><strong>Comercial</strong></td>
+              <td>Art. 34</td>
+              <td>Municipio donde se vende</td>
+              <td>Tienda en centro comercial de Bogot&aacute;</td>
+            </tr>
+            <tr>
+              <td><strong>Servicios</strong></td>
+              <td>Art. 35</td>
+              <td>Municipio donde se ejecuta</td>
+              <td>Consultor&iacute;a prestada en Cali</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Actividades NO sujetas al ICA (exclusiones comunes)
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Actividad excluida</th><th>Fundamento</th></tr></thead>
+              <tbody>
+                <tr><td>Producci&oacute;n primaria agr&iacute;cola, ganadera y av&iacute;cola (sin transformaci&oacute;n)</td><td>Ley 14/1983 Art. 39 num. 1</td></tr>
+                <tr><td>Producci&oacute;n nacional de art&iacute;culos destinados a la exportaci&oacute;n</td><td>Ley 14/1983 Art. 39 num. 2</td></tr>
+                <tr><td>Educaci&oacute;n p&uacute;blica, actividades de beneficencia, culturales y deportivas</td><td>Ley 14/1983 Art. 39 num. 3</td></tr>
+                <tr><td>Primera etapa de transformaci&oacute;n realizada en predios rurales (para Art. 33)</td><td>Ley 14/1983 Art. 39 num. 4</td></tr>
+                <tr><td>Actividades ejercidas por los municipios, departamentos y la Naci&oacute;n</td><td>Ley 14/1983 Art. 39 num. 5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <span></span>
+        <a href="#modulo-2" class="next" onclick="navigateTo(2)">M&oacute;dulo 2: Territorialidad &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 2 ===================== -->
+    <section id="modulo-2" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">ICA</a> &rsaquo; M&oacute;dulo 2
+        </div>
+        <div class="mod-num">M&oacute;dulo 2 de 6</div>
+        <h1>Territorialidad del ICA: d&oacute;nde se paga cada actividad</h1>
+        <p class="mod-desc">Este es el m&oacute;dulo m&aacute;s cr&iacute;tico del curso. La Ley 1819 de 2016 (Arts. 343-345) defini&oacute; reglas claras de territorialidad que terminaron d&eacute;cadas de conflictos entre municipios. Dominar estas reglas evita doble tributaci&oacute;n.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Reglas de territorialidad por tipo de actividad</h2>
+        <p>Antes de la Ley 1819/2016, cada municipio ten&iacute;a su propia interpretaci&oacute;n de d&oacute;nde se causaba el ICA. Esto generaba doble tributaci&oacute;n y conflictos permanentes. Los art&iacute;culos 343 a 345 unificaron las reglas.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Ley 1819/2016 &mdash; Art&iacute;culo 343 (Reglas de territorialidad)</h4>
+            <span class="norma-tag">Cr&iacute;tico</span>
+          </div>
+          <blockquote>
+            <strong>Actividad industrial:</strong> &ldquo;Se mantiene la regla prevista en el art&iacute;culo 77 de la Ley 49 de 1990 y en el art&iacute;culo 32 de la Ley 14 de 1983. El impuesto se paga <strong>en el municipio donde se encuentra ubicada la f&aacute;brica o planta industrial</strong>, teniendo como base gravable los ingresos brutos provenientes de la comercializaci&oacute;n de la producci&oacute;n.&rdquo;
+          </blockquote>
+          <blockquote>
+            <strong>Actividad comercial:</strong> &ldquo;Se entender&aacute;n realizadas en el <strong>municipio donde se efect&uacute;a la transacci&oacute;n o venta</strong>.&rdquo;
+          </blockquote>
+          <blockquote>
+            <strong>Actividad de servicios:</strong> &ldquo;Se entender&aacute;n prestados en el <strong>municipio donde se ejecute la prestaci&oacute;n del mismo</strong>.&rdquo;
+          </blockquote>
+        </div>
+
+        <h3>Reglas especiales por sector</h3>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Sector</th><th>D&oacute;nde se causa el ICA</th><th>Fundamento</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Transporte</strong></td>
+              <td>Municipio de <strong>origen</strong> del viaje (donde se despacha)</td>
+              <td>Art. 343 Ley 1819/2016</td>
+            </tr>
+            <tr>
+              <td><strong>Construcci&oacute;n</strong></td>
+              <td>Municipio donde se <strong>ejecuta la obra</strong></td>
+              <td>Art. 343 Ley 1819/2016</td>
+            </tr>
+            <tr>
+              <td><strong>Servicios p&uacute;blicos domiciliarios</strong></td>
+              <td>Municipio donde se presta el servicio al <strong>usuario final</strong></td>
+              <td>Art. 343 Ley 1819/2016</td>
+            </tr>
+            <tr>
+              <td><strong>Actividad industrial con comercializaci&oacute;n en f&aacute;brica</strong></td>
+              <td>Municipio de la <strong>sede fabril</strong> (100% all&iacute;)</td>
+              <td>Art. 77 Ley 49/1990</td>
+            </tr>
+            <tr>
+              <td><strong>Actividad industrial con comercializaci&oacute;n en otros municipios</strong></td>
+              <td>Industrial en sede fabril + comercial en cada punto de venta</td>
+              <td>Art. 77 Ley 49/1990</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; Empresa con operaciones en 3 ciudades</h4>
+          </div>
+          <div class="ejemplo-body">
+            <p style="font-size:.88rem;color:var(--gray-600);margin-bottom:12px"><strong>TEXTILES XYZ S.A.S.</strong> tiene f&aacute;brica en Medell&iacute;n y puntos de venta en Bogot&aacute; y Cali. Ingresos totales anuales: $2.000.000.000.</p>
+            <div class="ejemplo-row"><span class="label">Ventas desde f&aacute;brica Medell&iacute;n (industrial)</span><span class="value">$800.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">Ventas punto Bogot&aacute; (comercial)</span><span class="value">$750.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">Ventas punto Cali (comercial)</span><span class="value">$450.000.000</span></div>
+            <div class="ejemplo-row" style="border-top:2px solid var(--orange-200);padding-top:12px;margin-top:4px">
+              <span class="label"><strong>ICA Medell&iacute;n</strong> &mdash; tarifa industrial 4,14&permil;</span>
+              <span class="value">$3.312.000</span>
+            </div>
+            <div class="ejemplo-row">
+              <span class="label"><strong>ICA Bogot&aacute;</strong> &mdash; tarifa comercial 11,04&permil;</span>
+              <span class="value">$8.280.000</span>
+            </div>
+            <div class="ejemplo-row">
+              <span class="label"><strong>ICA Cali</strong> &mdash; tarifa comercial 6,0&permil;</span>
+              <span class="value">$2.700.000</span>
+            </div>
+            <div class="ejemplo-row total"><span class="label">Total ICA anual (3 municipios)</span><span class="value">$14.292.000</span></div>
+          </div>
+        </div>
+
+        <h3>Inscripci&oacute;n en cada municipio (Art. 344)</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Ley 1819/2016 &mdash; Art&iacute;culo 344 (Registro y obligaciones)</h4>
+          </div>
+          <blockquote>
+            &ldquo;Los sujetos pasivos del impuesto de industria y comercio deber&aacute;n <strong>registrarse e inscribirse</strong> ante la jurisdicci&oacute;n municipal o distrital en la que realicen sus actividades gravadas, dentro de los plazos que se&ntilde;ale cada ente territorial.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> Antes de declarar por primera vez, debes inscribir a tu cliente en la Secretar&iacute;a de Hacienda del municipio correspondiente. Cada municipio tiene su propio formulario de inscripci&oacute;n y proceso. En Bogot&aacute; es v&iacute;a RIT (Registro de Informaci&oacute;n Tributaria distrital).
+          </div>
+        </div>
+
+        <h3>Retenci&oacute;n en la fuente de ICA (Art. 345)</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Ley 1819/2016 &mdash; Art&iacute;culo 345 (Mecanismo de retenci&oacute;n)</h4>
+          </div>
+          <blockquote>
+            &ldquo;Los municipios y distritos podr&aacute;n establecer, mediante acuerdo municipal o distrital, mecanismos de <strong>retenci&oacute;n del impuesto de industria y comercio (ReteICA)</strong> como mecanismo de recaudo anticipado del tributo, de conformidad con la ley.&rdquo;
+          </blockquote>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n en territorialidad</h4>
+          </div>
+          <p>Declarar <strong>toda la facturaci&oacute;n de servicios en el municipio de la sede principal</strong> cuando el servicio se ejecuta en otro municipio. Ejemplo: una firma de Bogot&aacute; que env&iacute;a ingenieros a instalar equipos en Barranquilla debe tributar ICA de esos servicios en Barranquilla, no en Bogot&aacute;. Los municipios cruzan informaci&oacute;n y pueden exigir la declaraci&oacute;n con sanciones.</p>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico para determinar territorialidad</h4>
+          </div>
+          <p>Haz estas 3 preguntas para cada ingreso: <strong>1)</strong> &iquest;Es actividad industrial, comercial o de servicio? <strong>2)</strong> &iquest;En qu&eacute; municipio se ejecuta f&iacute;sicamente? <strong>3)</strong> &iquest;Hay regla especial (transporte=origen, construcci&oacute;n=donde se construye)? Con eso determinas el municipio correcto de tributaci&oacute;n.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Conflictos comunes de territorialidad y c&oacute;mo resolverlos
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Situaci&oacute;n</th><th>Municipio A reclama</th><th>Municipio B reclama</th><th>Soluci&oacute;n legal</th></tr></thead>
+              <tbody>
+                <tr><td>Servicio contratado en Bogot&aacute;, ejecutado en Medell&iacute;n</td><td>Bogot&aacute; (contrataci&oacute;n)</td><td>Medell&iacute;n (ejecuci&oacute;n)</td><td>Medell&iacute;n &mdash; donde se ejecuta (Art. 343)</td></tr>
+                <tr><td>Venta online desde Cali a comprador en Bucaramanga</td><td>Cali (despacho)</td><td>Bucaramanga (destino)</td><td>Cali &mdash; donde se efect&uacute;a la transacci&oacute;n</td></tr>
+                <tr><td>Transporte Bogot&aacute; &rarr; Cartagena</td><td>Bogot&aacute; (origen)</td><td>Cartagena (destino)</td><td>Bogot&aacute; &mdash; municipio de origen</td></tr>
+                <tr><td>Obra de construcci&oacute;n en Ch&iacute;a, empresa de Bogot&aacute;</td><td>Bogot&aacute; (sede)</td><td>Ch&iacute;a (obra)</td><td>Ch&iacute;a &mdash; donde se ejecuta la obra</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-1" class="prev" onclick="navigateTo(1)">&larr; M&oacute;dulo 1</a>
+        <a href="#modulo-3" class="next" onclick="navigateTo(3)">M&oacute;dulo 3: Tarifas y CIIU &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 3 ===================== -->
+    <section id="modulo-3" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">ICA</a> &rsaquo; M&oacute;dulo 3
+        </div>
+        <div class="mod-num">M&oacute;dulo 3 de 6</div>
+        <h1>Base gravable, tarifas y c&oacute;digos CIIU</h1>
+        <p class="mod-desc">Cada municipio fija sus propias tarifas dentro de los rangos que permite la ley. La tarifa depende de la actividad econ&oacute;mica seg&uacute;n el c&oacute;digo CIIU. Aqu&iacute; comparamos las 3 ciudades principales.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Base gravable del ICA</h2>
+        <p>La base gravable del ICA son los ingresos brutos ordinarios y extraordinarios obtenidos en el municipio, menos las exclusiones legales. Cada estatuto municipal puede definir exclusiones adicionales, pero todas deben respetar el marco de la Ley 14/1983.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 33 Ley 14/1983 y Art. 342 Ley 1819/2016 &mdash; Base gravable</h4>
+          </div>
+          <blockquote>
+            La base gravable se conforma por los <strong>ingresos netos</strong> del contribuyente obtenidos durante el periodo gravable. Se restan: devoluciones, rebajas y descuentos; exportaciones; venta de activos fijos; ingresos provenientes de actividades excluidas; ingresos por actividades exentas seg&uacute;n el estatuto municipal.
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Atenci&oacute;n:</strong> Los rendimientos financieros S&Iacute; hacen parte de la base gravable en la mayor&iacute;a de municipios. Se clasifican como actividad de servicios financieros y tienen su propia tarifa.
+          </div>
+        </div>
+
+        <h3>Rangos de tarifas por tipo de actividad</h3>
+        <p>La Ley 14 de 1983 establece los l&iacute;mites m&aacute;ximos y m&iacute;nimos de las tarifas. Dentro de estos rangos, cada municipio fija las suyas:</p>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Tipo de actividad</th><th>Tarifa m&iacute;nima</th><th>Tarifa m&aacute;xima</th><th>Rango t&iacute;pico</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Industrial</strong></td>
+              <td>2&permil;</td>
+              <td>7&permil;</td>
+              <td>3&permil; &ndash; 5&permil;</td>
+            </tr>
+            <tr>
+              <td><strong>Comercial</strong></td>
+              <td>2&permil;</td>
+              <td>10&permil;</td>
+              <td>4,14&permil; &ndash; 11,04&permil;</td>
+            </tr>
+            <tr>
+              <td><strong>Servicios</strong></td>
+              <td>2&permil;</td>
+              <td>10&permil;</td>
+              <td>4,14&permil; &ndash; 9,66&permil;</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Comparativo de tarifas: Bogot&aacute; vs. Medell&iacute;n vs. Cali</h3>
+        <p>Las tarifas var&iacute;an significativamente entre ciudades para la misma actividad econ&oacute;mica. Aqu&iacute; un comparativo de 10 actividades comunes con sus c&oacute;digos CIIU:</p>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Actividad</th><th>CIIU</th><th>Bogot&aacute; (&permil;)</th><th>Medell&iacute;n (&permil;)</th><th>Cali (&permil;)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Comercio al por menor de alimentos</td>
+              <td><code>4711</code></td>
+              <td>4,14</td>
+              <td>4,14</td>
+              <td>4,0</td>
+            </tr>
+            <tr>
+              <td>Comercio de prendas de vestir</td>
+              <td><code>4771</code></td>
+              <td>11,04</td>
+              <td>6,0</td>
+              <td>6,0</td>
+            </tr>
+            <tr>
+              <td>Fabricaci&oacute;n de prendas de vestir</td>
+              <td><code>1410</code></td>
+              <td>4,14</td>
+              <td>4,14</td>
+              <td>4,0</td>
+            </tr>
+            <tr>
+              <td>Construcci&oacute;n de edificios</td>
+              <td><code>4111</code></td>
+              <td>6,9</td>
+              <td>6,0</td>
+              <td>5,0</td>
+            </tr>
+            <tr>
+              <td>Transporte de carga</td>
+              <td><code>4923</code></td>
+              <td>4,14</td>
+              <td>4,14</td>
+              <td>4,0</td>
+            </tr>
+            <tr>
+              <td>Consultor&iacute;a empresarial</td>
+              <td><code>7020</code></td>
+              <td>9,66</td>
+              <td>7,0</td>
+              <td>8,0</td>
+            </tr>
+            <tr>
+              <td>Desarrollo de software</td>
+              <td><code>6201</code></td>
+              <td>9,66</td>
+              <td>7,0</td>
+              <td>6,0</td>
+            </tr>
+            <tr>
+              <td>Restaurantes y cafeter&iacute;as</td>
+              <td><code>5611</code></td>
+              <td>13,8</td>
+              <td>10,0</td>
+              <td>7,0</td>
+            </tr>
+            <tr>
+              <td>Actividades contables y de auditor&iacute;a</td>
+              <td><code>6920</code></td>
+              <td>9,66</td>
+              <td>7,0</td>
+              <td>8,0</td>
+            </tr>
+            <tr>
+              <td>Intermediaci&oacute;n financiera</td>
+              <td><code>6411</code></td>
+              <td>11,04</td>
+              <td>10,0</td>
+              <td>10,0</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>Las tarifas de Bogot&aacute; est&aacute;n en el <strong>Decreto Distrital 352 de 2002</strong> y actualizaciones. Medell&iacute;n en el <strong>Acuerdo 66 de 2017</strong>. Cali en el <strong>Acuerdo 0495 de 2019</strong>. Siempre verifica en el estatuto municipal vigente porque las tarifas cambian con nuevos acuerdos del Concejo. Nuestra herramienta de <a href="../estatutos.html" style="color:var(--blue-700);font-weight:700">Consulta de Estatutos Municipales</a> te ayuda a verificar.</p>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n en la determinaci&oacute;n de tarifas</h4>
+          </div>
+          <p>Aplicar la tarifa de un c&oacute;digo CIIU <strong>diferente al registrado</strong> en la C&aacute;mara de Comercio y en el RUT. Si tu cliente tiene CIIU 6201 (software) pero lo declaras como 4651 (comercio de equipos), la tarifa cambia y genera requerimiento. Siempre cruza el CIIU del RUT con el estatuto municipal.</p>
+        </div>
+
+        <h3>Periodicidad de la declaraci&oacute;n de ICA</h3>
+        <p>A diferencia del IVA que tiene periodicidad nacional uniforme, el ICA var&iacute;a seg&uacute;n el municipio:</p>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Municipio</th><th>Periodicidad</th><th>Plazo</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Bogot&aacute;</strong></td>
+              <td>Bimestral (grandes) / Anual (peque&ntilde;os)</td>
+              <td>Calendario SHD Bogot&aacute;</td>
+            </tr>
+            <tr>
+              <td><strong>Medell&iacute;n</strong></td>
+              <td>Anual (anticipos bimestrales)</td>
+              <td>Calendario Sec. Hacienda Medell&iacute;n</td>
+            </tr>
+            <tr>
+              <td><strong>Cali</strong></td>
+              <td>Bimestral (grandes) / Anual (peque&ntilde;os)</td>
+              <td>Calendario Sec. Hacienda Cali</td>
+            </tr>
+            <tr>
+              <td><strong>Barranquilla</strong></td>
+              <td>Anual</td>
+              <td>Calendario Sec. Hacienda Barranquilla</td>
+            </tr>
+            <tr>
+              <td><strong>Bucaramanga</strong></td>
+              <td>Anual</td>
+              <td>Calendario Sec. Hacienda Bucaramanga</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; Liquidaci&oacute;n ICA bimestral Bogot&aacute; (consultor&iacute;a)</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">Ingresos brutos bimestre (CIIU 7020)</span><span class="value">$85.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">(-) Devoluciones y descuentos</span><span class="value">$2.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">(-) Ingresos fuera de Bogot&aacute;</span><span class="value">$15.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">Base gravable en Bogot&aacute;</span><span class="value">$68.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">Tarifa consultor&iacute;a Bogot&aacute; (9,66&permil;)</span><span class="value">9,66&permil;</span></div>
+            <div class="ejemplo-row total"><span class="label">ICA a pagar bimestre</span><span class="value">$656.880</span></div>
+          </div>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Tarifas completas Bogot&aacute; por grupo de actividades
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Grupo</th><th>Tarifa (&permil;)</th><th>Actividades t&iacute;picas</th></tr></thead>
+              <tbody>
+                <tr><td>I</td><td>4,14</td><td>Producci&oacute;n de alimentos, industria textil, manufactura b&aacute;sica, transporte p&uacute;blico</td></tr>
+                <tr><td>II</td><td>6,9</td><td>Construcci&oacute;n, comercio al por mayor de materias primas, edici&oacute;n de libros</td></tr>
+                <tr><td>III</td><td>9,66</td><td>Consultor&iacute;a, contabilidad, software, publicidad, servicios profesionales</td></tr>
+                <tr><td>IV</td><td>11,04</td><td>Comercio de veh&iacute;culos, joyer&iacute;a, intermediaci&oacute;n financiera, licores</td></tr>
+                <tr><td>V</td><td>13,8</td><td>Expendio de bebidas alcoh&oacute;licas, juegos de azar, moteles</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-2" class="prev" onclick="navigateTo(2)">&larr; M&oacute;dulo 2</a>
+        <a href="#modulo-4" class="next" onclick="navigateTo(4)">M&oacute;dulo 4: ReteICA &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 4 ===================== -->
+    <section id="modulo-4" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">ICA</a> &rsaquo; M&oacute;dulo 4
+        </div>
+        <div class="mod-num">M&oacute;dulo 4 de 6</div>
+        <h1>ReteICA y autorretenci&oacute;n: el recaudo anticipado del ICA</h1>
+        <p class="mod-desc">La retenci&oacute;n del ICA (ReteICA) es un mecanismo municipal de recaudo anticipado. Funciona similar a la retenci&oacute;n en la fuente de renta, pero las tarifas, bases y agentes los define cada municipio en su estatuto.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>&iquest;Qu&eacute; es la ReteICA?</h2>
+        <p>La ReteICA es un mecanismo mediante el cual los agentes de retenci&oacute;n designados por cada municipio descuentan del pago a sus proveedores un porcentaje correspondiente al ICA, y lo consignan directamente al municipio. Para el proveedor, esa retenci&oacute;n es un anticipo de su ICA.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 345 Ley 1819/2016 y estatutos municipales</h4>
+          </div>
+          <blockquote>
+            Los municipios podr&aacute;n establecer retenci&oacute;n del impuesto de industria y comercio. La tarifa de retenci&oacute;n <strong>no podr&aacute; exceder la tarifa del impuesto correspondiente a la actividad gravada</strong>. La retenci&oacute;n se practica al momento del pago o abono en cuenta.
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Regla pr&aacute;ctica:</strong> La tarifa de ReteICA es generalmente entre el 40% y el 60% de la tarifa de ICA de la actividad. Ejemplo: si la tarifa de ICA para servicios es 9,66&permil;, la ReteICA t&iacute;pica ser&aacute; entre 3,86&permil; y 5,80&permil;.
+          </div>
+        </div>
+
+        <h3>Tarifas de ReteICA en ciudades principales</h3>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Ciudad</th><th>Actividad</th><th>Tarifa ICA (&permil;)</th><th>ReteICA (&permil;)</th><th>% sobre ICA</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Bogot&aacute;</strong></td>
+              <td>Servicios profesionales</td>
+              <td>9,66</td>
+              <td>6,9</td>
+              <td>~71%</td>
+            </tr>
+            <tr>
+              <td><strong>Bogot&aacute;</strong></td>
+              <td>Comercio al por menor</td>
+              <td>4,14</td>
+              <td>3,45</td>
+              <td>~83%</td>
+            </tr>
+            <tr>
+              <td><strong>Medell&iacute;n</strong></td>
+              <td>Servicios profesionales</td>
+              <td>7,0</td>
+              <td>3,5</td>
+              <td>50%</td>
+            </tr>
+            <tr>
+              <td><strong>Medell&iacute;n</strong></td>
+              <td>Comercio al por menor</td>
+              <td>4,14</td>
+              <td>2,07</td>
+              <td>50%</td>
+            </tr>
+            <tr>
+              <td><strong>Cali</strong></td>
+              <td>Servicios profesionales</td>
+              <td>8,0</td>
+              <td>4,0</td>
+              <td>50%</td>
+            </tr>
+            <tr>
+              <td><strong>Cali</strong></td>
+              <td>Comercio al por menor</td>
+              <td>4,0</td>
+              <td>2,0</td>
+              <td>50%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Autorretenci&oacute;n de ICA (Bogot&aacute;)</h3>
+        <p>Bogot&aacute; tiene un sistema especial de autorretenci&oacute;n de ICA. Los grandes contribuyentes distritales y ciertos contribuyentes designados por la Secretar&iacute;a de Hacienda deben autopracticarse la retenci&oacute;n sobre sus propios ingresos.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Decreto Distrital 362 de 2002 &mdash; Autorretenci&oacute;n Bogot&aacute;</h4>
+          </div>
+          <blockquote>
+            Los contribuyentes del ICA en Bogot&aacute; clasificados como <strong>grandes contribuyentes</strong> por la Secretar&iacute;a Distrital de Hacienda est&aacute;n obligados a practicarse <strong>autorretenci&oacute;n</strong> sobre la totalidad de sus ingresos gravados en el Distrito Capital.
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> La autorretenci&oacute;n de ICA en Bogot&aacute; se declara bimestralmente. El contribuyente aplica la tarifa de retenci&oacute;n sobre sus propios ingresos y lo descuenta de su declaraci&oacute;n anual o bimestral de ICA.
+          </div>
+        </div>
+
+        <h3>Contabilizaci&oacute;n de la ReteICA (PUC)</h3>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Cuenta PUC</th><th>Nombre</th><th>Naturaleza</th><th>Uso</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>2368</code></td>
+              <td>Impuesto de industria y comercio retenido</td>
+              <td>Cr&eacute;dito (pasivo)</td>
+              <td>ReteICA que <strong>practicas</strong> a tus proveedores &mdash; debes consignar al municipio</td>
+            </tr>
+            <tr>
+              <td><code>135515</code></td>
+              <td>Retenci&oacute;n de ICA a favor</td>
+              <td>D&eacute;bito (activo)</td>
+              <td>ReteICA que <strong>te practican</strong> &mdash; anticipo de tu ICA</td>
+            </tr>
+            <tr>
+              <td><code>2412</code></td>
+              <td>Impuesto de industria y comercio por pagar</td>
+              <td>Cr&eacute;dito (pasivo)</td>
+              <td>ICA causado pendiente de pago</td>
+            </tr>
+            <tr>
+              <td><code>241205</code></td>
+              <td>Vigencia fiscal corriente</td>
+              <td>Cr&eacute;dito (pasivo)</td>
+              <td>ICA del periodo actual</td>
+            </tr>
+            <tr>
+              <td><code>5115</code></td>
+              <td>Impuestos asumidos &mdash; industria y comercio</td>
+              <td>D&eacute;bito (gasto)</td>
+              <td>Gasto por ICA causado en el periodo</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; Contabilizaci&oacute;n de ReteICA recibida</h4>
+          </div>
+          <div class="ejemplo-body">
+            <p style="font-size:.85rem;color:var(--gray-600);margin-bottom:8px">Tu cliente presta servicios de consultor&iacute;a por $10.000.000 en Bogot&aacute;. El pagador le practica ReteICA de 6,9&permil;.</p>
+            <div class="ejemplo-row"><span class="label">Ingreso por servicios</span><span class="value">$10.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">ReteICA practicada (6,9&permil;)</span><span class="value">$69.000</span></div>
+            <div class="ejemplo-row"><span class="label">Efectivo recibido</span><span class="value">$9.931.000</span></div>
+            <div class="ejemplo-row" style="border-top:2px solid var(--blue-200);padding-top:8px;margin-top:4px">
+              <span class="label"><code>1105</code> Caja/Bancos (D&eacute;bito)</span><span class="value">$9.931.000</span>
+            </div>
+            <div class="ejemplo-row">
+              <span class="label"><code>135515</code> ReteICA a favor (D&eacute;bito)</span><span class="value">$69.000</span>
+            </div>
+            <div class="ejemplo-row">
+              <span class="label"><code>4110</code> Ingresos por servicios (Cr&eacute;dito)</span><span class="value">$10.000.000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que genera diferencias</h4>
+          </div>
+          <p>Confundir la <strong>retenci&oacute;n de ICA (municipal)</strong> con la <strong>retenci&oacute;n en la fuente de renta (nacional)</strong>. Son impuestos completamente diferentes. La retenci&oacute;n de renta va al formulario 350 (DIAN). La ReteICA va al formulario municipal del municipio correspondiente. Mezclar las cuentas contables genera descuadres en ambas declaraciones.</p>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>Crea subcuentas de la <code>2368</code> y la <code>135515</code> <strong>por municipio</strong>. Ejemplo: <code>236805</code> ReteICA Bogot&aacute;, <code>236810</code> ReteICA Medell&iacute;n. As&iacute; cuando vayas a declarar, puedes filtrar directamente por subcuenta sin cruzar manualmente cada certificado de retenci&oacute;n.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Agentes de retenci&oacute;n de ICA &mdash; &iquest;qui&eacute;n retiene?
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Tipo de agente</th><th>Descripci&oacute;n</th><th>Ejemplo</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Entidades estatales</strong></td><td>Todas las entidades p&uacute;blicas del orden nacional, departamental y municipal</td><td>Alcald&iacute;as, gobernaciones, ministerios</td></tr>
+                <tr><td><strong>Grandes contribuyentes</strong></td><td>Designados por la Secretar&iacute;a de Hacienda de cada municipio</td><td>Empresas con ingresos &gt; tope municipal</td></tr>
+                <tr><td><strong>Entidades financieras</strong></td><td>Bancos, corporaciones financieras, cooperativas</td><td>Bancolombia, Davivienda</td></tr>
+                <tr><td><strong>Consorcios y UT</strong></td><td>Consorcios y uniones temporales que contraten con el Estado</td><td>Consorcio vial, UT de interventor&iacute;a</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-3" class="prev" onclick="navigateTo(3)">&larr; M&oacute;dulo 3</a>
+        <a href="#modulo-5" class="next" onclick="navigateTo(5)">M&oacute;dulo 5: ICA descuento en renta &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 5 ===================== -->
+    <section id="modulo-5" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">ICA</a> &rsaquo; M&oacute;dulo 5
+        </div>
+        <div class="mod-num">M&oacute;dulo 5 de 6</div>
+        <h1>ICA como descuento tributario en renta</h1>
+        <p class="mod-desc">Desde la Ley 1819 de 2016, el 50% del ICA pagado se toma como <strong>descuento tributario</strong> en el impuesto de renta (Art. 115 Par. 1 ET). El otro 50% es deducible como gasto. Este doble beneficio puede ahorrar millones.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>El tratamiento fiscal del ICA en renta</h2>
+        <p>El ICA tiene un tratamiento dual en la declaraci&oacute;n de renta: una parte es deducible (reduce la base gravable) y otra es descontable (reduce directamente el impuesto a pagar). Este es uno de los beneficios tributarios m&aacute;s importantes y menos aprovechados.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art&iacute;culo 115 Par&aacute;grafo 1 del Estatuto Tributario</h4>
+            <span class="norma-tag">Cr&iacute;tico</span>
+          </div>
+          <blockquote>
+            <strong>&ldquo;A partir del a&ntilde;o gravable 2022,</strong> el ciento por ciento (100%) del impuesto de industria y comercio, avisos y tableros y la sobretasa bomberil, podr&aacute;n ser tomados como descuento tributario del impuesto sobre la renta, <strong>sin que el descuento exceda el impuesto a cargo del contribuyente</strong>.&rdquo;
+          </blockquote>
+          <p><strong>Nota hist&oacute;rica:</strong> La Ley 2277 de 2022 (reforma tributaria) modific&oacute; el Art. 115 para permitir el 100% como descuento a partir del AG 2023. Sin embargo, para a&ntilde;os anteriores (AG 2019-2022), el tratamiento era 50% descuento + 50% deducci&oacute;n.</p>
+          <div class="norma-aplicacion">
+            <strong>Regla actual (AG 2023 en adelante):</strong> El 100% del ICA efectivamente pagado se puede tomar como <strong>descuento tributario</strong> en el rengl&oacute;n correspondiente del formulario 110/210. Ya no se divide entre deducci&oacute;n y descuento. El descuento no puede exceder el impuesto a cargo.
+          </div>
+        </div>
+
+        <h3>Requisito fundamental: efectivamente pagado</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 115 ET &mdash; Requisito de pago efectivo</h4>
+          </div>
+          <blockquote>
+            El descuento tributario solo procede sobre el ICA que haya sido <strong>efectivamente pagado</strong> durante el a&ntilde;o gravable. No basta con haberlo causado contablemente. Debe haberse pagado al municipio respectivo.
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> Debes verificar los recibos de pago ante la tesorer&iacute;a municipal o la plataforma de pagos del municipio. El ICA causado pero no pagado al 31 de diciembre NO es descontable en renta de ese a&ntilde;o. Se lleva al a&ntilde;o en que se pague.
+          </div>
+        </div>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; Ahorro fiscal por descuento de ICA (AG 2025, regla 50%+50%)</h4>
+          </div>
+          <div class="ejemplo-body">
+            <p style="font-size:.85rem;color:var(--gray-600);margin-bottom:8px">Empresa con ICA pagado de $20.000.000, renta l&iacute;quida de $500.000.000, tarifa de renta 35%.</p>
+            <div class="ejemplo-row"><span class="label">ICA efectivamente pagado en el a&ntilde;o</span><span class="value">$20.000.000</span></div>
+            <div class="ejemplo-row" style="background:#EFF6FF;border-radius:6px;padding:8px"><span class="label"><strong>Tratamiento AG 2023+:</strong> 100% como descuento</span><span class="value">$20.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">Impuesto de renta antes de descuento ($500M &times; 35%)</span><span class="value">$175.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">(-) Descuento tributario ICA (100%)</span><span class="value">$20.000.000</span></div>
+            <div class="ejemplo-row total"><span class="label">Impuesto de renta despu&eacute;s de descuento</span><span class="value">$155.000.000</span></div>
+            <div class="ejemplo-row" style="background:#ECFDF5;border-radius:6px;padding:8px"><span class="label"><strong>Ahorro total por el ICA</strong></span><span class="value" style="color:#047857">$20.000.000</span></div>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Comparaci&oacute;n: deducci&oacute;n vs. descuento</h4>
+          </div>
+          <p><strong>Deducci&oacute;n:</strong> Reduce la base gravable. $20M de deducci&oacute;n &times; 35% tarifa = $7M de ahorro. <strong>Descuento:</strong> Reduce directamente el impuesto. $20M de descuento = $20M de ahorro. Por eso el descuento tributario es mucho m&aacute;s poderoso. Siempre prioriza el descuento sobre la deducci&oacute;n.</p>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que cuesta dinero</h4>
+          </div>
+          <p>Tomar el <strong>100% del ICA como deducci&oacute;n</strong> (gasto deducible en renta) en vez de aprovecharlo como descuento tributario. Esto reduce el beneficio enormemente. Con $20M de ICA: como deducci&oacute;n ahorras $7M (35%), como descuento ahorras $20M (100%). La diferencia son $13M que pierdes por desconocer la norma.</p>
+        </div>
+
+        <h3>Incluye avisos y tableros y sobretasa bomberil</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 115 Par. 1 ET &mdash; Impuestos incluidos</h4>
+          </div>
+          <blockquote>
+            El descuento tributario aplica sobre el <strong>impuesto de industria y comercio, avisos y tableros</strong> (generalmente 15% del ICA) <strong>y la sobretasa bomberil</strong>. Es decir, el valor total que pagas al municipio por concepto de ICA y sus complementarios es descontable.
+          </blockquote>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: L&iacute;nea de tiempo del tratamiento del ICA en renta
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>A&ntilde;o gravable</th><th>Tratamiento</th><th>Norma</th></tr></thead>
+              <tbody>
+                <tr><td>Hasta AG 2018</td><td>100% deducci&oacute;n (gasto)</td><td>Art. 115 ET (versi&oacute;n anterior)</td></tr>
+                <tr><td>AG 2019</td><td>50% descuento + 50% deducci&oacute;n</td><td>Art. 115 Par. 1 (Ley 1943/2018)</td></tr>
+                <tr><td>AG 2020-2022</td><td>50% descuento + 50% deducci&oacute;n</td><td>Art. 115 Par. 1 (Ley 2010/2019)</td></tr>
+                <tr><td>AG 2023 en adelante</td><td>100% descuento tributario</td><td>Art. 115 Par. 1 (Ley 2277/2022)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-4" class="prev" onclick="navigateTo(4)">&larr; M&oacute;dulo 4</a>
+        <a href="#modulo-6" class="next" onclick="navigateTo(6)">M&oacute;dulo 6: Pr&aacute;ctica &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 6 ===================== -->
+    <section id="modulo-6" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">ICA</a> &rsaquo; M&oacute;dulo 6
+        </div>
+        <div class="mod-num">M&oacute;dulo 6 de 6</div>
+        <h1>Pr&aacute;ctica: revisa el ICA de tu cliente con estatutos municipales</h1>
+        <p class="mod-desc">Pon en pr&aacute;ctica todo lo aprendido. Usa nuestra herramienta de consulta de estatutos municipales para verificar tarifas, completar tu checklist de ICA y cruzar informaci&oacute;n entre municipios.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Tu checklist completo de ICA</h2>
+        <p>Antes de presentar cualquier declaraci&oacute;n de ICA, verifica cada uno de estos puntos. Un solo error puede generar sanciones, intereses o doble tributaci&oacute;n.</p>
+
+        <h3>Paso 1: Identifica TODOS los municipios donde opera tu cliente</h3>
+        <p>Revisa la contabilidad buscando:</p>
+        <ul>
+          <li>Facturas de venta emitidas &mdash; &iquest;a clientes en qu&eacute; municipios?</li>
+          <li>Contratos de prestaci&oacute;n de servicios &mdash; &iquest;d&oacute;nde se ejecuta el servicio?</li>
+          <li>Certificados de ReteICA recibidos &mdash; &iquest;de qu&eacute; municipios?</li>
+          <li>N&oacute;mina de empleados &mdash; &iquest;en qu&eacute; ciudades trabajan?</li>
+          <li>Arriendos de locales o bodegas &mdash; &iquest;en qu&eacute; municipios?</li>
+          <li>Obras de construcci&oacute;n en curso &mdash; &iquest;d&oacute;nde est&aacute;n?</li>
+        </ul>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>Filtra en la contabilidad la cuenta <code>135515</code> (ReteICA a favor). Si hay retenciones de municipios donde tu cliente <strong>no est&aacute; declarando ICA</strong>, es una alerta roja: o est&aacute; tributando por omisi&oacute;n, o le est&aacute;n reteniendo incorrectamente. Ambos requieren acci&oacute;n.</p>
+        </div>
+
+        <h3>Paso 2: Verifica tarifas en el estatuto municipal</h3>
+        <p>Para cada municipio identificado:</p>
+        <ol>
+          <li>Confirma el c&oacute;digo CIIU registrado en el RUT del cliente</li>
+          <li>Busca la tarifa correspondiente a ese CIIU en el estatuto tributario del municipio</li>
+          <li>Verifica si hay actividades con tarifas diferentes (el cliente puede tener m&uacute;ltiples CIIU)</li>
+          <li>Confirma la periodicidad de la declaraci&oacute;n (bimestral, anual, etc.)</li>
+          <li>Revisa si aplica anticipo para el siguiente periodo</li>
+        </ol>
+
+        <div class="cta-practica">
+          <h3>Consulta los estatutos municipales</h3>
+          <p>Verifica tarifas, periodicidades y reglas especiales de cada municipio donde opera tu cliente.</p>
+          <a href="../estatutos.html">Ir a Consulta de Estatutos &rarr;</a>
+        </div>
+
+        <h3>Paso 3: Cruces de verificaci&oacute;n</h3>
+        <p>Realiza estos cruces para asegurar que la declaraci&oacute;n est&aacute; correcta:</p>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>#</th><th>Cruce</th><th>Qu&eacute; verificar</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><strong>Ingresos contables vs. base ICA</strong></td>
+              <td>La suma de bases gravables de ICA de todos los municipios + ingresos excluidos + exportaciones debe ser igual o cercana al total de ingresos contables</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><strong>ReteICA certificados vs. contabilidad</strong></td>
+              <td>La cuenta <code>135515</code> debe coincidir con la suma de certificados de retenci&oacute;n recibidos de cada municipio</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><strong>ReteICA practicada vs. declarada</strong></td>
+              <td>La cuenta <code>2368</code> debe coincidir con las declaraciones de retenci&oacute;n de ICA presentadas ante cada municipio</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><strong>ICA pagado vs. descuento en renta</strong></td>
+              <td>Solo el ICA <strong>efectivamente pagado</strong> (con recibo) se lleva como descuento tributario en el formulario 110/210</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td><strong>CIIU del RUT vs. tarifa aplicada</strong></td>
+              <td>La tarifa usada en la declaraci&oacute;n debe corresponder al CIIU registrado en la C&aacute;mara de Comercio y en el RUT</td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td><strong>Territorialidad de ingresos</strong></td>
+              <td>Para cada municipio, los ingresos declarados deben corresponder a actividades efectivamente realizadas all&iacute; (Arts. 343-345 Ley 1819/2016)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Errores frecuentes en la pr&aacute;ctica</h4>
+          </div>
+          <p><strong>1)</strong> No inscribirse en un municipio donde se ejecutan servicios espor&aacute;dicos. <strong>2)</strong> Aplicar la tarifa de Bogot&aacute; a ingresos de otros municipios. <strong>3)</strong> Olvidar sumar el impuesto de avisos y tableros (15% adicional sobre el ICA). <strong>4)</strong> No conciliar la ReteICA que le practican con los certificados de retenci&oacute;n. <strong>5)</strong> Tomar como descuento en renta ICA que a&uacute;n no se ha pagado.</p>
+        </div>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; Resumen anual ICA de una empresa multi-municipal</h4>
+          </div>
+          <div class="ejemplo-body">
+            <p style="font-size:.85rem;color:var(--gray-600);margin-bottom:8px"><strong>SERVICIOS INTEGRALES S.A.S.</strong> &mdash; Consultor&iacute;a (CIIU 7020), operaciones en 3 ciudades, AG 2025.</p>
+            <div class="ejemplo-row"><span class="label">Ingresos totales AG 2025</span><span class="value">$1.200.000.000</span></div>
+            <div class="ejemplo-row" style="border-top:2px solid var(--orange-200);padding-top:8px;margin-top:4px">
+              <span class="label"><strong>Bogot&aacute;</strong> &mdash; Base $720M &times; 9,66&permil;</span><span class="value">$6.955.200</span>
+            </div>
+            <div class="ejemplo-row"><span class="label"><strong>Medell&iacute;n</strong> &mdash; Base $300M &times; 7,0&permil;</span><span class="value">$2.100.000</span></div>
+            <div class="ejemplo-row"><span class="label"><strong>Cali</strong> &mdash; Base $180M &times; 8,0&permil;</span><span class="value">$1.440.000</span></div>
+            <div class="ejemplo-row"><span class="label">(+) Avisos y tableros (15%)</span><span class="value">$1.574.280</span></div>
+            <div class="ejemplo-row"><span class="label">(+) Sobretasa bomberil (~1,5% aprox.)</span><span class="value">$157.428</span></div>
+            <div class="ejemplo-row total"><span class="label">Total ICA + complementarios</span><span class="value">$12.226.908</span></div>
+            <div class="ejemplo-row"><span class="label">(-) ReteICA descontada (certificados)</span><span class="value">$7.800.000</span></div>
+            <div class="ejemplo-row total"><span class="label">Saldo neto a pagar municipios</span><span class="value">$4.426.908</span></div>
+            <div class="ejemplo-row" style="background:#ECFDF5;border-radius:6px;padding:8px">
+              <span class="label"><strong>Descuento en renta (100% pagado)</strong></span>
+              <span class="value" style="color:#047857">$12.226.908</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tu siguiente paso</h4>
+          </div>
+          <p>Ahora que dominas el ICA, complementa tu formaci&oacute;n con el curso de <strong>Renta 110</strong> donde ver&aacute;s c&oacute;mo aplicar el descuento tributario del ICA en la pr&aacute;ctica, y con el curso de <strong>Retenci&oacute;n 350</strong> para entender la diferencia entre retenci&oacute;n nacional y municipal.</p>
+        </div>
+
+        <div style="background:linear-gradient(135deg,var(--orange-50),var(--orange-100));border:2px solid var(--orange-200);border-radius:16px;padding:28px 24px;text-align:center;margin:28px 0">
+          <h3 style="font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;color:var(--orange-700);margin-bottom:8px">Volver a la Escuela Contable IA</h3>
+          <p style="font-size:.9rem;color:var(--orange-800);margin-bottom:16px">Explora todos los cursos disponibles: Renta 110, IVA 300, Retenci&oacute;n 350, Ex&oacute;gena, Sanciones, Procedimiento y m&aacute;s.</p>
+          <a href="../escuela.html" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:var(--orange-700);color:#fff;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;box-shadow:0 4px 16px rgba(194,65,12,.3);transition:all .2s" onmouseover="this.style.background='#9A3412'" onmouseout="this.style.background='#C2410C'">Ir a la Escuela Contable &rarr;</a>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Resumen completo de cuentas PUC relacionadas con ICA
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Cuenta</th><th>Nombre</th><th>Uso en ICA</th></tr></thead>
+              <tbody>
+                <tr><td><code>2412</code></td><td>Impuesto de industria y comercio</td><td>ICA causado por pagar (pasivo)</td></tr>
+                <tr><td><code>241205</code></td><td>Vigencia fiscal corriente</td><td>ICA del periodo actual</td></tr>
+                <tr><td><code>241210</code></td><td>Vigencias fiscales anteriores</td><td>ICA de periodos anteriores pendiente</td></tr>
+                <tr><td><code>2368</code></td><td>ICA retenido</td><td>ReteICA que practicas a proveedores (pasivo)</td></tr>
+                <tr><td><code>135515</code></td><td>Retenci&oacute;n de ICA</td><td>ReteICA que te practican (activo a favor)</td></tr>
+                <tr><td><code>5115</code></td><td>Impuestos &mdash; industria y comercio</td><td>Gasto por ICA del periodo</td></tr>
+                <tr><td><code>511505</code></td><td>Impuesto de industria y comercio</td><td>Gasto detallado por concepto</td></tr>
+                <tr><td><code>511510</code></td><td>Avisos y tableros</td><td>Complementario (15% del ICA)</td></tr>
+                <tr><td><code>2502</code></td><td>Anticipo de ICA</td><td>Anticipo del siguiente periodo (si aplica)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-5" class="prev" onclick="navigateTo(5)">&larr; M&oacute;dulo 5</a>
+        <a href="../escuela.html" class="next" style="background:var(--gray-800)">Volver a la Escuela &rarr;</a>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Abrir men&uacute;">&#9776;</button>
+
+<script>
+/* Module navigation */
+var currentModule = 1;
+var totalModules = 6;
+
+function navigateTo(n) {
+  // Hide all modules
+  document.querySelectorAll('.modulo-section').forEach(function(s){ s.style.display = 'none'; });
+  // Show target
+  var target = document.getElementById('modulo-' + n);
+  if (target) target.style.display = 'block';
+  // Update sidebar
+  var links = document.querySelectorAll('.sidebar-nav a');
+  links.forEach(function(a, i) {
+    a.classList.remove('active');
+    if (i < n - 1) a.classList.add('completed');
+    if (i === n - 1) a.classList.add('active');
+  });
+  // Update progress
+  var pct = Math.round((n / totalModules) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  currentModule = n;
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  // Track
+  if (typeof gtag !== 'undefined') gtag('event', 'escuela_modulo', { curso: 'ica', modulo: n });
+}
+
+/* Sidebar toggle for mobile */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+</script>
+</body>
+</html>

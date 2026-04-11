@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="../shared/cookie-consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S7SM6ST4CC');
+</script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta name="theme-color" content="#059669">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso Informaci&oacute;n Ex&oacute;gena (Medios Magn&eacute;ticos) &mdash; Escuela Contable IA | Ex&oacute;genaDIAN</title>
+<meta name="description" content="Curso completo de Informaci&oacute;n Ex&oacute;gena DIAN (Medios Magn&eacute;ticos). 6 m&oacute;dulos con referencias al Estatuto Tributario, Res. 000227/2024, formatos 1001-2276, tips pr&aacute;cticos y herramienta real.">
+<link rel="canonical" href="https://exogenadian.com/escuela/exogena.html">
+<meta name="robots" content="index, follow">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-900:#064E3B;--green-800:#065F46;--green-700:#047857;--green-600:#059669;--green-500:#10B981;--green-400:#34D399;--green-300:#6EE7B7;--green-200:#A7F3D0;--green-100:#D1FAE5;--green-50:#ECFDF5;
+  --white:#FFF;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-500:#6B7280;--gray-600:#4B5563;--gray-700:#374151;--gray-800:#1F2937;--gray-900:#111827;
+  --amber-50:#FFFBEB;--amber-100:#FEF3C7;--amber-500:#F59E0B;--amber-700:#92400E;--amber-800:#78350F;
+  --blue-50:#EFF6FF;--blue-100:#DBEAFE;--blue-500:#3B82F6;--blue-700:#1D4ED8;
+  --purple-50:#F5F3FF;--purple-100:#EDE9FE;--purple-500:#8B5CF6;--purple-700:#6D28D9;
+  --rose-50:#FFF1F2;--rose-500:#F43F5E;--rose-700:#BE123C;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.6}
+
+/* ===== LAYOUT ===== */
+.curso-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+@media(max-width:900px){.curso-layout{grid-template-columns:1fr}}
+
+/* ===== SIDEBAR ===== */
+.sidebar{background:var(--white);border-right:1px solid var(--gray-200);padding:20px 0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.sidebar-header{padding:16px 20px;border-bottom:1px solid var(--gray-100)}
+.sidebar-header a{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--gray-800);font-weight:800;font-size:.9rem}
+.sidebar-header a div{width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900}
+.sidebar-header small{display:block;font-size:.72rem;color:var(--gray-400);font-weight:500;margin-top:2px}
+.sidebar-curso{padding:16px 20px;border-bottom:1px solid var(--gray-100)}
+.sidebar-curso h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--green-700);margin-bottom:4px}
+.sidebar-curso p{font-size:.88rem;font-weight:700;color:var(--gray-800)}
+.sidebar-nav{padding:12px 0;flex:1}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:10px 20px;text-decoration:none;color:var(--gray-500);font-size:.85rem;font-weight:500;transition:all .15s;border-left:3px solid transparent}
+.sidebar-nav a:hover{background:var(--green-50);color:var(--green-700)}
+.sidebar-nav a.active{background:var(--green-50);color:var(--green-700);font-weight:700;border-left-color:var(--green-600)}
+.sidebar-nav a .nav-num{width:24px;height:24px;border-radius:50%;background:var(--gray-100);color:var(--gray-500);display:grid;place-items:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+.sidebar-nav a.active .nav-num{background:var(--green-600);color:#fff}
+.sidebar-nav a.completed .nav-num{background:var(--green-200);color:var(--green-700)}
+.sidebar-back{padding:16px 20px;border-top:1px solid var(--gray-100);margin-top:auto}
+.sidebar-back a{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--gray-400);font-size:.82rem;font-weight:500;transition:color .15s}
+.sidebar-back a:hover{color:var(--gray-700)}
+.sidebar-toggle{display:none;position:fixed;bottom:20px;left:20px;z-index:200;width:48px;height:48px;border-radius:50%;background:var(--green-600);color:#fff;border:none;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 16px rgba(5,150,105,.3)}
+@media(max-width:900px){
+  .sidebar{display:none;position:fixed;top:0;left:0;z-index:199;width:280px;box-shadow:4px 0 20px rgba(0,0,0,.1)}
+  .sidebar.open{display:flex}
+  .sidebar-toggle{display:block}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:198}
+  .sidebar-overlay.open{display:block}
+}
+
+/* ===== MAIN CONTENT ===== */
+.curso-main{padding:32px 40px 60px;max-width:860px}
+@media(max-width:900px){.curso-main{padding:20px 16px 80px}}
+
+/* Module header */
+.mod-header{margin-bottom:32px}
+.mod-breadcrumb{font-size:.78rem;color:var(--gray-400);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mod-breadcrumb a{color:var(--gray-400);text-decoration:none}
+.mod-breadcrumb a:hover{color:var(--green-600)}
+.mod-num{display:inline-flex;align-items:center;gap:8px;background:var(--green-100);color:var(--green-700);padding:4px 14px;border-radius:100px;font-size:.78rem;font-weight:700;margin-bottom:12px}
+.mod-header h1{font-family:'Fraunces',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px;line-height:1.2}
+.mod-header .mod-desc{font-size:1rem;color:var(--gray-500);max-width:600px;line-height:1.6}
+
+/* Content blocks */
+.content-block{margin-bottom:28px}
+.content-block h2{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;margin-bottom:12px;color:var(--gray-900);padding-bottom:8px;border-bottom:2px solid var(--green-200)}
+.content-block h3{font-size:1.05rem;font-weight:700;margin:20px 0 8px;color:var(--gray-800)}
+.content-block p{font-size:.92rem;color:var(--gray-600);line-height:1.7;margin-bottom:12px}
+.content-block ul,.content-block ol{margin:8px 0 16px 20px;display:flex;flex-direction:column;gap:6px}
+.content-block li{font-size:.9rem;color:var(--gray-600);line-height:1.6}
+
+/* Norma card */
+.norma{background:var(--amber-50);border:1.5px solid #FDE68A;border-radius:14px;padding:20px 24px;margin:20px 0}
+.norma-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.norma-icon{width:32px;height:32px;border-radius:8px;background:#FDE68A;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
+.norma-header h4{font-size:.92rem;font-weight:700;color:var(--amber-800)}
+.norma-header .norma-tag{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--amber-500);color:#fff;text-transform:uppercase;letter-spacing:.04em}
+.norma blockquote{font-size:.88rem;color:#78350F;line-height:1.65;padding:12px 16px;background:rgba(255,255,255,.6);border-radius:8px;border-left:3px solid var(--amber-500);margin:8px 0;font-style:italic}
+.norma blockquote strong{font-style:normal;color:var(--amber-800)}
+.norma p{font-size:.85rem;color:#78350F;line-height:1.6;margin:8px 0}
+.norma .norma-aplicacion{font-size:.82rem;color:var(--green-800);background:var(--green-50);padding:10px 14px;border-radius:8px;border:1px solid var(--green-200);margin-top:12px}
+.norma .norma-aplicacion strong{color:var(--green-700)}
+
+/* Tip card */
+.tip{background:var(--blue-50);border:1.5px solid #BFDBFE;border-radius:14px;padding:18px 22px;margin:20px 0}
+.tip-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tip-header h4{font-size:.88rem;font-weight:700;color:var(--blue-700)}
+.tip p{font-size:.88rem;color:#1E40AF;line-height:1.6}
+
+/* Error com&uacute;n */
+.error-comun{background:var(--rose-50);border:1.5px solid #FECACA;border-radius:14px;padding:18px 22px;margin:20px 0}
+.error-comun-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.error-comun-header h4{font-size:.88rem;font-weight:700;color:var(--rose-700)}
+.error-comun p{font-size:.88rem;color:#9F1239;line-height:1.6}
+
+/* Tabla normativa */
+.tabla-norm{width:100%;border-collapse:collapse;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--gray-200)}
+.tabla-norm th{background:var(--gray-100);padding:10px 14px;text-align:left;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-500)}
+.tabla-norm td{padding:10px 14px;font-size:.85rem;border-top:1px solid var(--gray-100);color:var(--gray-700)}
+.tabla-norm tr:hover{background:var(--green-50)}
+.tabla-norm code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--gray-100);padding:1px 6px;border-radius:4px}
+
+/* Ejemplo pr&aacute;ctico */
+.ejemplo{background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;overflow:hidden;margin:20px 0;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+.ejemplo-header{background:var(--gray-50);padding:12px 20px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;gap:8px}
+.ejemplo-header h4{font-size:.85rem;font-weight:700;color:var(--gray-700)}
+.ejemplo-body{padding:16px 20px}
+.ejemplo-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:.88rem}
+.ejemplo-row:last-child{border-bottom:none}
+.ejemplo-row .label{color:var(--gray-600)}
+.ejemplo-row .value{font-weight:700;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.ejemplo-row.total{border-top:2px solid var(--green-200);border-bottom:none;padding-top:12px;margin-top:4px}
+.ejemplo-row.total .label{font-weight:700;color:var(--gray-900)}
+.ejemplo-row.total .value{color:var(--green-700);font-size:.95rem}
+
+/* Navigation between modules */
+.mod-nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:2px solid var(--gray-200)}
+.mod-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:700;font-size:.92rem;transition:all .2s}
+.mod-nav .prev{background:var(--gray-100);color:var(--gray-700)}
+.mod-nav .prev:hover{background:var(--gray-200)}
+.mod-nav .next{background:var(--green-600);color:#fff;box-shadow:0 4px 12px rgba(5,150,105,.25)}
+.mod-nav .next:hover{background:var(--green-700);transform:translateY(-1px)}
+
+/* CTA practica */
+.cta-practica{background:linear-gradient(135deg,var(--green-50),#D1FAE5);border:2px solid var(--green-300);border-radius:16px;padding:28px 24px;text-align:center;margin:28px 0}
+.cta-practica h3{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;color:var(--green-800);margin-bottom:8px}
+.cta-practica p{font-size:.92rem;color:var(--green-700);margin-bottom:16px}
+.cta-practica a{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--green-600);color:#fff;border-radius:12px;font-weight:700;font-size:1rem;text-decoration:none;box-shadow:0 4px 16px rgba(5,150,105,.3);transition:all .2s}
+.cta-practica a:hover{background:var(--green-700);transform:translateY(-2px)}
+
+/* Progress */
+.progress-bar{height:4px;background:var(--gray-200);border-radius:2px;margin:12px 20px;overflow:hidden}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--green-500),var(--green-400));border-radius:2px;transition:width .3s}
+
+/* Expand/collapse */
+.expandible{margin:12px 0}
+.expandible-toggle{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;color:var(--gray-700);transition:all .15s;text-align:left}
+.expandible-toggle:hover{background:var(--gray-100)}
+.expandible-toggle svg{width:16px;height:16px;transition:transform .2s;flex-shrink:0}
+.expandible-content{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.expandible.open .expandible-content{max-height:4000px}
+.expandible.open .expandible-toggle svg{transform:rotate(180deg)}
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<div class="curso-layout">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html">
+        <div>E</div>
+        Ex&oacute;genaDIAN
+      </a>
+    </div>
+    <div class="sidebar-curso">
+      <h3>Escuela Contable IA</h3>
+      <p>Informaci&oacute;n Ex&oacute;gena &mdash; Medios Magn&eacute;ticos</p>
+    </div>
+    <div class="progress-bar"><div class="fill" id="progressFill" style="width:16%"></div></div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <a href="#modulo-1" class="active" onclick="navigateTo(1)">
+        <span class="nav-num">1</span> Obligados a reportar
+      </a>
+      <a href="#modulo-2" onclick="navigateTo(2)">
+        <span class="nav-num">2</span> F1001 Pagos y F1003 Retenciones
+      </a>
+      <a href="#modulo-3" onclick="navigateTo(3)">
+        <span class="nav-num">3</span> F1005/F1006 IVA
+      </a>
+      <a href="#modulo-4" onclick="navigateTo(4)">
+        <span class="nav-num">4</span> F1007 Ingresos y F2276
+      </a>
+      <a href="#modulo-5" onclick="navigateTo(5)">
+        <span class="nav-num">5</span> F1008-F1012 Saldos Dic. 31
+      </a>
+      <a href="#modulo-6" onclick="navigateTo(6)">
+        <span class="nav-num">6</span> Pr&aacute;ctica desde tu balance
+      </a>
+    </nav>
+    <div class="sidebar-back">
+      <a href="../escuela.html">&larr; Volver a la Escuela</a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="curso-main">
+
+    <!-- ===================== M&Oacute;DULO 1 ===================== -->
+    <section id="modulo-1" class="modulo-section">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Ex&oacute;gena</a> &rsaquo; M&oacute;dulo 1
+        </div>
+        <div class="mod-num">M&oacute;dulo 1 de 6</div>
+        <h1>Obligados a reportar: &iquest;qui&eacute;n debe presentar informaci&oacute;n ex&oacute;gena?</h1>
+        <p class="mod-desc">Antes de armar un solo formato, necesitas saber si tu cliente est&aacute; obligado y cu&aacute;les son las consecuencias de no reportar. Art. 631 ET, Res. 000227/2024 y sanciones del Art. 651.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Fundamento legal: Art&iacute;culo 631 del Estatuto Tributario</h2>
+        <p>La informaci&oacute;n ex&oacute;gena &mdash;tambi&eacute;n conocida como &ldquo;medios magn&eacute;ticos&rdquo;&mdash; es el reporte anual que ciertos contribuyentes deben enviar a la DIAN detallando sus operaciones con terceros: pagos, retenciones, ingresos, IVA y saldos a diciembre 31.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art&iacute;culo 631 del Estatuto Tributario</h4>
+            <span class="norma-tag">Obligatorio</span>
+          </div>
+          <blockquote>
+            <strong>&ldquo;El Director General de la DIAN podr&aacute; solicitar a las personas naturales y jur&iacute;dicas, contribuyentes y no contribuyentes,</strong> informaci&oacute;n relacionada con: <strong>a)</strong> Apellidos y nombres o raz&oacute;n social, NIT y direcci&oacute;n de quienes les hubieren practicado retenci&oacute;n en la fuente; <strong>b)</strong> Apellidos y nombres o raz&oacute;n social, NIT y direcci&oacute;n de cada una de las personas o entidades a quienes se les practic&oacute; retenci&oacute;n en la fuente; [...] <strong>e)</strong> Apellidos y nombres o raz&oacute;n social, NIT y direcci&oacute;n de cada uno de los beneficiarios de los pagos que constituyan costo o deducci&oacute;n.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> El Art. 631 es la norma marco. La DIAN emite cada a&ntilde;o una resoluci&oacute;n que define los formatos espec&iacute;ficos, topes y plazos. Para el a&ntilde;o gravable 2024 (que se presenta en 2025-2026) la resoluci&oacute;n base es la 000227 de 2024.
+          </div>
+        </div>
+
+        <h3>Resoluci&oacute;n 000227 de octubre 2024 (mod. Res. 000233/2024 y 000237/2025)</h3>
+        <p>Esta resoluci&oacute;n establece qui&eacute;nes reportan, qu&eacute; formatos usan, y los topes de ingresos y activos. Las modificaciones posteriores ajustan conceptos y plazos:</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Res. 000227/2024 &mdash; Art. 1: Sujetos obligados</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr>
+                <th>Tipo de obligado</th>
+                <th>Tope ingresos brutos 2023 o 2024</th>
+                <th>Tope activos brutos a Dic. 31</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Personas jur&iacute;dicas y asimiladas</td>
+                <td>&ge; $100.000.000</td>
+                <td>&mdash; (basta superar ingresos)</td>
+              </tr>
+              <tr>
+                <td>Personas naturales y asimiladas</td>
+                <td>&ge; $100.000.000</td>
+                <td>O activos brutos &ge; $500.000.000</td>
+              </tr>
+              <tr>
+                <td>Grandes Contribuyentes</td>
+                <td>Siempre obligados</td>
+                <td>Siempre obligados</td>
+              </tr>
+              <tr>
+                <td>Entidades p&uacute;blicas</td>
+                <td>Siempre obligadas</td>
+                <td>Siempre obligadas</td>
+              </tr>
+              <tr>
+                <td>Agentes de retenci&oacute;n</td>
+                <td>Siempre obligados</td>
+                <td>Siempre obligados</td>
+              </tr>
+              <tr>
+                <td>Consorcios y uniones temporales</td>
+                <td>Siempre obligados</td>
+                <td>Siempre obligados</td>
+              </tr>
+              <tr>
+                <td>Entidades financieras</td>
+                <td>Siempre obligadas</td>
+                <td>Siempre obligadas</td>
+              </tr>
+              <tr>
+                <td>C&aacute;maras de Comercio</td>
+                <td>Siempre obligadas</td>
+                <td>Siempre obligadas</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="norma-aplicacion">
+            <strong>Res. 000233/2024:</strong> Ajust&oacute; conceptos nuevos en F1007 (4020-4021) y precis&oacute; el reporte de operaciones de factoring. <strong>Res. 000237/2025:</strong> Defini&oacute; el calendario de vencimientos para abril-mayo 2026.
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>Los topes de <strong>$100 millones de ingresos</strong> se miden por los ingresos brutos del a&ntilde;o anterior (2023 para AG 2024). Si tu cliente factur&oacute; $95 millones en 2023 pero $200 millones en 2024, revisa si por ingresos de 2024 queda obligado. Adicionalmente, si los <strong>activos brutos a diciembre 31 de 2024</strong> superan $500 millones, tambi&eacute;n est&aacute; obligado, sin importar el nivel de ingresos.</p>
+        </div>
+
+        <h3>Plazos de presentaci&oacute;n: abril-mayo 2026</h3>
+        <p>La Resoluci&oacute;n 000237/2025 establece los vencimientos seg&uacute;n los dos &uacute;ltimos d&iacute;gitos del NIT (sin d&iacute;gito de verificaci&oacute;n):</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Res. 000237/2025 &mdash; Calendario ex&oacute;gena AG 2024</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>&Uacute;ltimos 2 d&iacute;gitos NIT</th><th>Grandes Contribuyentes</th><th>Personas Jur&iacute;dicas</th><th>Personas Naturales</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>01 &ndash; 05</td><td>1 abril 2026</td><td>14 abril 2026</td><td>5 mayo 2026</td></tr>
+              <tr><td>06 &ndash; 10</td><td>2 abril 2026</td><td>15 abril 2026</td><td>6 mayo 2026</td></tr>
+              <tr><td>11 &ndash; 15</td><td>3 abril 2026</td><td>16 abril 2026</td><td>7 mayo 2026</td></tr>
+              <tr><td>16 &ndash; 20</td><td>6 abril 2026</td><td>17 abril 2026</td><td>8 mayo 2026</td></tr>
+              <tr><td>21 &ndash; 25</td><td>7 abril 2026</td><td>20 abril 2026</td><td>11 mayo 2026</td></tr>
+              <tr><td>26 &ndash; 30</td><td>8 abril 2026</td><td>21 abril 2026</td><td>12 mayo 2026</td></tr>
+              <tr><td>31 &ndash; 35</td><td>9 abril 2026</td><td>22 abril 2026</td><td>13 mayo 2026</td></tr>
+              <tr><td>36 &ndash; 40</td><td>10 abril 2026</td><td>23 abril 2026</td><td>14 mayo 2026</td></tr>
+              <tr><td>41 &ndash; 45</td><td>13 abril 2026</td><td>24 abril 2026</td><td>15 mayo 2026</td></tr>
+              <tr><td>46 &ndash; 50</td><td>14 abril 2026</td><td>27 abril 2026</td><td>18 mayo 2026</td></tr>
+              <tr><td>51 &ndash; 55</td><td>15 abril 2026</td><td>28 abril 2026</td><td>19 mayo 2026</td></tr>
+              <tr><td>56 &ndash; 60</td><td>16 abril 2026</td><td>29 abril 2026</td><td>20 mayo 2026</td></tr>
+              <tr><td>61 &ndash; 65</td><td>17 abril 2026</td><td>30 abril 2026</td><td>21 mayo 2026</td></tr>
+              <tr><td>66 &ndash; 70</td><td>20 abril 2026</td><td>4 mayo 2026</td><td>22 mayo 2026</td></tr>
+              <tr><td>71 &ndash; 75</td><td>21 abril 2026</td><td>5 mayo 2026</td><td>25 mayo 2026</td></tr>
+              <tr><td>76 &ndash; 80</td><td>22 abril 2026</td><td>6 mayo 2026</td><td>26 mayo 2026</td></tr>
+              <tr><td>81 &ndash; 85</td><td>23 abril 2026</td><td>7 mayo 2026</td><td>27 mayo 2026</td></tr>
+              <tr><td>86 &ndash; 90</td><td>24 abril 2026</td><td>8 mayo 2026</td><td>28 mayo 2026</td></tr>
+              <tr><td>91 &ndash; 95</td><td>27 abril 2026</td><td>11 mayo 2026</td><td>29 mayo 2026</td></tr>
+              <tr><td>96 &ndash; 00</td><td>28 abril 2026</td><td>12 mayo 2026</td><td>1 junio 2026</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Sanciones: Art&iacute;culo 651 del Estatuto Tributario</h3>
+        <p>Las sanciones por no reportar, reportar con errores o reportar fuera de plazo son severas. La DIAN las aplica de forma autom&aacute;tica:</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art&iacute;culo 651 ET &mdash; Sanci&oacute;n por no enviar informaci&oacute;n</h4>
+            <span class="norma-tag">Cr&iacute;tico</span>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Infracci&oacute;n</th><th>Sanci&oacute;n</th><th>Base de c&aacute;lculo</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>No suministrar la informaci&oacute;n</strong></td>
+                <td>Hasta el <strong>1%</strong> de las sumas no reportadas</td>
+                <td>Monto de las operaciones omitidas</td>
+              </tr>
+              <tr>
+                <td><strong>Informaci&oacute;n con errores</strong> (contenido errado)</td>
+                <td>Hasta el <strong>0,7%</strong> de las sumas con error</td>
+                <td>Monto de los registros err&oacute;neos</td>
+              </tr>
+              <tr>
+                <td><strong>Informaci&oacute;n extempor&aacute;nea</strong> (fuera de plazo)</td>
+                <td>Hasta el <strong>0,5%</strong> de las sumas reportadas</td>
+                <td>Monto total de la informaci&oacute;n presentada</td>
+              </tr>
+            </tbody>
+          </table>
+          <blockquote>
+            <strong>Tope m&aacute;ximo:</strong> La sanci&oacute;n no puede exceder <strong>7.500 UVT</strong>. Con UVT 2026 = $52.369, el tope es <strong>$392.767.500</strong> (aprox. $392,8 millones). Si la informaci&oacute;n se corrige antes del emplazamiento, la sanci&oacute;n se reduce al 20% (Art. 651 par. 1).
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> Si un cliente tiene $2.000 millones en pagos y no reporta ex&oacute;gena, la sanci&oacute;n puede llegar al 1% = $20.000.000. Si solo tiene errores en $500 millones, ser&iacute;a 0,7% = $3.500.000. Corregir voluntariamente antes del emplazamiento reduce al 20%: $700.000.
+          </div>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Creer que la ex&oacute;gena &ldquo;no importa porque ya present&eacute; renta&rdquo;. La DIAN usa los formatos de ex&oacute;gena para <strong>cruzar informaci&oacute;n entre contribuyentes</strong>. Si tu proveedor te reporta un pago que t&uacute; no reportaste como ingreso, se genera un requerimiento autom&aacute;tico. La ex&oacute;gena es la principal herramienta de fiscalizaci&oacute;n masiva de la DIAN.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Resumen de formatos que se deben presentar
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Formato</th><th>Nombre</th><th>Art. 631 ET</th><th>Contenido</th></tr></thead>
+              <tbody>
+                <tr><td><code>F1001</code></td><td>Pagos y abonos en cuenta</td><td>Lit. b) y e)</td><td>Pagos a terceros por concepto</td></tr>
+                <tr><td><code>F1003</code></td><td>Retenciones practicadas</td><td>Lit. b)</td><td>Retenciones en la fuente a terceros</td></tr>
+                <tr><td><code>F1005</code></td><td>IVA descontable</td><td>Lit. d)</td><td>IVA pagado en compras, por proveedor</td></tr>
+                <tr><td><code>F1006</code></td><td>IVA generado</td><td>Lit. c)</td><td>IVA cobrado en ventas, por cliente</td></tr>
+                <tr><td><code>F1007</code></td><td>Ingresos recibidos</td><td>Lit. a)</td><td>Ingresos por tercero y concepto</td></tr>
+                <tr><td><code>F1008</code></td><td>Saldos deudores</td><td>Lit. e)</td><td>Cuentas por cobrar a Dic. 31</td></tr>
+                <tr><td><code>F1009</code></td><td>Saldos acreedores</td><td>Lit. e)</td><td>Cuentas por pagar a Dic. 31</td></tr>
+                <tr><td><code>F1010</code></td><td>Socios y accionistas</td><td>Lit. e)</td><td>Aportes y utilidades a Dic. 31</td></tr>
+                <tr><td><code>F1012</code></td><td>Inversiones</td><td>Lit. e)</td><td>Inversiones a Dic. 31</td></tr>
+                <tr><td><code>F2276</code></td><td>Rentas de trabajo</td><td>Art. 631 lit. b)</td><td>Detalle empleados: salario, deducciones, retenci&oacute;n</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <span></span>
+        <a href="#modulo-2" class="next" onclick="navigateTo(2)">M&oacute;dulo 2: F1001 Pagos y F1003 Retenciones &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 2 ===================== -->
+    <section id="modulo-2" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Ex&oacute;gena</a> &rsaquo; M&oacute;dulo 2
+        </div>
+        <div class="mod-num">M&oacute;dulo 2 de 6</div>
+        <h1>F1001 Pagos y abonos en cuenta &amp; F1003 Retenciones practicadas</h1>
+        <p class="mod-desc">Los dos formatos m&aacute;s voluminosos de la ex&oacute;gena. Aqu&iacute; mapeas cada pago del PUC grupo 5/6 a un concepto del F1001, y cada retenci&oacute;n practicada al F1003.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Formato 1001 v11: Pagos y abonos en cuenta</h2>
+        <p>El F1001 reporta todos los pagos o abonos en cuenta realizados durante el a&ntilde;o, clasificados por concepto y tercero beneficiario. Es el formato que alimenta los cruces m&aacute;s importantes de la DIAN.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 631 lit. b) y e) ET &mdash; Informaci&oacute;n de pagos</h4>
+          </div>
+          <blockquote>
+            &ldquo;Apellidos y nombres o raz&oacute;n social, NIT y direcci&oacute;n de cada una de las personas o entidades <strong>beneficiarias de los pagos</strong> que constituyan costo o deducci&oacute;n o den derecho a impuesto descontable, incluida la retenci&oacute;n en la fuente practicada&hellip;&rdquo;
+          </blockquote>
+        </div>
+
+        <h3>Conceptos principales del F1001 v11</h3>
+        <p>Cada pago se clasifica con un c&oacute;digo de concepto. Los m&aacute;s frecuentes:</p>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Concepto</th><th>Descripci&oacute;n</th><th>PUC relacionado</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>5001</code></td><td>Salarios, prestaciones y dem&aacute;s pagos laborales</td><td><code>5105, 5110, 5115, 5120, 5125, 5130, 5135</code></td></tr>
+            <tr><td><code>5002</code></td><td>Honorarios</td><td><code>5110xx, 5210xx</code></td></tr>
+            <tr><td><code>5003</code></td><td>Comisiones</td><td><code>5115xx, 5215xx</code></td></tr>
+            <tr><td><code>5004</code></td><td>Servicios</td><td><code>5135xx, 5235xx</code></td></tr>
+            <tr><td><code>5005</code></td><td>Arrendamientos</td><td><code>5120xx, 5220xx</code></td></tr>
+            <tr><td><code>5006</code></td><td>Intereses y rendimientos financieros</td><td><code>5305xx</code></td></tr>
+            <tr><td><code>5010</code></td><td>Compras</td><td><code>6205xx, 6210xx, 6215xx</code></td></tr>
+            <tr><td><code>5011</code></td><td>Otros costos y deducciones</td><td><code>5195xx, 5295xx, 53xx</code></td></tr>
+            <tr><td><code>5016</code></td><td>Pagos al exterior</td><td>Gastos/costos con beneficiario del exterior</td></tr>
+            <tr><td><code>5023</code></td><td>Aportes parafiscales</td><td><code>5170xx</code></td></tr>
+            <tr><td><code>5027</code></td><td>Aportes seguridad social</td><td><code>5165xx</code></td></tr>
+            <tr><td><code>5058</code></td><td>IVA mayor valor del costo o gasto</td><td><code>511570, 521570</code></td></tr>
+            <tr><td><code>5089</code></td><td>Pagos realizados con bonos electr&oacute;nicos o similares <em>(nuevo)</em></td><td>Seg&uacute;n naturaleza del gasto</td></tr>
+            <tr><td><code>5090</code></td><td>Pagos realizados a trav&eacute;s de plataformas tecnol&oacute;gicas <em>(nuevo)</em></td><td>Seg&uacute;n naturaleza del gasto</td></tr>
+            <tr><td><code>5091</code></td><td>Pagos por operaciones de factoring o confirming <em>(nuevo Res. 000233)</em></td><td>Seg&uacute;n naturaleza</td></tr>
+          </tbody>
+        </table>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Cuant&iacute;as menores</h4>
+          </div>
+          <p>Los pagos a un mismo tercero que en el a&ntilde;o <strong>no superen $500.000</strong> (para conceptos como servicios, honorarios, comisiones) se pueden acumular en un solo registro con NIT gen&eacute;rico <code>222222222</code> y raz&oacute;n social &ldquo;Cuant&iacute;as menores&rdquo;. Para compras, el umbral es <strong>$500.000</strong> tambi&eacute;n. La resoluci&oacute;n especifica cada umbral por concepto. <strong>Cuidado:</strong> salarios (5001) NO tienen cuant&iacute;a menor &mdash; siempre se reportan individualizados.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Mapeo PUC grupo 5 (Gastos) &rarr; conceptos F1001
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Grupo PUC</th><th>Nombre</th><th>Concepto F1001</th></tr></thead>
+              <tbody>
+                <tr><td><code>5105</code></td><td>Gastos de personal &ndash; salarios</td><td><code>5001</code></td></tr>
+                <tr><td><code>5110</code></td><td>Honorarios</td><td><code>5002</code></td></tr>
+                <tr><td><code>5115</code></td><td>Comisiones</td><td><code>5003</code></td></tr>
+                <tr><td><code>5120</code></td><td>Arrendamientos</td><td><code>5005</code></td></tr>
+                <tr><td><code>5125</code></td><td>Contribuciones y afiliaciones</td><td><code>5011</code></td></tr>
+                <tr><td><code>5130</code></td><td>Seguros</td><td><code>5011</code></td></tr>
+                <tr><td><code>5135</code></td><td>Servicios</td><td><code>5004</code></td></tr>
+                <tr><td><code>5140</code></td><td>Gastos legales</td><td><code>5004</code></td></tr>
+                <tr><td><code>5145</code></td><td>Mantenimiento y reparaciones</td><td><code>5004</code></td></tr>
+                <tr><td><code>5150</code></td><td>Adecuaci&oacute;n e instalaci&oacute;n</td><td><code>5004</code></td></tr>
+                <tr><td><code>5155</code></td><td>Gastos de viaje</td><td><code>5004</code></td></tr>
+                <tr><td><code>5160</code></td><td>Depreciaciones</td><td>No se reporta (no hay pago a tercero)</td></tr>
+                <tr><td><code>5165</code></td><td>Aportes a seguridad social</td><td><code>5027</code></td></tr>
+                <tr><td><code>5170</code></td><td>Aportes parafiscales</td><td><code>5023</code></td></tr>
+                <tr><td><code>5195</code></td><td>Diversos</td><td><code>5011</code></td></tr>
+                <tr><td><code>5305</code></td><td>Gastos financieros &ndash; intereses</td><td><code>5006</code></td></tr>
+              </tbody>
+            </table>
+            <p style="font-size:.82rem;color:var(--gray-500);margin-top:8px"><strong>Nota:</strong> Las cuentas PUC del grupo <code>6</code> (Costo de ventas) se mapean al concepto <code>5010</code> (Compras). Las cuentas de amortizaci&oacute;n y depreciaci&oacute;n <strong>no se reportan</strong> en F1001 porque no representan un pago a un tercero identificable.</p>
+          </div>
+        </div>
+
+        <h2>Formato 1003 v8: Retenciones en la fuente practicadas</h2>
+        <p>El F1003 reporta las retenciones que tu cliente practic&oacute; a sus proveedores y empleados. Se cruza con el F350 (declaraci&oacute;n de retenci&oacute;n mensual).</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 631 lit. b) ET &mdash; Retenciones practicadas</h4>
+          </div>
+          <blockquote>
+            &ldquo;[...] incluida la <strong>retenci&oacute;n en la fuente practicada o asumida</strong> a t&iacute;tulo de renta, IVA, timbre e impuesto de industria y comercio.&rdquo;
+          </blockquote>
+        </div>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Concepto F1003</th><th>Descripci&oacute;n</th><th>Cruce con F350</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>1301</code></td><td>Retenci&oacute;n por salarios</td><td>Rengl&oacute;n 40-42 F350</td></tr>
+            <tr><td><code>1302</code></td><td>Retenci&oacute;n por honorarios, comisiones y servicios PN declarante</td><td>Rengl&oacute;n 43-45</td></tr>
+            <tr><td><code>1303</code></td><td>Retenci&oacute;n por honorarios, comisiones y servicios PN no declarante</td><td>Rengl&oacute;n 43-45</td></tr>
+            <tr><td><code>1304</code></td><td>Retenci&oacute;n por honorarios, comisiones y servicios PJ</td><td>Rengl&oacute;n 43-45</td></tr>
+            <tr><td><code>1310</code></td><td>Retenci&oacute;n por compras</td><td>Rengl&oacute;n 55-57</td></tr>
+            <tr><td><code>1325</code></td><td>Retenci&oacute;n por arrendamientos</td><td>Rengl&oacute;n 46-48</td></tr>
+            <tr><td><code>1330</code></td><td>Retenci&oacute;n por rendimientos financieros</td><td>Rengl&oacute;n 49-51</td></tr>
+            <tr><td><code>1345</code></td><td>Retenci&oacute;n por IVA</td><td>Rengl&oacute;n 78-80 F350</td></tr>
+            <tr><td><code>1355</code></td><td>Retenci&oacute;n por ICA (cuando aplica)</td><td>Seg&uacute;n municipio</td></tr>
+          </tbody>
+        </table>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Que el <strong>total de retenciones del F1003 no cuadre con la sumatoria de los 12 F350</strong> del a&ntilde;o. La DIAN suma tus 12 declaraciones mensuales de retenci&oacute;n y compara con el acumulado anual del F1003. Si hay diferencia &ge; $50.000, genera requerimiento. Las correcciones a F350 de periodos anteriores son la causa m&aacute;s frecuente de este descuadre.</p>
+        </div>
+
+        <h3>Ejemplo pr&aacute;ctico: salario mapeado a F1001 + F1003</h3>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; Empleado Juan P&eacute;rez, NIT 1.023.456.789</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">Salario anual bruto (PUC 5105)</span><span class="value">$72.000.000</span></div>
+            <div class="ejemplo-row"><span class="label">Prestaciones sociales (PUC 5110-5125)</span><span class="value">$18.500.000</span></div>
+            <div class="ejemplo-row"><span class="label">Aportes SS empleador (PUC 5165)</span><span class="value">$8.640.000</span></div>
+            <div class="ejemplo-row"><span class="label">Aportes parafiscales (PUC 5170)</span><span class="value">$6.480.000</span></div>
+            <div class="ejemplo-row total"><span class="label">F1001 concepto 5001 &mdash; pago informado</span><span class="value">$90.500.000</span></div>
+            <div class="ejemplo-row"><span class="label">F1001 concepto 5027 &mdash; aportes SS</span><span class="value">$8.640.000</span></div>
+            <div class="ejemplo-row"><span class="label">F1001 concepto 5023 &mdash; parafiscales</span><span class="value">$6.480.000</span></div>
+            <div class="ejemplo-row" style="border-top:2px solid #FECACA;padding-top:12px;margin-top:4px"><span class="label"><strong>F1003 concepto 1301</strong> &mdash; retenci&oacute;n practicada</span><span class="value" style="color:var(--rose-500)">$4.320.000</span></div>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Cruce F1001 vs. F1003</h4>
+          </div>
+          <p>La DIAN cruza que la <strong>base reportada en F1003</strong> (campo &ldquo;base de retenci&oacute;n&rdquo;) sea consistente con el <strong>pago reportado en F1001</strong> para el mismo tercero y concepto. Si reportas retenci&oacute;n de honorarios a un NIT pero no hay pago de honorarios en F1001 al mismo NIT, se detecta inconsistencia.</p>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-1" class="prev" onclick="navigateTo(1)">&larr; M&oacute;dulo 1</a>
+        <a href="#modulo-3" class="next" onclick="navigateTo(3)">M&oacute;dulo 3: F1005/F1006 IVA &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 3 ===================== -->
+    <section id="modulo-3" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Ex&oacute;gena</a> &rsaquo; M&oacute;dulo 3
+        </div>
+        <div class="mod-num">M&oacute;dulo 3 de 6</div>
+        <h1>F1005 IVA descontable y F1006 IVA generado: el cruce con el F300</h1>
+        <p class="mod-desc">El IVA pagado y cobrado durante el a&ntilde;o se reporta por tercero en estos dos formatos. El total debe cuadrar exactamente con tus declaraciones bimestrales o cuatrimestrales del F300.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Formato 1005 v9: IVA descontable (compras)</h2>
+        <p>Reporta el IVA pagado en compras de bienes y servicios, discriminado por cada proveedor. Se alimenta directamente de la cuenta PUC <code>2404xx</code> (IVA descontable).</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 631 lit. d) ET &mdash; IVA descontable</h4>
+          </div>
+          <blockquote>
+            &ldquo;[Informaci&oacute;n de] El valor de los impuestos descontables y el de las operaciones exentas y excluidas del IVA, <strong>discriminando a cada uno de los proveedores o terceros</strong> que dieron origen a dicho impuesto descontable.&rdquo;
+          </blockquote>
+        </div>
+
+        <h3>Estructura del F1005</h3>
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Campo</th><th>Descripci&oacute;n</th><th>Fuente contable</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>NIT tercero</td><td>NIT del proveedor</td><td>Auxiliar por tercero</td></tr>
+            <tr><td>Valor IVA descontable</td><td>IVA pagado al proveedor en el a&ntilde;o</td><td><code>2404xx</code> d&eacute;bitos</td></tr>
+            <tr><td>Valor IVA no descontable</td><td>IVA que fue al costo/gasto (proporcionalidad)</td><td><code>511570, 521570</code></td></tr>
+            <tr><td>IVA por devoluciones</td><td>IVA devuelto por notas cr&eacute;dito de proveedores</td><td><code>2404xx</code> cr&eacute;ditos</td></tr>
+          </tbody>
+        </table>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Cruce obligatorio con F300</h4>
+          </div>
+          <p>La suma de todo el IVA descontable reportado en F1005 debe coincidir con la <strong>sumatoria de las casillas 40 a 52 de todos los F300 del a&ntilde;o</strong> (6 bimestrales o 3 cuatrimestrales). Si us&oacute; proporcionalidad (Art. 490 ET), la parte no descontable se reporta en la columna correspondiente y en F1001 concepto <code>5058</code>.</p>
+        </div>
+
+        <h2>Formato 1006 v8: IVA generado (ventas)</h2>
+        <p>Reporta el IVA generado (cobrado) en ventas de bienes y servicios, discriminado por cada cliente. Se alimenta de la cuenta PUC <code>2408xx</code> (IVA generado).</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 631 lit. c) ET &mdash; IVA generado</h4>
+          </div>
+          <blockquote>
+            &ldquo;[Informaci&oacute;n de] El valor del impuesto sobre las ventas generado, <strong>discriminando a cada uno de los compradores o terceros</strong> a quienes se les cobr&oacute; dicho impuesto.&rdquo;
+          </blockquote>
+        </div>
+
+        <h3>Estructura del F1006</h3>
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Campo</th><th>Descripci&oacute;n</th><th>Fuente contable</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>NIT tercero</td><td>NIT del cliente</td><td>Auxiliar por tercero</td></tr>
+            <tr><td>Valor IVA generado</td><td>IVA cobrado al cliente en el a&ntilde;o</td><td><code>2408xx</code> cr&eacute;ditos</td></tr>
+            <tr><td>IVA por devoluciones</td><td>IVA restado por notas cr&eacute;dito emitidas</td><td><code>2408xx</code> d&eacute;bitos</td></tr>
+          </tbody>
+        </table>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Cruce: F1005 + F1006 vs. F300</h4>
+            <span class="norma-tag">Cr&iacute;tico</span>
+          </div>
+          <table class="tabla-norm">
+            <thead><tr><th>Formato ex&oacute;gena</th><th>Casillas F300 relacionadas</th><th>Regla de cruce</th></tr></thead>
+            <tbody>
+              <tr><td><code>F1005</code> &mdash; Total IVA descontable</td><td>Cas. 40 a 52 (sumatoria anual)</td><td>Deben ser iguales</td></tr>
+              <tr><td><code>F1006</code> &mdash; Total IVA generado</td><td>Cas. 27 a 39 (sumatoria anual)</td><td>Deben ser iguales</td></tr>
+              <tr><td><code>F1006 - F1005</code></td><td>Saldo a pagar / favor sumado</td><td>Consistencia</td></tr>
+            </tbody>
+          </table>
+          <div class="norma-aplicacion">
+            <strong>Verificaci&oacute;n:</strong> Antes de enviar, suma los F300 del a&ntilde;o y compara. Si hay diferencia, revisa: notas cr&eacute;dito, IVA de importaciones, IVA asumido en servicios del exterior y ajustes por proporcionalidad. Esas son las 4 causas m&aacute;s frecuentes de descuadre.
+          </div>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>No incluir el <strong>IVA de importaciones</strong> en el F1005. El IVA pagado en la declaraci&oacute;n de importaci&oacute;n (DIAN aduanas) tambi&eacute;n se reporta como IVA descontable, con NIT de la DIAN (<code>800.197.268</code>) como tercero. Igualmente, el <strong>IVA asumido en servicios del exterior</strong> (Art. 437-2 ET) debe incluirse. Estos valores s&iacute; est&aacute;n en tu F300 pero muchos olvidan reportarlos en ex&oacute;gena.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Cuentas PUC 2404 y 2408 detalladas
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Cuenta</th><th>Nombre</th><th>Formato ex&oacute;gena</th></tr></thead>
+              <tbody>
+                <tr><td><code>240405</code></td><td>IVA descontable &ndash; bienes 19%</td><td>F1005</td></tr>
+                <tr><td><code>240410</code></td><td>IVA descontable &ndash; bienes 5%</td><td>F1005</td></tr>
+                <tr><td><code>240415</code></td><td>IVA descontable &ndash; servicios 19%</td><td>F1005</td></tr>
+                <tr><td><code>240420</code></td><td>IVA descontable &ndash; servicios 5%</td><td>F1005</td></tr>
+                <tr><td><code>240425</code></td><td>IVA descontable &ndash; importaciones</td><td>F1005</td></tr>
+                <tr><td><code>240805</code></td><td>IVA generado &ndash; ventas 19%</td><td>F1006</td></tr>
+                <tr><td><code>240810</code></td><td>IVA generado &ndash; ventas 5%</td><td>F1006</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-2" class="prev" onclick="navigateTo(2)">&larr; M&oacute;dulo 2</a>
+        <a href="#modulo-4" class="next" onclick="navigateTo(4)">M&oacute;dulo 4: F1007 Ingresos y F2276 &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 4 ===================== -->
+    <section id="modulo-4" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Ex&oacute;gena</a> &rsaquo; M&oacute;dulo 4
+        </div>
+        <div class="mod-num">M&oacute;dulo 4 de 6</div>
+        <h1>F1007 Ingresos recibidos y F2276 Rentas de trabajo</h1>
+        <p class="mod-desc">Los ingresos del a&ntilde;o clasificados por concepto y cliente, m&aacute;s el detalle de cada empleado con su certificado de ingresos y retenciones.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Formato 1007 v9: Ingresos recibidos por tercero</h2>
+        <p>El F1007 reporta todos los ingresos del a&ntilde;o, discriminados por cada cliente o pagador y clasificados por concepto. Se cruza con la declaraci&oacute;n de renta (F110) y con el F1001 que ese mismo tercero te report&oacute; como pago.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 631 lit. a) ET &mdash; Ingresos recibidos</h4>
+          </div>
+          <blockquote>
+            &ldquo;Apellidos y nombres o raz&oacute;n social, NIT y direcci&oacute;n de cada una de las personas o entidades <strong>de quienes se hayan recibido ingresos</strong>&hellip;&rdquo;
+          </blockquote>
+        </div>
+
+        <h3>Conceptos del F1007 v9</h3>
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Concepto</th><th>Descripci&oacute;n</th><th>PUC relacionado</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>4001</code></td><td>Ingresos por venta de bienes</td><td><code>4135xx, 4140xx</code></td></tr>
+            <tr><td><code>4002</code></td><td>Ingresos por prestaci&oacute;n de servicios</td><td><code>4115xx, 4120xx</code></td></tr>
+            <tr><td><code>4003</code></td><td>Ingresos por honorarios</td><td><code>4110xx</code></td></tr>
+            <tr><td><code>4004</code></td><td>Ingresos por comisiones</td><td><code>4210xx</code></td></tr>
+            <tr><td><code>4005</code></td><td>Ingresos por arrendamientos</td><td><code>4220xx</code></td></tr>
+            <tr><td><code>4006</code></td><td>Ingresos por rendimientos financieros</td><td><code>4210xx</code></td></tr>
+            <tr><td><code>4010</code></td><td>Ingresos por dividendos y participaciones</td><td><code>4215xx</code></td></tr>
+            <tr><td><code>4015</code></td><td>Ingresos por exportaciones</td><td><code>4105xx</code> (exentos Art. 481 ET)</td></tr>
+            <tr><td><code>4016</code></td><td>Ingresos por recuperaciones</td><td><code>4175xx</code></td></tr>
+            <tr><td><code>4017</code></td><td>Ingresos recibidos como donaciones</td><td><code>4230xx</code></td></tr>
+            <tr><td><code>4020</code></td><td>Ingresos por operaciones de factoring <em>(nuevo Res. 000233)</em></td><td>Seg&uacute;n naturaleza</td></tr>
+            <tr><td><code>4021</code></td><td>Ingresos por plataformas tecnol&oacute;gicas <em>(nuevo Res. 000233)</em></td><td>Seg&uacute;n naturaleza</td></tr>
+          </tbody>
+        </table>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Cruce con declaraci&oacute;n de renta (F110)</h4>
+          </div>
+          <p>El total de ingresos del F1007 debe ser consistente con los <strong>ingresos brutos declarados en el rengl&oacute;n 33-42 del F110</strong>. La DIAN cruza ambas fuentes. Diferencias t&iacute;picas: ingresos no operacionales (ganancia en venta de activos, indemnizaciones), que van en el F1007 pero a veces se omiten. Tambi&eacute;n verifica que los ingresos que otros te reportaron en sus F1001 (concepto 5010 compras) aparezcan en tu F1007.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Mapeo PUC grupo 4 (Ingresos) &rarr; conceptos F1007
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Grupo PUC</th><th>Nombre</th><th>Concepto F1007</th></tr></thead>
+              <tbody>
+                <tr><td><code>4105</code></td><td>Venta de productos &ndash; agricultura, ganader&iacute;a</td><td><code>4001</code></td></tr>
+                <tr><td><code>4110</code></td><td>Contratos de consultor&iacute;a / honorarios</td><td><code>4003</code></td></tr>
+                <tr><td><code>4115</code></td><td>Actividades inmobiliarias</td><td><code>4002</code></td></tr>
+                <tr><td><code>4120</code></td><td>Servicio de transporte, almacenamiento</td><td><code>4002</code></td></tr>
+                <tr><td><code>4125</code></td><td>Servicios de hoteler&iacute;a y restaurantes</td><td><code>4002</code></td></tr>
+                <tr><td><code>4130</code></td><td>Servicios de telecomunicaciones</td><td><code>4002</code></td></tr>
+                <tr><td><code>4135</code></td><td>Comercio al por mayor</td><td><code>4001</code></td></tr>
+                <tr><td><code>4140</code></td><td>Comercio al por menor</td><td><code>4001</code></td></tr>
+                <tr><td><code>4175</code></td><td>Recuperaciones</td><td><code>4016</code></td></tr>
+                <tr><td><code>4210</code></td><td>Financieros &ndash; intereses</td><td><code>4006</code></td></tr>
+                <tr><td><code>4215</code></td><td>Dividendos y participaciones</td><td><code>4010</code></td></tr>
+                <tr><td><code>4220</code></td><td>Arrendamientos</td><td><code>4005</code></td></tr>
+                <tr><td><code>4230</code></td><td>Donaciones</td><td><code>4017</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h2>Formato 2276: Rentas de trabajo &mdash; Certificado de ingresos y retenciones</h2>
+        <p>El F2276 es el detalle de cada empleado: salario, deducciones, rentas exentas e ingreso neto gravable. Es la base del certificado de ingresos y retenciones (Art. 378 ET) que debe entregarse a cada trabajador.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 378 ET &mdash; Certificado de ingresos y retenciones</h4>
+          </div>
+          <blockquote>
+            &ldquo;Los agentes retenedores de los pagos originados en la relaci&oacute;n laboral o legal y reglamentaria, deber&aacute;n <strong>expedir anualmente a los asalariados un certificado de ingresos y retenciones</strong> correspondiente al a&ntilde;o gravable inmediatamente anterior.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Plazo:</strong> El certificado debe entregarse a m&aacute;s tardar el 31 de marzo del a&ntilde;o siguiente. El F2276 en ex&oacute;gena tiene la misma informaci&oacute;n, por lo que deben coincidir exactamente.
+          </div>
+        </div>
+
+        <h3>Campos clave del F2276</h3>
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Campo</th><th>Descripci&oacute;n</th><th>Norma ET</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Pagos brutos laborales</td><td>Total salarios + prestaciones + otros pagos laborales</td><td>Art. 103 ET</td></tr>
+            <tr><td>Cesant&iacute;as e intereses</td><td>Cesant&iacute;as pagadas + intereses de cesant&iacute;as</td><td>Art. 206 num. 4</td></tr>
+            <tr><td>Aportes obligatorios salud</td><td>Aporte del trabajador (4%)</td><td>Art. 56 ET</td></tr>
+            <tr><td>Aportes obligatorios pensi&oacute;n</td><td>Aporte del trabajador (4%)</td><td>Art. 55 ET</td></tr>
+            <tr><td>Aportes voluntarios pensi&oacute;n/AFC</td><td>Aportes voluntarios a pensi&oacute;n o AFC</td><td>Art. 126-1, 126-4 ET</td></tr>
+            <tr><td>Renta exenta 25%</td><td>25% del ingreso laboral neto (l&iacute;mite 790 UVT)</td><td>Art. 206 num. 10 ET</td></tr>
+            <tr><td>L&iacute;mite 40% rentas exentas + deducciones</td><td>Tope del 40% (1.340 UVT anuales)</td><td>Art. 336 par. 2 ET</td></tr>
+            <tr><td>Retenci&oacute;n en la fuente practicada</td><td>Total retenido en el a&ntilde;o</td><td>Art. 383, 385 ET</td></tr>
+          </tbody>
+        </table>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Que el <strong>total de pagos laborales del F2276 no cuadre con el concepto 5001 del F1001</strong> para el mismo empleado. Tambi&eacute;n se cruza que la retenci&oacute;n del F2276 coincida con el concepto 1301 del F1003 y con el acumulado mensual del F350. Si un empleado reclama en su declaraci&oacute;n de renta rentas exentas que no coinciden con lo reportado en el F2276, el problema recae en el empleador que hizo el reporte.</p>
+        </div>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; F2276 vs. F1001 para un empleado</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">F2276: Pagos brutos laborales</span><span class="value">$90.500.000</span></div>
+            <div class="ejemplo-row"><span class="label">F1001 concepto 5001: Pago reportado</span><span class="value">$90.500.000</span></div>
+            <div class="ejemplo-row" style="background:#ECFDF5;border-radius:6px;padding:8px"><span class="label"><strong>Diferencia</strong></span><span class="value" style="color:#047857">$0 &#10003;</span></div>
+            <div class="ejemplo-row"><span class="label">F2276: Retenci&oacute;n practicada</span><span class="value">$4.320.000</span></div>
+            <div class="ejemplo-row"><span class="label">F1003 concepto 1301: Retenci&oacute;n informada</span><span class="value">$4.320.000</span></div>
+            <div class="ejemplo-row" style="background:#ECFDF5;border-radius:6px;padding:8px"><span class="label"><strong>Diferencia</strong></span><span class="value" style="color:#047857">$0 &#10003;</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-3" class="prev" onclick="navigateTo(3)">&larr; M&oacute;dulo 3</a>
+        <a href="#modulo-5" class="next" onclick="navigateTo(5)">M&oacute;dulo 5: F1008-F1012 Saldos &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 5 ===================== -->
+    <section id="modulo-5" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Ex&oacute;gena</a> &rsaquo; M&oacute;dulo 5
+        </div>
+        <div class="mod-num">M&oacute;dulo 5 de 6</div>
+        <h1>F1008, F1009, F1010 y F1012: Saldos a diciembre 31</h1>
+        <p class="mod-desc">Estos formatos reportan las fotograf&iacute;as de cierre: deudores, acreedores, socios e inversiones al 31 de diciembre. Deben cuadrar exactamente con tu balance de prueba.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Formato 1008: Cuentas por cobrar (Deudores)</h2>
+        <p>Reporta los saldos a favor de la empresa al 31 de diciembre, discriminados por cada deudor. Se alimenta del PUC grupo <code>13</code> (Deudores).</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 631 lit. e) ET &mdash; Deudores</h4>
+          </div>
+          <blockquote>
+            &ldquo;[Informaci&oacute;n de] Los deudores de cr&eacute;ditos activos y pasivos <strong>que a 31 de diciembre del a&ntilde;o reportado</strong> existieran, con indicaci&oacute;n del valor del saldo.&rdquo;
+          </blockquote>
+        </div>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Cuenta PUC</th><th>Nombre</th><th>Umbral de reporte</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>1305</code></td><td>Clientes</td><td>&ge; $500.000 por tercero</td></tr>
+            <tr><td><code>1310</code></td><td>Cuentas corrientes comerciales</td><td>&ge; $500.000 por tercero</td></tr>
+            <tr><td><code>1315</code></td><td>Cuentas por cobrar a casa matriz</td><td>&ge; $500.000 por tercero</td></tr>
+            <tr><td><code>1320</code></td><td>Cuentas por cobrar a socios/accionistas</td><td>&ge; $500.000 por tercero</td></tr>
+            <tr><td><code>1325</code></td><td>Cuentas por cobrar a trabajadores</td><td>&ge; $500.000 por tercero</td></tr>
+            <tr><td><code>1330</code></td><td>Anticipos y avances</td><td>&ge; $500.000 por tercero</td></tr>
+            <tr><td><code>1335</code></td><td>Dep&oacute;sitos</td><td>&ge; $500.000 por tercero</td></tr>
+            <tr><td><code>1340</code></td><td>Promesas de compraventa</td><td>&ge; $500.000 por tercero</td></tr>
+            <tr><td><code>1345</code></td><td>Ingresos por cobrar</td><td>&ge; $500.000 por tercero</td></tr>
+            <tr><td><code>1355</code></td><td>Anticipo de impuestos</td><td>&ge; $500.000 por tercero</td></tr>
+            <tr><td><code>1365</code></td><td>Cuentas por cobrar a trabajadores</td><td>&ge; $500.000 por tercero</td></tr>
+            <tr><td><code>1380</code></td><td>Deudores varios</td><td>&ge; $500.000 por tercero</td></tr>
+          </tbody>
+        </table>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Cuant&iacute;as menores en saldos</h4>
+          </div>
+          <p>Los saldos por tercero menores a <strong>$500.000</strong> se pueden acumular en un solo registro con NIT gen&eacute;rico <code>222222222</code>. Pero cuidado: la suma de cuant&iacute;as menores + los saldos individualizados debe dar <strong>exactamente</strong> el saldo de la cuenta en el balance de prueba a Dic. 31.</p>
+        </div>
+
+        <h2>Formato 1009: Cuentas por pagar (Acreedores)</h2>
+        <p>Reporta las obligaciones de la empresa al 31 de diciembre, por cada acreedor. Se alimenta del PUC grupos <code>22</code> (Proveedores) y <code>23</code> (Cuentas por pagar).</p>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Cuenta PUC</th><th>Nombre</th><th>Cruce</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>2205</code></td><td>Proveedores nacionales</td><td>El acreedor reportar&aacute; la CxC en su F1008</td></tr>
+            <tr><td><code>2210</code></td><td>Proveedores del exterior</td><td>Cruce con pagos exterior F1001 concepto 5016</td></tr>
+            <tr><td><code>2305</code></td><td>Cuentas por pagar &ndash; proveedores</td><td>Consistente con F1001</td></tr>
+            <tr><td><code>2335</code></td><td>Costos y gastos por pagar</td><td>Consistente con F1001</td></tr>
+            <tr><td><code>2355</code></td><td>Deudas con socios</td><td>Cruce con F1010</td></tr>
+            <tr><td><code>2360</code></td><td>Dividendos por pagar</td><td>Cruce con F1010</td></tr>
+            <tr><td><code>2365</code></td><td>Retenci&oacute;n en la fuente</td><td>Saldo = retenci&oacute;n de diciembre (F350)</td></tr>
+            <tr><td><code>2370</code></td><td>Retenciones y aportes n&oacute;mina</td><td>Saldo = aportes de diciembre</td></tr>
+            <tr><td><code>2380</code></td><td>Acreedores varios</td><td>Individualizar por tercero</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Formato 1010: Socios y accionistas</h2>
+        <p>Reporta la composici&oacute;n del patrimonio al 31 de diciembre: cada socio con su aporte y porcentaje. Se alimenta del PUC grupos <code>31</code> (Capital social) y <code>32</code> (Super&aacute;vit de capital).</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>F1010 &mdash; Cruce con renta F110</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead><tr><th>Campo F1010</th><th>Fuente PUC</th><th>Cruce</th></tr></thead>
+            <tbody>
+              <tr><td>Valor patrimonial acciones</td><td><code>3105, 3115</code></td><td>Total = patrimonio bruto F110</td></tr>
+              <tr><td>Porcentaje de participaci&oacute;n</td><td>Libro de accionistas</td><td>Suma = 100%</td></tr>
+              <tr><td>Utilidades repartidas</td><td><code>3605, 3610</code> contra <code>2360</code></td><td>Cruce con F1009 dividendos por pagar</td></tr>
+            </tbody>
+          </table>
+          <div class="norma-aplicacion">
+            <strong>Importante:</strong> Si hay socios extranjeros, se reportan con tipo de documento 42 (NIT de otro pa&iacute;s). La DIAN usa esta informaci&oacute;n para cruces internacionales de precios de transferencia.
+          </div>
+        </div>
+
+        <h2>Formato 1012: Inversiones</h2>
+        <p>Reporta las inversiones de la empresa al 31 de diciembre. Se alimenta del PUC grupo <code>12</code> (Inversiones).</p>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Cuenta PUC</th><th>Nombre</th><th>Qu&eacute; reportar</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>1205</code></td><td>Acciones</td><td>Valor patrimonial, NIT de la sociedad emisora</td></tr>
+            <tr><td><code>1210</code></td><td>Cuotas o partes de inter&eacute;s social</td><td>Valor patrimonial, NIT de la sociedad</td></tr>
+            <tr><td><code>1215</code></td><td>Bonos</td><td>Valor, NIT del emisor</td></tr>
+            <tr><td><code>1220</code></td><td>C&eacute;dulas</td><td>Valor, NIT del emisor</td></tr>
+            <tr><td><code>1225</code></td><td>Certificados</td><td>Valor, NIT del emisor</td></tr>
+            <tr><td><code>1245</code></td><td>Derechos fiduciarios</td><td>Valor, NIT de la fiduciaria</td></tr>
+          </tbody>
+        </table>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Que los <strong>saldos reportados en F1008, F1009, F1010 y F1012 no coincidan con el balance de prueba a diciembre 31</strong>. Es el error m&aacute;s frecuente y el m&aacute;s f&aacute;cil de evitar. Antes de enviar, toma tu balance de prueba al 31 de diciembre con auxiliar por tercero y verifica que la sumatoria de cada formato sea igual al saldo de las cuentas correspondientes. Diferencia de $1 = error en prevalidador.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Resumen de cruces entre formatos de saldos y renta
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Formato</th><th>PUC</th><th>Cruce con F110 (Renta)</th></tr></thead>
+              <tbody>
+                <tr><td>F1008 Deudores</td><td>Grupo 13</td><td>Rengl&oacute;n 37-38 &mdash; Deudores comerciales</td></tr>
+                <tr><td>F1009 Acreedores</td><td>Grupos 22-23</td><td>Rengl&oacute;n 54-56 &mdash; Pasivos</td></tr>
+                <tr><td>F1010 Socios</td><td>Grupos 31-32</td><td>Rengl&oacute;n 61-63 &mdash; Patrimonio</td></tr>
+                <tr><td>F1012 Inversiones</td><td>Grupo 12</td><td>Rengl&oacute;n 34-36 &mdash; Inversiones</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-4" class="prev" onclick="navigateTo(4)">&larr; M&oacute;dulo 4</a>
+        <a href="#modulo-6" class="next" onclick="navigateTo(6)">M&oacute;dulo 6: Pr&aacute;ctica &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 6 ===================== -->
+    <section id="modulo-6" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Ex&oacute;gena</a> &rsaquo; M&oacute;dulo 6
+        </div>
+        <div class="mod-num">M&oacute;dulo 6 de 6</div>
+        <h1>Pr&aacute;ctica: genera tus 10 formatos desde tu balance de prueba</h1>
+        <p class="mod-desc">Todo lo que aprendiste aplicado. Tu balance con auxiliar por tercero entra, y la herramienta clasifica PUC, mapea conceptos, calcula cuant&iacute;as menores y genera los archivos XML. T&uacute; verificas los cruces.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Checklist antes de empezar</h2>
+        <p>Antes de usar la herramienta, aseg&uacute;rate de tener:</p>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>#</th><th>Requisito</th><th>Detalle</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td><strong>Balance de prueba con auxiliar por tercero</strong></td><td>Debe incluir todas las cuentas de enero a diciembre, con NIT de cada tercero</td></tr>
+            <tr><td>2</td><td><strong>Movimiento del a&ntilde;o completo</strong></td><td>No solo saldos finales &mdash; necesitas d&eacute;bitos y cr&eacute;ditos del a&ntilde;o para F1001, F1003, F1005, F1006, F1007</td></tr>
+            <tr><td>3</td><td><strong>NIT con d&iacute;gito de verificaci&oacute;n</strong></td><td>Cada tercero debe tener NIT completo. La herramienta calcula el DV autom&aacute;ticamente si falta</td></tr>
+            <tr><td>4</td><td><strong>F300 y F350 del a&ntilde;o</strong></td><td>Para verificar cruces de IVA y retenciones</td></tr>
+            <tr><td>5</td><td><strong>N&oacute;mina con detalle</strong></td><td>Para el F2276, necesitas: salario, deducciones, rentas exentas y retenci&oacute;n por empleado</td></tr>
+          </tbody>
+        </table>
+
+        <h2>&iquest;Qu&eacute; hace la herramienta autom&aacute;ticamente?</h2>
+        <ul>
+          <li><strong>Clasifica las cuentas PUC</strong> en los conceptos de cada formato (5001-5091 para F1001, 1301-1355 para F1003, etc.)</li>
+          <li><strong>Acumula cuant&iacute;as menores</strong> bajo NIT gen&eacute;rico <code>222222222</code> cuando el tercero no supera el umbral</li>
+          <li><strong>Calcula el d&iacute;gito de verificaci&oacute;n</strong> (DV) para NITs que no lo tengan</li>
+          <li><strong>Separa saldos a diciembre 31</strong> para F1008, F1009, F1010 y F1012</li>
+          <li><strong>Genera los archivos XML</strong> en el esquema DIAN para cada formato</li>
+        </ul>
+
+        <h2>&iquest;Qu&eacute; debes verificar T&Uacute;?</h2>
+        <p>La herramienta automatiza la clasificaci&oacute;n, pero estos cruces requieren tu revisi&oacute;n:</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>6 cruces cr&iacute;ticos que la DIAN ejecuta</h4>
+            <span class="norma-tag">Verificar</span>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>#</th><th>Cruce DIAN</th><th>Qu&eacute; compara</th><th>Tolerancia</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><strong>F1003 vs. 12 F350</strong></td>
+                <td>Retenciones practicadas anual vs. suma mensual</td>
+                <td>$0</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><strong>F1005 + F1006 vs. F300</strong></td>
+                <td>IVA descontable y generado vs. suma bimestral/cuatrimestral</td>
+                <td>$0</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><strong>F1007 vs. F110 ingresos</strong></td>
+                <td>Ingresos totales ex&oacute;gena vs. ingresos brutos renta</td>
+                <td>Diferencias explicables (no operacionales)</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><strong>F1008/F1009/F1012 vs. balance Dic. 31</strong></td>
+                <td>Saldos reportados vs. balance de prueba a cierre</td>
+                <td>$0</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><strong>F2276 vs. F1001 concepto 5001</strong></td>
+                <td>Pagos laborales detallados vs. pagos totales</td>
+                <td>$0</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td><strong>Tu F1007 vs. F1001 de tu contraparte</strong></td>
+                <td>Lo que reportas como ingreso vs. lo que tu cliente report&oacute; como pago</td>
+                <td>DIAN cruza masivamente entre contribuyentes</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Errores frecuentes del prevalidador DIAN</h3>
+        <p>Cuando subes los XML al prevalidador de la DIAN, estos son los errores m&aacute;s comunes y c&oacute;mo solucionarlos:</p>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Errores frecuentes del prevalidador</h4>
+          </div>
+          <p><strong>1. &ldquo;NIT no existe en el RUT&rdquo;:</strong> El NIT del tercero no est&aacute; registrado en la DIAN. Verifica con la herramienta de consulta NIT o corrige el n&uacute;mero.</p>
+          <p><strong>2. &ldquo;D&iacute;gito de verificaci&oacute;n incorrecto&rdquo;:</strong> El DV calculado no coincide. Usa el algoritmo oficial (m&oacute;dulo 11) o la herramienta para recalcular.</p>
+          <p><strong>3. &ldquo;Concepto no v&aacute;lido para el formato&rdquo;:</strong> Usaste un c&oacute;digo de concepto que no corresponde a la versi&oacute;n del formato. Revisa la tabla de conceptos vigentes.</p>
+          <p><strong>4. &ldquo;Valores negativos&rdquo;:</strong> El prevalidador no acepta valores negativos. Si tienes notas cr&eacute;dito que generan saldo negativo, rep&oacute;rtalas como valor positivo en la columna de devoluciones/rebajas.</p>
+          <p><strong>5. &ldquo;Registros duplicados&rdquo;:</strong> Dos registros con el mismo NIT y concepto. Debes consolidar por tercero+concepto.</p>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Flujo recomendado</h4>
+          </div>
+          <p><strong>1.</strong> Sube tu balance con auxiliar por tercero a la herramienta. <strong>2.</strong> Revisa la clasificaci&oacute;n autom&aacute;tica de PUC &rarr; conceptos. <strong>3.</strong> Descarga los XML. <strong>4.</strong> P&aacute;salos por el prevalidador DIAN. <strong>5.</strong> Corrige errores del prevalidador. <strong>6.</strong> Verifica los 6 cruces cr&iacute;ticos del cuadro anterior. <strong>7.</strong> Env&iacute;a por el portal MUISCA. <strong>8.</strong> Guarda el acuse de recibo.</p>
+        </div>
+
+        <div class="cta-practica">
+          <h3>Genera tu ex&oacute;gena con IA</h3>
+          <p>Sube tu balance de prueba y obt&eacute;n los 10 formatos clasificados, con cruces autom&aacute;ticos y XML listo para el prevalidador DIAN.</p>
+          <a href="../exogena.html">Ir a la herramienta de Ex&oacute;gena &rarr;</a>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Completaste todos los cursos</h4>
+          </div>
+          <p>Este era el &uacute;ltimo curso de la Escuela Contable IA. Ya tienes el conocimiento normativo de <strong>IVA (F300)</strong>, <strong>Retenci&oacute;n (F350)</strong>, <strong>Renta (F110)</strong> e <strong>Informaci&oacute;n Ex&oacute;gena</strong>. Ahora, aplica todo con las herramientas reales de Ex&oacute;genaDIAN.</p>
+        </div>
+
+        <div style="background:linear-gradient(135deg,var(--green-50),var(--green-100));border:2px solid var(--green-300);border-radius:16px;padding:28px 24px;text-align:center;margin:28px 0">
+          <h3 style="font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;color:var(--green-800);margin-bottom:8px">Volver a la Escuela Contable IA</h3>
+          <p style="font-size:.9rem;color:var(--green-700);margin-bottom:16px">Revisa los otros cursos o comparte la Escuela con colegas contadores.</p>
+          <a href="../escuela.html" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:var(--green-700);color:#fff;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;box-shadow:0 4px 16px rgba(4,120,87,.3);transition:all .2s" onmouseover="this.style.background='#064E3B'" onmouseout="this.style.background='#047857'">&larr; Volver a la Escuela</a>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-5" class="prev" onclick="navigateTo(5)">&larr; M&oacute;dulo 5</a>
+        <a href="../escuela.html" class="next" style="background:var(--gray-800)">Volver a la Escuela &rarr;</a>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Abrir men&uacute;">&#9776;</button>
+
+<script>
+/* Module navigation */
+var currentModule = 1;
+var totalModules = 6;
+
+function navigateTo(n) {
+  // Hide all modules
+  document.querySelectorAll('.modulo-section').forEach(function(s){ s.style.display = 'none'; });
+  // Show target
+  var target = document.getElementById('modulo-' + n);
+  if (target) target.style.display = 'block';
+  // Update sidebar
+  var links = document.querySelectorAll('.sidebar-nav a');
+  links.forEach(function(a, i) {
+    a.classList.remove('active');
+    if (i < n - 1) a.classList.add('completed');
+    if (i === n - 1) a.classList.add('active');
+  });
+  // Update progress
+  var pct = Math.round((n / totalModules) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  currentModule = n;
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  // Track
+  if (typeof gtag !== 'undefined') gtag('event', 'escuela_modulo', { curso: 'exogena', modulo: n });
+}
+
+/* Sidebar toggle for mobile */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+</script>
+</body>
+</html>

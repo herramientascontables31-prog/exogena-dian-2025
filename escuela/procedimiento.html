@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="../shared/cookie-consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S7SM6ST4CC');
+</script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta name="theme-color" content="#059669">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso Procedimiento Tributario &mdash; Escuela Contable IA | Ex&oacute;genaDIAN</title>
+<meta name="description" content="Aprende procedimiento tributario paso a paso. 6 m&oacute;dulos: fiscalizaci&oacute;n, requerimiento especial, liquidaci&oacute;n oficial, recursos, pruebas y pr&aacute;ctica con herramientas IA.">
+<link rel="canonical" href="https://exogenadian.com/escuela/procedimiento.html">
+<meta name="robots" content="index, follow">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-900:#064E3B;--green-800:#065F46;--green-700:#047857;--green-600:#059669;--green-500:#10B981;--green-400:#34D399;--green-300:#6EE7B7;--green-200:#A7F3D0;--green-100:#D1FAE5;--green-50:#ECFDF5;
+  --white:#FFF;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-500:#6B7280;--gray-600:#4B5563;--gray-700:#374151;--gray-800:#1F2937;--gray-900:#111827;
+  --amber-50:#FFFBEB;--amber-100:#FEF3C7;--amber-500:#F59E0B;--amber-700:#92400E;--amber-800:#78350F;
+  --blue-50:#EFF6FF;--blue-100:#DBEAFE;--blue-500:#3B82F6;--blue-700:#1D4ED8;
+  --purple-50:#F5F3FF;--purple-100:#EDE9FE;--purple-500:#8B5CF6;--purple-700:#6D28D9;
+  --rose-50:#FFF1F2;--rose-500:#F43F5E;--rose-700:#BE123C;
+  --indigo-50:#EEF2FF;--indigo-100:#E0E7FF;--indigo-500:#6366F1;--indigo-700:#4338CA;--indigo-800:#3730A3;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.6}
+
+/* ===== LAYOUT ===== */
+.curso-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+@media(max-width:900px){.curso-layout{grid-template-columns:1fr}}
+
+/* ===== SIDEBAR ===== */
+.sidebar{background:var(--white);border-right:1px solid var(--gray-200);padding:20px 0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.sidebar-header{padding:16px 20px;border-bottom:1px solid var(--gray-100)}
+.sidebar-header a{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--gray-800);font-weight:800;font-size:.9rem}
+.sidebar-header a div{width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900}
+.sidebar-header small{display:block;font-size:.72rem;color:var(--gray-400);font-weight:500;margin-top:2px}
+.sidebar-curso{padding:16px 20px;border-bottom:1px solid var(--gray-100)}
+.sidebar-curso h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--indigo-700);margin-bottom:4px}
+.sidebar-curso p{font-size:.88rem;font-weight:700;color:var(--gray-800)}
+.sidebar-nav{padding:12px 0;flex:1}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:10px 20px;text-decoration:none;color:var(--gray-500);font-size:.85rem;font-weight:500;transition:all .15s;border-left:3px solid transparent}
+.sidebar-nav a:hover{background:var(--indigo-50);color:var(--indigo-700)}
+.sidebar-nav a.active{background:var(--indigo-50);color:var(--indigo-700);font-weight:700;border-left-color:var(--indigo-500)}
+.sidebar-nav a .nav-num{width:24px;height:24px;border-radius:50%;background:var(--gray-100);color:var(--gray-500);display:grid;place-items:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+.sidebar-nav a.active .nav-num{background:var(--indigo-500);color:#fff}
+.sidebar-nav a.completed .nav-num{background:var(--indigo-100);color:var(--indigo-700)}
+.sidebar-back{padding:16px 20px;border-top:1px solid var(--gray-100);margin-top:auto}
+.sidebar-back a{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--gray-400);font-size:.82rem;font-weight:500;transition:color .15s}
+.sidebar-back a:hover{color:var(--gray-700)}
+.sidebar-toggle{display:none;position:fixed;bottom:20px;left:20px;z-index:200;width:48px;height:48px;border-radius:50%;background:var(--indigo-500);color:#fff;border:none;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 16px rgba(99,102,241,.3)}
+@media(max-width:900px){
+  .sidebar{display:none;position:fixed;top:0;left:0;z-index:199;width:280px;box-shadow:4px 0 20px rgba(0,0,0,.1)}
+  .sidebar.open{display:flex}
+  .sidebar-toggle{display:block}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:198}
+  .sidebar-overlay.open{display:block}
+}
+
+/* ===== MAIN CONTENT ===== */
+.curso-main{padding:32px 40px 60px;max-width:860px}
+@media(max-width:900px){.curso-main{padding:20px 16px 80px}}
+
+/* Module header */
+.mod-header{margin-bottom:32px}
+.mod-breadcrumb{font-size:.78rem;color:var(--gray-400);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mod-breadcrumb a{color:var(--gray-400);text-decoration:none}
+.mod-breadcrumb a:hover{color:var(--indigo-500)}
+.mod-num{display:inline-flex;align-items:center;gap:8px;background:var(--indigo-50);color:var(--indigo-700);padding:4px 14px;border-radius:100px;font-size:.78rem;font-weight:700;margin-bottom:12px}
+.mod-header h1{font-family:'Fraunces',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px;line-height:1.2}
+.mod-header .mod-desc{font-size:1rem;color:var(--gray-500);max-width:600px;line-height:1.6}
+
+/* Content blocks */
+.content-block{margin-bottom:28px}
+.content-block h2{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;margin-bottom:12px;color:var(--gray-900);padding-bottom:8px;border-bottom:2px solid var(--indigo-100)}
+.content-block h3{font-size:1.05rem;font-weight:700;margin:20px 0 8px;color:var(--gray-800)}
+.content-block p{font-size:.92rem;color:var(--gray-600);line-height:1.7;margin-bottom:12px}
+.content-block ul,.content-block ol{margin:8px 0 16px 20px;display:flex;flex-direction:column;gap:6px}
+.content-block li{font-size:.9rem;color:var(--gray-600);line-height:1.6}
+
+/* Norma card */
+.norma{background:var(--amber-50);border:1.5px solid #FDE68A;border-radius:14px;padding:20px 24px;margin:20px 0}
+.norma-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.norma-icon{width:32px;height:32px;border-radius:8px;background:#FDE68A;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
+.norma-header h4{font-size:.92rem;font-weight:700;color:var(--amber-800)}
+.norma-header .norma-tag{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--amber-500);color:#fff;text-transform:uppercase;letter-spacing:.04em}
+.norma blockquote{font-size:.88rem;color:#78350F;line-height:1.65;padding:12px 16px;background:rgba(255,255,255,.6);border-radius:8px;border-left:3px solid var(--amber-500);margin:8px 0;font-style:italic}
+.norma blockquote strong{font-style:normal;color:var(--amber-800)}
+.norma p{font-size:.85rem;color:#78350F;line-height:1.6;margin:8px 0}
+.norma .norma-aplicacion{font-size:.82rem;color:var(--green-800);background:var(--green-50);padding:10px 14px;border-radius:8px;border:1px solid var(--green-200);margin-top:12px}
+.norma .norma-aplicacion strong{color:var(--green-700)}
+
+/* Tip card */
+.tip{background:var(--blue-50);border:1.5px solid #BFDBFE;border-radius:14px;padding:18px 22px;margin:20px 0}
+.tip-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tip-header h4{font-size:.88rem;font-weight:700;color:var(--blue-700)}
+.tip p{font-size:.88rem;color:#1E40AF;line-height:1.6}
+
+/* Error com&uacute;n */
+.error-comun{background:var(--rose-50);border:1.5px solid #FECACA;border-radius:14px;padding:18px 22px;margin:20px 0}
+.error-comun-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.error-comun-header h4{font-size:.88rem;font-weight:700;color:var(--rose-700)}
+.error-comun p{font-size:.88rem;color:#9F1239;line-height:1.6}
+
+/* Tabla normativa */
+.tabla-norm{width:100%;border-collapse:collapse;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--gray-200)}
+.tabla-norm th{background:var(--gray-100);padding:10px 14px;text-align:left;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-500)}
+.tabla-norm td{padding:10px 14px;font-size:.85rem;border-top:1px solid var(--gray-100);color:var(--gray-700)}
+.tabla-norm tr:hover{background:var(--indigo-50)}
+.tabla-norm code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--gray-100);padding:1px 6px;border-radius:4px}
+
+/* Ejemplo pr&aacute;ctico */
+.ejemplo{background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;overflow:hidden;margin:20px 0;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+.ejemplo-header{background:var(--gray-50);padding:12px 20px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;gap:8px}
+.ejemplo-header h4{font-size:.85rem;font-weight:700;color:var(--gray-700)}
+.ejemplo-body{padding:16px 20px}
+.ejemplo-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:.88rem}
+.ejemplo-row:last-child{border-bottom:none}
+.ejemplo-row .label{color:var(--gray-600)}
+.ejemplo-row .value{font-weight:700;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.ejemplo-row.total{border-top:2px solid var(--indigo-100);border-bottom:none;padding-top:12px;margin-top:4px}
+.ejemplo-row.total .label{font-weight:700;color:var(--gray-900)}
+.ejemplo-row.total .value{color:var(--indigo-700);font-size:.95rem}
+
+/* Navigation between modules */
+.mod-nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:2px solid var(--gray-200)}
+.mod-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:700;font-size:.92rem;transition:all .2s}
+.mod-nav .prev{background:var(--gray-100);color:var(--gray-700)}
+.mod-nav .prev:hover{background:var(--gray-200)}
+.mod-nav .next{background:var(--indigo-500);color:#fff;box-shadow:0 4px 12px rgba(99,102,241,.25)}
+.mod-nav .next:hover{background:var(--indigo-700);transform:translateY(-1px)}
+
+/* CTA practica */
+.cta-practica{background:linear-gradient(135deg,var(--indigo-50),#E0E7FF);border:2px solid #C7D2FE;border-radius:16px;padding:28px 24px;text-align:center;margin:28px 0}
+.cta-practica h3{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;color:var(--indigo-800);margin-bottom:8px}
+.cta-practica p{font-size:.92rem;color:var(--indigo-700);margin-bottom:16px}
+.cta-practica a{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--indigo-500);color:#fff;border-radius:12px;font-weight:700;font-size:1rem;text-decoration:none;box-shadow:0 4px 16px rgba(99,102,241,.3);transition:all .2s}
+.cta-practica a:hover{background:var(--indigo-700);transform:translateY(-2px)}
+
+/* Progress */
+.progress-bar{height:4px;background:var(--gray-200);border-radius:2px;margin:12px 20px;overflow:hidden}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--indigo-500),#818CF8);border-radius:2px;transition:width .3s}
+
+/* Expand/collapse */
+.expandible{margin:12px 0}
+.expandible-toggle{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;color:var(--gray-700);transition:all .15s;text-align:left}
+.expandible-toggle:hover{background:var(--gray-100)}
+.expandible-toggle svg{width:16px;height:16px;transition:transform .2s;flex-shrink:0}
+.expandible-content{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.expandible.open .expandible-content{max-height:2000px}
+.expandible.open .expandible-toggle svg{transform:rotate(180deg)}
+
+/* Timeline */
+.timeline{position:relative;padding-left:28px;margin:20px 0}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--indigo-100)}
+.timeline-item{position:relative;margin-bottom:20px}
+.timeline-item::before{content:'';position:absolute;left:-24px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--indigo-500);border:2px solid var(--white);box-shadow:0 0 0 2px var(--indigo-200)}
+.timeline-item h4{font-size:.9rem;font-weight:700;color:var(--gray-800);margin-bottom:4px}
+.timeline-item p{font-size:.85rem;color:var(--gray-600);line-height:1.6}
+.timeline-item .timeline-norma{font-size:.78rem;color:var(--indigo-700);font-weight:600;margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<div class="curso-layout">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html">
+        <div>E</div>
+        Ex&oacute;genaDIAN
+      </a>
+    </div>
+    <div class="sidebar-curso">
+      <h3>Escuela Contable IA</h3>
+      <p>Procedimiento Tributario</p>
+    </div>
+    <div class="progress-bar"><div class="fill" id="progressFill" style="width:16%"></div></div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <a href="#modulo-1" class="active" onclick="navigateTo(1)">
+        <span class="nav-num">1</span> Fiscalizaci&oacute;n tributaria
+      </a>
+      <a href="#modulo-2" onclick="navigateTo(2)">
+        <span class="nav-num">2</span> Requerimiento especial
+      </a>
+      <a href="#modulo-3" onclick="navigateTo(3)">
+        <span class="nav-num">3</span> Liquidaci&oacute;n oficial
+      </a>
+      <a href="#modulo-4" onclick="navigateTo(4)">
+        <span class="nav-num">4</span> Recursos tributarios
+      </a>
+      <a href="#modulo-5" onclick="navigateTo(5)">
+        <span class="nav-num">5</span> Pruebas en materia tributaria
+      </a>
+      <a href="#modulo-6" onclick="navigateTo(6)">
+        <span class="nav-num">6</span> Pr&aacute;ctica con herramientas IA
+      </a>
+    </nav>
+    <div class="sidebar-back">
+      <a href="../escuela.html">&larr; Volver a la Escuela</a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="curso-main">
+
+    <!-- ===================== M&Oacute;DULO 1 ===================== -->
+    <section id="modulo-1" class="modulo-section">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Procedimiento</a> &rsaquo; M&oacute;dulo 1
+        </div>
+        <div class="mod-num">M&oacute;dulo 1 de 6</div>
+        <h1>Fiscalizaci&oacute;n tributaria: c&oacute;mo investiga la DIAN</h1>
+        <p class="mod-desc">Antes de que la DIAN pueda modificar tu declaraci&oacute;n o sancionarte, debe seguir un proceso reglado. Este m&oacute;dulo te ense&ntilde;a cada etapa de la fiscalizaci&oacute;n y los derechos que tienes como contribuyente.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Facultades de fiscalizaci&oacute;n e investigaci&oacute;n</h2>
+        <p>La DIAN tiene amplias facultades para verificar el cumplimiento de las obligaciones tributarias, pero estas facultades tienen l&iacute;mites legales. El contribuyente tiene derecho al debido proceso en cada etapa.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art&iacute;culo 684 del Estatuto Tributario</h4>
+            <span class="norma-tag">Obligatorio</span>
+          </div>
+          <blockquote>
+            <strong>&ldquo;La Administraci&oacute;n Tributaria tiene amplias facultades de fiscalizaci&oacute;n e investigaci&oacute;n</strong> para asegurar el efectivo cumplimiento de las normas sustanciales. Para tal efecto podr&aacute;: 1) Verificar la exactitud de las declaraciones. 2) Adelantar las investigaciones que estime convenientes. 3) Citar o requerir al contribuyente. 4) Exigir la presentaci&oacute;n de libros de contabilidad y dem&aacute;s documentos. 5) Ordenar la exhibici&oacute;n y examen parcial de los libros, comprobantes y documentos&hellip;&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> La DIAN puede pedirte cualquier documento contable o tributario. Negarse a entregar informaci&oacute;n puede generar sanci&oacute;n por no enviar informaci&oacute;n (Art. 651 ET) y desconocimiento de costos y deducciones (Art. 781 ET).
+          </div>
+        </div>
+
+        <h3>El requerimiento ordinario: primera se&ntilde;al de la DIAN</h3>
+        <p>El requerimiento ordinario es la herramienta m&aacute;s com&uacute;n de fiscalizaci&oacute;n. No es un acto administrativo &mdash; es un simple oficio que pide informaci&oacute;n. Pero ignorarlo tiene consecuencias graves.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 686 num. 1 y Art. 688 ET &mdash; Requerimiento ordinario</h4>
+          </div>
+          <blockquote>
+            El contribuyente est&aacute; obligado a <strong>&ldquo;atender los requerimientos de informaci&oacute;n y pruebas&rdquo;</strong> que le formule la Administraci&oacute;n. El funcionario competente para proferir requerimientos ordinarios es el jefe de la unidad de fiscalizaci&oacute;n o quien haga sus veces.
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Clave:</strong> El plazo para responder un requerimiento ordinario es de <strong>15 d&iacute;as h&aacute;biles</strong> (Art. 261 Ley 1819/2016). Si necesitas m&aacute;s tiempo, solicita pr&oacute;rroga por escrito antes del vencimiento.
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>Siempre responde el requerimiento ordinario, aunque consideres que la informaci&oacute;n pedida ya obra en poder de la DIAN. La <strong>falta de respuesta</strong> puede ser usada como indicio en tu contra (Art. 788 ET) y adem&aacute;s genera sanci&oacute;n por no informar de hasta 15.000 UVT ($785.535.000 en 2025).</p>
+        </div>
+
+        <h3>Emplazamiento para declarar</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 715 (antes 689-1) ET &mdash; Emplazamiento para declarar</h4>
+          </div>
+          <blockquote>
+            &ldquo;Quienes incumplan con la obligaci&oacute;n de presentar las declaraciones tributarias estando obligados a ello, ser&aacute;n emplazados por la Administraci&oacute;n para que lo hagan <strong>en el t&eacute;rmino perentorio de un (1) mes</strong>&hellip;&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Consecuencia:</strong> Si declaras dentro del mes siguiente al emplazamiento, la sanci&oacute;n por extempor&aacute;neidad se duplica. Si NO declaras, la DIAN puede proferir liquidaci&oacute;n de aforo (Art. 717 ET).
+          </div>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Ignorar el emplazamiento para declarar creyendo que &ldquo;si no declaro no pasa nada&rdquo;. La DIAN procede con <strong>liquidaci&oacute;n de aforo</strong> (Art. 717 ET), donde ella misma determina el impuesto a pagar con base en la informaci&oacute;n que tiene (ex&oacute;gena, facturaci&oacute;n electr&oacute;nica, informaci&oacute;n bancaria). El resultado casi siempre es un impuesto mucho mayor al real.</p>
+        </div>
+
+        <h3>Emplazamiento para corregir</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 685 (antes 689-2) ET &mdash; Emplazamiento para corregir</h4>
+          </div>
+          <blockquote>
+            &ldquo;Cuando la Administraci&oacute;n Tributaria tenga indicios de la inexactitud de la declaraci&oacute;n, podr&aacute; enviar al contribuyente un <strong>emplazamiento para corregir</strong>, para que dentro del mes siguiente a su notificaci&oacute;n, el contribuyente corrija la declaraci&oacute;n liquidando la sanci&oacute;n de correcci&oacute;n de que trata el art&iacute;culo 644.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Ventaja de corregir:</strong> Si corriges tras el emplazamiento, la sanci&oacute;n por correcci&oacute;n es del <strong>20%</strong> de la diferencia. Si esperas al requerimiento especial, la sanci&oacute;n sube al <strong>35%</strong>. Y si esperas a la liquidaci&oacute;n oficial, sube al <strong>100%</strong> (Art. 644 ET).
+          </div>
+        </div>
+
+        <h3>Inspecci&oacute;n tributaria e inspecci&oacute;n contable</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Arts. 779 (antes 690) y 782 (antes 691) ET &mdash; Inspecciones</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Tipo</th><th>Qu&eacute; es</th><th>Plazo m&aacute;ximo</th><th>Efecto en t&eacute;rminos</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Inspecci&oacute;n tributaria</strong> (Art. 779)</td>
+                <td>Visita al establecimiento para verificar hechos de inter&eacute;s tributario</td>
+                <td>No tiene plazo fijo &mdash; se rige por el t&eacute;rmino de fiscalizaci&oacute;n</td>
+                <td>Suspende t&eacute;rminos hasta por 3 meses</td>
+              </tr>
+              <tr>
+                <td><strong>Inspecci&oacute;n contable</strong> (Art. 782)</td>
+                <td>Examen de libros, comprobantes y documentos contables</td>
+                <td>Se decreta como prueba dentro del proceso</td>
+                <td>Suspende t&eacute;rminos hasta por 3 meses</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="norma-aplicacion">
+            <strong>Importante:</strong> La inspecci&oacute;n tributaria <strong>suspende el t&eacute;rmino</strong> para notificar el requerimiento especial o la liquidaci&oacute;n oficial hasta por 3 meses. Es una herramienta que la DIAN usa cuando necesita m&aacute;s tiempo.
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>Durante una inspecci&oacute;n contable, <strong>no entregues originales</strong> &mdash; solo copias autenticadas. La DIAN puede retener los documentos que considere necesarios, y recuperar originales puede tardar meses. Adem&aacute;s, exige que levanten acta de cada diligencia: es tu prueba de qu&eacute; se revis&oacute;.</p>
+        </div>
+
+        <h3>L&iacute;nea de tiempo de la fiscalizaci&oacute;n</h3>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; Cronolog&iacute;a de fiscalizaci&oacute;n t&iacute;pica</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="timeline">
+              <div class="timeline-item">
+                <h4>D&iacute;a 0 &mdash; Requerimiento ordinario</h4>
+                <p>La DIAN solicita documentaci&oacute;n contable del a&ntilde;o gravable 2023.</p>
+                <span class="timeline-norma">Art. 684 ET</span>
+              </div>
+              <div class="timeline-item">
+                <h4>D&iacute;a 15 &mdash; Respuesta al requerimiento</h4>
+                <p>El contribuyente env&iacute;a la documentaci&oacute;n solicitada con memorial explicativo.</p>
+                <span class="timeline-norma">15 d&iacute;as h&aacute;biles para responder</span>
+              </div>
+              <div class="timeline-item">
+                <h4>D&iacute;a 60 &mdash; Emplazamiento para corregir</h4>
+                <p>La DIAN detecta inconsistencias y emplaza al contribuyente.</p>
+                <span class="timeline-norma">Art. 685 ET &mdash; 1 mes para corregir</span>
+              </div>
+              <div class="timeline-item">
+                <h4>D&iacute;a 120 &mdash; Requerimiento especial</h4>
+                <p>Si no se corrigi&oacute;, la DIAN propone la modificaci&oacute;n formal de la declaraci&oacute;n.</p>
+                <span class="timeline-norma">Art. 703 ET &mdash; 3 meses para responder</span>
+              </div>
+              <div class="timeline-item">
+                <h4>D&iacute;a 210 &mdash; Vencimiento respuesta</h4>
+                <p>Termina el plazo de 3 meses (prorrogable 3 meses m&aacute;s) para dar respuesta.</p>
+                <span class="timeline-norma">Art. 707 ET</span>
+              </div>
+              <div class="timeline-item">
+                <h4>D&iacute;a 390 &mdash; Liquidaci&oacute;n oficial de revisi&oacute;n</h4>
+                <p>La DIAN profiere la liquidaci&oacute;n oficial si no acept&oacute; la respuesta.</p>
+                <span class="timeline-norma">Art. 710 ET &mdash; 6 meses despu&eacute;s de vencida la respuesta</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Resumen de las facultades de fiscalizaci&oacute;n (Art. 684 ET)
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>#</th><th>Facultad</th><th>Alcance</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Verificar exactitud de declaraciones</td><td>Cruces de informaci&oacute;n, ex&oacute;gena, facturaci&oacute;n electr&oacute;nica</td></tr>
+                <tr><td>2</td><td>Adelantar investigaciones</td><td>Programas de fiscalizaci&oacute;n por sector econ&oacute;mico o actividad</td></tr>
+                <tr><td>3</td><td>Citar o requerir al contribuyente</td><td>Requerimiento ordinario, citaciones a comparecer</td></tr>
+                <tr><td>4</td><td>Exigir presentaci&oacute;n de libros</td><td>Contabilidad, soportes, facturaci&oacute;n, extractos bancarios</td></tr>
+                <tr><td>5</td><td>Ordenar exhibici&oacute;n y examen</td><td>Inspecci&oacute;n contable y tributaria en el domicilio</td></tr>
+                <tr><td>6</td><td>Efectuar cruces de informaci&oacute;n</td><td>Terceros, entidades financieras, c&aacute;maras de comercio</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <span></span>
+        <a href="#modulo-2" class="next" onclick="navigateTo(2)">M&oacute;dulo 2: Requerimiento especial &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 2 ===================== -->
+    <section id="modulo-2" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Procedimiento</a> &rsaquo; M&oacute;dulo 2
+        </div>
+        <div class="mod-num">M&oacute;dulo 2 de 6</div>
+        <h1>Requerimiento especial: la propuesta de modificaci&oacute;n</h1>
+        <p class="mod-desc">El requerimiento especial es el acto previo obligatorio antes de que la DIAN pueda modificar tu declaraci&oacute;n. Entender su estructura y c&oacute;mo responderlo es la clave para defender tus derechos.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>&iquest;Qu&eacute; es el requerimiento especial?</h2>
+        <p>Es el acto administrativo mediante el cual la DIAN propone al contribuyente una modificaci&oacute;n a su declaraci&oacute;n tributaria. Es <strong>requisito previo obligatorio</strong> para proferir liquidaci&oacute;n oficial de revisi&oacute;n &mdash; sin requerimiento especial, la liquidaci&oacute;n es nula.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art&iacute;culo 703 del Estatuto Tributario</h4>
+            <span class="norma-tag">Obligatorio</span>
+          </div>
+          <blockquote>
+            <strong>&ldquo;Antes de efectuar la liquidaci&oacute;n de revisi&oacute;n,</strong> la Administraci&oacute;n enviar&aacute; al contribuyente, responsable, agente retenedor o declarante, por una sola vez, un requerimiento especial que contenga todos los puntos que se proponga modificar, con explicaci&oacute;n de las razones en que se sustenta.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> El requerimiento especial es como una &ldquo;demanda preliminar&rdquo; de la DIAN. Todo lo que la DIAN no incluya en el requerimiento especial, <strong>no puede incluirlo despu&eacute;s</strong> en la liquidaci&oacute;n oficial (principio de correspondencia, Art. 711 ET).
+          </div>
+        </div>
+
+        <h3>T&eacute;rmino para notificar el requerimiento especial</h3>
+        <p>La DIAN no puede expedir el requerimiento especial en cualquier momento. Tiene un plazo perentorio que depende del tipo de declaraci&oacute;n.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Arts. 705 y 706 ET &mdash; T&eacute;rmino para notificar</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Situaci&oacute;n</th><th>T&eacute;rmino</th><th>Desde cu&aacute;ndo se cuenta</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Declaraci&oacute;n presentada oportunamente</td>
+                <td><strong>3 a&ntilde;os</strong></td>
+                <td>Desde el vencimiento del plazo para declarar</td>
+              </tr>
+              <tr>
+                <td>Declaraci&oacute;n presentada extempor&aacute;neamente</td>
+                <td><strong>3 a&ntilde;os</strong></td>
+                <td>Desde la fecha de presentaci&oacute;n</td>
+              </tr>
+              <tr>
+                <td>Declaraci&oacute;n con saldo a favor</td>
+                <td><strong>3 a&ntilde;os</strong></td>
+                <td>Desde la presentaci&oacute;n de la solicitud de devoluci&oacute;n o compensaci&oacute;n</td>
+              </tr>
+              <tr>
+                <td>Declaraci&oacute;n con p&eacute;rdidas fiscales</td>
+                <td><strong>5 a&ntilde;os</strong> (Ley 1819/2016)</td>
+                <td>Desde el vencimiento del plazo para declarar</td>
+              </tr>
+              <tr>
+                <td>Correcci&oacute;n que incrementa saldo a favor o disminuye valor a pagar</td>
+                <td><strong>3 a&ntilde;os</strong></td>
+                <td>Desde la fecha de la correcci&oacute;n (Art. 706 ET)</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="norma-aplicacion">
+            <strong>Clave pr&aacute;ctica:</strong> Si la DIAN notifica el requerimiento especial despu&eacute;s de vencido el t&eacute;rmino, el acto es <strong>nulo por falta de competencia temporal</strong>. Siempre verifica la fecha de notificaci&oacute;n contra la fecha de firmeza.
+          </div>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Confundir <strong>notificaci&oacute;n</strong> con <strong>expedici&oacute;n</strong>. La DIAN debe <strong>notificar</strong> el requerimiento especial dentro del t&eacute;rmino, no simplemente expedirlo. Si lo expide el &uacute;ltimo d&iacute;a pero lo notifica despu&eacute;s, est&aacute; fuera de tiempo. La fecha que cuenta es la de notificaci&oacute;n personal o por correo (Art. 565 ET).</p>
+        </div>
+
+        <h3>Plazo para responder el requerimiento especial</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 707 ET &mdash; T&eacute;rmino de respuesta</h4>
+          </div>
+          <blockquote>
+            &ldquo;Dentro de los <strong>tres (3) meses</strong> siguientes, contados a partir de la fecha de notificaci&oacute;n del requerimiento especial, el contribuyente podr&aacute; formular por escrito sus objeciones, solicitar pruebas, o subsanar las omisiones que permita la ley. La Administraci&oacute;n podr&aacute; <strong>ampliar por una sola vez este t&eacute;rmino hasta por tres (3) meses m&aacute;s</strong>, cuando la complejidad del asunto lo amerite.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Estrategia:</strong> Siempre solicita la ampliaci&oacute;n de 3 meses adicionales. Es un derecho y te da tiempo para preparar una respuesta s&oacute;lida con pruebas documentales. La solicitud debe hacerse <strong>antes</strong> de vencer los 3 meses iniciales.
+          </div>
+        </div>
+
+        <h3>Aceptaci&oacute;n vs. rechazo del requerimiento</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Arts. 708 y 709 ET &mdash; Aceptaci&oacute;n y ampliaci&oacute;n</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Escenario</th><th>Qu&eacute; pasa</th><th>Sanci&oacute;n</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Aceptar totalmente</strong> (Art. 709)</td>
+                <td>El contribuyente corrige su declaraci&oacute;n aceptando todo lo propuesto</td>
+                <td>Sanci&oacute;n de inexactitud reducida al <strong>50%</strong> (Art. 709 par&aacute;grafo)</td>
+              </tr>
+              <tr>
+                <td><strong>Aceptar parcialmente</strong></td>
+                <td>Se corrige lo aceptado; el resto sigue en discusi&oacute;n</td>
+                <td>Reducci&oacute;n del 50% solo sobre la parte aceptada</td>
+              </tr>
+              <tr>
+                <td><strong>Rechazar totalmente</strong></td>
+                <td>Se presenta respuesta con argumentos y pruebas</td>
+                <td>Sin reducci&oacute;n &mdash; si la DIAN tiene raz&oacute;n, sanci&oacute;n plena del 100%</td>
+              </tr>
+              <tr>
+                <td><strong>No responder</strong></td>
+                <td>La DIAN puede proferir liquidaci&oacute;n oficial directamente</td>
+                <td>Sanci&oacute;n plena del 100% &mdash; sin posibilidad de reducci&oacute;n</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico &mdash; C&oacute;mo estructurar la respuesta</h4>
+          </div>
+          <p>Tu respuesta al requerimiento especial debe contener: <strong>1)</strong> Identificaci&oacute;n del requerimiento (n&uacute;mero y fecha). <strong>2)</strong> Respuesta punto por punto a cada glosa. <strong>3)</strong> Fundamento legal de tu posici&oacute;n. <strong>4)</strong> Relaci&oacute;n de pruebas aportadas. <strong>5)</strong> Solicitud de pruebas adicionales si las necesitas. <strong>6)</strong> Petici&oacute;n concreta (archivar, reducir sanci&oacute;n, etc.).</p>
+        </div>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; L&iacute;nea de tiempo del requerimiento especial</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">Declaraci&oacute;n renta AG 2022 &mdash; Vencimiento plazo</span><span class="value">Oct 2023</span></div>
+            <div class="ejemplo-row"><span class="label">T&eacute;rmino de firmeza (3 a&ntilde;os)</span><span class="value">Oct 2026</span></div>
+            <div class="ejemplo-row"><span class="label">DIAN notifica requerimiento especial</span><span class="value">Jun 2026</span></div>
+            <div class="ejemplo-row"><span class="label">Plazo respuesta (3 meses)</span><span class="value">Sep 2026</span></div>
+            <div class="ejemplo-row"><span class="label">Ampliaci&oacute;n solicitada (+3 meses)</span><span class="value">Dic 2026</span></div>
+            <div class="ejemplo-row total"><span class="label">L&iacute;mite liquidaci&oacute;n oficial (6 meses despu&eacute;s)</span><span class="value">Jun 2027</span></div>
+          </div>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Contenido m&iacute;nimo del requerimiento especial (Art. 703 ET)
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>#</th><th>Elemento</th><th>Descripci&oacute;n</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Identificaci&oacute;n del contribuyente</td><td>NIT, raz&oacute;n social, direcci&oacute;n de notificaci&oacute;n</td></tr>
+                <tr><td>2</td><td>Declaraci&oacute;n objeto de revisi&oacute;n</td><td>Formulario, a&ntilde;o gravable, n&uacute;mero de radicaci&oacute;n</td></tr>
+                <tr><td>3</td><td>Puntos de modificaci&oacute;n propuestos</td><td>Cada glosa con su cuant&iacute;a y fundamento f&aacute;ctico</td></tr>
+                <tr><td>4</td><td>Explicaci&oacute;n de razones</td><td>Fundamento jur&iacute;dico y probatorio de cada punto</td></tr>
+                <tr><td>5</td><td>Liquidaci&oacute;n propuesta</td><td>C&aacute;lculo del mayor impuesto y sanciones</td></tr>
+                <tr><td>6</td><td>Plazo de respuesta</td><td>3 meses a partir de la notificaci&oacute;n</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-1" class="prev" onclick="navigateTo(1)">&larr; M&oacute;dulo 1</a>
+        <a href="#modulo-3" class="next" onclick="navigateTo(3)">M&oacute;dulo 3: Liquidaci&oacute;n oficial &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 3 ===================== -->
+    <section id="modulo-3" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Procedimiento</a> &rsaquo; M&oacute;dulo 3
+        </div>
+        <div class="mod-num">M&oacute;dulo 3 de 6</div>
+        <h1>Liquidaci&oacute;n oficial: cuando la DIAN modifica tu declaraci&oacute;n</h1>
+        <p class="mod-desc">La liquidaci&oacute;n oficial es el acto administrativo por el cual la DIAN sustituye la liquidaci&oacute;n privada del contribuyente. Conocer los tipos, t&eacute;rminos y vicios de nulidad es esencial para tu defensa.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Tipos de liquidaci&oacute;n oficial</h2>
+        <p>El Estatuto Tributario contempla tres tipos de liquidaci&oacute;n oficial, cada uno con requisitos y t&eacute;rminos distintos. Confundirlos es un error costoso.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 764 ET &mdash; Tipos de liquidaci&oacute;n oficial</h4>
+            <span class="norma-tag">Obligatorio</span>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Tipo</th><th>Art&iacute;culo ET</th><th>Cu&aacute;ndo procede</th><th>Requisito previo</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Liquidaci&oacute;n de revisi&oacute;n</strong></td>
+                <td>Art. 710</td>
+                <td>Cuando el contribuyente no acepta el requerimiento especial</td>
+                <td>Requerimiento especial notificado y no aceptado</td>
+              </tr>
+              <tr>
+                <td><strong>Liquidaci&oacute;n de correcci&oacute;n aritm&eacute;tica</strong></td>
+                <td>Art. 697 (antes 712)</td>
+                <td>Errores de suma, resta, multiplicaci&oacute;n o divisi&oacute;n</td>
+                <td>Ninguno &mdash; no requiere requerimiento especial</td>
+              </tr>
+              <tr>
+                <td><strong>Liquidaci&oacute;n de aforo</strong></td>
+                <td>Art. 717 (antes 713)</td>
+                <td>Cuando el contribuyente no declar&oacute; estando obligado</td>
+                <td>Emplazamiento para declarar sin respuesta</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Liquidaci&oacute;n oficial de revisi&oacute;n (Art. 710 ET)</h3>
+        <p>Es la m&aacute;s frecuente y la que genera mayores controversias. La DIAN modifica la declaraci&oacute;n privada del contribuyente en los puntos que fueron objeto del requerimiento especial.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 710 ET &mdash; T&eacute;rmino para proferir la liquidaci&oacute;n de revisi&oacute;n</h4>
+          </div>
+          <blockquote>
+            &ldquo;Dentro de los <strong>seis (6) meses</strong> siguientes a la fecha de vencimiento del t&eacute;rmino para dar respuesta al requerimiento especial o a su ampliaci&oacute;n, seg&uacute;n el caso, la Administraci&oacute;n deber&aacute; notificar la liquidaci&oacute;n oficial de revisi&oacute;n, si hay m&eacute;rito para ello.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Defensa clave:</strong> Si la DIAN no notifica la liquidaci&oacute;n de revisi&oacute;n dentro de los 6 meses, <strong>pierde competencia</strong> y el requerimiento especial queda sin efecto. La declaraci&oacute;n privada queda en firme. Verifica siempre esta fecha.
+          </div>
+        </div>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 711 ET &mdash; Correspondencia entre requerimiento y liquidaci&oacute;n</h4>
+          </div>
+          <blockquote>
+            &ldquo;La liquidaci&oacute;n de revisi&oacute;n deber&aacute; contraerse <strong>exclusivamente a la declaraci&oacute;n del contribuyente y a los hechos que hubieren sido contemplados en el requerimiento especial</strong> o en su ampliaci&oacute;n, seg&uacute;n el caso.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Importante:</strong> Si la DIAN incluye en la liquidaci&oacute;n puntos que no estaban en el requerimiento especial, la liquidaci&oacute;n es <strong>nula</strong> respecto de esos puntos. Es una de las causales de nulidad m&aacute;s frecuentes.
+          </div>
+        </div>
+
+        <h3>Liquidaci&oacute;n de correcci&oacute;n aritm&eacute;tica (Art. 697 ET)</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 697 ET &mdash; Correcci&oacute;n aritm&eacute;tica</h4>
+          </div>
+          <blockquote>
+            &ldquo;Cuando la Administraci&oacute;n detecte errores aritm&eacute;ticos en las declaraciones tributarias, podr&aacute; efectuar la correcci&oacute;n mediante <strong>liquidaci&oacute;n de correcci&oacute;n aritm&eacute;tica</strong> dentro de los <strong>dos (2) a&ntilde;os</strong> siguientes a la fecha de presentaci&oacute;n de la declaraci&oacute;n.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Solo errores aritm&eacute;ticos:</strong> La DIAN no puede usar esta liquidaci&oacute;n para cuestionar la procedencia de un gasto o ingreso. Si lo hace, la liquidaci&oacute;n es nula. Errores aritm&eacute;ticos son exclusivamente: sumas, restas, multiplicaciones o divisiones incorrectas.
+          </div>
+        </div>
+
+        <h3>Liquidaci&oacute;n de aforo (Art. 717 ET)</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 717 ET &mdash; Liquidaci&oacute;n de aforo</h4>
+          </div>
+          <blockquote>
+            &ldquo;Agotado el procedimiento previsto en los art&iacute;culos 643, 715 y 716, la Administraci&oacute;n podr&aacute; determinar la obligaci&oacute;n tributaria del contribuyente que <strong>no haya declarado</strong>, mediante la <strong>liquidaci&oacute;n de aforo</strong>.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Requisitos previos:</strong> 1) Emplazamiento para declarar notificado. 2) Que el contribuyente no haya declarado dentro del mes siguiente. 3) Que se notifique dentro del t&eacute;rmino de firmeza. Sin emplazamiento previo, la liquidaci&oacute;n de aforo es nula.
+          </div>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Creer que presentar la declaraci&oacute;n <strong>despu&eacute;s</strong> de la liquidaci&oacute;n de aforo la invalida autom&aacute;ticamente. Una vez notificada la liquidaci&oacute;n de aforo, la &uacute;nica v&iacute;a es interponer recurso de reconsideraci&oacute;n o demandar ante la jurisdicci&oacute;n contenciosa administrativa.</p>
+        </div>
+
+        <h3>Firmeza de las declaraciones tributarias</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 714 ET &mdash; Firmeza de la declaraci&oacute;n</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Situaci&oacute;n</th><th>T&eacute;rmino de firmeza</th><th>Desde cu&aacute;ndo</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Declaraci&oacute;n de renta ordinaria</td>
+                <td><strong>3 a&ntilde;os</strong></td>
+                <td>Vencimiento del plazo para declarar o fecha de presentaci&oacute;n (la que sea posterior)</td>
+              </tr>
+              <tr>
+                <td>Declaraci&oacute;n con p&eacute;rdida fiscal</td>
+                <td><strong>5 a&ntilde;os</strong></td>
+                <td>Vencimiento del plazo para declarar</td>
+              </tr>
+              <tr>
+                <td>Declaraci&oacute;n con saldo a favor solicitado en devoluci&oacute;n</td>
+                <td><strong>3 a&ntilde;os</strong></td>
+                <td>Presentaci&oacute;n de la solicitud de devoluci&oacute;n</td>
+              </tr>
+              <tr>
+                <td>Declaraci&oacute;n con beneficio de auditor&iacute;a (Art. 689-2 ET)</td>
+                <td><strong>6 o 12 meses</strong></td>
+                <td>Presentaci&oacute;n de la declaraci&oacute;n (seg&uacute;n % de incremento del impuesto)</td>
+              </tr>
+              <tr>
+                <td>Declaraci&oacute;n de IVA, retenci&oacute;n, ICA</td>
+                <td><strong>3 a&ntilde;os</strong></td>
+                <td>Vencimiento del plazo para declarar o fecha de presentaci&oacute;n</td>
+              </tr>
+              <tr>
+                <td>Declaraci&oacute;n del R&eacute;gimen Simple</td>
+                <td><strong>3 a&ntilde;os</strong></td>
+                <td>Vencimiento del plazo para declarar</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="norma-aplicacion">
+            <strong>Consecuencia de la firmeza:</strong> Una vez firme, la declaraci&oacute;n no puede ser modificada por la DIAN ni por el contribuyente (excepto correcci&oacute;n que disminuya el saldo a favor dentro del a&ntilde;o siguiente, Art. 589 ET).
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>Lleva un <strong>calendario de firmeza</strong> para cada cliente. Cuando la declaraci&oacute;n queda en firme, notifica al cliente y guarda copia digital con nota &ldquo;FIRME &mdash; no requiere m&aacute;s soporte&rdquo;. Esto facilita futuras auditor&iacute;as y te protege de requerimientos extempor&aacute;neos.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Causales de nulidad de la liquidaci&oacute;n oficial
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>#</th><th>Causal</th><th>Fundamento</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Falta de requerimiento especial previo</td><td>Art. 703 ET &mdash; requisito sine qua non</td></tr>
+                <tr><td>2</td><td>Notificaci&oacute;n fuera de t&eacute;rminos</td><td>Arts. 705, 706, 710 ET &mdash; competencia temporal</td></tr>
+                <tr><td>3</td><td>Falta de correspondencia con requerimiento</td><td>Art. 711 ET &mdash; puntos no propuestos</td></tr>
+                <tr><td>4</td><td>Incompetencia del funcionario</td><td>Art. 691 ET &mdash; funcionario sin delegaci&oacute;n</td></tr>
+                <tr><td>5</td><td>Pretermisi&oacute;n del derecho de defensa</td><td>Art. 29 Constituci&oacute;n Pol&iacute;tica &mdash; debido proceso</td></tr>
+                <tr><td>6</td><td>Motivaci&oacute;n insuficiente o falsa</td><td>Art. 730 num. 4 ET &mdash; falsa motivaci&oacute;n</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-2" class="prev" onclick="navigateTo(2)">&larr; M&oacute;dulo 2</a>
+        <a href="#modulo-4" class="next" onclick="navigateTo(4)">M&oacute;dulo 4: Recursos tributarios &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 4 ===================== -->
+    <section id="modulo-4" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Procedimiento</a> &rsaquo; M&oacute;dulo 4
+        </div>
+        <div class="mod-num">M&oacute;dulo 4 de 6</div>
+        <h1>Recursos tributarios: c&oacute;mo impugnar las decisiones de la DIAN</h1>
+        <p class="mod-desc">Cuando la DIAN emite una liquidaci&oacute;n oficial o una sanci&oacute;n, el contribuyente tiene derecho a impugnar la decisi&oacute;n. Conocer los recursos, sus t&eacute;rminos y el silencio administrativo positivo puede cambiar el resultado.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Recurso de reconsideraci&oacute;n (Art. 720 ET)</h2>
+        <p>Es el recurso principal en materia tributaria. Es de car&aacute;cter <strong>obligatorio</strong> antes de acudir a la jurisdicci&oacute;n contenciosa administrativa &mdash; sin agotar este recurso, el juez rechaza la demanda.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art&iacute;culo 720 del Estatuto Tributario</h4>
+            <span class="norma-tag">Obligatorio</span>
+          </div>
+          <blockquote>
+            <strong>&ldquo;Sin perjuicio de lo dispuesto en normas especiales de este Estatuto,</strong> contra las liquidaciones oficiales, resoluciones que impongan sanciones u ordenen el reintegro de sumas devueltas y dem&aacute;s actos producidos en relaci&oacute;n con los impuestos administrados por la Unidad Administrativa Especial Direcci&oacute;n de Impuestos y Aduanas Nacionales, procede el <strong>recurso de reconsideraci&oacute;n</strong>.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> El recurso de reconsideraci&oacute;n se interpone ante la misma DIAN (no ante un juez). Lo resuelve la Subdirecci&oacute;n de Gesti&oacute;n de Recursos Jur&iacute;dicos o la Direcci&oacute;n Seccional, seg&uacute;n la cuant&iacute;a.
+          </div>
+        </div>
+
+        <h3>T&eacute;rmino para interponer el recurso</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 720 inc. 2 ET &mdash; Plazo de 2 meses</h4>
+          </div>
+          <blockquote>
+            &ldquo;El recurso de reconsideraci&oacute;n deber&aacute; interponerse dentro de los <strong>dos (2) meses</strong> siguientes a la notificaci&oacute;n del acto que se impugna.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Atenci&oacute;n:</strong> Son 2 meses <strong>calendario</strong>, no h&aacute;biles. Si el &uacute;ltimo d&iacute;a cae en festivo o fin de semana, se extiende al siguiente d&iacute;a h&aacute;bil. Pero <strong>no existe pr&oacute;rroga</strong> &mdash; si se pasa un solo d&iacute;a, el recurso se rechaza por extempor&aacute;neo.
+          </div>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Interponer el recurso sin <strong>anexar prueba del pago o acuerdo de pago</strong> de la parte no discutida (Art. 720 par. ET). Si discutes solo una glosa pero no pagas el resto, el recurso puede ser inadmitido. Siempre verifica si debes pagar o garantizar la parte aceptada.</p>
+        </div>
+
+        <h3>T&eacute;rmino para resolver el recurso</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 732 ET &mdash; Plazo de 1 a&ntilde;o para resolver</h4>
+          </div>
+          <blockquote>
+            &ldquo;La Administraci&oacute;n Tributaria tendr&aacute; <strong>un (1) a&ntilde;o</strong> para resolver los recursos de reconsideraci&oacute;n, contado a partir de su interposici&oacute;n en debida forma.&rdquo;
+          </blockquote>
+        </div>
+
+        <h3>Silencio administrativo positivo (Art. 734 ET)</h3>
+        <p>Esta es una de las figuras m&aacute;s poderosas del procedimiento tributario y una de las menos conocidas por los contribuyentes.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 734 ET &mdash; Silencio administrativo positivo</h4>
+            <span class="norma-tag">Cr&iacute;tico</span>
+          </div>
+          <blockquote>
+            <strong>&ldquo;Si transcurrido el t&eacute;rmino se&ntilde;alado en el art&iacute;culo 732</strong> sin que se hubiere notificado la resoluci&oacute;n que decide el recurso, se entender&aacute; <strong>fallado a favor del contribuyente</strong>, en cuyo caso la Administraci&oacute;n, de oficio o a petici&oacute;n de parte, as&iacute; lo declarar&aacute;.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Efecto pr&aacute;ctico:</strong> Si la DIAN no resuelve el recurso dentro de 1 a&ntilde;o, la liquidaci&oacute;n oficial queda <strong>sin efecto</strong> y la declaraci&oacute;n privada del contribuyente prevalece. Es como si nunca hubiera habido requerimiento. La DIAN debe expedir auto declaratorio dentro de los 10 d&iacute;as siguientes.
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>Lleva un <strong>control estricto de la fecha</strong> de presentaci&oacute;n del recurso. Cuando se cumpla el a&ntilde;o sin notificaci&oacute;n de la resoluci&oacute;n, presenta inmediatamente derecho de petici&oacute;n solicitando la declaratoria de silencio administrativo positivo. La DIAN a veces &ldquo;olvida&rdquo; resolver &mdash; y eso te beneficia enormemente.</p>
+        </div>
+
+        <h3>Revocatoria directa (Art. 736 ET)</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Arts. 736 y 736-1 ET &mdash; Revocatoria directa</h4>
+          </div>
+          <blockquote>
+            &ldquo;Solo procede la revocatoria directa cuando el contribuyente <strong>no hubiere interpuesto los recursos por la v&iacute;a gubernativa</strong>.&rdquo; (Art. 736). &ldquo;Trat&aacute;ndose de pliegos de cargos y resoluciones que imponen sanci&oacute;n, el contribuyente podr&aacute; <strong>transigir</strong> antes de que se profiera resoluci&oacute;n que resuelva el recurso&rdquo; (Art. 736-1).
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Importante:</strong> La revocatoria directa y el recurso de reconsideraci&oacute;n son <strong>excluyentes</strong>. Si ya interpusiste recurso, no puedes pedir revocatoria y viceversa. Eval&uacute;a cu&aacute;l conviene antes de decidir.
+          </div>
+        </div>
+
+        <h3>Demanda ante la jurisdicci&oacute;n contenciosa</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 164 num. 2 lit. d, Ley 1437 de 2011 (CPACA) &mdash; T&eacute;rmino para demandar</h4>
+          </div>
+          <blockquote>
+            &ldquo;Cuando se pretenda la nulidad y restablecimiento del derecho de un acto administrativo particular &mdash; incluidos los de car&aacute;cter tributario &mdash; la demanda deber&aacute; presentarse dentro de los <strong>cuatro (4) meses</strong> siguientes a la notificaci&oacute;n de la decisi&oacute;n que resuelve el recurso.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Ruta:</strong> 1) Agotar recurso de reconsideraci&oacute;n. 2) Si la DIAN confirma, tienes 4 meses para demandar. 3) La demanda se presenta ante el Tribunal Administrativo (o Consejo de Estado seg&uacute;n cuant&iacute;a). 4) El proceso puede durar de 2 a 5 a&ntilde;os.
+          </div>
+        </div>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; Ruta completa de impugnaci&oacute;n</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">Liquidaci&oacute;n oficial notificada</span><span class="value">15 Ene 2026</span></div>
+            <div class="ejemplo-row"><span class="label">Recurso de reconsideraci&oacute;n (2 meses)</span><span class="value">15 Mar 2026</span></div>
+            <div class="ejemplo-row"><span class="label">DIAN resuelve (l&iacute;mite 1 a&ntilde;o)</span><span class="value">15 Mar 2027</span></div>
+            <div class="ejemplo-row"><span class="label">Si no resuelve &rarr; silencio positivo</span><span class="value">16 Mar 2027</span></div>
+            <div class="ejemplo-row"><span class="label">Demanda contenciosa (4 meses)</span><span class="value">15 Jul 2027</span></div>
+            <div class="ejemplo-row total"><span class="label">Sentencia estimada</span><span class="value">2029-2031</span></div>
+          </div>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Comparaci&oacute;n recurso de reconsideraci&oacute;n vs. revocatoria directa
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Aspecto</th><th>Recurso de reconsideraci&oacute;n</th><th>Revocatoria directa</th></tr></thead>
+              <tbody>
+                <tr><td>Plazo</td><td>2 meses desde notificaci&oacute;n</td><td>No tiene plazo fijo (antes de que el acto quede en firme)</td></tr>
+                <tr><td>Requisito para demandar</td><td>S&iacute; &mdash; es obligatorio agotarlo</td><td>No agota v&iacute;a gubernativa &mdash; no permite demandar</td></tr>
+                <tr><td>Silencio positivo</td><td>S&iacute; &mdash; 1 a&ntilde;o (Art. 734)</td><td>No aplica</td></tr>
+                <tr><td>Compatibilidad</td><td>Excluye revocatoria</td><td>Excluye recurso</td></tr>
+                <tr><td>Mejor para</td><td>Discutir fondo y preservar v&iacute;a judicial</td><td>Aceptar parcialmente con beneficio de reducci&oacute;n</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-3" class="prev" onclick="navigateTo(3)">&larr; M&oacute;dulo 3</a>
+        <a href="#modulo-5" class="next" onclick="navigateTo(5)">M&oacute;dulo 5: Pruebas tributarias &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 5 ===================== -->
+    <section id="modulo-5" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Procedimiento</a> &rsaquo; M&oacute;dulo 5
+        </div>
+        <div class="mod-num">M&oacute;dulo 5 de 6</div>
+        <h1>Pruebas en materia tributaria: c&oacute;mo demostrar tu posici&oacute;n</h1>
+        <p class="mod-desc">En procedimiento tributario, quien afirma debe probar. La contabilidad es la reina de las pruebas, pero no la &uacute;nica. Este m&oacute;dulo te ense&ntilde;a c&oacute;mo construir un caso s&oacute;lido ante la DIAN.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>La contabilidad como medio de prueba</h2>
+        <p>En Colombia, la contabilidad llevada conforme a las normas legales es una prueba a favor del contribuyente. Pero si no cumple los requisitos, puede volverse prueba en su contra.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art&iacute;culo 772 del Estatuto Tributario</h4>
+            <span class="norma-tag">Obligatorio</span>
+          </div>
+          <blockquote>
+            <strong>&ldquo;Los libros de contabilidad del contribuyente constituyen prueba a su favor,</strong> siempre que se lleven en debida forma.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> &ldquo;En debida forma&rdquo; significa: registrados en la C&aacute;mara de Comercio, con asientos cronol&oacute;gicos, con soportes internos y externos, y que reflejen la realidad econ&oacute;mica del negocio. Si usas software contable, asegura que el sistema genere los libros oficiales (diario, mayor e inventarios).
+          </div>
+        </div>
+
+        <h3>&iquest;Cu&aacute;ndo la contabilidad NO es v&aacute;lida como prueba?</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 774 ET &mdash; Requisitos para que la contabilidad sea prueba</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>#</th><th>Requisito</th><th>Consecuencia si falta</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Estar registrada en la C&aacute;mara de Comercio</td>
+                <td>Se desconoce como prueba a favor (Art. 774 num. 1)</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Respaldada por comprobantes internos y externos</td>
+                <td>Partidas sin soporte se presumen inexistentes (Art. 781)</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Reflejar fielmente la situaci&oacute;n financiera</td>
+                <td>Prevalecen las pruebas de la DIAN (Art. 775)</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>No haber sido desvirtuada por otros medios de prueba</td>
+                <td>Se puede desvirtuar con informaci&oacute;n de terceros, extractos bancarios, etc.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 773 ET &mdash; Forma y requisitos para llevar la contabilidad</h4>
+          </div>
+          <blockquote>
+            &ldquo;Para efectos fiscales, la contabilidad deber&aacute; sujetarse al t&iacute;tulo IV del libro primero del C&oacute;digo de Comercio, al marco t&eacute;cnico normativo contable vigente, y a las dem&aacute;s normas concordantes. <strong>Los libros deben conformarse a las reglas que expida la Junta Central de Contadores.</strong>&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Alerta NIIF:</strong> Desde la convergencia a NIIF (NIC), la contabilidad bajo est&aacute;ndares internacionales es la base. Pero para efectos fiscales aplica la <strong>conciliaci&oacute;n fiscal</strong> (formato 2516/2517). Los valores contables NIIF pueden diferir de los fiscales y eso no invalida la contabilidad.
+          </div>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Contabilizar gastos <strong>sin soporte externo v&aacute;lido</strong> (factura electr&oacute;nica o documento equivalente). Desde 2020, el Art. 616-1 ET exige factura electr&oacute;nica como soporte de costos y deducciones. Un recibo de caja o un comprobante interno <strong>no es suficiente</strong> para soportar deducciones superiores al l&iacute;mite del Art. 771-5 ET.</p>
+        </div>
+
+        <h3>La factura electr&oacute;nica como prueba</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 771-2 ET (antes 786) &mdash; Factura como requisito para costos y deducciones</h4>
+          </div>
+          <blockquote>
+            &ldquo;Para la procedencia de costos y deducciones en el impuesto sobre la renta, as&iacute; como de los impuestos descontables en el IVA, se requerir&aacute; de <strong>facturas con el cumplimiento de los requisitos</strong> establecidos en los literales b), c), d), e), f) y g) del art&iacute;culo 617 del Estatuto Tributario.&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Desde 2024:</strong> Con la facturaci&oacute;n electr&oacute;nica consolidada, la DIAN cruza autom&aacute;ticamente las facturas emitidas con los costos declarados por los compradores. Si no hay factura electr&oacute;nica en el sistema de la DIAN que respalde tu costo, la deducci&oacute;n puede ser rechazada.
+          </div>
+        </div>
+
+        <h3>Indicios y presunciones</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Art. 754-1 (antes 788) ET &mdash; Datos estad&iacute;sticos e indicios</h4>
+          </div>
+          <blockquote>
+            &ldquo;Los datos estad&iacute;sticos producidos por la Direcci&oacute;n de Impuestos y Aduanas Nacionales, por el Departamento Administrativo Nacional de Estad&iacute;stica, por el Banco de la Rep&uacute;blica, por la Superintendencia de Sociedades u otras entidades, <strong>constituyen indicio grave</strong> en materia de ingresos, costos, deducciones, rentas exentas, activos patrimoniales y dem&aacute;s factores&hellip;&rdquo;
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>En la pr&aacute;ctica:</strong> La DIAN usa indicios cuando detecta que tus m&aacute;rgenes de utilidad son significativamente inferiores al promedio del sector. Por ejemplo: si el margen promedio de restaurantes es 12% y t&uacute; declaras 2%, eso es un &ldquo;indicio grave&rdquo; que puede motivar fiscalizaci&oacute;n.
+          </div>
+        </div>
+
+        <h3>Carga de la prueba</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Arts. 746 y 747 (antes 795 y 797) ET &mdash; Presunciones y carga de la prueba</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Regla</th><th>Qui&eacute;n prueba</th><th>Art&iacute;culo ET</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Las declaraciones tributarias se presumen ver&iacute;dicas</td>
+                <td>La DIAN debe desvirtuar &mdash; presunci&oacute;n a favor del contribuyente</td>
+                <td>Art. 746</td>
+              </tr>
+              <tr>
+                <td>Costos y deducciones &mdash; carga del contribuyente</td>
+                <td>El contribuyente debe probar la realidad y procedencia de los costos</td>
+                <td>Art. 747</td>
+              </tr>
+              <tr>
+                <td>Hechos confesados &mdash; no requieren prueba</td>
+                <td>Lo declarado por el contribuyente se tiene como confesi&oacute;n</td>
+                <td>Art. 748</td>
+              </tr>
+              <tr>
+                <td>Informaci&oacute;n de terceros prevalece si no se controvierte</td>
+                <td>El contribuyente debe desvirtuar la informaci&oacute;n de terceros</td>
+                <td>Art. 750</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="norma-aplicacion">
+            <strong>Regla de oro:</strong> Tu declaraci&oacute;n se presume ver&iacute;dica, pero esa presunci&oacute;n se puede desvirtuar. La carga de probar <strong>ingresos omitidos</strong> es de la DIAN. La carga de probar <strong>costos y deducciones</strong> es del contribuyente. No basta con contabilizarlos &mdash; debes poder probarlos con soportes.
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>Construye un <strong>&ldquo;expediente de defensa&rdquo;</strong> para cada partida significativa del balance: factura electr&oacute;nica, comprobante de pago (extracto bancario o transferencia), contrato si aplica, y certificaci&oacute;n del revisor fiscal. Si la DIAN te pide soportes 3 a&ntilde;os despu&eacute;s, los tendr&aacute;s listos en minutos.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Medios de prueba admisibles en materia tributaria
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>Medio de prueba</th><th>Fundamento</th><th>Valor probatorio</th></tr></thead>
+              <tbody>
+                <tr><td>Contabilidad</td><td>Art. 772 ET</td><td>Plena prueba si cumple requisitos (Art. 774)</td></tr>
+                <tr><td>Factura electr&oacute;nica</td><td>Art. 771-2 ET</td><td>Requisito para costos y deducciones</td></tr>
+                <tr><td>Confesi&oacute;n (declaraci&oacute;n tributaria)</td><td>Art. 748 ET</td><td>Lo declarado se presume ver&iacute;dico</td></tr>
+                <tr><td>Testimonio</td><td>Art. 750 ET</td><td>Informaci&oacute;n de terceros como indicio</td></tr>
+                <tr><td>Inspecci&oacute;n tributaria</td><td>Art. 779 ET</td><td>Verificaci&oacute;n directa de hechos</td></tr>
+                <tr><td>Inspecci&oacute;n contable</td><td>Art. 782 ET</td><td>Examen de libros y documentos</td></tr>
+                <tr><td>Indicios y presunciones</td><td>Art. 754-1 ET</td><td>Datos estad&iacute;sticos como indicio grave</td></tr>
+                <tr><td>Dictamen pericial</td><td>CGP / Ley 1437</td><td>Admisible para temas t&eacute;cnicos contables</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-4" class="prev" onclick="navigateTo(4)">&larr; M&oacute;dulo 4</a>
+        <a href="#modulo-6" class="next" onclick="navigateTo(6)">M&oacute;dulo 6: Pr&aacute;ctica con IA &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 6 ===================== -->
+    <section id="modulo-6" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">Procedimiento</a> &rsaquo; M&oacute;dulo 6
+        </div>
+        <div class="mod-num">M&oacute;dulo 6 de 6</div>
+        <h1>Pr&aacute;ctica: defiende a tu cliente con herramientas IA</h1>
+        <p class="mod-desc">Todo lo que aprendiste en los m&oacute;dulos anteriores cobra vida aqu&iacute;. Usa nuestras herramientas de inteligencia artificial para redactar respuestas a requerimientos, calcular sanciones y preparar tu defensa tributaria.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Herramienta 1: Asistente para responder requerimientos</h2>
+        <p>Nuestra IA te ayuda a estructurar la respuesta al requerimiento especial de la DIAN, asegurando que cubras todos los puntos y cites la normatividad correcta.</p>
+
+        <div class="cta-practica">
+          <h3>Responde requerimientos con IA</h3>
+          <p>Sube el requerimiento especial y obt&eacute;n un borrador de respuesta estructurado con fundamento legal, argumentos de defensa y relaci&oacute;n de pruebas.</p>
+          <a href="../ia-respuesta-requerimiento.html">Abrir Asistente de Requerimientos &rarr;</a>
+        </div>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Recordatorio normativo &mdash; Arts. 703 y 707 ET</h4>
+          </div>
+          <p>El requerimiento especial debe responderse dentro de <strong>3 meses</strong> desde su notificaci&oacute;n (ampliable a 6). La respuesta debe ser <strong>punto por punto</strong>, con pruebas documentales y fundamento legal. Lo que no controviertas, se entiende aceptado.</p>
+          <div class="norma-aplicacion">
+            <strong>La IA te ayuda a:</strong> Identificar las glosas, redactar argumentos de defensa por cada punto, citar jurisprudencia del Consejo de Estado, y generar la lista de anexos probatorios que debes adjuntar.
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p>La IA genera un <strong>borrador inicial</strong>. Siempre rev&iacute;salo con criterio profesional, ajusta los argumentos a la situaci&oacute;n espec&iacute;fica de tu cliente, y verifica que las citas normativas est&eacute;n vigentes. La firma y responsabilidad son tuyas como contador o abogado.</p>
+        </div>
+
+        <h2>Herramienta 2: Calculadora de sanciones DIAN</h2>
+        <p>Calcula en segundos las sanciones por extempor&aacute;neidad, correcci&oacute;n, inexactitud, y por no enviar informaci&oacute;n. Incluye reducciones y graduaciones seg&uacute;n el momento procesal.</p>
+
+        <div class="cta-practica">
+          <h3>Calcula sanciones al instante</h3>
+          <p>Ingresa el tipo de sanci&oacute;n, la cuant&iacute;a y el momento del proceso, y obt&eacute;n el valor exacto con fundamento en el Estatuto Tributario.</p>
+          <a href="../sanciones-dian.html">Abrir Calculadora de Sanciones &rarr;</a>
+        </div>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Recordatorio normativo &mdash; Art. 640 ET &mdash; Gradualidad de sanciones</h4>
+          </div>
+          <p>Las sanciones tributarias se pueden reducir seg&uacute;n el momento en que se corrija la irregularidad:</p>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Momento</th><th>Reducci&oacute;n</th><th>Condici&oacute;n</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Antes de emplazamiento o pliego de cargos</td>
+                <td><strong>75%</strong> de reducci&oacute;n</td>
+                <td>Corregir y pagar dentro de los 6 meses (si no ha habido actuaci&oacute;n de la DIAN)</td>
+              </tr>
+              <tr>
+                <td>Despu&eacute;s de emplazamiento y antes de requerimiento especial</td>
+                <td><strong>50%</strong> de reducci&oacute;n</td>
+                <td>Corregir y pagar antes del requerimiento especial</td>
+              </tr>
+              <tr>
+                <td>Despu&eacute;s del requerimiento especial</td>
+                <td><strong>25%</strong> de reducci&oacute;n (o 50% si acepta todo)</td>
+                <td>Aceptar total o parcialmente el requerimiento especial</td>
+              </tr>
+              <tr>
+                <td>Despu&eacute;s de la liquidaci&oacute;n oficial</td>
+                <td><strong>0%</strong> de reducci&oacute;n</td>
+                <td>Sanci&oacute;n plena &mdash; solo queda recurso de reconsideraci&oacute;n</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n que la DIAN detecta</h4>
+          </div>
+          <p>Aplicar la reducci&oacute;n de sanci&oacute;n <strong>sin pagar simult&aacute;neamente</strong>. La reducci&oacute;n del Art. 640 ET exige que la sanci&oacute;n reducida se <strong>pague</strong> junto con el impuesto y los intereses al momento de la correcci&oacute;n. Si corriges la declaraci&oacute;n pero no pagas, la reducci&oacute;n no aplica.</p>
+        </div>
+
+        <h2>Resumen del curso: mapa del procedimiento tributario</h2>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Mapa completo del procedimiento tributario</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="timeline">
+              <div class="timeline-item">
+                <h4>Etapa 1 &mdash; Fiscalizaci&oacute;n</h4>
+                <p>Requerimiento ordinario, emplazamientos, inspecciones. La DIAN recopila informaci&oacute;n.</p>
+                <span class="timeline-norma">Arts. 684-691 ET &mdash; M&oacute;dulo 1</span>
+              </div>
+              <div class="timeline-item">
+                <h4>Etapa 2 &mdash; Requerimiento especial</h4>
+                <p>La DIAN propone modificaci&oacute;n formal. 3+3 meses para responder.</p>
+                <span class="timeline-norma">Arts. 703-709 ET &mdash; M&oacute;dulo 2</span>
+              </div>
+              <div class="timeline-item">
+                <h4>Etapa 3 &mdash; Liquidaci&oacute;n oficial</h4>
+                <p>La DIAN modifica la declaraci&oacute;n. 6 meses para notificar.</p>
+                <span class="timeline-norma">Arts. 710-717 ET &mdash; M&oacute;dulo 3</span>
+              </div>
+              <div class="timeline-item">
+                <h4>Etapa 4 &mdash; Recurso de reconsideraci&oacute;n</h4>
+                <p>2 meses para interponer, 1 a&ntilde;o para resolver. Silencio positivo.</p>
+                <span class="timeline-norma">Arts. 720-736 ET &mdash; M&oacute;dulo 4</span>
+              </div>
+              <div class="timeline-item">
+                <h4>Etapa 5 &mdash; V&iacute;a judicial</h4>
+                <p>Demanda ante jurisdicci&oacute;n contenciosa administrativa. 4 meses para demandar.</p>
+                <span class="timeline-norma">Ley 1437 de 2011 &mdash; M&oacute;dulo 4</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tu siguiente paso</h4>
+          </div>
+          <p>Ahora que dominas el procedimiento tributario, tienes las herramientas para defender a tus clientes en cada etapa. Explora los dem&aacute;s cursos de la Escuela Contable IA para completar tu formaci&oacute;n tributaria pr&aacute;ctica.</p>
+        </div>
+
+        <div style="background:linear-gradient(135deg,var(--green-50),#D1FAE5);border:2px solid var(--green-300);border-radius:16px;padding:28px 24px;text-align:center;margin:28px 0">
+          <h3 style="font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;color:var(--green-800);margin-bottom:8px">Volver a la Escuela Contable IA</h3>
+          <p style="font-size:.9rem;color:var(--green-700);margin-bottom:16px">Explora todos los cursos disponibles: Renta 110, IVA 300, Retenci&oacute;n 350, Ex&oacute;gena, Sanciones y m&aacute;s.</p>
+          <a href="../escuela.html" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;background:var(--green-600);color:#fff;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;box-shadow:0 4px 16px rgba(5,150,105,.3);transition:all .2s" onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">Ir a la Escuela &rarr;</a>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-5" class="prev" onclick="navigateTo(5)">&larr; M&oacute;dulo 5</a>
+        <a href="../escuela.html" class="next" style="background:var(--gray-800)">Volver a la Escuela &rarr;</a>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Abrir men&uacute;">&#9776;</button>
+
+<script>
+/* Module navigation */
+var currentModule = 1;
+var totalModules = 6;
+
+function navigateTo(n) {
+  // Hide all modules
+  document.querySelectorAll('.modulo-section').forEach(function(s){ s.style.display = 'none'; });
+  // Show target
+  var target = document.getElementById('modulo-' + n);
+  if (target) target.style.display = 'block';
+  // Update sidebar
+  var links = document.querySelectorAll('.sidebar-nav a');
+  links.forEach(function(a, i) {
+    a.classList.remove('active');
+    if (i < n - 1) a.classList.add('completed');
+    if (i === n - 1) a.classList.add('active');
+  });
+  // Update progress
+  var pct = Math.round((n / totalModules) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  currentModule = n;
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  // Track
+  if (typeof gtag !== 'undefined') gtag('event', 'escuela_modulo', { curso: 'procedimiento', modulo: n });
+}
+
+/* Sidebar toggle for mobile */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+</script>
+</body>
+</html>
