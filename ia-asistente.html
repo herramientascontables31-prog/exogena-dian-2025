@@ -949,8 +949,9 @@ body {
       var buffer = '';
       var fullText = '';
       var firstChunk = true;
+      var streamDone = false;
 
-      while (true) {
+      while (!streamDone) {
         var result = await reader.read();
         if (result.done) break;
         buffer += decoder.decode(result.value, { stream: true });
@@ -976,7 +977,8 @@ body {
               scrollToBottom();
 
             } else if (event.type === 'done') {
-              // Finalize
+              // Finalize — exit both loops
+              streamDone = true;
               break;
 
             } else if (event.type === 'error') {
@@ -989,6 +991,8 @@ body {
           }
         }
       }
+      // Ensure reader is released
+      try { reader.cancel(); } catch(e) {}
 
       // Finalize the message with sources
       if (fullText) {
