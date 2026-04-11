@@ -215,7 +215,8 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
   .cursos-grid{grid-template-columns:1fr 1fr}
 @media(max-width:500px){.cursos-grid{grid-template-columns:1fr}
   .metodo-steps{grid-template-columns:1fr 1fr;gap:12px}
-  .precio-grid{grid-template-columns:1fr!important;max-width:400px;margin:0 auto}
+  .precio-grid{grid-template-columns:1fr 1fr!important;max-width:700px;margin:0 auto}
+@media(max-width:500px){.precio-grid{grid-template-columns:1fr!important;max-width:400px}
   .precio-card.pop{transform:scale(1);order:-1}
   .pq-grid{grid-template-columns:1fr}
 }
@@ -553,7 +554,26 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
     <h2>Invierte en entender, no en memorizar</h2>
     <p class="sub">El curso de IVA 300 es gratis. Los dem&aacute;s cursos se desbloquean con la Escuela o con el plan PRO Anual.</p>
 
-    <div class="precio-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="precio-grid" style="grid-template-columns:repeat(4,1fr)">
+      <!-- PRO Mensual sin Escuela -->
+      <div class="precio-card">
+        <p class="precio-label">PRO Mensual</p>
+        <h3 class="precio-name">Solo herramientas</h3>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
+          <div class="precio-val"><span class="precio-sign">$</span><span class="precio-num">19.900</span></div>
+          <span style="font-size:.82rem;color:var(--gray-400)">/mes</span>
+        </div>
+        <p class="precio-per">primer mes &middot; despu&eacute;s $29.900/mes</p>
+        <ul class="precio-list">
+          <li>Todas las herramientas PRO sin l&iacute;mite</li>
+          <li>Ex&oacute;gena, Renta, IVA, Retenci&oacute;n, EEFF</li>
+          <li>IA Contable (50 consultas/d&iacute;a)</li>
+          <li>Conciliaci&oacute;n, NIT ilimitado</li>
+          <li style="color:var(--gray-400)">Escuela no incluida</li>
+        </ul>
+        <a href="precios.html" class="precio-cta precio-cta-outline" onclick="gtag('event','clic_escuela_precio',{plan:'pro_mensual'})">Suscribirme PRO &rarr;</a>
+      </div>
+
       <!-- Escuela sola -->
       <div class="precio-card">
         <p class="precio-label">Solo Escuela</p>
@@ -572,7 +592,7 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
 
       <!-- PRO Mensual + Escuela -->
       <div class="precio-card">
-        <p class="precio-label">PRO Mensual + Escuela</p>
+        <p class="precio-label">PRO + Escuela</p>
         <h3 class="precio-name">Herramientas + cursos</h3>
         <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:4px">
           <div class="precio-val"><span class="precio-sign">$</span><span class="precio-num">29.900</span></div>
@@ -581,12 +601,12 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
         <p class="precio-per">+ $29.900 &uacute;nico por la Escuela</p>
         <ul class="precio-list">
           <li>Todas las herramientas PRO sin l&iacute;mite</li>
-          <li>Ex&oacute;gena, Renta, IVA, Retenci&oacute;n, EEFF</li>
           <li>IA Contable (50 consultas/d&iacute;a)</li>
-          <li class="hl">+ 9 cursos Escuela (pago &uacute;nico adicional)</li>
-          <li>Cancela cuando quieras</li>
+          <li class="hl">+ 9 cursos Escuela (pago &uacute;nico)</li>
+          <li>Referencias normativas en cada paso</li>
+          <li>Cancela PRO cuando quieras</li>
         </ul>
-        <a href="precios.html" class="precio-cta precio-cta-outline" onclick="gtag('event','clic_escuela_precio',{plan:'pro_mensual_escuela'})">Suscribirme PRO &rarr;</a>
+        <a href="precios.html" class="precio-cta precio-cta-outline" onclick="gtag('event','clic_escuela_precio',{plan:'pro_mensual_escuela'})">PRO + Escuela &rarr;</a>
       </div>
 
       <!-- PRO Anual -->
@@ -601,7 +621,6 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
         <p class="precio-per">pago &uacute;nico anual &middot; Ahorras m&aacute;s del 55%</p>
         <ul class="precio-list">
           <li class="hl">Todas las herramientas PRO 12 meses</li>
-          <li>Ex&oacute;gena, Renta, IVA, Retenci&oacute;n, EEFF</li>
           <li>IA Contable (50 consultas/d&iacute;a)</li>
           <li class="hl">Escuela Contable IA GRATIS (9 cursos)</li>
           <li class="hl">Acceso a futuros cursos incluido</li>
