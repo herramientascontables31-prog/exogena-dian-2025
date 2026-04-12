@@ -975,21 +975,233 @@ async function exportExcel2516(){
     r3++;
   });
 
-  // ── H4: IMPUESTO DIFERIDO (placeholder) ──
+  // ── H4: IMPUESTO DIFERIDO ──
   const ws4=wb.addWorksheet('H4 (Impuesto Diferido)');
-  ws4.getCell('A1').value='Activos y pasivos por impuestos diferidos';ws4.getCell('A1').font={...fB,size:14,color:{argb:DB}};
-  ws4.getCell('A3').value='Esta hoja debe ser diligenciada manualmente por el contador.';ws4.getCell('A3').font={...fN,italic:true,color:{argb:'FF6B7280'}};
-  ws4.getCell('A4').value='Las diferencias temporarias se calculan comparando base contable vs base fiscal de cada activo/pasivo.';ws4.getCell('A4').font={...fN,size:9,color:{argb:'FF9CA3AF'}};
+  ws4.properties.showGridLines=false;
+  ws4.getColumn(1).width=6;ws4.getColumn(2).width=42;ws4.getColumn(3).width=18;ws4.getColumn(4).width=18;
+  ws4.getColumn(5).width=18;ws4.getColumn(6).width=18;ws4.getColumn(7).width=18;ws4.getColumn(8).width=18;
+  ws4.getColumn(9).width=18;ws4.getColumn(10).width=12;
+  ws4.getCell('B1').value='Activos y pasivos por impuestos diferidos';ws4.getCell('B1').font={...fB,size:14,color:{argb:DB}};
+  ws4.getCell('B2').value=razon+' — NIT '+nit+' — AG '+year+' — Debe ser verificado por un contador publico';
+  ws4.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+  // H4 headers
+  const h4Hdr=['NUM','Concepto','Base contable','Base Fiscal','Diferencia\nTemporaria','Diferencia\nPermanente',
+    'Saldo imp diferido\na 31-Dic '+year,'Saldo imp diferido\na 31-Dic '+(parseInt(year)-1),'Variacion','Tasa fiscal\naplicada'];
+  let r4=4;
+  h4Hdr.forEach((h,i)=>{
+    ws4.getCell(r4,i+1).value=h;ws4.getCell(r4,i+1).font={...fB,size:8,color:{argb:WH}};
+    ws4.getCell(r4,i+1).fill=fH;ws4.getCell(r4,i+1).border=bt;ws4.getCell(r4,i+1).alignment={horizontal:'center',vertical:'middle',wrapText:true};
+  });
+  ws4.getRow(r4).height=40;r4++;
+  // H4 Section 1: Activo (Diferencias temporarias deducibles)
+  ws4.getCell(r4,2).value='1. Impuestos diferidos provenientes de diferencias temporarias';
+  ws4.getCell(r4,2).font={...fB,color:{argb:DB}};for(let ci=1;ci<=10;ci++){ws4.getCell(r4,ci).fill=fGy;ws4.getCell(r4,ci).border=bt}r4++;
+  ws4.getCell(r4,2).value='Activo (Diferencias temporarias deducibles)';
+  ws4.getCell(r4,2).font={...fB,size:10,color:{argb:DB}};for(let ci=1;ci<=10;ci++)ws4.getCell(r4,ci).border=bt;r4++;
+  // Rows from prevalidador: 13-30
+  const h4ActRows=[
+    {num:13,desc:'Efectivo y equivalentes al efectivo'},
+    {num:14,desc:'Inversiones e instrumentos derivados'},
+    {num:15,desc:'Cuentas por cobrar'},
+    {num:16,desc:'Inventarios'},
+    {num:17,desc:'Propiedades, planta y equipo'},
+    {num:18,desc:'Activos intangibles'},
+    {num:19,desc:'Propiedades de inversion'},
+    {num:20,desc:'Activos biologicos'},
+    {num:21,desc:'Activos no corrientes mantenidos para la venta'},
+    {num:22,desc:'Pasivos financieros y cuentas por pagar'},
+    {num:23,desc:'Impuestos, gravamenes y tasas'},
+    {num:24,desc:'Beneficios a Empleados'},
+    {num:25,desc:'Provisiones'},
+    {num:26,desc:'Otros Pasivos Anticipos y avances recibidos'},
+    {num:27,desc:'Operaciones con titulos y derivados'},
+    {num:28,desc:'Perdidas fiscales y/o excesos de renta presuntiva'},
+    {num:29,desc:'Activos reconocidos solamente para fines fiscales'},
+    {num:30,desc:'Otros activos'},
+  ];
+  // Map H2 cuentas to H4 categories for auto-fill
+  const h4Map={
+    13:['11'],14:['12'],15:['13'],16:['14'],17:['15'],18:['16'],19:['18'],20:['19'],
+    22:['21','22','23'],23:['24'],24:['25'],25:['26'],26:['27','28'],
+  };
+  for(const row of h4ActRows){
+    const prefixes=h4Map[row.num]||[];
+    const ctsH2=cuentas2516.filter(c=>c.hoja==='H2'&&prefixes.some(p=>c.code.startsWith(p)));
+    const baseCtb=ctsH2.reduce((s,c)=>s+c.val,0);
+    const baseFis=ctsH2.reduce((s,c)=>s+c.valFiscal,0);
+    const difTemp=baseFis-baseCtb;
+    ws4.getCell(r4,1).value=row.num;ws4.getCell(r4,1).font={...fN,size:9};ws4.getCell(r4,1).border=bt;
+    ws4.getCell(r4,2).value=row.desc;ws4.getCell(r4,2).font=fN;ws4.getCell(r4,2).border=bt;
+    ws4.getCell(r4,3).value=baseCtb||'';ws4.getCell(r4,3).numFmt='#,##0';ws4.getCell(r4,3).border=bt;
+    ws4.getCell(r4,4).value=baseFis||'';ws4.getCell(r4,4).numFmt='#,##0';ws4.getCell(r4,4).border=bt;
+    // Diferencia temporaria (formula: Fiscal - Contable)
+    const cC=_cL(3),cD=_cL(4);
+    ws4.getCell(r4,5).value=difTemp!==0?{formula:cD+r4+'-'+cC+r4,result:difTemp}:'';
+    ws4.getCell(r4,5).numFmt='#,##0';ws4.getCell(r4,5).border=bt;
+    ws4.getCell(r4,6).value='';ws4.getCell(r4,6).border=bt;ws4.getCell(r4,6).numFmt='#,##0'; // Dif permanente: manual
+    ws4.getCell(r4,7).value='';ws4.getCell(r4,7).border=bt;ws4.getCell(r4,7).numFmt='#,##0'; // Saldo DTA actual: manual
+    ws4.getCell(r4,8).value='';ws4.getCell(r4,8).border=bt;ws4.getCell(r4,8).numFmt='#,##0'; // Saldo DTA anterior: manual
+    // Variacion = actual - anterior (formula)
+    const cG=_cL(7),cH=_cL(8);
+    ws4.getCell(r4,9).value={formula:cG+r4+'-'+cH+r4,result:0};ws4.getCell(r4,9).numFmt='#,##0';ws4.getCell(r4,9).border=bt;
+    ws4.getCell(r4,10).value='';ws4.getCell(r4,10).border=bt; // Tasa: manual
+    r4++;
+  }
+  // Total activo DTA
+  const r4ActStart=r4-h4ActRows.length;
+  ws4.getCell(r4,1).value=31;ws4.getCell(r4,2).value='Valor total Activo DTA';ws4.getCell(r4,2).font={...fB,color:{argb:DB}};
+  for(let ci=3;ci<=9;ci++){
+    const col=_cL(ci);
+    ws4.getCell(r4,ci).value={formula:'SUM('+col+r4ActStart+':'+col+(r4-1)+')',result:0};
+    ws4.getCell(r4,ci).numFmt='#,##0';ws4.getCell(r4,ci).font=fB;
+  }
+  for(let ci=1;ci<=10;ci++){ws4.getCell(r4,ci).border=bt;ws4.getCell(r4,ci).fill=fGy}
+  r4+=2;
+  // H4 Section 2: Pasivo (Diferencias temporarias imponibles)
+  ws4.getCell(r4,2).value='Pasivo (Diferencias temporarias imponibles)';
+  ws4.getCell(r4,2).font={...fB,size:10,color:{argb:DB}};for(let ci=1;ci<=10;ci++)ws4.getCell(r4,ci).border=bt;r4++;
+  const h4PasRows=[
+    {num:33,desc:'Efectivo y equivalentes al efectivo'},
+    {num:34,desc:'Inversiones e instrumentos derivados'},
+    {num:35,desc:'Cuentas por cobrar'},
+    {num:36,desc:'Inventarios'},
+    {num:37,desc:'Propiedades, planta y equipo'},
+    {num:38,desc:'Activos intangibles'},
+    {num:39,desc:'Propiedades de inversion'},
+    {num:40,desc:'Activos biologicos'},
+    {num:41,desc:'Activos no corrientes mantenidos para la venta'},
+    {num:42,desc:'Pasivos financieros y cuentas por pagar'},
+    {num:43,desc:'Impuestos, gravamenes y tasas'},
+    {num:44,desc:'Beneficios a Empleados'},
+    {num:45,desc:'Provisiones'},
+    {num:46,desc:'Otros Pasivos Anticipos y avances recibidos'},
+    {num:47,desc:'Operaciones con titulos y derivados'},
+    {num:48,desc:'Pasivos reconocidos solamente para fines fiscales'},
+    {num:49,desc:'Otros pasivos'},
+    {num:50,desc:'Otros'},
+  ];
+  for(const row of h4PasRows){
+    ws4.getCell(r4,1).value=row.num;ws4.getCell(r4,1).font={...fN,size:9};ws4.getCell(r4,1).border=bt;
+    ws4.getCell(r4,2).value=row.desc;ws4.getCell(r4,2).font=fN;ws4.getCell(r4,2).border=bt;
+    for(let ci=3;ci<=10;ci++){ws4.getCell(r4,ci).value='';ws4.getCell(r4,ci).border=bt;ws4.getCell(r4,ci).numFmt='#,##0'}
+    const cC4=_cL(3),cD4=_cL(4),cG4=_cL(7),cH4=_cL(8);
+    ws4.getCell(r4,5).value={formula:cD4+r4+'-'+cC4+r4,result:0};ws4.getCell(r4,5).numFmt='#,##0';
+    ws4.getCell(r4,9).value={formula:cG4+r4+'-'+cH4+r4,result:0};ws4.getCell(r4,9).numFmt='#,##0';
+    r4++;
+  }
+  // Total pasivo DTL
+  const r4PasStart=r4-h4PasRows.length;
+  ws4.getCell(r4,1).value=51;ws4.getCell(r4,2).value='Valor total Pasivo DTL';ws4.getCell(r4,2).font={...fB,color:{argb:DB}};
+  for(let ci=3;ci<=9;ci++){
+    const col=_cL(ci);
+    ws4.getCell(r4,ci).value={formula:'SUM('+col+r4PasStart+':'+col+(r4-1)+')',result:0};
+    ws4.getCell(r4,ci).numFmt='#,##0';ws4.getCell(r4,ci).font=fB;
+  }
+  for(let ci=1;ci<=10;ci++){ws4.getCell(r4,ci).border=bt;ws4.getCell(r4,ci).fill=fGy}
+  r4+=2;
+  ws4.getCell(r4,2).value='Nota: Las bases contable y fiscal de activos se precargan del balance. Las columnas de Saldo Impuesto Diferido actual/anterior y Tasa fiscal deben ser diligenciadas por el contador.';
+  ws4.getCell(r4,2).font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
 
-  // ── H5: INGRESOS Y FACTURACION (placeholder) ──
+  // ── H5: INGRESOS Y FACTURACION ──
   const ws5=wb.addWorksheet('H5 (Ingresos y Facturacion)');
-  ws5.getCell('A1').value='Conciliacion ingreso contable (devengado) y facturacion';ws5.getCell('A1').font={...fB,size:14,color:{argb:DB}};
-  ws5.getCell('A3').value='Esta hoja debe ser diligenciada manualmente.';ws5.getCell('A3').font={...fN,italic:true,color:{argb:'FF6B7280'}};
+  ws5.properties.showGridLines=false;
+  ws5.getColumn(1).width=6;ws5.getColumn(2).width=28;
+  for(let ci=3;ci<=14;ci++)ws5.getColumn(ci).width=16;
+  ws5.getCell('B1').value='Conciliacion ingreso contable (devengado) y facturacion';ws5.getCell('B1').font={...fB,size:14,color:{argb:DB}};
+  ws5.getCell('B2').value=razon+' — AG '+year;ws5.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+  // Headers (2 rows)
+  const h5r1=['NUM','Concepto','Pasivo por ingreso diferido','','','','Facturacion emitida en el periodo','','','','','Ingreso contable devengado en el periodo'];
+  const h5r2=['','','Saldo inicio','Registrado como ingreso','Generado periodo','Saldo final','Devengada periodos ant.','Devengada periodo','Registrada como pasivo','Solo facturado','Valor total','Sin facturar'];
+  let r5=4;
+  h5r1.forEach((h,i)=>{ws5.getCell(r5,i+1).value=h;ws5.getCell(r5,i+1).font={...fB,size:8,color:{argb:WH}};ws5.getCell(r5,i+1).fill=fH;ws5.getCell(r5,i+1).border=bt;ws5.getCell(r5,i+1).alignment={horizontal:'center',wrapText:true}});
+  r5++;
+  h5r2.forEach((h,i)=>{ws5.getCell(r5,i+1).value=h;ws5.getCell(r5,i+1).font={...fB,size:7,color:{argb:WH}};ws5.getCell(r5,i+1).fill=fH;ws5.getCell(r5,i+1).border=bt;ws5.getCell(r5,i+1).alignment={horizontal:'center',wrapText:true}});
+  ws5.getRow(r5).height=36;r5++;
+  const h5Rows=[{num:12,desc:'Venta de bienes'},{num:13,desc:'Prestacion de servicios'},{num:14,desc:'Otros ingresos'},{num:15,desc:'Ingresos para terceros'},{num:16,desc:'Ajustes al valor facturado'}];
+  for(const row of h5Rows){
+    ws5.getCell(r5,1).value=row.num;ws5.getCell(r5,1).font={...fN,size:9};ws5.getCell(r5,1).border=bt;
+    ws5.getCell(r5,2).value=row.desc;ws5.getCell(r5,2).font=fN;ws5.getCell(r5,2).border=bt;
+    for(let ci=3;ci<=12;ci++){ws5.getCell(r5,ci).value='';ws5.getCell(r5,ci).border=bt;ws5.getCell(r5,ci).numFmt='#,##0'}
+    // Saldo final = col3 - col4 + col5
+    const c3=_cL(3),c4=_cL(4),c5=_cL(5);
+    ws5.getCell(r5,6).value={formula:c3+r5+'-'+c4+r5+'+'+c5+r5,result:0};ws5.getCell(r5,6).numFmt='#,##0';
+    // Valor total facturacion = col7+col8+col9+col10
+    const c7=_cL(7),c8=_cL(8),c9=_cL(9),c10=_cL(10);
+    ws5.getCell(r5,11).value={formula:c7+r5+'+'+c8+r5+'+'+c9+r5+'+'+c10+r5,result:0};ws5.getCell(r5,11).numFmt='#,##0';
+    r5++;
+  }
+  // Total
+  ws5.getCell(r5,1).value=17;ws5.getCell(r5,2).value='TOTAL';ws5.getCell(r5,2).font={...fB,color:{argb:DB}};
+  const r5Start=r5-h5Rows.length;
+  for(let ci=3;ci<=12;ci++){
+    const col=_cL(ci);
+    ws5.getCell(r5,ci).value={formula:'SUM('+col+r5Start+':'+col+(r5-1)+')',result:0};
+    ws5.getCell(r5,ci).numFmt='#,##0';ws5.getCell(r5,ci).font=fB;
+  }
+  for(let ci=1;ci<=12;ci++){ws5.getCell(r5,ci).border=bt;ws5.getCell(r5,ci).fill=fGy}
+  r5+=2;
+  ws5.getCell(r5,2).value='Esta hoja debe ser diligenciada manualmente comparando ingresos devengados vs facturacion emitida.';
+  ws5.getCell(r5,2).font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
 
-  // ── H6: ACTIVOS FIJOS (placeholder with PPE data) ──
+  // ── H6: ACTIVOS FIJOS ──
   const ws6=wb.addWorksheet('H6 (Activos fijos)');
-  ws6.getCell('A1').value='Conciliacion Propiedades, planta y equipo (PPE)';ws6.getCell('A1').font={...fB,size:14,color:{argb:DB}};
-  ws6.getCell('A3').value='Esta hoja requiere el detalle de movimientos de PPE (adquisiciones, bajas, depreciacion). Diligenciar manualmente.';ws6.getCell('A3').font={...fN,italic:true,color:{argb:'FF6B7280'}};
+  ws6.properties.showGridLines=false;
+  ws6.getColumn(1).width=6;ws6.getColumn(2).width=30;ws6.getColumn(3).width=16;ws6.getColumn(4).width=16;
+  for(let ci=5;ci<=14;ci++)ws6.getColumn(ci).width=15;
+  ws6.getCell('B1').value='Conciliacion Propiedades, planta y equipo (PPE), propiedades de inversion y activos intangibles';
+  ws6.getCell('B1').font={...fB,size:13,color:{argb:DB}};
+  ws6.getCell('B2').value=razon+' — AG '+year+' — Valores contables y fiscales';
+  ws6.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+  // Simplified H6 headers (contable side)
+  const h6Hdr=['NUM','CONCEPTO','Importe inicio\n(Costo)','Adquisiciones','Bajas','Depreciacion\nacumulada','Deterioro\nacumulado',
+    'Saldo final\ncontable','Costo fiscal\ninicio','Depreciacion\nfiscal acum','Saldo final\nfiscal','Diferencia'];
+  let r6=4;
+  h6Hdr.forEach((h,i)=>{
+    ws6.getCell(r6,i+1).value=h;ws6.getCell(r6,i+1).font={...fB,size:8,color:{argb:WH}};
+    ws6.getCell(r6,i+1).fill=fH;ws6.getCell(r6,i+1).border=bt;ws6.getCell(r6,i+1).alignment={horizontal:'center',vertical:'middle',wrapText:true};
+  });
+  ws6.getRow(r6).height=40;r6++;
+  // PPE rows
+  ws6.getCell(r6,2).value='Propiedades, planta y equipo';ws6.getCell(r6,2).font={...fB,color:{argb:DB}};
+  for(let ci=1;ci<=12;ci++){ws6.getCell(r6,ci).fill=fGy;ws6.getCell(r6,ci).border=bt}r6++;
+  const h6PPE=[
+    {num:13,desc:'Terrenos',puc:'1504'},{num:14,desc:'Edificios',puc:'1516'},
+    {num:15,desc:'Maquinaria',puc:'1520'},{num:18,desc:'Equipos de Transporte',puc:'1540'},
+    {num:19,desc:'Enseres y accesorios',puc:'1524'},{num:20,desc:'Equipos informaticos',puc:'1528'},
+    {num:29,desc:'Construcciones en proceso',puc:'1506'},{num:30,desc:'Otras PPE',puc:'1548'},
+  ];
+  for(const row of h6PPE){
+    const cts=cuentas2516.filter(c=>c.hoja==='H2'&&c.code.startsWith(row.puc));
+    const ctb=cts.reduce((s,c)=>s+c.val,0);
+    const fis=cts.reduce((s,c)=>s+c.valFiscal,0);
+    ws6.getCell(r6,1).value=row.num;ws6.getCell(r6,1).font={...fN,size:9};ws6.getCell(r6,1).border=bt;
+    ws6.getCell(r6,2).value=row.desc;ws6.getCell(r6,2).font=fN;ws6.getCell(r6,2).border=bt;
+    for(let ci=3;ci<=12;ci++){ws6.getCell(r6,ci).value='';ws6.getCell(r6,ci).border=bt;ws6.getCell(r6,ci).numFmt='#,##0'}
+    ws6.getCell(r6,8).value=ctb||'';ws6.getCell(r6,8).numFmt='#,##0';ws6.getCell(r6,8).font=fB;
+    ws6.getCell(r6,11).value=fis||'';ws6.getCell(r6,11).numFmt='#,##0';ws6.getCell(r6,11).font=fB;
+    const c8=_cL(8),c11=_cL(11);
+    ws6.getCell(r6,12).value={formula:c11+r6+'-'+c8+r6,result:fis-ctb};ws6.getCell(r6,12).numFmt='#,##0';ws6.getCell(r6,12).border=bt;
+    r6++;
+  }
+  // Depreciation row
+  const depCtb=cuentas2516.filter(c=>c.hoja==='H2'&&c.code.startsWith('1592')).reduce((s,c)=>s+c.val,0);
+  const depFis=cuentas2516.filter(c=>c.hoja==='H2'&&c.code.startsWith('1592')).reduce((s,c)=>s+c.valFiscal,0);
+  ws6.getCell(r6,2).value='Depreciacion acumulada total';ws6.getCell(r6,2).font={...fB,color:{argb:'FFC62828'}};
+  ws6.getCell(r6,8).value=depCtb;ws6.getCell(r6,8).numFmt='#,##0';ws6.getCell(r6,8).font=fB;
+  ws6.getCell(r6,11).value=depFis;ws6.getCell(r6,11).numFmt='#,##0';ws6.getCell(r6,11).font=fB;
+  for(let ci=1;ci<=12;ci++){ws6.getCell(r6,ci).border=bt;ws6.getCell(r6,ci).fill=fGy}
+  r6+=2;
+  // Total PPE
+  const ppeCtb=cuentas2516.filter(c=>c.hoja==='H2'&&c.code.startsWith('15')).reduce((s,c)=>s+c.val,0);
+  const ppeFis=cuentas2516.filter(c=>c.hoja==='H2'&&c.code.startsWith('15')).reduce((s,c)=>s+c.valFiscal,0);
+  ws6.getCell(r6,2).value='TOTAL PPE NETO';ws6.getCell(r6,2).font={...fB,size:11,color:{argb:DB}};
+  ws6.getCell(r6,8).value=ppeCtb;ws6.getCell(r6,8).numFmt='#,##0';ws6.getCell(r6,8).font={...fB,size:11};
+  ws6.getCell(r6,11).value=ppeFis;ws6.getCell(r6,11).numFmt='#,##0';ws6.getCell(r6,11).font={...fB,size:11};
+  ws6.getCell(r6,12).value=ppeFis-ppeCtb;ws6.getCell(r6,12).numFmt='#,##0';ws6.getCell(r6,12).font={...fB,size:11};
+  for(let ci=1;ci<=12;ci++){ws6.getCell(r6,ci).border=bt;ws6.getCell(r6,ci).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8F5E9'}}}
+  r6+=2;
+  ws6.getCell(r6,2).value='Las columnas de Adquisiciones, Bajas, Costo fiscal inicio y Depreciacion fiscal deben ser completadas por el contador. Los saldos contable y fiscal finales se precargaron del balance.';
+  ws6.getCell(r6,2).font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
 
   // ── H7: RESUMEN ESF-ERI ──
   const ws7=wb.addWorksheet('H7 (Resumen ESF-ERI)');
