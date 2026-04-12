@@ -1585,7 +1585,92 @@ async function exportExcel(){
   wsAnt.getCell('B'+ra).value='ExogenaDIAN \u00b7 exogenadian.com';
   wsAnt.getCell('B'+ra).font={...fN,size:8,italic:true,color:{argb:'FFD1D5DB'}};
 
-  // HOJA 3: GASTOS NO DEDUCIBLES// Gastos No Deducibles (hoja nueva)
+  // HOJA 3: BALANCE CLASIFICADO (balance original + renglón asignado, formulado al 110)
+  const wsB=wb.addWorksheet('Balance Clasificado');
+  wsB.properties.showGridLines=false;
+  const fBb={name:'Arial',size:10,bold:true},fNb={name:'Arial',size:10};
+  const DBb='FF1A3C6E',Wb='FFFFFFFF',GYb='FFF8FAFC';
+  const bb={top:{style:'thin',color:{argb:'FFD1D5DB'}},bottom:{style:'thin',color:{argb:'FFD1D5DB'}},left:{style:'thin',color:{argb:'FFD1D5DB'}},right:{style:'thin',color:{argb:'FFD1D5DB'}}};
+  wsB.getColumn(1).width=14;wsB.getColumn(2).width=42;wsB.getColumn(3).width=18;
+  wsB.getColumn(4).width=18;wsB.getColumn(5).width=18;wsB.getColumn(6).width=12;
+  wsB.getColumn(7).width=35;wsB.getColumn(8).width=14;
+  wsB.mergeCells('A1:H1');wsB.getCell('A1').value='BALANCE DE PRUEBA CLASIFICADO — RENTA AG '+year;
+  wsB.getCell('A1').font={...fBb,size:13,color:{argb:DBb}};wsB.getCell('A1').alignment={horizontal:'center'};
+  wsB.mergeCells('A2:H2');wsB.getCell('A2').value=razon+' — NIT '+nit+' — Los valores deben ser verificados por un contador publico';
+  wsB.getCell('A2').font={...fNb,size:9,italic:true,color:{argb:'FF6B7280'}};wsB.getCell('A2').alignment={horizontal:'center'};
+  const hdrB=['Cuenta','Nombre','Valor Contable','Valor Fiscal','Diferencia','Renglon','Descripcion Renglon','Deducible'];
+  let rb=4;
+  hdrB.forEach((h,i)=>{
+    wsB.getCell(rb,i+1).value=h;wsB.getCell(rb,i+1).font={...fBb,color:{argb:Wb}};
+    wsB.getCell(rb,i+1).fill={type:'pattern',pattern:'solid',fgColor:{argb:DBb}};wsB.getCell(rb,i+1).border=bb;
+    wsB.getCell(rb,i+1).alignment={horizontal:i>=2?'center':'left'};
+  });
+  rb++;
+  // Descripcion por casilla
+  const casDesc={};for(const m of PUC_F110){casDesc[m.cas]=m.desc}
+  // Ordenar por codigo
+  const balOrden=cuentasBalance.slice().sort((a,b)=>a.code.localeCompare(b.code));
+  // Separadores de clase
+  const claseNoms={'1':'ACTIVOS','2':'PASIVOS','3':'PATRIMONIO','4':'INGRESOS','5':'GASTOS','6':'COSTOS'};
+  let lastClase='';
+  // Mapa de filas por casilla para formulas SUMIF
+  const casillaRows={};
+  for(const c of balOrden){
+    const cls=c.code[0];
+    if(cls!==lastClase&&claseNoms[cls]){
+      wsB.mergeCells(rb,1,rb,8);
+      wsB.getCell(rb,1).value=claseNoms[cls];
+      wsB.getCell(rb,1).font={...fBb,size:10,color:{argb:DBb}};
+      wsB.getCell(rb,1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8EDF5'}};
+      wsB.getCell(rb,1).border=bb;rb++;lastClase=cls;
+    }
+    const isAlt=rb%2===0;
+    const fillR=isAlt?{type:'pattern',pattern:'solid',fgColor:{argb:GYb}}:undefined;
+    wsB.getCell(rb,1).value=c.code;wsB.getCell(rb,1).font={...fNb,name:'Consolas',size:9};wsB.getCell(rb,1).border=bb;
+    wsB.getCell(rb,2).value=c.name;wsB.getCell(rb,2).font=fNb;wsB.getCell(rb,2).border=bb;
+    wsB.getCell(rb,3).value=c.val;wsB.getCell(rb,3).numFmt='#,##0';wsB.getCell(rb,3).font=fNb;wsB.getCell(rb,3).border=bb;
+    wsB.getCell(rb,4).value=c.valFiscal;wsB.getCell(rb,4).numFmt='#,##0';wsB.getCell(rb,4).font=fBb;wsB.getCell(rb,4).border=bb;
+    const colC=_cL(3),colD=_cL(4);
+    wsB.getCell(rb,5).value={formula:colC+rb+'-'+colD+rb};wsB.getCell(rb,5).numFmt='#,##0';wsB.getCell(rb,5).font=fNb;wsB.getCell(rb,5).border=bb;
+    wsB.getCell(rb,6).value=c.casilla||0;wsB.getCell(rb,6).font={...fBb,color:{argb:'FF059669'}};wsB.getCell(rb,6).border=bb;wsB.getCell(rb,6).alignment={horizontal:'center'};
+    wsB.getCell(rb,7).value=casDesc[c.casilla]||'Sin asignar';wsB.getCell(rb,7).font={...fNb,size:9,color:{argb:'FF6B7280'}};wsB.getCell(rb,7).border=bb;
+    wsB.getCell(rb,8).value=c.ded==='no_ded'?'NO DED':c.ded==='gmf'?'50% DED':'DED';
+    const dedColor=c.ded==='no_ded'?'FFC62828':c.ded==='gmf'?'FFD97706':'FF059669';
+    wsB.getCell(rb,8).font={...fBb,size:9,color:{argb:dedColor}};wsB.getCell(rb,8).border=bb;wsB.getCell(rb,8).alignment={horizontal:'center'};
+    if(fillR){for(let ci=1;ci<=8;ci++){wsB.getCell(rb,ci).fill=fillR}}
+    // Track rows per casilla for summary formulas
+    if(!casillaRows[c.casilla])casillaRows[c.casilla]=[];
+    casillaRows[c.casilla].push(rb);
+    rb++;
+  }
+  // Summary: totales por renglón con SUMIF
+  rb+=2;
+  wsB.mergeCells(rb,1,rb,8);wsB.getCell(rb,1).value='RESUMEN POR RENGLON DEL F110';
+  wsB.getCell(rb,1).font={...fBb,size:12,color:{argb:DBb}};wsB.getCell(rb,1).alignment={horizontal:'center'};rb++;
+  wsB.getCell(rb,1).value='Si modifica el renglon (col F) o el valor fiscal (col D) de una cuenta, estos totales se recalculan automaticamente.';
+  wsB.getCell(rb,1).font={...fNb,size:9,italic:true,color:{argb:'FF9CA3AF'}};rb+=2;
+  ['Renglon','Descripcion','Total Contable','Total Fiscal'].forEach((h,i)=>{
+    wsB.getCell(rb,i+1).value=h;wsB.getCell(rb,i+1).font={...fBb,color:{argb:Wb}};
+    wsB.getCell(rb,i+1).fill={type:'pattern',pattern:'solid',fgColor:{argb:DBb}};wsB.getCell(rb,i+1).border=bb;
+  });rb++;
+  const colF=_cL(6),colCc=_cL(3),colDd=_cL(4);
+  const dataStart=5,dataEnd=5+balOrden.length+Object.keys(claseNoms).length;
+  const casillasUsadas=[...new Set(cuentasBalance.map(c=>c.casilla))].filter(c=>c>0).sort((a,b)=>a-b);
+  for(const cas of casillasUsadas){
+    wsB.getCell(rb,1).value=cas;wsB.getCell(rb,1).font={...fBb,color:{argb:'FF059669'}};wsB.getCell(rb,1).border=bb;wsB.getCell(rb,1).alignment={horizontal:'center'};
+    wsB.getCell(rb,2).value=casDesc[cas]||'';wsB.getCell(rb,2).font=fNb;wsB.getCell(rb,2).border=bb;
+    wsB.getCell(rb,3).value={formula:'SUMIF('+colF+'$'+dataStart+':'+colF+'$'+dataEnd+','+rb+'*1,'+colCc+'$'+dataStart+':'+colCc+'$'+dataEnd+')',result:cuentasBalance.filter(c=>c.casilla===cas).reduce((s,c)=>s+c.val,0)};
+    wsB.getCell(rb,3).numFmt='#,##0';wsB.getCell(rb,3).font=fNb;wsB.getCell(rb,3).border=bb;
+    wsB.getCell(rb,4).value={formula:'SUMIF('+colF+'$'+dataStart+':'+colF+'$'+dataEnd+','+rb+'*1,'+colDd+'$'+dataStart+':'+colDd+'$'+dataEnd+')',result:cuentasBalance.filter(c=>c.casilla===cas).reduce((s,c)=>s+c.valFiscal,0)};
+    wsB.getCell(rb,4).numFmt='#,##0';wsB.getCell(rb,4).font=fBb;wsB.getCell(rb,4).border=bb;
+    rb++;
+  }
+  rb++;
+  wsB.getCell(rb,1).value='Nota:';wsB.getCell(rb,1).font={...fBb,size:9};
+  wsB.getCell(rb,2).value='Los totales usan SUMIF sobre la columna Renglon. Si cambia un renglon, el total se recalcula al abrir en Excel.';
+  wsB.getCell(rb,2).font={...fNb,size:9,italic:true,color:{argb:'FF9CA3AF'}};
+
+  // HOJA 4: GASTOS NO DEDUCIBLES
   const noDed=cuentasBalance.filter(c=>c.ded==='no_ded'||c.ded==='gmf');
   if(noDed.length>0){
     const wsG=wb.addWorksheet('Gastos No Deducibles');
