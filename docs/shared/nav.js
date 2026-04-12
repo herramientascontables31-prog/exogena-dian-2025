@@ -16,7 +16,7 @@
     if(localStorage.getItem('exo_banner_dismissed_2026')) return;
     var bannerCSS=document.createElement('style');
     bannerCSS.textContent=`
-      .exo-announce{position:fixed;top:0;left:0;right:0;z-index:9999;background:#0A0F1E;color:#E2E8F0;font-family:'Outfit',sans-serif;padding:10px 20px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:.88rem;flex-wrap:wrap;border-bottom:2px solid #22C55E;box-shadow:0 2px 12px rgba(0,0,0,.4)}
+      .exo-announce{position:relative;top:0;left:0;right:0;z-index:50;background:#0A0F1E;color:#E2E8F0;font-family:'Outfit',sans-serif;padding:10px 20px;display:flex;align-items:center;justify-content:center;gap:12px;font-size:.88rem;flex-wrap:wrap;border-bottom:2px solid #22C55E}
       .exo-announce-text{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;text-align:center}
       .exo-announce-cta{display:inline-flex;align-items:center;gap:5px;background:#22C55E;color:#0A0F1E;padding:6px 16px;border-radius:8px;font-weight:700;font-size:.82rem;text-decoration:none;transition:all .2s;white-space:nowrap}
       .exo-announce-cta:hover{background:#16A34A;color:#fff;transform:translateY(-1px)}
@@ -30,17 +30,8 @@
     banner.setAttribute('role','alert');
     banner.innerHTML='<span class="exo-announce-text">\u26A0\uFE0F Vencimientos Informaci\u00F3n Ex\u00F3gena DIAN: <strong>28 de abril</strong> \u2014 Activa tu cuenta antes de la fecha l\u00EDmite</span>'+
       '<a href="precios.html" class="exo-announce-cta" onclick="if(typeof exoTrack!==\'undefined\')exoTrack.ctaClick(\'banner_vencimiento\',\'precios\')">Activar ahora \u2192</a>'+
-      '<button class="exo-announce-x" aria-label="Cerrar anuncio" onclick="this.parentElement.remove();localStorage.setItem(\'exo_banner_dismissed_2026\',\'1\');document.body.style.paddingTop=document.body.getAttribute(\'data-exo-original-pt\')||\'0\'">&times;</button>';
+      '<button class="exo-announce-x" aria-label="Cerrar anuncio" onclick="this.parentElement.remove();localStorage.setItem(\'exo_banner_dismissed_2026\',\'1\')">&times;</button>';
     document.body.insertAdjacentElement('afterbegin',banner);
-    // Push content down to account for banner height
-    requestAnimationFrame(function(){
-      var h=banner.offsetHeight;
-      document.body.setAttribute('data-exo-original-pt',document.body.style.paddingTop||'0');
-      document.body.style.paddingTop=(parseInt(document.body.style.paddingTop||'0')+h)+'px';
-      // Also offset fixed nav
-      var nav=document.getElementById('nav')||document.querySelector('nav#nav')||document.querySelector('.ed-nav');
-      if(nav&&getComputedStyle(nav).position==='fixed'){nav.style.top=h+'px'}
-    });
   })();
 
   /* ─── Security: inject CSP meta tag if not present ─── */
