@@ -181,6 +181,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
         <button onclick="btnLoading(this,exportExcel2516)" class="btn btn-success" style="padding:14px 32px;font-size:1rem">Descargar Excel 2516 + F110</button>
       </div>
       <p style="font-size:.82rem;color:var(--muted)">Excel con 9 hojas: H1-H7 del prevalidador + Formulario 110 + Balance Clasificado.<br>Los valores fiscales del 2516 alimentan automaticamente las casillas del F110.<br><strong>Debe ser verificado por un contador publico.</strong></p>
+      <div id="proActivation" style="margin-top:16px;padding:12px 16px;background:var(--amber2);border:1px solid #FDE68A;border-radius:8px;font-size:.82rem;color:#92400E;display:none">
+        <strong>Formato 2516 — Solo PRO</strong><br>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center;justify-content:center">
+          <input type="email" id="proEmail2516" placeholder="Tu email PRO" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;width:220px">
+          <button onclick="activarPro2516()" class="btn btn-primary" style="padding:6px 16px;font-size:.82rem">Activar</button>
+        </div>
+        <div style="margin-top:6px"><a href="precios.html" style="color:var(--pri2);font-weight:600;font-size:.8rem">No tienes PRO? Suscribete →</a></div>
+        <div id="proError2516" style="margin-top:4px;font-size:.75rem;color:var(--red)"></div>
+      </div>
     </div>
     <div class="actions">
       <button class="btn btn-outline" onclick="goStep(2)">&larr; Volver a Clasificacion</button>
@@ -217,6 +226,25 @@ function goStep(n){
 }
 
 /* ── FILE UPLOAD ── */
+let proUnlocked=false;
+function updateProUI(){
+  const badge=document.getElementById('proBadgeHeader');
+  if(badge)badge.style.display=proUnlocked?'inline':'none';
+  const actBox=document.getElementById('proActivation');
+  if(actBox)actBox.style.display=proUnlocked?'none':'block';
+}
+exoPro.check().then(isPro=>{if(isPro){proUnlocked=true;updateProUI()}});
+async function activarPro2516(){
+  const email=document.getElementById('proEmail2516').value.trim();
+  const errEl=document.getElementById('proError2516');
+  if(!email){errEl.textContent='Ingresa tu email PRO';return}
+  errEl.textContent='Validando...';errEl.style.color='var(--green)';
+  try{
+    const ok=await exoPro.activate(email);
+    if(ok){proUnlocked=true;updateProUI();document.getElementById('proActivation').style.display='none';exoToast('PRO activado','success');errEl.textContent=''}
+    else{errEl.style.color='var(--red)';errEl.textContent='Email no encontrado o suscripcion vencida'}
+  }catch(e){errEl.style.color='var(--red)';errEl.textContent='Error de conexion'}
+}
 let archivoData=null;
 let cuentas2516=[]; // {code,name,val,valFiscal,hoja,concepto2516,descConcepto}
 
@@ -780,6 +808,10 @@ function mostrarHoja(hoja,tabEl){
 
 /* ── EXPORTAR EXCEL 2516 ── */
 async function exportExcel2516(){
+  if(!proUnlocked){
+    exoToast('El Formato 2516 requiere suscripcion PRO. Visita precios.html para activar.','info');
+    return;
+  }
   const wb=new ExcelJS.Workbook();
   wb.calcProperties={fullCalcOnLoad:true};
   const nit=document.getElementById('cfgNit').value||'';
