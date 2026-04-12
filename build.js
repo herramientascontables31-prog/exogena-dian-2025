@@ -62,6 +62,9 @@ const HTML_FILES = [
   'escuela/ica.html',
   'escuela/niif.html',
   'escuela/ia-automatizacion.html',
+  'calculadora-regimen.html',
+  'regimen-simple.html',
+  'escuela/regimen-simple.html',
 ];
 
 // ─── Directorios/archivos estáticos a copiar tal cual ───

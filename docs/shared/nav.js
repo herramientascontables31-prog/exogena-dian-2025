@@ -172,6 +172,8 @@
   '        <a href="iva300.html">📋 IVA 300</a>'+
   '        <a href="retencion350.html">🧮 Retención 350</a>'+
   '        <a href="retencion-dividendos.html">💰 Retención Dividendos</a>'+
+  '        <a href="regimen-simple.html">📋 Régimen Simple RST</a>'+
+  '        <a href="calculadora-regimen.html">⚖️ RST vs Ordinario</a>'+
   '      </div>'+
   '    </div>'+
        /* Financieras */
@@ -256,6 +258,8 @@
   '          <a href="iva300.html"><div class="dd-icon" style="background:#FFFBEB">📋</div> IVA 300</a>'+
   '          <a href="retencion350.html"><div class="dd-icon" style="background:#EFF6FF">🧮</div> Retención 350</a>'+
   '          <a href="retencion-dividendos.html"><div class="dd-icon" style="background:#F5F3FF">💰</div> Retención Dividendos</a>'+
+  '          <a href="regimen-simple.html"><div class="dd-icon" style="background:#D1FAE5">📋</div> Régimen Simple RST</a>'+
+  '          <a href="calculadora-regimen.html"><div class="dd-icon" style="background:#ECFDF5">⚖️</div> RST vs Ordinario</a>'+
   '        </div>'+
            /* ── Col 2: Financieras ── */
   '        <div class="mega-col">'+
