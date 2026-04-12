@@ -111,34 +111,67 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
 
   <!-- ═══ STEP 1: CARGAR BALANCE ═══ -->
   <div id="step1">
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div class="card-title">1. Cargar Balance de Prueba</div>
-        <span style="font-size:.72rem;color:var(--green);font-weight:600;background:var(--green2);padding:3px 10px;border-radius:12px">100% en tu equipo</span>
+    <!-- PRO GATE: se muestra si NO es PRO -->
+    <div id="proGateCard" class="card" style="text-align:center;padding:40px 32px">
+      <div style="font-size:3rem;margin-bottom:12px">&#128274;</div>
+      <div style="font-size:1.3rem;font-weight:700;color:var(--pri);margin-bottom:8px">Formato 2516 — Herramienta PRO</div>
+      <p style="font-size:.9rem;color:var(--muted);margin-bottom:20px;max-width:500px;margin-left:auto;margin-right:auto">
+        La Conciliacion Fiscal (Formato 2516 V9) es una herramienta exclusiva para suscriptores PRO.<br>
+        Genera las 7 hojas del prevalidador DIAN + Formulario 110 integrado desde tu balance de prueba.
+      </p>
+      <div style="display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
+        <input type="email" id="proEmail2516" placeholder="Tu email PRO" style="padding:10px 16px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;width:260px;font-family:inherit">
+        <button onclick="activarPro2516()" class="btn btn-primary" style="padding:10px 20px">Activar PRO</button>
       </div>
-      <div class="alert alert-info"><span>&#128161;</span><div>Sube el mismo balance de prueba que usaste para el Formulario 110. La herramienta clasifica automaticamente cada cuenta en las secciones del 2516 (ESF Patrimonio, ERI Renta Liquida, etc.). <strong>Los valores generados son borradores que deben ser verificados por un contador publico.</strong></div></div>
-      <div id="uploadZone" style="border:2px dashed var(--border);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:.3s;position:relative" onclick="document.getElementById('fileInput2516').click()">
-        <input type="file" accept=".xlsx,.xls,.csv" id="fileInput2516" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer">
-        <div style="font-size:2rem;margin-bottom:8px">&#128196;</div>
-        <div style="font-weight:600;color:var(--pri)">Arrastra tu balance aqui o haz clic para seleccionar</div>
-        <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Excel (.xlsx, .xls) o CSV · Maximo 20 MB</div>
-        <div id="fileName" style="margin-top:8px;font-size:.82rem;color:var(--green);font-weight:600;display:none"></div>
+      <div id="proError2516" style="font-size:.78rem;color:var(--red);margin-bottom:12px"></div>
+      <a href="precios.html" style="color:var(--pri2);font-weight:600;font-size:.9rem">No tienes PRO? Suscribete desde $19.900/mes &rarr;</a>
+      <div style="margin-top:24px;padding:16px;background:var(--pri3);border-radius:12px;text-align:left;font-size:.82rem;color:var(--pri)">
+        <strong>Que incluye el 2516 PRO:</strong>
+        <ul style="margin-top:8px;padding-left:20px;line-height:1.8">
+          <li>H1 Caratula con datos del declarante</li>
+          <li>H2 ESF Patrimonio — clasificacion automatica desde balance PUC</li>
+          <li>H3 ERI Renta Liquida — ingresos, costos, gastos, diferencias</li>
+          <li>H4 Impuesto Diferido — base contable vs fiscal con formulas</li>
+          <li>H5 Ingresos y Facturacion</li>
+          <li>H6 Activos Fijos — movimientos de PPE</li>
+          <li>H7 Resumen ESF-ERI</li>
+          <li>Formulario 110 alimentado por valores fiscales del 2516</li>
+          <li>Balance Clasificado con concepto 2516 por cuenta</li>
+        </ul>
       </div>
-      <div id="errorMsg" class="hidden" style="margin-top:12px;padding:10px;background:#FEE2E2;border:1px solid #FECACA;border-radius:8px;color:#991B1B;font-size:.82rem"></div>
     </div>
 
-    <div class="card">
-      <div class="card-title">Datos del Declarante</div>
-      <div class="config-grid">
-        <div class="config-item"><label>5. NIT</label><input type="text" id="cfgNit" placeholder="Ej: 900875335"></div>
-        <div class="config-item"><label>11. Razon Social</label><input type="text" id="cfgRazon" placeholder="Ej: MI EMPRESA S.A.S."></div>
-        <div class="config-item"><label>1. Ano Gravable</label><select id="cfgYear"><option value="2025" selected>2025</option><option value="2024">2024</option><option value="2026">2026</option></select></div>
-        <div class="config-item"><label>12. Cod. Direccion Seccional</label><input type="text" id="cfgDirSec" placeholder="Ej: 11"></div>
+    <!-- CONTENIDO REAL: se muestra si ES PRO -->
+    <div id="proContentCard" style="display:none">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div class="card-title">1. Cargar Balance de Prueba</div>
+          <span style="font-size:.72rem;color:var(--green);font-weight:600;background:var(--green2);padding:3px 10px;border-radius:12px">PRO activo</span>
+        </div>
+        <div class="alert alert-info"><span>&#128161;</span><div>Sube el mismo balance de prueba que usaste para el Formulario 110. La herramienta clasifica automaticamente cada cuenta en las secciones del 2516. <strong>Los valores generados son borradores que deben ser verificados por un contador publico.</strong></div></div>
+        <div id="uploadZone" style="border:2px dashed var(--border);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:.3s;position:relative" onclick="document.getElementById('fileInput2516').click()">
+          <input type="file" accept=".xlsx,.xls,.csv" id="fileInput2516" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer">
+          <div style="font-size:2rem;margin-bottom:8px">&#128196;</div>
+          <div style="font-weight:600;color:var(--pri)">Arrastra tu balance aqui o haz clic para seleccionar</div>
+          <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Excel (.xlsx, .xls) o CSV · Maximo 20 MB</div>
+          <div id="fileName" style="margin-top:8px;font-size:.82rem;color:var(--green);font-weight:600;display:none"></div>
+        </div>
+        <div id="errorMsg" class="hidden" style="margin-top:12px;padding:10px;background:#FEE2E2;border:1px solid #FECACA;border-radius:8px;color:#991B1B;font-size:.82rem"></div>
       </div>
-    </div>
 
-    <div class="actions">
-      <button class="btn btn-primary" id="btnProcesar" onclick="procesarBalance()" disabled>Clasificar Balance &rarr;</button>
+      <div class="card">
+        <div class="card-title">Datos del Declarante</div>
+        <div class="config-grid">
+          <div class="config-item"><label>5. NIT</label><input type="text" id="cfgNit" placeholder="Ej: 900875335"></div>
+          <div class="config-item"><label>11. Razon Social</label><input type="text" id="cfgRazon" placeholder="Ej: MI EMPRESA S.A.S."></div>
+          <div class="config-item"><label>1. Ano Gravable</label><select id="cfgYear"><option value="2025" selected>2025</option><option value="2024">2024</option><option value="2026">2026</option></select></div>
+          <div class="config-item"><label>12. Cod. Direccion Seccional</label><input type="text" id="cfgDirSec" placeholder="Ej: 11"></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="btnProcesar" onclick="procesarBalance()" disabled>Clasificar Balance &rarr;</button>
+      </div>
     </div>
   </div>
 
@@ -230,8 +263,10 @@ let proUnlocked=false;
 function updateProUI(){
   const badge=document.getElementById('proBadgeHeader');
   if(badge)badge.style.display=proUnlocked?'inline':'none';
-  const actBox=document.getElementById('proActivation');
-  if(actBox)actBox.style.display=proUnlocked?'none':'block';
+  const gate=document.getElementById('proGateCard');
+  const content=document.getElementById('proContentCard');
+  if(gate)gate.style.display=proUnlocked?'none':'block';
+  if(content)content.style.display=proUnlocked?'block':'none';
 }
 exoPro.check().then(isPro=>{if(isPro){proUnlocked=true;updateProUI()}});
 async function activarPro2516(){
