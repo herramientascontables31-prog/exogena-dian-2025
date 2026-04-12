@@ -14,7 +14,7 @@ gtag('config', 'G-S7SM6ST4CC');
 <meta name="theme-color" content="#059669">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Curso IA y Automatizaci&oacute;n para Contadores &mdash; Escuela Contable IA | Ex&oacute;genaDIAN</title>
-<meta name="description" content="8 m&oacute;dulos para llevar tu firma contable al siguiente nivel con inteligencia artificial y automatizaci&oacute;n. No necesitas programar: solo conectar los puntos.">
+<meta name="description" content="Aprende a usar inteligencia artificial y automatizaci&oacute;n en tu pr&aacute;ctica contable. 8 m&oacute;dulos con habilidades reales: auditar con IA, consultar normativa, automatizar con Apps Script y construir dashboards para clientes.">
 <link rel="canonical" href="https://exogenadian.com/escuela/ia-automatizacion.html">
 <meta name="robots" content="index, follow">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -84,7 +84,7 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
 .content-block ul,.content-block ol{margin:8px 0 16px 20px;display:flex;flex-direction:column;gap:6px}
 .content-block li{font-size:.9rem;color:var(--gray-600);line-height:1.6}
 
-/* Norma card */
+/* Norma card (reutilizada para conceptos clave) */
 .norma{background:var(--amber-50);border:1.5px solid #FDE68A;border-radius:14px;padding:20px 24px;margin:20px 0}
 .norma-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .norma-icon{width:32px;height:32px;border-radius:8px;background:#FDE68A;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
@@ -156,16 +156,10 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
 .expandible.open .expandible-content{max-height:2000px}
 .expandible.open .expandible-toggle svg{transform:rotate(180deg)}
 
-/* Flow diagram */
-.flow-diagram{background:var(--white);border:1.5px solid var(--green-200);border-radius:14px;padding:24px;margin:20px 0;text-align:center}
-.flow-step{display:inline-block;background:var(--green-50);border:1px solid var(--green-300);border-radius:10px;padding:10px 18px;font-size:.85rem;font-weight:600;color:var(--green-800);margin:4px}
-.flow-arrow{display:block;color:var(--green-400);font-size:1.4rem;margin:4px auto;line-height:1}
-.flow-diagram h4{font-size:.92rem;font-weight:700;color:var(--gray-700);margin-bottom:16px}
-
-/* Pseudocode block */
-.pseudocode{background:var(--gray-800);color:var(--green-300);border-radius:12px;padding:20px 24px;margin:16px 0;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.8;overflow-x:auto}
+/* Pseudocode blocks */
+.pseudocode{background:var(--gray-800);color:var(--green-300);border-radius:10px;padding:16px 20px;margin:16px 0;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.8;overflow-x:auto}
 .pseudocode .comment{color:var(--gray-400)}
-.pseudocode .step-num{color:var(--amber-500);font-weight:700}
+.pseudocode .keyword{color:var(--amber-500)}
 </style>
 </head>
 <body>
@@ -188,28 +182,28 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
     <div class="progress-bar"><div class="fill" id="progressFill" style="width:12%"></div></div>
     <nav class="sidebar-nav" id="sidebarNav">
       <a href="#modulo-1" class="active" onclick="navigateTo(1)">
-        <span class="nav-num">1</span> Qu&eacute; puede hacer la IA
+        <span class="nav-num">1</span> Qu&eacute; es la IA realmente
       </a>
       <a href="#modulo-2" onclick="navigateTo(2)">
-        <span class="nav-num">2</span> Auditor DIAN con IA
+        <span class="nav-num">2</span> Auditar con IA
       </a>
       <a href="#modulo-3" onclick="navigateTo(3)">
-        <span class="nav-num">3</span> Consultar el ET con IA
+        <span class="nav-num">3</span> Consultar normativa con IA
       </a>
       <a href="#modulo-4" onclick="navigateTo(4)">
-        <span class="nav-num">4</span> Requerimientos DIAN
+        <span class="nav-num">4</span> Redactar documentos con IA
       </a>
       <a href="#modulo-5" onclick="navigateTo(5)">
-        <span class="nav-num">5</span> Software + Google Sheets
+        <span class="nav-num">5</span> Software contable + Sheets
       </a>
       <a href="#modulo-6" onclick="navigateTo(6)">
-        <span class="nav-num">6</span> Apps Script autom&aacute;tico
+        <span class="nav-num">6</span> Apps Script para contadores
       </a>
       <a href="#modulo-7" onclick="navigateTo(7)">
-        <span class="nav-num">7</span> Dashboards autom&aacute;ticos
+        <span class="nav-num">7</span> Dashboards para clientes
       </a>
       <a href="#modulo-8" onclick="navigateTo(8)">
-        <span class="nav-num">8</span> Tu firma al siguiente nivel
+        <span class="nav-num">8</span> Tu roadmap de automatizaci&oacute;n
       </a>
     </nav>
     <div class="sidebar-back">
@@ -227,110 +221,97 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
           <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 1
         </div>
         <div class="mod-num">M&oacute;dulo 1 de 8</div>
-        <h1>Qu&eacute; puede hacer la IA por un contador (y qu&eacute; no)</h1>
-        <p class="mod-desc">La inteligencia artificial no piensa. No razona como t&uacute;. Pero puede procesar, clasificar y revisar informaci&oacute;n a una velocidad que ning&uacute;n humano alcanza. Aqu&iacute; separamos lo real de la fantas&iacute;a.</p>
+        <h1>Qu&eacute; es la IA y c&oacute;mo funciona realmente</h1>
+        <p class="mod-desc">Antes de usar cualquier herramienta de IA necesitas entender qu&eacute; es, qu&eacute; puede hacer, y &mdash;cr&iacute;ticamente&mdash; por qu&eacute; miente. Este m&oacute;dulo te da los fundamentos reales, sin marketing.</p>
       </div>
 
       <div class="content-block">
-        <h2>&iquest;Qu&eacute; es realmente la inteligencia artificial?</h2>
-        <p>La IA no &ldquo;piensa&rdquo; ni &ldquo;entiende&rdquo;. Es <strong>reconocimiento de patrones a escala masiva</strong>. Un modelo de IA ha le&iacute;do millones de textos y aprendi&oacute; a predecir qu&eacute; palabra viene despu&eacute;s de otra. Cuando le preguntas sobre el Art&iacute;culo 240 del Estatuto Tributario, no est&aacute; &ldquo;consultando&rdquo; el ET &mdash; est&aacute; prediciendo qu&eacute; respuesta es m&aacute;s probable basado en todo lo que ley&oacute;.</p>
-        <p>Esto es poderoso y peligroso al mismo tiempo. Poderoso porque puede procesar en segundos lo que a ti te tomar&iacute;a horas. Peligroso porque <strong>puede inventar cosas que suenan perfectas pero son completamente falsas</strong>.</p>
+        <h2>Qu&eacute; es la IA en realidad</h2>
+        <p>La &ldquo;inteligencia artificial&rdquo; que usas hoy (ChatGPT, Gemini, Claude, Copilot) no piensa ni entiende. Son <strong>modelos de lenguaje grande</strong> (LLMs) &mdash; programas entrenados con miles de millones de textos de internet que aprendieron a predecir la siguiente palabra m&aacute;s probable en una oraci&oacute;n.</p>
+        <p>Cuando le preguntas algo a ChatGPT, no &ldquo;busca&rdquo; la respuesta en una base de datos. Genera texto palabra por palabra, eligiendo la opci&oacute;n estad&iacute;sticamente m&aacute;s probable seg&uacute;n todo lo que ley&oacute; durante su entrenamiento. Es reconocimiento de patrones a escala masiva, no razonamiento.</p>
 
-        <h3>IA entrenada en normativa colombiana vs. ChatGPT gen&eacute;rico</h3>
-        <p>No es lo mismo preguntarle a ChatGPT gen&eacute;rico sobre impuestos colombianos que usar una IA entrenada espec&iacute;ficamente con el Estatuto Tributario, conceptos DIAN y doctrina colombiana. La diferencia:</p>
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9881;</div>
+            <h4>Los LLMs que debes conocer</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Modelo</th><th>Empresa</th><th>Acceso gratuito</th><th>Fortaleza</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>ChatGPT</strong></td><td>OpenAI</td><td>S&iacute; (GPT-4o limitado)</td><td>Versatilidad general, plugins</td></tr>
+              <tr><td><strong>Gemini</strong></td><td>Google</td><td>S&iacute; (integrado en Google)</td><td>Integraci&oacute;n con Sheets, Docs, Gmail</td></tr>
+              <tr><td><strong>Claude</strong></td><td>Anthropic</td><td>S&iacute; (limitado)</td><td>An&aacute;lisis de documentos largos</td></tr>
+              <tr><td><strong>Copilot</strong></td><td>Microsoft</td><td>S&iacute; (con Bing)</td><td>Integraci&oacute;n con Office 365</td></tr>
+            </tbody>
+          </table>
+          <div class="norma-aplicacion">
+            <strong>Consejo pr&aacute;ctico:</strong> No te cases con uno solo. Cada modelo tiene fortalezas diferentes. Prueba la misma pregunta tributaria en dos o tres y compara las respuestas.
+          </div>
+        </div>
 
+        <h2>Por qu&eacute; la IA &ldquo;miente&rdquo; (alucinaciones)</h2>
+        <p>El fen&oacute;meno m&aacute;s peligroso de la IA para un contador se llama <strong>alucinaci&oacute;n</strong>. Como el modelo predice la siguiente palabra m&aacute;s probable (no la m&aacute;s verdadera), puede generar respuestas que suenan perfectas, citan art&iacute;culos espec&iacute;ficos, mencionan conceptos DIAN con n&uacute;mero y fecha... y nada de eso existe.</p>
+        <p>La IA no distingue entre verdad y ficci&oacute;n. Si estad&iacute;sticamente es probable que exista un &ldquo;Art&iacute;culo 387-2 del ET&rdquo;, lo inventar&aacute; con total confianza. No sabe que lo invent&oacute;.</p>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Caso real de alucinaci&oacute;n</h4>
+          </div>
+          <p>Un contador pregunt&oacute; a ChatGPT sobre retenci&oacute;n en la fuente por servicios. La IA respondi&oacute; citando el <strong>&ldquo;Art&iacute;culo 392-1 del ET, modificado por la Ley 2277 de 2022, par&aacute;grafo 3&rdquo;</strong>. Suena espec&iacute;fico y cre&iacute;ble. Pero ese art&iacute;culo no existe. El art&iacute;culo 392 del ET trata de agentes de retenci&oacute;n, pero no tiene un 392-1 ni ese par&aacute;grafo. El contador lo incluy&oacute; en una respuesta a un requerimiento de la DIAN. Tuvo que corregir.</p>
+        </div>
+
+        <h2>El contexto colombiano: por qu&eacute; los errores son peores aqu&iacute;</h2>
+        <p>Los LLMs se entrenan mayoritariamente con textos en ingl&eacute;s. La legislaci&oacute;n tributaria colombiana &mdash;el Estatuto Tributario, los decretos reglamentarios, las resoluciones DIAN, los conceptos&mdash; representa una fracci&oacute;n m&iacute;nima de esos datos de entrenamiento. Esto significa que:</p>
+        <ul>
+          <li>La IA conoce mejor el IRC (c&oacute;digo tributario de EE.UU.) que el ET colombiano</li>
+          <li>Confunde normas entre pa&iacute;ses (puede mezclar conceptos de M&eacute;xico, Espa&ntilde;a o Argentina)</li>
+          <li>No tiene las reformas recientes (su entrenamiento tiene una fecha de corte)</li>
+          <li>Los UVT, calendarios DIAN y topes cambian cada a&ntilde;o &mdash; la IA no se actualiza autom&aacute;ticamente</li>
+        </ul>
+
+        <h2>Qu&eacute; hace bien y qu&eacute; hace mal</h2>
         <table class="tabla-norm">
           <thead>
-            <tr><th>Aspecto</th><th>ChatGPT gen&eacute;rico</th><th>IA entrenada en ET colombiano</th></tr>
+            <tr><th>Tarea</th><th>La IA puede ayudar</th><th>La IA va a fallar</th></tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Fuente de datos</td>
-              <td>Internet general, mezcla de pa&iacute;ses</td>
-              <td>Estatuto Tributario, conceptos DIAN, doctrina</td>
-            </tr>
-            <tr>
-              <td>Art&iacute;culos citados</td>
-              <td>Puede inventar n&uacute;meros de art&iacute;culos</td>
-              <td>Cita art&iacute;culos que realmente existen en el ET</td>
-            </tr>
-            <tr>
-              <td>Valores UVT</td>
-              <td>Frecuentemente desactualizados o incorrectos</td>
-              <td>Actualizado al a&ntilde;o gravable vigente</td>
-            </tr>
-            <tr>
-              <td>Contexto colombiano</td>
-              <td>Mezcla normas de otros pa&iacute;ses</td>
-              <td>Espec&iacute;fico para Colombia</td>
-            </tr>
+            <tr><td>Resumir un decreto largo</td><td>Excelente &mdash; identifica puntos clave</td><td>Puede omitir excepciones cr&iacute;ticas</td></tr>
+            <tr><td>Clasificar gastos por categor&iacute;a</td><td>Buena &mdash; agrupa r&aacute;pido por patrones</td><td>Puede clasificar mal gastos ambiguos</td></tr>
+            <tr><td>Citar un art&iacute;culo espec&iacute;fico del ET</td><td>A veces acierta</td><td>Inventa art&iacute;culos con frecuencia</td></tr>
+            <tr><td>Calcular retenci&oacute;n en la fuente</td><td>Conoce las f&oacute;rmulas generales</td><td>Usa UVT desactualizados o tarifas err&oacute;neas</td></tr>
+            <tr><td>Redactar un borrador de respuesta</td><td>Excelente estructura y tono</td><td>Los argumentos legales pueden ser inventados</td></tr>
+            <tr><td>Comparar datos de dos tablas</td><td>Muy buena si le das datos claros</td><td>Se confunde con archivos grandes o ambiguos</td></tr>
+            <tr><td>Dar fechas de vencimiento DIAN</td><td>Puede tener las del a&ntilde;o anterior</td><td>Las del a&ntilde;o actual casi siempre est&aacute;n mal</td></tr>
+            <tr><td>Traducir un concepto contable</td><td>Excelente NIIF &harr; Espa&ntilde;ol</td><td>Puede mezclar NIIF plenas con NIIF pymes</td></tr>
           </tbody>
         </table>
-
-        <h3>Qu&eacute; S&Iacute; puedes delegarle a la IA</h3>
-        <ul>
-          <li><strong>Clasificaci&oacute;n:</strong> organizar cuentas, identificar conceptos de retenci&oacute;n, categorizar gastos</li>
-          <li><strong>Borradores:</strong> generar un primer borrador de respuesta a requerimientos, informes, notas</li>
-          <li><strong>Revisi&oacute;n:</strong> cruzar tu balance contra reglas tributarias, detectar inconsistencias</li>
-          <li><strong>C&aacute;lculos:</strong> verificar operaciones aritm&eacute;ticas, aplicar tarifas, calcular proporcionalidades</li>
-          <li><strong>Investigaci&oacute;n:</strong> buscar art&iacute;culos del ET, identificar conceptos DIAN aplicables, comparar tratamientos</li>
-        </ul>
-
-        <h3>Qu&eacute; NUNCA debes delegarle a la IA</h3>
-        <ul>
-          <li><strong>Juicio final:</strong> la decisi&oacute;n de c&oacute;mo tratar una operaci&oacute;n ambigua es tuya, no de la IA</li>
-          <li><strong>Firma:</strong> t&uacute; firmas, t&uacute; respondes. La IA no tiene tarjeta profesional</li>
-          <li><strong>Comunicaci&oacute;n con el cliente:</strong> la IA no conoce el contexto, la relaci&oacute;n ni las sensibilidades del cliente</li>
-          <li><strong>Interpretaci&oacute;n de normas ambiguas:</strong> cuando dos lecturas del ET son v&aacute;lidas, la elecci&oacute;n es criterio profesional</li>
-        </ul>
 
         <div class="norma">
           <div class="norma-header">
             <div class="norma-icon">&#9878;</div>
-            <h4>Riesgos reales de la IA en contabilidad</h4>
+            <h4>La regla de oro</h4>
             <span class="norma-tag">Cr&iacute;tico</span>
           </div>
           <blockquote>
-            La IA puede generar: <strong>art&iacute;culos que no existen</strong> (ej. &ldquo;Art. 437-5 ET&rdquo; &mdash; ese art&iacute;culo no existe), <strong>plazos inventados</strong>, <strong>valores de UVT incorrectos</strong>, <strong>conceptos DIAN que nunca se emitieron</strong>, y <strong>tratamientos tributarios de otros pa&iacute;ses</strong> presentados como si fueran colombianos.
+            <strong>La IA BORRADOREA, t&uacute; VERIFICAS.</strong> Nunca conf&iacute;es. Siempre chequea. Cada art&iacute;culo que cite, b&uacute;scalo. Cada n&uacute;mero que calcule, rep&iacute;telo. Cada fecha que te d&eacute;, conf&iacute;rmala en la fuente oficial. Tu firma profesional est&aacute; en juego, no la de la IA.
           </blockquote>
-          <div class="norma-aplicacion">
-            <strong>Regla de oro:</strong> La IA es tu asistente, no tu reemplazo. T&uacute; eres el supervisor. Cada dato que la IA te d&eacute; &mdash; art&iacute;culo, fecha, UVT, concepto &mdash; debe ser verificado contra la fuente oficial antes de usarlo.
-          </div>
-        </div>
-
-        <div class="ejemplo">
-          <div class="ejemplo-header">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-            <h4>Ejemplo &mdash; C&oacute;mo atrapar un error de la IA</h4>
-          </div>
-          <div class="ejemplo-body">
-            <div class="ejemplo-row"><span class="label">La IA dice:</span><span class="value">&ldquo;Seg&uacute;n Art. 437-5 ET...&rdquo;</span></div>
-            <div class="ejemplo-row"><span class="label">T&uacute; verificas:</span><span class="value">Abres el ET &rarr; Art. 437-5 no existe</span></div>
-            <div class="ejemplo-row"><span class="label">La IA quer&iacute;a decir:</span><span class="value">Probablemente Art. 437-1 o 437-2</span></div>
-            <div class="ejemplo-row total"><span class="label">Acci&oacute;n correcta:</span><span class="value">Siempre verificar el n&uacute;mero de art&iacute;culo</span></div>
-          </div>
         </div>
 
         <div class="tip">
           <div class="tip-header">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            <h4>Tip pr&aacute;ctico</h4>
+            <h4>Mentalidad correcta</h4>
           </div>
-          <p><strong>Siempre verifica 3 cosas</strong> cuando la IA te cite normativa: (1) que el n&uacute;mero del art&iacute;culo exista, (2) que el contenido citado corresponda al art&iacute;culo real, y (3) que el valor en UVT o pesos sea del a&ntilde;o gravable correcto. Estas son las 3 &aacute;reas donde la IA falla m&aacute;s.</p>
-        </div>
-
-        <div class="error-comun">
-          <div class="error-comun-header">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
-            <h4>Caso real: respuesta con conceptos falsos</h4>
-          </div>
-          <p>Un contador us&oacute; ChatGPT para responder un requerimiento ordinario de la DIAN. La respuesta citaba 3 &ldquo;Conceptos DIAN&rdquo; con n&uacute;mero y fecha que <strong>nunca existieron</strong>. La DIAN rechaz&oacute; la respuesta y el contribuyente perdi&oacute; la oportunidad procesal de contestar oportunamente. <strong>La IA no firma. T&uacute; s&iacute;.</strong></p>
+          <p>Piensa en la IA como un <strong>practicante muy r&aacute;pido pero descuidado</strong>. Te entrega borradores en segundos, pero t&uacute; SIEMPRE revisas antes de firmar. Nunca env&iacute;es un documento generado por IA sin leer cada palabra. Nunca cites un art&iacute;culo sin verificarlo en el ET.</p>
         </div>
       </div>
 
       <div class="mod-nav">
         <span></span>
-        <a href="#modulo-2" class="next" onclick="navigateTo(2)">M&oacute;dulo 2: Auditor DIAN con IA &rarr;</a>
+        <a href="#modulo-2" class="next" onclick="navigateTo(2)">M&oacute;dulo 2: Auditar con IA &rarr;</a>
       </div>
     </section>
 
@@ -341,96 +322,95 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
           <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 2
         </div>
         <div class="mod-num">M&oacute;dulo 2 de 8</div>
-        <h1>Revisar tu informaci&oacute;n con IA: el Auditor DIAN</h1>
-        <p class="mod-desc">Antes de presentar cualquier declaraci&oacute;n, deja que la IA revise tu balance con los mismos ojos que usar&iacute;a un fiscalizador de la DIAN. Prevenir es mucho m&aacute;s barato que corregir.</p>
+        <h1>C&oacute;mo usar IA para auditar tu informaci&oacute;n contable</h1>
+        <p class="mod-desc">Puedes pedirle a la IA que revise tu informaci&oacute;n como lo har&iacute;a un auditor de la DIAN. Aqu&iacute; aprendes el proceso paso a paso &mdash;la habilidad&mdash; para que lo hagas con cualquier herramienta.</p>
       </div>
 
       <div class="content-block">
-        <h2>&iquest;Qu&eacute; hace el Auditor DIAN?</h2>
-        <p>El Auditor DIAN de Ex&oacute;genaDIAN analiza tu balance de prueba aplicando las mismas reglas y cruces que la DIAN usa en sus programas de fiscalizaci&oacute;n. No reemplaza una auditor&iacute;a formal, pero detecta las inconsistencias m&aacute;s comunes <strong>antes</strong> de que la DIAN te env&iacute;e un requerimiento.</p>
+        <h2>El concepto: IA como auditor interno</h2>
+        <p>La DIAN cruza tu informaci&oacute;n autom&aacute;ticamente: compara tu IVA con tu facturaci&oacute;n electr&oacute;nica, tus retenciones con tus pagos, tus ingresos en renta con los de IVA. T&uacute; puedes hacer esos mismos cruces ANTES de que la DIAN los haga, usando IA para detectar inconsistencias.</p>
+        <p>La habilidad clave no es conocer una herramienta espec&iacute;fica, sino saber <strong>qu&eacute; preguntar</strong> y <strong>c&oacute;mo estructurar tus datos</strong> para que cualquier IA pueda analizarlos.</p>
 
-        <h3>Cruces que la IA realiza autom&aacute;ticamente</h3>
+        <h2>El proceso paso a paso</h2>
+
+        <h3>Paso 1: Exporta tus datos a un formato estructurado</h3>
+        <p>Necesitas sacar la informaci&oacute;n de tu software contable a un formato que la IA pueda leer: Excel (.xlsx) o CSV. Lo m&aacute;s &uacute;til es el <strong>balance de prueba por tercero</strong> porque tiene el detalle que necesitas para cruces.</p>
+        <ul>
+          <li>Balance de prueba general &mdash; para cruces entre cuentas</li>
+          <li>Balance por tercero &mdash; para cruces con retenciones y ex&oacute;gena</li>
+          <li>Auxiliar de una cuenta espec&iacute;fica &mdash; para detalle de movimientos</li>
+        </ul>
+
+        <h3>Paso 2: Describe tus datos a la IA</h3>
+        <p>La IA no sabe qu&eacute; significan tus columnas. Debes decirle expl&iacute;citamente qu&eacute; tiene el archivo: qu&eacute; columnas, qu&eacute; periodo, qu&eacute; tipo de entidad, qu&eacute; r&eacute;gimen tributario.</p>
+
+        <h3>Paso 3: Haz preguntas espec&iacute;ficas de cruce</h3>
+        <p>Las preguntas generales dan respuestas generales. Las preguntas espec&iacute;ficas dan hallazgos &uacute;tiles.</p>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Prompts efectivos para auditor&iacute;a contable</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label" style="color:var(--rose-500)">Mal:</span><span class="value" style="font-family:'Outfit';font-weight:500;font-size:.82rem">&ldquo;Revisa mi balance&rdquo;</span></div>
+            <div class="ejemplo-row"><span class="label" style="color:var(--green-700)">Bien:</span><span class="value" style="font-family:'Outfit';font-weight:500;font-size:.82rem">&ldquo;Tengo un balance de prueba con columnas: C&oacute;digo cuenta, Nombre, D&eacute;bito, Cr&eacute;dito, Saldo. Compara el IVA generado (ctas 2408) vs ingresos gravados (ctas 4135-4175) al 19%.&rdquo;</span></div>
+            <div class="ejemplo-row"><span class="label" style="color:var(--rose-500)">Mal:</span><span class="value" style="font-family:'Outfit';font-weight:500;font-size:.82rem">&ldquo;Hay errores?&rdquo;</span></div>
+            <div class="ejemplo-row"><span class="label" style="color:var(--green-700)">Bien:</span><span class="value" style="font-family:'Outfit';font-weight:500;font-size:.82rem">&ldquo;Lista todos los terceros con pagos &gt;100 UVT ($4.979.900) en cuentas del grupo 5 que no aparezcan en retenciones 2365.&rdquo;</span></div>
+            <div class="ejemplo-row"><span class="label" style="color:var(--rose-500)">Mal:</span><span class="value" style="font-family:'Outfit';font-weight:500;font-size:.82rem">&ldquo;Revisa las retenciones&rdquo;</span></div>
+            <div class="ejemplo-row"><span class="label" style="color:var(--green-700)">Bien:</span><span class="value" style="font-family:'Outfit';font-weight:500;font-size:.82rem">&ldquo;Compara el saldo de retenciones en cta 2365 por concepto vs lo que deber&iacute;a ser seg&uacute;n los pagos en ctas 5 y 7, aplicando las tarifas del Art. 392 ET.&rdquo;</span></div>
+          </div>
+        </div>
+
+        <h3>Paso 4: Verifica cada hallazgo</h3>
+        <p>La IA te dir&aacute; &ldquo;encontr&eacute; una diferencia de $3.500.000 entre el IVA generado y lo que deber&iacute;a ser seg&uacute;n los ingresos&rdquo;. Eso es un <strong>punto de partida para investigar</strong>, no una conclusi&oacute;n definitiva. Revisa el auxiliar de esa cuenta, busca la factura, confirma el hallazgo.</p>
+
+        <h2>Los cruces que importan (perspectiva DIAN)</h2>
+        <p>Estos son los cruces que la DIAN ejecuta autom&aacute;ticamente. Si t&uacute; los haces primero, llegas preparado:</p>
 
         <table class="tabla-norm">
           <thead>
-            <tr><th>Cruce</th><th>Qu&eacute; compara</th><th>Riesgo si no cuadra</th></tr>
+            <tr><th>Cruce</th><th>Qu&eacute; compara</th><th>Qu&eacute; preguntarle a la IA</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td><strong>F300 vs F350</strong></td>
-              <td>IVA generado en tus ventas vs. retenci&oacute;n de IVA practicada por tus clientes</td>
-              <td>Requerimiento por diferencia en IVA declarado</td>
+              <td><strong>IVA vs. facturaci&oacute;n</strong></td>
+              <td>F300 vs. facturas electr&oacute;nicas emitidas</td>
+              <td>&ldquo;Suma de cr&eacute;ditos en 2408 debe ser 19% de ingresos en grupo 41 gravados&rdquo;</td>
             </tr>
             <tr>
-              <td><strong>Renta vs Ex&oacute;gena</strong></td>
-              <td>Ingresos en renta vs. ingresos reportados en informaci&oacute;n ex&oacute;gena por terceros</td>
-              <td>Inconsistencia fiscal que genera auto de verificaci&oacute;n</td>
+              <td><strong>Retenciones practicadas vs. declaradas</strong></td>
+              <td>F350 vs. certificados de retenci&oacute;n</td>
+              <td>&ldquo;Total de cr&eacute;ditos en 2365 por concepto vs. lo reportado en F350&rdquo;</td>
             </tr>
             <tr>
-              <td><strong>IVA generado vs Facturaci&oacute;n</strong></td>
-              <td>Lo que declaraste como ventas gravadas vs. lo que facturaste electr&oacute;nicamente</td>
-              <td>Omisi&oacute;n de ingresos (sanci&oacute;n por inexactitud Art. 647 ET)</td>
+              <td><strong>Ingresos renta vs. IVA vs. ex&oacute;gena</strong></td>
+              <td>F110/210 vs. F300 vs. F1001</td>
+              <td>&ldquo;Suma de ingresos grupo 4 vs. base gravable IVA del a&ntilde;o&rdquo;</td>
             </tr>
             <tr>
-              <td><strong>Retenciones vs Certificados</strong></td>
-              <td>Retenciones declaradas vs. certificados emitidos</td>
-              <td>Diferencia en lo descontado en renta</td>
-            </tr>
-            <tr>
-              <td><strong>Proporcionalidad gastos</strong></td>
-              <td>Relaci&oacute;n gastos vs. ingresos por sector econ&oacute;mico</td>
-              <td>Gastos desproporcionados que activan fiscalizaci&oacute;n</td>
+              <td><strong>Gastos vs. retenciones</strong></td>
+              <td>Pagos a terceros vs. retenciones practicadas</td>
+              <td>&ldquo;Terceros con pagos &gt;100 UVT en grupo 5 sin retenci&oacute;n en 2365&rdquo;</td>
             </tr>
           </tbody>
         </table>
 
-        <h3>&iquest;Qu&eacute; busca la DIAN en una fiscalizaci&oacute;n?</h3>
-        <p>La DIAN no revisa todo. Tiene un sistema de <strong>cruces autom&aacute;ticos</strong> que prioriza contribuyentes con:</p>
+        <h2>Herramientas que puedes usar</h2>
+        <p>La habilidad es la misma con cualquier herramienta. Lo que cambia es la interfaz:</p>
         <ul>
-          <li><strong>Inconsistencias entre formularios:</strong> tu F300 dice una cosa, tu F110 dice otra</li>
-          <li><strong>Omisiones:</strong> terceros reportaron pagos a tu NIT pero t&uacute; no declaraste esos ingresos</li>
-          <li><strong>Desproporciones:</strong> gastos excesivos respecto a los ingresos del sector</li>
-          <li><strong>Saldos a favor recurrentes:</strong> solicitudes de devoluci&oacute;n frecuentes</li>
-          <li><strong>Cambios bruscos:</strong> ingresos que caen 50% de un a&ntilde;o a otro sin justificaci&oacute;n</li>
+          <li><strong>ChatGPT:</strong> Sube tu archivo Excel o pega datos en el chat. La versi&oacute;n Plus analiza archivos directamente.</li>
+          <li><strong>Google Sheets + Gemini:</strong> Abre tu balance en Sheets y usa Gemini integrado para hacer preguntas sobre los datos.</li>
+          <li><strong>Claude:</strong> Sube el archivo y pide an&aacute;lisis espec&iacute;ficos. Maneja documentos largos.</li>
+          <li><strong>Herramientas especializadas:</strong> Existen opciones como el Auditor de Ex&oacute;genaDIAN u otras plataformas contables con IA integrada que automatizan estos cruces.</li>
         </ul>
-
-        <h3>C&oacute;mo leer los hallazgos de la IA</h3>
-
-        <div class="norma">
-          <div class="norma-header">
-            <div class="norma-icon">&#9878;</div>
-            <h4>Niveles de alerta del Auditor</h4>
-          </div>
-          <table class="tabla-norm">
-            <thead>
-              <tr><th>Nivel</th><th>Significado</th><th>Acci&oacute;n requerida</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="color:var(--rose-700);font-weight:700">Cr&iacute;tico</td>
-                <td>Inconsistencia que la DIAN detectar&aacute; en cruce autom&aacute;tico</td>
-                <td>Corregir ANTES de presentar</td>
-              </tr>
-              <tr>
-                <td style="color:var(--amber-700);font-weight:700">Informativo</td>
-                <td>Situaci&oacute;n at&iacute;pica que podr&iacute;a generar preguntas</td>
-                <td>Documentar la justificaci&oacute;n</td>
-              </tr>
-              <tr>
-                <td style="color:var(--blue-700);font-weight:700">Sugerencia</td>
-                <td>Oportunidad de mejora u optimizaci&oacute;n tributaria</td>
-                <td>Evaluar si aplica al cliente</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
 
         <div class="tip">
           <div class="tip-header">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            <h4>Tip pr&aacute;ctico</h4>
+            <h4>Tip: archivos grandes</h4>
           </div>
-          <p><strong>Pasa el Auditor ANTES de presentar, no despu&eacute;s.</strong> El valor de la herramienta es preventivo. Una vez presentada la declaraci&oacute;n, ya no puedes corregir sin sanci&oacute;n (Art. 644 ET). Haz del Auditor tu &uacute;ltimo paso antes de firmar.</p>
+          <p>La IA tiene l&iacute;mites de contexto (cu&aacute;ntos datos puede procesar a la vez). Si tu balance tiene miles de registros, <strong>env&iacute;alo por partes</strong>: primero las cuentas del grupo 2 (pasivos), luego el grupo 4 (ingresos), etc. Un grupo a la vez, un cruce a la vez.</p>
         </div>
 
         <div class="error-comun">
@@ -438,19 +418,13 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
             <h4>Error com&uacute;n</h4>
           </div>
-          <p>Presentar la declaraci&oacute;n sin revisar cruces y descubrir la inconsistencia cuando llega el requerimiento. Corregir despu&eacute;s genera <strong>sanci&oacute;n por inexactitud</strong> (100% de la mayor retenci&oacute;n o menor saldo a favor, Art. 647 ET) o <strong>sanci&oacute;n por correcci&oacute;n</strong> (10% o 20% de la diferencia, Art. 644 ET).</p>
-        </div>
-
-        <div class="cta-practica">
-          <h3>Prueba el Auditor DIAN ahora</h3>
-          <p>Sube tu balance de prueba y deja que la IA identifique riesgos antes de que la DIAN lo haga.</p>
-          <a href="../ia-analisis-balance.html">Abrir Auditor DIAN &rarr;</a>
+          <p>Confiar ciegamente en el resultado de la IA sin verificar. La IA puede decirte &ldquo;todo cuadra&rdquo; cuando hay una diferencia que no detect&oacute;, o se&ntilde;alar una &ldquo;inconsistencia&rdquo; que en realidad es una nota cr&eacute;dito leg&iacute;tima. Cada hallazgo es una hip&oacute;tesis &mdash; t&uacute; confirmas o descartas.</p>
         </div>
       </div>
 
       <div class="mod-nav">
         <a href="#modulo-1" class="prev" onclick="navigateTo(1)">&larr; M&oacute;dulo 1</a>
-        <a href="#modulo-3" class="next" onclick="navigateTo(3)">M&oacute;dulo 3: Consultar el ET con IA &rarr;</a>
+        <a href="#modulo-3" class="next" onclick="navigateTo(3)">M&oacute;dulo 3: Consultar normativa &rarr;</a>
       </div>
     </section>
 
@@ -461,125 +435,128 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
           <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 3
         </div>
         <div class="mod-num">M&oacute;dulo 3 de 8</div>
-        <h1>Consultar normativa con IA: el Estatuto Tributario a tu alcance</h1>
-        <p class="mod-desc">Saber preguntar es la mitad de la respuesta. La IA entrenada en el ET colombiano puede ahorrarte horas de b&uacute;squeda &mdash; si sabes c&oacute;mo formular la pregunta correcta.</p>
+        <h1>C&oacute;mo consultar normativa tributaria con IA sin que te invente</h1>
+        <p class="mod-desc">S&iacute;, puedes usar IA para investigar normas tributarias. Pero necesitas un m&eacute;todo de verificaci&oacute;n riguroso. Aqu&iacute; lo aprendes.</p>
       </div>
 
       <div class="content-block">
-        <h2>El arte de preguntar bien</h2>
-        <p>La calidad de la respuesta de la IA depende directamente de la calidad de tu pregunta. Una pregunta vaga produce una respuesta gen&eacute;rica. Una pregunta espec&iacute;fica produce una respuesta &uacute;til.</p>
+        <h2>El problema</h2>
+        <p>Le preguntas a la IA: &ldquo;&iquest;Cu&aacute;l es la tarifa de retenci&oacute;n por servicios profesionales?&rdquo; Te responde con confianza total: &ldquo;Seg&uacute;n el Art&iacute;culo 392 del ET, la tarifa es del 11% sobre el valor bruto del pago...&rdquo; Suena perfecto. &iquest;Pero es correcto? &iquest;Es actual? &iquest;Aplica para tu caso espec&iacute;fico?</p>
+        <p>La IA no distingue entre una norma vigente y una derogada. No sabe si la Ley 2277 de 2022 modific&oacute; ese art&iacute;culo. No conoce el &uacute;ltimo concepto DIAN al respecto. T&uacute; necesitas un <strong>framework de verificaci&oacute;n</strong>.</p>
 
-        <h3>Preguntas malas vs. preguntas buenas</h3>
+        <h2>El framework de verificaci&oacute;n en 4 pasos</h2>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">1</div>
+            <h4>Paso 1: Preg&uacute;ntale a la IA y anota los art&iacute;culos</h4>
+          </div>
+          <p>Haz tu pregunta con el mayor contexto posible (ve m&aacute;s abajo c&oacute;mo). La IA te dar&aacute; una respuesta citando art&iacute;culos. <strong>Anota cada n&uacute;mero de art&iacute;culo, decreto o concepto que mencione.</strong></p>
+        </div>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">2</div>
+            <h4>Paso 2: Busca CADA art&iacute;culo en la fuente original</h4>
+          </div>
+          <p>Ve al texto real del Estatuto Tributario: en el sitio de la DIAN, en leyes.co, en la Secretar&iacute;a del Senado, o en tu ET f&iacute;sico. Lee el art&iacute;culo completo &mdash; no solo la parte que la IA cit&oacute;. Busca par&aacute;grafos, incisos y excepciones.</p>
+        </div>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">3</div>
+            <h4>Paso 3: Verifica si fue modificado por reformas recientes</h4>
+          </div>
+          <p>Las &uacute;ltimas reformas tributarias (Ley 2277/2022, Ley 2294/2023) modificaron decenas de art&iacute;culos. La IA puede estar citando la versi&oacute;n anterior. Revisa si el art&iacute;culo fue modificado, derogado o adicionado.</p>
+        </div>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">4</div>
+            <h4>Paso 4: Cruza con conceptos DIAN oficiales</h4>
+          </div>
+          <p>Si la IA cita un concepto DIAN, b&uacute;scalo en el buscador de normativa de la DIAN (dian.gov.co &rarr; Normativa &rarr; Conceptos). Si no aparece, no existe. No lo uses.</p>
+        </div>
+
+        <h2>C&oacute;mo hacer mejores preguntas tributarias</h2>
+        <p>La calidad de la respuesta depende directamente de la calidad de tu pregunta. Incluye siempre:</p>
 
         <table class="tabla-norm">
           <thead>
-            <tr><th>Pregunta mala</th><th>Pregunta buena</th><th>Por qu&eacute; es mejor</th></tr>
+            <tr><th>Pregunta mala</th><th>Pregunta buena</th><th>Qu&eacute; verificar despu&eacute;s</th></tr>
           </thead>
           <tbody>
             <tr>
-              <td>&ldquo;&iquest;C&oacute;mo hago la renta?&rdquo;</td>
-              <td>&ldquo;&iquest;Cu&aacute;l es la tarifa del Art. 240 ET para personas jur&iacute;dicas con ingresos superiores a 800 millones en AG 2025?&rdquo;</td>
-              <td>Especifica el art&iacute;culo, tipo de contribuyente, monto y a&ntilde;o</td>
+              <td>&ldquo;&iquest;Cu&aacute;l es la retenci&oacute;n por servicios?&rdquo;</td>
+              <td>&ldquo;Para AG 2025, persona jur&iacute;dica SAS que paga servicios profesionales a una persona natural declarante de renta, &iquest;cu&aacute;l es la tarifa de retenci&oacute;n? Cita los art&iacute;culos del ET.&rdquo;</td>
+              <td>Art. 392 ET, tabla Art. 383 ET, Decreto 1625/2016 Art. 1.2.4.3.1</td>
+            </tr>
+            <tr>
+              <td>&ldquo;&iquest;Qui&eacute;n declara renta?&rdquo;</td>
+              <td>&ldquo;Persona natural residente fiscal en Colombia, ingresos brutos 2025 de $85.000.000, asalariada. &iquest;Est&aacute; obligada a declarar renta AG 2025? Cita la norma.&rdquo;</td>
+              <td>Art. 592, 593 ET, Decreto calendario tributario 2026</td>
+            </tr>
+            <tr>
+              <td>&ldquo;&iquest;Los arriendos tienen IVA?&rdquo;</td>
+              <td>&ldquo;Arriendo de local comercial en Colombia, arrendador persona jur&iacute;dica, arrendatario persona jur&iacute;dica. &iquest;Se cobra IVA? &iquest;Qu&eacute; retenciones aplican? Para AG 2025.&rdquo;</td>
+              <td>Art. 468 ET, Art. 476 num. 15 ET (excluidos), retenci&oacute;n Art. 437-2 ET</td>
+            </tr>
+            <tr>
+              <td>&ldquo;&iquest;C&oacute;mo se calcula la renta l&iacute;quida?&rdquo;</td>
+              <td>&ldquo;C&oacute;mo se calcula la renta l&iacute;quida gravable para una SAS del r&eacute;gimen ordinario en AG 2025. Detalla la depuraci&oacute;n del Art. 26 ET y los l&iacute;mites del Art. 105 ET.&rdquo;</td>
+              <td>Arts. 26, 105, 107, 177-1, 177-2 ET</td>
+            </tr>
+            <tr>
+              <td>&ldquo;&iquest;Qu&eacute; es la ex&oacute;gena?&rdquo;</td>
+              <td>&ldquo;Para AG 2025, persona jur&iacute;dica con ingresos de $350 millones, &iquest;est&aacute; obligada a presentar informaci&oacute;n ex&oacute;gena? &iquest;Qu&eacute; resoluci&oacute;n DIAN aplica y cu&aacute;les son los topes?&rdquo;</td>
+              <td>Resoluci&oacute;n DIAN de ex&oacute;gena vigente, Art. 631 ET</td>
             </tr>
             <tr>
               <td>&ldquo;&iquest;Qu&eacute; gastos son deducibles?&rdquo;</td>
-              <td>&ldquo;&iquest;Los gastos de representaci&oacute;n del Art. 107-1 ET tienen l&iacute;mite para una SAS del sector servicios en AG 2025?&rdquo;</td>
-              <td>Especifica el tipo de gasto, art&iacute;culo, tipo de empresa y per&iacute;odo</td>
-            </tr>
-            <tr>
-              <td>&ldquo;&iquest;C&oacute;mo funciona la retenci&oacute;n?&rdquo;</td>
-              <td>&ldquo;&iquest;Cu&aacute;l es la base m&iacute;nima en UVT para practicar retenci&oacute;n por servicios generales seg&uacute;n el Art. 392 ET?&rdquo;</td>
-              <td>Especifica el concepto de retenci&oacute;n y el art&iacute;culo</td>
-            </tr>
-            <tr>
-              <td>&ldquo;&iquest;Qu&eacute; pasa si no pago IVA?&rdquo;</td>
-              <td>&ldquo;&iquest;Cu&aacute;l es la sanci&oacute;n por extemporaneidad del Art. 641 ET para una declaraci&oacute;n de IVA bimestral presentada 3 meses tarde con saldo a pagar de $15M?&rdquo;</td>
-              <td>Da todos los datos para que la IA calcule el resultado espec&iacute;fico</td>
-            </tr>
-            <tr>
-              <td>&ldquo;&iquest;Qu&eacute; es ex&oacute;gena?&rdquo;</td>
-              <td>&ldquo;&iquest;Qu&eacute; formatos de ex&oacute;gena debe presentar una SAS con ingresos de $2.000M en el AG 2025 seg&uacute;n la Resoluci&oacute;n DIAN vigente?&rdquo;</td>
-              <td>Especifica tipo de contribuyente, monto y a&ntilde;o para respuesta precisa</td>
+              <td>&ldquo;Requisitos generales para que un gasto sea deducible en renta para persona jur&iacute;dica r&eacute;gimen ordinario, AG 2025. Incluye requisitos de causalidad, necesidad, proporcionalidad y soporte. Cita art&iacute;culos del ET.&rdquo;</td>
+              <td>Arts. 107, 771-2, 771-5 ET, bancarizaci&oacute;n Art. 771-5</td>
             </tr>
           </tbody>
         </table>
 
-        <h3>C&oacute;mo verificar la respuesta</h3>
-        <p>Incluso con una IA entrenada en el ET colombiano, debes verificar:</p>
-        <ol>
-          <li><strong>El n&uacute;mero del art&iacute;culo existe:</strong> busca el art&iacute;culo en el ET real. Si la IA dice &ldquo;Art. 437-5&rdquo; y no existe, la respuesta es inventada.</li>
-          <li><strong>El contenido coincide:</strong> que el art&iacute;culo citado realmente diga lo que la IA afirma. A veces cita el art&iacute;culo correcto pero atribuye contenido de otro.</li>
-          <li><strong>La versi&oacute;n es vigente:</strong> el ET se modifica frecuentemente. Un art&iacute;culo que dec&iacute;a X en 2022 puede decir Y en 2025 por reforma tributaria.</li>
-        </ol>
+        <h2>La jerarqu&iacute;a de fuentes</h2>
+        <p>Cuando busques la respuesta definitiva, sigue este orden. La IA siempre es la &uacute;ltima fuente, nunca la primera:</p>
 
-        <div class="norma">
-          <div class="norma-header">
-            <div class="norma-icon">&#9878;</div>
-            <h4>Concepto DIAN vs. opini&oacute;n de la IA vs. doctrina</h4>
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Jerarqu&iacute;a de fuentes tributarias</h4>
           </div>
-          <table class="tabla-norm">
-            <thead>
-              <tr><th>Fuente</th><th>Fuerza vinculante</th><th>Fiabilidad</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Art&iacute;culo del ET</strong></td>
-                <td>Ley &mdash; obligatoria</td>
-                <td>M&aacute;xima (es la norma)</td>
-              </tr>
-              <tr>
-                <td><strong>Concepto DIAN</strong></td>
-                <td>Doctrina oficial &mdash; vinculante para la DIAN</td>
-                <td>Alta (posici&oacute;n oficial de la DIAN)</td>
-              </tr>
-              <tr>
-                <td><strong>Sentencia C.E. / C. Const.</strong></td>
-                <td>Jurisprudencia &mdash; vinculante</td>
-                <td>Alta (interpretaci&oacute;n judicial)</td>
-              </tr>
-              <tr>
-                <td><strong>Doctrina acad&eacute;mica</strong></td>
-                <td>Orientadora &mdash; no vinculante</td>
-                <td>Media (depende del autor)</td>
-              </tr>
-              <tr>
-                <td><strong>Opini&oacute;n de la IA</strong></td>
-                <td>Ninguna &mdash; no es fuente de derecho</td>
-                <td>Variable (debe verificarse siempre)</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="norma-aplicacion">
-            <strong>Clave:</strong> La IA es una herramienta de b&uacute;squeda inteligente, no una fuente de derecho. Nunca cites &ldquo;seg&uacute;n la IA&rdquo; en un documento formal. Cita el art&iacute;culo del ET que la IA te ayud&oacute; a encontrar.
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">1. Ley / Estatuto Tributario (texto vigente)</span><span class="value" style="color:var(--green-700)">M&aacute;xima</span></div>
+            <div class="ejemplo-row"><span class="label">2. Decreto reglamentario (Decreto 1625/2016 y modificaciones)</span><span class="value" style="color:var(--green-600)">Alta</span></div>
+            <div class="ejemplo-row"><span class="label">3. Concepto DIAN unificado / Oficio DIAN</span><span class="value" style="color:var(--amber-500)">Media</span></div>
+            <div class="ejemplo-row"><span class="label">4. Jurisprudencia (Consejo de Estado, Corte Constitucional)</span><span class="value" style="color:var(--amber-500)">Media</span></div>
+            <div class="ejemplo-row"><span class="label">5. Doctrina (libros, publicaciones especializadas)</span><span class="value" style="color:var(--gray-400)">Referencia</span></div>
+            <div class="ejemplo-row"><span class="label">6. Opini&oacute;n de la IA</span><span class="value" style="color:var(--rose-500)">&Uacute;ltima</span></div>
           </div>
         </div>
 
         <div class="tip">
           <div class="tip-header">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            <h4>Tip pr&aacute;ctico</h4>
+            <h4>Estrategia multi-modelo</h4>
           </div>
-          <p><strong>Usa la IA como punto de partida, no como punto final.</strong> Preg&uacute;ntale a la IA, obt&eacute;n los art&iacute;culos relevantes, y luego ve directamente al Estatuto Tributario a confirmar. Es m&aacute;s r&aacute;pido que buscar desde cero, pero m&aacute;s seguro que confiar ciegamente.</p>
+          <p>Cuando la pregunta es cr&iacute;tica, hazla en <strong>dos o tres IAs diferentes</strong> (ChatGPT, Gemini, Claude). Si las tres coinciden en el art&iacute;culo y la interpretaci&oacute;n, es m&aacute;s probable que est&eacute;n en lo correcto. Si difieren, hay una se&ntilde;al de alerta que debes investigar en la fuente original.</p>
         </div>
 
         <div class="error-comun">
           <div class="error-comun-header">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
-            <h4>Error com&uacute;n</h4>
+            <h4>Caso real: concepto DIAN fantasma</h4>
           </div>
-          <p>Copiar y pegar la respuesta de la IA sin verificar. Si la IA te dice &ldquo;seg&uacute;n el Concepto DIAN 015432 de 2023&rdquo;, <strong>busca ese concepto</strong>. Si no existe, est&aacute;s citando fuentes fantasma en un documento con tu firma profesional.</p>
-        </div>
-
-        <div class="cta-practica">
-          <h3>Consulta el Estatuto Tributario con IA</h3>
-          <p>Haz preguntas espec&iacute;ficas y obt&eacute;n respuestas con art&iacute;culos reales del ET colombiano.</p>
-          <a href="../ia-chat-et.html">Abrir Chat ET &rarr;</a>
+          <p>Un contador le pidi&oacute; a la IA referencias para sustentar un tratamiento de retenci&oacute;n en la fuente. La IA cit&oacute; el <strong>&ldquo;Concepto DIAN 012345 de marzo de 2024&rdquo;</strong> como soporte. El contador lo incluy&oacute; en su respuesta a un requerimiento. Problema: ese concepto no existe. La DIAN lo verific&oacute; y eso debilit&oacute; toda la argumentaci&oacute;n. <strong>Siempre busca el concepto en dian.gov.co antes de citarlo.</strong></p>
         </div>
       </div>
 
       <div class="mod-nav">
         <a href="#modulo-2" class="prev" onclick="navigateTo(2)">&larr; M&oacute;dulo 2</a>
-        <a href="#modulo-4" class="next" onclick="navigateTo(4)">M&oacute;dulo 4: Requerimientos DIAN &rarr;</a>
+        <a href="#modulo-4" class="next" onclick="navigateTo(4)">M&oacute;dulo 4: Redactar documentos &rarr;</a>
       </div>
     </section>
 
@@ -590,102 +567,103 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
           <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 4
         </div>
         <div class="mod-num">M&oacute;dulo 4 de 8</div>
-        <h1>Responder requerimientos DIAN con asistencia de IA</h1>
-        <p class="mod-desc">Recibir un requerimiento de la DIAN genera estr&eacute;s. La IA puede ayudarte a estructurar una respuesta s&oacute;lida &mdash; pero la revisi&oacute;n final y la firma son tuyas.</p>
+        <h1>C&oacute;mo redactar documentos tributarios con IA</h1>
+        <p class="mod-desc">La IA puede ahorrarte horas en la redacci&oacute;n de documentos. Pero la responsabilidad profesional siempre es tuya. Aqu&iacute; aprendes el proceso correcto.</p>
       </div>
 
       <div class="content-block">
-        <h2>Anatom&iacute;a de un requerimiento DIAN</h2>
-        <p>Un requerimiento ordinario (Art. 684 ET) tiene una estructura predecible que la IA puede analizar:</p>
+        <h2>Documentos que puedes borradorear con IA</h2>
         <ul>
-          <li><strong>Encabezado:</strong> datos del contribuyente, NIT, a&ntilde;o gravable, n&uacute;mero del acto administrativo</li>
-          <li><strong>Hechos:</strong> lo que la DIAN detect&oacute; en sus cruces (la inconsistencia espec&iacute;fica)</li>
-          <li><strong>Fundamentos legales:</strong> art&iacute;culos del ET y normas que cita la DIAN para sustentar su posici&oacute;n</li>
-          <li><strong>Petici&oacute;n:</strong> lo que la DIAN pide (explicaci&oacute;n, pruebas, correcci&oacute;n)</li>
-          <li><strong>Plazo:</strong> t&eacute;rmino para responder (generalmente 15 d&iacute;as h&aacute;biles, Art. 261 de la Ley 1564 de 2012)</li>
+          <li><strong>Respuestas a requerimientos DIAN:</strong> La IA estructura la argumentaci&oacute;n, t&uacute; verificas los fundamentos legales</li>
+          <li><strong>Opiniones tributarias para clientes:</strong> Mem&oacute;s internos explicando tratamientos fiscales</li>
+          <li><strong>Notas a los estados financieros:</strong> Revelaciones sobre pol&iacute;ticas contables y tributarias</li>
+          <li><strong>Pol&iacute;ticas de retenci&oacute;n:</strong> Documentos internos sobre procedimientos de retenci&oacute;n en la fuente</li>
+          <li><strong>Solicitudes de devoluci&oacute;n y/o compensaci&oacute;n:</strong> Estructuraci&oacute;n de la solicitud formal</li>
         </ul>
 
-        <h3>C&oacute;mo funciona la herramienta de IA para requerimientos</h3>
-        <p>La herramienta de Ex&oacute;genaDIAN recibe el texto del requerimiento y:</p>
-        <ol>
-          <li>Identifica los art&iacute;culos del ET citados por la DIAN</li>
-          <li>Analiza el tipo de inconsistencia que se&ntilde;ala</li>
-          <li>Genera un borrador de respuesta con la estructura correcta</li>
-          <li>Sugiere los argumentos legales relevantes</li>
-          <li>Indica qu&eacute; pruebas deber&iacute;as adjuntar</li>
-        </ol>
+        <h2>El proceso: de la nada al documento final</h2>
 
-        <h3>Estructura de la respuesta</h3>
+        <h3>1. Re&uacute;ne tus hechos y evidencia primero</h3>
+        <p>Nunca le pidas a la IA que redacte sin contexto. Antes de abrir ChatGPT, ten listos: los hechos del caso, las fechas relevantes, los documentos soporte (facturas, certificados, extractos), y los art&iacute;culos del ET que crees aplicables.</p>
 
-        <div class="norma">
-          <div class="norma-header">
-            <div class="norma-icon">&#9878;</div>
-            <h4>Estructura recomendada para responder un requerimiento</h4>
+        <h3>2. Escribe un prompt estructurado</h3>
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo de prompt para respuesta a requerimiento</h4>
           </div>
-          <table class="tabla-norm">
-            <thead>
-              <tr><th>Secci&oacute;n</th><th>Contenido</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>1. Encabezado</strong></td>
-                <td>Se&ntilde;ores DIAN, referencia al acto administrativo, datos del contribuyente</td>
-              </tr>
-              <tr>
-                <td><strong>2. Hechos</strong></td>
-                <td>Narrar la situaci&oacute;n f&aacute;ctica con precisi&oacute;n &mdash; qu&eacute; pas&oacute; y por qu&eacute;</td>
-              </tr>
-              <tr>
-                <td><strong>3. Fundamentos de derecho</strong></td>
-                <td>Art&iacute;culos del ET que respaldan tu posici&oacute;n, conceptos DIAN aplicables</td>
-              </tr>
-              <tr>
-                <td><strong>4. Pruebas</strong></td>
-                <td>Lista detallada de documentos adjuntos (facturas, certificados, libros)</td>
-              </tr>
-              <tr>
-                <td><strong>5. Petici&oacute;n</strong></td>
-                <td>Solicitud concreta: archivar, aceptar explicaci&oacute;n, cerrar investigaci&oacute;n</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="ejemplo-body" style="font-size:.85rem;color:var(--gray-600);line-height:1.7">
+            <p>&ldquo;Necesito redactar una respuesta a un requerimiento ordinario de informaci&oacute;n de la DIAN. Los datos son:</p>
+            <p><strong>Contribuyente:</strong> [Nombre SAS], NIT [xxx], r&eacute;gimen ordinario.</p>
+            <p><strong>Requerimiento:</strong> N&uacute;mero [xxx], fecha [xxx]. La DIAN pregunta por la diferencia entre los ingresos declarados en renta AG 2024 ($450M) y los ingresos reportados en ex&oacute;gena ($465M).</p>
+            <p><strong>Explicaci&oacute;n real:</strong> La diferencia de $15M corresponde a ingresos por diferencia en cambio (Cta 4210) que se reportan en ex&oacute;gena pero se clasifican como ingreso no operacional en renta.</p>
+            <p><strong>Soporte:</strong> Certificado del revisor fiscal, auxiliar cuenta 4210, conciliaci&oacute;n renta vs. ex&oacute;gena.</p>
+            <p>Redacta una respuesta formal con estructura legal, citando las normas aplicables. Usa tono formal y respetuoso.&rdquo;</p>
+          </div>
         </div>
 
-        <h3>Qu&eacute; revisar ANTES de enviar la respuesta generada por IA</h3>
+        <h3>3. Revisa cada art&iacute;culo y cada c&aacute;lculo</h3>
+        <p>La IA te entregar&aacute; un borrador bien estructurado. Ahora viene TU trabajo profesional:</p>
         <ul>
-          <li><strong>Verificar cada art&iacute;culo citado:</strong> que exista y diga lo que la IA afirma</li>
-          <li><strong>Agregar evidencia espec&iacute;fica:</strong> la IA no conoce tus documentos &mdash; a&ntilde;ade facturas, certificados, libros contables</li>
-          <li><strong>Revisar c&aacute;lculos:</strong> si la respuesta incluye n&uacute;meros, verif&iacute;calos contra tu contabilidad</li>
-          <li><strong>Adaptar el tono:</strong> la IA puede ser demasiado t&eacute;cnica o demasiado informal para la ocasi&oacute;n</li>
-          <li><strong>Verificar plazos:</strong> aseg&uacute;rate de que est&aacute;s respondiendo dentro del t&eacute;rmino legal</li>
+          <li>Verifica cada art&iacute;culo del ET citado (usa el framework del M&oacute;dulo 3)</li>
+          <li>Confirma que los c&aacute;lculos est&eacute;n correctos</li>
+          <li>Adapta el tono si es necesario (la IA a veces es demasiado formal o demasiado informal)</li>
+          <li>Agrega la evidencia espec&iacute;fica que solo t&uacute; tienes</li>
         </ul>
+
+        <h3>4. Agrega tu evidencia espec&iacute;fica</h3>
+        <p>La IA no tiene tus facturas, tus certificados ni tus extractos bancarios. El borrador mencionar&aacute; &ldquo;se adjunta factura No. X&rdquo; &mdash; pero t&uacute; debes llenar esos espacios con los datos reales.</p>
+
+        <h3>5. T&Uacute; firmas &mdash; tu responsabilidad profesional</h3>
+        <p>Tu tarjeta profesional, tu firma, tu responsabilidad. Si el documento tiene un error legal, la DIAN no va a aceptar &ldquo;lo gener&oacute; la IA&rdquo; como excusa. T&uacute; eres el profesional.</p>
+
+        <h2>Estructura para respuesta a requerimiento</h2>
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Plantilla de estructura (para pedirle a la IA)</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">1. Encabezado</span><span class="value" style="font-family:'Outfit';font-size:.8rem">Datos contribuyente, No. requerimiento, fecha</span></div>
+            <div class="ejemplo-row"><span class="label">2. Objeto</span><span class="value" style="font-family:'Outfit';font-size:.8rem">&ldquo;Respuesta al requerimiento No. X&rdquo;</span></div>
+            <div class="ejemplo-row"><span class="label">3. Hechos</span><span class="value" style="font-family:'Outfit';font-size:.8rem">Cronolog&iacute;a de lo que sucedi&oacute;</span></div>
+            <div class="ejemplo-row"><span class="label">4. Fundamentos legales</span><span class="value" style="font-family:'Outfit';font-size:.8rem">Art&iacute;culos del ET verificados por TI</span></div>
+            <div class="ejemplo-row"><span class="label">5. Argumentaci&oacute;n</span><span class="value" style="font-family:'Outfit';font-size:.8rem">Hechos + norma = conclusi&oacute;n</span></div>
+            <div class="ejemplo-row"><span class="label">6. Pruebas</span><span class="value" style="font-family:'Outfit';font-size:.8rem">Lista numerada de anexos adjuntos</span></div>
+            <div class="ejemplo-row"><span class="label">7. Petici&oacute;n</span><span class="value" style="font-family:'Outfit';font-size:.8rem">Lo que solicitas (archivar, aceptar, etc.)</span></div>
+            <div class="ejemplo-row"><span class="label">8. Firma</span><span class="value" style="font-family:'Outfit';font-size:.8rem">Nombre, c&eacute;dula, tarjeta profesional</span></div>
+          </div>
+        </div>
+
+        <h2>Prompts para otros tipos de documentos</h2>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Prompts para opini&oacute;n tributaria, notas a EEFF, pol&iacute;ticas internas
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <h4 style="font-size:.88rem;margin:8px 0;color:var(--gray-800)">Opini&oacute;n tributaria para cliente:</h4>
+            <p style="font-size:.82rem;color:var(--gray-600);margin-bottom:12px">&ldquo;Mi cliente [tipo entidad] quiere saber si [operaci&oacute;n espec&iacute;fica] est&aacute; gravada con IVA. Los hechos son [X]. Redacta un memo interno de m&aacute;ximo 2 p&aacute;ginas explicando el tratamiento tributario aplicable, citando art&iacute;culos del ET y conceptos DIAN relevantes. Incluye conclusi&oacute;n y recomendaci&oacute;n.&rdquo;</p>
+            <h4 style="font-size:.88rem;margin:8px 0;color:var(--gray-800)">Notas a estados financieros:</h4>
+            <p style="font-size:.82rem;color:var(--gray-600);margin-bottom:12px">&ldquo;Redacta la nota de revelaci&oacute;n sobre pol&iacute;ticas contables de impuestos para una SAS en NIIF para PYMES grupo 2. Incluye: pol&iacute;tica de impuesto corriente (secci&oacute;n 29), estimaciones clave, y conciliaci&oacute;n de tasa efectiva vs. nominal (35%). La empresa tiene ingresos de $X y utilidad antes de impuestos de $Y.&rdquo;</p>
+            <h4 style="font-size:.88rem;margin:8px 0;color:var(--gray-800)">Pol&iacute;tica interna de retenci&oacute;n:</h4>
+            <p style="font-size:.82rem;color:var(--gray-600)">&ldquo;Redacta una pol&iacute;tica interna de retenci&oacute;n en la fuente para una empresa SAS que paga servicios profesionales, arriendos, compras y honorarios. Incluye: bases m&iacute;nimas en UVT 2025, tarifas, excepciones, y responsable interno de practicar las retenciones. Formato tabla.&rdquo;</p>
+          </div>
+        </div>
 
         <div class="error-comun">
           <div class="error-comun-header">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
-            <h4>Error cr&iacute;tico: enviar sin revisar</h4>
+            <h4>Regla inquebrantable</h4>
           </div>
-          <p><strong>Nunca env&iacute;es una respuesta generada por IA sin revisi&oacute;n exhaustiva.</strong> Es TU firma, no la de la IA. Un art&iacute;culo mal citado, un c&aacute;lculo incorrecto o una argumentaci&oacute;n inveros&iacute;mil destruyen tu credibilidad profesional ante la DIAN y pueden perjudicar gravemente a tu cliente.</p>
-        </div>
-
-        <div class="tip">
-          <div class="tip-header">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            <h4>Tip pr&aacute;ctico</h4>
-          </div>
-          <p><strong>Usa la IA para el primer borrador y dedica tu tiempo a lo que importa:</strong> revisar que los art&iacute;culos sean correctos, que la argumentaci&oacute;n sea s&oacute;lida, que las pruebas est&eacute;n completas y que el tono sea apropiado. Esto es mucho m&aacute;s eficiente que escribir todo desde cero.</p>
-        </div>
-
-        <div class="cta-practica">
-          <h3>Genera borradores de respuesta a requerimientos</h3>
-          <p>Pega el texto del requerimiento y obt&eacute;n un borrador estructurado con fundamentos legales.</p>
-          <a href="../ia-respuesta-requerimiento.html">Abrir Asistente de Requerimientos &rarr;</a>
+          <p><strong>NUNCA env&iacute;es un documento generado por IA sin leer cada palabra.</strong> Un art&iacute;culo mal citado puede invalidar toda tu argumentaci&oacute;n ante la DIAN. Un concepto inventado demuestra falta de rigor. Tu reputaci&oacute;n profesional vale m&aacute;s que los 30 minutos que te ahorras.</p>
         </div>
       </div>
 
       <div class="mod-nav">
         <a href="#modulo-3" class="prev" onclick="navigateTo(3)">&larr; M&oacute;dulo 3</a>
-        <a href="#modulo-5" class="next" onclick="navigateTo(5)">M&oacute;dulo 5: Software + Google Sheets &rarr;</a>
+        <a href="#modulo-5" class="next" onclick="navigateTo(5)">M&oacute;dulo 5: Software + Sheets &rarr;</a>
       </div>
     </section>
 
@@ -697,133 +675,104 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
         </div>
         <div class="mod-num">M&oacute;dulo 5 de 8</div>
         <h1>Conecta tu software contable con Google Sheets</h1>
-        <p class="mod-desc">Tu software contable tiene datos atrapados. Google Sheets los libera. Una vez que tus datos est&aacute;n en Sheets, todo lo dem&aacute;s &mdash; scripts, dashboards, IA &mdash; se vuelve posible.</p>
+        <p class="mod-desc">Tu software contable tiene datos atrapados. Una vez que los saques a Sheets, puedes automatizar todo. Este m&oacute;dulo te ense&ntilde;a la estrategia.</p>
       </div>
 
       <div class="content-block">
-        <h2>El concepto: liberar tus datos</h2>
-        <p>Siigo, World Office, Helisa, Alegra &mdash; todos son excelentes para registrar operaciones. Pero cuando necesitas <strong>analizar</strong>, <strong>cruzar</strong> o <strong>automatizar</strong>, te quedas corto. Los datos est&aacute;n encerrados en el software.</p>
-        <p>Google Sheets es el puente. Es gratuito, est&aacute; en la nube, permite colaboraci&oacute;n en tiempo real, y tiene un motor de automatizaci&oacute;n integrado (Apps Script). Una vez que tu balance est&aacute; en Sheets, puedes hacer <strong>todo lo que el software contable no te deja hacer</strong>.</p>
+        <h2>&iquest;Por qu&eacute; Google Sheets?</h2>
+        <p>Tu software contable (Siigo, World Office, Helisa, Alegra, etc.) es bueno para registrar. Pero para <strong>analizar, cruzar, automatizar y presentar</strong>, necesitas una capa intermedia. Google Sheets es esa capa porque:</p>
+        <ul>
+          <li>Es gratis &mdash; no necesitas licencias adicionales</li>
+          <li>Es en la nube &mdash; accedes desde cualquier dispositivo</li>
+          <li>Tiene Gemini integrado &mdash; IA directamente sobre tus datos</li>
+          <li>Permite Apps Script &mdash; automatizaci&oacute;n sin instalar nada</li>
+          <li>Conecta con Looker Studio &mdash; dashboards profesionales gratis</li>
+          <li>Se comparte con un link &mdash; tu cliente ve sin instalar software</li>
+        </ul>
 
-        <h3>Paso a paso: del software contable a Sheets</h3>
-        <ol>
-          <li><strong>Exporta el balance de prueba:</strong> todos los software contables permiten exportar a Excel (.xlsx) o CSV</li>
-          <li><strong>Sube a Google Drive:</strong> arrastra el archivo a tu carpeta organizada en Drive</li>
-          <li><strong>Abre con Google Sheets:</strong> clic derecho &rarr; Abrir con &rarr; Google Sheets</li>
-          <li><strong>Limpia el formato:</strong> elimina filas de encabezado innecesarias, aseg&uacute;rate de que los n&uacute;meros sean n&uacute;meros (no texto)</li>
-          <li><strong>Guarda como Sheets nativo:</strong> Archivo &rarr; Guardar como Google Sheets (para usar Apps Script despu&eacute;s)</li>
-        </ol>
+        <h2>El concepto: tu &ldquo;data lake contable&rdquo;</h2>
+        <p>La idea es tener un lugar organizado en Google Drive donde viva toda la informaci&oacute;n contable de tus clientes, lista para ser procesada. No es una bodega desordenada de archivos &mdash;es una estructura pensada para que la automatizaci&oacute;n funcione.</p>
 
-        <h3>Formato de exportaci&oacute;n por software</h3>
+        <h2>C&oacute;mo exportar desde cada software</h2>
 
         <table class="tabla-norm">
           <thead>
-            <tr><th>Software</th><th>Ruta de exportaci&oacute;n</th><th>Formato</th><th>Notas</th></tr>
+            <tr><th>Software</th><th>Ruta para exportar balance de prueba</th><th>Formato</th></tr>
           </thead>
           <tbody>
-            <tr>
-              <td><strong>Siigo Nube</strong></td>
-              <td>Informes &rarr; Balance de prueba &rarr; Exportar</td>
-              <td>Excel (.xlsx)</td>
-              <td>Viene con formato limpio, importa directo</td>
-            </tr>
-            <tr>
-              <td><strong>World Office</strong></td>
-              <td>Contabilidad &rarr; Informes &rarr; Balance &rarr; Excel</td>
-              <td>Excel (.xls)</td>
-              <td>Puede requerir limpieza de filas de t&iacute;tulo</td>
-            </tr>
-            <tr>
-              <td><strong>Helisa</strong></td>
-              <td>M&oacute;dulo contable &rarr; Reportes &rarr; Balance</td>
-              <td>Excel (.xlsx) o CSV</td>
-              <td>CSV es m&aacute;s limpio para importar</td>
-            </tr>
-            <tr>
-              <td><strong>Alegra</strong></td>
-              <td>Reportes &rarr; Balance de prueba &rarr; Descargar</td>
-              <td>Excel (.xlsx)</td>
-              <td>Formato moderno, importa sin problemas</td>
-            </tr>
-            <tr>
-              <td><strong>Contai / M&oacute;nica</strong></td>
-              <td>Informes &rarr; Balance &rarr; Generar &rarr; Exportar</td>
-              <td>Excel (.xls) o TXT</td>
-              <td>Formatos antiguos, puede requerir limpieza</td>
-            </tr>
+            <tr><td><strong>Siigo</strong></td><td>Reportes &rarr; Balance de prueba &rarr; Generar &rarr; Exportar Excel</td><td>.xlsx</td></tr>
+            <tr><td><strong>World Office</strong></td><td>Informes &rarr; Balance por tercero &rarr; Excel</td><td>.xlsx</td></tr>
+            <tr><td><strong>Helisa GW</strong></td><td>Reportes contables &rarr; Balance &rarr; Excel</td><td>.xlsx</td></tr>
+            <tr><td><strong>Alegra</strong></td><td>Reportes &rarr; Balance de comprobaci&oacute;n &rarr; Descargar</td><td>.xlsx</td></tr>
+            <tr><td><strong>Cualquier otro</strong></td><td>Busca &ldquo;Balance de prueba&rdquo; en reportes &rarr; bot&oacute;n Exportar/Excel</td><td>.xlsx / .csv</td></tr>
           </tbody>
         </table>
-
-        <h3>Crea tu &ldquo;data lake contable&rdquo;</h3>
-        <p>Un data lake suena t&eacute;cnico, pero es simplemente <strong>un lugar organizado donde viven todos tus datos</strong>. En tu caso: una carpeta en Google Drive con una estructura consistente.</p>
 
         <div class="tip">
           <div class="tip-header">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            <h4>Tip pr&aacute;ctico</h4>
+            <h4>El archivo m&aacute;s importante</h4>
           </div>
-          <p><strong>Nombra tus archivos de forma consistente:</strong> <code>Balance_[NombreCliente]_[YYYY-MM].xlsx</code>. Por ejemplo: <code>Balance_DistribuidoraXYZ_2025-12.xlsx</code>. Esto permite que los scripts los encuentren autom&aacute;ticamente y que t&uacute; sepas exactamente qu&eacute; contiene cada archivo sin abrirlo.</p>
+          <p>El <strong>balance de prueba por tercero</strong> es el archivo m&aacute;s &uacute;til para automatizaci&oacute;n. Tiene el detalle por NIT que necesitas para ex&oacute;gena, retenciones y cruces. Si tu software lo permite, expor&oacute;rtalo siempre por tercero, no solo por cuenta.</p>
         </div>
+
+        <h2>Organizaci&oacute;n en Google Drive</h2>
 
         <div class="expandible" onclick="this.classList.toggle('open')">
           <button class="expandible-toggle">
             <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
-            Ver: Estructura de carpetas en Drive para una firma con 10 clientes
+            Ver: Estructura de carpetas recomendada para una firma con 10 clientes
           </button>
           <div class="expandible-content" style="padding:12px 14px">
             <div class="pseudocode">
-<span class="comment">// Estructura recomendada en Google Drive</span>
-<br><br>
-<span class="step-num">Mi Firma Contable/</span>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;2025/
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cliente_DistribuidoraXYZ/
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Balance_DistribuidoraXYZ_2025-01.xlsx
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Balance_DistribuidoraXYZ_2025-02.xlsx
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Balance_DistribuidoraXYZ_2025-12.xlsx
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Borradores/
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Borrador_IVA_Bim1.gsheet
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Borrador_ReteFte_Ene.gsheet
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cliente_RestauranteLaMesa/
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Balance_RestauranteLaMesa_2025-01.xlsx
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cliente_ConsultoraABC/
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
-<br>&nbsp;&nbsp;&nbsp;&nbsp;2026/
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Misma estructura, nuevo a&ntilde;o</span>
-<br>&nbsp;&nbsp;&nbsp;&nbsp;Plantillas/
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Plantilla_Balance_Vacio.gsheet
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard_Modelo.gsheet
+<span class="comment">// Estructura en Google Drive</span>
+Mi Firma Contable/
+  Cliente_01_NombreSAS/
+    2025/
+      Balance_Cliente01_2025-01.xlsx
+      Balance_Cliente01_2025-02.xlsx
+      ...
+      Balance_Cliente01_2025-12.xlsx
+      <span class="keyword">MaestroAnual_Cliente01_2025.gsheet</span> <span class="comment">// Tabs por mes</span>
+    2026/
+      ...
+  Cliente_02_NombreLTDA/
+    2025/
+      ...
+  ...
+  Cliente_10_NombrePN/
+    2025/
+      ...
+  <span class="keyword">Plantillas/</span>
+    Plantilla_Balance.gsheet
+    Plantilla_Dashboard.gsheet
+    Plantilla_IVA300.gsheet
             </div>
-            <p style="font-size:.85rem;color:var(--gray-600);margin-top:12px">Esta estructura te permite encontrar cualquier balance en 3 clics y automatizar con scripts que recorren la carpeta de cada cliente.</p>
+            <p style="font-size:.82rem;color:var(--gray-600);margin-top:8px"><strong>Convenci&oacute;n de nombres:</strong> Balance_[NombreCorto]_[YYYY-MM].xlsx. Siempre el mismo formato. As&iacute; tus scripts pueden encontrar los archivos autom&aacute;ticamente.</p>
           </div>
         </div>
 
-        <div class="norma">
-          <div class="norma-header">
-            <div class="norma-icon">&#9878;</div>
-            <h4>El poder de tener datos en Sheets</h4>
-          </div>
-          <blockquote>
-            Una vez que tus datos est&aacute;n en Google Sheets, puedes: <strong>escribir scripts</strong> que calculen borradores de declaraciones autom&aacute;ticamente, <strong>crear dashboards</strong> que tu cliente ve en tiempo real, <strong>alimentar herramientas de IA</strong> que analicen tu informaci&oacute;n, y <strong>compartir</strong> con tu equipo sin enviar archivos por correo.
-          </blockquote>
-          <div class="norma-aplicacion">
-            <strong>La inversi&oacute;n:</strong> 30 minutos al mes por cliente para exportar e importar. <strong>El retorno:</strong> horas ahorradas en c&aacute;lculos manuales, cero errores de transcripci&oacute;n, y la capacidad de automatizar todo lo que viene despu&eacute;s.
-          </div>
-        </div>
+        <h2>De Excel a Sheets: el flujo mensual</h2>
+        <ol>
+          <li><strong>D&iacute;a 5 del mes:</strong> Exportas el balance de prueba del mes anterior desde tu software</li>
+          <li><strong>Subes a Drive:</strong> Lo colocas en la carpeta del cliente, a&ntilde;o y mes correspondiente</li>
+          <li><strong>Importas a tu Maestro Anual:</strong> Copias los datos a una nueva pesta&ntilde;a en tu archivo Sheets maestro</li>
+          <li><strong>Autom&aacute;tico:</strong> Una vez importado, tus f&oacute;rmulas, scripts y dashboards se actualizan solos</li>
+        </ol>
+        <p>La primera vez toma esfuerzo. Desde el segundo mes, son 15 minutos por cliente. Desde el tercero, puedes automatizar la importaci&oacute;n con Apps Script (pr&oacute;ximo m&oacute;dulo).</p>
 
-        <div class="error-comun">
-          <div class="error-comun-header">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
-            <h4>Error com&uacute;n</h4>
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Empieza con UNO</h4>
           </div>
-          <p>Guardar los archivos con nombres como &ldquo;Balance final (2).xlsx&rdquo;, &ldquo;Balance corregido NUEVO.xlsx&rdquo; o &ldquo;Copia de copia&rdquo;. <strong>No sabr&aacute;s cu&aacute;l es el correcto</strong> y ning&uacute;n script podr&aacute; encontrarlos autom&aacute;ticamente. Usa el formato: <code>Balance_[Cliente]_[YYYY-MM].xlsx</code> desde el primer d&iacute;a.</p>
+          <p>No intentes organizar 15 clientes de una vez. <strong>Elige tu cliente m&aacute;s sencillo</strong> (pocos movimientos, una sola actividad econ&oacute;mica). Mont&aacute; la estructura completa para ese. Cuando funcione, replicas.</p>
         </div>
       </div>
 
       <div class="mod-nav">
         <a href="#modulo-4" class="prev" onclick="navigateTo(4)">&larr; M&oacute;dulo 4</a>
-        <a href="#modulo-6" class="next" onclick="navigateTo(6)">M&oacute;dulo 6: Apps Script autom&aacute;tico &rarr;</a>
+        <a href="#modulo-6" class="next" onclick="navigateTo(6)">M&oacute;dulo 6: Apps Script &rarr;</a>
       </div>
     </section>
 
@@ -834,93 +783,154 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
           <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 6
         </div>
         <div class="mod-num">M&oacute;dulo 6 de 8</div>
-        <h1>Apps Script: borradores autom&aacute;ticos de impuestos</h1>
-        <p class="mod-desc">Google Apps Script es el lenguaje de automatizaci&oacute;n de Google Sheets. Es gratuito, no requiere instalaci&oacute;n, y no necesitas ser programador para usarlo. Solo necesitas describir tu proceso.</p>
+        <h1>Apps Script: automatiza tus procesos contables</h1>
+        <p class="mod-desc">Google Apps Script es JavaScript que corre dentro de Sheets. Es gratis, no requiere instalaci&oacute;n, y puedes usar IA para que te ayude a escribirlo. No necesitas ser programador.</p>
       </div>
 
       <div class="content-block">
-        <h2>&iquest;Qu&eacute; es Apps Script?</h2>
-        <p>Apps Script es la herramienta de automatizaci&oacute;n integrada en Google Sheets. Funciona en la nube (no instalas nada en tu computador), es completamente gratuita, y te permite automatizar tareas repetitivas que hoy haces a mano.</p>
-        <p><strong>No necesitas ser programador.</strong> La mayor&iacute;a de scripts &uacute;tiles para contabilidad siguen el mismo patr&oacute;n: leer datos de una hoja, hacer un c&aacute;lculo, y escribir el resultado en otra hoja. Es describir tu proceso en un lenguaje que el computador entiende.</p>
+        <h2>Qu&eacute; es Apps Script</h2>
+        <p>Apps Script es un lenguaje de programaci&oacute;n que Google puso dentro de sus herramientas (Sheets, Docs, Gmail, Drive). Cuando abres una hoja de c&aacute;lculo y vas a <strong>Extensiones &rarr; Apps Script</strong>, se abre un editor donde puedes escribir instrucciones que manipulan tus datos autom&aacute;ticamente.</p>
+        <p>Es gratis. No instalas nada. Corre en la nube de Google. Y lo m&aacute;s importante: <strong>puedes usar ChatGPT o Gemini para que te escriba los scripts.</strong></p>
 
-        <h3>&iquest;Qu&eacute; puedes automatizar?</h3>
-
-        <table class="tabla-norm">
-          <thead>
-            <tr><th>Tarea manual</th><th>Automatizaci&oacute;n con Apps Script</th><th>Tiempo ahorrado</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Leer balance y calcular casillas del IVA 300</td>
-              <td>Script lee cuentas 2408/2404 &rarr; calcula IVA generado/descontable &rarr; escribe borrador</td>
-              <td>2-3 horas por cliente/bimestre</td>
-            </tr>
-            <tr>
-              <td>Calcular retenci&oacute;n en la fuente por empleado</td>
-              <td>Script lee n&oacute;mina &rarr; aplica tabla Art. 383 ET &rarr; genera resumen de retenci&oacute;n</td>
-              <td>4-6 horas por mes</td>
-            </tr>
-            <tr>
-              <td>Pre-depurar renta: identificar gastos no deducibles</td>
-              <td>Script lee balance &rarr; aplica 63 reglas de l&iacute;mites &rarr; marca gastos que exceden topes</td>
-              <td>1-2 d&iacute;as por cliente</td>
-            </tr>
-            <tr>
-              <td>Clasificar cuentas para ex&oacute;gena</td>
-              <td>Script lee m&uacute;ltiples balances &rarr; clasifica por concepto de ex&oacute;gena &rarr; genera archivo</td>
-              <td>Medio d&iacute;a por cliente</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h3>C&oacute;mo piensa un script (sin c&oacute;digo)</h3>
-        <p>Un script no es m&aacute;s que <strong>tu proceso manual escrito paso a paso</strong>. Veamos un ejemplo: c&oacute;mo calcular&iacute;as el IVA generado del bimestre.</p>
-
-        <div class="ejemplo">
-          <div class="ejemplo-header">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-            <h4>Ejemplo &mdash; L&oacute;gica de un script para IVA generado</h4>
-          </div>
-          <div class="ejemplo-body">
-            <div class="pseudocode">
-<span class="step-num">Paso 1.</span> Abrir la hoja "Balance_ClienteX_2025-02"
-<br><span class="step-num">Paso 2.</span> Buscar todas las filas con c&oacute;digo de cuenta que empiece con "2408" <span class="comment">// IVA generado</span>
-<br><span class="step-num">Paso 3.</span> Para cada fila encontrada: sumar el saldo cr&eacute;dito
-<br><span class="step-num">Paso 4.</span> El resultado = Total IVA generado del periodo
-<br><span class="step-num">Paso 5.</span> Escribir ese valor en la hoja "Borrador_IVA", casilla 29
-<br>
-<br><span class="step-num">Paso 6.</span> Repetir para cuentas "2404" <span class="comment">// IVA descontable</span>
-<br><span class="step-num">Paso 7.</span> Sumar saldos d&eacute;bito = Total IVA descontable
-<br><span class="step-num">Paso 8.</span> Escribir en casilla 52 del borrador
-<br>
-<br><span class="step-num">Paso 9.</span> Calcular: IVA generado - IVA descontable = Saldo
-<br><span class="step-num">Paso 10.</span> Si saldo &gt; 0 &rarr; "Saldo a pagar" <span class="comment">// casilla 80</span>
-<br><span class="step-num">Paso 10.</span> Si saldo &lt; 0 &rarr; "Saldo a favor" <span class="comment">// casilla 84</span>
-            </div>
-          </div>
-        </div>
-
-        <p>&iquest;Ves? No hay nada m&iacute;stico. Es exactamente lo que t&uacute; haces a mano, pero el computador lo hace en 2 segundos en vez de 2 horas. <strong>El cambio mental es clave:</strong> no est&aacute;s &ldquo;programando&rdquo;, est&aacute;s <strong>describiendo tu proceso</strong> para que el computador lo ejecute.</p>
+        <h2>Lo que necesitas saber (no es programar)</h2>
+        <p>No necesitas aprender JavaScript. Necesitas aprender a:</p>
+        <ol>
+          <li><strong>Entender qu&eacute; quieres automatizar</strong> &mdash; describe tu proceso manual paso a paso</li>
+          <li><strong>Describirlo en lenguaje natural</strong> &mdash; escr&iacute;belo como se lo explicar&iacute;as a un asistente</li>
+          <li><strong>Ped&iacute;rselo a la IA</strong> &mdash; la IA traduce tu descripci&oacute;n a c&oacute;digo Apps Script</li>
+          <li><strong>Probarlo con datos reales</strong> &mdash; corre el script con UNA hoja de prueba primero</li>
+          <li><strong>Ajustar y mejorar</strong> &mdash; si algo no funciona, le dices a la IA qu&eacute; sali&oacute; mal</li>
+        </ol>
 
         <div class="norma">
           <div class="norma-header">
-            <div class="norma-icon">&#9878;</div>
+            <div class="norma-icon">&#9881;</div>
             <h4>El cambio de mentalidad</h4>
+            <span class="norma-tag">Clave</span>
           </div>
           <blockquote>
-            Cada vez que te encuentres haciendo una tarea repetitiva &mdash; copiar n&uacute;meros de un lado a otro, buscar cuentas espec&iacute;ficas, sumar columnas, aplicar la misma f&oacute;rmula para 20 clientes &mdash; <strong>preg&uacute;ntate: &iquest;puedo describir esto como pasos?</strong> Si la respuesta es s&iacute;, un script puede hacerlo por ti.
+            <strong>No est&aacute;s programando. Est&aacute;s DESCRIBIENDO tu proceso manual para que la computadora lo repita.</strong> Los mismos pasos que haces en Excel con el mouse, pero automatizados. Leer una columna, filtrar ciertas filas, sumar valores, escribir el resultado en otra celda.
           </blockquote>
-          <div class="norma-aplicacion">
-            <strong>No necesitas escribir el script t&uacute; mismo.</strong> Puedes pedirle a la IA que lo genere a partir de tu descripci&oacute;n en lenguaje natural. T&uacute; describes el proceso, la IA escribe el c&oacute;digo, t&uacute; lo pegas en Apps Script, lo ejecutas y verificas el resultado.
+        </div>
+
+        <h2>Qu&eacute; puedes automatizar (con l&oacute;gica conceptual)</h2>
+
+        <h3>Borrador de IVA (F300)</h3>
+        <div class="pseudocode">
+<span class="comment">// L&oacute;gica conceptual &mdash; NO es c&oacute;digo real</span>
+
+<span class="keyword">LEER</span> hoja "Balance" completa
+<span class="keyword">FILTRAR</span> filas donde c&oacute;digo de cuenta empiece con "2408"
+  <span class="comment">// Estas son las cuentas de IVA generado</span>
+<span class="keyword">SUMAR</span> la columna de cr&eacute;ditos de esas filas
+  <span class="comment">// Resultado = Total IVA generado</span>
+<span class="keyword">FILTRAR</span> filas donde c&oacute;digo empiece con "2404"
+  <span class="comment">// Estas son las cuentas de IVA descontable</span>
+<span class="keyword">SUMAR</span> la columna de d&eacute;bitos de esas filas
+  <span class="comment">// Resultado = Total IVA descontable</span>
+<span class="keyword">CALCULAR</span> diferencia = generado - descontable
+<span class="keyword">ESCRIBIR</span> resultados en hoja "Resumen_IVA"
+        </div>
+
+        <h3>Borrador de retenciones (F350)</h3>
+        <div class="pseudocode">
+<span class="comment">// L&oacute;gica conceptual</span>
+
+<span class="keyword">LEER</span> hoja "Balance"
+<span class="keyword">FILTRAR</span> filas donde cuenta empiece con "2365"
+  <span class="comment">// Retenciones practicadas</span>
+<span class="keyword">AGRUPAR</span> por subcuenta (2365xx):
+  236505 = Salarios
+  236510 = Honorarios
+  236515 = Servicios
+  236525 = Compras
+  ...
+<span class="keyword">SUMAR</span> cr&eacute;ditos de cada grupo
+<span class="keyword">ESCRIBIR</span> tabla resumen en hoja "Resumen_ReteFte"
+  concepto | base | tarifa | retenci&oacute;n
+        </div>
+
+        <h3>Pre-depuraci&oacute;n de renta</h3>
+        <div class="pseudocode">
+<span class="comment">// L&oacute;gica conceptual</span>
+
+<span class="keyword">LEER</span> hoja "Balance"
+<span class="keyword">CLASIFICAR</span>:
+  Ingresos = cuentas grupo 4 (41xx, 42xx)
+  Costos = cuentas grupo 6 (61xx)
+  Gastos = cuentas grupo 5 (51xx, 52xx, 53xx)
+<span class="keyword">SUMAR</span> cada grupo
+<span class="keyword">CALCULAR</span>:
+  Renta bruta = Ingresos - Costos
+  Renta l&iacute;quida = Renta bruta - Gastos deducibles
+<span class="keyword">MARCAR</span> gastos sospechosos:
+  - Gastos de representaci&oacute;n &gt; l&iacute;mite
+  - Donaciones sin certificado
+  - Gastos sin factura electr&oacute;nica soporte
+<span class="keyword">ESCRIBIR</span> resumen en hoja "Pre_Renta"
+        </div>
+
+        <h3>Clasificaci&oacute;n ex&oacute;gena</h3>
+        <div class="pseudocode">
+<span class="comment">// L&oacute;gica conceptual</span>
+
+<span class="keyword">LEER</span> hoja "Balance_por_Tercero"
+<span class="keyword">PARA CADA</span> tercero:
+  <span class="keyword">CLASIFICAR</span> sus cuentas en formatos DIAN:
+    Ctas 22xx pagos &rarr; Formato 1001 (pagos a terceros)
+    Ctas 13xx cobros &rarr; Formato 1007 (ingresos recibidos)
+    Ctas 2365 retenciones &rarr; Formato 1003 (retenciones practicadas)
+  <span class="keyword">VERIFICAR</span>: si pago &gt; tope, debe tener retenci&oacute;n
+<span class="keyword">GENERAR</span> resumen por formato y concepto
+        </div>
+
+        <h3>C&aacute;lculos de n&oacute;mina</h3>
+        <div class="pseudocode">
+<span class="comment">// L&oacute;gica conceptual</span>
+
+<span class="keyword">LEER</span> hoja "Empleados" (nombre, salario, d&iacute;as)
+<span class="keyword">PARA CADA</span> empleado:
+  <span class="keyword">CALCULAR</span> devengado del mes
+  <span class="keyword">CALCULAR</span> seguridad social:
+    Salud empleado = 4% del IBC
+    Pensi&oacute;n empleado = 4% del IBC
+    Salud empleador = 8.5% (o exento si &lt; 10 SMMLV, Art. 114-1 ET)
+    Pensi&oacute;n empleador = 12%
+  <span class="keyword">CALCULAR</span> prestaciones:
+    Prima = salario / 12
+    Cesant&iacute;as = salario / 12
+    Intereses cesant&iacute;as = cesant&iacute;as * 12%
+    Vacaciones = salario base / 24 (d&iacute;as h&aacute;biles)
+  <span class="keyword">CALCULAR</span> retenci&oacute;n en la fuente si aplica
+<span class="keyword">ESCRIBIR</span> n&oacute;mina mensual en hoja "Nomina_[MES]"
+        </div>
+
+        <h2>C&oacute;mo pedirle a la IA que escriba tu script</h2>
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Prompt modelo para generar Apps Script</h4>
+          </div>
+          <div class="ejemplo-body" style="font-size:.85rem;color:var(--gray-600);line-height:1.7">
+            <p>&ldquo;Escribe un Google Apps Script que haga lo siguiente:</p>
+            <p>1. Lea la hoja llamada &lsquo;Balance&rsquo; de mi Google Sheets</p>
+            <p>2. La columna A tiene el c&oacute;digo de cuenta PUC (6 d&iacute;gitos)</p>
+            <p>3. La columna B tiene el nombre de la cuenta</p>
+            <p>4. La columna D tiene el saldo d&eacute;bito</p>
+            <p>5. La columna E tiene el saldo cr&eacute;dito</p>
+            <p>6. Filtre las filas donde la cuenta empiece con &lsquo;2408&rsquo;</p>
+            <p>7. Sume todos los cr&eacute;ditos de esas filas</p>
+            <p>8. Escriba el total en la celda B5 de una hoja llamada &lsquo;Resumen_IVA&rsquo;</p>
+            <p>9. Si la hoja &lsquo;Resumen_IVA&rsquo; no existe, que la cree.&rdquo;</p>
           </div>
         </div>
 
         <div class="tip">
           <div class="tip-header">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            <h4>Tip pr&aacute;ctico</h4>
+            <h4>Empieza con lo m&aacute;s simple</h4>
           </div>
-          <p><strong>Empieza peque&ntilde;o.</strong> No intentes automatizar toda tu firma el primer d&iacute;a. Elige UNA tarea para UN cliente: por ejemplo, calcular el IVA generado del bimestre para tu cliente m&aacute;s grande. Una vez que funcione, rep&iacute;telo para los dem&aacute;s. As&iacute; construyes confianza en el proceso.</p>
+          <p>Tu primer script deber&iacute;a ser algo trivial: &ldquo;suma los cr&eacute;ditos de las cuentas 2408 y escribe el total en otra celda&rdquo;. Eso. Nada m&aacute;s. Cuando funcione y entiendas el flujo (escribir &rarr; probar &rarr; ajustar), avanzas al siguiente. <strong>No intentes automatizar toda tu firma en un fin de semana.</strong></p>
         </div>
 
         <div class="error-comun">
@@ -928,32 +938,13 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
             <h4>Error com&uacute;n</h4>
           </div>
-          <p>Querer automatizar todo al mismo tiempo. El resultado: frustraci&oacute;n, scripts a medio terminar y volver al m&eacute;todo manual. <strong>La automatizaci&oacute;n exitosa es incremental:</strong> una tarea a la vez, un cliente a la vez, un formulario a la vez.</p>
-        </div>
-
-        <div class="expandible" onclick="this.classList.toggle('open')">
-          <button class="expandible-toggle">
-            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
-            Ver: C&oacute;mo abrir Apps Script en Google Sheets
-          </button>
-          <div class="expandible-content" style="padding:12px 14px">
-            <ol style="font-size:.85rem;color:var(--gray-600);line-height:1.7;padding-left:20px">
-              <li>Abre cualquier archivo de Google Sheets</li>
-              <li>Men&uacute; superior: <strong>Extensiones</strong> &rarr; <strong>Apps Script</strong></li>
-              <li>Se abre un editor en una nueva pesta&ntilde;a</li>
-              <li>Pega el c&oacute;digo del script (el que la IA te gener&oacute; o que copiaste de una fuente confiable)</li>
-              <li>Haz clic en el bot&oacute;n <strong>Ejecutar</strong> (triangulito de play)</li>
-              <li>La primera vez pedir&aacute; permisos &mdash; acept&aacute; (es tu propia cuenta de Google)</li>
-              <li>El script se ejecuta y los resultados aparecen en tu hoja</li>
-            </ol>
-            <p style="font-size:.85rem;color:var(--gray-600);margin-top:12px"><strong>Tiempo total:</strong> menos de 5 minutos la primera vez. Despu&eacute;s, un clic.</p>
-          </div>
+          <p>Querer automatizar todo de una vez. Empiezas con un script de IVA + retenciones + renta + ex&oacute;gena + n&oacute;mina. Se rompe en la l&iacute;nea 3, no sabes por qu&eacute;, te frustras, abandonas. <strong>Un script. Una tarea. Un cliente.</strong> Construye desde ah&iacute;.</p>
         </div>
       </div>
 
       <div class="mod-nav">
         <a href="#modulo-5" class="prev" onclick="navigateTo(5)">&larr; M&oacute;dulo 5</a>
-        <a href="#modulo-7" class="next" onclick="navigateTo(7)">M&oacute;dulo 7: Dashboards autom&aacute;ticos &rarr;</a>
+        <a href="#modulo-7" class="next" onclick="navigateTo(7)">M&oacute;dulo 7: Dashboards &rarr;</a>
       </div>
     </section>
 
@@ -964,122 +955,131 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
           <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 7
         </div>
         <div class="mod-num">M&oacute;dulo 7 de 8</div>
-        <h1>Dashboards autom&aacute;ticos: muestra resultados, no solo n&uacute;meros</h1>
-        <p class="mod-desc">Tu cliente no quiere un PDF de 30 p&aacute;ginas. Quiere saber c&oacute;mo va su negocio en 10 segundos. Los dashboards transforman tu trabajo contable en valor visible.</p>
+        <h1>Construye dashboards para tus clientes</h1>
+        <p class="mod-desc">Tus competidores env&iacute;an un PDF una vez al mes. T&uacute; env&iacute;as un link a un dashboard en vivo. Esa es la diferencia entre un contador y un contador que cobra m&aacute;s.</p>
       </div>
 
       <div class="content-block">
-        <h2>&iquest;Por qu&eacute; importan los dashboards?</h2>
-        <p>La contabilidad es invisible para la mayor&iacute;a de los empresarios. Ven n&uacute;meros que no entienden en estados financieros que no leen. Un dashboard cambia eso: <strong>convierte datos contables en decisiones de negocio</strong>.</p>
-        <p>La diferencia competitiva es real:</p>
+        <h2>&iquest;Por qu&eacute; dashboards?</h2>
+        <p>Tu cliente no entiende un balance de prueba. No quiere un estado financiero en PDF. Quiere saber: <strong>&iquest;c&oacute;mo va mi negocio?</strong> Un dashboard traduce tu conocimiento contable a un lenguaje visual que el cliente entiende y valora. Y lo mejor: se actualiza solo cuando actualizas los datos en Sheets.</p>
+
+        <h2>Dashboards en Google Sheets (sin herramientas extra)</h2>
+        <p>Antes de usar herramientas sofisticadas, puedes construir dashboards efectivos directamente en Google Sheets:</p>
+
+        <h3>Herramientas nativas de Sheets</h3>
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Herramienta</th><th>Para qu&eacute; sirve</th><th>Ejemplo contable</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Tablas din&aacute;micas</strong></td><td>Resumir grandes vol&uacute;menes de datos por categor&iacute;a</td><td>Ingresos por l&iacute;nea de negocio por mes</td></tr>
+            <tr><td><strong>SPARKLINE</strong></td><td>Mini-gr&aacute;ficos dentro de una celda</td><td>Tendencia de ingresos mensuales en una celda</td></tr>
+            <tr><td><strong>Formato condicional</strong></td><td>Sem&aacute;foros rojo/amarillo/verde</td><td>Impuestos: rojo si vencido, amarillo si &lt;5 d&iacute;as, verde si al d&iacute;a</td></tr>
+            <tr><td><strong>Gr&aacute;ficos de barras</strong></td><td>Comparar valores entre categor&iacute;as</td><td>Ingresos mensuales del a&ntilde;o</td></tr>
+            <tr><td><strong>Gr&aacute;ficos circulares</strong></td><td>Distribuci&oacute;n porcentual</td><td>Gastos por categor&iacute;a (n&oacute;mina, arriendos, servicios)</td></tr>
+            <tr><td><strong>Gr&aacute;ficos de l&iacute;nea</strong></td><td>Tendencias en el tiempo</td><td>Evoluci&oacute;n de utilidad mes a mes</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Indicadores clave para cada cliente</h2>
+        <p>Estos son los indicadores que todo cliente deber&iacute;a poder ver en su dashboard:</p>
 
         <div class="ejemplo">
           <div class="ejemplo-header">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-            <h4>Antes vs. Despu&eacute;s &mdash; C&oacute;mo presentas la informaci&oacute;n</h4>
+            <h4>Dashboard m&iacute;nimo viable para un cliente</h4>
           </div>
           <div class="ejemplo-body">
-            <div class="ejemplo-row"><span class="label">Antes: enviar por correo</span><span class="value">PDF del balance + ERI en Excel</span></div>
-            <div class="ejemplo-row"><span class="label">El cliente hace:</span><span class="value">Lo ignora o lo archiva</span></div>
-            <div class="ejemplo-row" style="border-top:2px solid var(--green-200);margin-top:8px;padding-top:12px"><span class="label">Despu&eacute;s: compartir un link</span><span class="value">Dashboard interactivo en tiempo real</span></div>
-            <div class="ejemplo-row"><span class="label">El cliente hace:</span><span class="value">Lo consulta cada semana</span></div>
-            <div class="ejemplo-row total"><span class="label">Diferencia real:</span><span class="value">Tu cliente te percibe como estratega, no solo como obligatorio</span></div>
+            <div class="ejemplo-row"><span class="label">Tendencia de ingresos mensuales</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Gr&aacute;fico de barras</span></div>
+            <div class="ejemplo-row"><span class="label">Desglose de gastos por categor&iacute;a</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Gr&aacute;fico circular</span></div>
+            <div class="ejemplo-row"><span class="label">Impuestos pagados vs. provisionados</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Tabla comparativa</span></div>
+            <div class="ejemplo-row"><span class="label">Cartera por edades (30/60/90 d&iacute;as)</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Barras apiladas</span></div>
+            <div class="ejemplo-row"><span class="label">Flujo de caja resumido</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Tabla + l&iacute;nea de tendencia</span></div>
+            <div class="ejemplo-row"><span class="label">Pr&oacute;ximos vencimientos tributarios</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Sem&aacute;foro rojo/amarillo/verde</span></div>
           </div>
         </div>
 
-        <h3>Opci&oacute;n 1: Dashboards en Google Sheets</h3>
-        <p>No necesitas herramientas externas para empezar. Google Sheets ya tiene todo lo que necesitas:</p>
-        <ul>
-          <li><strong>Tablas din&aacute;micas:</strong> agrupa ingresos por mes, gastos por categor&iacute;a, impuestos por tipo</li>
-          <li><strong>Formato condicional:</strong> sem&aacute;foro rojo/amarillo/verde para indicadores clave</li>
-          <li><strong>Sparklines:</strong> mini-gr&aacute;ficos dentro de celdas que muestran tendencias</li>
-          <li><strong>Gr&aacute;ficos:</strong> barras, l&iacute;neas, tortas &mdash; vinculados a los datos que se actualizan solos</li>
-        </ul>
-
-        <h3>Indicadores clave para un dashboard contable</h3>
-
-        <table class="tabla-norm">
-          <thead>
-            <tr><th>Indicador</th><th>Tipo de gr&aacute;fico</th><th>Fuente de datos</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Ingresos mensuales</strong></td>
-              <td>L&iacute;nea (tendencia 12 meses)</td>
-              <td>Cuentas 41xx del balance mensual</td>
-            </tr>
-            <tr>
-              <td><strong>Gastos por categor&iacute;a</strong></td>
-              <td>Torta o barras horizontales</td>
-              <td>Cuentas 51xx, 52xx agrupadas</td>
-            </tr>
-            <tr>
-              <td><strong>Impuestos pagados vs. causados</strong></td>
-              <td>Barras comparativas</td>
-              <td>Cuentas 2408, 2404, 2365, 2368</td>
-            </tr>
-            <tr>
-              <td><strong>Cartera por antig&uuml;edad</strong></td>
-              <td>Barras apiladas (0-30, 31-60, 61-90, &gt;90 d&iacute;as)</td>
-              <td>Cuentas 1305xx con auxiliar por tercero</td>
-            </tr>
-            <tr>
-              <td><strong>Obligaciones tributarias</strong></td>
-              <td>Sem&aacute;foro (al d&iacute;a / pr&oacute;ximo / vencido)</td>
-              <td>Calendario tributario del cliente</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h3>Opci&oacute;n 2: Looker Studio (gratuito)</h3>
-        <p>Si quieres un nivel m&aacute;s profesional, <strong>Looker Studio</strong> (antes Google Data Studio) es la herramienta gratuita de Google para crear dashboards interactivos:</p>
-        <ul>
-          <li>Se conecta directamente a Google Sheets (tus datos ya est&aacute;n ah&iacute;)</li>
-          <li>Interfaz de arrastrar y soltar &mdash; no requiere c&oacute;digo</li>
-          <li>Genera un link compartible &mdash; tu cliente lo abre en el navegador</li>
-          <li>Se actualiza autom&aacute;ticamente cuando los datos en Sheets cambian</li>
-          <li>Puedes personalizar con los colores de la marca de tu cliente</li>
-        </ul>
+        <h2>Looker Studio: dashboards profesionales gratis</h2>
+        <p><strong>Looker Studio</strong> (antes Google Data Studio) es la herramienta gratuita de Google para crear dashboards interactivos y visualmente profesionales. Se conecta directamente a tus Google Sheets.</p>
+        <ol>
+          <li><strong>Crea un reporte nuevo</strong> en lookerstudio.google.com</li>
+          <li><strong>Conecta tu fuente de datos:</strong> selecciona tu Google Sheets con el balance/resumen</li>
+          <li><strong>Arrastra y suelta:</strong> tablas, gr&aacute;ficos, filtros, indicadores KPI</li>
+          <li><strong>Comparte con un link:</strong> tu cliente accede sin necesitar cuenta Google</li>
+          <li><strong>Se actualiza solo:</strong> cuando cambias datos en Sheets, el dashboard refleja los cambios</li>
+        </ol>
 
         <div class="norma">
           <div class="norma-header">
-            <div class="norma-icon">&#9878;</div>
-            <h4>La ventaja competitiva real</h4>
+            <div class="norma-icon">&#9733;</div>
+            <h4>La ventaja competitiva en Colombia</h4>
           </div>
           <blockquote>
-            &ldquo;Mi contador me manda un link donde veo mis indicadores en tiempo real&rdquo; vs. &ldquo;Mi contador me manda un PDF una vez al mes que no entiendo&rdquo;. <strong>La percepci&oacute;n de valor del cliente cambia radicalmente.</strong> El contador que muestra dashboards retiene clientes, cobra m&aacute;s y se diferencia de la competencia.
+            La mayor&iacute;a de firmas contables en Colombia env&iacute;an <strong>fotos de Excel por WhatsApp</strong> o PDFs adjuntos por correo. T&uacute; env&iacute;as un <strong>link a un dashboard interactivo</strong> que el cliente abre en su celular y ve c&oacute;mo va su negocio en tiempo real. Eso es lo que te permite <strong>cobrar m&aacute;s y retener clientes</strong>.
           </blockquote>
-          <div class="norma-aplicacion">
-            <strong>Dato clave:</strong> Crear un dashboard b&aacute;sico en Looker Studio conectado a Sheets toma entre 2 y 4 horas la primera vez. Pero una vez creado el modelo, replicarlo para cada cliente toma 30 minutos. La inversi&oacute;n se paga con el primer cliente que decide quedarse porque &ldquo;su contador le da m&aacute;s que n&uacute;meros&rdquo;.
+        </div>
+
+        <h2>Tu primer dashboard: paso a paso</h2>
+        <ol>
+          <li>Elige un cliente con datos de al menos 3 meses en tu Sheets maestro</li>
+          <li>Crea una pesta&ntilde;a &ldquo;Dashboard_Data&rdquo; con tablas resumen: ingresos por mes, gastos por categor&iacute;a, impuestos pagados</li>
+          <li>Inserta un gr&aacute;fico de barras con ingresos mensuales (Insertar &rarr; Gr&aacute;fico)</li>
+          <li>Agrega un gr&aacute;fico circular de gastos por categor&iacute;a</li>
+          <li>Agrega formato condicional tipo sem&aacute;foro a los vencimientos</li>
+          <li>Comp&aacute;rtelo con tu cliente con permisos de &ldquo;solo ver&rdquo;</li>
+        </ol>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: 5 f&oacute;rmulas de Sheets que todo contador debe dominar
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <table class="tabla-norm">
+              <thead><tr><th>F&oacute;rmula</th><th>Qu&eacute; hace</th><th>Ejemplo contable</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>SUMIFS</code></td>
+                  <td>Suma con m&uacute;ltiples condiciones</td>
+                  <td><code>=SUMIFS(E:E, A:A, "2408*")</code> &mdash; Suma cr&eacute;ditos de cuentas 2408</td>
+                </tr>
+                <tr>
+                  <td><code>VLOOKUP</code></td>
+                  <td>Busca un valor en una tabla</td>
+                  <td>Buscar el nombre de un tercero por NIT</td>
+                </tr>
+                <tr>
+                  <td><code>QUERY</code></td>
+                  <td>Consulta tipo SQL sobre tus datos</td>
+                  <td><code>=QUERY(A:E, "SELECT A,E WHERE A LIKE '24%' ORDER BY E DESC")</code></td>
+                </tr>
+                <tr>
+                  <td><code>FILTER</code></td>
+                  <td>Filtra filas seg&uacute;n condici&oacute;n</td>
+                  <td><code>=FILTER(A:E, LEFT(A:A,2)="51")</code> &mdash; Solo gastos operacionales</td>
+                </tr>
+                <tr>
+                  <td><code>SPARKLINE</code></td>
+                  <td>Mini-gr&aacute;fico en una celda</td>
+                  <td><code>=SPARKLINE(B2:M2, {"charttype","bar"})</code> &mdash; Ingresos 12 meses</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
         <div class="tip">
           <div class="tip-header">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            <h4>Tip pr&aacute;ctico</h4>
+            <h4>El poder de la percepci&oacute;n</h4>
           </div>
-          <p><strong>Empieza con un dashboard de Sheets para tu mejor cliente.</strong> No necesitas Looker Studio desde el d&iacute;a 1. Una hoja con 4 gr&aacute;ficos bien hechos y formato condicional tipo sem&aacute;foro ya impresiona m&aacute;s que cualquier PDF. Cuando domines Sheets, migra a Looker Studio para el acabado profesional.</p>
-        </div>
-
-        <div class="error-comun">
-          <div class="error-comun-header">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
-            <h4>Error com&uacute;n</h4>
-          </div>
-          <p>Crear un dashboard con 20 indicadores que nadie entiende. <strong>Menos es m&aacute;s.</strong> Tu cliente necesita 4-5 indicadores clave, no un tablero de avi&oacute;n. Preg&uacute;ntale: &ldquo;&iquest;Qu&eacute; 3 cosas quieres saber de tu negocio cada semana?&rdquo; y construye el dashboard alrededor de esas respuestas.</p>
-        </div>
-
-        <div class="cta-practica">
-          <h3>Explora el Dashboard de Ex&oacute;genaDIAN</h3>
-          <p>Mira c&oacute;mo se ve un dashboard contable profesional y &uacute;salo de referencia para crear el tuyo.</p>
-          <a href="../dashboard.html">Ver Dashboard &rarr;</a>
+          <p>Un dashboard no cambia la calidad de tu trabajo contable &mdash;pero s&iacute; cambia c&oacute;mo tu cliente <strong>percibe</strong> tu trabajo. Y en servicios profesionales, la percepci&oacute;n determina cu&aacute;nto est&aacute;n dispuestos a pagar. El mismo trabajo, presentado mejor, vale m&aacute;s.</p>
         </div>
       </div>
 
       <div class="mod-nav">
         <a href="#modulo-6" class="prev" onclick="navigateTo(6)">&larr; M&oacute;dulo 6</a>
-        <a href="#modulo-8" class="next" onclick="navigateTo(8)">M&oacute;dulo 8: Tu firma al siguiente nivel &rarr;</a>
+        <a href="#modulo-8" class="next" onclick="navigateTo(8)">M&oacute;dulo 8: Tu roadmap &rarr;</a>
       </div>
     </section>
 
@@ -1090,171 +1090,131 @@ body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-
           <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 8
         </div>
         <div class="mod-num">M&oacute;dulo 8 de 8</div>
-        <h1>Pr&aacute;ctica: lleva tu firma al siguiente nivel</h1>
-        <p class="mod-desc">Ya tienes el mapa completo. Ahora es cuesti&oacute;n de conectar los puntos. Aqu&iacute; ves el flujo completo de una firma contable automatizada &mdash; y el plan para llegar ah&iacute; en 6 meses.</p>
+        <h1>Tu roadmap de automatizaci&oacute;n: lleva tu firma al siguiente nivel</h1>
+        <p class="mod-desc">Ya sabes las piezas. Ahora armemos el rompecabezas completo: un plan de 6 meses para transformar tu pr&aacute;ctica contable.</p>
       </div>
 
       <div class="content-block">
-        <h2>El flujo completo de una firma automatizada</h2>
-        <p>Este es el camino que recorre la informaci&oacute;n desde tu software contable hasta la declaraci&oacute;n presentada ante la DIAN. Cada paso ya tiene una herramienta disponible:</p>
+        <h2>El flujo completo automatizado</h2>
+        <p>Esto es a lo que apuntas. No tienes que llegar aqu&iacute; en una semana &mdash;es un proceso de meses&mdash; pero necesitas saber hacia d&oacute;nde caminas:</p>
 
-        <div class="flow-diagram">
-          <h4>Flujo de automatizaci&oacute;n contable</h4>
-          <span class="flow-step">Software Contable (Siigo / WO / Helisa / Alegra)</span>
-          <span class="flow-arrow">&darr;</span>
-          <span class="flow-step">Exportar a Excel</span>
-          <span class="flow-arrow">&darr;</span>
-          <span class="flow-step">Google Sheets (tu data lake contable)</span>
-          <span class="flow-arrow">&darr;</span>
-          <span class="flow-step">Apps Script (c&aacute;lculos autom&aacute;ticos)</span>
-          <span class="flow-arrow">&darr;</span>
-          <span class="flow-step">Borradores autom&aacute;ticos (IVA, ReteFte, Renta)</span>
-          <span class="flow-arrow">&darr;</span>
-          <span class="flow-step">Ex&oacute;genaDIAN (procesar + validar con IA)</span>
-          <span class="flow-arrow">&darr;</span>
-          <span class="flow-step">Dashboard (presentar al cliente)</span>
-          <span class="flow-arrow">&darr;</span>
-          <span class="flow-step">DIAN (presentar declaraciones con confianza)</span>
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Flujo ideal de una firma automatizada</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">1. Software contable</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Registras operaciones normalmente</span></div>
+            <div class="ejemplo-row"><span class="label">2. Exportar a Sheets</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Balance mensual a tu data lake</span></div>
+            <div class="ejemplo-row"><span class="label">3. Apps Script procesa</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Clasifica, cruza, genera borradores</span></div>
+            <div class="ejemplo-row"><span class="label">4. IA audita</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Detecta inconsistencias autom&aacute;ticamente</span></div>
+            <div class="ejemplo-row"><span class="label">5. T&uacute; validas</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Revisas hallazgos y borradores</span></div>
+            <div class="ejemplo-row"><span class="label">6. Presentas ante DIAN</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Con confianza, datos ya cruzados</span></div>
+            <div class="ejemplo-row"><span class="label">7. Dashboard se actualiza</span><span class="value" style="font-family:'Outfit';font-size:.82rem">Tu cliente ve resultados en su celular</span></div>
+          </div>
         </div>
 
-        <h3>Roadmap realista para una firma peque&ntilde;a</h3>
-        <p>No tienes que hacer todo de una vez. Este es un plan de 6 meses que funciona:</p>
+        <h2>Plan de 6 meses para una firma peque&ntilde;a</h2>
 
         <table class="tabla-norm">
           <thead>
-            <tr><th>Mes</th><th>Objetivo</th><th>Resultado</th></tr>
+            <tr><th>Mes</th><th>Objetivo</th><th>Entregable</th></tr>
           </thead>
           <tbody>
             <tr>
               <td><strong>Mes 1</strong></td>
-              <td>Organizar datos en Google Sheets: exportar balances de tus 3 clientes principales, crear estructura de carpetas en Drive</td>
-              <td>Datos accesibles desde cualquier lugar</td>
+              <td>Organizar TODOS los datos de clientes en Drive/Sheets</td>
+              <td>Estructura de carpetas + balances de 3 meses importados para 1 cliente piloto</td>
             </tr>
             <tr>
               <td><strong>Mes 2</strong></td>
-              <td>Primer Apps Script: automatizar el c&aacute;lculo de IVA generado y descontable para un cliente</td>
-              <td>Borrador de IVA 300 en 2 segundos</td>
+              <td>Crear primer Apps Script (borrador de IVA para 1 cliente)</td>
+              <td>Script funcional que lee balance y genera resumen IVA</td>
             </tr>
             <tr>
               <td><strong>Mes 3</strong></td>
-              <td>Crear un dashboard b&aacute;sico en Sheets para tu mejor cliente: ingresos, gastos, impuestos, cartera</td>
-              <td>Cliente impresionado, percepci&oacute;n de valor</td>
+              <td>Construir primer dashboard de Sheets para ese cliente</td>
+              <td>Dashboard con 4-5 indicadores, compartido con el cliente</td>
             </tr>
             <tr>
               <td><strong>Mes 4</strong></td>
-              <td>Replicar el script de IVA y el dashboard para los dem&aacute;s clientes</td>
-              <td>Proceso estandarizado y escalable</td>
+              <td>Replicar estructura y automatizaci&oacute;n para TODOS los clientes</td>
+              <td>Todos los clientes con carpetas organizadas y datos importados</td>
             </tr>
             <tr>
               <td><strong>Mes 5</strong></td>
-              <td>Automatizar retenci&oacute;n en la fuente: script para calcular ReteFte mensual</td>
-              <td>Dos formularios automatizados (300 + 350)</td>
+              <td>Agregar automatizaciones de retenciones y pre-renta</td>
+              <td>Scripts de ReteFte (F350) y pre-depuraci&oacute;n de renta funcionando</td>
             </tr>
             <tr>
               <td><strong>Mes 6</strong></td>
-              <td>Flujo completo operativo: software &rarr; Sheets &rarr; scripts &rarr; Ex&oacute;genaDIAN &rarr; dashboard &rarr; DIAN</td>
-              <td>Firma contable del siglo XXI</td>
+              <td>Flujo completo operativo</td>
+              <td>Todos los clientes con automatizaci&oacute;n + dashboard. Manejas 2x clientes con el mismo esfuerzo.</td>
             </tr>
           </tbody>
         </table>
+
+        <h2>Las matem&aacute;ticas que importan</h2>
+        <p>La automatizaci&oacute;n no es un lujo tecnol&oacute;gico. Es una decisi&oacute;n de negocio que se mide en horas y dinero:</p>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Tiempo real: manual vs. automatizado (firma con 15 clientes)</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">IVA manual: 2 horas/cliente &times; 15</span><span class="value" style="color:var(--rose-500)">30 h/mes</span></div>
+            <div class="ejemplo-row"><span class="label">IVA automatizado: 15 min revisi&oacute;n/cliente &times; 15</span><span class="value" style="color:var(--green-700)">3.75 h/mes</span></div>
+            <div class="ejemplo-row total"><span class="label">Tiempo ahorrado solo en IVA</span><span class="value">26+ h/mes</span></div>
+          </div>
+        </div>
+
+        <div class="ejemplo">
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">ReteFte manual: 1.5 horas/cliente &times; 15</span><span class="value" style="color:var(--rose-500)">22.5 h/mes</span></div>
+            <div class="ejemplo-row"><span class="label">ReteFte automatizado: 10 min revisi&oacute;n/cliente &times; 15</span><span class="value" style="color:var(--green-700)">2.5 h/mes</span></div>
+            <div class="ejemplo-row total"><span class="label">Tiempo ahorrado en ReteFte</span><span class="value">20 h/mes</span></div>
+          </div>
+        </div>
+
+        <div class="ejemplo">
+          <div class="ejemplo-body">
+            <div class="ejemplo-row total"><span class="label">Total tiempo recuperado por mes</span><span class="value" style="color:var(--green-700)">46+ horas</span></div>
+            <div class="ejemplo-row"><span class="label">Eso equivale a</span><span class="value" style="font-family:'Outfit';font-size:.85rem">5-6 d&iacute;as laborales</span></div>
+            <div class="ejemplo-row"><span class="label">Que puedes usar para</span><span class="value" style="font-family:'Outfit';font-size:.85rem">M&aacute;s clientes o mejor servicio</span></div>
+          </div>
+        </div>
+
+        <h2>&iquest;Qu&eacute; aprender despu&eacute;s?</h2>
+        <p>Una vez que domines Sheets + Apps Script + IA, estos son los siguientes pasos para seguir creciendo:</p>
+        <ul>
+          <li><strong>Python para an&aacute;lisis de datos:</strong> M&aacute;s potente que Apps Script para vol&uacute;menes grandes. Google Colab es gratis.</li>
+          <li><strong>Power BI:</strong> Si tus clientes usan Microsoft, Power BI conecta con Excel y crea dashboards profesionales.</li>
+          <li><strong>APIs de software contable:</strong> Algunos software (Alegra, Siigo Nube) tienen APIs que permiten extraer datos autom&aacute;ticamente, sin exportar Excel manualmente.</li>
+          <li><strong>Automatizaciones con Make/Zapier:</strong> Conecta herramientas entre s&iacute; sin c&oacute;digo (ej: cuando llega una factura al correo, extra&eacute;rla autom&aacute;ticamente).</li>
+        </ul>
 
         <div class="norma">
           <div class="norma-header">
-            <div class="norma-icon">&#9878;</div>
-            <h4>Lo que ya existe en Ex&oacute;genaDIAN</h4>
+            <div class="norma-icon">&#9733;</div>
+            <h4>El cambio de identidad profesional</h4>
+            <span class="norma-tag">Reflexi&oacute;n</span>
           </div>
           <blockquote>
-            No necesitas construir todo desde cero. <strong>Estas herramientas ya est&aacute;n listas para usar:</strong> Auditor DIAN con IA, Chat con el Estatuto Tributario, Asistente para Requerimientos, Procesador de IVA 300, Procesador de Renta 110, Procesador de ReteFte 350, Procesador de Ex&oacute;gena, Dashboard Contable y Mi Oficina Contable.
+            <strong>No eres solo un contador. Eres un contador que construye sistemas.</strong> Tus colegas hacen el mismo trabajo manualmente, todos los meses, para siempre. T&uacute; inviertes tiempo una vez en automatizar, y ese sistema trabaja para ti cada mes. Eso te permite atender m&aacute;s clientes, cobrar m&aacute;s por cliente, o simplemente trabajar menos horas. La elecci&oacute;n es tuya.
           </blockquote>
-          <div class="norma-aplicacion">
-            <strong>Tu trabajo:</strong> conectar los puntos. Los datos de tu software contable alimentan estas herramientas. Los resultados de estas herramientas alimentan tu dashboard. El dashboard alimenta la confianza de tu cliente.
-          </div>
         </div>
 
-        <h3>Todas las herramientas en un solo lugar</h3>
-
-        <table class="tabla-norm">
-          <thead>
-            <tr><th>Herramienta</th><th>Para qu&eacute; sirve</th><th>Enlace</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Auditor DIAN</strong></td>
-              <td>Revisar tu balance con ojos de fiscalizador</td>
-              <td><a href="../ia-analisis-balance.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
-            </tr>
-            <tr>
-              <td><strong>Chat Estatuto Tributario</strong></td>
-              <td>Consultar normativa con IA entrenada en el ET</td>
-              <td><a href="../ia-chat-et.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
-            </tr>
-            <tr>
-              <td><strong>Asistente Requerimientos</strong></td>
-              <td>Generar borradores de respuesta a requerimientos DIAN</td>
-              <td><a href="../ia-respuesta-requerimiento.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
-            </tr>
-            <tr>
-              <td><strong>IVA 300</strong></td>
-              <td>Procesar balance &rarr; borrador formulario 300</td>
-              <td><a href="../iva300.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
-            </tr>
-            <tr>
-              <td><strong>Renta 110</strong></td>
-              <td>Procesar balance &rarr; borrador formulario 110</td>
-              <td><a href="../renta110.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
-            </tr>
-            <tr>
-              <td><strong>ReteFte 350</strong></td>
-              <td>Procesar balance &rarr; borrador formulario 350</td>
-              <td><a href="../retefuente350.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
-            </tr>
-            <tr>
-              <td><strong>Ex&oacute;gena</strong></td>
-              <td>Procesar balance &rarr; archivos XML de informaci&oacute;n ex&oacute;gena</td>
-              <td><a href="../index.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
-            </tr>
-            <tr>
-              <td><strong>Dashboard Contable</strong></td>
-              <td>Visualizar indicadores financieros del cliente</td>
-              <td><a href="../dashboard.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
-            </tr>
-            <tr>
-              <td><strong>Mi Oficina Contable</strong></td>
-              <td>Gestionar obligaciones y clientes de tu firma</td>
-              <td><a href="../mi-oficina.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="tip">
-          <div class="tip-header">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            <h4>Tu siguiente paso concreto</h4>
-          </div>
-          <p><strong>Hoy mismo:</strong> abre el Auditor DIAN, sube el balance de prueba de tu cliente principal, y mira qu&eacute; encuentra. Eso es todo. Un paso. Ma&ntilde;ana das el siguiente. En 6 meses tu firma opera de forma completamente diferente.</p>
-        </div>
-
-        <div class="error-comun">
-          <div class="error-comun-header">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
-            <h4>El &uacute;nico error imperdonable</h4>
-          </div>
-          <p><strong>Seguir haciendo todo manual.</strong> No porque sea &ldquo;malo&rdquo; &mdash; es que es insostenible. Tus clientes esperan m&aacute;s, la DIAN cruza m&aacute;s, la competencia se automatiza m&aacute;s. El contador que no se adapta no desaparece de golpe: se va quedando sin clientes lentamente. La buena noticia es que adaptarse nunca fue tan f&aacute;cil como hoy.</p>
-        </div>
-
-        <div style="background:linear-gradient(135deg,var(--green-50),#A7F3D0);border:2px solid var(--green-400);border-radius:16px;padding:36px 28px;text-align:center;margin:32px 0">
-          <h3 style="font-family:'Fraunces',serif;font-size:1.4rem;font-weight:700;color:var(--green-900);margin-bottom:12px">Tu competencia sigue haciendo todo manual. T&uacute; ya no.</h3>
-          <p style="font-size:.95rem;color:var(--green-800);margin-bottom:20px;max-width:500px;margin-left:auto;margin-right:auto">Tienes las herramientas, tienes el plan, tienes el conocimiento. Solo falta empezar. Y el mejor momento para empezar es ahora.</p>
-          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-            <a href="../ia-analisis-balance.html" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--green-700);color:#fff;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;box-shadow:0 4px 16px rgba(5,150,105,.3);transition:all .2s" onmouseover="this.style.background='#064E3B'" onmouseout="this.style.background='#047857'">Empezar con el Auditor DIAN &rarr;</a>
-            <a href="../escuela.html" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--white);color:var(--green-800);border:2px solid var(--green-300);border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;transition:all .2s" onmouseover="this.style.background='#ECFDF5'" onmouseout="this.style.background='#FFF'">Volver a la Escuela &rarr;</a>
-          </div>
+        <div class="cta-practica">
+          <h3>Tu competencia sigue haciendo todo manual. T&uacute; ya no tienes que hacerlo.</h3>
+          <p>Ahora tienes las habilidades. El siguiente paso es aplicarlas. Empieza con un cliente, un script, un dashboard. Lo dem&aacute;s se construye solo.</p>
+          <a href="../escuela.html">&larr; Volver a la Escuela Contable IA</a>
         </div>
       </div>
 
       <div class="mod-nav">
         <a href="#modulo-7" class="prev" onclick="navigateTo(7)">&larr; M&oacute;dulo 7</a>
-        <a href="../escuela.html" class="next" style="background:var(--gray-800)">Volver a la Escuela &rarr;</a>
+        <a href="../escuela.html" class="next">Volver a la Escuela &rarr;</a>
       </div>
     </section>
 
