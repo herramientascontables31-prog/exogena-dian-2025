@@ -65,6 +65,8 @@ const HTML_FILES = [
   'calculadora-regimen.html',
   'regimen-simple.html',
   'escuela/regimen-simple.html',
+  'certificado.html',
+  'verificar-certificado.html',
 ];
 
 // ─── Directorios/archivos estáticos a copiar tal cual ───

@@ -2025,6 +2025,22 @@ total impuestos por presentar, y alertas de vencimientos pr&oacute;ximos.</pre>
         </div>
       </div>
 
+      <!-- ===== CERTIFICATE SECTION (Free users — 10 modules) ===== -->
+      <div id="cert-section-free" class="content-block" style="display:none;margin-top:32px">
+        <div style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:2px solid #A7F3D0;border-radius:16px;padding:28px 32px;text-align:center">
+          <div style="width:56px;height:56px;background:linear-gradient(135deg,#059669,#34D399);border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;font-size:1.5rem;color:#fff">&#127891;</div>
+          <h3 style="font-family:Fraunces,serif;font-size:1.3rem;color:#065F46;margin-bottom:8px">&iexcl;Felicidades! Completaste los 10 m&oacute;dulos fundamentales</h3>
+          <p style="color:#047857;font-size:.9rem;line-height:1.6;margin-bottom:20px;max-width:480px;margin-left:auto;margin-right:auto">Genera tu certificado de finalizaci&oacute;n de los m&oacute;dulos gratuitos del curso IA y Automatizaci&oacute;n para Contadores.</p>
+          <div style="max-width:360px;margin:0 auto">
+            <label style="display:block;text-align:left;font-size:.78rem;font-weight:600;color:#065F46;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Tu nombre completo</label>
+            <input type="text" id="certNameFree" placeholder="Ej: Juan P&eacute;rez Hoyos" style="width:100%;padding:12px 16px;border:1.5px solid #A7F3D0;border-radius:10px;font-size:1rem;font-family:Outfit,sans-serif;margin-bottom:14px;background:#fff">
+            <button onclick="emitirCertificado('free')" style="width:100%;padding:14px;background:#059669;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Outfit,sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(5,150,105,.25)">Generar mi certificado &rarr;</button>
+            <p id="certErrorFree" style="display:none;color:#DC2626;font-size:.82rem;margin-top:8px"></p>
+          </div>
+          <p style="color:#9CA3AF;font-size:.78rem;margin-top:14px">Con el plan PRO + Escuela puedes completar los 14 m&oacute;dulos y obtener el certificado completo.</p>
+        </div>
+      </div>
+
       <div class="mod-nav">
         <a href="#modulo-9" class="prev" onclick="navigateTo(9)">&larr; M&oacute;dulo 9</a>
         <a href="#modulo-11" class="next" onclick="navigateTo(11)">M&oacute;dulo 11: Errores que destruyen &rarr;</a>
@@ -3269,6 +3285,21 @@ Para cada mes incluye: tareas semanales, herramientas a usar, m&eacute;tricas de
         </div>
       </div>
 
+      <!-- ===== CERTIFICATE SECTION (PRO users — 14 modules) ===== -->
+      <div id="cert-section-pro" class="content-block" style="margin-top:32px">
+        <div style="background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:2px solid #A7F3D0;border-radius:16px;padding:28px 32px;text-align:center">
+          <div style="width:56px;height:56px;background:linear-gradient(135deg,#059669,#34D399);border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;font-size:1.5rem;color:#fff">&#127891;</div>
+          <h3 style="font-family:Fraunces,serif;font-size:1.3rem;color:#065F46;margin-bottom:8px">&iexcl;Felicidades! Completaste los 14 m&oacute;dulos del curso</h3>
+          <p style="color:#047857;font-size:.9rem;line-height:1.6;margin-bottom:20px;max-width:480px;margin-left:auto;margin-right:auto">Genera tu certificado de finalizaci&oacute;n del curso completo de IA y Automatizaci&oacute;n para Contadores.</p>
+          <div style="max-width:360px;margin:0 auto">
+            <label style="display:block;text-align:left;font-size:.78rem;font-weight:600;color:#065F46;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Tu nombre completo</label>
+            <input type="text" id="certNamePro" placeholder="Ej: Juan P&eacute;rez Hoyos" style="width:100%;padding:12px 16px;border:1.5px solid #A7F3D0;border-radius:10px;font-size:1rem;font-family:Outfit,sans-serif;margin-bottom:14px;background:#fff">
+            <button onclick="emitirCertificado('pro')" style="width:100%;padding:14px;background:#059669;color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:700;font-family:Outfit,sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(5,150,105,.25)">Generar mi certificado &rarr;</button>
+            <p id="certErrorPro" style="display:none;color:#DC2626;font-size:.82rem;margin-top:8px"></p>
+          </div>
+        </div>
+      </div>
+
       <div class="mod-nav">
         <a href="#modulo-13" class="prev" onclick="navigateTo(13)">&larr; M&oacute;dulo 13</a>
         <a href="../escuela.html" class="next">Volver a la Escuela &rarr;</a>
@@ -3440,6 +3471,66 @@ function copyPrompt(btn) {
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initLocks);
   else initLocks();
 })();
+
+/* ===== Certificate section visibility ===== */
+(function(){
+  var origNavigateTo = navigateTo;
+  navigateTo = function(n) {
+    origNavigateTo(n);
+    // Show free certificate section only on module 10 for non-PRO users
+    var freeSection = document.getElementById('cert-section-free');
+    if (freeSection) {
+      freeSection.style.display = (n === 10 && !isEscuelaUser()) ? 'block' : 'none';
+    }
+  };
+})();
+</script>
+<script src="../shared/certificado.js"></script>
+<script>
+function emitirCertificado(tipo) {
+  var inputId = tipo === 'pro' ? 'certNamePro' : 'certNameFree';
+  var errorId = tipo === 'pro' ? 'certErrorPro' : 'certErrorFree';
+  var nameInput = document.getElementById(inputId);
+  var errorEl = document.getElementById(errorId);
+  var name = nameInput.value.trim();
+
+  errorEl.style.display = 'none';
+
+  if (!name) {
+    errorEl.textContent = 'Por favor ingresa tu nombre completo.';
+    errorEl.style.display = 'block';
+    nameInput.focus();
+    return;
+  }
+  if (name.length < 3) {
+    errorEl.textContent = 'El nombre debe tener al menos 3 caracteres.';
+    errorEl.style.display = 'block';
+    nameInput.focus();
+    return;
+  }
+
+  // Check progress
+  var saved = 1;
+  try {
+    var data = JSON.parse(localStorage.getItem('exo_ia_curso_progress') || '{}');
+    saved = data.modulo || 1;
+  } catch(e) {}
+
+  if (tipo === 'free' && saved < 10) {
+    errorEl.textContent = 'Debes completar al menos los 10 m\u00f3dulos fundamentales para obtener el certificado.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  if (tipo === 'pro' && saved < 14) {
+    errorEl.textContent = 'Debes completar los 14 m\u00f3dulos para obtener el certificado completo.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  var opts = { modulosCompletados: tipo === 'pro' ? 14 : 10 };
+  window.exoCertificado.generate('ia-automatizacion', name, opts);
+}
 </script>
 </body>
 </html>

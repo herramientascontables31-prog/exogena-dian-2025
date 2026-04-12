@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<script src="shared/cookie-consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-S7SM6ST4CC');</script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="og-image.png">
+<meta name="theme-color" content="#059669">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Verificar Certificado &mdash; Escuela Contable IA | Ex&oacute;genaDIAN</title>
+<meta name="description" content="Verifica la autenticidad de un certificado emitido por la Escuela Contable IA de Ex&oacute;genaDIAN.">
+<link rel="canonical" href="https://exogenadian.com/verificar-certificado.html">
+<meta property="og:title" content="Verificar Certificado &mdash; Escuela Contable IA | Ex&oacute;genaDIAN">
+<meta property="og:description" content="Verifica la autenticidad de un certificado de la Escuela Contable IA.">
+<meta property="og:url" content="https://exogenadian.com/verificar-certificado.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="Ex&oacute;genaDIAN">
+<meta property="og:image" content="https://exogenadian.com/og-image.png">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Escuela Contable IA","item":"https://exogenadian.com/escuela.html"},{"@type":"ListItem","position":3,"name":"Verificar Certificado","item":"https://exogenadian.com/verificar-certificado.html"}]}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#059669;--green2:#ECFDF5;--green3:#D1FAE5;--red:#DC2626;--red2:#FEF2F2;--red3:#FECACA;--border:#e2e8f0;--radius:12px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+.container{max-width:640px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);padding:28px 32px;border-radius:16px;margin-bottom:24px;color:#fff}
+.header-back{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,.6);font-size:.82rem;text-decoration:none;margin-bottom:12px;transition:color .15s}
+.header-back:hover{color:#fff}
+.header h1{font-size:1.4rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.header h1 span{font-size:1.5rem}
+.header p{opacity:.8;font-size:.83rem;margin-top:4px}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.search-form{display:flex;gap:10px}
+.search-form input{flex:1;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:1rem;color:var(--text);transition:.2s;text-transform:uppercase}
+.search-form input:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 3px rgba(46,117,182,.12)}
+.search-form input::placeholder{text-transform:none;font-family:'DM Sans',sans-serif;color:#9CA3AF;font-size:.9rem}
+.search-form button{padding:12px 24px;background:var(--pri2);color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+.search-form button:hover{background:var(--pri);transform:translateY(-1px)}
+.hint{font-size:.75rem;color:var(--muted);margin-top:8px}
+
+/* Results */
+.result{display:none;margin-top:20px;padding:24px;border-radius:var(--radius);border:1.5px solid transparent}
+.result.valid{display:block;background:var(--green2);border-color:var(--green3)}
+.result.invalid{display:block;background:var(--red2);border-color:var(--red3)}
+.result-icon{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;margin:0 auto 16px;font-size:1.4rem}
+.result.valid .result-icon{background:var(--green3);color:var(--green)}
+.result.invalid .result-icon{background:var(--red3);color:var(--red)}
+.result h3{text-align:center;font-size:1.1rem;margin-bottom:16px}
+.result.valid h3{color:#065F46}
+.result.invalid h3{color:#991B1B}
+.result-details{display:grid;gap:12px}
+.result-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(255,255,255,.7);border-radius:8px}
+.result-row .label{font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.result-row .value{font-size:.92rem;font-weight:600;color:var(--text)}
+.result-row .value.mono{font-family:'JetBrains Mono',monospace;font-size:.88rem}
+.result-link{display:inline-flex;align-items:center;gap:6px;margin-top:16px;padding:10px 20px;background:var(--green);color:#fff;border-radius:10px;font-weight:600;font-size:.88rem;text-decoration:none;transition:all .2s}
+.result-link:hover{background:#047857;transform:translateY(-1px)}
+.result-center{text-align:center}
+.result.invalid p{text-align:center;color:#991B1B;font-size:.9rem}
+
+@media(max-width:480px){
+  .search-form{flex-direction:column}
+  .result-row{flex-direction:column;align-items:flex-start;gap:4px}
+}
+</style>
+</head>
+<body>
+
+<div id="nav-container"></div>
+<script src="shared/nav.js"></script>
+
+<div class="container">
+  <div class="header">
+    <a href="escuela.html" class="header-back">&larr; Escuela Contable IA</a>
+    <h1><span>&#128270;</span> Verificar Certificado</h1>
+    <p>Ingresa el c&oacute;digo de verificaci&oacute;n para comprobar la autenticidad de un certificado.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">&#128272; C&oacute;digo de verificaci&oacute;n</div>
+    <div class="search-form">
+      <input type="text" id="codeInput" placeholder="Ej: EXO-IA-2026-A3F7" maxlength="30" autocomplete="off" spellcheck="false">
+      <button onclick="verificar()">Verificar</button>
+    </div>
+    <p class="hint">El c&oacute;digo aparece en la parte inferior del certificado. Formato: EXO-XXXX-YYYY-ZZZZ</p>
+
+    <div class="result" id="resultValid">
+      <div class="result-icon">&#10004;</div>
+      <h3>Certificado v&aacute;lido</h3>
+      <div class="result-details">
+        <div class="result-row">
+          <span class="label">Estudiante</span>
+          <span class="value" id="resNombre"></span>
+        </div>
+        <div class="result-row">
+          <span class="label">Curso</span>
+          <span class="value" id="resCurso"></span>
+        </div>
+        <div class="result-row">
+          <span class="label">Fecha de finalizaci&oacute;n</span>
+          <span class="value" id="resFecha"></span>
+        </div>
+        <div class="result-row">
+          <span class="label">C&oacute;digo</span>
+          <span class="value mono" id="resCodigo"></span>
+        </div>
+      </div>
+      <div class="result-center">
+        <a class="result-link" id="resLink" href="#">Ver certificado &rarr;</a>
+      </div>
+    </div>
+
+    <div class="result" id="resultInvalid">
+      <div class="result-icon">&#10008;</div>
+      <h3>Certificado no encontrado</h3>
+      <p>No se encontr&oacute; un certificado con este c&oacute;digo. Verifica que lo hayas ingresado correctamente.</p>
+    </div>
+  </div>
+</div>
+
+<script src="shared/certificado.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  var input = document.getElementById('codeInput');
+
+  // Auto-uppercase as user types
+  input.addEventListener('input', function() {
+    this.value = this.value.toUpperCase();
+  });
+
+  // Enter key
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') verificar();
+  });
+
+  window.verificar = function() {
+    var code = input.value.trim().toUpperCase();
+    if (!code) { input.focus(); return; }
+
+    document.getElementById('resultValid').className = 'result';
+    document.getElementById('resultInvalid').className = 'result';
+
+    var cert = window.exoCertificado.find(code);
+
+    if (cert) {
+      document.getElementById('resNombre').textContent = cert.nombre;
+      document.getElementById('resCurso').textContent = cert.cursoNombre;
+
+      // Format date
+      var parts = cert.fecha.split('-');
+      var months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+      document.getElementById('resFecha').textContent = parseInt(parts[2]) + ' de ' + months[parseInt(parts[1]) - 1] + ' de ' + parts[0];
+
+      document.getElementById('resCodigo').textContent = cert.codigo;
+
+      var certUrl = 'certificado.html#nombre=' + encodeURIComponent(cert.nombre) +
+        '&curso=' + encodeURIComponent(cert.cursoId) +
+        '&codigo=' + encodeURIComponent(cert.codigo) +
+        '&fecha=' + encodeURIComponent(cert.fecha);
+      document.getElementById('resLink').href = certUrl;
+
+      document.getElementById('resultValid').className = 'result valid';
+
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'certificado_verificado', { codigo: code, valido: true });
+      }
+    } else {
+      document.getElementById('resultInvalid').className = 'result invalid';
+
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'certificado_verificado', { codigo: code, valido: false });
+      }
+    }
+  };
+
+  // Check if code in URL hash
+  var hash = window.location.hash.substring(1);
+  if (hash) {
+    input.value = hash.toUpperCase();
+    verificar();
+  }
+})();
+</script>
+</body>
+</html>
