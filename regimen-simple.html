@@ -156,6 +156,33 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:
   .venc-grid{grid-template-columns:1fr}
   .bim-input-grid{grid-template-columns:1fr}
 }
+
+/* DIAN FORM */
+.dian-form{border:2px solid #000;font-family:Arial,Helvetica,sans-serif;font-size:11px;background:#fff;max-width:1100px;margin:0 auto}
+.dian-top{display:grid;grid-template-columns:80px 1fr 120px;border-bottom:2px solid #000}
+.dian-top-left{background:#1a3c6e;color:#fff;display:flex;align-items:center;justify-content:center;padding:8px;font-size:9px;text-align:center;font-weight:700;line-height:1.2;border-right:1px solid #000}
+.dian-top-center{padding:6px 12px}
+.dian-top-center .dian-title{font-size:13px;font-weight:700;text-align:center;margin:2px 0}
+.dian-top-center .dian-subtitle{font-size:9px;color:#555;text-align:center}
+.dian-top-right{background:#1a3c6e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;font-family:'JetBrains Mono',monospace;border-left:1px solid #000}
+.dian-sec{background:#d4e6f1;padding:3px 8px;font-weight:700;font-size:9px;border-bottom:1px solid #000;text-transform:uppercase;color:#1a3c6e;letter-spacing:.3px}
+.dian-row{display:grid;grid-template-columns:1fr 40px 160px;border-bottom:1px solid #ddd;font-size:10px;min-height:22px}
+.dian-row:hover{background:#f5f8fc}
+.dian-row .f-label{padding:2px 6px;font-size:9px;display:flex;align-items:center;line-height:1.2}
+.dian-row .f-cas{display:flex;align-items:center;justify-content:center;font-size:7.5px;color:#888;font-family:'JetBrains Mono',monospace;background:#f9f9f9;border-left:1px solid #eee;border-right:1px solid #eee}
+.dian-row .f-val{padding:1px 6px;display:flex;align-items:center;justify-content:flex-end;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#1a3c6e}
+.dian-row.f-total{background:#f0f2f5;font-weight:700}
+.dian-row.f-total .f-label{font-weight:700;color:#1a3c6e}
+.dian-row.f-result{background:#d4e6f1}
+.dian-row.f-result .f-label{font-weight:700;color:#1a3c6e}
+.dian-row.f-result .f-val{font-size:11px;font-weight:800}
+.dian-row.f-green .f-val{color:#059669}
+.dian-datos{display:grid;grid-template-columns:60px 1fr 80px 1fr;border-bottom:2px solid #000;font-size:10px}
+.dian-datos>div{padding:4px 8px;border-right:1px solid #ccc}
+.dian-datos .lbl{font-size:8px;color:#666;display:block}
+.dian-datos .val{font-weight:700}
+.dian-footer{padding:8px 12px;font-size:8px;color:#888;text-align:center;border-top:1px solid #ccc;background:#fafafa}
+.dian-footer strong{color:#1a3c6e}
 </style>
 </head>
 <body>
@@ -281,6 +308,18 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:
       <input type="text" id="b-inc-ventas" class="money" placeholder="Ej: 70,000,000" oninput="formatMoney(this)">
     </div>
     <div class="form-group">
+      <label>IVA generado (ventas gravadas &times; tarifa IVA) <span class="tip" data-tip="Art. 915 ET: RST presenta IVA anualmente, pero aqu&iacute; se registra el IVA generado del bimestre para control y seguimiento.">?</span></label>
+      <input type="text" id="b-iva-generado" class="money" placeholder="Ej: 5,000,000" oninput="formatMoney(this)">
+    </div>
+    <div class="form-group">
+      <label>IVA descontable <span class="tip" data-tip="IVA pagado en compras y servicios del bimestre que se puede descontar del IVA generado. Art. 488 ET.">?</span></label>
+      <input type="text" id="b-iva-descontable" class="money" placeholder="Ej: 2,000,000" oninput="formatMoney(this)">
+    </div>
+    <div class="form-group">
+      <label>ICA consolidado bimestral <span class="tip" data-tip="Componente ICA territorial consolidado del bimestre. Art. 907 ET: El SIMPLE incluye el componente de ICA seg&uacute;n tarifas del municipio.">?</span></label>
+      <input type="text" id="b-ica" class="money" placeholder="Ej: 800,000" oninput="formatMoney(this)">
+    </div>
+    <div class="form-group">
       <label>Retenciones de ICA del bimestre <span class="tip" data-tip="Retenciones de ICA (ReteICA) que le hayan practicado durante el bimestre. Se cruzan contra el componente ICA del SIMPLE.">?</span></label>
       <input type="text" id="b-reteica" class="money" placeholder="Ej: 200,000" oninput="formatMoney(this)">
     </div>
@@ -395,6 +434,18 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:
     <div class="form-group" id="a-inc-group" style="display:none">
       <label>Ventas sujetas a INC 8% (anual) <span class="tip" data-tip="Art. 512-1 ET: Total ventas de comidas/bebidas del a&ntilde;o para restaurantes/bares.">?</span></label>
       <input type="text" id="a-inc-ventas" class="money" placeholder="Ej: 400,000,000" oninput="formatMoney(this)">
+    </div>
+    <div class="form-group">
+      <label>IVA generado anual <span class="tip" data-tip="Art. 915 ET: Los contribuyentes del RST presentan y pagan IVA anualmente en el F260. Total IVA generado en el a&ntilde;o gravable.">?</span></label>
+      <input type="text" id="a-iva-generado" class="money" placeholder="Ej: 30,000,000" oninput="formatMoney(this)">
+    </div>
+    <div class="form-group">
+      <label>IVA descontable anual <span class="tip" data-tip="Total IVA pagado en compras y servicios del a&ntilde;o que se puede descontar del IVA generado. Art. 488 ET.">?</span></label>
+      <input type="text" id="a-iva-descontable" class="money" placeholder="Ej: 12,000,000" oninput="formatMoney(this)">
+    </div>
+    <div class="form-group">
+      <label>ICA consolidado anual <span class="tip" data-tip="Art. 907 ET: Componente ICA territorial consolidado del a&ntilde;o. Incluido en el impuesto unificado SIMPLE.">?</span></label>
+      <input type="text" id="a-ica" class="money" placeholder="Ej: 5,000,000" oninput="formatMoney(this)">
     </div>
     <div class="form-group">
       <label>Retenciones ICA del a&ntilde;o <span class="tip" data-tip="Total ReteICA practicada durante el a&ntilde;o gravable.">?</span></label>
@@ -563,6 +614,9 @@ function calcBimestral(){
   var incVentas=parseMoney(document.getElementById('b-inc-ventas').value);
   var reteica=parseMoney(document.getElementById('b-reteica').value);
   var saldoAnt=parseMoney(document.getElementById('b-saldo-anterior').value);
+  var ivaGenerado=parseMoney(document.getElementById('b-iva-generado').value);
+  var ivaDescontable=parseMoney(document.getElementById('b-iva-descontable').value);
+  var icaBim=parseMoney(document.getElementById('b-ica').value);
 
   var credPension=Math.min(pension,impBruto);
   var credElec=electronico*0.005;
@@ -572,8 +626,10 @@ function calcBimestral(){
   var totalCreditos=credPension+credFin;
   var impNeto=Math.max(0,impBruto-totalCreditos);
   var incImp=(grupoB===3)?incVentas*0.08:0;
-  var totalAntes=impNeto+incImp;
-  var totalPagar=Math.max(0,totalAntes-reteica-saldoAnt);
+  var ivaSaldo=Math.max(0,ivaGenerado-ivaDescontable);
+  var icaNeto=Math.max(0,icaBim-reteica);
+  var totalAntes=impNeto+incImp+icaNeto+ivaSaldo;
+  var totalPagar=Math.max(0,totalAntes-saldoAnt);
 
   // Vencimiento
   var digito=document.getElementById('b-nit-digito').value;
@@ -589,37 +645,69 @@ function calcBimestral(){
   html+='<div class="kpi"><div class="kpi-val">'+fechaVenc+'</div><div class="kpi-lbl">Vencimiento</div></div>';
   html+='</div>';
 
-  // Tabla borrador
-  html+='<div class="card"><div class="card-title">&#128209; Borrador Anticipo Bimestral &mdash; Formulario 2593</div>';
-  html+='<div class="alert alert-info" style="margin-bottom:12px"><span>&#128197;</span><div><strong>Bimestre '+bimestre+' ('+BIM_NOMBRES[bimestre]+') &mdash; Grupo '+grupoB+':</strong> '+GRUPO_NOMBRES[grupoB]+'</div></div>';
+  // DIAN form borrador
+  html+='<div class="dian-form">';
+  html+='<div class="dian-top">';
+  html+='<div class="dian-top-left">DIAN<br>Colombia</div>';
+  html+='<div class="dian-top-center">';
+  html+='<div class="dian-title">Recibo Electr\u00f3nico SIMPLE</div>';
+  html+='<div class="dian-subtitle">Anticipo Bimestral \u00b7 Bimestre '+bimestre+' \u00b7 AG 2026</div>';
+  html+='</div>';
+  html+='<div class="dian-top-right">2593</div>';
+  html+='</div>';
+  html+='<div class="dian-datos">';
+  html+='<div><span class="lbl">1. A\u00f1o</span><span class="val">2026</span></div>';
+  html+='<div><span class="lbl">5. NIT</span><span class="val">'+(digito?'...'+digito:'')+'</span></div>';
+  html+='<div><span class="lbl">3. Per\u00edodo</span><span class="val">Bimestre '+bimestre+'</span></div>';
+  html+='<div><span class="lbl">Grupo</span><span class="val">Grupo '+grupoB+'</span></div>';
+  html+='</div>';
 
-  html+='<table class="borrador-table"><thead><tr><th>Concepto</th><th style="text-align:right">Valor</th></tr></thead><tbody>';
-  html+='<tr class="section-row"><td colspan="2">Componente nacional &mdash; Impuesto unificado SIMPLE</td></tr>';
-  html+='<tr><td>Ingresos brutos ordinarios y extraordinarios del bimestre<span class="ref">Art. 904 ET</span></td><td class="val">'+fCOP(ingresos)+'</td></tr>';
-  html+='<tr><td>Ingresos en UVT</td><td class="val">'+fN(Math.round(ingUVT))+' UVT</td></tr>';
-  html+='<tr><td>Tarifa aplicable &mdash; Grupo '+grupoB+' ('+fN(bracket.min)+' \u2014 '+fN(bracket.max)+' UVT)<span class="ref">'+GRUPO_NORMAS[grupoB]+'</span></td><td class="val">'+fP(bracket.rate)+'</td></tr>';
-  html+='<tr><td>Impuesto SIMPLE bruto (ingresos &times; tarifa)</td><td class="val">'+fCOP(impBruto)+'</td></tr>';
+  // Section: Componente SIMPLE nacional
+  html+='<div class="dian-sec">Liquidaci\u00f3n anticipo bimestral componente SIMPLE nacional</div>';
+  html+='<div class="dian-row"><div class="f-label">Ingresos brutos bimestrales (Art. 904 ET)</div><div class="f-cas">38</div><div class="f-val">'+fCOP(ingresos)+'</div></div>';
+  html+='<div class="dian-row"><div class="f-label">Ingresos en UVT</div><div class="f-cas">39</div><div class="f-val">'+fN(Math.round(ingUVT))+' UVT</div></div>';
+  html+='<div class="dian-row"><div class="f-label">Tarifa aplicable \u2014 Grupo '+grupoB+' ('+fN(bracket.min)+'\u2013'+fN(bracket.max)+' UVT)</div><div class="f-cas">40</div><div class="f-val">'+fP(bracket.rate)+'</div></div>';
+  html+='<div class="dian-row f-total"><div class="f-label">Impuesto SIMPLE bruto (ingresos \u00d7 tarifa)</div><div class="f-cas">41</div><div class="f-val">'+fCOP(impBruto)+'</div></div>';
 
-  html+='<tr class="section-row"><td colspan="2">Cr&eacute;ditos y descuentos</td></tr>';
-  if(credPension>0) html+='<tr><td>(-) Cr\u00e9dito aportes pensi\u00f3n empleador<span class="ref">Art. 903 par. 3 ET</span></td><td class="val" style="color:var(--green)">-'+fCOP(credPension)+'</td></tr>';
-  html+='<tr><td>(-) Cr\u00e9dito financiero: '+tipoCredFin+'<span class="ref">No acumulables GMF vs 0.5% electr\u00f3nicos</span></td><td class="val" style="color:var(--green)">-'+fCOP(credFin)+'</td></tr>';
-  html+='<tr><td>Impuesto SIMPLE neto</td><td class="val">'+fCOP(impNeto)+'</td></tr>';
+  // Section: Cr\u00e9ditos
+  html+='<div class="dian-sec">Cr\u00e9ditos y descuentos</div>';
+  html+='<div class="dian-row f-green"><div class="f-label">(-) Cr\u00e9dito aportes pensi\u00f3n empleador (Art. 903 par. 3 ET)</div><div class="f-cas">43</div><div class="f-val">-'+fCOP(credPension)+'</div></div>';
+  html+='<div class="dian-row f-green"><div class="f-label">(-) Cr\u00e9dito financiero: '+tipoCredFin+'</div><div class="f-cas">44</div><div class="f-val">-'+fCOP(credFin)+'</div></div>';
+  html+='<div class="dian-row f-total"><div class="f-label">Impuesto SIMPLE neto</div><div class="f-cas">45</div><div class="f-val">'+fCOP(impNeto)+'</div></div>';
 
+  // Section: ICA consolidado
+  html+='<div class="dian-sec">Liquidaci\u00f3n componente ICA consolidado</div>';
+  html+='<div class="dian-row"><div class="f-label">ICA consolidado bimestral (Art. 907 ET)</div><div class="f-cas">48</div><div class="f-val">'+fCOP(icaBim)+'</div></div>';
+  html+='<div class="dian-row f-green"><div class="f-label">(-) Retenciones de ICA (ReteICA)</div><div class="f-cas">49</div><div class="f-val">-'+fCOP(reteica)+'</div></div>';
+  html+='<div class="dian-row f-total"><div class="f-label">ICA neto a pagar</div><div class="f-cas">50</div><div class="f-val">'+fCOP(icaNeto)+'</div></div>';
+
+  // Section: INC (only grupo 3)
   if(grupoB===3){
-    html+='<tr class="section-row"><td colspan="2">Impuesto Nacional al Consumo (INC)</td></tr>';
-    html+='<tr><td>Ventas de comidas y bebidas sujetas a INC<span class="ref">Art. 512-1 ET</span></td><td class="val">'+fCOP(incVentas)+'</td></tr>';
-    html+='<tr><td>INC 8%</td><td class="val">'+fCOP(incImp)+'</td></tr>';
+    html+='<div class="dian-sec">Impuesto Nacional al Consumo (INC)</div>';
+    html+='<div class="dian-row"><div class="f-label">Ventas de comidas y bebidas sujetas a INC (Art. 512-1 ET)</div><div class="f-cas">52</div><div class="f-val">'+fCOP(incVentas)+'</div></div>';
+    html+='<div class="dian-row f-total"><div class="f-label">INC 8%</div><div class="f-cas">53</div><div class="f-val">'+fCOP(incImp)+'</div></div>';
   }
 
-  html+='<tr class="section-row"><td colspan="2">Otros cr\u00e9ditos</td></tr>';
-  if(reteica>0) html+='<tr><td>(-) Retenciones de ICA (ReteICA)</td><td class="val" style="color:var(--green)">-'+fCOP(reteica)+'</td></tr>';
-  if(saldoAnt>0) html+='<tr><td>(-) Saldo a favor bimestre anterior</td><td class="val" style="color:var(--green)">-'+fCOP(saldoAnt)+'</td></tr>';
+  // Section: IVA
+  html+='<div class="dian-sec">Liquidaci\u00f3n IVA (Art. 915 ET \u2014 seguimiento bimestral, pago anual)</div>';
+  html+='<div class="dian-row"><div class="f-label">IVA generado</div><div class="f-cas">70</div><div class="f-val">'+fCOP(ivaGenerado)+'</div></div>';
+  html+='<div class="dian-row"><div class="f-label">IVA descontable</div><div class="f-cas">71</div><div class="f-val">'+fCOP(ivaDescontable)+'</div></div>';
+  html+='<div class="dian-row f-total"><div class="f-label">Saldo IVA a pagar</div><div class="f-cas">72</div><div class="f-val">'+fCOP(ivaSaldo)+'</div></div>';
 
-  html+='<tr class="total-row"><td>TOTAL A PAGAR &mdash; Anticipo bimestral</td><td class="val">'+fCOP(totalPagar)+'</td></tr>';
-  html+='</tbody></table></div>';
+  // Section: Determinaci\u00f3n del valor a pagar
+  html+='<div class="dian-sec">Determinaci\u00f3n del valor a pagar</div>';
+  html+='<div class="dian-row"><div class="f-label">Impuesto SIMPLE neto</div><div class="f-cas">60</div><div class="f-val">'+fCOP(impNeto)+'</div></div>';
+  html+='<div class="dian-row"><div class="f-label">ICA neto</div><div class="f-cas">61</div><div class="f-val">'+fCOP(icaNeto)+'</div></div>';
+  if(grupoB===3) html+='<div class="dian-row"><div class="f-label">INC</div><div class="f-cas">62</div><div class="f-val">'+fCOP(incImp)+'</div></div>';
+  html+='<div class="dian-row"><div class="f-label">Saldo IVA a pagar</div><div class="f-cas">63</div><div class="f-val">'+fCOP(ivaSaldo)+'</div></div>';
+  if(saldoAnt>0) html+='<div class="dian-row f-green"><div class="f-label">(-) Saldo a favor bimestre anterior</div><div class="f-cas">65</div><div class="f-val">-'+fCOP(saldoAnt)+'</div></div>';
+  html+='<div class="dian-row f-result"><div class="f-label">TOTAL A PAGAR \u2014 Anticipo bimestral F2593</div><div class="f-cas">68</div><div class="f-val">'+fCOP(totalPagar)+'</div></div>';
+
+  html+='<div class="dian-footer"><strong>Ex\u00f3genaDIAN</strong> \u00b7 Borrador autom\u00e1tico \u00b7 Arts. 903-916 ET \u00b7 Ley 2277/2022 \u00b7 AG 2026</div>';
+  html+='</div>';
 
   // Tabla de tarifas bimestrales
-  html+='<div class="card"><div class="card-title">&#128202; Tarifas bimestrales Grupo '+grupoB+' &mdash; Art. 908 ET</div>';
+  html+='<div class="card" style="margin-top:20px"><div class="card-title">&#128202; Tarifas bimestrales Grupo '+grupoB+' &mdash; Art. 908 ET</div>';
   html+='<table class="borrador-table"><thead><tr><th>Rango UVT bimestral</th><th>Rango en $</th><th style="text-align:right">Tarifa</th></tr></thead><tbody>';
   TARIFAS_BIM[grupoB].forEach(function(b){
     var act=(ingUVT>=b.min&&(ingUVT<b.max||(b===TARIFAS_BIM[grupoB][TARIFAS_BIM[grupoB].length-1]&&ingUVT>=b.min)));
@@ -638,9 +726,11 @@ function calcBimestral(){
   html+='<div class="norma-item"><strong>Art. 904 ET:</strong> Hecho generador &mdash; ingresos brutos ordinarios y extraordinarios. Base gravable sin deducciones.</div>';
   html+='<div class="norma-item"><strong>'+GRUPO_NORMAS[grupoB]+':</strong> '+GRUPO_NOMBRES[grupoB]+'. Tarifa aplicada: <code>'+fP(bracket.rate)+'</code>.</div>';
   html+='<div class="norma-item"><strong>Art. 903 par. 3 ET:</strong> Descuento del 12% de aportes a pensi\u00f3n de empleados vinculados a la generaci\u00f3n de ingresos.</div>';
+  html+='<div class="norma-item"><strong>Art. 907 ET:</strong> El impuesto SIMPLE incluye el componente de ICA territorial consolidado.</div>';
   html+='<div class="norma-item"><strong>Art. 911 ET:</strong> Anticipo bimestral mediante recibo electr\u00f3nico de pago (F2593). 6 per\u00edodos al a\u00f1o.</div>';
   html+='<div class="norma-item"><strong>Art. 911 par. 2 ET:</strong> Los contribuyentes del SIMPLE no son sujetos de retenci\u00f3n en la fuente sobre sus ingresos.</div>';
   html+='<div class="norma-item"><strong>Art. 911 par. 4 ET:</strong> Personas naturales con ingresos brutos &lt; 3,500 UVT (<code>'+fCOP(3500*UVT)+'</code>) est\u00e1n exentas de anticipos bimestrales.</div>';
+  html+='<div class="norma-item"><strong>Art. 915 ET:</strong> Contribuyentes del RST presentan y pagan IVA anualmente. El seguimiento bimestral es de control.</div>';
   if(grupoB===3) html+='<div class="norma-item"><strong>Art. 512-1 ET:</strong> INC del 8% sobre ventas de comidas y bebidas en restaurantes, bares y similares. Adicional al impuesto SIMPLE.</div>';
   html+='<div class="norma-item"><strong>Art. 908 par. 5 ET:</strong> Actividades en m\u00faltiples grupos: se aplica la tarifa consolidada del grupo m\u00e1s alto a todos los ingresos.</div>';
   html+='<div class="norma-item"><strong>Sentencia C-540/23:</strong> Declar\u00f3 inexequibles los numerales 4 y 5 del Art. 908 ET (Ley 2277/2022). Se revive la regulaci\u00f3n de Ley 2155/2021 para Grupo 4. El l\u00edmite de 12,000 UVT para profesionales fue eliminado.</div>';
@@ -651,7 +741,7 @@ function calcBimestral(){
   html+='<div style="text-align:center;margin-top:16px"><button class="btn btn-export" onclick="exportBimestral()">&#128229; Descargar borrador F2593 en Excel</button></div>';
 
   // Store data for export
-  window._bimData={ingresos:ingresos,ingUVT:ingUVT,bracket:bracket,impBruto:impBruto,credPension:credPension,credFin:credFin,tipoCredFin:tipoCredFin,impNeto:impNeto,incImp:incImp,incVentas:incVentas,reteica:reteica,saldoAnt:saldoAnt,totalPagar:totalPagar,grupo:grupoB,bimestre:bimestre,fechaVenc:fechaVenc};
+  window._bimData={ingresos:ingresos,ingUVT:ingUVT,bracket:bracket,impBruto:impBruto,credPension:credPension,credFin:credFin,tipoCredFin:tipoCredFin,impNeto:impNeto,incImp:incImp,incVentas:incVentas,reteica:reteica,saldoAnt:saldoAnt,totalPagar:totalPagar,grupo:grupoB,bimestre:bimestre,fechaVenc:fechaVenc,ivaGenerado:ivaGenerado,ivaDescontable:ivaDescontable,ivaSaldo:ivaSaldo,icaBim:icaBim,icaNeto:icaNeto};
 
   document.getElementById('res-bimestral').innerHTML=html;
   document.getElementById('res-bimestral').style.display='block';
@@ -677,6 +767,9 @@ function calcAnual(){
   var incVentas=parseMoney(document.getElementById('a-inc-ventas').value);
   var reteica=parseMoney(document.getElementById('a-reteica').value);
   var gananciaOc=parseMoney(document.getElementById('a-ganancia-oc').value);
+  var ivaGenerado=parseMoney(document.getElementById('a-iva-generado').value);
+  var ivaDescontable=parseMoney(document.getElementById('a-iva-descontable').value);
+  var icaAnual=parseMoney(document.getElementById('a-ica').value);
 
   var credPension=Math.min(pension,impBruto);
   var credElec=electronico*0.005;
@@ -685,12 +778,14 @@ function calcAnual(){
   var tipoCredFin=credGMF>=credElec?'GMF (4x1000)':'0.5% pagos electr\u00f3nicos';
   var impNeto=Math.max(0,impBruto-credPension-credFin);
   var incImp=(grupoA===3)?incVentas*0.08:0;
+  var ivaSaldo=Math.max(0,ivaGenerado-ivaDescontable);
+  var icaNeto=Math.max(0,icaAnual-reteica);
 
   // Ganancia ocasional — 15% (Art. 314 ET para PJ, Art. 313 ET para PN hasta 2023, ahora 15% uniforme Ley 2277)
   var impGanOc=gananciaOc*0.15;
 
-  var totalImpuesto=impNeto+incImp+impGanOc;
-  var saldoPagar=totalImpuesto-anticipos-reteica;
+  var totalImpuesto=impNeto+incImp+impGanOc+icaNeto+ivaSaldo;
+  var saldoPagar=totalImpuesto-anticipos;
   var esFavor=saldoPagar<0;
 
   var digito=document.getElementById('a-nit-digito').value;
@@ -706,56 +801,91 @@ function calcAnual(){
   html+='<div class="kpi"><div class="kpi-val">'+fechaVenc+'</div><div class="kpi-lbl">Vencimiento F260</div></div>';
   html+='</div>';
 
-  // Borrador anual
-  html+='<div class="card"><div class="card-title">&#128209; Borrador Declaraci\u00f3n Anual &mdash; Formulario 260</div>';
-  html+='<table class="borrador-table"><thead><tr><th>Concepto</th><th style="text-align:right">Valor</th></tr></thead><tbody>';
-
-  html+='<tr class="section-row"><td colspan="2">Ingresos brutos por bimestre</td></tr>';
-  for(var i=0;i<6;i++){
-    html+='<tr><td>Bimestre '+(i+1)+' ('+BIM_NOMBRES[i+1]+')</td><td class="val">'+fCOP(bimIngs[i])+'</td></tr>';
-  }
-  html+='<tr><td><strong>Total ingresos brutos anuales</strong><span class="ref">Art. 904 ET</span></td><td class="val"><strong>'+fCOP(totalIng)+'</strong></td></tr>';
-  html+='<tr><td>Ingresos en UVT</td><td class="val">'+fN(Math.round(ingUVT))+' UVT</td></tr>';
-
-  html+='<tr class="section-row"><td colspan="2">Liquidaci\u00f3n componente nacional SIMPLE</td></tr>';
-  html+='<tr><td>Tarifa aplicable &mdash; Grupo '+grupoA+' ('+fN(bracket.min)+' \u2014 '+fN(bracket.max)+' UVT)<span class="ref">'+GRUPO_NORMAS[grupoA]+'</span></td><td class="val">'+fP(bracket.rate)+'</td></tr>';
-  html+='<tr><td>Impuesto SIMPLE bruto</td><td class="val">'+fCOP(impBruto)+'</td></tr>';
-
-  html+='<tr class="section-row"><td colspan="2">Cr\u00e9ditos y descuentos</td></tr>';
-  if(credPension>0) html+='<tr><td>(-) Cr\u00e9dito pensi\u00f3n empleador<span class="ref">Art. 903 par. 3 ET</span></td><td class="val" style="color:var(--green)">-'+fCOP(credPension)+'</td></tr>';
-  html+='<tr><td>(-) Cr\u00e9dito financiero: '+tipoCredFin+'</td><td class="val" style="color:var(--green)">-'+fCOP(credFin)+'</td></tr>';
-  html+='<tr><td>Impuesto SIMPLE neto</td><td class="val">'+fCOP(impNeto)+'</td></tr>';
-
-  if(grupoA===3){
-    html+='<tr class="section-row"><td colspan="2">Impuesto Nacional al Consumo (INC)</td></tr>';
-    html+='<tr><td>Ventas sujetas a INC<span class="ref">Art. 512-1 ET</span></td><td class="val">'+fCOP(incVentas)+'</td></tr>';
-    html+='<tr><td>INC 8%</td><td class="val">'+fCOP(incImp)+'</td></tr>';
-  }
-
-  if(gananciaOc>0){
-    html+='<tr class="section-row"><td colspan="2">Ganancias ocasionales</td></tr>';
-    html+='<tr><td>Ganancias ocasionales brutas<span class="ref">Art. 908 par. 6 ET &mdash; se liquidan aparte</span></td><td class="val">'+fCOP(gananciaOc)+'</td></tr>';
-    html+='<tr><td>Impuesto ganancias ocasionales (15%)<span class="ref">Art. 313-314 ET, Ley 2277/2022</span></td><td class="val">'+fCOP(impGanOc)+'</td></tr>';
-  }
-
-  html+='<tr><td><strong>Total impuesto anual calculado</strong></td><td class="val"><strong>'+fCOP(totalImpuesto)+'</strong></td></tr>';
-
-  html+='<tr class="section-row"><td colspan="2">Anticipos pagados y retenciones</td></tr>';
-  html+='<tr><td>(-) Anticipos bimestrales pagados (6 F2593)<span class="ref">Art. 911 ET</span></td><td class="val" style="color:var(--green)">-'+fCOP(anticipos)+'</td></tr>';
-  if(reteica>0) html+='<tr><td>(-) Retenciones ICA del a\u00f1o</td><td class="val" style="color:var(--green)">-'+fCOP(reteica)+'</td></tr>';
-
-  if(esFavor){
-    html+='<tr class="total-row"><td>SALDO A FAVOR</td><td class="val" style="color:var(--pri2)">('+fCOP(Math.abs(saldoPagar))+')</td></tr>';
-  }else{
-    html+='<tr class="total-row"><td>SALDO A PAGAR</td><td class="val">'+fCOP(saldoPagar)+'</td></tr>';
-  }
-  html+='</tbody></table>';
-
-  html+='<div class="alert alert-norma" style="margin-top:12px"><span>&#128161;</span><div><strong>Tasa efectiva sobre ingresos brutos:</strong> '+fP(totalImpuesto/totalIng)+'. En el R\u00e9gimen Ordinario el impuesto se calcula sobre renta l\u00edquida (despu\u00e9s de deducir costos y gastos). <a href="calculadora-regimen.html" style="color:#92400E;font-weight:700">Compara aqu\u00ed &rarr;</a></div></div>';
+  // DIAN form borrador
+  html+='<div class="dian-form">';
+  html+='<div class="dian-top">';
+  html+='<div class="dian-top-left">DIAN<br>Colombia</div>';
+  html+='<div class="dian-top-center">';
+  html+='<div class="dian-title">Declaraci\u00f3n Anual Consolidada</div>';
+  html+='<div class="dian-subtitle">R\u00e9gimen Simple de Tributaci\u00f3n \u00b7 AG 2025</div>';
+  html+='</div>';
+  html+='<div class="dian-top-right">260</div>';
+  html+='</div>';
+  html+='<div class="dian-datos">';
+  html+='<div><span class="lbl">1. A\u00f1o</span><span class="val">2025</span></div>';
+  html+='<div><span class="lbl">5. NIT</span><span class="val">'+(digito?'...'+digito:'')+'</span></div>';
+  html+='<div><span class="lbl">Per\u00edodo</span><span class="val">Anual</span></div>';
+  html+='<div><span class="lbl">Grupo</span><span class="val">Grupo '+grupoA+'</span></div>';
   html+='</div>';
 
+  // Section: Ingresos brutos por bimestre
+  html+='<div class="dian-sec">Ingresos brutos por bimestre</div>';
+  for(var i=0;i<6;i++){
+    html+='<div class="dian-row"><div class="f-label">Bimestre '+(i+1)+' ('+BIM_NOMBRES[i+1]+')</div><div class="f-cas">'+(26+i)+'</div><div class="f-val">'+fCOP(bimIngs[i])+'</div></div>';
+  }
+  html+='<div class="dian-row f-total"><div class="f-label">Total ingresos brutos anuales (Art. 904 ET)</div><div class="f-cas">32</div><div class="f-val">'+fCOP(totalIng)+'</div></div>';
+  html+='<div class="dian-row"><div class="f-label">Ingresos en UVT</div><div class="f-cas">33</div><div class="f-val">'+fN(Math.round(ingUVT))+' UVT</div></div>';
+
+  // Section: Liquidaci\u00f3n componente SIMPLE
+  html+='<div class="dian-sec">Liquidaci\u00f3n componente nacional SIMPLE</div>';
+  html+='<div class="dian-row"><div class="f-label">Tarifa aplicable \u2014 Grupo '+grupoA+' ('+fN(bracket.min)+'\u2013'+fN(bracket.max)+' UVT)</div><div class="f-cas">35</div><div class="f-val">'+fP(bracket.rate)+'</div></div>';
+  html+='<div class="dian-row f-total"><div class="f-label">Impuesto SIMPLE bruto</div><div class="f-cas">36</div><div class="f-val">'+fCOP(impBruto)+'</div></div>';
+
+  // Section: Cr\u00e9ditos
+  html+='<div class="dian-sec">Cr\u00e9ditos y descuentos</div>';
+  html+='<div class="dian-row f-green"><div class="f-label">(-) Cr\u00e9dito pensi\u00f3n empleador (Art. 903 par. 3 ET)</div><div class="f-cas">38</div><div class="f-val">-'+fCOP(credPension)+'</div></div>';
+  html+='<div class="dian-row f-green"><div class="f-label">(-) Cr\u00e9dito financiero: '+tipoCredFin+'</div><div class="f-cas">39</div><div class="f-val">-'+fCOP(credFin)+'</div></div>';
+  html+='<div class="dian-row f-total"><div class="f-label">Impuesto SIMPLE neto</div><div class="f-cas">40</div><div class="f-val">'+fCOP(impNeto)+'</div></div>';
+
+  // Section: ICA consolidado anual
+  html+='<div class="dian-sec">Liquidaci\u00f3n componente ICA consolidado anual</div>';
+  html+='<div class="dian-row"><div class="f-label">ICA consolidado anual (Art. 907 ET)</div><div class="f-cas">42</div><div class="f-val">'+fCOP(icaAnual)+'</div></div>';
+  html+='<div class="dian-row f-green"><div class="f-label">(-) Retenciones ICA del a\u00f1o</div><div class="f-cas">43</div><div class="f-val">-'+fCOP(reteica)+'</div></div>';
+  html+='<div class="dian-row f-total"><div class="f-label">ICA neto a pagar</div><div class="f-cas">44</div><div class="f-val">'+fCOP(icaNeto)+'</div></div>';
+
+  // Section: INC (only grupo 3)
+  if(grupoA===3){
+    html+='<div class="dian-sec">Impuesto Nacional al Consumo (INC)</div>';
+    html+='<div class="dian-row"><div class="f-label">Ventas sujetas a INC (Art. 512-1 ET)</div><div class="f-cas">46</div><div class="f-val">'+fCOP(incVentas)+'</div></div>';
+    html+='<div class="dian-row f-total"><div class="f-label">INC 8%</div><div class="f-cas">47</div><div class="f-val">'+fCOP(incImp)+'</div></div>';
+  }
+
+  // Section: Ganancias ocasionales
+  if(gananciaOc>0){
+    html+='<div class="dian-sec">Ganancias ocasionales</div>';
+    html+='<div class="dian-row"><div class="f-label">Ganancias ocasionales brutas (Art. 908 par. 6 ET)</div><div class="f-cas">50</div><div class="f-val">'+fCOP(gananciaOc)+'</div></div>';
+    html+='<div class="dian-row f-total"><div class="f-label">Impuesto ganancias ocasionales (15%)</div><div class="f-cas">51</div><div class="f-val">'+fCOP(impGanOc)+'</div></div>';
+  }
+
+  // Section: IVA anual (Art. 915 ET)
+  html+='<div class="dian-sec">Liquidaci\u00f3n IVA anual (Art. 915 ET)</div>';
+  html+='<div class="dian-row"><div class="f-label">IVA generado anual</div><div class="f-cas">70</div><div class="f-val">'+fCOP(ivaGenerado)+'</div></div>';
+  html+='<div class="dian-row"><div class="f-label">IVA descontable anual</div><div class="f-cas">71</div><div class="f-val">'+fCOP(ivaDescontable)+'</div></div>';
+  html+='<div class="dian-row f-total"><div class="f-label">Saldo IVA a pagar</div><div class="f-cas">72</div><div class="f-val">'+fCOP(ivaSaldo)+'</div></div>';
+
+  // Section: Determinaci\u00f3n del valor a pagar
+  html+='<div class="dian-sec">Determinaci\u00f3n del valor a pagar</div>';
+  html+='<div class="dian-row"><div class="f-label">Impuesto SIMPLE neto</div><div class="f-cas">55</div><div class="f-val">'+fCOP(impNeto)+'</div></div>';
+  html+='<div class="dian-row"><div class="f-label">ICA neto</div><div class="f-cas">56</div><div class="f-val">'+fCOP(icaNeto)+'</div></div>';
+  if(grupoA===3) html+='<div class="dian-row"><div class="f-label">INC</div><div class="f-cas">57</div><div class="f-val">'+fCOP(incImp)+'</div></div>';
+  if(impGanOc>0) html+='<div class="dian-row"><div class="f-label">Impuesto ganancias ocasionales</div><div class="f-cas">58</div><div class="f-val">'+fCOP(impGanOc)+'</div></div>';
+  html+='<div class="dian-row"><div class="f-label">Saldo IVA a pagar</div><div class="f-cas">59</div><div class="f-val">'+fCOP(ivaSaldo)+'</div></div>';
+  html+='<div class="dian-row f-total"><div class="f-label">Total impuesto anual calculado</div><div class="f-cas">60</div><div class="f-val">'+fCOP(totalImpuesto)+'</div></div>';
+  html+='<div class="dian-row f-green"><div class="f-label">(-) Anticipos bimestrales pagados (6 F2593) (Art. 911 ET)</div><div class="f-cas">62</div><div class="f-val">-'+fCOP(anticipos)+'</div></div>';
+
+  if(esFavor){
+    html+='<div class="dian-row f-result"><div class="f-label">SALDO A FAVOR</div><div class="f-cas">68</div><div class="f-val" style="color:#2E75B6">('+fCOP(Math.abs(saldoPagar))+')</div></div>';
+  }else{
+    html+='<div class="dian-row f-result"><div class="f-label">SALDO A PAGAR</div><div class="f-cas">68</div><div class="f-val">'+fCOP(saldoPagar)+'</div></div>';
+  }
+
+  html+='<div class="dian-footer"><strong>Ex\u00f3genaDIAN</strong> \u00b7 Borrador autom\u00e1tico \u00b7 Arts. 903-916 ET \u00b7 Ley 2277/2022 \u00b7 AG 2025</div>';
+  html+='</div>';
+
+  html+='<div class="alert alert-norma" style="margin-top:12px"><span>&#128161;</span><div><strong>Tasa efectiva sobre ingresos brutos:</strong> '+fP(totalImpuesto/totalIng)+'. En el R\u00e9gimen Ordinario el impuesto se calcula sobre renta l\u00edquida (despu\u00e9s de deducir costos y gastos). <a href="calculadora-regimen.html" style="color:#92400E;font-weight:700">Compara aqu\u00ed &rarr;</a></div></div>';
+
   // Tarifas anuales
-  html+='<div class="card"><div class="card-title">&#128202; Tarifas anuales Grupo '+grupoA+' &mdash; Art. 908 ET</div>';
+  html+='<div class="card" style="margin-top:20px"><div class="card-title">&#128202; Tarifas anuales Grupo '+grupoA+' &mdash; Art. 908 ET</div>';
   html+='<table class="borrador-table"><thead><tr><th>Rango UVT anual</th><th>Rango en $</th><th style="text-align:right">Tarifa</th></tr></thead><tbody>';
   TARIFAS_ANUAL[grupoA].forEach(function(b){
     var act=(ingUVT>=b.min&&(ingUVT<b.max||(b===TARIFAS_ANUAL[grupoA][TARIFAS_ANUAL[grupoA].length-1]&&ingUVT>=b.min)));
@@ -771,11 +901,13 @@ function calcAnual(){
   html+='<div class="norma-item"><strong>Art. 903 ET:</strong> Impuesto unificado bajo el RST. Sustituye renta + ICA + complementarios + INC.</div>';
   html+='<div class="norma-item"><strong>Art. 904 ET:</strong> Base gravable: ingresos brutos ordinarios y extraordinarios. Sin deducciones.</div>';
   html+='<div class="norma-item"><strong>'+GRUPO_NORMAS[grupoA]+':</strong> '+GRUPO_NOMBRES[grupoA]+'. Tarifa anual: <code>'+fP(bracket.rate)+'</code>.</div>';
+  html+='<div class="norma-item"><strong>Art. 907 ET:</strong> El impuesto SIMPLE incluye el componente de ICA territorial consolidado.</div>';
   html+='<div class="norma-item"><strong>Art. 908 par. 5 ET:</strong> M\u00faltiples actividades: tarifa del grupo m\u00e1s alto aplica a todos los ingresos.</div>';
   html+='<div class="norma-item"><strong>Art. 908 par. 6 ET:</strong> Ganancias ocasionales se liquidan por separado bajo reglas generales (no con tarifas SIMPLE).</div>';
   html+='<div class="norma-item"><strong>Art. 903 par. 3 ET:</strong> Descuento 12% aportes pensi\u00f3n empleador vinculados a la actividad.</div>';
-  html+='<div class="norma-item"><strong>Art. 910 ET:</strong> Declaraci\u00f3n anual consolidada (F260). Consolida componente nacional + ICA territorial + INC + ganancia ocasional.</div>';
+  html+='<div class="norma-item"><strong>Art. 910 ET:</strong> Declaraci\u00f3n anual consolidada (F260). Consolida componente nacional + ICA territorial + INC + IVA + ganancia ocasional.</div>';
   html+='<div class="norma-item"><strong>Art. 911 ET:</strong> Anticipo bimestral (F2593). Los 6 pagos se restan del impuesto anual calculado.</div>';
+  html+='<div class="norma-item"><strong>Art. 915 ET:</strong> Contribuyentes del RST presentan y pagan IVA anualmente en la declaraci\u00f3n consolidada F260.</div>';
   if(grupoA===3) html+='<div class="norma-item"><strong>Art. 512-1 ET:</strong> INC 8% sobre comidas y bebidas preparadas en restaurantes, bares y similares.</div>';
   html+='<div class="norma-item"><strong>Sentencia C-540/23:</strong> Elimin\u00f3 numerales 4 y 5 del Art. 908 ET (Ley 2277/2022). Revive Ley 2155/2021 para Grupo 4. Sin l\u00edmite de 12,000 UVT para profesionales.</div>';
   html+='<div class="norma-item"><strong>Ley 2277/2022:</strong> Reforma tributaria que modific\u00f3 Arts. 903-916 ET y la tarifa de ganancias ocasionales.</div>';
@@ -786,7 +918,7 @@ function calcAnual(){
   html+='<div style="text-align:center;margin-top:16px"><button class="btn btn-export" onclick="exportAnual()">&#128229; Descargar borrador F260 en Excel</button></div>';
 
   // Store data for export
-  window._anualData={totalIng:totalIng,bimIngs:bimIngs,ingUVT:ingUVT,bracket:bracket,impBruto:impBruto,credPension:credPension,credFin:credFin,tipoCredFin:tipoCredFin,impNeto:impNeto,incImp:incImp,incVentas:incVentas,reteica:reteica,anticipos:anticipos,gananciaOc:gananciaOc,impGanOc:impGanOc,totalImpuesto:totalImpuesto,saldoPagar:saldoPagar,esFavor:esFavor,grupo:grupoA,fechaVenc:fechaVenc};
+  window._anualData={totalIng:totalIng,bimIngs:bimIngs,ingUVT:ingUVT,bracket:bracket,impBruto:impBruto,credPension:credPension,credFin:credFin,tipoCredFin:tipoCredFin,impNeto:impNeto,incImp:incImp,incVentas:incVentas,reteica:reteica,anticipos:anticipos,gananciaOc:gananciaOc,impGanOc:impGanOc,totalImpuesto:totalImpuesto,saldoPagar:saldoPagar,esFavor:esFavor,grupo:grupoA,fechaVenc:fechaVenc,ivaGenerado:ivaGenerado,ivaDescontable:ivaDescontable,ivaSaldo:ivaSaldo,icaAnual:icaAnual,icaNeto:icaNeto};
 
   document.getElementById('res-anual').innerHTML=html;
   document.getElementById('res-anual').style.display='block';
@@ -863,14 +995,23 @@ async function exportBimestral(){
   addRow('(-) Crédito financiero: '+d.tipoCredFin,-d.credFin,'',false,true);
   addRow('Impuesto SIMPLE neto',d.impNeto);
 
+  addSection('ICA CONSOLIDADO BIMESTRAL');
+  addRow('ICA consolidado bimestral',d.icaBim,'Art. 907 ET');
+  if(d.reteica>0) addRow('(-) Retenciones ICA (ReteICA)',-d.reteica,'',false,true);
+  addRow('ICA neto a pagar',d.icaNeto);
+
   if(d.grupo===3&&d.incImp>0){
     addSection('IMPUESTO NACIONAL AL CONSUMO (INC)');
     addRow('Ventas sujetas a INC',d.incVentas,'Art. 512-1 ET');
     addRow('INC 8%',d.incImp);
   }
 
-  addSection('OTROS CRÉDITOS');
-  if(d.reteica>0) addRow('(-) Retenciones ICA (ReteICA)',-d.reteica,'',false,true);
+  addSection('IVA (SEGUIMIENTO BIMESTRAL — ART. 915 ET)');
+  addRow('IVA generado',d.ivaGenerado);
+  addRow('IVA descontable',d.ivaDescontable);
+  addRow('Saldo IVA a pagar',d.ivaSaldo);
+
+  addSection('DETERMINACIÓN DEL VALOR A PAGAR');
   if(d.saldoAnt>0) addRow('(-) Saldo a favor bimestre anterior',-d.saldoAnt,'',false,true);
 
   r++;
@@ -954,6 +1095,11 @@ async function exportAnual(){
   addRow('(-) Crédito financiero: '+d.tipoCredFin,-d.credFin,'',false,true);
   addRow('Impuesto SIMPLE neto',d.impNeto);
 
+  addSection('ICA CONSOLIDADO ANUAL');
+  addRow('ICA consolidado anual',d.icaAnual,'Art. 907 ET');
+  if(d.reteica>0) addRow('(-) Retenciones ICA del año',-d.reteica,'',false,true);
+  addRow('ICA neto a pagar',d.icaNeto);
+
   if(d.grupo===3&&d.incImp>0){
     addSection('IMPUESTO NACIONAL AL CONSUMO (INC)');
     addRow('Ventas sujetas a INC',d.incVentas,'Art. 512-1 ET');
@@ -966,11 +1112,15 @@ async function exportAnual(){
     addRow('Impuesto ganancias ocasionales (15%)',d.impGanOc,'Art. 313-314 ET');
   }
 
+  addSection('IVA ANUAL (ART. 915 ET)');
+  addRow('IVA generado anual',d.ivaGenerado);
+  addRow('IVA descontable anual',d.ivaDescontable);
+  addRow('Saldo IVA a pagar',d.ivaSaldo);
+
   addRow('Total impuesto anual calculado',d.totalImpuesto,'',true);
 
-  addSection('ANTICIPOS PAGADOS Y RETENCIONES');
+  addSection('ANTICIPOS PAGADOS');
   addRow('(-) Anticipos bimestrales pagados (6 F2593)',-d.anticipos,'Art. 911 ET',false,true);
-  if(d.reteica>0) addRow('(-) Retenciones ICA del año',-d.reteica,'',false,true);
 
   r++;
   if(d.esFavor){
