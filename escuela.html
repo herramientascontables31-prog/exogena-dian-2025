@@ -807,5 +807,74 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
   document.querySelectorAll('.fade-in').forEach(function(el){obs.observe(el)});
 })();
 </script>
+
+<!-- Escuela access control: cursos gratis vs PRO -->
+<script>
+(function(){
+  var FREE_COURSES=['escuela/iva300.html','escuela/exogena.html','escuela/ia-automatizacion.html'];
+
+  function isPro(){
+    if(typeof exoPro==='undefined') return false;
+    try{return !!localStorage.getItem('exogenadian_pro_email')||!!localStorage.getItem('exogenadian_pro_key')}catch(e){return false}
+  }
+
+  function initEscuelaGate(){
+    // Wait for exoPro
+    if(typeof exoPro!=='undefined'){
+      exoPro.check().then(function(pro){ applyGate(pro); });
+    } else {
+      setTimeout(function(){ applyGate(isPro()); }, 300);
+    }
+  }
+
+  function applyGate(hasPro){
+    var cards=document.querySelectorAll('.curso-card');
+    cards.forEach(function(card){
+      var href=card.getAttribute('href')||'';
+      var isFree=FREE_COURSES.some(function(f){return href.indexOf(f)!==-1});
+      if(isFree||hasPro) return; // No tocar cursos gratis ni usuarios PRO
+
+      // Curso PRO para usuario sin suscripci&oacute;n
+      card.style.position='relative';
+      card.style.opacity='0.7';
+
+      // Agregar overlay de candado
+      var lock=document.createElement('div');
+      lock.style.cssText='position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,0.6);border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)';
+      lock.innerHTML='<div style="width:48px;height:48px;background:#FFF7ED;border:2px solid #FED7AA;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;margin-bottom:8px">\uD83D\uDD12</div>'+
+        '<div style="font-size:.85rem;font-weight:700;color:#1F2937;margin-bottom:4px">Curso PRO</div>'+
+        '<div style="font-size:.75rem;color:#6B7280">Incluido en PRO + Escuela</div>';
+
+      // Interceptar clic: llevar a precios
+      card.addEventListener('click',function(e){
+        e.preventDefault();
+        window.location.href='precios.html';
+      });
+
+      card.appendChild(lock);
+    });
+
+    // Agregar banner de cursos gratis si no es PRO
+    if(!hasPro){
+      var grid=document.querySelector('.cursos-grid');
+      if(grid){
+        var banner=document.createElement('div');
+        banner.style.cssText='grid-column:1/-1;background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:2px solid #A7F3D0;border-radius:16px;padding:20px 24px;text-align:center;order:-1';
+        banner.innerHTML='<div style="font-size:.82rem;font-weight:700;color:#065F46;margin-bottom:8px">&#127891; Empieza gratis con estos cursos:</div>'+
+          '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+
+            '<a href="escuela/iva300.html" style="padding:8px 18px;background:#059669;color:#fff;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;transition:all .2s" onmouseover="this.style.background=\'#047857\'" onmouseout="this.style.background=\'#059669\'">IVA 300 (gratis)</a>'+
+            '<a href="escuela/exogena.html" style="padding:8px 18px;background:#059669;color:#fff;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;transition:all .2s" onmouseover="this.style.background=\'#047857\'" onmouseout="this.style.background=\'#059669\'">Ex\u00f3gena (gratis)</a>'+
+            '<a href="escuela/ia-automatizacion.html" style="padding:8px 18px;background:#059669;color:#fff;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;transition:all .2s" onmouseover="this.style.background=\'#047857\'" onmouseout="this.style.background=\'#059669\'">IA para Contadores (gratis)</a>'+
+          '</div>'+
+          '<div style="font-size:.75rem;color:#6B7280;margin-top:8px">Los dem\u00e1s cursos se desbloquean con <a href="precios.html" style="color:#EA580C;font-weight:700;text-decoration:none">PRO + Escuela</a></div>';
+        grid.insertAdjacentElement('afterbegin',banner);
+      }
+    }
+  }
+
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initEscuelaGate);
+  else initEscuelaGate();
+})();
+</script>
 </body>
 </html>
