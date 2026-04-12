@@ -105,7 +105,9 @@
               setCacheValid();
               // Guardar tipo de plan y acceso a escuela
               if(data.planType) localStorage.setItem(KEY_PLAN, data.planType);
-              localStorage.setItem(KEY_ESCUELA, data.escuela ? 'true' : 'false');
+              // Si el servidor no envía campo 'escuela' explícitamente, PRO incluye escuela por defecto
+              var tieneEscuela = (typeof data.escuela !== 'undefined') ? data.escuela : true;
+              localStorage.setItem(KEY_ESCUELA, tieneEscuela ? 'true' : 'false');
               resolve(true);
             } else {
               if(data.reason) console.warn('PRO rechazado:', data.reason);
