@@ -37,11 +37,14 @@ const EMAIL_REMINDER_DAYS = 3;
 // M-xxx  = PRO mensual (sin Escuela)
 // PE-xxx = PRO + Escuela mensual
 // A-xxx  = PRO Anual (incluye Escuela gratis)
+// ADMIN  = Acceso total (admin interno)
+// Sin prefijo (legacy) = PRO mensual sin Escuela
 function detectarPlan(ref) {
   ref = String(ref || '').trim().toUpperCase();
-  if (ref.indexOf('PE-') === 0) return { planType: 'pro+escuela', dias: DIAS_VIGENCIA_MENSUAL, escuela: true };
-  if (ref.indexOf('A-') === 0)  return { planType: 'pro-anual',    dias: DIAS_VIGENCIA_ANUAL,   escuela: true };
-  return                                { planType: 'pro',           dias: DIAS_VIGENCIA_MENSUAL, escuela: false };
+  if (ref === 'ADMIN')            return { planType: 'pro-anual',    dias: DIAS_VIGENCIA_ANUAL,   escuela: true };
+  if (ref.indexOf('PE-') === 0)   return { planType: 'pro+escuela', dias: DIAS_VIGENCIA_MENSUAL, escuela: true };
+  if (ref.indexOf('A-') === 0)    return { planType: 'pro-anual',    dias: DIAS_VIGENCIA_ANUAL,   escuela: true };
+  return                                  { planType: 'pro',           dias: DIAS_VIGENCIA_MENSUAL, escuela: false };
 }
 
 // ── ENDPOINT PRINCIPAL ──
