@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="shared/cookie-consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S7SM6ST4CC');
+</script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="og-image.png">
+<meta name="theme-color" content="#059669">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario 210 — Declaracion de Renta Personas Naturales AG 2025 | ExogenaDIAN</title>
+<meta name="description" content="Genera el borrador del formulario 210 de renta para personas naturales residentes AG 2025. Carga tu reporte de exogena DIAN y obtien el borrador con calculos automaticos por cedula, anticipo y conciliacion patrimonial.">
+<meta name="keywords" content="formulario 210 renta 2025, declaracion renta personas naturales, cedula general, rentas de trabajo, honorarios, rentas de capital, renta liquida gravable, anticipo renta, conciliacion patrimonial">
+<link rel="canonical" href="https://exogenadian.com/formato210.html">
+<meta property="og:title" content="Formulario 210 Renta Personas Naturales — Borrador Automatico | ExogenaDIAN">
+<meta property="og:description" content="Borrador F210 con calculos automaticos. Carga tu exogena DIAN, calcula por cedulas, anticipo y conciliacion patrimonial.">
+<meta property="og:url" content="https://exogenadian.com/formato210.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="ExogenaDIAN">
+<meta property="og:image" content="https://exogenadian.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Formulario 210 Declaracion de Renta Personas Naturales","url":"https://exogenadian.com/formato210.html","description":"Genera el borrador del formulario 210 para personas naturales residentes AG 2025. Calculos automaticos por cedulas con tarifas Art. 241 ET.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExogenaDIAN","url":"https://exogenadian.com"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://exogenadian.com/"},{"@type":"ListItem","position":2,"name":"Renta F210","item":"https://exogenadian.com/formato210.html"}]}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" integrity="sha384-Pqp51FUN2/qzfxZxBCtF0stpc9ONI6MYZpVqmo8m20SoaQCzf+arZvACkLkirlPz" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#548235;--green2:#E2EFDA;--red:#CC0000;--amber:#D97706;--amber2:#FFF8E1;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);padding:28px 32px;border-radius:16px;margin-bottom:24px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:1.5rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.header h1 span{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:600}
+.header p{opacity:.8;font-size:.85rem;margin-top:4px}
+.header-right{text-align:right;font-size:.8rem;opacity:.7}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:12px;margin-bottom:10px;box-shadow:var(--shadow)}
+.card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.btn{padding:10px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--pri2);color:#fff}.btn-primary:hover{background:var(--pri);transform:translateY(-1px)}
+.btn-success{background:var(--green);color:#fff}.btn-success:hover{opacity:.9}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--pri2);color:var(--pri)}
+.actions{display:flex;gap:12px;justify-content:center;margin-top:20px}
+.alert{padding:14px 18px;border-radius:8px;font-size:.85rem;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.alert-info{background:var(--pri3);color:var(--pri);border:1px solid #B4C6E7}
+
+/* ── DIAN FORM STYLES ── */
+.dian-form{border:2px solid #000;font-family:Arial,Helvetica,sans-serif;font-size:11px;background:#fff;max-width:1100px;margin:0 auto}
+.dian-top{display:grid;grid-template-columns:80px 1fr 120px;border-bottom:2px solid #000}
+.dian-top-left{background:#1a3c6e;color:#fff;display:flex;align-items:center;justify-content:center;padding:8px;font-size:9px;text-align:center;font-weight:700;line-height:1.2;border-right:1px solid #000}
+.dian-top-center{padding:6px 12px}
+.dian-top-center .dian-title{font-size:13px;font-weight:700;text-align:center;margin:2px 0}
+.dian-top-center .dian-subtitle{font-size:9px;color:#555;text-align:center}
+.dian-top-right{background:#1a3c6e;color:#fff;display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;font-family:'JetBrains Mono',monospace;border-left:1px solid #000}
+.dian-sec{background:#d4e6f1;padding:3px 8px;font-weight:700;font-size:9px;border-bottom:1px solid #000;text-transform:uppercase;color:#1a3c6e;letter-spacing:.3px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.dian-sec .toggle{font-size:8px;opacity:.6}
+.f110-grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #000}
+.f110-col{border-right:1px solid #ccc}
+.f110-col:last-child{border-right:none}
+.f110-row{display:grid;grid-template-columns:1fr 32px 130px;border-bottom:1px solid #ddd;font-size:10px;min-height:22px}
+.f110-row:hover{background:#f5f8fc}
+.f110-row .f-label{padding:2px 6px;font-size:9px;display:flex;align-items:center;line-height:1.2}
+.f110-row .f-cas{display:flex;align-items:center;justify-content:center;font-size:7.5px;color:#888;font-family:'JetBrains Mono',monospace;background:#f9f9f9;border-left:1px solid #eee;border-right:1px solid #eee}
+.f110-row .f-val{padding:1px 4px;display:flex;align-items:center;justify-content:flex-end}
+.f110-row .f-val input{border:none;background:transparent;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;width:100%;outline:none;padding:1px 3px;color:#ccc}
+.f110-row .f-val input.filled{font-weight:700;color:#1a3c6e;background:#edf4ff}
+.f110-row .f-val input.computed{font-weight:700;color:#2E7D32;background:#E8F5E9;cursor:default}
+.f110-row.f-total{background:#f0f2f5;font-weight:700}
+.f110-row.f-total .f-label{font-weight:700;color:#1a3c6e}
+.f110-row.f-result{background:#d4e6f1}
+.f110-row.f-result .f-label{font-weight:700;color:#1a3c6e}
+.f110-row.f-result .f-val input{font-size:11px;font-weight:800}
+.f110-datos{display:grid;grid-template-columns:60px 1fr 60px 1fr;border-bottom:2px solid #000;font-size:10px}
+.f110-datos>div{padding:4px 8px;border-right:1px solid #ccc}
+.f110-datos .lbl{font-size:8px;color:#666;display:block}.f110-datos .val{font-weight:700}
+.dian-footer{padding:8px 12px;font-size:8px;color:#888;text-align:center;border-top:1px solid #ccc;background:#fafafa}
+.dian-footer strong{color:#1a3c6e}
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.config-item{display:flex;flex-direction:column;gap:4px}
+.config-item label{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.config-item input,.config-item select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit}
+.config-item input:focus,.config-item select:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 3px rgba(46,117,182,.15)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center}
+.stat-card .val{font-size:1.3rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.stat-card .lbl{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:4px}
+.stat-card.blue .val{color:var(--pri2)}.stat-card.green .val{color:var(--green)}.stat-card.amber .val{color:var(--amber)}.stat-card.red .val{color:var(--red)}
+.hidden{display:none!important}
+
+/* Cedula grid for 4 subcedulas */
+.ced-grid{display:grid;grid-template-columns:minmax(180px,1fr) repeat(4,minmax(100px,1fr));border-bottom:1px solid #000;font-size:10px}
+.ced-grid .ced-hdr{background:#e8eef5;font-weight:700;font-size:8px;text-align:center;padding:3px 4px;border-right:1px solid #ccc;color:#1a3c6e;text-transform:uppercase}
+.ced-grid .ced-hdr:last-child{border-right:none}
+.ced-row{display:contents}
+.ced-row>div{border-bottom:1px solid #eee;border-right:1px solid #eee;padding:1px 4px;min-height:22px;display:flex;align-items:center}
+.ced-row>div:last-child{border-right:none}
+.ced-row .c-label{font-size:9px;line-height:1.2}
+.ced-row .c-cell{justify-content:flex-end;position:relative}
+.ced-row .c-cell .cas-num{position:absolute;left:2px;top:1px;font-size:6.5px;color:#aaa;font-family:'JetBrains Mono',monospace}
+.ced-row .c-cell input{border:none;background:transparent;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;width:100%;outline:none;padding:1px 3px;color:#ccc}
+.ced-row .c-cell input.filled{font-weight:700;color:#1a3c6e;background:#edf4ff}
+.ced-row .c-cell input.computed{font-weight:700;color:#2E7D32;background:#E8F5E9;cursor:default}
+.ced-row.c-total>div{background:#f0f2f5;font-weight:700}
+.ced-row.c-total .c-label{color:#1a3c6e}
+
+/* Desglose tables */
+.desglose-tbl{width:100%;border-collapse:collapse;font-size:.78rem}
+.desglose-tbl th{background:var(--pri);color:#fff;padding:4px 8px;text-align:left;font-size:.72rem;font-weight:600}
+.desglose-tbl th:last-child{text-align:right}
+.desglose-tbl td{padding:3px 8px;border-bottom:1px solid #eee}
+.desglose-tbl td:last-child{text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600}
+.desglose-tbl tr.subtotal{background:#f0f2f5;font-weight:700}
+.desglose-tbl tr.subtotal td{border-top:2px solid var(--pri)}
+.desglose-cat{font-size:.7rem;color:var(--pri);font-weight:700;padding:6px 8px 2px;text-transform:uppercase;letter-spacing:.3px}
+
+/* PRO gate */
+.pro-gate{text-align:center;padding:60px 20px;background:linear-gradient(135deg,#f8fafc,#edf2f7);border-radius:16px;border:2px dashed var(--border)}
+.pro-gate h2{font-size:1.4rem;margin-bottom:8px;color:var(--pri)}
+.pro-gate p{color:var(--muted);font-size:.9rem;margin-bottom:16px}
+
+@media(max-width:900px){.f110-grid{grid-template-columns:1fr}.config-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.ced-grid{grid-template-columns:minmax(120px,1fr) repeat(4,minmax(70px,1fr))}}
+
+@media print {
+  body{background:#fff!important;color:#000!important;font-size:11pt;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #nav-container,#exogenaZone,.btn,.actions,button,#proGate,#excelSection{display:none!important}
+  .container{max-width:100%!important;padding:0!important;margin:0!important}
+  .header{border-radius:0!important;margin-bottom:12px!important;padding:16px!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .card{box-shadow:none!important;border:1px solid #ccc!important;margin-bottom:8px!important;padding:10px!important}
+  .dian-form{max-width:100%!important;border:2px solid #000!important;page-break-inside:avoid}
+  .f110-row .f-val input,.ced-row .c-cell input{color:#000!important;background:transparent!important;border:none!important}
+  .f110-row .f-val input.filled,.ced-row .c-cell input.filled{color:#1a3c6e!important;font-weight:700!important}
+  .f110-row .f-val input.computed,.ced-row .c-cell input.computed{color:#2E7D32!important;font-weight:700!important}
+  .stats{grid-template-columns:repeat(4,1fr)!important}
+  .stat-card{border:1px solid #ccc!important;box-shadow:none!important}
+  a{color:#000!important;text-decoration:none!important}
+  @page{margin:10mm}
+}
+</style>
+</head>
+<body>
+<div class="exo-loading" id="loadingOverlay"><div class="spinner"></div><div class="spinner-text">Procesando...</div></div>
+<div id="nav-container"></div>
+<script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
+<script src="shared/nav.js"></script>
+<script src="shared/pro-banner.js"></script>
+<div class="container">
+  <div class="header" style="padding:20px 28px"><div>
+    <h1><span>210</span> Declaracion de Renta</h1>
+    <p>Personas Naturales Residentes &middot; AG 2025 &middot; Casillas <strong style="color:#fff">blancas</strong> = editables &middot; <strong style="color:#81C784">verdes</strong> = automaticas</p>
+  </div><div class="header-right"><span id="proBadgeHeader" style="display:none;background:rgba(255,255,255,.2);padding:3px 10px;border-radius:12px;font-size:.75rem;font-weight:700">PRO</span><br>100% en navegador</div></div>
+
+  <!-- PRO GATE -->
+  <div id="proGate" class="card" style="padding:0;overflow:hidden">
+    <div class="pro-gate">
+      <div style="font-size:2.5rem;margin-bottom:12px">&#128274;</div>
+      <h2>Herramienta PRO</h2>
+      <p>El Formulario 210 con calculos automaticos, carga de exogena DIAN, conciliacion patrimonial y anticipo esta disponible exclusivamente para suscriptores PRO.</p>
+      <div style="margin-bottom:16px">
+        <input type="email" id="proKeyGate" placeholder="Ingresa tu email PRO" style="padding:10px 16px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit;width:280px;text-align:center">
+      </div>
+      <button onclick="validarProGate()" class="btn btn-primary" style="padding:10px 28px">Activar PRO</button>
+      <div id="proGateError" style="margin-top:8px;font-size:.78rem;color:var(--red)"></div>
+      <div style="margin-top:12px"><a href="precios.html" style="font-size:.85rem;color:#059669;font-weight:600;text-decoration:none">No tienes suscripcion? Suscribete PRO &rarr;</a></div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRO (oculto hasta validar) -->
+  <div id="proContent" class="hidden">
+
+  <!-- UPLOAD EXOGENA -->
+  <div class="card" style="padding:16px" id="exogenaZone">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div class="card-title" style="margin:0"><span>&#128196;</span> Cargar Reporte Exogena DIAN (opcional)</div>
+      <span style="font-size:.75rem;color:#065F46;background:#ECFDF5;border:1px solid #A7F3D0;padding:4px 10px;border-radius:6px;font-weight:600">&#128274; 100% en tu equipo</span>
+    </div>
+    <div class="alert alert-info" style="margin-bottom:12px"><span>&#128161;</span><div>Descarga tu reporte de exogena desde el portal DIAN: <strong>Transaccional &rarr; Consultas &rarr; Informacion exogena &rarr; Consulta de informacion reportada por terceros</strong>. Exporta en Excel y sube el archivo aqui.</div></div>
+    <div style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;cursor:pointer;position:relative" id="dzExogena" onclick="document.getElementById('fileExogena').click()">
+      <input type="file" accept=".xlsx,.xls" id="fileExogena" style="position:absolute;inset:0;opacity:0;cursor:pointer">
+      <span style="font-size:1.5rem">&#128202;</span>
+      <span style="font-weight:600;color:var(--pri);margin-left:8px">Arrastra o haz clic para cargar reporte exogena</span>
+      <span style="font-size:.78rem;color:var(--muted);margin-left:8px">Excel de la DIAN</span>
+      <div id="fileNameExo" style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--green);font-weight:600"></div>
+    </div>
+    <div id="exoResult" class="hidden" style="margin-top:10px">
+      <div id="exoStats" class="stats" style="margin-bottom:8px"></div>
+      <div id="exoDetail" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;font-size:.75rem"></div>
+      <div style="margin-top:8px;text-align:right;display:flex;gap:8px;justify-content:flex-end">
+        <button onclick="limpiarExogena()" class="btn btn-outline" style="padding:8px 16px;font-size:.82rem">Limpiar</button>
+        <button onclick="aplicarExogena()" class="btn btn-primary" style="padding:8px 20px;font-size:.85rem">Aplicar al Formulario &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Datos del declarante -->
+  <div class="card" style="padding:16px">
+    <div class="card-title" style="margin-bottom:10px"><span>&#128100;</span> Datos del Declarante</div>
+    <div class="config-grid">
+      <div class="config-item"><label>5. Numero de Identificacion (CC)</label><input type="text" id="cfgCC" placeholder="Ej: 1037581657" oninput="recalcular()"></div>
+      <div class="config-item"><label>7. Primer Apellido</label><input type="text" id="cfgApellido1" placeholder="Ej: HOYOS"></div>
+      <div class="config-item"><label>8. Segundo Apellido</label><input type="text" id="cfgApellido2" placeholder="Ej: SALAZAR"></div>
+      <div class="config-item"><label>9. Primer Nombre</label><input type="text" id="cfgNombre1" placeholder="Ej: JUAN"></div>
+      <div class="config-item"><label>10. Otros Nombres</label><input type="text" id="cfgNombre2" placeholder="Ej: ESTEBAN"></div>
+      <div class="config-item"><label>24. Actividad Economica</label><input type="text" id="cfgActividad" placeholder="Ej: 6201"></div>
+    </div>
+  </div>
+
+  <!-- DATOS AÑO ANTERIOR -->
+  <div class="card" style="padding:12px">
+    <div class="card-title" style="margin-bottom:8px"><span>&#128203;</span> Declaracion Ano Anterior (AG 2024)</div>
+    <p style="font-size:.75rem;color:var(--muted);margin-bottom:10px">Para calcular anticipo y conciliacion patrimonial. Si es primera declaracion, deja en blanco.</p>
+    <div class="config-grid">
+      <div class="config-item"><label>Impuesto neto de renta AG 2024 (cas 126)</label><input type="text" id="antImpNeto" placeholder="0" oninput="recalcular()"></div>
+      <div class="config-item"><label>Anticipo liquidado ano anterior (cas 133)</label><input type="text" id="antAnticipo" placeholder="0" oninput="recalcular()"></div>
+      <div class="config-item"><label>Saldo a favor ano anterior (cas 137)</label><input type="text" id="antSaldoFavor" placeholder="0" oninput="recalcular()"></div>
+      <div class="config-item"><label>Patrimonio liquido ano anterior (cas 31)</label><input type="text" id="antPatLiq" placeholder="0" oninput="recalcular()"></div>
+      <div class="config-item">
+        <label>Metodo anticipo ano siguiente</label>
+        <select id="antMetodo" onchange="recalcular()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;font-family:inherit">
+          <option value="75">75% del impuesto neto (3er ano en adelante)</option>
+          <option value="promedio">Promedio (2do ano declarando)</option>
+          <option value="25">25% del impuesto neto (1er ano declarando)</option>
+          <option value="0">No aplica anticipo</option>
+        </select>
+      </div>
+      <div class="config-item">
+        <label>Numero de dependientes economicos</label>
+        <input type="number" id="cfgDependientes" value="0" min="0" max="10" oninput="recalcular()" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem">
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ FORMULARIO 210 ═══════ -->
+  <div class="dian-form" id="f210form">
+    <div class="dian-top">
+      <div class="dian-top-left">DIAN<br>Colombia</div>
+      <div class="dian-top-center">
+        <div class="dian-title">Declaracion de Renta y Complementario</div>
+        <div class="dian-subtitle">Personas Naturales y Asimiladas Residentes &middot; Privada &middot; AG 2025</div>
+      </div>
+      <div class="dian-top-right">210</div>
+    </div>
+
+    <!-- ══ PATRIMONIO ══ -->
+    <div class="dian-sec" onclick="toggleSec('secPatrimonio')">Patrimonio <span class="toggle">&#9660;</span></div>
+    <div id="secPatrimonio">
+      <div class="f110-row"><div class="f-label">Total patrimonio bruto</div><div class="f-cas">29</div><div class="f-val"><input id="c29" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Deudas</div><div class="f-cas">30</div><div class="f-val"><input id="c30" oninput="recalcular()"></div></div>
+      <div class="f110-row f-total"><div class="f-label">Total patrimonio liquido (29 - 30)</div><div class="f-cas">31</div><div class="f-val"><input id="c31" class="computed" readonly></div></div>
+    </div>
+
+    <!-- ══ CEDULA GENERAL ══ -->
+    <div class="dian-sec" onclick="toggleSec('secCedGen')" style="background:#c6d9ec">Cedula General &mdash; 4 Subcedulas <span class="toggle">&#9660;</span></div>
+    <div id="secCedGen">
+
+    <!-- Encabezados subcédulas -->
+    <div class="ced-grid">
+      <div class="ced-hdr">Concepto / Rentas</div>
+      <div class="ced-hdr">Rentas de<br>Trabajo</div>
+      <div class="ced-hdr">Honorarios y<br>Servicios</div>
+      <div class="ced-hdr">Rentas de<br>Capital</div>
+      <div class="ced-hdr">Rentas No<br>Laborales</div>
+
+      <!-- Ingresos brutos -->
+      <div class="ced-row"><div class="c-label">Ingresos brutos</div>
+        <div class="c-cell"><span class="cas-num">32</span><input id="c32" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">43</span><input id="c43" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">58</span><input id="c58" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">74</span><input id="c74" oninput="recalcular()"></div>
+      </div>
+
+      <!-- Devoluciones (solo no laborales) -->
+      <div class="ced-row"><div class="c-label">Devoluciones, rebajas y descuentos</div>
+        <div class="c-cell" style="background:#f5f5f5"></div>
+        <div class="c-cell" style="background:#f5f5f5"></div>
+        <div class="c-cell" style="background:#f5f5f5"></div>
+        <div class="c-cell"><span class="cas-num">75</span><input id="c75" oninput="recalcular()"></div>
+      </div>
+
+      <!-- INCRNGO -->
+      <div class="ced-row"><div class="c-label">Ingresos no constitutivos de renta</div>
+        <div class="c-cell"><span class="cas-num">33</span><input id="c33" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">44</span><input id="c44" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">59</span><input id="c59" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">76</span><input id="c76" oninput="recalcular()"></div>
+      </div>
+
+      <!-- Costos y deducciones -->
+      <div class="ced-row"><div class="c-label">Costos y deducciones procedentes</div>
+        <div class="c-cell" style="background:#f5f5f5"></div>
+        <div class="c-cell"><span class="cas-num">45</span><input id="c45" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">60</span><input id="c60" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">77</span><input id="c77" oninput="recalcular()"></div>
+      </div>
+
+      <!-- Renta líquida -->
+      <div class="ced-row c-total"><div class="c-label">Renta liquida</div>
+        <div class="c-cell"><span class="cas-num">34</span><input id="c34" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">46</span><input id="c46" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">61</span><input id="c61" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">78</span><input id="c78" class="computed" readonly></div>
+      </div>
+
+      <!-- Rentas líquidas pasivas ECE -->
+      <div class="ced-row"><div class="c-label">Rentas liquidas pasivas ECE</div>
+        <div class="c-cell" style="background:#f5f5f5"></div>
+        <div class="c-cell" style="background:#f5f5f5"></div>
+        <div class="c-cell"><span class="cas-num">62</span><input id="c62" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">79</span><input id="c79" oninput="recalcular()"></div>
+      </div>
+
+      <!-- Aportes voluntarios AFC/FVP/AVC -->
+      <div class="ced-row"><div class="c-label">Aportes voluntarios AFC, FVP y/o AVC</div>
+        <div class="c-cell"><span class="cas-num">35</span><input id="c35" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">47</span><input id="c47" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">63</span><input id="c63" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">80</span><input id="c80" oninput="recalcular()"></div>
+      </div>
+
+      <!-- Otras rentas exentas -->
+      <div class="ced-row"><div class="c-label">Otras rentas exentas</div>
+        <div class="c-cell"><span class="cas-num">36</span><input id="c36" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">48</span><input id="c48" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">64</span><input id="c64" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">81</span><input id="c81" oninput="recalcular()"></div>
+      </div>
+
+      <!-- Total rentas exentas -->
+      <div class="ced-row c-total"><div class="c-label">Total rentas exentas</div>
+        <div class="c-cell"><span class="cas-num">37</span><input id="c37" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">49</span><input id="c49" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">65</span><input id="c65" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">82</span><input id="c82" class="computed" readonly></div>
+      </div>
+
+      <!-- Intereses de vivienda -->
+      <div class="ced-row"><div class="c-label">Intereses de vivienda</div>
+        <div class="c-cell"><span class="cas-num">38</span><input id="c38" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">50</span><input id="c50" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">66</span><input id="c66" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">83</span><input id="c83" oninput="recalcular()"></div>
+      </div>
+
+      <!-- Otras deducciones -->
+      <div class="ced-row"><div class="c-label">Otras deducciones imputables</div>
+        <div class="c-cell"><span class="cas-num">39</span><input id="c39" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">51</span><input id="c51" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">67</span><input id="c67" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">84</span><input id="c84" oninput="recalcular()"></div>
+      </div>
+
+      <!-- Total deducciones -->
+      <div class="ced-row c-total"><div class="c-label">Total deducciones imputables</div>
+        <div class="c-cell"><span class="cas-num">40</span><input id="c40" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">52</span><input id="c52" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">68</span><input id="c68" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">85</span><input id="c85" class="computed" readonly></div>
+      </div>
+
+      <!-- Rentas exentas y/o deducciones limitadas -->
+      <div class="ced-row c-total"><div class="c-label">Rentas exentas y/o deducciones imputables limitadas</div>
+        <div class="c-cell"><span class="cas-num">41</span><input id="c41" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">53</span><input id="c53" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">69</span><input id="c69" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">86</span><input id="c86" class="computed" readonly></div>
+      </div>
+
+      <!-- Renta líquida ordinaria del ejercicio -->
+      <div class="ced-row"><div class="c-label">Renta liquida ordinaria del ejercicio</div>
+        <div class="c-cell" style="background:#f5f5f5"></div>
+        <div class="c-cell"><span class="cas-num">54</span><input id="c54" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">70</span><input id="c70" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">87</span><input id="c87" class="computed" readonly></div>
+      </div>
+
+      <!-- Pérdida líquida -->
+      <div class="ced-row"><div class="c-label">Perdida liquida del ejercicio</div>
+        <div class="c-cell" style="background:#f5f5f5"></div>
+        <div class="c-cell"><span class="cas-num">55</span><input id="c55" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">71</span><input id="c71" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">88</span><input id="c88" class="computed" readonly></div>
+      </div>
+
+      <!-- Compensaciones -->
+      <div class="ced-row"><div class="c-label">Compensaciones por perdidas</div>
+        <div class="c-cell" style="background:#f5f5f5"></div>
+        <div class="c-cell"><span class="cas-num">56</span><input id="c56" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">72</span><input id="c72" oninput="recalcular()"></div>
+        <div class="c-cell"><span class="cas-num">89</span><input id="c89" oninput="recalcular()"></div>
+      </div>
+
+      <!-- Renta líquida ordinaria -->
+      <div class="ced-row c-total"><div class="c-label">Renta liquida ordinaria</div>
+        <div class="c-cell"><span class="cas-num">42</span><input id="c42" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">57</span><input id="c57" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">73</span><input id="c73_r" class="computed" readonly></div>
+        <div class="c-cell"><span class="cas-num">90</span><input id="c90" class="computed" readonly></div>
+      </div>
+    </div>
+    </div>
+
+    <!-- ══ CONSOLIDADO CEDULA GENERAL ══ -->
+    <div class="dian-sec" onclick="toggleSec('secConsolid')" style="background:#b8d4e8">Consolidado Cedula General <span class="toggle">&#9660;</span></div>
+    <div id="secConsolid">
+      <div class="f110-row"><div class="f-label">1% de compras con factura electronica (num. 5 art. 336 ET)</div><div class="f-cas">28</div><div class="f-val"><input id="c28" oninput="recalcular()"></div></div>
+      <div class="f110-row f-total"><div class="f-label">Renta liquida cedula general (antes de restar exentas y ded. limitadas)</div><div class="f-cas">91</div><div class="f-val"><input id="c91" class="computed" readonly></div></div>
+      <div class="f110-row f-total"><div class="f-label">Rentas exentas y deducciones limitadas (41+53+69+86+28+139)</div><div class="f-cas">92</div><div class="f-val"><input id="c92" class="computed" readonly></div></div>
+      <div class="f110-row f-result"><div class="f-label">Renta liquida ordinaria cedula general (91 - 92)</div><div class="f-cas">93</div><div class="f-val"><input id="c93" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">Compensacion perdidas anos 2018 y anteriores</div><div class="f-cas">94</div><div class="f-val"><input id="c94" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Compensacion por exceso de renta presuntiva</div><div class="f-cas">95</div><div class="f-val"><input id="c95" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Rentas gravables</div><div class="f-cas">96</div><div class="f-val"><input id="c96" oninput="recalcular()"></div></div>
+      <div class="f110-row f-result"><div class="f-label">Renta liquida gravable cedula general (93+96-94-95)</div><div class="f-cas">97</div><div class="f-val"><input id="c97" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">Renta presuntiva</div><div class="f-cas">98</div><div class="f-val"><input id="c98" oninput="recalcular()"></div></div>
+    </div>
+
+    <!-- ══ CEDULA DE PENSIONES ══ -->
+    <div class="dian-sec" onclick="toggleSec('secPensiones')">Cedula de Pensiones <span class="toggle">&#9660;</span></div>
+    <div id="secPensiones">
+      <div class="f110-row"><div class="f-label">Ingresos brutos por rentas de pensiones del pais y del exterior</div><div class="f-cas">99</div><div class="f-val"><input id="c99" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Ingresos no constitutivos de renta</div><div class="f-cas">100</div><div class="f-val"><input id="c100" oninput="recalcular()"></div></div>
+      <div class="f110-row f-total"><div class="f-label">Renta liquida (99 - 100)</div><div class="f-cas">101</div><div class="f-val"><input id="c101" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">Rentas exentas de pensiones</div><div class="f-cas">102</div><div class="f-val"><input id="c102" oninput="recalcular()"></div></div>
+      <div class="f110-row f-total"><div class="f-label">Renta liquida gravable cedula de pensiones (101 - 102)</div><div class="f-cas">103</div><div class="f-val"><input id="c103" class="computed" readonly></div></div>
+    </div>
+
+    <!-- ══ CEDULA DE DIVIDENDOS ══ -->
+    <div class="dian-sec" onclick="toggleSec('secDividendos')">Cedula de Dividendos y Participaciones <span class="toggle">&#9660;</span></div>
+    <div id="secDividendos">
+      <div class="f110-row"><div class="f-label">Dividendos y participaciones 2016 y anteriores, y otros</div><div class="f-cas">104</div><div class="f-val"><input id="c104" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Ingresos no constitutivos de renta</div><div class="f-cas">105</div><div class="f-val"><input id="c105" oninput="recalcular()"></div></div>
+      <div class="f110-row f-total"><div class="f-label">Renta liquida ordinaria ano 2016 y anteriores (104 - 105)</div><div class="f-cas">106</div><div class="f-val"><input id="c106" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">1a. Subcedula 2017+ numeral 3 art. 49 ET (no gravados)</div><div class="f-cas">107</div><div class="f-val"><input id="c107" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">2a. Subcedula 2017+ paragrafo 2 art. 49 ET (gravados)</div><div class="f-cas">108</div><div class="f-val"><input id="c108" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Dividendos y participaciones recibidas del exterior</div><div class="f-cas">109</div><div class="f-val"><input id="c109" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Rentas exentas dividendos ECE y/o del exterior (cas 109)</div><div class="f-cas">110</div><div class="f-val"><input id="c110" oninput="recalcular()"></div></div>
+    </div>
+
+    <!-- ══ RENTA LIQUIDA GRAVABLE TOTAL ══ -->
+    <div class="dian-sec" style="background:#b0c4de">Renta Liquida Gravable Total</div>
+    <div class="f110-row f-result"><div class="f-label">Renta liq. gravable (cedula general o presuntiva + pensiones + dividendos, Art. 241 ET)</div><div class="f-cas">111</div><div class="f-val"><input id="c111" class="computed" readonly></div></div>
+
+    <!-- ══ GANANCIAS OCASIONALES ══ -->
+    <div class="dian-sec" onclick="toggleSec('secGO')">Ganancias Ocasionales <span class="toggle">&#9660;</span></div>
+    <div id="secGO">
+      <div class="f110-row"><div class="f-label">Ingresos por ganancias ocasionales del pais y del exterior</div><div class="f-cas">112</div><div class="f-val"><input id="c112" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Costos por ganancias ocasionales</div><div class="f-cas">113</div><div class="f-val"><input id="c113" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Ganancias ocasionales no gravadas y exentas</div><div class="f-cas">114</div><div class="f-val"><input id="c114" oninput="recalcular()"></div></div>
+      <div class="f110-row f-total"><div class="f-label">Ganancias ocasionales gravables (si 112-113-114 > 0)</div><div class="f-cas">115</div><div class="f-val"><input id="c115" class="computed" readonly></div></div>
+    </div>
+
+    <!-- ══ LIQUIDACION PRIVADA ══ -->
+    <div class="dian-sec" onclick="toggleSec('secLiq')" style="background:#c6d9ec">Liquidacion Privada <span class="toggle">&#9660;</span></div>
+    <div id="secLiq">
+      <div class="f110-row"><div class="f-label">Impuesto cedula general + pensiones + dividendos (base cas 111, Art. 241)</div><div class="f-cas">116</div><div class="f-val"><input id="c116" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">O Renta presuntiva + pensiones + dividendos (base cas 111)</div><div class="f-cas">117</div><div class="f-val"><input id="c117" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">Impuesto dividendos 2a subcedula 2017+ (base cas 108)</div><div class="f-cas">118</div><div class="f-val"><input id="c118" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">Impuesto dividendos 2016 y anteriores (base cas 106)</div><div class="f-cas">119</div><div class="f-val"><input id="c119" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">Impuesto dividendos del exterior (base cas 109 - 110)</div><div class="f-cas">120</div><div class="f-val"><input id="c120" class="computed" readonly></div></div>
+      <div class="f110-row f-total"><div class="f-label">Total impuesto rentas liquidas cedulares (116 a 120)</div><div class="f-cas">121</div><div class="f-val"><input id="c121" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">Descuento: Impuestos pagados en el exterior</div><div class="f-cas">122</div><div class="f-val"><input id="c122" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Descuento: Donaciones</div><div class="f-cas">123</div><div class="f-val"><input id="c123" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Descuento: Dividendos y participaciones (Art. 254-1)</div><div class="f-cas">124</div><div class="f-val"><input id="c124" oninput="recalcular()"></div></div>
+      <div class="f110-row f-total"><div class="f-label">Total descuentos tributarios (122 + 123 + 124)</div><div class="f-cas">125</div><div class="f-val"><input id="c125" class="computed" readonly></div></div>
+      <div class="f110-row f-result"><div class="f-label">Impuesto neto de renta (121 - 125)</div><div class="f-cas">126</div><div class="f-val"><input id="c126" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">Impuesto de ganancias ocasionales</div><div class="f-cas">127</div><div class="f-val"><input id="c127" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">Descuento impuestos pagados exterior por GO</div><div class="f-cas">128</div><div class="f-val"><input id="c128" oninput="recalcular()"></div></div>
+      <div class="f110-row f-result"><div class="f-label">Total impuesto a cargo (126 + 127 - 128)</div><div class="f-cas">129</div><div class="f-val"><input id="c129" class="computed" readonly></div></div>
+    </div>
+
+    <!-- ══ PAGOS ══ -->
+    <div class="dian-sec" onclick="toggleSec('secPagos')">Pagos y Saldo <span class="toggle">&#9660;</span></div>
+    <div id="secPagos">
+      <div class="f110-row"><div class="f-label">Anticipo renta liquidado ano gravable anterior</div><div class="f-cas">130</div><div class="f-val"><input id="c130" oninput="this._manual=true;recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Saldo a favor ano gravable anterior sin solicitud de devolucion</div><div class="f-cas">131</div><div class="f-val"><input id="c131" oninput="this._manual=true;recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Retenciones ano gravable a declarar</div><div class="f-cas">132</div><div class="f-val"><input id="c132" oninput="recalcular()"></div></div>
+      <div class="f110-row"><div class="f-label">Anticipo renta para el ano gravable siguiente</div><div class="f-cas">133</div><div class="f-val"><input id="c133" class="computed" readonly></div></div>
+      <div class="f110-row f-result"><div class="f-label">Saldo a pagar por impuesto (si 129+133-130-131-132 > 0)</div><div class="f-cas">134</div><div class="f-val"><input id="c134" class="computed" readonly></div></div>
+      <div class="f110-row"><div class="f-label">Sanciones</div><div class="f-cas">135</div><div class="f-val"><input id="c135" oninput="recalcular()"></div></div>
+      <div class="f110-row f-result"><div class="f-label">Total saldo a pagar (si 129+133+135-130-131-132 > 0)</div><div class="f-cas">136</div><div class="f-val"><input id="c136" class="computed" readonly></div></div>
+      <div class="f110-row f-result"><div class="f-label">Total saldo a favor (si 130+131+132-129-133-135 > 0)</div><div class="f-cas">137</div><div class="f-val"><input id="c137" class="computed" readonly></div></div>
+    </div>
+
+    <!-- ══ DEPENDIENTES Y OTROS ══ -->
+    <div class="dian-sec">Informacion Adicional</div>
+    <div class="f110-grid" style="border-bottom:none">
+      <div class="f110-col">
+        <div class="f110-row"><div class="f-label">Numero de dependientes economicos</div><div class="f-cas">138</div><div class="f-val"><input id="c138" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Adicion por dependientes a casilla 92 (72 UVT c/u)</div><div class="f-cas">139</div><div class="f-val"><input id="c139" class="computed" readonly></div></div>
+      </div>
+      <div class="f110-col">
+        <div class="f110-row"><div class="f-label">Supero tope indicativo art. 336-1 ET</div><div class="f-cas">140</div><div class="f-val"><input id="c140" class="computed" readonly></div></div>
+        <div class="f110-row"><div class="f-label">Aporte voluntario (art. 244-1 ET)</div><div class="f-cas">141</div><div class="f-val"><input id="c141" oninput="recalcular()"></div></div>
+      </div>
+    </div>
+
+    <div class="dian-footer">
+      <strong>ExogenaDIAN</strong> &middot; Borrador automatico &middot; Art. 241 ET &middot; AG 2025 &middot; UVT $49,799 &middot; El contador debe validar antes de presentar
+    </div>
+  </div>
+
+  <!-- ══ DESGLOSE PATRIMONIO BRUTO ══ -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <div onclick="document.getElementById('desglosePatBody').classList.toggle('hidden')" style="padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f8fafc">
+      <span style="font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px"><span>&#128178;</span> Desglose Patrimonio Bruto (Casilla 29)</span>
+      <span style="font-size:.75rem;color:var(--muted)">clic para expandir &#9660;</span>
+    </div>
+    <div id="desglosePatBody" class="hidden" style="padding:12px 16px">
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">Detalla los activos que componen tu patrimonio bruto. El total se aplicara a la casilla 29.</p>
+      <div id="desglosePatTable"></div>
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button onclick="agregarPatrimonio()" class="btn btn-outline" style="padding:6px 14px;font-size:.8rem">+ Agregar activo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DESGLOSE DEUDAS ══ -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <div onclick="document.getElementById('desgloseDeudBody').classList.toggle('hidden')" style="padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f8fafc">
+      <span style="font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px"><span>&#128179;</span> Desglose Deudas (Casilla 30)</span>
+      <span style="font-size:.75rem;color:var(--muted)">clic para expandir &#9660;</span>
+    </div>
+    <div id="desgloseDeudBody" class="hidden" style="padding:12px 16px">
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">Detalla tus deudas y obligaciones. El total se aplicara a la casilla 30.</p>
+      <div id="desgloseDeudTable"></div>
+      <div style="margin-top:8px">
+        <button onclick="agregarDeuda()" class="btn btn-outline" style="padding:6px 14px;font-size:.8rem">+ Agregar deuda</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CONCILIACION PATRIMONIAL ══ -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <div onclick="document.getElementById('concilBody').classList.toggle('hidden')" style="padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f8fafc">
+      <span style="font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px"><span>&#128200;</span> Conciliacion Patrimonial</span>
+      <span style="font-size:.75rem;color:var(--muted)">clic para expandir &#9660;</span>
+    </div>
+    <div id="concilBody" class="hidden" style="padding:12px 16px">
+      <p style="font-size:.78rem;color:var(--muted);margin-bottom:10px">Verifica que la variacion del patrimonio sea justificable con las rentas declaradas.</p>
+      <div id="concilResult"></div>
+    </div>
+  </div>
+
+  <!-- ══ ANTICIPO DETALLE ══ -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <div onclick="document.getElementById('anticipoBody').classList.toggle('hidden')" style="padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;background:#f8fafc">
+      <span style="font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:8px"><span>&#128197;</span> Detalle Calculo Anticipo Renta 2026</span>
+      <span style="font-size:.75rem;color:var(--muted)">clic para expandir &#9660;</span>
+    </div>
+    <div id="anticipoBody" class="hidden" style="padding:12px 16px">
+      <div id="anticipoResult"></div>
+    </div>
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="stats" id="resumen" style="margin-top:12px"></div>
+
+  <!-- DESCARGA EXCEL PRO -->
+  <div style="text-align:center;margin-bottom:12px" id="excelSection">
+    <div style="display:inline-block;padding:16px 28px;background:#f8fafc;border:2px dashed var(--border);border-radius:12px">
+      <div style="font-size:.85rem;font-weight:600;color:var(--muted);margin-bottom:6px">&#128202; Descargar Excel con Formulas</div>
+      <div style="font-size:.78rem;color:var(--muted);margin-bottom:10px">F210 formato DIAN, Desglose Patrimonio, Anticipo, Conciliacion Patrimonial</div>
+      <button id="btnDescargar210" onclick="btnLoading(this,descargarExcel210)" class="btn btn-success" style="padding:8px 20px;margin-top:8px">Descargar Excel</button>
+    </div>
+  </div>
+
+  </div><!-- /proContent -->
+</div>
+
+<div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
+  <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">Exogena DIAN</a> &middot; Los valores calculados son estimaciones. Deben ser verificados y ajustados por un contador publico antes de su presentacion oficial.<br>
+  &#128274; Tus archivos se procesan 100% en tu navegador &middot; Nunca se envian a servidores &middot; <a href="https://exogenadian.com/politica-privacidad.html" style="color:#059669">Politica de privacidad</a>
+</div>
+
+<script>
+function esc(s){return(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+/* ═══════════════════════════════════════════════════════════
+   FORMULARIO 210 — DECLARACION DE RENTA PERSONAS NATURALES
+   Calculos automaticos con tabla Art. 241 ET · AG 2025
+   UVT 2025 = $49,799
+   ═══════════════════════════════════════════════════════════ */
+
+const UVT = 49799;
+
+/* ── PRO GATE ── */
+function validarProGate(){
+  var email = document.getElementById('proKeyGate').value.trim();
+  if(!email){document.getElementById('proGateError').textContent='Ingresa tu email PRO';return}
+  exoPro.check(email).then(function(ok){
+    if(ok){
+      document.getElementById('proGate').classList.add('hidden');
+      document.getElementById('proContent').classList.remove('hidden');
+      gtag('event','f210_pro_activated',{method:'gate'});
+      recalcular();
+    } else {
+      document.getElementById('proGateError').textContent='Email no encontrado o suscripcion inactiva. Verifica tu email.';
+    }
+  }).catch(function(){
+    document.getElementById('proGateError').textContent='Error de conexion. Intenta de nuevo.';
+  });
+}
+
+// Auto-check PRO on load
+document.addEventListener('DOMContentLoaded', function(){
+  exoPro.check().then(function(ok){
+    if(ok){
+      document.getElementById('proGate').classList.add('hidden');
+      document.getElementById('proContent').classList.remove('hidden');
+      recalcular();
+    }
+  });
+});
+
+/* ── TOGGLE SECTIONS ── */
+function toggleSec(id){
+  var el=document.getElementById(id);
+  if(el)el.classList.toggle('hidden');
+}
+
+/* ── HELPERS ── */
+function v(id){var el=document.getElementById(id);if(!el)return 0;var s=el.value.replace(/[,.\s$]/g,'');return parseInt(s)||0}
+function vCfg(id){var el=document.getElementById(id);if(!el)return 0;return parseInt(String(el.value).replace(/[,.\s$]/g,''))||0}
+function set(id,val){
+  var el=document.getElementById(id);if(!el)return;
+  var n=Math.round(val/1000)*1000;
+  el.value=n!==0?n.toLocaleString('es-CO'):'';
+  el.classList.toggle('filled',n!==0);
+}
+function fN(n){return Math.round(n).toLocaleString('es-CO')}
+function btnLoading(btn,fn){btn.disabled=true;btn.textContent='Procesando...';setTimeout(function(){fn();btn.disabled=false;btn.textContent='Descargar Excel'},500)}
+
+/* ═══════════════════════════════════════════════
+   TABLA IMPUESTO ART. 241 ET — Personas Naturales
+   ═══════════════════════════════════════════════ */
+function impuestoArt241(baseEnPesos){
+  var baseUVT = baseEnPesos / UVT;
+  if(baseUVT <= 0) return 0;
+  var imp = 0;
+  if(baseUVT <= 1090){
+    imp = 0;
+  } else if(baseUVT <= 1700){
+    imp = (baseUVT - 1090) * 0.19;
+  } else if(baseUVT <= 4100){
+    imp = (baseUVT - 1700) * 0.28 + 116;
+  } else if(baseUVT <= 8670){
+    imp = (baseUVT - 4100) * 0.33 + 788;
+  } else if(baseUVT <= 18970){
+    imp = (baseUVT - 8670) * 0.35 + 2296;
+  } else if(baseUVT <= 31000){
+    imp = (baseUVT - 18970) * 0.37 + 5901;
+  } else {
+    imp = (baseUVT - 31000) * 0.39 + 10352;
+  }
+  return Math.round(imp * UVT / 1000) * 1000;
+}
+
+/* Tabla dividendos gravados 2016 y anteriores (Art. 1.2.1.10.3 DUT) */
+function impuestoDivGravados2016(baseEnPesos){
+  var baseUVT = baseEnPesos / UVT;
+  if(baseUVT <= 0) return 0;
+  var imp = 0;
+  if(baseUVT <= 1090){
+    imp = 0;
+  } else if(baseUVT <= 1700){
+    imp = (baseUVT - 1090) * 0.19;
+  } else if(baseUVT <= 4100){
+    imp = (baseUVT - 1700) * 0.28 + 116;
+  } else {
+    imp = (baseUVT - 4100) * 0.33 + 788;
+  }
+  return Math.round(imp * UVT / 1000) * 1000;
+}
+
+/* Impuesto dividendos gravados 2017+ (2a subcédula, Art. 240 par 2 art 49 ET) */
+function impuestoDivGravados2017(baseEnPesos){
+  // Tarifa: primero se aplica tarifa Art. 240 (35% para la sociedad que distribuyó)
+  // Luego el excedente se busca en tabla Art. 241
+  // Simplificación: la 2a subcédula tributa con tarifa del Art. 240 de la sociedad
+  // Para PN: se aplica la tarifa combinada según Art. 242-1 ET
+  // Tarifa marginal sobre dividendos gravados = tarifa corporativa primero, luego Art. 241 sobre el neto
+  // En la práctica, la DIAN calcula: Imp = Base * Tarifa_sociedad / (1 - Tarifa_sociedad), luego busca en tabla
+  // Simplificación práctica: el contribuyente calcula manualmente
+  // Para esta herramienta, aplicamos la tabla Art. 241 directamente ya que el MUISCA lo hace así
+  if(baseEnPesos <= 0) return 0;
+  // Tarifa corporativa del 35%: imp1 = base * 35%
+  var imp1 = Math.round(baseEnPesos * 0.35 / 1000) * 1000;
+  // Luego sobre el neto (base - imp1) se busca en tabla Art 241
+  var neto = baseEnPesos - imp1;
+  var imp2 = neto > 0 ? impuestoArt241(neto) : 0;
+  return imp1 + imp2;
+}
+
+/* ═══════════════════════════════════════
+   RECALCULAR — Motor principal del F210
+   ═══════════════════════════════════════ */
+function recalcular(){
+  // ── PATRIMONIO ──
+  set('c31', Math.max(v('c29') - v('c30'), 0));
+
+  // ── CEDULA GENERAL — RENTAS DE TRABAJO ──
+  var rl34 = Math.max(v('c32') - v('c33'), 0);
+  set('c34', rl34);
+  set('c37', v('c35') + v('c36'));  // total exentas trabajo
+  set('c40', v('c38') + v('c39'));  // total deducciones trabajo
+  var exDed41 = v('c37') + v('c40');
+  set('c41', exDed41);
+  var rl42 = Math.max(rl34 - exDed41, 0);
+  set('c42', rl42);
+
+  // ── CEDULA GENERAL — HONORARIOS ──
+  var rl46 = Math.max(v('c43') - v('c44') - v('c45'), 0);
+  set('c46', rl46);
+  set('c49', v('c47') + v('c48'));
+  set('c52', v('c50') + v('c51'));
+  var exDed53 = v('c49') + v('c52');
+  set('c53', exDed53);
+  // Renta líquida ordinaria / pérdida
+  var rlHon = rl46 + 0 - exDed53; // sin ECE para honorarios
+  if(rlHon >= 0){
+    var rl54 = Math.max(rlHon - v('c56'), 0);
+    set('c54', rl54 + v('c56') > 0 ? rlHon : 0);
+    set('c55', 0);
+  } else {
+    set('c54', 0);
+    set('c55', Math.abs(rlHon));
+  }
+  var rl57 = Math.max(rl46 - exDed53 - v('c56'), 0);
+  set('c57', rl57);
+
+  // ── CEDULA GENERAL — RENTAS DE CAPITAL ──
+  var rl61 = Math.max(v('c58') - v('c59') - v('c60'), 0);
+  set('c61', rl61);
+  set('c65', v('c63') + v('c64'));
+  set('c68', v('c66') + v('c67'));
+  var exDed69 = v('c65') + v('c68');
+  set('c69', exDed69);
+  var rlCap = rl61 + v('c62') - exDed69;
+  if(rlCap >= 0){
+    set('c70', rlCap);
+    set('c71', 0);
+  } else {
+    set('c70', 0);
+    set('c71', Math.abs(rlCap));
+  }
+  var rl73 = Math.max(rlCap - v('c72'), 0);
+  set('c73_r', rl73);
+
+  // ── CEDULA GENERAL — RENTAS NO LABORALES ──
+  var rl78 = Math.max(v('c74') - v('c75') - v('c76') - v('c77'), 0);
+  set('c78', rl78);
+  set('c82', v('c80') + v('c81'));
+  set('c85', v('c83') + v('c84'));
+  var exDed86 = v('c82') + v('c85');
+  set('c86', exDed86);
+  var rlNL = rl78 + v('c79') - exDed86;
+  if(rlNL >= 0){
+    set('c87', rlNL);
+    set('c88', 0);
+  } else {
+    set('c87', 0);
+    set('c88', Math.abs(rlNL));
+  }
+  var rl90 = Math.max(rlNL - v('c89'), 0);
+  set('c90', rl90);
+
+  // ── CONSOLIDADO CEDULA GENERAL ──
+  // Casilla 91: suma de rentas líquidas ANTES de restar exentas y deducciones
+  // = (34 + ECE_trabajo) + (46 + ECE_hon) + (61 + 62) + (78 + 79)
+  // Pero neteando pérdidas entre subcédulas (Art. 1.2.1.20.5 DUT)
+  var sumRL = rl34 + rl46 + rl61 + v('c62') + rl78 + v('c79');
+  // Restar pérdidas de honorarios/capital/no laborales
+  var perdidas = v('c55') + v('c71') + v('c88');
+  var c91val = Math.max(sumRL - perdidas, 0);
+  set('c91', c91val);
+
+  // Casilla 138, 139: Dependientes
+  var numDep = parseInt(document.getElementById('cfgDependientes').value) || 0;
+  set('c138', numDep);
+  var depVal = Math.round(numDep * 72 * UVT / 1000) * 1000;
+  set('c139', depVal);
+
+  // Casilla 92: Rentas exentas y deducciones limitadas
+  // = min(41 + 53 + 69 + 86 + 28 + 139, 40% * 91, 5040 UVT)
+  var rawExDed = exDed41 + exDed53 + exDed69 + exDed86 + v('c28') + depVal;
+  var limite40 = Math.round(c91val * 0.40 / 1000) * 1000;
+  var limite5040 = Math.round(5040 * UVT / 1000) * 1000;
+  var c92val = Math.min(rawExDed, limite40, limite5040);
+  // No puede exceder la renta líquida
+  c92val = Math.min(c92val, c91val);
+  set('c92', c92val);
+
+  // Casilla 93: Renta líquida ordinaria cédula general
+  var c93val = Math.max(c91val - c92val, 0);
+  set('c93', c93val);
+
+  // Casilla 97: Renta líquida gravable cédula general
+  var c97val = Math.max(c93val + v('c96') - v('c94') - v('c95'), 0);
+  set('c97', c97val);
+
+  // Casilla 140: Superó tope art. 336-1 ET
+  set('c140', rawExDed > limite40 ? 1 : 0);
+
+  // ── CEDULA DE PENSIONES ──
+  var c101 = Math.max(v('c99') - v('c100'), 0);
+  set('c101', c101);
+  var c103val = Math.max(c101 - v('c102'), 0);
+  set('c103', c103val);
+
+  // ── CEDULA DE DIVIDENDOS ──
+  var c106 = Math.max(v('c104') - v('c105'), 0);
+  set('c106', c106);
+
+  // ── RENTA LIQUIDA GRAVABLE TOTAL (casilla 111) ──
+  // = max(97, 98) + 103 + 107 (dividendos no gravados 2017+ se suman para tabla Art 241)
+  var baseRentaPres = Math.max(c97val, v('c98'));
+  var c111val = baseRentaPres + c103val + v('c107');
+  set('c111', c111val);
+
+  // ── GANANCIAS OCASIONALES ──
+  var c115val = Math.max(v('c112') - v('c113') - v('c114'), 0);
+  set('c115', c115val);
+
+  // ── LIQUIDACION PRIVADA ──
+  // Casilla 116: Impuesto tabla Art. 241 sobre casilla 111
+  var imp116 = impuestoArt241(c111val);
+  set('c116', imp116);
+
+  // Casilla 117: si renta presuntiva > cédula general, igual impuesto
+  var imp117 = v('c98') > c97val ? imp116 : 0;
+  set('c117', imp117);
+
+  // Casilla 118: Impuesto dividendos gravados 2017+ (2a subcédula)
+  var imp118 = impuestoDivGravados2017(v('c108'));
+  set('c118', imp118);
+
+  // Casilla 119: Impuesto dividendos 2016 y anteriores
+  var imp119 = impuestoDivGravados2016(c106);
+  set('c119', imp119);
+
+  // Casilla 120: Impuesto dividendos del exterior
+  var divExt = Math.max(v('c109') - v('c110'), 0);
+  var imp120 = impuestoArt241(divExt);
+  set('c120', imp120);
+
+  // Casilla 121: Total impuesto rentas cedulares
+  var c121val = imp116 + imp118 + imp119 + imp120;
+  set('c121', c121val);
+
+  // Casilla 125: Total descuentos
+  var c125val = v('c122') + v('c123') + v('c124');
+  set('c125', c125val);
+
+  // Casilla 126: Impuesto neto de renta
+  var c126val = Math.max(c121val - c125val, 0);
+  set('c126', c126val);
+
+  // Casilla 127: Impuesto ganancias ocasionales (15%)
+  var c127val = Math.round(c115val * 0.15 / 1000) * 1000;
+  set('c127', c127val);
+
+  // Casilla 129: Total impuesto a cargo
+  var c129val = Math.max(c126val + c127val - v('c128'), 0);
+  set('c129', c129val);
+
+  // ── DATOS AÑO ANTERIOR → casillas 130, 131 ──
+  var antAnticipo = vCfg('antAnticipo');
+  var antSaldoFavor = vCfg('antSaldoFavor');
+  if(antAnticipo && !document.getElementById('c130')._manual){set('c130', antAnticipo)}
+  if(antSaldoFavor && !document.getElementById('c131')._manual){set('c131', antSaldoFavor)}
+
+  // ── ANTICIPO AÑO SIGUIENTE (Art. 807-809 ET) ──
+  var metodo = document.getElementById('antMetodo').value;
+  var antImpNeto = vCfg('antImpNeto');
+  var retenciones132 = v('c132');
+  var c133val = 0;
+
+  if(metodo === '75'){
+    c133val = Math.max(Math.round(c126val * 0.75 / 1000) * 1000 - retenciones132, 0);
+  } else if(metodo === 'promedio'){
+    var base = Math.round(((antImpNeto * 0.75) + (c126val * 0.75)) / 2 / 1000) * 1000;
+    c133val = Math.max(base - retenciones132, 0);
+  } else if(metodo === '25'){
+    c133val = Math.max(Math.round(c126val * 0.25 / 1000) * 1000 - retenciones132, 0);
+  }
+  set('c133', c133val);
+
+  // ── SALDO ──
+  var totalPagos = v('c130') + v('c131') + retenciones132;
+  var totalCargo = c129val + c133val;
+  var saldoImp = totalCargo - totalPagos;
+
+  // Casilla 134: Saldo a pagar por impuesto
+  set('c134', Math.max(saldoImp, 0));
+
+  // Casilla 136: Total saldo a pagar (incluye sanciones)
+  var totalPagar = Math.max(saldoImp + v('c135'), 0);
+  set('c136', totalPagar);
+
+  // Casilla 137: Total saldo a favor
+  var totalFavor = Math.max(totalPagos - totalCargo - v('c135'), 0);
+  set('c137', totalFavor);
+
+  // ── RESUMEN VISUAL ──
+  actualizarResumen();
+  actualizarConciliacion();
+  actualizarAnticipo();
+}
+
+function actualizarResumen(){
+  var r = document.getElementById('resumen');
+  if(!r) return;
+  r.innerHTML =
+    '<div class="stat-card blue"><div class="val">' + fN(v('c111')) + '</div><div class="lbl">Renta Liquida Gravable</div></div>' +
+    '<div class="stat-card amber"><div class="val">' + fN(v('c129')) + '</div><div class="lbl">Total Impuesto a Cargo</div></div>' +
+    '<div class="stat-card ' + (v('c136') > 0 ? 'red' : 'green') + '"><div class="val">' + fN(v('c136')) + '</div><div class="lbl">Saldo a Pagar</div></div>' +
+    '<div class="stat-card green"><div class="val">' + fN(v('c137')) + '</div><div class="lbl">Saldo a Favor</div></div>';
+}
+
+/* ═══════════════════════════════════════
+   CONCILIACION PATRIMONIAL
+   ═══════════════════════════════════════ */
+function actualizarConciliacion(){
+  var patLiqAnt = vCfg('antPatLiq');
+  // Ingresos no gravados (INCRNGO de todas las cédulas)
+  var incrngo = v('c33') + v('c44') + v('c59') + v('c76') + v('c100') + v('c105');
+  // Ganancia/pérdida ocasional neta
+  var goNeta = v('c112') - v('c113');
+  // Renta líquida capitalizada (cédula general antes de exentas)
+  var rentaLiqCap = v('c91');
+  // Impuesto a cargo
+  var impCargo = v('c129');
+  // Total justificable
+  var justificable = patLiqAnt + incrngo + goNeta + rentaLiqCap - impCargo;
+  // Patrimonio declarado
+  var patDeclarado = v('c31');
+  // Diferencia
+  var diferencia = patDeclarado - justificable;
+
+  var colorDif = diferencia > 0 ? '#C62828' : '#2E7D32';
+  var bgDif = diferencia > 0 ? '#FFEBEE' : '#E8F5E9';
+  var msgDif = diferencia > 0
+    ? 'La DIAN podria convertir $' + fN(diferencia) + ' en renta liquida gravable (Arts. 236, 239-1 ET). Revisa gastos personales no deducibles.'
+    : 'Patrimonio justificado correctamente.';
+
+  document.getElementById('concilResult').innerHTML =
+    '<table class="desglose-tbl">' +
+    '<tr><td>Patrimonio liquido a dic. 31/2024</td><td>' + fN(patLiqAnt) + '</td></tr>' +
+    '<tr><td>+ Ingresos no gravados (INCRNGO)</td><td>' + fN(incrngo) + '</td></tr>' +
+    '<tr><td>+ Ganancia/perdida ocasional neta (112 - 113)</td><td>' + fN(goNeta) + '</td></tr>' +
+    '<tr><td>+ Renta liquida capitalizada (casilla 91)</td><td>' + fN(rentaLiqCap) + '</td></tr>' +
+    '<tr><td>- Impuesto a cargo (casilla 129)</td><td>(' + fN(impCargo) + ')</td></tr>' +
+    '<tr class="subtotal"><td><strong>Patrimonio justificable a dic. 31/2025</strong></td><td><strong>' + fN(justificable) + '</strong></td></tr>' +
+    '<tr><td>Patrimonio declarado (casilla 31)</td><td>' + fN(patDeclarado) + '</td></tr>' +
+    '<tr style="background:' + bgDif + '"><td><strong>Diferencia patrimonial</strong></td><td style="color:' + colorDif + ';font-weight:800">' + fN(diferencia) + '</td></tr>' +
+    '</table>' +
+    '<div style="margin-top:8px;padding:8px 12px;background:' + bgDif + ';border-radius:8px;font-size:.78rem;color:' + colorDif + '">' + msgDif + '</div>' +
+    '<div style="margin-top:6px;font-size:.72rem;color:var(--muted)"><em>Nota: ajusta la diferencia incluyendo gastos personales (comida, servicios, viajes, etc.) que no son deducibles pero si disminuyen el patrimonio.</em></div>';
+}
+
+/* ═══════════════════════════════════════
+   ANTICIPO DETALLE
+   ═══════════════════════════════════════ */
+function actualizarAnticipo(){
+  var metodo = document.getElementById('antMetodo').value;
+  var impNeto = v('c126');
+  var antImpNeto = vCfg('antImpNeto');
+  var ret = v('c132');
+  var h = '';
+
+  if(metodo === '25'){
+    h = '<table class="desglose-tbl">' +
+      '<tr><td colspan="2" style="font-weight:700;color:var(--pri)">Primer ano declarando (25%)</td></tr>' +
+      '<tr><td>Impuesto neto de renta AG 2025 (cas 126)</td><td>' + fN(impNeto) + '</td></tr>' +
+      '<tr><td>x 25%</td><td>' + fN(Math.round(impNeto * 0.25 / 1000) * 1000) + '</td></tr>' +
+      '<tr><td>- Retenciones 2025 (cas 132)</td><td>(' + fN(ret) + ')</td></tr>' +
+      '<tr class="subtotal"><td><strong>Anticipo para 2026</strong></td><td><strong>' + fN(v('c133')) + '</strong></td></tr>' +
+      '</table>';
+  } else if(metodo === 'promedio'){
+    var prom = Math.round(((antImpNeto * 0.75) + (impNeto * 0.75)) / 2 / 1000) * 1000;
+    h = '<table class="desglose-tbl">' +
+      '<tr><td colspan="2" style="font-weight:700;color:var(--pri)">Segundo ano declarando (Promedio)</td></tr>' +
+      '<tr><td>Impuesto neto renta AG 2024</td><td>' + fN(antImpNeto) + '</td></tr>' +
+      '<tr><td>Impuesto neto renta AG 2025 (cas 126)</td><td>' + fN(impNeto) + '</td></tr>' +
+      '<tr><td>Subtotal</td><td>' + fN(antImpNeto + impNeto) + '</td></tr>' +
+      '<tr><td>Promedio x 75%</td><td>' + fN(prom) + '</td></tr>' +
+      '<tr><td>- Retenciones 2025 (cas 132)</td><td>(' + fN(ret) + ')</td></tr>' +
+      '<tr class="subtotal"><td><strong>Anticipo para 2026</strong></td><td><strong>' + fN(v('c133')) + '</strong></td></tr>' +
+      '</table>';
+  } else if(metodo === '75'){
+    h = '<table class="desglose-tbl">' +
+      '<tr><td colspan="2" style="font-weight:700;color:var(--pri)">Tercer ano en adelante (75%)</td></tr>' +
+      '<tr><td>Impuesto neto de renta AG 2025 (cas 126)</td><td>' + fN(impNeto) + '</td></tr>' +
+      '<tr><td>x 75%</td><td>' + fN(Math.round(impNeto * 0.75 / 1000) * 1000) + '</td></tr>' +
+      '<tr><td>- Retenciones 2025 (cas 132)</td><td>(' + fN(ret) + ')</td></tr>' +
+      '<tr class="subtotal"><td><strong>Anticipo para 2026</strong></td><td><strong>' + fN(v('c133')) + '</strong></td></tr>' +
+      '</table>';
+  } else {
+    h = '<p style="color:var(--muted);font-size:.82rem">No aplica anticipo.</p>';
+  }
+
+  document.getElementById('anticipoResult').innerHTML = h;
+}
+
+/* ═══════════════════════════════════════
+   DESGLOSE PATRIMONIO BRUTO
+   ═══════════════════════════════════════ */
+var patrimonioItems = [];
+var deudaItems = [];
+
+function editPatVal(idx,rawVal){
+  var n=parseInt(String(rawVal).replace(/[,.\s]/g,''))||0;
+  patrimonioItems[idx].valor=n;
+  actualizarTotalPat();
+}
+function editDeudVal(idx,rawVal){
+  var n=parseInt(String(rawVal).replace(/[,.\s]/g,''))||0;
+  deudaItems[idx].valor=n;
+  actualizarTotalDeud();
+}
+
+function renderPatrimonio(){
+  var h = '<table class="desglose-tbl"><thead><tr><th>Categoria</th><th>Descripcion</th><th>Tercero</th><th style="text-align:right">Valor</th><th style="text-align:center;width:30px"></th></tr></thead><tbody>';
+  var total = 0;
+  for(var i = 0; i < patrimonioItems.length; i++){
+    var it = patrimonioItems[i];
+    total += it.valor;
+    h += '<tr>' +
+      '<td><select onchange="patrimonioItems[' + i + '].cat=this.value" style="font-size:.72rem;padding:2px;border:1px solid #ddd;border-radius:4px">' +
+      catOptions(it.cat, 'pat') + '</select></td>' +
+      '<td><input value="' + esc(it.desc) + '" onchange="patrimonioItems[' + i + '].desc=this.value" style="font-size:.75rem;border:1px solid #eee;border-radius:3px;padding:2px 4px;width:100%"></td>' +
+      '<td><input value="' + esc(it.tercero) + '" onchange="patrimonioItems[' + i + '].tercero=this.value" style="font-size:.72rem;border:1px solid #eee;border-radius:3px;padding:2px 4px;width:80px"></td>' +
+      '<td style="text-align:right"><input id="patVal' + i + '" value="' + (it.valor ? fN(it.valor) : '') + '" onfocus="this.value=String(patrimonioItems[' + i + '].valor||0)" onblur="editPatVal(' + i + ',this.value);this.value=patrimonioItems[' + i + '].valor?fN(patrimonioItems[' + i + '].valor):&quot;&quot;" style="font-size:.75rem;font-family:JetBrains Mono;text-align:right;border:1px solid #eee;border-radius:3px;padding:2px 4px;width:100px;font-weight:600"></td>' +
+      '<td style="text-align:center"><button onclick="patrimonioItems.splice(' + i + ',1);renderPatrimonio()" style="background:none;border:none;color:#EF4444;cursor:pointer;font-size:.8rem">&#10005;</button></td>' +
+      '</tr>';
+  }
+  h += '<tr class="subtotal"><td colspan="3"><strong>Total Patrimonio Bruto</strong></td><td style="font-weight:800">' + fN(total) + '</td><td></td></tr>';
+  h += '</tbody></table>';
+  document.getElementById('desglosePatTable').innerHTML = h;
+  // Actualizar casilla 29
+  set('c29', total);
+  recalcular();
+}
+
+function renderDeudas(){
+  var h = '<table class="desglose-tbl"><thead><tr><th>Tipo</th><th>Descripcion</th><th>Tercero</th><th style="text-align:right">Valor</th><th style="text-align:center;width:30px"></th></tr></thead><tbody>';
+  var total = 0;
+  for(var i = 0; i < deudaItems.length; i++){
+    var it = deudaItems[i];
+    total += it.valor;
+    h += '<tr>' +
+      '<td><select onchange="deudaItems[' + i + '].cat=this.value" style="font-size:.72rem;padding:2px;border:1px solid #ddd;border-radius:4px">' +
+      catOptions(it.cat, 'deu') + '</select></td>' +
+      '<td><input value="' + esc(it.desc) + '" onchange="deudaItems[' + i + '].desc=this.value" style="font-size:.75rem;border:1px solid #eee;border-radius:3px;padding:2px 4px;width:100%"></td>' +
+      '<td><input value="' + esc(it.tercero) + '" onchange="deudaItems[' + i + '].tercero=this.value" style="font-size:.72rem;border:1px solid #eee;border-radius:3px;padding:2px 4px;width:80px"></td>' +
+      '<td style="text-align:right"><input id="deudVal' + i + '" value="' + (it.valor ? fN(it.valor) : '') + '" onfocus="this.value=String(deudaItems[' + i + '].valor||0)" onblur="editDeudVal(' + i + ',this.value);this.value=deudaItems[' + i + '].valor?fN(deudaItems[' + i + '].valor):&quot;&quot;" style="font-size:.75rem;font-family:JetBrains Mono;text-align:right;border:1px solid #eee;border-radius:3px;padding:2px 4px;width:100px;font-weight:600"></td>' +
+      '<td style="text-align:center"><button onclick="deudaItems.splice(' + i + ',1);renderDeudas()" style="background:none;border:none;color:#EF4444;cursor:pointer;font-size:.8rem">&#10005;</button></td>' +
+      '</tr>';
+  }
+  h += '<tr class="subtotal"><td colspan="3"><strong>Total Deudas</strong></td><td style="font-weight:800">' + fN(total) + '</td><td></td></tr>';
+  h += '</tbody></table>';
+  document.getElementById('desgloseDeudTable').innerHTML = h;
+  set('c30', total);
+  recalcular();
+}
+
+function catOptions(selected, tipo){
+  var opts = tipo === 'pat' ? [
+    ['efectivo','Efectivo y cuentas bancarias'],
+    ['cdt','CDTs e inversiones'],
+    ['fondos','Fondos de inversion colectiva'],
+    ['acciones','Acciones y aportes societarios'],
+    ['vehiculos','Vehiculos'],
+    ['inmuebles','Bienes raices'],
+    ['cxc','Cuentas por cobrar'],
+    ['pension','Aportes pension voluntaria'],
+    ['cesantias','Cesantias'],
+    ['otros','Otros activos']
+  ] : [
+    ['prestamo','Prestamos bancarios'],
+    ['tarjeta','Tarjetas de credito'],
+    ['hipoteca','Creditos hipotecarios'],
+    ['cxp','Cuentas por pagar'],
+    ['impuestos','Impuestos por pagar'],
+    ['otros','Otras deudas']
+  ];
+  var h = '';
+  for(var i = 0; i < opts.length; i++){
+    h += '<option value="' + opts[i][0] + '"' + (opts[i][0] === selected ? ' selected' : '') + '>' + opts[i][1] + '</option>';
+  }
+  return h;
+}
+
+function agregarPatrimonio(){
+  patrimonioItems.push({cat:'efectivo',desc:'',tercero:'',valor:0});
+  renderPatrimonio();
+}
+function agregarDeuda(){
+  deudaItems.push({cat:'prestamo',desc:'',tercero:'',valor:0});
+  renderDeudas();
+}
+function actualizarTotalPat(){
+  var total = 0;
+  for(var i = 0; i < patrimonioItems.length; i++) total += patrimonioItems[i].valor;
+  set('c29', total);
+  recalcular();
+}
+function actualizarTotalDeud(){
+  var total = 0;
+  for(var i = 0; i < deudaItems.length; i++) total += deudaItems[i].valor;
+  set('c30', total);
+  recalcular();
+}
+
+/* ═══════════════════════════════════════
+   CARGA DE EXOGENA DIAN
+   ═══════════════════════════════════════ */
+var exogenaData = [];  // parsed items
+
+document.getElementById('fileExogena').addEventListener('change', function(e){
+  if(e.target.files[0]) procesarExogena(e.target.files[0]);
+});
+var dzE = document.getElementById('dzExogena');
+['dragover','dragenter'].forEach(function(ev){dzE.addEventListener(ev, function(e){e.preventDefault();dzE.style.borderColor='var(--pri2)'})});
+['dragleave','drop'].forEach(function(ev){dzE.addEventListener(ev, function(e){e.preventDefault();dzE.style.borderColor='var(--border)'})});
+dzE.addEventListener('drop', function(e){if(e.dataTransfer.files[0]) procesarExogena(e.dataTransfer.files[0])});
+
+function procesarExogena(file){
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try {
+      var wb = XLSX.read(ev.target.result, {type:'array'});
+      var ws = wb.Sheets[wb.SheetNames[0]];
+      var raw = XLSX.utils.sheet_to_json(ws, {header:1, defval:'', raw:true});
+
+      document.getElementById('fileNameExo').innerHTML = esc(file.name) + ' &middot; ' + raw.length + ' filas' +
+        '<button onclick="event.stopPropagation();limpiarExogena()" style="background:none;border:1px solid #EF4444;color:#EF4444;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;margin-left:6px">&#10005;</button>';
+
+      // Find header row (contains "Detalle" and "Valor")
+      var hdrRow = 0;
+      for(var i = 0; i < Math.min(20, raw.length); i++){
+        var row = raw[i];
+        if(!row) continue;
+        var joined = row.join('|').toLowerCase();
+        if(joined.includes('detalle') && joined.includes('valor')){
+          hdrRow = i;
+          break;
+        }
+      }
+
+      // Find column indices
+      var headers = raw[hdrRow] || [];
+      var colNitRep = -1, colNomRep = -1, colNit = -1, colNom = -1, colDetalle = -1, colValor = -1, colUso = -1, colInfo = -1;
+      for(var ci = 0; ci < headers.length; ci++){
+        var h = String(headers[ci] || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+        if(h.includes('detalle') && colDetalle < 0) colDetalle = ci;
+        else if(h.includes('valor') && colValor < 0) colValor = ci;
+        else if(h.includes('uso') && colUso < 0) colUso = ci;
+        else if(h.includes('adicional') && colInfo < 0) colInfo = ci;
+      }
+      // Default positions based on DIAN format
+      if(colDetalle < 0) colDetalle = 4;
+      if(colValor < 0) colValor = 5;
+      if(colUso < 0) colUso = 6;
+      if(colInfo < 0) colInfo = 7;
+
+      // Parse items
+      exogenaData = [];
+      var ccContribuyente = '';
+
+      for(var i = hdrRow + 1; i < raw.length; i++){
+        var row = raw[i];
+        if(!row || row.length < 5) continue;
+
+        var detalle = String(row[colDetalle] || '').trim();
+        var valor = parseFloat(row[colValor]) || 0;
+        var uso = String(row[colUso] || '').trim();
+        var info = String(row[colInfo] || '').trim();
+        var nitRep = String(row[0] || '').trim();
+        var nomRep = String(row[1] || '').trim();
+
+        if(!detalle || valor === 0) continue;
+        if(detalle.startsWith('Tope ')) continue; // Skip tope rows
+
+        // Extract CC from data
+        var nitReportado = String(row[2] || '').trim();
+        if(nitReportado && !ccContribuyente) ccContribuyente = nitReportado;
+
+        // Determine casilla from "Uso declaración Sugerida"
+        var casilla = 0;
+        var categoria = 'otro';
+        var rMatch = uso.match(/R(\d+)/);
+        if(rMatch) casilla = parseInt(rMatch[1]);
+
+        // Categorize for patrimonio/deudas desglose
+        if(uso.includes('R29') || (uso.includes('Patrimonio') && !uso.includes('Tope'))){
+          categoria = categorizarPatrimonio(detalle, info);
+          if(casilla === 0) casilla = 29;
+        } else if(uso.includes('R30') || uso.includes('Deuda')){
+          categoria = categorizarDeuda(detalle);
+          if(casilla === 0) casilla = 30;
+        } else if(uso.includes('R132') || uso.includes('Retenciones')){
+          if(casilla === 0) casilla = 132;
+          categoria = 'retencion';
+        }
+
+        exogenaData.push({
+          nitRep: nitRep,
+          nomRep: nomRep,
+          detalle: detalle,
+          valor: valor,
+          uso: uso,
+          info: info,
+          casilla: casilla,
+          categoria: categoria
+        });
+      }
+
+      // Auto-fill CC
+      if(ccContribuyente){
+        document.getElementById('cfgCC').value = ccContribuyente;
+      }
+      // Auto-fill name from first data row
+      for(var i = hdrRow + 1; i < raw.length; i++){
+        var nom = String(raw[i][3] || '').trim();
+        if(nom && nom.length > 3){
+          var parts = nom.split(' ');
+          if(parts.length >= 2){
+            document.getElementById('cfgApellido1').value = parts[0] || '';
+            document.getElementById('cfgApellido2').value = parts[1] || '';
+            document.getElementById('cfgNombre1').value = parts[2] || '';
+            document.getElementById('cfgNombre2').value = parts.slice(3).join(' ') || '';
+          }
+          break;
+        }
+      }
+
+      mostrarExogena();
+      gtag('event','f210_exogena_cargada',{items:exogenaData.length});
+    } catch(err){
+      exoToast('Error al procesar: ' + err.message, 'error');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function categorizarPatrimonio(detalle, info){
+  var d = detalle.toLowerCase();
+  if(d.includes('cuenta') && (d.includes('ahorro') || d.includes('bancaria') || d.includes('corriente'))) return 'efectivo';
+  if(d.includes('cdt')) return 'cdt';
+  if(d.includes('fondo') && d.includes('inversi')) return 'fondos';
+  if(d.includes('acci') || d.includes('aporte') || d.includes('capital socio') || d.includes('derecho social')) return 'acciones';
+  if(d.includes('veh') || d.includes('aval')) return 'vehiculos';
+  if(d.includes('inmueble') || d.includes('predio') || d.includes('bien raiz') || d.includes('bien ra')) return 'inmuebles';
+  if(d.includes('cobrar') || d.includes('cuenta por cobrar')) return 'cxc';
+  if(d.includes('pensi') && d.includes('voluntar')) return 'pension';
+  if(d.includes('ahorro voluntario')) return 'pension';
+  if(d.includes('cesant')) return 'cesantias';
+  return 'otros';
+}
+
+function categorizarDeuda(detalle){
+  var d = detalle.toLowerCase();
+  if(d.includes('prestamo') || d.includes('pr') && d.includes('stamo')) return 'prestamo';
+  if(d.includes('tarjeta')) return 'tarjeta';
+  if(d.includes('hipotec')) return 'hipoteca';
+  if(d.includes('impuesto')) return 'impuestos';
+  if(d.includes('cuenta') && d.includes('pagar')) return 'cxp';
+  return 'otros';
+}
+
+function mostrarExogena(){
+  if(!exogenaData.length) return;
+  document.getElementById('exoResult').classList.remove('hidden');
+
+  // Stats
+  var totalPat = 0, totalIng = 0, totalRet = 0, totalDeud = 0;
+  for(var i = 0; i < exogenaData.length; i++){
+    var it = exogenaData[i];
+    if(it.casilla === 29 || it.categoria !== 'otro' && it.categoria !== 'retencion' && it.casilla !== 30 && it.casilla !== 132 && ![32,33,43,44,58,59,74,76].includes(it.casilla)){
+      if([29].includes(it.casilla) || ['efectivo','cdt','fondos','acciones','vehiculos','inmuebles','cxc','pension','cesantias','otros'].includes(it.categoria) && it.casilla !== 30) totalPat += it.valor;
+    }
+    if([32,43,58,74].includes(it.casilla)) totalIng += it.valor;
+    if(it.casilla === 132) totalRet += it.valor;
+    if(it.casilla === 30) totalDeud += it.valor;
+  }
+
+  document.getElementById('exoStats').innerHTML =
+    '<div class="stat-card blue"><div class="val">' + fN(totalPat) + '</div><div class="lbl">Patrimonio</div></div>' +
+    '<div class="stat-card green"><div class="val">' + fN(totalIng) + '</div><div class="lbl">Ingresos</div></div>' +
+    '<div class="stat-card amber"><div class="val">' + fN(totalDeud) + '</div><div class="lbl">Deudas</div></div>' +
+    '<div class="stat-card red"><div class="val">' + fN(totalRet) + '</div><div class="lbl">Retenciones</div></div>';
+
+  // Detail table
+  var h = '<table style="width:100%;border-collapse:collapse;font-size:.73rem">' +
+    '<thead><tr style="background:var(--pri);color:#fff;position:sticky;top:0">' +
+    '<th style="padding:4px 6px;text-align:left">Reportante</th>' +
+    '<th style="padding:4px 6px;text-align:left">Detalle</th>' +
+    '<th style="padding:4px 6px;text-align:right">Valor</th>' +
+    '<th style="padding:4px 6px;text-align:center">Casilla</th>' +
+    '</tr></thead><tbody>';
+
+  for(var i = 0; i < exogenaData.length; i++){
+    var it = exogenaData[i];
+    var bg = it.casilla === 29 ? '#EDF4FF' : it.casilla === 30 ? '#FFF8E1' : it.casilla === 132 ? '#FFEBEE' : '';
+    h += '<tr style="border-bottom:1px solid #eee;background:' + bg + '">' +
+      '<td style="padding:3px 6px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(it.nomRep) + '">' + esc(it.nomRep) + '</td>' +
+      '<td style="padding:3px 6px;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="' + esc(it.detalle) + '">' + esc(it.detalle) + '</td>' +
+      '<td style="padding:3px 6px;text-align:right;font-family:JetBrains Mono;font-weight:600">' + fN(it.valor) + '</td>' +
+      '<td style="padding:3px 6px;text-align:center">' +
+      '<select onchange="exogenaData[' + i + '].casilla=+this.value" style="font-size:.65rem;padding:1px;border:1px solid #ddd;border-radius:3px">' +
+      casillaOptions210(it.casilla) + '</select></td>' +
+      '</tr>';
+  }
+  h += '</tbody></table>';
+  document.getElementById('exoDetail').innerHTML = h;
+}
+
+function casillaOptions210(sel){
+  var opts = [
+    [0,'-- No aplicar'],
+    [29,'29 Patrimonio bruto'], [30,'30 Deudas'],
+    [32,'32 Ing. trabajo'], [33,'33 INCRNGO trabajo'],
+    [43,'43 Ing. honorarios'], [44,'44 INCRNGO honor.'],
+    [58,'58 Ing. capital'], [59,'59 INCRNGO capital'],
+    [74,'74 Ing. no laborales'], [76,'76 INCRNGO no lab.'],
+    [99,'99 Ing. pensiones'], [100,'100 INCRNGO pens.'],
+    [112,'112 Ing. GO'],
+    [132,'132 Retenciones'],
+    [35,'35 Aportes vol. AFC/FVP'],
+    [36,'36 Otras exentas trabajo'],
+    [45,'45 Costos honorarios'], [60,'60 Costos capital'], [77,'77 Costos no lab.']
+  ];
+  var h = '';
+  for(var i = 0; i < opts.length; i++){
+    h += '<option value="' + opts[i][0] + '"' + (opts[i][0] === sel ? ' selected' : '') + '>' + opts[i][1] + '</option>';
+  }
+  return h;
+}
+
+function aplicarExogena(){
+  // Totalizar por casilla
+  var totales = {};
+  for(var i = 0; i < exogenaData.length; i++){
+    var it = exogenaData[i];
+    if(!it.casilla) continue;
+    totales[it.casilla] = (totales[it.casilla] || 0) + it.valor;
+  }
+
+  // Apply to form (round to thousands)
+  for(var cas in totales){
+    var el = document.getElementById('c' + cas);
+    if(el && !el.readOnly){
+      var rounded = Math.round(totales[cas] / 1000) * 1000;
+      el.value = rounded ? rounded.toLocaleString('es-CO') : '';
+      el.classList.toggle('filled', rounded !== 0);
+    }
+  }
+
+  // Populate patrimonio desglose
+  patrimonioItems = [];
+  deudaItems = [];
+  for(var i = 0; i < exogenaData.length; i++){
+    var it = exogenaData[i];
+    if(it.casilla === 29 || (it.uso.includes('Patrimonio') && it.casilla !== 30 && it.casilla !== 132 && ![32,33,43,44,58,59,74,76,99,100].includes(it.casilla))){
+      patrimonioItems.push({
+        cat: it.categoria !== 'otro' ? it.categoria : 'otros',
+        desc: it.detalle.substring(0, 60),
+        tercero: it.nomRep.substring(0, 30),
+        valor: Math.round(it.valor)
+      });
+    }
+    if(it.casilla === 30){
+      deudaItems.push({
+        cat: it.categoria !== 'otro' ? it.categoria : 'otros',
+        desc: it.detalle.substring(0, 60),
+        tercero: it.nomRep.substring(0, 30),
+        valor: Math.round(it.valor)
+      });
+    }
+  }
+
+  // Recalculate patrimonio/deudas totals
+  if(patrimonioItems.length){
+    renderPatrimonio();
+    document.getElementById('desglosePatBody').classList.remove('hidden');
+  }
+  if(deudaItems.length){
+    renderDeudas();
+    document.getElementById('desgloseDeudBody').classList.remove('hidden');
+  }
+
+  recalcular();
+  document.getElementById('f210form').scrollIntoView({behavior:'smooth'});
+  exoToast('Exogena aplicada al formulario', 'success');
+  gtag('event','f210_exogena_aplicada',{items:exogenaData.length});
+}
+
+function limpiarExogena(){
+  exogenaData = [];
+  document.getElementById('exoResult').classList.add('hidden');
+  document.getElementById('fileNameExo').innerHTML = '';
+  document.getElementById('fileExogena').value = '';
+}
+
+/* ═══════════════════════════════════════
+   DESCARGA EXCEL
+   ═══════════════════════════════════════ */
+function descargarExcel210(){
+  var wb = new ExcelJS.Workbook();
+  wb.creator = 'ExogenaDIAN';
+
+  // ── Hoja 1: Formulario 210 ──
+  var ws = wb.addWorksheet('Formulario 210');
+  ws.columns = [
+    {width:5},{width:35},{width:8},{width:18},{width:5},{width:35},{width:8},{width:18}
+  ];
+
+  // Header
+  ws.mergeCells('A1:H1');
+  var h1 = ws.getCell('A1');
+  h1.value = 'FORMULARIO 210 — DECLARACION DE RENTA PERSONAS NATURALES AG 2025';
+  h1.font = {bold:true, size:14, color:{argb:'FFFFFFFF'}};
+  h1.fill = {type:'pattern', pattern:'solid', fgColor:{argb:'FF1B3A5C'}};
+  h1.alignment = {horizontal:'center'};
+
+  ws.mergeCells('A2:H2');
+  ws.getCell('A2').value = 'UVT 2025: $' + fN(UVT) + ' | Generado: ' + new Date().toLocaleDateString('es-CO');
+  ws.getCell('A2').font = {size:9, color:{argb:'FF666666'}};
+  ws.getCell('A2').alignment = {horizontal:'center'};
+
+  var r = 4;
+  function addRow(label, cas, val, col){
+    col = col || 0;
+    var c = col * 4;
+    ws.getCell(r, c+1).value = cas;
+    ws.getCell(r, c+1).font = {size:8, color:{argb:'FF999999'}};
+    ws.getCell(r, c+2).value = label;
+    ws.getCell(r, c+2).font = {size:10};
+    ws.getCell(r, c+4).value = val;
+    ws.getCell(r, c+4).font = {bold:true, size:10};
+    ws.getCell(r, c+4).numFmt = '#,##0';
+    if(col === 0) r++;
+  }
+  function addSection(title){
+    ws.mergeCells(r, 1, r, 8);
+    var cell = ws.getCell(r, 1);
+    cell.value = title;
+    cell.font = {bold:true, size:10, color:{argb:'FF1B3A5C'}};
+    cell.fill = {type:'pattern', pattern:'solid', fgColor:{argb:'FFD4E6F1'}};
+    r++;
+  }
+
+  // Datos declarante
+  addSection('DATOS DEL DECLARANTE');
+  addRow('CC:', '', document.getElementById('cfgCC').value);
+  addRow('Nombre:', '', (document.getElementById('cfgApellido1').value + ' ' + document.getElementById('cfgApellido2').value + ' ' + document.getElementById('cfgNombre1').value + ' ' + document.getElementById('cfgNombre2').value).trim());
+
+  // Patrimonio
+  addSection('PATRIMONIO');
+  addRow('Total patrimonio bruto', 29, v('c29'));
+  addRow('Deudas', 30, v('c30'));
+  addRow('Total patrimonio liquido', 31, v('c31'));
+
+  // Cédula General
+  addSection('CEDULA GENERAL');
+  var subLabels = ['Rentas Trabajo','Honorarios','Capital','No Laborales'];
+  var subCas = [[32,33,34,35,36,37,38,39,40,41,42],[43,44,45,46,47,48,49,50,51,52,53,54,55,56,57],[58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,'73_r'],[74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90]];
+
+  // Write subcédula labels
+  ws.getCell(r,2).value = 'Concepto';
+  ws.getCell(r,4).value = 'Trabajo';
+  ws.getCell(r,6).value = 'Honorarios';
+  ws.getCell(r,8).value = 'Capital';
+  for(var i = 2; i <= 8; i += 2){
+    ws.getCell(r,i).font = {bold:true, size:9};
+  }
+  r++;
+
+  addRow('Ingresos brutos', '32/43/58/74', v('c32') + ' | ' + v('c43') + ' | ' + v('c58') + ' | ' + v('c74'));
+
+  // Consolidado
+  r++;
+  addSection('CONSOLIDADO CEDULA GENERAL');
+  addRow('1% compras factura electronica', 28, v('c28'));
+  addRow('Renta liq. cedula general', 91, v('c91'));
+  addRow('Exentas y deducciones limitadas', 92, v('c92'));
+  addRow('Renta liq. ordinaria', 93, v('c93'));
+  addRow('Renta liq. gravable', 97, v('c97'));
+
+  // Pensiones
+  addSection('CEDULA DE PENSIONES');
+  addRow('Ingresos pensiones', 99, v('c99'));
+  addRow('Renta liq. gravable pensiones', 103, v('c103'));
+
+  // Dividendos
+  addSection('CEDULA DE DIVIDENDOS');
+  addRow('Dividendos 2016 y anteriores', 104, v('c104'));
+  addRow('1a Subcedula 2017+', 107, v('c107'));
+  addRow('2a Subcedula 2017+', 108, v('c108'));
+
+  // Renta líquida total
+  addSection('RENTA LIQUIDA GRAVABLE');
+  addRow('Renta liq. gravable total (Art. 241)', 111, v('c111'));
+
+  // GO
+  addSection('GANANCIAS OCASIONALES');
+  addRow('Ingresos GO', 112, v('c112'));
+  addRow('Costos GO', 113, v('c113'));
+  addRow('GO gravables', 115, v('c115'));
+
+  // Liquidación
+  addSection('LIQUIDACION PRIVADA');
+  addRow('Impuesto rentas cedulares', 121, v('c121'));
+  addRow('Descuentos tributarios', 125, v('c125'));
+  addRow('Impuesto neto renta', 126, v('c126'));
+  addRow('Impuesto GO', 127, v('c127'));
+  addRow('Total impuesto a cargo', 129, v('c129'));
+
+  // Pagos
+  addSection('PAGOS Y SALDO');
+  addRow('Anticipo ano anterior', 130, v('c130'));
+  addRow('Saldo favor ano anterior', 131, v('c131'));
+  addRow('Retenciones', 132, v('c132'));
+  addRow('Anticipo ano siguiente', 133, v('c133'));
+  addRow('SALDO A PAGAR', 136, v('c136'));
+  addRow('SALDO A FAVOR', 137, v('c137'));
+
+  // ── Hoja 2: Desglose Patrimonio ──
+  if(patrimonioItems.length){
+    var ws2 = wb.addWorksheet('Desglose Patrimonio');
+    ws2.columns = [{width:20},{width:50},{width:25},{width:18}];
+    ws2.addRow(['Categoria','Descripcion','Tercero','Valor']);
+    ws2.getRow(1).font = {bold:true, color:{argb:'FFFFFFFF'}};
+    ws2.getRow(1).fill = {type:'pattern', pattern:'solid', fgColor:{argb:'FF1B3A5C'}};
+    var tPat = 0;
+    for(var i = 0; i < patrimonioItems.length; i++){
+      var it = patrimonioItems[i];
+      ws2.addRow([it.cat, it.desc, it.tercero, it.valor]);
+      ws2.getCell(i+2, 4).numFmt = '#,##0';
+      tPat += it.valor;
+    }
+    var tr = patrimonioItems.length + 2;
+    ws2.addRow(['','','TOTAL', tPat]);
+    ws2.getCell(tr, 4).numFmt = '#,##0';
+    ws2.getRow(tr).font = {bold:true};
+  }
+
+  // ── Hoja 3: Desglose Deudas ──
+  if(deudaItems.length){
+    var ws3 = wb.addWorksheet('Desglose Deudas');
+    ws3.columns = [{width:20},{width:50},{width:25},{width:18}];
+    ws3.addRow(['Tipo','Descripcion','Tercero','Valor']);
+    ws3.getRow(1).font = {bold:true, color:{argb:'FFFFFFFF'}};
+    ws3.getRow(1).fill = {type:'pattern', pattern:'solid', fgColor:{argb:'FF1B3A5C'}};
+    var tDeu = 0;
+    for(var i = 0; i < deudaItems.length; i++){
+      var it = deudaItems[i];
+      ws3.addRow([it.cat, it.desc, it.tercero, it.valor]);
+      ws3.getCell(i+2, 4).numFmt = '#,##0';
+      tDeu += it.valor;
+    }
+    var tr3 = deudaItems.length + 2;
+    ws3.addRow(['','','TOTAL', tDeu]);
+    ws3.getCell(tr3, 4).numFmt = '#,##0';
+    ws3.getRow(tr3).font = {bold:true};
+  }
+
+  // ── Hoja 4: Conciliación Patrimonial ──
+  var ws4 = wb.addWorksheet('Conciliacion Patrimonial');
+  ws4.columns = [{width:50},{width:18}];
+  ws4.addRow(['CONCILIACION PATRIMONIAL AG 2025','']);
+  ws4.getRow(1).font = {bold:true, size:12};
+  ws4.addRow([]);
+  ws4.addRow(['Concepto','Valor']);
+  ws4.getRow(3).font = {bold:true, color:{argb:'FFFFFFFF'}};
+  ws4.getRow(3).fill = {type:'pattern', pattern:'solid', fgColor:{argb:'FF1B3A5C'}};
+
+  var patAnt = vCfg('antPatLiq');
+  var incrngo = v('c33') + v('c44') + v('c59') + v('c76') + v('c100') + v('c105');
+  var goNeta = v('c112') - v('c113');
+  var rentaCap = v('c91');
+  var impCargo = v('c129');
+  var justif = patAnt + incrngo + goNeta + rentaCap - impCargo;
+
+  ws4.addRow(['Patrimonio liquido a dic. 31/2024', patAnt]);
+  ws4.addRow(['+ Ingresos no gravados (INCRNGO)', incrngo]);
+  ws4.addRow(['+ Ganancia/perdida ocasional neta', goNeta]);
+  ws4.addRow(['+ Renta liquida capitalizada', rentaCap]);
+  ws4.addRow(['- Impuesto a cargo', impCargo]);
+  ws4.addRow(['Patrimonio justificable a dic. 31/2025', justif]);
+  ws4.addRow(['Patrimonio declarado (cas 31)', v('c31')]);
+  ws4.addRow(['Diferencia patrimonial', v('c31') - justif]);
+  for(var ri = 4; ri <= 11; ri++){ws4.getCell(ri, 2).numFmt = '#,##0'}
+  ws4.getRow(9).font = {bold:true};
+  ws4.getRow(11).font = {bold:true, color:{argb:'FFCC0000'}};
+
+  // ── Hoja 5: Anticipo ──
+  var ws5 = wb.addWorksheet('Anticipo Renta 2026');
+  ws5.columns = [{width:50},{width:18}];
+  ws5.addRow(['CALCULO ANTICIPO RENTA 2026','']);
+  ws5.getRow(1).font = {bold:true, size:12};
+  ws5.addRow([]);
+  ws5.addRow(['Metodo: ' + document.getElementById('antMetodo').selectedOptions[0].text, '']);
+  ws5.addRow(['Impuesto neto renta AG 2025', v('c126')]);
+  ws5.addRow(['Retenciones AG 2025', v('c132')]);
+  ws5.addRow(['Anticipo calculado', v('c133')]);
+  for(var ri = 4; ri <= 6; ri++){ws5.getCell(ri, 2).numFmt = '#,##0'}
+  ws5.getRow(6).font = {bold:true};
+
+  // Download
+  wb.xlsx.writeBuffer().then(function(buf){
+    var blob = new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    var cc = document.getElementById('cfgCC').value || 'PN';
+    a.download = 'F210-AG2025-' + cc + '.xlsx';
+    a.click();
+    URL.revokeObjectURL(url);
+    gtag('event','f210_excel_descargado');
+  });
+}
+
+// Initialize
+renderPatrimonio();
+renderDeudas();
+</script>
+</body>
+</html>

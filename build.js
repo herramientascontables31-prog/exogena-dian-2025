@@ -36,6 +36,7 @@ const HTML_FILES = [
   'politica-privacidad.html',
   'retencion-fuente.html',
   'credito.html',
+  'formato210.html',
   'formato220.html',
   'precios.html',
   'ia.html',
