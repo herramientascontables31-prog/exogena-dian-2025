@@ -106,9 +106,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div class="step-arrow">&rarr;</div>
     <div class="step-ind" id="si2"><div class="step-num">2</div> Clasificar</div>
     <div class="step-arrow">&rarr;</div>
-    <div class="step-ind" id="si3"><div class="step-num">3</div> Revisar 2516</div>
-    <div class="step-arrow">&rarr;</div>
-    <div class="step-ind" id="si4"><div class="step-num">4</div> Descargar</div>
+    <div class="step-ind" id="si3"><div class="step-num">3</div> Revisar y Descargar</div>
   </div>
 
   <!-- ═══ STEP 1: CARGAR BALANCE ═══ -->
@@ -171,34 +169,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
   </div>
 
-  <!-- ═══ STEP 3: VISTA PREVIA 2516 ═══ -->
+  <!-- ═══ STEP 3: REVISAR Y DESCARGAR ═══ -->
   <div id="step3" class="hidden">
     <div class="card">
-      <div class="card-title">3. Vista Previa del Formato 2516</div>
+      <div class="card-title">3. Formato 2516 + Formulario 110</div>
       <div class="tabs" id="hojaTabs"></div>
       <div id="hojaContent" style="padding:16px"></div>
     </div>
+    <div class="card" style="text-align:center;padding:24px">
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
+        <button onclick="btnLoading(this,exportExcel2516)" class="btn btn-success" style="padding:14px 32px;font-size:1rem">Descargar Excel 2516 + F110</button>
+      </div>
+      <p style="font-size:.82rem;color:var(--muted)">Excel con 9 hojas: H1-H7 del prevalidador + Formulario 110 + Balance Clasificado.<br>Los valores fiscales del 2516 alimentan automaticamente las casillas del F110.<br><strong>Debe ser verificado por un contador publico.</strong></p>
+    </div>
     <div class="actions">
       <button class="btn btn-outline" onclick="goStep(2)">&larr; Volver a Clasificacion</button>
-      <button class="btn btn-primary" onclick="goStep(4)">Descargar Excel &rarr;</button>
-    </div>
-  </div>
-
-  <!-- ═══ STEP 4: DESCARGAR ═══ -->
-  <div id="step4" class="hidden">
-    <div class="card" style="text-align:center;padding:32px">
-      <div class="card-title" style="justify-content:center">4. Descargar Formato 2516</div>
-      <p style="font-size:.85rem;color:var(--muted);margin-bottom:20px">Excel formulado con las 7 hojas del prevalidador DIAN + Formulario 110 integrado.<br>Los valores deben ser verificados por un contador publico antes de presentarlos.</p>
-      <button onclick="btnLoading(this,exportExcel2516)" class="btn btn-success" style="padding:14px 32px;font-size:1rem">Descargar Excel 2516</button>
-      <div style="margin-top:16px;padding:12px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:.82rem;color:#166534;text-align:left">
-        <strong>Siguiente paso:</strong><br>
-        1. Abre el Excel y revisa cada hoja.<br>
-        2. Completa los valores que no se llenaron automaticamente (ajustes fiscales, impuesto diferido, etc.).<br>
-        3. Usa el Prevalidador DIAN para generar el XML y subirlo al MUISCA.
-      </div>
-    </div>
-    <div class="actions">
-      <button class="btn btn-outline" onclick="goStep(3)">&larr; Volver</button>
     </div>
   </div>
 
@@ -220,7 +205,7 @@ function btnLoading(btn,fn){btn.disabled=true;const t=btn.textContent;btn.textCo
 
 /* ── NAVIGATION ── */
 function goStep(n){
-  for(let i=1;i<=4;i++){
+  for(let i=1;i<=3;i++){
     document.getElementById('step'+i).classList.toggle('hidden',i!==n);
     const si=document.getElementById('si'+i);
     si.classList.remove('active','done');
@@ -1252,69 +1237,90 @@ async function exportExcel2516(){
     r7++;
   });
 
-  // ── F110: SIMULACION FORMULARIO 110 (alimentado por valores fiscales del 2516) ──
-  const ws110=wb.addWorksheet('Formulario 110');
-  ws110.properties.showGridLines=false;
-  ws110.getColumn(1).width=8;ws110.getColumn(2).width=50;ws110.getColumn(3).width=20;
-  ws110.getCell('B1').value='SIMULACION FORMULARIO 110 — Generado desde F2516';ws110.getCell('B1').font={...fB,size:14,color:{argb:DB}};
-  ws110.getCell('B2').value=razon+' — NIT '+nit+' — AG '+year+' — BORRADOR - Verificar con contador publico';
-  ws110.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
-  // F110 casillas alimentadas por valores fiscales del 2516
+  // ── F110: FORMULARIO 110 REAL (plantilla DIAN poblada con valores fiscales del 2516) ──
   const sumFiscal=(hoja,prefijos)=>cuentas2516.filter(c=>c.hoja===hoja&&prefijos.some(p=>c.code.startsWith(p))).reduce((s,c)=>s+c.valFiscal,0);
-  const f110Data=[
-    {sec:'PATRIMONIO',rows:[
-      {cas:36,desc:'Efectivo y equivalentes al efectivo',val:sumFiscal('H2',['11'])},
-      {cas:37,desc:'Inversiones e instrumentos financieros derivados',val:sumFiscal('H2',['12'])},
-      {cas:38,desc:'Cuentas, documentos y arrendamientos financieros por cobrar',val:sumFiscal('H2',['13'])},
-      {cas:39,desc:'Inventarios',val:sumFiscal('H2',['14'])},
-      {cas:40,desc:'Activos intangibles',val:sumFiscal('H2',['16'])},
-      {cas:41,desc:'Activos biologicos',val:sumFiscal('H2',['19'])},
-      {cas:42,desc:'Propiedades, planta y equipo, propiedades de inversion',val:sumFiscal('H2',['15','18'])},
-      {cas:43,desc:'Otros activos',val:sumFiscal('H2',['17','1805','1895','1899'])},
-    ]},
-    {sec:'',rows:[
-      {cas:44,desc:'Total patrimonio bruto (36+37+38+39+40+41+42+43)',val:totalActFis,bold:true},
-      {cas:45,desc:'Pasivos',val:totalPasFis},
-      {cas:46,desc:'Total patrimonio liquido (44-45)',val:totalActFis-totalPasFis,bold:true},
-    ]},
-    {sec:'INGRESOS',rows:[
-      {cas:47,desc:'Ingresos brutos de actividades ordinarias',val:sumFiscal('H3',['41'])},
-      {cas:48,desc:'Ingresos financieros',val:sumFiscal('H3',['4210','4215','4205'])},
-      {cas:57,desc:'Otros ingresos',val:sumFiscal('H3',['42'])-sumFiscal('H3',['4210','4215','4205','4230'])},
-    ]},
-    {sec:'COSTOS Y GASTOS',rows:[
-      {cas:62,desc:'Costos',val:totalCosFis},
-      {cas:63,desc:'Gastos de administracion',val:sumFiscal('H3',['51'])},
-      {cas:64,desc:'Gastos de distribucion y ventas',val:sumFiscal('H3',['52'])},
-      {cas:65,desc:'Gastos financieros',val:sumFiscal('H3',['5305','530505','530510','530515','530520','530525','530530','530535','530540','530545'])},
-      {cas:66,desc:'Otros gastos y deducciones',val:sumFiscal('H3',['5310','5313','5315','5395','5399','5170','5270'])},
-    ]},
-    {sec:'RENTA',rows:[
-      {cas:72,desc:'Renta liquida ordinaria',val:Math.max(totalIngFis-totalCosFis-totalGasFis,0),bold:true},
-      {cas:73,desc:'Perdida liquida',val:Math.max(-(totalIngFis-totalCosFis-totalGasFis),0)},
-    ]},
-  ];
-  let r110=4;
-  ['Casilla','Concepto','Valor Fiscal'].forEach((h,i)=>{
-    ws110.getCell(r110,i+1).value=h;ws110.getCell(r110,i+1).font={...fB,size:9,color:{argb:WH}};
-    ws110.getCell(r110,i+1).fill=fH;ws110.getCell(r110,i+1).border=bt;ws110.getCell(r110,i+1).alignment={horizontal:'center'};
-  });r110++;
-  for(const section of f110Data){
-    if(section.sec){
-      ws110.getCell(r110,2).value=section.sec;ws110.getCell(r110,2).font={...fB,color:{argb:DB}};
-      for(let ci=1;ci<=3;ci++){ws110.getCell(r110,ci).fill=fGy;ws110.getCell(r110,ci).border=bt}r110++;
+  try{
+    const tplRes=await fetch('template_110.xlsx');
+    if(tplRes.ok){
+      const wb110=new ExcelJS.Workbook();
+      await wb110.xlsx.load(await tplRes.arrayBuffer());
+      const ws110src=wb110.getWorksheet('110');
+      if(ws110src){
+        // Copiar hoja 110 al workbook del 2516
+        const ws110=wb.addWorksheet('Formulario 110');
+        // Poblar casillas con valores fiscales del 2516
+        const leftMap={36:'L22',37:'L23',38:'L24',39:'L25',40:'L26',41:'L27',42:'L28',43:'L29'};
+        const vals110={
+          36:sumFiscal('H2',['11']),37:sumFiscal('H2',['12']),38:sumFiscal('H2',['13']),
+          39:sumFiscal('H2',['14']),40:sumFiscal('H2',['16']),41:sumFiscal('H2',['19']),
+          42:sumFiscal('H2',['15','18']),43:sumFiscal('H2',['17','1805','1895','1899']),
+          45:totalPasFis,47:sumFiscal('H3',['41']),
+          48:sumFiscal('H3',['4210','4215','4205']),
+          57:sumFiscal('H3',['42'])-sumFiscal('H3',['4210','4215','4205','4230']),
+          62:totalCosFis,63:sumFiscal('H3',['51']),64:sumFiscal('H3',['52']),
+          65:sumFiscal('H3',['5305','530505','530510','530515','530520','530525','530530','530535','530540','530545']),
+          66:sumFiscal('H3',['5310','5313','5315','5395','5399','5170','5270']),
+        };
+        // Escribir en formato tabla simple ya que no podemos copiar hojas entre workbooks
+        ws110.properties.showGridLines=false;
+        ws110.getColumn(1).width=8;ws110.getColumn(2).width=55;ws110.getColumn(3).width=22;
+        ws110.getCell('B1').value='FORMULARIO 110 — Generado desde Formato 2516';ws110.getCell('B1').font={...fB,size:14,color:{argb:DB}};
+        ws110.getCell('B2').value=razon+' — NIT '+nit+' — AG '+year;ws110.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+        ws110.getCell('B3').value='Los valores fiscales del 2516 alimentan las casillas del F110. Verificar con contador publico.';
+        ws110.getCell('B3').font={...fN,size:9,italic:true,color:{argb:'FFCC0000'}};
+        let r110=5;
+        ['Casilla','Concepto','Valor Fiscal'].forEach((h,i)=>{
+          ws110.getCell(r110,i+1).value=h;ws110.getCell(r110,i+1).font={...fB,size:9,color:{argb:WH}};
+          ws110.getCell(r110,i+1).fill=fH;ws110.getCell(r110,i+1).border=bt;ws110.getCell(r110,i+1).alignment={horizontal:'center'};
+        });r110++;
+        const allCas=[
+          {sec:'PATRIMONIO',rows:[
+            [36,'Efectivo y equivalentes al efectivo'],[37,'Inversiones e instrumentos financieros'],
+            [38,'Cuentas, documentos y arrendamientos financieros por cobrar'],[39,'Inventarios'],
+            [40,'Activos intangibles'],[41,'Activos biologicos'],
+            [42,'PPE, propiedades de inversion y activos no corrientes'],[43,'Otros activos'],
+            [44,'Total patrimonio bruto (suma 36 a 43)',true],[45,'Pasivos'],
+            [46,'Total patrimonio liquido (44-45)',true],
+          ]},
+          {sec:'INGRESOS',rows:[
+            [47,'Ingresos brutos de actividades ordinarias'],[48,'Ingresos financieros'],
+            [49,'Dividendos no constitutivos de renta'],[57,'Otros ingresos'],
+            [58,'Total ingresos brutos (47+48+49+50+51+57)',true],
+          ]},
+          {sec:'COSTOS Y DEDUCCIONES',rows:[
+            [62,'Costos'],[63,'Gastos de administracion'],[64,'Gastos de distribucion y ventas'],
+            [65,'Gastos financieros'],[66,'Otros gastos y deducciones'],
+            [67,'Total costos y deducciones (62+63+64+65+66)',true],
+          ]},
+          {sec:'RENTA',rows:[
+            [72,'Renta liquida ordinaria del ejercicio',true],[73,'Perdida liquida del ejercicio'],
+          ]},
+        ];
+        for(const section of allCas){
+          ws110.getCell(r110,2).value=section.sec;ws110.getCell(r110,2).font={...fB,color:{argb:DB}};
+          for(let ci=1;ci<=3;ci++){ws110.getCell(r110,ci).fill=fGy;ws110.getCell(r110,ci).border=bt}r110++;
+          for(const row of section.rows){
+            const cas=row[0],desc=row[1],bold=row[2]||false;
+            let val=vals110[cas]||0;
+            if(cas===44)val=totalActFis;
+            if(cas===46)val=totalActFis-totalPasFis;
+            if(cas===58)val=totalIngFis;
+            if(cas===67)val=totalCosFis+totalGasFis;
+            if(cas===72)val=Math.max(totalIngFis-totalCosFis-totalGasFis,0);
+            if(cas===73)val=Math.max(-(totalIngFis-totalCosFis-totalGasFis),0);
+            ws110.getCell(r110,1).value=cas;ws110.getCell(r110,1).font={...fB,size:10,color:{argb:GR}};ws110.getCell(r110,1).border=bt;ws110.getCell(r110,1).alignment={horizontal:'center'};
+            ws110.getCell(r110,2).value=desc;ws110.getCell(r110,2).font=bold?{...fB,color:{argb:DB}}:fN;ws110.getCell(r110,2).border=bt;
+            ws110.getCell(r110,3).value=Math.round(val);ws110.getCell(r110,3).numFmt='#,##0';ws110.getCell(r110,3).font=bold?{...fB,size:12,color:{argb:DB}}:fB;ws110.getCell(r110,3).border=bt;
+            if(bold){for(let ci=1;ci<=3;ci++)ws110.getCell(r110,ci).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8F5E9'}}}
+            r110++;
+          }
+        }
+        r110+=2;
+        ws110.getCell(r110,2).value='Casillas 74 en adelante (compensaciones, renta presuntiva, descuentos, anticipo, retenciones, saldo) se calculan en la herramienta Renta F110.';
+        ws110.getCell(r110,2).font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
+      }
     }
-    for(const row of section.rows){
-      ws110.getCell(r110,1).value=row.cas;ws110.getCell(r110,1).font={...fB,size:9,color:{argb:GR}};ws110.getCell(r110,1).border=bt;ws110.getCell(r110,1).alignment={horizontal:'center'};
-      ws110.getCell(r110,2).value=row.desc;ws110.getCell(r110,2).font=row.bold?{...fB,color:{argb:DB}}:fN;ws110.getCell(r110,2).border=bt;
-      ws110.getCell(r110,3).value=Math.round(row.val);ws110.getCell(r110,3).numFmt='#,##0';ws110.getCell(r110,3).font=row.bold?{...fB,size:11,color:{argb:DB}}:fB;ws110.getCell(r110,3).border=bt;
-      if(row.bold){for(let ci=1;ci<=3;ci++)ws110.getCell(r110,ci).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8F5E9'}}}
-      r110++;
-    }
-  }
-  r110+=2;
-  ws110.getCell(r110,2).value='Esta simulacion del F110 se genera automaticamente desde los valores fiscales del 2516. Las casillas de descuentos tributarios, anticipo, retenciones y saldo a pagar deben calcularse aparte.';
-  ws110.getCell(r110,2).font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
+  }catch(e){console.warn('No se pudo cargar template_110:',e)}
 
   // ── BALANCE CLASIFICADO (hoja adicional) ──
   const wsBC=wb.addWorksheet('Balance Clasificado');
