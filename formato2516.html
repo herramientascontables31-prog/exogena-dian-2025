@@ -1252,6 +1252,70 @@ async function exportExcel2516(){
     r7++;
   });
 
+  // ── F110: SIMULACION FORMULARIO 110 (alimentado por valores fiscales del 2516) ──
+  const ws110=wb.addWorksheet('Formulario 110');
+  ws110.properties.showGridLines=false;
+  ws110.getColumn(1).width=8;ws110.getColumn(2).width=50;ws110.getColumn(3).width=20;
+  ws110.getCell('B1').value='SIMULACION FORMULARIO 110 — Generado desde F2516';ws110.getCell('B1').font={...fB,size:14,color:{argb:DB}};
+  ws110.getCell('B2').value=razon+' — NIT '+nit+' — AG '+year+' — BORRADOR - Verificar con contador publico';
+  ws110.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+  // F110 casillas alimentadas por valores fiscales del 2516
+  const sumFiscal=(hoja,prefijos)=>cuentas2516.filter(c=>c.hoja===hoja&&prefijos.some(p=>c.code.startsWith(p))).reduce((s,c)=>s+c.valFiscal,0);
+  const f110Data=[
+    {sec:'PATRIMONIO',rows:[
+      {cas:36,desc:'Efectivo y equivalentes al efectivo',val:sumFiscal('H2',['11'])},
+      {cas:37,desc:'Inversiones e instrumentos financieros derivados',val:sumFiscal('H2',['12'])},
+      {cas:38,desc:'Cuentas, documentos y arrendamientos financieros por cobrar',val:sumFiscal('H2',['13'])},
+      {cas:39,desc:'Inventarios',val:sumFiscal('H2',['14'])},
+      {cas:40,desc:'Activos intangibles',val:sumFiscal('H2',['16'])},
+      {cas:41,desc:'Activos biologicos',val:sumFiscal('H2',['19'])},
+      {cas:42,desc:'Propiedades, planta y equipo, propiedades de inversion',val:sumFiscal('H2',['15','18'])},
+      {cas:43,desc:'Otros activos',val:sumFiscal('H2',['17','1805','1895','1899'])},
+    ]},
+    {sec:'',rows:[
+      {cas:44,desc:'Total patrimonio bruto (36+37+38+39+40+41+42+43)',val:totalActFis,bold:true},
+      {cas:45,desc:'Pasivos',val:totalPasFis},
+      {cas:46,desc:'Total patrimonio liquido (44-45)',val:totalActFis-totalPasFis,bold:true},
+    ]},
+    {sec:'INGRESOS',rows:[
+      {cas:47,desc:'Ingresos brutos de actividades ordinarias',val:sumFiscal('H3',['41'])},
+      {cas:48,desc:'Ingresos financieros',val:sumFiscal('H3',['4210','4215','4205'])},
+      {cas:57,desc:'Otros ingresos',val:sumFiscal('H3',['42'])-sumFiscal('H3',['4210','4215','4205','4230'])},
+    ]},
+    {sec:'COSTOS Y GASTOS',rows:[
+      {cas:62,desc:'Costos',val:totalCosFis},
+      {cas:63,desc:'Gastos de administracion',val:sumFiscal('H3',['51'])},
+      {cas:64,desc:'Gastos de distribucion y ventas',val:sumFiscal('H3',['52'])},
+      {cas:65,desc:'Gastos financieros',val:sumFiscal('H3',['5305','530505','530510','530515','530520','530525','530530','530535','530540','530545'])},
+      {cas:66,desc:'Otros gastos y deducciones',val:sumFiscal('H3',['5310','5313','5315','5395','5399','5170','5270'])},
+    ]},
+    {sec:'RENTA',rows:[
+      {cas:72,desc:'Renta liquida ordinaria',val:Math.max(totalIngFis-totalCosFis-totalGasFis,0),bold:true},
+      {cas:73,desc:'Perdida liquida',val:Math.max(-(totalIngFis-totalCosFis-totalGasFis),0)},
+    ]},
+  ];
+  let r110=4;
+  ['Casilla','Concepto','Valor Fiscal'].forEach((h,i)=>{
+    ws110.getCell(r110,i+1).value=h;ws110.getCell(r110,i+1).font={...fB,size:9,color:{argb:WH}};
+    ws110.getCell(r110,i+1).fill=fH;ws110.getCell(r110,i+1).border=bt;ws110.getCell(r110,i+1).alignment={horizontal:'center'};
+  });r110++;
+  for(const section of f110Data){
+    if(section.sec){
+      ws110.getCell(r110,2).value=section.sec;ws110.getCell(r110,2).font={...fB,color:{argb:DB}};
+      for(let ci=1;ci<=3;ci++){ws110.getCell(r110,ci).fill=fGy;ws110.getCell(r110,ci).border=bt}r110++;
+    }
+    for(const row of section.rows){
+      ws110.getCell(r110,1).value=row.cas;ws110.getCell(r110,1).font={...fB,size:9,color:{argb:GR}};ws110.getCell(r110,1).border=bt;ws110.getCell(r110,1).alignment={horizontal:'center'};
+      ws110.getCell(r110,2).value=row.desc;ws110.getCell(r110,2).font=row.bold?{...fB,color:{argb:DB}}:fN;ws110.getCell(r110,2).border=bt;
+      ws110.getCell(r110,3).value=Math.round(row.val);ws110.getCell(r110,3).numFmt='#,##0';ws110.getCell(r110,3).font=row.bold?{...fB,size:11,color:{argb:DB}}:fB;ws110.getCell(r110,3).border=bt;
+      if(row.bold){for(let ci=1;ci<=3;ci++)ws110.getCell(r110,ci).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8F5E9'}}}
+      r110++;
+    }
+  }
+  r110+=2;
+  ws110.getCell(r110,2).value='Esta simulacion del F110 se genera automaticamente desde los valores fiscales del 2516. Las casillas de descuentos tributarios, anticipo, retenciones y saldo a pagar deben calcularse aparte.';
+  ws110.getCell(r110,2).font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
+
   // ── BALANCE CLASIFICADO (hoja adicional) ──
   const wsBC=wb.addWorksheet('Balance Clasificado');
   wsBC.getColumn(1).width=14;wsBC.getColumn(2).width=40;wsBC.getColumn(3).width=18;wsBC.getColumn(4).width=18;wsBC.getColumn(5).width=10;wsBC.getColumn(6).width=35;wsBC.getColumn(7).width=10;
