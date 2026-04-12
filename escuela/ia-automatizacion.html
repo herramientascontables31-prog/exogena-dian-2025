@@ -3323,9 +3323,68 @@ function dismissResume() {
   }
 })();
 
+var PRO_MODULE_MIN = 11; // Módulos 11+ requieren PRO+Escuela
+
+function isEscuelaUser() {
+  if (typeof exoPro === 'undefined') return false;
+  try { return exoPro.hasEscuela(); } catch(e) { return false; }
+}
+
+function showModuleGate() {
+  var existing = document.getElementById('module-gate');
+  if (existing) { existing.style.display = 'flex'; return; }
+  var gate = document.createElement('div');
+  gate.id = 'module-gate';
+  gate.className = 'modulo-section';
+  gate.style.cssText = 'display:flex;align-items:center;justify-content:center;min-height:60vh;padding:40px 20px';
+  gate.innerHTML =
+    '<div style="max-width:480px;text-align:center">' +
+      '<div style="width:64px;height:64px;background:#FFF7ED;border:2px solid #FED7AA;border-radius:50%;display:grid;place-items:center;margin:0 auto 20px;font-size:1.5rem">\uD83D\uDD12</div>' +
+      '<h2 style="font-family:Fraunces,serif;font-size:1.5rem;color:#1F2937;margin-bottom:12px">M\u00f3dulos PRO</h2>' +
+      '<p style="color:#6B7280;font-size:.92rem;line-height:1.6;margin-bottom:20px">Los m\u00f3dulos 11\u201314 (errores avanzados, Claude Code, agentes IA y plan de acci\u00f3n) est\u00e1n disponibles con el plan PRO + Escuela o PRO Anual.</p>' +
+      '<p style="color:#9CA3AF;font-size:.82rem;margin-bottom:20px">Los primeros 10 m\u00f3dulos son 100% gratis.</p>' +
+      '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">' +
+        '<a href="../precios.html" style="padding:12px 28px;background:#EA580C;color:#fff;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;box-shadow:0 4px 14px rgba(234,88,12,.25)">Ver planes \u2192</a>' +
+        '<button onclick="navigateTo(10)" style="padding:12px 28px;background:#F3F4F6;color:#374151;border-radius:12px;font-weight:600;font-size:.95rem;border:none;cursor:pointer">\u2190 Volver al m\u00f3dulo 10</button>' +
+      '</div>' +
+    '</div>';
+  document.querySelector('.curso-main').appendChild(gate);
+}
+
+function updateSidebarLocks() {
+  var hasPro = isEscuelaUser();
+  var links = document.querySelectorAll('.sidebar-nav a');
+  links.forEach(function(a, i) {
+    var modNum = i + 1;
+    if (modNum >= PRO_MODULE_MIN && !hasPro) {
+      if (!a.querySelector('.lock-icon')) {
+        var lock = document.createElement('span');
+        lock.className = 'lock-icon';
+        lock.style.cssText = 'margin-left:auto;font-size:.7rem;color:#D97706';
+        lock.textContent = '\uD83D\uDD12';
+        a.appendChild(lock);
+      }
+    }
+  });
+}
+
 function navigateTo(n) {
+  /* PRO gate for modules 11+ */
+  if (n >= PRO_MODULE_MIN && !isEscuelaUser()) {
+    document.querySelectorAll('.modulo-section').forEach(function(s){ s.style.display = 'none'; });
+    var gate = document.getElementById('module-gate');
+    if (gate) gate.style.display = 'none';
+    showModuleGate();
+    /* Update sidebar */
+    var links = document.querySelectorAll('.sidebar-nav a');
+    links.forEach(function(a, i) { a.classList.remove('active'); if (i === n - 1) a.classList.add('active'); });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
   /* Hide all modules */
   document.querySelectorAll('.modulo-section').forEach(function(s){ s.style.display = 'none'; });
+  var gate = document.getElementById('module-gate');
+  if (gate) gate.style.display = 'none';
   /* Show target */
   var target = document.getElementById('modulo-' + n);
   if (target) target.style.display = 'block';
@@ -3368,6 +3427,19 @@ function copyPrompt(btn) {
     setTimeout(function(){ btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 2000);
   });
 }
+
+/* ===== Init sidebar locks on load ===== */
+(function(){
+  function initLocks(){
+    if(typeof exoPro!=='undefined'){
+      exoPro.check().then(function(){ updateSidebarLocks(); });
+    } else {
+      setTimeout(function(){ updateSidebarLocks(); },500);
+    }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',initLocks);
+  else initLocks();
+})();
 </script>
 </body>
 </html>
