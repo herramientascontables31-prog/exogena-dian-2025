@@ -51,6 +51,17 @@ const HTML_FILES = [
   'estatutos.html',
   'retencion-dividendos.html',
   '404.html',
+  'escuela.html',
+  'escuela/iva300.html',
+  'escuela/retencion350.html',
+  'escuela/renta110.html',
+  'escuela/exogena.html',
+  'escuela/sanciones.html',
+  'escuela/nomina.html',
+  'escuela/procedimiento.html',
+  'escuela/ica.html',
+  'escuela/niif.html',
+  'escuela/ia-automatizacion.html',
 ];
 
 // ─── Directorios/archivos estáticos a copiar tal cual ───

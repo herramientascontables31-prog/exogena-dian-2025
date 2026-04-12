@@ -207,6 +207,14 @@
     banner.setAttribute('role', 'status');
     banner.setAttribute('aria-label', 'Estado de suscripción');
 
+    var planType = isPro ? exoPro.getPlan() : '';
+    var tieneEscuela = isPro ? exoPro.hasEscuela() : false;
+
+    // Etiqueta legible del plan
+    var planLabel = 'PRO';
+    if (planType === 'pro+escuela') planLabel = 'PRO + Escuela';
+    else if (planType === 'pro-anual') planLabel = 'PRO Anual';
+
     if (isFreeOnly) {
       /* ── Herramienta 100% gratuita ── */
       if (isPro) return; // PRO users don't need to see "free" badge
@@ -217,7 +225,7 @@
       /* ── PRO activo ── */
       var theme = tool.dark ? 'dark' : 'light';
       banner.classList.add(theme);
-      banner.innerHTML = '<span class="psb-badge-pro">✅ PRO activo</span>' +
+      banner.innerHTML = '<span class="psb-badge-pro">✅ ' + planLabel + ' activo</span>' +
         '<span class="psb-limits">' + tool.icon + ' Acceso completo — ' + tool.pro + '</span>';
     } else {
       /* ── Free user en herramienta con limites ── */

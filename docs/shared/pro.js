@@ -31,6 +31,8 @@
   var KEY_PRO='exogenadian_pro_key';
   var KEY_DEVICE='exogenadian_device_id';
   var KEY_ACTIVATED='exogenadian_pro_activated_at';
+  var KEY_PLAN='exogenadian_pro_plan';       // pro | pro+escuela | pro-anual
+  var KEY_ESCUELA='exogenadian_pro_escuela'; // true | false
   var PRO_MAX_DAYS=395; // 365 días + 30 de gracia
 
   // --- Backward compatibility: migrate old keys ---
@@ -66,6 +68,8 @@
     localStorage.removeItem(KEY_EMAIL);
     localStorage.removeItem(KEY_PRO);
     localStorage.removeItem(KEY_ACTIVATED);
+    localStorage.removeItem(KEY_PLAN);
+    localStorage.removeItem(KEY_ESCUELA);
     sessionStorage.removeItem(CACHE_KEY);
   }
 
@@ -99,6 +103,9 @@
           .then(function(data){
             if(data.valid){
               setCacheValid();
+              // Guardar tipo de plan y acceso a escuela
+              if(data.planType) localStorage.setItem(KEY_PLAN, data.planType);
+              localStorage.setItem(KEY_ESCUELA, data.escuela ? 'true' : 'false');
               resolve(true);
             } else {
               if(data.reason) console.warn('PRO rechazado:', data.reason);
@@ -166,6 +173,16 @@
     });
   }
 
+  // Obtener tipo de plan actual
+  function getPlan(){
+    return localStorage.getItem(KEY_PLAN) || 'pro';
+  }
+
+  // Verificar si tiene acceso a Escuela
+  function hasEscuela(){
+    return localStorage.getItem(KEY_ESCUELA) === 'true';
+  }
+
   // Exportar API global
   window.exoPro={
     check: check,
@@ -174,9 +191,13 @@
     getSaved: getSaved,
     clearPro: clearPro,
     getDeviceFingerprint: getDeviceFingerprint,
+    getPlan: getPlan,
+    hasEscuela: hasEscuela,
     // Constantes para uso externo
     KEY_EMAIL: KEY_EMAIL,
     KEY_PRO: KEY_PRO,
+    KEY_PLAN: KEY_PLAN,
+    KEY_ESCUELA: KEY_ESCUELA,
     APPS_SCRIPT_URL: APPS_SCRIPT_URL
   };
 

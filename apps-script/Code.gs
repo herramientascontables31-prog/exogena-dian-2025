@@ -27,9 +27,22 @@ const WOMPI_INTEGRITY_SECRET = PropertiesService.getScriptProperties().getProper
 const SPREADSHEET_ID = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
 const SHEET_NAME = 'Claves';
 const MONTO_MINIMO_COP = 1990000; // $19,900 en centavos
-const DIAS_VIGENCIA = 30;
+const DIAS_VIGENCIA_MENSUAL = 30;
+const DIAS_VIGENCIA_ANUAL = 365;
 const MAX_DISPOSITIVOS = 2;
 const EMAIL_REMINDER_DAYS = 3;
+
+// ── PLANES ──
+// Prefijo de referencia → tipo de plan
+// M-xxx  = PRO mensual (sin Escuela)
+// PE-xxx = PRO + Escuela mensual
+// A-xxx  = PRO Anual (incluye Escuela gratis)
+function detectarPlan(ref) {
+  ref = String(ref || '').trim().toUpperCase();
+  if (ref.indexOf('PE-') === 0) return { planType: 'pro+escuela', dias: DIAS_VIGENCIA_MENSUAL, escuela: true };
+  if (ref.indexOf('A-') === 0)  return { planType: 'pro-anual',    dias: DIAS_VIGENCIA_ANUAL,   escuela: true };
+  return                                { planType: 'pro',           dias: DIAS_VIGENCIA_MENSUAL, escuela: false };
+}
 
 // ── ENDPOINT PRINCIPAL ──
 function doGet(e) {
@@ -106,13 +119,16 @@ function handleGenerateKey(params) {
       return { success: false, error: txData.reason };
     }
 
+    // Detectar plan desde la referencia
+    var plan = detectarPlan(ref);
+
     // Generar clave única
     var clave = generarClaveUnica(sheet);
     var hoy = new Date();
     var vencimiento = new Date(hoy);
-    vencimiento.setDate(vencimiento.getDate() + DIAS_VIGENCIA);
+    vencimiento.setDate(vencimiento.getDate() + plan.dias);
 
-    // Escribir en el Sheet (columnas A-J, ahora con ReminderSent)
+    // Escribir en el Sheet (columnas A-J)
     sheet.appendRow([
       clave,                                                              // A: Clave
       Utilities.formatDate(hoy, 'America/Bogota', 'yyyy-MM-dd'),         // B: FechaCompra
@@ -130,7 +146,9 @@ function handleGenerateKey(params) {
       success: true,
       clave: clave,
       expiry: Utilities.formatDate(vencimiento, 'America/Bogota', 'yyyy-MM-dd'),
-      daysLeft: DIAS_VIGENCIA
+      daysLeft: plan.dias,
+      planType: plan.planType,
+      escuela: plan.escuela
     };
   } finally {
     lock.releaseLock();
@@ -158,9 +176,11 @@ function handleValidateKey(params) {
     if (clave !== key) continue;
 
     var estado = String(row[2]).trim().toLowerCase();
+    var ref = String(row[4]).trim();
     var fechaVenc = row[6];
     var numDisp = Number(row[7]) || 0;
     var dispositivos = String(row[8]).trim();
+    var plan = detectarPlan(ref);
 
     // Verificar estado
     if (estado === 'cancelado') {
@@ -203,7 +223,9 @@ function handleValidateKey(params) {
       valid: true,
       reason: 'Clave activa',
       daysLeft: diasRestantes,
-      expiry: Utilities.formatDate(venc, 'America/Bogota', 'yyyy-MM-dd')
+      expiry: Utilities.formatDate(venc, 'America/Bogota', 'yyyy-MM-dd'),
+      planType: plan.planType,
+      escuela: plan.escuela
     };
   }
 
@@ -225,9 +247,11 @@ function handleValidateEmail(params) {
   var data = sheet.getDataRange().getValues();
   var hoy = new Date();
 
-  // Buscar la suscripción activa más reciente para este email
+  // Buscar la mejor suscripción activa para este email
+  // Prioridad: 1) incluye escuela, 2) vencimiento más lejano
   var bestRow = -1;
   var bestVenc = null;
+  var bestEscuela = false;
 
   for (var i = 1; i < data.length; i++) {
     var rowEmail = String(data[i][5]).trim().toLowerCase();
@@ -246,16 +270,30 @@ function handleValidateEmail(params) {
       continue;
     }
 
-    // Si está activa y es más reciente que la anterior encontrada
-    if (bestVenc === null || fechaVenc > bestVenc) {
+    var rowPlan = detectarPlan(String(data[i][4]).trim());
+
+    // Preferir suscripción con escuela, luego la de mayor vencimiento
+    var dominated = false;
+    if (bestRow !== -1) {
+      if (bestEscuela && !rowPlan.escuela) dominated = true;
+      if (!dominated && !bestEscuela && !rowPlan.escuela && fechaVenc <= bestVenc) dominated = true;
+      if (!dominated && bestEscuela && rowPlan.escuela && fechaVenc <= bestVenc) dominated = true;
+    }
+
+    if (!dominated) {
       bestRow = i;
       bestVenc = fechaVenc;
+      bestEscuela = rowPlan.escuela;
     }
   }
 
   if (bestRow === -1) {
     return { success: true, valid: false, reason: 'No se encontró suscripción activa para este email' };
   }
+
+  // Detectar plan de la mejor suscripción
+  var bestRef = String(data[bestRow][4]).trim();
+  var plan = detectarPlan(bestRef);
 
   // Registrar dispositivo
   var numDisp = Number(data[bestRow][7]) || 0;
@@ -285,7 +323,9 @@ function handleValidateEmail(params) {
     valid: true,
     reason: 'Suscripción activa',
     daysLeft: diasRestantes,
-    expiry: Utilities.formatDate(bestVenc, 'America/Bogota', 'yyyy-MM-dd')
+    expiry: Utilities.formatDate(bestVenc, 'America/Bogota', 'yyyy-MM-dd'),
+    planType: plan.planType,
+    escuela: plan.escuela
   };
 }
 
