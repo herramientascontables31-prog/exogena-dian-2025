@@ -2,8 +2,14 @@
 <html lang="es">
 <head>
 <script src="shared/cookie-consent.js"></script>
+<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
-<script>var _0x3cd19f=_0x4740;function _0x4740(_0xf63003,_0x410c45){_0xf63003=_0xf63003-0xb5;var _0x7e94ea=_0x7e94();var _0x47400f=_0x7e94ea[_0xf63003];if(_0x4740['OmYYWR']===undefined){var _0x1bc03b=function(_0x325513){var _0x47a486='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x1bcd7e='',_0x3bc4a7='';for(var _0x36a621=0x0,_0x58b67f,_0x4fba18,_0xb072d5=0x0;_0x4fba18=_0x325513['charAt'](_0xb072d5++);~_0x4fba18&&(_0x58b67f=_0x36a621%0x4?_0x58b67f*0x40+_0x4fba18:_0x4fba18,_0x36a621++%0x4)?_0x1bcd7e+=String['fromCharCode'](0xff&_0x58b67f>>(-0x2*_0x36a621&0x6)):0x0){_0x4fba18=_0x47a486['indexOf'](_0x4fba18);}for(var _0xd495a5=0x0,_0x1ccfde=_0x1bcd7e['length'];_0xd495a5<_0x1ccfde;_0xd495a5++){_0x3bc4a7+='%'+('00'+_0x1bcd7e['charCodeAt'](_0xd495a5)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x3bc4a7);};_0x4740['UYZCSJ']=_0x1bc03b,_0x4740['LqldPi']={},_0x4740['OmYYWR']=!![];}var _0x301482=_0x7e94ea[0x0],_0x2bd595=_0xf63003+_0x301482,_0x2cd1a0=_0x4740['LqldPi'][_0x2bd595];return!_0x2cd1a0?(_0x47400f=_0x4740['UYZCSJ'](_0x47400f),_0x4740['LqldPi'][_0x2bd595]=_0x47400f):_0x47400f=_0x2cd1a0,_0x47400f;}(function(_0x7fc13b,_0x217ed4){var _0x11d6f9=_0x4740,_0x5312bf=_0x7fc13b();while(!![]){try{var _0x11e72e=parseInt(_0x11d6f9(0xc0))/0x1+parseInt(_0x11d6f9(0xbb))/0x2*(parseInt(_0x11d6f9(0xba))/0x3)+parseInt(_0x11d6f9(0xbe))/0x4+parseInt(_0x11d6f9(0xb7))/0x5+parseInt(_0x11d6f9(0xbf))/0x6*(-parseInt(_0x11d6f9(0xb8))/0x7)+-parseInt(_0x11d6f9(0xb6))/0x8+parseInt(_0x11d6f9(0xbd))/0x9*(parseInt(_0x11d6f9(0xb9))/0xa);if(_0x11e72e===_0x217ed4)break;else _0x5312bf['push'](_0x5312bf['shift']());}catch(_0x1e35c6){_0x5312bf['push'](_0x5312bf['shift']());}}}(_0x7e94,0x5874b),window['dataLayer']=window['dataLayer']||[]);function gtag(){var _0x5c0069=_0x4740;dataLayer[_0x5c0069(0xbc)](arguments);}function _0x7e94(){var _0x7a0c4e=['ChvZAa','otL5rLj0vee','mJq5mZK3nLnWuM1jvW','mZm0mZaYsvr2u01j','mtGZntG5tMrwsK9T','y29UzMLN','nde4mJC2mgfnvgfgvq','mJqZndyYmfL5s1nYzG','nZbNCMjMB20','mZG2nZbKCxvQDuq','mZuYnJjuy25xALu','mtH0rgTXDgC'];_0x7e94=function(){return _0x7a0c4e;};return _0x7e94();}gtag('js',new Date()),gtag(_0x3cd19f(0xb5),'G-S7SM6ST4'+'CC');</script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S7SM6ST4CC');
+</script>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="apple-touch-icon" href="og-image.png">
@@ -179,6 +185,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     <div class="step-pill" id="sp3" onclick="goStep(3)" style="cursor:pointer"><span class="num">3</span> Mapeo Cuentas → 350</div>
     <div class="step-pill" id="sp4" onclick="goStep(4)" style="cursor:pointer"><span class="num">4</span> Borrador 350</div>
   </div>
+
+  <!-- STEP 1: Upload -->
   <div id="step1">
     <div class="card">
       <div class="card-title"><span>📄</span> Cargar Balance o Auxiliar</div>
@@ -199,29 +207,38 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
     </div>
   </div>
+
+  <!-- STEP 2: Column Mapping + Preview -->
   <div id="step2" class="hidden">
     <div class="card">
       <div class="card-title"><span>🔧</span> Verificar Columnas del Archivo</div>
       <div class="alert alert-info"><span>💡</span><div>Se detectaron las columnas automáticamente. <strong>Verifica que sean correctas</strong> y ajusta si es necesario. Luego confirma para procesar los datos de retención.</div></div>
+
       <div class="hdr-selector">
         <label>📌 Fila de encabezados:</label>
         <select id="hdrRowSelect" onchange="onHeaderRowChange()"></select>
         <span class="hdr-preview" id="hdrPreviewText"></span>
       </div>
+
       <div class="raw-preview" id="rawPreview"></div>
+
       <div style="margin:20px 0 8px;font-weight:700;font-size:.9rem;color:var(--pri)">📋 Asignación de columnas <span style="font-weight:400;color:var(--muted);font-size:.8rem">(<span class="req" style="color:var(--red)">*</span> = obligatoria)</span></div>
       <div class="col-mapper" id="colMapper"></div>
+
       <div class="config-grid mb12" style="margin-top:20px">
         <div class="config-item"><label>Año gravable</label><input type="number" id="cfgYear" value="2026" min="2020" max="2035"></div>
         <div class="config-item"><label>Período (mes)</label><select id="cfgMonth"><option value="01">01 - Enero</option><option value="02">02 - Febrero</option><option value="03">03 - Marzo</option><option value="04">04 - Abril</option><option value="05">05 - Mayo</option><option value="06">06 - Junio</option><option value="07">07 - Julio</option><option value="08">08 - Agosto</option><option value="09">09 - Septiembre</option><option value="10">10 - Octubre</option><option value="11">11 - Noviembre</option><option value="12">12 - Diciembre</option></select></div>
         <div class="config-item"><label>NIT de la empresa</label><input type="text" id="cfgNit" placeholder="Ej: 901657282-9"></div>
         <div class="config-item"><label>Razón social</label><input type="text" id="cfgEmpresa" placeholder="Ej: MI EMPRESA S.A.S"></div>
       </div>
+
       <div class="actions">
         <button class="btn btn-outline" onclick="goStep(1)">← Cambiar archivo</button>
         <button class="btn btn-primary" onclick="confirmColumns()">Confirmar y Procesar →</button>
       </div>
     </div>
+
+    <!-- Preview after processing -->
     <div class="card hidden" id="previewCard">
       <div class="card-title"><span>🔍</span> Resultado del Procesamiento</div>
       <div id="fileStats" class="stats"></div>
@@ -238,6 +255,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       <div class="actions"><button class="btn btn-primary" onclick="goToStep3()">Continuar al Mapeo →</button></div>
     </div>
   </div>
+
+  <!-- STEP 3: PUC Mapping -->
   <div id="step3" class="hidden">
     <div class="card">
       <div class="card-title"><span>🔗</span> Mapeo Cuentas → Casillas Formulario 350</div>
@@ -255,6 +274,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
       </div>
     </div>
   </div>
+
+  <!-- STEP 4: Form 350 -->
   <div id="step4" class="hidden">
     <div class="card">
       <div class="flex-between mb12">
@@ -276,9 +297,695 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);lin
     </div>
   </div>
 </div>
-<script>const _0x2c1b43=_0x2539;(function(_0x3071f6,_0x3a553f){const _0x2fc2bf=_0x2539,_0x23c7bb=_0x3071f6();while(!![]){try{const _0x594340=parseInt(_0x2fc2bf(0x228))/0x1*(parseInt(_0x2fc2bf(0x153))/0x2)+parseInt(_0x2fc2bf(0x3d0))/0x3+parseInt(_0x2fc2bf(0x357))/0x4*(-parseInt(_0x2fc2bf(0x2fd))/0x5)+parseInt(_0x2fc2bf(0x341))/0x6+-parseInt(_0x2fc2bf(0x35a))/0x7*(-parseInt(_0x2fc2bf(0x1b5))/0x8)+-parseInt(_0x2fc2bf(0x1c3))/0x9+-parseInt(_0x2fc2bf(0x313))/0xa;if(_0x594340===_0x3a553f)break;else _0x23c7bb['push'](_0x23c7bb['shift']());}catch(_0x35443f){_0x23c7bb['push'](_0x23c7bb['shift']());}}}(_0x473c,0xb4682));function esc(_0x29ab59){const _0x1d4aad=_0x2539;return(_0x29ab59==null?'':String(_0x29ab59))['replace'](/&/g,_0x1d4aad(0x333))[_0x1d4aad(0x356)](/</g,'&lt;')[_0x1d4aad(0x356)](/>/g,_0x1d4aad(0x371))[_0x1d4aad(0x356)](/"/g,'&quot;');}const DEFAULT_MAP=[{'prefix':'236505','name':'Salarios\x20y'+_0x2c1b43(0x301)+_0x2c1b43(0x1c8),'concepto':'rentas_tra'+_0x2c1b43(0x1e5),'aplica':'PN','tarifa':0x0,'casPJb':null,'casPJr':null,'casPNb':0x4d,'casPNr':0x5d},{'prefix':'236510','name':'Dividendos','concepto':'dividendos','aplica':'AMBOS','tarifa':7.5,'casPJb':0x23,'casPJr':0x30,'casPNb':0x55,'casPNr':0x65},{'prefix':_0x2c1b43(0x28e),'name':'Honorarios','concepto':_0x2c1b43(0x31d),'aplica':_0x2c1b43(0x391),'tarifa':0xb,'casPJb':0x1d,'casPJr':0x2a,'casPNb':0x4f,'casPNr':0x5f},{'prefix':_0x2c1b43(0x144),'name':'Comisiones','concepto':_0x2c1b43(0x2af),'aplica':'AMBOS','tarifa':0xb,'casPJb':0x1e,'casPJr':0x2b,'casPNb':0x50,'casPNr':0x60},{'prefix':'236525','name':'Servicios','concepto':'servicios','aplica':_0x2c1b43(0x391),'tarifa':0x4,'casPJb':0x1f,'casPJr':0x2c,'casPNb':0x51,'casPNr':0x61},{'prefix':_0x2c1b43(0x207),'name':_0x2c1b43(0x348)+_0x2c1b43(0x271),'concepto':_0x2c1b43(0x2ca)+'ntos','aplica':_0x2c1b43(0x391),'tarifa':3.5,'casPJb':0x21,'casPJr':0x2e,'casPNb':0x53,'casPNr':0x63},{'prefix':_0x2c1b43(0x189),'name':_0x2c1b43(0x345)+'os\x20financi'+'eros','concepto':'rendimient'+'os','aplica':_0x2c1b43(0x391),'tarifa':0x4,'casPJb':0x20,'casPJr':0x2d,'casPNb':0x52,'casPNr':0x62},{'prefix':_0x2c1b43(0x2bc),'name':_0x2c1b43(0x1b0),'concepto':'compras','aplica':'AMBOS','tarifa':2.5,'casPJb':0x24,'casPJr':0x31,'casPNb':0x56,'casPNr':0x66},{'prefix':_0x2c1b43(0x13a),'name':'Enajenació'+'n\x20activos\x20'+'PN','concepto':_0x2c1b43(0x292)+'n','aplica':'PN','tarifa':0x1,'casPJb':null,'casPJr':null,'casPNb':0x59,'casPNr':0x69},{'prefix':'236550','name':_0x2c1b43(0x3c4)+_0x2c1b43(0x291),'concepto':'loterias','aplica':_0x2c1b43(0x391),'tarifa':0x14,'casPJb':0x27,'casPJr':0x34,'casPNb':0x5a,'casPNr':0x6a},{'prefix':'236555','name':_0x2c1b43(0x390)+'xterior','concepto':_0x2c1b43(0x39b)+'in','aplica':'AMBOS','tarifa':0x14,'casPJb':0x37,'casPJr':0x39,'casPNb':0x6d,'casPNr':0x6f},{'prefix':_0x2c1b43(0x234),'name':_0x2c1b43(0x2ec)+_0x2c1b43(0x1cd),'concepto':_0x2c1b43(0x19a)+'ros','aplica':'AMBOS','tarifa':0x1,'casPJb':0x28,'casPJr':0x35,'casPNb':0x5b,'casPNr':0x6b},{'prefix':_0x2c1b43(0x29c),'name':'Tarjetas\x20d'+_0x2c1b43(0x1bd)+_0x2c1b43(0x3ab),'concepto':'tarjetas','aplica':'AMBOS','tarifa':1.5,'casPJb':0x25,'casPJr':0x32,'casPNb':0x57,'casPNr':0x67},{'prefix':_0x2c1b43(0x22a),'name':'Contratos\x20'+_0x2c1b43(0x3b5)+'ón','concepto':'construcci'+'on','aplica':_0x2c1b43(0x391),'tarifa':0x2,'casPJb':0x26,'casPJr':0x33,'casPNb':0x58,'casPNr':0x68},{'prefix':_0x2c1b43(0x2fb),'name':_0x2c1b43(0x133)+'ción\x20espec'+'ial','concepto':'autoret_11'+'4','aplica':'PJ','tarifa':0.8,'casPJb':0x3b,'casPJr':0x44,'casPNb':null,'casPNr':null},{'prefix':_0x2c1b43(0x15f),'name':'Autorreten'+'ción\x20venta'+'s','concepto':_0x2c1b43(0x194)+'ntas','aplica':'PJ','tarifa':0.8,'casPJb':0x3c,'casPJr':0x45,'casPNb':0x71,'casPNr':0x79},{'prefix':_0x2c1b43(0x171),'name':'Autorreten'+_0x2c1b43(0x307)+_0x2c1b43(0x2d8),'concepto':'autoret_se'+'rv','aplica':'PJ','tarifa':0.8,'casPJb':0x3f,'casPJr':0x48,'casPNb':null,'casPNr':null},{'prefix':'236595','name':_0x2c1b43(0x18c)+'s','concepto':_0x2c1b43(0x3b1),'aplica':_0x2c1b43(0x391),'tarifa':3.5,'casPJb':0x29,'casPJr':0x36,'casPNb':0x5c,'casPNr':0x6c},{'prefix':'236597','name':_0x2c1b43(0x3b7),'concepto':'regalias','aplica':_0x2c1b43(0x391),'tarifa':3.5,'casPJb':0x22,'casPJr':0x2f,'casPNb':0x54,'casPNr':0x64},{'prefix':_0x2c1b43(0x2a9),'name':_0x2c1b43(0x2dc),'concepto':'pensiones','aplica':'PN','tarifa':0x0,'casPJb':null,'casPJr':null,'casPNb':0x4e,'casPNr':0x5e}],KEYWORDS={'rentas_trabajo':['salario','laboral','trabajo',_0x2c1b43(0x11f),_0x2c1b43(0x27c)],'pensiones':[_0x2c1b43(0x15a)],'honorarios':['honorar'],'comisiones':[_0x2c1b43(0x19f)],'servicios':[_0x2c1b43(0x374),'transport','programa','informatic'+'o',_0x2c1b43(0x25d)+'e'],'rendimientos':[_0x2c1b43(0x166)+'o','interes','financiero'],'arrendamientos':[_0x2c1b43(0x110),_0x2c1b43(0x1a8)],'compras':['compra','adquisicio'+'n'],'dividendos':['dividend',_0x2c1b43(0x176)+'ion'],'loterias':[_0x2c1b43(0x113),'rifa'],'exterior_sin':[_0x2c1b43(0x323)],'hidrocarburos':[_0x2c1b43(0x19a)+'ro',_0x2c1b43(0x141),'minero'],'tarjetas':[_0x2c1b43(0x151)],'construccion':['construcc','urbaniz'],'enajenacion':[_0x2c1b43(0x292)+'n','activo\x20fij'+'o'],'autoret_114':[_0x2c1b43(0x386),_0x2c1b43(0x346),'114-1'],'autoret_ventas':['autorreten'+'cion','decreto\x2022'+'01',_0x2c1b43(0x383)],'autoret_serv':[_0x2c1b43(0x24e)+'cion.*serv'+'ic'],'otros':['otro'],'regalias':[_0x2c1b43(0x286),'propiedad\x20'+_0x2c1b43(0x33e)+'l']};let rawData=[],parsedAccounts=[],mappings=[],result350={},detectedHeaderRow=-0x1,colMap={'code':-0x1,'name':-0x1,'id':-0x1,'tercero':-0x1,'deb':-0x1,'cre':-0x1};const COL_FIELDS=[{'key':'code','label':'Código\x20Cue'+_0x2c1b43(0x188),'required':!![],'icon':'🔢','hints':[_0x2c1b43(0x218),_0x2c1b43(0x274),'código',_0x2c1b43(0x37f),'account']},{'key':'name','label':'Nombre\x20Cue'+'nta','required':![],'icon':'📝','hints':['descripcio'+'n','nombre\x20cue'+_0x2c1b43(0x188),_0x2c1b43(0x245)+_0x2c1b43(0x3a5),'descriptio'+'n']},{'key':'id','label':'ID\x20Tercero','required':!![],'icon':'🆔','hints':[_0x2c1b43(0x204),_0x2c1b43(0x254)+'cion',_0x2c1b43(0x254)+'ción','nit',_0x2c1b43(0x164),'id',_0x2c1b43(0x321)]},{'key':_0x2c1b43(0x204),'label':'Nombre\x20Ter'+_0x2c1b43(0x305),'required':![],'icon':'👤','hints':[_0x2c1b43(0x231)+'al',_0x2c1b43(0x192)+'al',_0x2c1b43(0x2db)+'cero',_0x2c1b43(0x39e)+'y','name']},{'key':_0x2c1b43(0x363),'label':_0x2c1b43(0x287),'required':!![],'icon':'📤','hints':[_0x2c1b43(0x35e),_0x2c1b43(0x203),'debitos','débitos',_0x2c1b43(0x350)]},{'key':_0x2c1b43(0x182),'label':'Créditos','required':!![],'icon':'📥','hints':['credito','crédito',_0x2c1b43(0x351),_0x2c1b43(0x119),'credit']}];function norm(_0x27a9d8){const _0x3b3e3e=_0x2c1b43;return String(_0x27a9d8||'')['toLowerCas'+'e']()[_0x3b3e3e(0x2b5)]('NFD')['replace'](/[\u0300-\u036f]/g,'')['trim']();}function toNum(_0x41d5c5){const _0xd5657e=_0x2c1b43;if(typeof _0x41d5c5==='number')return _0x41d5c5;if(!_0x41d5c5)return 0x0;let _0x136299=String(_0x41d5c5)['replace'](/[$\s]/g,'');if(_0x136299[_0xd5657e(0x2f8)](',')&&_0x136299['includes']('.')){if(_0x136299[_0xd5657e(0x36d)+'f'](',')>_0x136299[_0xd5657e(0x36d)+'f']('.'))_0x136299=_0x136299['replace'](/\./g,'')[_0xd5657e(0x356)](',','.');else _0x136299=_0x136299[_0xd5657e(0x356)](/,/g,'');}else{if(_0x136299[_0xd5657e(0x2f8)](',')&&!_0x136299['includes']('.')){const _0x2cc37c=_0x136299[_0xd5657e(0x2d4)](',');if(_0x2cc37c[_0x2cc37c[_0xd5657e(0x208)]-0x1][_0xd5657e(0x208)]<=0x2)_0x136299=_0x136299['replace'](',','.');else _0x136299=_0x136299['replace'](/,/g,'');}}return parseFloat(_0x136299)||0x0;}function fN(_0x4329cb){const _0x48749f=_0x2c1b43;return(_0x4329cb||0x0)[_0x48749f(0x2ba)+'ring'](_0x48749f(0x360),{'minimumFractionDigits':0x0,'maximumFractionDigits':0x0});}function cellStr(_0x5c66ea){const _0x5b5d8a=_0x2c1b43,_0x536b44=String(_0x5c66ea??'')[_0x5b5d8a(0x3a3)]();return _0x536b44===_0x5b5d8a(0x285)||_0x536b44==='null'||_0x536b44==='NaN'?'':_0x536b44;}document['getElement'+_0x2c1b43(0x2be)]('fileInput')[_0x2c1b43(0x3b3)+'stener']('change',_0x4723e7=>{const _0x49bff1=_0x2c1b43;if(_0x4723e7[_0x49bff1(0x1ee)][_0x49bff1(0x1bc)][_0x49bff1(0x208)])loadFile(_0x4723e7['target'][_0x49bff1(0x1bc)][0x0]);});const dz=document['getElement'+_0x2c1b43(0x2be)]('dz');dz['addEventLi'+_0x2c1b43(0x2d3)](_0x2c1b43(0x1e4),_0x174184=>{const _0xce366a=_0x2c1b43;_0x174184[_0xce366a(0x2e4)+'ault'](),dz[_0xce366a(0x319)]['add']('drag');}),dz['addEventLi'+_0x2c1b43(0x2d3)](_0x2c1b43(0x21a),()=>dz[_0x2c1b43(0x319)]['remove']('drag')),dz['addEventLi'+_0x2c1b43(0x2d3)]('drop',_0xc5b289=>{const _0x5ab151=_0x2c1b43;_0xc5b289['preventDef'+_0x5ab151(0x1e3)](),dz['classList'][_0x5ab151(0x10b)]('drag');if(_0xc5b289[_0x5ab151(0x37a)+'er']['files'][_0x5ab151(0x208)])loadFile(_0xc5b289[_0x5ab151(0x37a)+'er']['files'][0x0]);});function loadFile(_0x57e503){const _0x52e085=_0x2c1b43;var _0x43605c=0x14*0x400*0x400;if(_0x57e503['size']>_0x43605c){exoToast(_0x52e085(0x236)+_0x52e085(0x264)+_0x52e085(0x20a)+_0x52e085(0x370),'warning');return;}document['getElement'+_0x52e085(0x2be)]('fileName')['textConten'+'t']='✓\x20'+_0x57e503[_0x52e085(0x1e8)];const _0x4d7863=new FileReader();_0x4d7863['onerror']=function(){_0x1ebce7['classList']['remove']('active');},_0x4d7863[_0x52e085(0x27a)]=function(_0x202847){const _0x1ce370=_0x52e085;try{const _0xd9fee2=XLSX[_0x1ce370(0x237)](new Uint8Array(_0x202847[_0x1ce370(0x1ee)][_0x1ce370(0x143)]),{'type':_0x1ce370(0x178),'cellDates':!![]});rawData=XLSX['utils']['sheet_to_j'+'son'](_0xd9fee2['Sheets'][_0xd9fee2[_0x1ce370(0x375)][0x0]],{'header':0x1,'defval':''}),afterFileLoaded();}finally{_0x1ebce7['classList']['remove']('active');}};var _0x1ebce7=document['getElement'+'ById']('loadingOve'+_0x52e085(0x20d));_0x1ebce7[_0x52e085(0x319)]['add'](_0x52e085(0x2bd)),_0x4d7863[_0x52e085(0x2a4)+'yBuffer'](_0x57e503);}function afterFileLoaded(){extractMeta(),detectedHeaderRow=autoDetectHeaderRow(),goStep(0x2),buildColumnMapper();}function extractMeta(){const _0x37d58a=_0x2c1b43;for(let _0x23c8bd=0x0;_0x23c8bd<Math[_0x37d58a(0x3c5)](0xa,rawData[_0x37d58a(0x208)]);_0x23c8bd++){const _0x85b876=rawData[_0x23c8bd];if(!_0x85b876)continue;for(let _0x535e1e=0x0;_0x535e1e<_0x85b876[_0x37d58a(0x208)];_0x535e1e++){const _0x33094b=String(_0x85b876[_0x535e1e]||''),_0x167a2d=_0x33094b['match'](/Compa[ñn][ií]a:\s*([^\n\\]+)/i);if(_0x167a2d)document[_0x37d58a(0x366)+_0x37d58a(0x2be)]('cfgEmpresa')['value']=_0x167a2d[0x1]['trim']()['split']('\x5cn')[0x0];const _0x172e4e=_0x33094b['match'](/Periodos?:\s*(\d{4})(\d{2})_/i);_0x172e4e&&(document[_0x37d58a(0x366)+'ById']('cfgYear')['value']=_0x172e4e[0x1],document['getElement'+_0x37d58a(0x2be)]('cfgMonth')['value']=_0x172e4e[0x2]);}const _0x48690d=String(_0x85b876[0x0]||'')['trim']();if(/^\d{9}\s*-\s*\d$/['test'](_0x48690d))document['getElement'+_0x37d58a(0x2be)]('cfgNit')[_0x37d58a(0x384)]=_0x48690d;const _0x2f2176=document[_0x37d58a(0x366)+_0x37d58a(0x2be)]('cfgEmpresa')['value'];if(!_0x2f2176&&/^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s.]{4,}$/['test'](_0x48690d)&&!/^(MOV|LIB|REP|TOT|ELA)/i['test'](_0x48690d))document[_0x37d58a(0x366)+_0x37d58a(0x2be)](_0x37d58a(0x3d5))[_0x37d58a(0x384)]=_0x48690d;const _0x4f99aa=_0x48690d[_0x37d58a(0x332)](/(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre).*?(\d{4})/i);if(_0x4f99aa){document['getElement'+'ById'](_0x37d58a(0x297))[_0x37d58a(0x384)]=_0x4f99aa[0x2];const _0x45b111=['enero',_0x37d58a(0x1be),_0x37d58a(0x3d6),_0x37d58a(0x132),'mayo','junio','julio',_0x37d58a(0x243),_0x37d58a(0x235),_0x37d58a(0x3da),_0x37d58a(0x2f9),'diciembre'],_0xe44b48=_0x45b111[_0x37d58a(0x121)](_0x515e4b=>norm(_0x48690d)['includes'](_0x515e4b));if(_0xe44b48>=0x0)document[_0x37d58a(0x366)+_0x37d58a(0x2be)](_0x37d58a(0x23d))['value']=String(_0xe44b48+0x1)[_0x37d58a(0x25f)](0x2,'0');}}}function autoDetectHeaderRow(){const _0x278b46=_0x2c1b43;for(let _0x32ccec=0x0;_0x32ccec<Math['min'](0xf,rawData['length']);_0x32ccec++){const _0x547b4c=rawData[_0x32ccec];if(!_0x547b4c)continue;const _0x38673e=_0x547b4c['map'](_0x5a8202=>norm(cellStr(_0x5a8202)));let _0x9d3e99=0x0;const _0xf0b33f=COL_FIELDS[_0x278b46(0x215)](_0x5ac48f=>_0x5ac48f['hints']);for(const _0x567c81 of _0x38673e){if(!_0x567c81)continue;for(const _0x4fc293 of _0xf0b33f){if(_0x567c81[_0x278b46(0x2f8)](_0x4fc293)){_0x9d3e99++;break;}}}if(_0x9d3e99>=0x2)return _0x32ccec;}return 0x0;}function autoDetectColumns(_0x1e0ac3){const _0x1184be=_0x2c1b43;colMap={'code':-0x1,'name':-0x1,'id':-0x1,'tercero':-0x1,'deb':-0x1,'cre':-0x1};const _0x3d445b=rawData[_0x1e0ac3];if(!_0x3d445b)return;for(let _0x3f2752=0x0;_0x3f2752<_0x3d445b['length'];_0x3f2752++){const _0x1bedda=norm(cellStr(_0x3d445b[_0x3f2752]));if(!_0x1bedda)continue;for(const _0x50d85b of COL_FIELDS){if(colMap[_0x50d85b[_0x1184be(0x129)]]!==-0x1)continue;for(const _0x37febc of _0x50d85b[_0x1184be(0x18f)]){if(_0x1bedda===_0x37febc||_0x1bedda['includes'](_0x37febc)){colMap[_0x50d85b['key']]=_0x3f2752;break;}}}}}function buildColumnMapper(){const _0x4e6f7b=_0x2c1b43,_0x58a16c=detectedHeaderRow,_0x4ed202=document[_0x4e6f7b(0x366)+_0x4e6f7b(0x2be)]('hdrRowSele'+'ct');_0x4ed202['innerHTML']='';const _0x1c2912=Math['min'](0xf,rawData[_0x4e6f7b(0x208)]);for(let _0x2e1d85=0x0;_0x2e1d85<_0x1c2912;_0x2e1d85++){const _0x20e176=rawData[_0x2e1d85];if(!_0x20e176)continue;const _0x21eb96=_0x20e176[_0x4e6f7b(0x2f3)](0x0,0x4)[_0x4e6f7b(0x262)](_0x5b95dd=>cellStr(_0x5b95dd))['filter'](Boolean)[_0x4e6f7b(0x37e)]('\x20|\x20')['substring'](0x0,0x50),_0x548049=document[_0x4e6f7b(0x272)+_0x4e6f7b(0x13b)]('option');_0x548049[_0x4e6f7b(0x384)]=_0x2e1d85,_0x548049[_0x4e6f7b(0x314)+'t']=_0x4e6f7b(0x1eb)+_0x2e1d85+':\x20'+_0x21eb96;if(_0x2e1d85===_0x58a16c)_0x548049['selected']=!![];_0x4ed202[_0x4e6f7b(0x183)+'d'](_0x548049);}updateHdrPreview(),autoDetectColumns(_0x58a16c),renderRawPreview(),renderColMapper();}function onHeaderRowChange(){const _0x51bfe7=_0x2c1b43;detectedHeaderRow=parseInt(document['getElement'+'ById'](_0x51bfe7(0x19e)+'ct')[_0x51bfe7(0x384)]),autoDetectColumns(detectedHeaderRow),renderRawPreview(),renderColMapper(),updateHdrPreview();}function updateHdrPreview(){const _0x5e0a1b=_0x2c1b43,_0xd0052a=rawData[detectedHeaderRow];if(!_0xd0052a)return;const _0x5593c0=_0xd0052a['map'](_0x422f84=>cellStr(_0x422f84))['filter'](Boolean)['join']('\x20·\x20');document['getElement'+'ById'](_0x5e0a1b(0x25c)+_0x5e0a1b(0x2e8))[_0x5e0a1b(0x314)+'t']=_0x5593c0[_0x5e0a1b(0x1b7)](0x0,0x78)+(_0x5593c0[_0x5e0a1b(0x208)]>0x78?'…':'');}function renderRawPreview(){const _0x430bfb=_0x2c1b43,_0x49ddea=detectedHeaderRow,_0x5100b5=Math[_0x430bfb(0x39f)](0x0,_0x49ddea-0x2),_0x4986a6=Math[_0x430bfb(0x3c5)](rawData[_0x430bfb(0x208)],_0x49ddea+0x8),_0x35f162=Math[_0x430bfb(0x3c5)]((rawData[_0x49ddea]||[])['length'],0xc);let _0x22d54d=_0x430bfb(0x2d0);_0x22d54d+=_0x430bfb(0x201)+'yle=\x22backg'+_0x430bfb(0x36e)+';color:#99'+_0x430bfb(0x179)+'h>';for(let _0xcb7536=0x0;_0xcb7536<_0x35f162;_0xcb7536++)_0x22d54d+='<th\x20style='+'\x22backgroun'+'d:#eee;col'+'or:#999\x22>C'+_0x430bfb(0x3ad)+_0xcb7536+_0x430bfb(0x2b3);_0x22d54d+='</tr>';for(let _0x4a5575=_0x5100b5;_0x4a5575<_0x4986a6;_0x4a5575++){const _0x2f3ddd=rawData[_0x4a5575];if(!_0x2f3ddd)continue;const _0x285a59=_0x4a5575===_0x49ddea;_0x22d54d+=_0x430bfb(0x2d7)+'\x22'+(_0x285a59?'hdr-row':'')+('\x22><td\x20styl'+_0x430bfb(0x17b)+'ight:700;c'+_0x430bfb(0x150))+(_0x285a59?_0x430bfb(0x1b3)+'r)':_0x430bfb(0x20c))+(_0x430bfb(0x32f)+_0x430bfb(0x185))+(_0x285a59?_0x430bfb(0x1ab):'')+_0x4a5575+'</td>';for(let _0x142e98=0x0;_0x142e98<_0x35f162;_0x142e98++){const _0x49acd2=cellStr(_0x2f3ddd[_0x142e98]);_0x22d54d+=_0x430bfb(0x221)+'\x22'+_0x49acd2+'\x22>'+_0x49acd2['substring'](0x0,0x23)+(_0x49acd2['length']>0x23?'…':'')+_0x430bfb(0x219);}_0x22d54d+='</tr>';}_0x22d54d+=_0x430bfb(0x32a),document['getElement'+_0x430bfb(0x2be)](_0x430bfb(0x2e3))['innerHTML']=_0x22d54d;}function renderColMapper(){const _0xd96ec4=_0x2c1b43,_0x55c520=rawData[detectedHeaderRow]||[],_0x448044=_0x55c520['length'];let _0x58985e='<option\x20va'+_0xd96ec4(0x336)+'\x20No\x20asigna'+'da\x20—</opti'+_0xd96ec4(0x2c7);for(let _0x57a784=0x0;_0x57a784<_0x448044;_0x57a784++){const _0x635572=cellStr(_0x55c520[_0x57a784]);_0x58985e+=_0xd96ec4(0x377)+'lue=\x22'+_0x57a784+'\x22>Col\x20'+_0x57a784+':\x20'+(_0x635572?_0x635572['substring'](0x0,0x19):_0xd96ec4(0x1d9))+'</option>';}let _0x286309='';COL_FIELDS['forEach'](_0x19dda0=>{const _0x566f33=_0xd96ec4,_0x142a25=colMap[_0x19dda0['key']],_0x4cfd7a=_0x142a25>=0x0,_0x1ba766=rawData[detectedHeaderRow+0x1]||[];let _0x3f022b='';for(let _0x1da5ab=detectedHeaderRow+0x1;_0x1da5ab<Math[_0x566f33(0x3c5)](rawData['length'],detectedHeaderRow+0x32);_0x1da5ab++){const _0x2c83fd=rawData[_0x1da5ab];if(!_0x2c83fd)continue;if(_0x142a25>=0x0){const _0x343568=cellStr(_0x2c83fd[_0x142a25]);if(_0x343568&&_0x343568!=='0'){_0x3f022b=_0x343568;break;}}}_0x286309+=_0x566f33(0x1d8)+'=\x22col-map-'+'item\x20'+(_0x4cfd7a?'mapped':'')+'\x20'+(_0x19dda0['required']&&!_0x4cfd7a?'required':'')+('\x22>\x0a\x20\x20\x20\x20\x20\x20<'+_0x566f33(0x1f0)+'\x22cml\x22>')+_0x19dda0[_0x566f33(0x175)]+'\x20'+_0x19dda0[_0x566f33(0x2ee)]+'\x20'+(_0x19dda0[_0x566f33(0x29f)]?'<span\x20clas'+'s=\x22req\x22>*<'+_0x566f33(0x3ac):'')+('</div>\x0a\x20\x20\x20'+_0x566f33(0x29b)+'\x20onchange='+_0x566f33(0x1f8)+_0x566f33(0x123))+_0x19dda0[_0x566f33(0x129)]+('\x27,this.val'+'ue)\x22\x20id=\x22s'+_0x566f33(0x38a))+_0x19dda0[_0x566f33(0x129)]+('\x22>\x0a\x20\x20\x20\x20\x20\x20\x20'+'\x20')+_0x58985e['replace'](_0x566f33(0x392)+_0x142a25+'\x22','value=\x22'+_0x142a25+_0x566f33(0x125))+('\x0a\x20\x20\x20\x20\x20\x20</s'+_0x566f33(0x299)+_0x566f33(0x2c8)+'ass=\x22sampl'+'e\x22\x20id=\x22sam'+'p_')+_0x19dda0[_0x566f33(0x129)]+'\x22>'+(_0x3f022b?_0x566f33(0x27b)+'g>'+_0x3f022b[_0x566f33(0x1b7)](0x0,0x1e)+'</strong>':'<em>sin\x20da'+_0x566f33(0x2b1))+('</div>\x0a\x20\x20\x20'+_0x566f33(0x196));}),document[_0xd96ec4(0x366)+_0xd96ec4(0x2be)]('colMapper')[_0xd96ec4(0x239)]=_0x286309;}function onColChange(_0x51c0d6,_0x336bcb){const _0x17ca7a=_0x2c1b43,_0x100006=parseInt(_0x336bcb);colMap[_0x51c0d6]=_0x100006;let _0x2df029='';for(let _0x3f204b=detectedHeaderRow+0x1;_0x3f204b<Math[_0x17ca7a(0x3c5)](rawData[_0x17ca7a(0x208)],detectedHeaderRow+0x32);_0x3f204b++){const _0x5f2fc9=rawData[_0x3f204b];if(!_0x5f2fc9)continue;if(_0x100006>=0x0){const _0x5bf4ca=cellStr(_0x5f2fc9[_0x100006]);if(_0x5bf4ca&&_0x5bf4ca!=='0'){_0x2df029=_0x5bf4ca;break;}}}const _0x365af1=document['getElement'+_0x17ca7a(0x2be)](_0x17ca7a(0x387)+_0x51c0d6);if(_0x365af1)_0x365af1[_0x17ca7a(0x239)]=_0x2df029?_0x17ca7a(0x27b)+'g>'+_0x2df029[_0x17ca7a(0x1b7)](0x0,0x1e)+'</strong>':_0x17ca7a(0x1ed)+'tos</em>';const _0x5dbfa1=_0x365af1?.[_0x17ca7a(0x19c)]('.col-map-i'+'tem');if(_0x5dbfa1){const _0x43eed6=COL_FIELDS['find'](_0x19b1b9=>_0x19b1b9[_0x17ca7a(0x129)]===_0x51c0d6);_0x5dbfa1['classList']['toggle'](_0x17ca7a(0x1d6),_0x100006>=0x0),_0x5dbfa1[_0x17ca7a(0x319)]['toggle'](_0x17ca7a(0x29f),_0x43eed6?.[_0x17ca7a(0x29f)]&&_0x100006<0x0);}}function confirmColumns(){const _0x4bd4c1=_0x2c1b43,_0x392dbb=COL_FIELDS[_0x4bd4c1(0x21e)](_0x1576cf=>_0x1576cf['required']&&colMap[_0x1576cf[_0x4bd4c1(0x129)]]<0x0);if(_0x392dbb['length']){exoToast(_0x4bd4c1(0x268)+_0x4bd4c1(0x1c2)+_0x4bd4c1(0x359)+_0x392dbb['map'](_0x476d8c=>'•\x20'+_0x476d8c['label'])[_0x4bd4c1(0x37e)]('\x0a'),_0x4bd4c1(0x3d4));return;}processData();}function processData(){const _0x2cc253=_0x2c1b43;parsedAccounts=[];let _0x1c1810=0x0;for(let _0x4fcc24=detectedHeaderRow+0x1;_0x4fcc24<rawData[_0x2cc253(0x208)];_0x4fcc24++){const _0x2deee3=rawData[_0x4fcc24];if(!_0x2deee3)continue;const _0x4b55dc=cellStr(_0x2deee3[colMap['code']]);if(!_0x4b55dc||/^(total|procesado|elaborado)/i['test'](_0x4b55dc))continue;if(!_0x4b55dc['startsWith']('2365')&&!_0x4b55dc[_0x2cc253(0x389)]('2367')&&!_0x4b55dc[_0x2cc253(0x389)](_0x2cc253(0x11e)))continue;const _0x88d543=colMap['name']>=0x0?cellStr(_0x2deee3[colMap['name']]):'',_0x5d0700=colMap['id']>=0x0?String(_0x2deee3[colMap['id']]||'')['replace'](/\s/g,''):'',_0x1043f2=colMap[_0x2cc253(0x204)]>=0x0?cellStr(_0x2deee3[colMap[_0x2cc253(0x204)]]):'',_0x212dac=colMap[_0x2cc253(0x363)]>=0x0?toNum(_0x2deee3[colMap['deb']]):0x0,_0x2ed5ed=colMap['cre']>=0x0?toNum(_0x2deee3[colMap[_0x2cc253(0x182)]]):0x0,_0x5ec99e=_0x5d0700['replace'](/[^0-9]/g,'');if(!_0x5ec99e||_0x5ec99e[_0x2cc253(0x208)]<0x4){_0x1c1810++;continue;}if(_0x212dac===0x0&&_0x2ed5ed===0x0)continue;const _0x4023da=_0x5ec99e[_0x2cc253(0x208)]===0x9||/S\.?A\.?S|LTDA|S\.?A\b|E\.?U\b|SOCIEDAD|COOPERATIVA|FUNDACI|ASOCIACI|CORPORACI|FONDO|ENTIDAD|EMPRESA|INC\b|CORP\b|E\.?S\.?P\b|E\.?S\.?A\.?L/i[_0x2cc253(0x225)](_0x1043f2);parsedAccounts['push']({'code':_0x4b55dc,'name':_0x88d543,'id':_0x5ec99e,'tercero':_0x1043f2,'deb':_0x212dac,'cre':_0x2ed5ed,'isPJ':_0x4023da,'tipo':_0x4023da?'PJ':'PN'});}showPreview();}function showPreview(){const _0x487dd9=_0x2c1b43;document[_0x487dd9(0x366)+'ById'](_0x487dd9(0x23b)+'d')[_0x487dd9(0x319)][_0x487dd9(0x10b)](_0x487dd9(0x282));const _0xb989f1={};let _0x4f411c=0x0,_0x26a5df=0x0;const _0x15c235=new Set();parsedAccounts['forEach'](_0x4fa960=>{const _0x594c3c=_0x487dd9;if(!_0xb989f1[_0x4fa960['code']])_0xb989f1[_0x4fa960[_0x594c3c(0x37f)]]={'code':_0x4fa960['code'],'name':_0x4fa960['name'],'deb':0x0,'cre':0x0,'count':0x0,'terceros':new Set()};_0xb989f1[_0x4fa960[_0x594c3c(0x37f)]][_0x594c3c(0x363)]+=_0x4fa960[_0x594c3c(0x363)],_0xb989f1[_0x4fa960['code']][_0x594c3c(0x182)]+=_0x4fa960['cre'],_0xb989f1[_0x4fa960[_0x594c3c(0x37f)]][_0x594c3c(0x159)]++,_0x4fa960['id']&&(_0xb989f1[_0x4fa960['code']]['terceros'][_0x594c3c(0x13d)](_0x4fa960['id']),_0x15c235[_0x594c3c(0x13d)](_0x4fa960['id'])),_0x4f411c+=_0x4fa960[_0x594c3c(0x182)],_0x26a5df+=_0x4fa960['deb'];});const _0x5683f9=Object[_0x487dd9(0x16b)](_0xb989f1);document[_0x487dd9(0x366)+'ById'](_0x487dd9(0x3bf)+'65')[_0x487dd9(0x319)]['toggle']('hidden',_0x5683f9['length']>0x0);const _0x9dec1b=document['getElement'+_0x487dd9(0x2be)]('alertOk');if(parsedAccounts[_0x487dd9(0x208)]>0x0)_0x9dec1b[_0x487dd9(0x319)]['remove']('hidden'),document['getElement'+_0x487dd9(0x2be)](_0x487dd9(0x2b9)+'t')['innerHTML']=_0x487dd9(0x2a5)+_0x5683f9[_0x487dd9(0x208)]+(_0x487dd9(0x1df)+'s</strong>'+'\x20con\x20<stro'+'ng>')+parsedAccounts['length']+('\x20movimient'+_0x487dd9(0x149)+'>\x20de\x20')+_0x15c235['size']+('\x20terceros.'+'\x20Retención'+_0x487dd9(0x1d7)+'rong>$')+fN(_0x4f411c-_0x26a5df)+'</strong>';else _0x9dec1b[_0x487dd9(0x319)][_0x487dd9(0x13d)]('hidden');document[_0x487dd9(0x366)+_0x487dd9(0x2be)](_0x487dd9(0x30a))[_0x487dd9(0x239)]='\x0a\x20\x20\x20\x20<div\x20'+_0x487dd9(0x326)+'t-card\x20blu'+_0x487dd9(0x198)+'ass=\x22val\x22>'+_0x5683f9[_0x487dd9(0x208)]+('</div><div'+_0x487dd9(0x259)+'l\x22>Subcuen'+_0x487dd9(0x173)+'/div>\x0a\x20\x20\x20\x20'+'<div\x20class'+'=\x22stat-car'+'d\x20green\x22><'+'div\x20class='+'\x22val\x22>')+parsedAccounts['length']+('</div><div'+_0x487dd9(0x259)+_0x487dd9(0x1ea)+'ntos</div>'+'</div>\x0a\x20\x20\x20'+_0x487dd9(0x279)+_0x487dd9(0x1e2)+_0x487dd9(0x399)+'<div\x20class'+_0x487dd9(0x114))+_0x15c235['size']+(_0x487dd9(0x139)+'\x20class=\x22lb'+_0x487dd9(0x394)+'s</div></d'+'iv>\x0a\x20\x20\x20\x20<d'+'iv\x20class=\x22'+_0x487dd9(0x3a7)+'red\x22><div\x20'+_0x487dd9(0x1c7)+_0x487dd9(0x334))+fN(_0x4f411c-_0x26a5df)+(_0x487dd9(0x139)+'\x20class=\x22lb'+'l\x22>Retenci'+'ón\x20neta</d'+'iv></div>');let _0x28f259='<table\x20cla'+_0x487dd9(0x361)+'ble\x22><thea'+'d><tr><th>'+'Cuenta</th'+_0x487dd9(0x1fa)+_0x487dd9(0x22e)+_0x487dd9(0x2a7)+_0x487dd9(0x195)+'s</th><th\x20'+_0x487dd9(0x2ea)+_0x487dd9(0x2f2)+_0x487dd9(0x1ac)+'><th\x20class'+'=\x22text-rig'+_0x487dd9(0x347)+'os</th><th'+'\x20class=\x22te'+_0x487dd9(0x35c)+_0x487dd9(0x1ec)+'/tr></thea'+'d><tbody>';_0x5683f9[_0x487dd9(0x355)]((_0x4d5a79,_0x5f17f1)=>_0x4d5a79[_0x487dd9(0x37f)][_0x487dd9(0x1aa)+'are'](_0x5f17f1['code']))[_0x487dd9(0x27f)](_0x5e4f10=>{const _0xca7da=_0x487dd9;_0x28f259+='<tr><td\x20cl'+'ass=\x22mono\x20'+_0xca7da(0x31f)+_0x5e4f10['code']+_0xca7da(0x15b)+_0x5e4f10['name']+('</td><td\x20c'+'lass=\x22text'+_0xca7da(0x2cb))+_0x5e4f10['count']+(_0xca7da(0x267)+_0xca7da(0x39d)+_0xca7da(0x2cb))+_0x5e4f10[_0xca7da(0x246)]['size']+(_0xca7da(0x267)+_0xca7da(0x39d)+_0xca7da(0x33a)+_0xca7da(0x320))+fN(_0x5e4f10[_0xca7da(0x363)])+('</td><td\x20c'+_0xca7da(0x39d)+_0xca7da(0x33a)+'o\x22>')+fN(_0x5e4f10['cre'])+(_0xca7da(0x267)+'lass=\x22text'+'-right\x20mon'+_0xca7da(0x2ae))+fN(_0x5e4f10[_0xca7da(0x182)]-_0x5e4f10['deb'])+'</td></tr>';}),_0x28f259+='</tbody></'+'table>',document['getElement'+'ById']('previewTab'+'le')[_0x487dd9(0x239)]=_0x28f259,document['getElement'+_0x487dd9(0x2be)]('previewCar'+'d')[_0x487dd9(0x338)+_0x487dd9(0x327)]({'behavior':_0x487dd9(0x16c),'block':_0x487dd9(0x3d7)});}function goToStep3(){const _0x3587df=_0x2c1b43;if(!parsedAccounts[_0x3587df(0x208)]){exoToast(_0x3587df(0x1cc)+_0x3587df(0x17f),'warning');return;}goStep(0x3),buildMappingTable();}function autoMapAccount(_0x178eaf,_0x355f51){const _0x4a76c4=_0x2c1b43,_0x1c5690=norm(_0x355f51),_0x28fab5=String(_0x178eaf);for(const _0x46818a of DEFAULT_MAP)if(_0x28fab5['startsWith'](_0x46818a['prefix']))return{..._0x46818a};for(const _0x10833a of DEFAULT_MAP){const _0x5c522e=KEYWORDS[_0x10833a['concepto']]||[];for(const _0x102b0c of _0x5c522e){if(_0x102b0c[_0x4a76c4(0x2f8)]('.*')){if(new RegExp(_0x102b0c)[_0x4a76c4(0x225)](_0x1c5690))return{..._0x10833a,'prefix':_0x28fab5};}else{if(_0x1c5690['includes'](_0x102b0c))return{..._0x10833a,'prefix':_0x28fab5};}}}if(_0x28fab5[_0x4a76c4(0x389)]('2367'))return{'prefix':_0x28fab5,'name':'Retención\x20'+'IVA','concepto':'reteiva','aplica':_0x4a76c4(0x391),'tarifa':0xf,'casPJb':null,'casPJr':0x83,'casPNb':null,'casPNr':0x83};if(_0x28fab5['startsWith']('2368'))return{'prefix':_0x28fab5,'name':'Retención\x20'+_0x4a76c4(0x322),'concepto':_0x4a76c4(0x3ba),'aplica':_0x4a76c4(0x391),'tarifa':0x0,'casPJb':null,'casPJr':0x87,'casPNb':null,'casPNr':0x87};return{'prefix':_0x28fab5,'name':_0x355f51||'Otros','concepto':'otros','aplica':_0x4a76c4(0x391),'tarifa':3.5,'casPJb':0x29,'casPJr':0x36,'casPNb':0x5c,'casPNr':0x6c};}function extractTarifa(_0x501f59){const _0x558551=_0x501f59['match'](/(\d+[.,]?\d*)\s*%/);return _0x558551?parseFloat(_0x558551[0x1]['replace'](',','.'))||null:null;}function buildMappingTable(){const _0x5172c2=_0x2c1b43,_0x35015e={};parsedAccounts['forEach'](_0x4a2320=>{const _0x145fb3=_0x2539;if(!_0x35015e[_0x4a2320['code']])_0x35015e[_0x4a2320[_0x145fb3(0x37f)]]={'code':_0x4a2320['code'],'name':_0x4a2320[_0x145fb3(0x1e8)],'totalDeb':0x0,'totalCre':0x0,'count':0x0};_0x35015e[_0x4a2320[_0x145fb3(0x37f)]][_0x145fb3(0x1f9)]+=_0x4a2320['deb'],_0x35015e[_0x4a2320['code']]['totalCre']+=_0x4a2320['cre'],_0x35015e[_0x4a2320['code']]['count']++;});const _0x51f618=Object['values'](_0x35015e)[_0x5172c2(0x355)]((_0x5f1046,_0x1d4493)=>_0x5f1046['code']['localeComp'+_0x5172c2(0x122)](_0x1d4493['code']));mappings=_0x51f618[_0x5172c2(0x262)](_0x1d6b40=>{const _0x39d18d=_0x5172c2,_0x120463=autoMapAccount(_0x1d6b40[_0x39d18d(0x37f)],_0x1d6b40[_0x39d18d(0x1e8)]),_0x1d44d6=extractTarifa(_0x1d6b40['name']);return{..._0x1d6b40,..._0x120463,'userTarifa':_0x1d44d6!==null?_0x1d44d6:_0x120463['tarifa']};});const _0x544f43=DEFAULT_MAP[_0x5172c2(0x262)](_0x163422=>'<option\x20va'+'lue=\x22'+_0x163422[_0x5172c2(0x300)]+'\x22>'+_0x163422['name']+_0x5172c2(0x12b))[_0x5172c2(0x37e)]('')+(_0x5172c2(0x377)+_0x5172c2(0x1d4)+_0x5172c2(0x220)+_0x5172c2(0x2a1)+'ption><opt'+'ion\x20value='+'\x22timbre\x22>R'+'etención\x20T'+_0x5172c2(0x39a)+_0x5172c2(0x296)+_0x5172c2(0x214)+'gnorar\x22>—\x20'+'Ignorar\x20—<'+'/option>'),_0x4be677=document[_0x5172c2(0x366)+'ById']('mapBody');_0x4be677[_0x5172c2(0x239)]='',mappings[_0x5172c2(0x27f)]((_0x1a5f4c,_0x282955)=>{const _0x24f882=_0x5172c2,_0x458ba7=_0x1a5f4c['totalCre']-_0x1a5f4c[_0x24f882(0x1f9)],_0xb6581d=_0x1a5f4c[_0x24f882(0x3a1)]>0x0?Math['round'](_0x458ba7/(_0x1a5f4c['userTarifa']/0x64)):0x0,_0x2ad780=_0x1a5f4c[_0x24f882(0x2d5)]==='PJ'?'<span\x20clas'+'s=\x22badge\x20b'+'adge-pj\x22>P'+_0x24f882(0x28d):_0x1a5f4c[_0x24f882(0x2d5)]==='PN'?'<span\x20clas'+_0x24f882(0x2f7)+_0x24f882(0x1bf)+'N</span>':_0x24f882(0x1d1)+'s=\x22badge\x20b'+_0x24f882(0x38c)+_0x24f882(0x146)+_0x24f882(0x2f5);_0x4be677['innerHTML']+=_0x24f882(0x154)+_0x24f882(0x2da)+'fw600\x22>'+_0x1a5f4c['code']+_0x24f882(0x15b)+_0x1a5f4c[_0x24f882(0x1e8)]+(_0x24f882(0x226)+_0x24f882(0x2b4)+_0x24f882(0x31c)+_0x24f882(0x252)+_0x24f882(0x2e0))+_0x1a5f4c[_0x24f882(0x159)]+(_0x24f882(0x1de)+_0x24f882(0x21f)+'<td><selec'+'t\x20onchange'+_0x24f882(0x38d)+'p(')+_0x282955+(',\x27c\x27,this.'+_0x24f882(0x15d))+_0x544f43[_0x24f882(0x356)](_0x24f882(0x392)+_0x1a5f4c['concepto']+'\x22','value=\x22'+_0x1a5f4c[_0x24f882(0x300)]+'\x22\x20selected')+('</select><'+'/td>\x0a\x20\x20\x20\x20\x20'+'\x20<td\x20class'+'=\x22text-cen'+'ter\x22>')+_0x2ad780+('</td>\x0a\x20\x20\x20\x20'+_0x24f882(0x26e)+'ut\x20type=\x22n'+_0x24f882(0x1af)+'ue=\x22')+_0x1a5f4c[_0x24f882(0x3a1)]+(_0x24f882(0x3a6)+'01\x22\x20min=\x220'+'\x22\x20max=\x22100'+'\x22\x20onchange'+'=\x22updateMa'+'p(')+_0x282955+(_0x24f882(0x2d9)+_0x24f882(0x16a)+'yle=\x22width'+_0x24f882(0x1f1)+'d>\x0a\x20\x20\x20\x20\x20\x20<'+'td\x20class=\x22'+_0x24f882(0x1dd)+'\x20mono\x20fw60'+_0x24f882(0x3d1))+fN(_0x458ba7)+('</td>\x0a\x20\x20\x20\x20'+_0x24f882(0x2b6)+_0x24f882(0x26a)+'ght\x20mono\x22\x20'+'id=\x22b')+_0x282955+'\x22>$'+fN(_0xb6581d)+(_0x24f882(0x1ce)+_0x24f882(0x2b6)+_0x24f882(0x35f)+_0x24f882(0x39c)+'>')+(_0x1a5f4c[_0x24f882(0x35d)]||_0x1a5f4c[_0x24f882(0x33d)]||'—')+('</td>\x0a\x20\x20\x20\x20'+'\x20\x20<td\x20clas'+'s=\x22text-ce'+_0x24f882(0x39c)+'>')+(_0x1a5f4c[_0x24f882(0x32c)]||_0x1a5f4c['casPNr']||'—')+'</td></tr>';});const _0xa7deb0=new Set(),_0x1e0f44=new Set();parsedAccounts['forEach'](_0x413020=>{const _0x5e5213=_0x5172c2;if(_0x413020['isPJ'])_0xa7deb0[_0x5e5213(0x13d)](_0x413020['id']);else _0x1e0f44[_0x5e5213(0x13d)](_0x413020['id']);}),document['getElement'+_0x5172c2(0x2be)](_0x5172c2(0x3db)+'t')[_0x5172c2(0x314)+'t']=mappings['length'],document['getElement'+'ById']('pjCount')[_0x5172c2(0x314)+'t']=_0xa7deb0[_0x5172c2(0x22c)],document['getElement'+'ById']('pnCount')[_0x5172c2(0x314)+'t']=_0x1e0f44[_0x5172c2(0x22c)];}function updateMap(_0x5da481,_0x34297b,_0x2e89a8){const _0x1c57ba=_0x2c1b43;if(_0x34297b==='c'){const _0x133839=DEFAULT_MAP[_0x1c57ba(0x10f)](_0x4f5b5f=>_0x4f5b5f['concepto']===_0x2e89a8);if(_0x133839)Object['assign'](mappings[_0x5da481],_0x133839,{'concepto':_0x2e89a8});else{if(_0x2e89a8===_0x1c57ba(0x1a1))Object[_0x1c57ba(0x232)](mappings[_0x5da481],{'concepto':_0x1c57ba(0x1a1),'casPJr':0x83,'casPNr':0x83,'casPJb':null,'casPNb':null});else{if(_0x2e89a8==='timbre')Object[_0x1c57ba(0x232)](mappings[_0x5da481],{'concepto':_0x1c57ba(0x3ba),'casPJr':0x87,'casPNr':0x87,'casPJb':null,'casPNb':null});else mappings[_0x5da481]['concepto']=_0x1c57ba(0x19d);}}}if(_0x34297b==='t')mappings[_0x5da481]['userTarifa']=parseFloat(_0x2e89a8)||0x0;const _0x1d9e11=mappings[_0x5da481],_0x26b84=_0x1d9e11['totalCre']-_0x1d9e11['totalDeb'],_0x22677b=_0x1d9e11['userTarifa']>0x0?Math['round'](_0x26b84/(_0x1d9e11[_0x1c57ba(0x3a1)]/0x64)):0x0,_0x49bc4b=document[_0x1c57ba(0x366)+'ById']('b'+_0x5da481);if(_0x49bc4b)_0x49bc4b[_0x1c57ba(0x314)+'t']='$'+fN(_0x22677b);}function goStep4(){goStep(0x4),calc350(),render350(),renderDet();}function _0x473c(){const _0x1a65dd=['oJyWChGIpJWVDa','BgvZpc9ZCgfUpG','oInInMq3ytG7zG','lNrHyI1JB250zq','BMvZihrHCMPLDa','vMvUDgfZ','uhjHy3rPy2fKyq','iM9Uq29Sq2HHBG','Dg90ywXezwi','pJX0Ad5oB21ICG','otaWo2zVBNqTCW','B3DZCgfUpsi','EcbZB2XPzcaJzq','B3jKzxiTCMLNAa','zw5JAw9UzxmGyq','zgv0ywLSvgfIBa','phrYpJX0AcbZDa','BMnPB25LCYbTW6e','zmoPyML0BW','DgvYy2vYBW','qvy1mq','BNqTC2L6ztO5lG','mJm2ntmW','BgvUz3rO','BNrLCYbLEg9Uzq','igZdRw1PDguGzgu','zw5JACoZBJWVzgK','iZK5oq','CMXHEq','CMv0','vdi3','iNbHzgrPBMC6nq','j0PLDejYywLUCW','Axy+','ignHCMDHCIbSyq','BIb2ywX1zt0IAq','zMXHDe1HCa','B3nWywnLo2jVCG','zxi7CgfKzgLUzW','y3vLBNrH','pc90zd4','zhjHz2XLyxzL','cIaGicaGicaGpa','vdm4','DgfSicGXmZGPpa','zMLSDgvY','Dgq+cIaGicaGia','DMeIpLjLDgvUyW','phrKihrPDgXLpq','mIbSzxzLBhm6ia','pgrPDIbZDhLSzq','CZ0IDMfSiJ4','DgvZDa','idXZCgfUihn0Eq','ihbSyw50AwXSyq','nfnss1b6Aa','EMvYBW','mJm2nty4','quCXoa','C2L6zq','AhjLzG','ztWVDgG+phrOpG','quiZna','AxPLoJe2ChGIpG','CMf6B24GC29JAq','yxnZAwDU','Axy+cIaGicaGia','mJm2ntyW','C2vWDgLLBwjYzq','rwWGyxjJAgL2BW','CMvHza','vdmZ','Aw5Uzxjive1m','BgvMDdOXChGGCW','ChjLDMLLD0nHCG','rMvICMvYBW','y2zNtw9UDgG','quiZmq','qvy1mG','quCYoq','y2nPW7nU','Axy+pc9KAxy+cG','ywDVC3rV','quC0mG','y3vLBNrHignVBG','DgvYy2vYB3m','ysbYzxrLBMnPW7m','D3jPDgvcDwzMzq','pc9KAxy+cIaGia','ywrKAw5NoJjWEa','Dw5HigrLy2XHCG','y29SDw1UoNnWyq','CYbnB25VjYXTBW','yxv0B3jYzxrLBG','mxb4ihnVBgLKia','DhjHDSoPCYbKzwW','iJ48C3bHBIbJBa','C2L6ztOUn3jLBq','BMnPW7nUpc9KAxy','AwrLBNrPzMLJyq','zgrPBMC6mNb4iG','ie1VBM8Nlg1VBG','odG4o2jHy2TNCG','C2vYihzLCMLMAq','ignSyxnZpsjSyG','vdqY','qvy0oq','AgrYuhjLDMLLDW','CMvZDgf1CMfUDa','CYbWB3iGC2vYDG','CgfKu3rHCNq','iJ5dyxmUpc9KAq','twfYEM8','BwfW','BM9Zpc9KAxy+cG','igv4y2vKzsbLBa','qvyXoq','ideZnsK','pc90zd48DgqGyW','rMfSDgfUignVBa','quCZmq','CZ0IDgv4Dc1YAq','y29Uy2vWDg9Z','y29SB3i6i2mWma','BtOYChGGC29SAq','ica8Dgq+pgLUCa','zd48Dhi+phrOpG','B3vUzdOJzdvLoa','BNrVCW','y3jLyxrLrwXLBq','BM9ZCgfJztTIBW','y29KAwDV','yxmGtMfJAw9Uyq','iIbZDhLSzt0IyG','quCZnW','yxnZpsj2ywWIpG','idXKAxyGy2XHCW','B25SB2fK','rwO6idXZDhjVBG','mZGZ','qvyZmq','z3jVDw5KoInLnq','zM9YrwfJAa','zcaJzwvLo3bHza','EdTIB3jKzxiTDa','AgLKzgvU','zgL2pGOGicaGpa','zgnLogy0o2jVCG','Dw5KzwzPBMvK','CMvNywW','rmoPyML0B3m','zxiTCMLNAhq6mq','icaGicaGpgrPDG','BMnPB25LCYbjvG','rxjYB3i6ia','qsbYzxnWB25Zyq','sJWVC3bHBJ4','mJm2nte1','vdqW','BNrLCJTQDxn0Aq','ihjPzMfZ','zw5HAMvUywnPBW','quCZmG','oIDkzxrcCMfPBG','oInLnwyWzta7Ca','Aw9UpJXVChrPBW','y2zNwwvHCG','pLbHz29Zl2fIBW','zwXLy3q+cIaGia','iZfHnwmXyq','icaGphnLBgvJDa','mJm2nty1','mtm4pc9KAxy+cG','DwfS','CMvXDwLYzwq','z3jPzdTNCMLKlq','ACoZBIbjvKe8l28','CMLKo2DYAwqTDa','oJjWEci+uMv0zq','CMvHzefZqxjYyq','phn0CM9UzZ4','CYbjvKeGzw4Gzq','tw92lJWVDgG+pa','vhjHBNnHy2nPBW','mJm2ntK5','vdqZ','zM9UDc1ZAxPLoG','C3r5Bgu9iMDYAq','BZWVDgG+phrOpG','BYbMDZyWmci+','y29TAxnPB25LCW','BM8IpG','Dg9Zpc9LBt4','B24Gy29UDMvUAq','pc90Ad4','Bgu9iMnVBg9YoG','BM9YBwfSAxPL','ica8DgqGy2XHCW','B3r0B206mxb4ia','DJ4kicaGidWVza','ywXLCNrpA1rLEa','Dg9mB2nHBgvtDa','CM9ZihKGChjVza','mJm2ntqW','ywn0AxzL','qNLjza','yMfJA2DYB3vUza','pgrPDJ48C3bHBG','zgvYlxjPz2H0oG','quiXoq','tefsqu5ursaTlq','lwnHCMqGz3jLzq','pGOGicaGica8za','zM9UDc13zwLNAa','B24+','icaGpgrPDIbJBa','AwDODci+qMfZzq','yxjYzw5Kyw1Pzq','lwnLBNrLCIi+','CMvTB3zLq2HPBa','Dc1ZAxPLoJLWEa','uMvNywZdRwfZihK','Eg1SzM9YBwf0CW','phrHyMXLpG','zM9YBxvSyq','qui0mq','C3rLBMvY','C3bSAxq','yxbSAwnH','ywWIpG','phrYignSyxnZpq','y2LVCW','lcD0jYX0AgLZlG','yxnZpsjTB25Via','BM9TyNjLihrLCG','ugvUC2LVBMvZ','cIaGica8zgL2ia','yM9KEq','rvjtt05buYbkvq','iJ4O','CI1YAwDODdOXCa','igv4DgvYAw9Ypa','CMf3uhjLDMLLDW','ChjLDMvUDerLzG','CY12ywW','DgvUy2NdS248l3q','Bci+ns4GtKLupa','vgv4Da','ChGGC29SAwqGiW','y2XHC3m9iNrLEa','qvy0ma','sgLKCM9JyxjIDq','sg9UB3jHCMLVCW','BgfIzwW','quiYmG','qvy1na','DgLLCW','Dc1YAwDODci+ra','C2XPy2u','quCZnG','yw4+','CMrLCI1Szwz0oG','CZ0IyMfKz2uGyG','Aw5JBhvKzxm','BM92AwvTyNjL','CxvLCNLtzwXLyW','mJm2ntCW','lNrHyG','nJC3odvtwvzjzeS','m3b4','pKnHCY48l2rPDG','y29Uy2vWDg8','ihbHz29ZigXHyG','CYbLBIbSysbgDq','CMLUzW','ihnVBgLKicm5oq','y2vYBW','A2DYB3vUzdOJza','y2NdS24GC2vYDMK','oJeXChG7zM9UDa','quCYma','zMLSzvn0yxrZ','vdi2','iJ4kicaGicaGpa','qvyYoa','psjKAwfUlxjVDW','yxqOncWXzNiPoW','zJvMnwy1iJ5dBW','qvy0mG','iMjHy2TNCM91BG','nZu2nteWme9xEuf6Ba','Dgv4DenVBNrLBG','zZOYChGIpLjLDa','B3jKzxiTDg9WoG','C3m9iMnVBMnLCa','Bsi+cIaGica8iq','y2XHC3nmAxn0','zcaJotK5o2jVCG','yw4+phnWyw4GyW','iZK5otTMB250lq','Ag9UB3jHCMLVCW','C3r5Bgu','zNC2mdaIpG','BYi+','zg9JDw1LBNq','vgLTyNjL','zxH0zxjPB3i','oJvWEca0ChG7zG','B2X1Bw5ZoJfMCG','y2XHC3m9iNn0yq','vMLLDW','AwqGi2rKzdTMBW','qvyZoa','pc90ywjSzt4','psjKAwfUlxnLyW','y2fZuePY','oInLzgy0zMy7zG','nJTIB3jKzxiTBa','o2zVBNqTC2L6zq','ohb4o2zVBNqTDW','CM91BMq','Bwf0y2G','jMfTCdS','iJ4K','psjKAwfUlwzVCG','BhvLpsiTmsi+4Ocu','psjKAxnWBgf5oG','C2nYB2XSsw50BW','AxnqsG','lxjPz2H0ig1VBG','lxDLAwDODdO3ma','lw9MzMLJzwrVyW','y2fZue5I','Aw50zwXLy3r1yq','DgXLiJ5ezwnSyq','ica8zgL2ihn0Eq','ndy0mJGZmgfLt3vVCW','CMLNAhq6mxb4ia','vdmX','yxnZpsjKAwfUlq','uMvUzgLTAwvUDa','y3jLzq','AhqIpKnYW6LKAxq','qxjYzw5Kyw1Pzq','icm5otK7CgfKza','ChG7y29SB3i6iW','qvy0mW','l2rPDJ48l2rPDG','u0Lox05jva','DgvTCgXHDgvFmW','BIa0o2jHy2TNCG','zgvIAxq','y3jLzgL0B3m','qvyZnG','BgvZpc9KAxy+','ls0Gve9qiejbuG','C29YDa','CMvWBgfJzq','ntzvqLPmCuq','Axy+cIaGica8lW','z2f0B3jPyxm6cG','oda3mZfZsw5ytuW','qvyXoa','EhqTCMLNAhqIpG','y2fZuePI','zgvIAxrV','CZ0IDgv4Dc1Jzq','zxmTq08','C3m9iM1HCc10yq','pGOGicaGpgrPDG','zgvI','B250lxDLAwDODa','B3iGz2vUzxjHza','z2v0rwXLBwvUDa','C3rLigrVy3vTzq','lxnPEMu6n3b4oW','suq8l3rOpJX0Aa','vdi0','t3rYB3mGy29UyW','mNb4ihnVBgLKia','BgfZDeLUzgv4tW','CM91BMq6i2vLzq','zgL2ihn0EwXLpq','idiWie1clG','jMD0oW','zg93BMXVywq','uMv0zw5JAw9Uzq','C2vYDMLJAw8','u2HLzxroyw1LCW','Dc1JyxjKigjSDq','pg9WDgLVBIb2yq','m3b4idzWEdTMBW','qwDVC3rV','zgf0yvrYyw5ZzG','cIaGica8l2rPDG','B250lxnPEMu6oa','qvyYma','AM9PBG','y29Kzq','q2fZlLi8l3rOpG','cIaGicaGidX0za','pc9ZCgfUpJWVza','mJiWmq','DMfSDwu','z2v0v29YA3nOzq','zxHVBMvYywrV','C2fTCf8','suXbreftpc9KAq','C3rHCNrZv2L0Aa','zwXF','qvy1ma','ywrNzs1IB3rOiG','psj1CgrHDgvnyq','lNn0zxaTCgLSBa','qvyYnG','ugfNB3mGywWGzq','qu1ct1m','DMfSDwu9iG','BgfZCZ0IC3rHDa','Bci+vgvYy2vYBW','DdTWywrKAw5NoG','DhLSzt0IzM9UDa','DdO0mdaIpKrPCG','C2nYB2XSvg8','CMqGyw1IzxiIpG','Aw1ICMu8l29WDa','zxH0zxjPB3jFCW','BNrLCIbTB25ViG','BgfZCZ0IDgv4Da','DgHPCMqGCgfYDa','Bwf4','zwnJACoZBIbKzsa','DxnLCLrHCMLMyq','B2XPzcaJy2nJiG','DhjPBq','ChGGmtbWEci+','DgfIBgu','iIbZDgvWpsiWlG','C3rHDc1JyxjKia','BNqTzMfTAwX5oG','CYbPBxb1zxn0BW','qvyYnq','AxrV','l3nWyw4+','B2WG','CMvKDwnL','quiYnW','icaGpgrPDIbZDa','B3rYB3m','nhb4o2nVBg9YoG','ywrKrxzLBNrmAq','zguGy29UC3rYDq','y29UC3rYDwnJAq','pGOGicaGpceTlq','uMvNywZdRwfZ','y29TCgXLBwvUDa','rw5LCM8','DgLTyNjL','quCZoq','Ad48DgG+q2fZlG','oJnWEcaYChG7zG','phrKignSyxnZpq','ywXLCNroB3qYmW','is0TienptfvntG','BIbJBgfZCZ0IDG','y2fZue5Y','BI1PDgvTCZPJzq','tg90zxldRwfZihK','BwLU','AwqGiZaWmdTMBW','y2fTzw50zs4Grq','AwfSpc9ZCgfUpG','pc90zd48DgqGCG','vdiY','ldfMCIKGCMvWzq','ignSyxnZpsjJyq','y2fZ','r2vUzxjHBMrVlG','AwfSlIbezwjLia','mtKWmtu4nLbQy2PZEG','mci+ja','BIbHy3rPDM9Zia','yxqTy2fYzcbHBq','D2fYBMLUzW','y2zNrw1WCMvZyq','BwfYEM8','C3rHCNq','qu4UEgXZEa','uMvUDgfZigrLia','B2n0DwjYzq','BwfWCgvKq291BG','yw4Tzgf0B3mIpG','CMvTB3zL','qvyZnW','A2DYB3vUzdOJzq','DJ48C3bHBIbJBa','zMLUza','yxjYzw5K','EwXLpsj0zxH0lq','rwPLBxbSB19szq','Bg90zxjPyq','psj2ywWIpG','BgvTzw50yxjPBW','zZOZChGGohb4oW','yMXLiJ48DgHLyq','qvyZna','y3ldQwrPDg9Z','zgfZ','y2u4zJq7yM9Yza','DJ4kicaGicaGpa','quCYoa','mJm2oa','C3vLBgrV','ihn0EwXLpsjIyq','zMLUzeLUzgv4','yxjL','z2uOjW','psjSyMWIpJeXlG','iIbZzwXLy3rLza','Dc1ZAxPLoJeWCa','qvyYna','icaGidXKAxyGyW','A2v5','zwvLo3bHzgrPBG','pc9VChrPB24+','BNrHihKGy29TCa','CMv0zw5JAw9Uzq','qwjYAwW','quCZna','DgvTCgXHDguTyW','y2fSy1bYB3bLCG','ywjYAwW','qxv0B3jYzxrLBG','z2v0q2vSBa','pJm1mdWVzgL2pG','C3bHBIbJBgfZCW','CY48l2rPDJ4kia','oJyWma','pc9KAxy+pgrPDG','mJm2ntq1','zw50','quiYma','ywrK','zwz0iJ5esufopa','uJWVC3rYB25NpG','BMnLChrVpc9KAq','y2fYyM9U','BMC6mNb4iJ5dyq','CMvZDwX0','mJm2ntiW','pc9ZCgfUpJWVDa','pKfTyM9Zpc9ZCa','ifjHESoZBIbZB2m','ywq+phrIB2r5pG','B3m8l3n0CM9UzW','AxyGy2XHC3m9iG','ica8l2rPDJ4','quiZnG','qvyYoq','quiZnW','Bg9Hza','B2XVCJO','DgfYAMv0yq','BhvTBNm6mJaWCa','ndaZmZm0BMnMt3H0','phrYpJX0zcbJBa','vc4P','zxn0yxm','yM9YzgvYlxjPzW','DhjHyMfQBW','y291BNq','CgvUC2LVBG','pc90zd48Dgq+','Bw46C3bHBIa0oW','DMfSDwuPiJ4','vdmY','mJm2ntC1','rgLJAwvTyNjL','EgnLC28','CMfJACoZBIbKzsa','zw50CMLLCW','y2vKDwXH','quiZma','CMvUzgLTAwvUDa','BNrVCYaOBxvLyG','ywXPz246CMLNAa','lwnLBNrLCIiGCG','DMfSDwuPiIbZDa','DMfSDwvZ','C21VB3rO','zw5JAw9Uzxm8lW','y2XPy2S','q29TAxnPB25LCW','qvyZoq','mJm2ntGW','CMfKB3mGkefYDa','DgfZpc9KAxy+pa','pc9KAxy+','AwnVBG','CgfYDgLJAxbHyW','ignSyxnZpsjZDa','yxjYyxK','osi+rMLSytWVDa','B2jQzwn0','zt0IzM9UDc13zq','B250lxnPEMu6mq','quiZoa','y3rvuKW','Aw1Pzw50B3mU','rgL2AwrLBMrVCW','BwvZC2fNzq','y3jL','yxbWzw5Kq2HPBa','zMe7yM9YzgvYlq','oI43CMvTiJ4','DdOXChGGC29SAq','zZOYChGIpKnHCW','BNrH','mJm2ntm1','quCYna','CgfYzw50rwXLBq','t3rYB3mGCgfNBW','y2TNCM91BMq6iW','oInMmgy4zwy7zG','AgLUDhm','zdq7yM9YzgvYlq','Dg9YqwXS','CMf6W7nUihnVy2K','quCYnW','yxv0B3jLDf92zq','DgG+vgvYy2vYBW','idWVzgL2pG','C29SAwqGiZK5oq','zsi+pgrPDIbJBa','y2zNtML0','AgLKCM9JyxjIDq','ksaTlt4kicaGia','y2XVC2vZDa','AwDUB3jHCG','AgrYuM93u2vSzq','y29TAxnPB24','BgLNBJPYAwDODa','CMv0zwL2yq','quC0mq','quiYoa','CZ0IzgLHBI10Aq','igzPBgXLza','idiWmhb4iduWCa','rJm1mf9svevF','ywXXDwLSzxi','AwqGi2vLztTWyq','Bg9JywXLq29TCa','8j+tJca','W6LIAxrVCZWVDgG','l2rPDJ4','pc90CJ48l3rOzq','Dw1IzxiIihzHBa','q29TChjHCW','qsbWyCoTC2vZigm','Aw5NoJnWEci+ua','DMfYkc0Tyw1Izq','AwqGiZK5otTWyq','nZj1AgLluKy','C29SAwqGi2uWzq','C3vIC3rYAw5N','kc0Pie1LBM9Zia','jdWVzgL2pGOGia','x0v4B2DLBMfesq','Bci+uMv0lIbszq','zMLSzxm','W6LIAxrVl2nYW6LK','zMvICMvYBW','ywrNzs1WBIi+ua','lIbTAw5LCM9Z','zwLNAhq6nZaWoW','Dw1UyxmGB2jSAq','nty5ntKWmNvSD3vfqq','i2vLztS','sw1WDwvZDg9Zpa','oJfWEcbZB2XPza','y2XHC3m9iNzHBa','B3jHBgvZ','y2fKBYb5ihbYzq','qsbWyCoTC2vZihm','t2n0DwjYzq','tM8GAgf5ig1VDG','CM9Z','pc90zd4kicaGia','DhLSzt0ICgfKza','qvy1mW','phnWyw4Gy2XHCW','Dw1LBNqUC3bYzq','vg90ywWGCMv0zq','BhvLpsjYzxrLAq','quCYnG','BwfWCgvK','ig5LDge6idXZDa','pgrPDIbJBgfZCW','khzHy8oTysK','C2vUDgfKBYbHia','quC0ma','zt0ICgfKzgLUzW','Dgv4Dc1YAwDODa','ktWVC3bHBJ48lW','ihn1yMn1zw50yq','i2yWzJbMmci+cG','Aw5NoJHWEcaXmG','CZ0IC3rHDc1Jyq','yxvSDa','zhjHz292zxi','yMfQBW','ywXPz246y2vUDa','quiZmW','BMfTzq','quCYnq','Bci+tw92Aw1Pzq','rMLSysa','tMv0BZWVDgG+pa','pgvTpNnPBIbKyq','DgfYz2v0','ChGIpJK4mc4Gua','zgL2ignSyxnZpq'];_0x473c=function(){return _0x1a65dd;};return _0x473c();}function calc350(){const _0x10f38d=_0x2c1b43,_0x5d9f07={};for(let _0xcf51e9=0x1d;_0xcf51e9<=0x9b;_0xcf51e9++)_0x5d9f07[_0xcf51e9]=0x0;const _0x51030a={};mappings[_0x10f38d(0x27f)](_0x275a1e=>{const _0x49037e=_0x10f38d;_0x51030a[_0x275a1e[_0x49037e(0x37f)]]=_0x275a1e;});const _0x158524={};parsedAccounts[_0x10f38d(0x27f)](_0xbf4a89=>{const _0x5b0179=_0x10f38d,_0x27ac91=_0x51030a[_0xbf4a89[_0x5b0179(0x37f)]];if(!_0x27ac91||_0x27ac91['concepto']===_0x5b0179(0x19d))return;const _0x4730bc=_0xbf4a89['cre']-_0xbf4a89[_0x5b0179(0x363)];if(_0x4730bc===0x0)return;const _0xc5bb1d=_0x27ac91[_0x5b0179(0x3a1)]||0x0,_0x1e899f=_0xc5bb1d>0x0?Math[_0x5b0179(0x331)](_0x4730bc/(_0xc5bb1d/0x64)):0x0;let _0xf25f43,_0x459978;if(_0xbf4a89[_0x5b0179(0x339)]&&_0x27ac91['casPJr'])_0xf25f43=_0x27ac91['casPJb'],_0x459978=_0x27ac91[_0x5b0179(0x32c)];else!_0xbf4a89[_0x5b0179(0x339)]&&_0x27ac91['casPNr']?(_0xf25f43=_0x27ac91['casPNb'],_0x459978=_0x27ac91[_0x5b0179(0x3c2)]):(_0xf25f43=_0x27ac91[_0x5b0179(0x35d)]||_0x27ac91[_0x5b0179(0x33d)],_0x459978=_0x27ac91[_0x5b0179(0x32c)]||_0x27ac91['casPNr']);if(_0xf25f43)_0x5d9f07[_0xf25f43]=(_0x5d9f07[_0xf25f43]||0x0)+_0x1e899f;if(_0x459978)_0x5d9f07[_0x459978]=(_0x5d9f07[_0x459978]||0x0)+_0x4730bc;const _0xb18fa0=_0xbf4a89['id']||'SIN_ID';if(!_0x158524[_0xb18fa0])_0x158524[_0xb18fa0]={'id':_0xbf4a89['id'],'tercero':_0xbf4a89[_0x5b0179(0x204)],'isPJ':_0xbf4a89[_0x5b0179(0x339)],'conceptos':{}};if(!_0x158524[_0xb18fa0][_0x5b0179(0x26b)][_0x27ac91['concepto']])_0x158524[_0xb18fa0][_0x5b0179(0x26b)][_0x27ac91['concepto']]={'name':_0x27ac91[_0x5b0179(0x1e8)],'base':0x0,'ret':0x0,'cb':_0xf25f43,'cr':_0x459978};_0x158524[_0xb18fa0]['conceptos'][_0x27ac91[_0x5b0179(0x300)]]['base']+=_0x1e899f,_0x158524[_0xb18fa0][_0x5b0179(0x26b)][_0x27ac91[_0x5b0179(0x300)]]['ret']+=_0x4730bc;});for(const _0x566586 in _0x5d9f07)if(_0x5d9f07[_0x566586]<0x0)_0x5d9f07[_0x566586]=0x0;_0x5d9f07[0x81]=0x0;const _0x2fb5da=[0x2a,0x2b,0x2c,0x2d,0x2e,0x2f,0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x39,0x3a,0x44,0x45,0x46,0x47,0x48,0x49,0x4a,0x4b,0x4c,0x5d,0x5e,0x5f,0x60,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6a,0x6b,0x6c,0x6f,0x70,0x79,0x7a,0x7b,0x7c,0x7d,0x7e,0x7f,0x80];_0x5d9f07[0x82]=_0x2fb5da['reduce']((_0x43e8d4,_0x277322)=>_0x43e8d4+(_0x5d9f07[_0x277322]||0x0),0x0)-(_0x5d9f07[0x81]||0x0),_0x5d9f07[0x85]=0x0,_0x5d9f07[0x86]=(_0x5d9f07[0x83]||0x0)+(_0x5d9f07[0x84]||0x0)-(_0x5d9f07[0x85]||0x0),_0x5d9f07[0x88]=(_0x5d9f07[0x82]||0x0)+(_0x5d9f07[0x86]||0x0)+(_0x5d9f07[0x87]||0x0),_0x5d9f07[0x89]=0x0,_0x5d9f07[0x8a]=(_0x5d9f07[0x88]||0x0)+(_0x5d9f07[0x89]||0x0),result350={'cas':_0x5d9f07,'det':_0x158524};}function render350(){const _0x4592c7=_0x2c1b43,_0x4acd28=result350[_0x4592c7(0x3cd)],_0x1645b2=document[_0x4592c7(0x366)+_0x4592c7(0x2be)](_0x4592c7(0x3d5))[_0x4592c7(0x384)],_0x371750=document[_0x4592c7(0x366)+_0x4592c7(0x2be)](_0x4592c7(0x199))['value'],_0x245792=document[_0x4592c7(0x366)+_0x4592c7(0x2be)]('cfgYear')[_0x4592c7(0x384)],_0x3b2cca=document[_0x4592c7(0x366)+'ById']('cfgMonth')[_0x4592c7(0x384)],_0x727d49=['',_0x4592c7(0x3b9),_0x4592c7(0x23c),_0x4592c7(0x261),_0x4592c7(0x12e),'Mayo','Junio','Julio',_0x4592c7(0x379),'Septiembre',_0x4592c7(0x1cb),'Noviembre',_0x4592c7(0x160)][parseInt(_0x3b2cca)]||_0x3b2cca;function _0x4506fc(_0x4faccc){const _0x5cc162=_0x4592c7;return _0x4faccc?_0x4faccc['toLocaleSt'+_0x5cc162(0x303)](_0x5cc162(0x360)):'';}function _0x51041f(_0x17b880){const _0x226ae9=_0x4592c7,_0x2cd35e=_0x4acd28[_0x17b880]||0x0;return'<div\x20class'+'=\x22cas-val'+(_0x2cd35e?_0x226ae9(0x1a5):_0x226ae9(0x229))+'\x22>'+(_0x2cd35e?_0x4506fc(_0x2cd35e):'')+('</div><div'+_0x226ae9(0x3cc)+'s-num\x22>')+_0x17b880+_0x226ae9(0x174);}function _0x485584(_0x3d025c,_0x14f80d){const _0x5cc8ef=_0x4592c7,_0x2ef256=_0x3d025c?_0x4acd28[_0x3d025c]||0x0:0x0,_0x13e86d=_0x14f80d?_0x4acd28[_0x14f80d]||0x0:0x0;return _0x5cc8ef(0x1d8)+'=\x22cas-val'+(_0x2ef256?_0x5cc8ef(0x1a5):'')+'\x22>'+(_0x2ef256?_0x4506fc(_0x2ef256):'')+(_0x5cc8ef(0x139)+_0x5cc8ef(0x3cc)+'s-num\x22>')+(_0x3d025c||'')+('</div><div'+_0x5cc8ef(0x3cc)+_0x5cc8ef(0x2e5))+(_0x13e86d?'\x20filled':'')+'\x22>'+(_0x13e86d?_0x4506fc(_0x13e86d):'')+('</div><div'+'\x20class=\x22ca'+'s-num\x22>')+(_0x14f80d||'')+_0x5cc8ef(0x174);}function _0x446522(_0x1ff425,_0x238c16,_0x3e8580,_0x2e949c,_0x5a3a9e){const _0x555202=_0x4592c7;return _0x555202(0x1d8)+_0x555202(0x30e)+'\x22><div\x20cla'+_0x555202(0x317)+'to\x22>'+_0x1ff425+_0x555202(0x174)+_0x485584(_0x238c16,_0x3e8580)+_0x485584(_0x2e949c,_0x5a3a9e)+_0x555202(0x174);}let _0x157211=_0x4592c7(0x1d8)+_0x4592c7(0x335)+_0x4592c7(0x318)+_0x4592c7(0x354)+'\x20-->\x0a\x20\x20\x20\x20<'+_0x4592c7(0x1f0)+'\x22dian-top\x22'+_0x4592c7(0x2c5)+_0x4592c7(0x14a)+'dian-top-l'+_0x4592c7(0x13e)+'br><span\x20s'+_0x4592c7(0x396)+_0x4592c7(0x368)+_0x4592c7(0x2c6)+_0x4592c7(0x397)+_0x4592c7(0x3a0)+_0x4592c7(0x1c5)+'br>y\x20Aduan'+_0x4592c7(0x275)+_0x4592c7(0x1f2)+_0x4592c7(0x249)+'\x20\x20\x20<div\x20cl'+_0x4592c7(0x344)+'top-center'+'\x22>\x0a\x20\x20\x20\x20\x20\x20\x20'+'\x20<div\x20clas'+_0x4592c7(0x1a4)+_0x4592c7(0x33f)+_0x4592c7(0x162)+_0x4592c7(0x373)+_0x4592c7(0x302)+'ente</div>'+_0x4592c7(0x21b)+_0x4592c7(0x1f0)+'\x22dian-subt'+'itle\x22>Reso'+'lución\x20000'+'031\x20de\x20202'+'4\x20—\x20Borrad'+_0x4592c7(0x365)+'o\x20automáti'+'camente</d'+_0x4592c7(0x233)+'</div>\x0a\x20\x20\x20'+_0x4592c7(0x2c8)+'ass=\x22dian-'+'top-right\x22'+_0x4592c7(0x135)+_0x4592c7(0x37b)+_0x4592c7(0x3b6)+'\x20DATOS\x20DEC'+_0x4592c7(0x2c3)+'>\x0a\x20\x20\x20\x20<div'+'\x20class=\x22di'+_0x4592c7(0x3dc)+'\x0a\x20\x20\x20\x20\x20\x20<di'+_0x4592c7(0x10e)+'ass=\x22lbl\x22>'+'1.\x20Año</sp'+_0x4592c7(0x31b)+'lass=\x22val\x22'+'>'+_0x245792+(_0x4592c7(0x382)+_0x4592c7(0x233)+'<div\x20class'+'=\x22razon\x22><'+_0x4592c7(0x136)+_0x4592c7(0x124)+_0x4592c7(0x147)+_0x4592c7(0x3c8)+_0x4592c7(0x1d1)+'s=\x22val\x22>')+_0x1645b2+('</span></d'+_0x4592c7(0x233)+'<div><span'+'\x20class=\x22lb'+'l\x22>3.\x20Perí'+'odo</span>'+'<span\x20clas'+_0x4592c7(0x224))+_0x3b2cca+'\x20'+_0x727d49+('</span></d'+_0x4592c7(0x233)+_0x4592c7(0x2c0)+'\x20class=\x22lb'+_0x4592c7(0x2e7)+'/span><spa'+_0x4592c7(0x3c1)+_0x4592c7(0x2d6))+_0x371750+(_0x4592c7(0x382)+_0x4592c7(0x358)+_0x4592c7(0x283)+_0x4592c7(0x3c0)+'\x20HEADERS\x20('+_0x4592c7(0x222)+'PJ\x20/\x20PN,\x20t'+'hen\x20Base\x20/'+'\x20Retención'+_0x4592c7(0x19b)+_0x4592c7(0x1d8)+'=\x22dian-sec'+'\x22>A\x20título'+'\x20de\x20impues'+'to\x20sobre\x20l'+'a\x20renta\x20y\x20'+_0x4592c7(0x3b8)+'ario\x20—\x20Ret'+_0x4592c7(0x16d)+'div>\x0a\x20\x20\x20\x20<'+'div\x20style='+'\x22display:g'+_0x4592c7(0x2a2)+'emplate-co'+_0x4592c7(0x152)+'x\x20repeat(4'+_0x4592c7(0x3cb)+_0x4592c7(0x30f)+_0x4592c7(0x2ab)+_0x4592c7(0x330)+_0x4592c7(0x1c1)+'text-align'+':center;bo'+'rder-botto'+_0x4592c7(0x26d)+'d\x20#000\x22>\x0a\x20'+'\x20\x20\x20\x20\x20<div\x20'+_0x4592c7(0x2ac)+'d-row:span'+'\x202;display'+':flex;alig'+_0x4592c7(0x3c3)+_0x4592c7(0x290)+'fy-content'+':center;bo'+'rder-right'+':1px\x20solid'+'\x20#999;padd'+'ing:4px;ba'+_0x4592c7(0x18d)+_0x4592c7(0x310)+_0x4592c7(0x140)+'v>\x0a\x20\x20\x20\x20\x20\x20<'+'div\x20style='+'\x22grid-colu'+_0x4592c7(0x15c)+_0x4592c7(0x2bf)+':#c6dced;b'+'order-righ'+_0x4592c7(0x186)+_0x4592c7(0x31a)+'der-bottom'+_0x4592c7(0x1c6)+_0x4592c7(0x349)+_0x4592c7(0x1b2)+_0x4592c7(0x2df)+'RÍDICAS\x20Y\x20'+'ASIMILADAS'+'</div>\x0a\x20\x20\x20'+_0x4592c7(0x3b0)+'yle=\x22grid-'+_0x4592c7(0x24c)+_0x4592c7(0x34f)+_0x4592c7(0x270)+_0x4592c7(0x190)+'bottom:1px'+_0x4592c7(0x304)+'9;padding:'+'3px\x22>PERSO'+'NAS\x20NATURA'+'LES\x20Y\x20ASIM'+_0x4592c7(0x388)+_0x4592c7(0x11c)+'div\x20style='+_0x4592c7(0x312)+'d:#dce8f4;'+_0x4592c7(0x157)+'ht:1px\x20sol'+_0x4592c7(0x1a9)+_0x4592c7(0x255)+_0x4592c7(0x298)+_0x4592c7(0x263)+_0x4592c7(0x289)+_0x4592c7(0x120)+_0x4592c7(0x18d)+_0x4592c7(0x284)+'der-right:'+'1px\x20solid\x20'+'#eee;paddi'+_0x4592c7(0x142)+(_0x4592c7(0x137)+'\x20\x20\x20\x20\x20<div\x20'+'style=\x22bac'+_0x4592c7(0x306)+_0x4592c7(0x11b)+_0x4592c7(0x288)+_0x4592c7(0x2e9)+'eee;paddin'+_0x4592c7(0x315)+_0x4592c7(0x20b)+_0x4592c7(0x11c)+_0x4592c7(0x36f)+_0x4592c7(0x312)+'d:#dce8f4;'+'border-rig'+'ht:1px\x20sol'+_0x4592c7(0x1b4)+'dding:2px\x22'+_0x4592c7(0x2ff)+_0x4592c7(0x2c5)+'iv\x20style=\x22'+_0x4592c7(0x2bf)+':#e5f0e0;b'+_0x4592c7(0x1fe)+'t:1px\x20soli'+_0x4592c7(0x280)+'ding:2px\x22>'+'Pagos/abon'+'os</div>\x0a\x20'+'\x20\x20\x20\x20\x20<div\x20'+'style=\x22bac'+_0x4592c7(0x10d)+'5f0e0;bord'+_0x4592c7(0x288)+'px\x20solid\x20#'+_0x4592c7(0x12a)+_0x4592c7(0x187)+'.</div>\x0a\x20\x20'+'\x20\x20\x20\x20<div\x20s'+'tyle=\x22back'+_0x4592c7(0x27e)+'f0e0;borde'+_0x4592c7(0x2e1)+_0x4592c7(0x1fd)+'ee;padding'+_0x4592c7(0x2a3)+_0x4592c7(0x253)+'>\x0a\x20\x20\x20\x20\x20\x20<d'+'iv\x20style=\x22'+_0x4592c7(0x2bf)+_0x4592c7(0x295)+_0x4592c7(0x24a)+_0x4592c7(0x260)+_0x4592c7(0x2b8)+_0x4592c7(0x212)));function _0x22f124(_0x402742,_0x4cd3f3,_0x485932,_0x4624f5,_0x103d11){const _0x159144=_0x4592c7,_0x4be33a=_0x4cd3f3?_0x4acd28[_0x4cd3f3]||0x0:0x0,_0xe851a5=_0x485932?_0x4acd28[_0x485932]||0x0:0x0,_0x4e61ef=_0x4624f5?_0x4acd28[_0x4624f5]||0x0:0x0,_0x310a59=_0x103d11?_0x4acd28[_0x103d11]||0x0:0x0;return _0x159144(0x223)+'=\x22display:'+'grid;grid-'+'template-c'+'olumns:200'+'px\x20repeat('+'8,1fr);fon'+_0x159144(0x126)+'x;border-b'+_0x159144(0x2b7)+_0x159144(0x1b6)+'0e0\x22>\x0a\x20\x20\x20\x20'+'\x20\x20<div\x20sty'+'le=\x22paddin'+_0x159144(0x116)+_0x159144(0x157)+'ht:1px\x20sol'+_0x159144(0x328)+_0x159144(0x206)+'5px\x22>'+_0x402742+(_0x159144(0x249)+_0x159144(0x3b0)+'yle=\x22text-'+_0x159144(0x168)+_0x159144(0x395)+_0x159144(0x378)+'nt-family:'+'\x27JetBrains'+_0x159144(0x256)+'ospace;bor'+'der-right:'+'1px\x20solid\x20'+_0x159144(0x1c4))+(_0x4be33a?'background'+_0x159144(0x32d)+_0x159144(0x364)+_0x159144(0x138):'')+'\x22>'+(_0x4be33a?_0x4506fc(_0x4be33a):'')+('</div>\x0a\x20\x20\x20'+'\x20\x20\x20<div\x20st'+_0x159144(0x111)+_0x159144(0x1e6)+_0x159144(0x217)+_0x159144(0x3bd)+_0x159144(0x37c)+'px;color:#'+_0x159144(0x257)+'ound:#fafa'+_0x159144(0x184)+_0x159144(0x342)+'solid\x20#eee'+'\x22>')+(_0x4cd3f3||'')+(_0x159144(0x249)+_0x159144(0x3b0)+'yle=\x22text-'+_0x159144(0x168)+_0x159144(0x395)+'3px\x206px;fo'+_0x159144(0x3a8)+'\x27JetBrains'+'\x20Mono\x27,mon'+_0x159144(0x216)+_0x159144(0x2c1)+'1px\x20solid\x20'+_0x159144(0x1c4))+(_0xe851a5?_0x159144(0x2bf)+_0x159144(0x32d)+'ont-weight'+':600':'')+'\x22>'+(_0xe851a5?_0x4506fc(_0xe851a5):'')+(_0x159144(0x249)+'\x20\x20\x20<div\x20st'+_0x159144(0x111)+_0x159144(0x1e6)+'er;padding'+_0x159144(0x3bd)+_0x159144(0x37c)+'px;color:#'+_0x159144(0x257)+'ound:#fafa'+_0x159144(0x184)+'right:1px\x20'+'solid\x20#999'+'\x22>')+(_0x485932||'')+('</div>\x0a\x20\x20\x20'+'\x20\x20\x20<div\x20st'+_0x159144(0x111)+_0x159144(0x168)+'t;padding:'+_0x159144(0x378)+'nt-family:'+_0x159144(0x211)+'\x20Mono\x27,mon'+'ospace;bor'+'der-right:'+_0x159144(0x24f)+'#eee;')+(_0x4e61ef?'background'+_0x159144(0x18e)+_0x159144(0x364)+':600':'')+'\x22>'+(_0x4e61ef?_0x4506fc(_0x4e61ef):'')+(_0x159144(0x249)+'\x20\x20\x20<div\x20st'+'yle=\x22text-'+'align:cent'+_0x159144(0x217)+_0x159144(0x3bd)+'ont-size:8'+_0x159144(0x34a)+'888;backgr'+'ound:#fafa'+_0x159144(0x184)+'right:1px\x20'+'solid\x20#eee'+'\x22>')+(_0x4624f5||'')+(_0x159144(0x249)+_0x159144(0x3b0)+'yle=\x22text-'+_0x159144(0x168)+_0x159144(0x395)+_0x159144(0x378)+_0x159144(0x3a8)+_0x159144(0x211)+'\x20Mono\x27,mon'+'ospace;bor'+_0x159144(0x2c1)+'1px\x20solid\x20'+_0x159144(0x1c4))+(_0x310a59?_0x159144(0x2bf)+':#f0f8ef;f'+_0x159144(0x364)+':600':'')+'\x22>'+(_0x310a59?_0x4506fc(_0x310a59):'')+('</div>\x0a\x20\x20\x20'+_0x159144(0x3b0)+_0x159144(0x111)+_0x159144(0x1e6)+_0x159144(0x217)+':3px\x202px;f'+'ont-size:8'+'px;color:#'+_0x159144(0x257)+'ound:#fafa'+'fa\x22>')+(_0x103d11||'')+(_0x159144(0x249)+'\x20</div>');}_0x157211+=_0x22f124(_0x4592c7(0x3d9)+_0x4592c7(0x158),null,null,0x4d,0x5d),_0x157211+=_0x22f124(_0x4592c7(0x3d9)+'pensiones',null,null,0x4e,0x5e),_0x157211+=_0x22f124(_0x4592c7(0x2ed),0x1d,0x2a,0x4f,0x5f),_0x157211+=_0x22f124(_0x4592c7(0x16f),0x1e,0x2b,0x50,0x60),_0x157211+=_0x22f124('Servicios',0x1f,0x2c,0x51,0x61),_0x157211+=_0x22f124('Rendimient'+'os\x20financi'+'eros',0x20,0x2d,0x52,0x62),_0x157211+=_0x22f124(_0x4592c7(0x348)+_0x4592c7(0x167)+'les\x20e\x20inmu'+'ebles)',0x21,0x2e,0x53,0x63),_0x157211+=_0x22f124(_0x4592c7(0x2ce)+'\x20propiedad'+'\x20intelectu'+'al',0x22,0x2f,0x54,0x64),_0x157211+=_0x22f124(_0x4592c7(0x180)+'\x20y\x20partici'+'paciones',0x23,0x30,0x55,0x65),_0x157211+=_0x22f124('Compras',0x24,0x31,0x56,0x66),_0x157211+=_0x22f124(_0x4592c7(0x2a8)+_0x4592c7(0x1f5)+'as\x20débito/'+'crédito',0x25,0x32,0x57,0x67),_0x157211+=_0x22f124('Contratos\x20'+_0x4592c7(0x3b4)+_0x4592c7(0x241),0x26,0x33,0x58,0x68),_0x157211+=_0x22f124('Enajenació'+_0x4592c7(0x3d2)+'fijos\x20PN',null,null,0x59,0x69),_0x157211+=_0x22f124('Loterías,\x20'+'rifas,\x20apu'+_0x4592c7(0x156),0x27,0x34,0x5a,0x6a),_0x157211+=_0x22f124('Hidrocarbu'+_0x4592c7(0x2bb)+_0x4592c7(0x1c0),0x28,0x35,0x5b,0x6b),_0x157211+=_0x22f124(_0x4592c7(0x18c)+'s\x20sujetos\x20'+_0x4592c7(0x247)+'n',0x29,0x36,0x5c,0x6c),_0x157211+=_0x4592c7(0x1d8)+'=\x22dian-sec'+'\x22>Pagos\x20al'+_0x4592c7(0x2e2)+_0x4592c7(0x1ad),_0x157211+=_0x22f124(_0x4592c7(0x1ca)+'in\x20conveni'+'o',0x37,0x39,0x6d,0x6f),_0x157211+=_0x22f124(_0x4592c7(0x1b1)+_0x4592c7(0x2b2)+'o\x20vigente',0x38,0x3a,0x6e,0x70),_0x157211+='<div\x20class'+'=\x22dian-sec'+'\x22>Autorret'+_0x4592c7(0x1ff)+'\x20título\x20de'+'\x20renta</di'+'v>',_0x157211+=_0x22f124('Contribuye'+_0x4592c7(0x209)+_0x4592c7(0x172)+'.\x20114-1\x20E.'+_0x4592c7(0x155),0x3b,0x44,null,null),_0x157211+=_0x22f124(_0x4592c7(0x1f6),0x3c,0x45,0x71,0x79),_0x157211+=_0x22f124('Honorarios',0x3d,0x46,0x72,0x7a),_0x157211+=_0x22f124(_0x4592c7(0x16f),0x3e,0x47,0x73,0x7b),_0x157211+=_0x22f124('Servicios',0x3f,0x48,0x74,0x7c),_0x157211+=_0x22f124('Rendimient'+'os\x20financi'+'eros',0x40,0x49,0x75,0x7d),_0x157211+=_0x22f124(_0x4592c7(0x36b)+'eptos',0x43,0x4c,0x78,0x80);function _0x2cfce1(_0x35fdb0,_0x58b600,_0x112911,_0x21758c){const _0x4c568b=_0x4592c7,_0x577c6a=_0x21758c||'';return'<div\x20style'+_0x4c568b(0x337)+'grid;grid-'+_0x4c568b(0x130)+'olumns:1fr'+'\x20200px\x2050p'+'x;border-b'+'ottom:2px\x20'+_0x4c568b(0x197)+';font-size'+_0x4c568b(0x308)+_0x4c568b(0x33b)+'0;'+_0x577c6a+(_0x4c568b(0x30c)+'div\x20style='+_0x4c568b(0x210)+_0x4c568b(0x3a4))+_0x35fdb0+('</div>\x0a\x20\x20\x20'+'\x20\x20\x20<div\x20st'+'yle=\x22text-'+'align:righ'+_0x4c568b(0x395)+'5px\x2010px;f'+'ont-family'+_0x4c568b(0x294)+_0x4c568b(0x24d)+_0x4c568b(0x273)+_0x4c568b(0x2f6)+'1px\x20solid\x20'+'#ccc\x22>')+_0x4506fc(_0x58b600)+('</div>\x0a\x20\x20\x20'+_0x4c568b(0x3b0)+_0x4c568b(0x111)+_0x4c568b(0x1e6)+'er;padding'+_0x4c568b(0x324)+'ont-size:9'+_0x4c568b(0x34a)+'666;backgr'+'ound:#fafa'+'fa;border-'+_0x4c568b(0x23a)+_0x4c568b(0x3a2)+'>')+_0x112911+('</div>\x0a\x20\x20\x20'+_0x4c568b(0x196));}_0x157211+='<div\x20class'+_0x4592c7(0x32b)+_0x4592c7(0x276)+_0x4592c7(0x316)+_0x4592c7(0x36c)+'#000\x22>Tota'+_0x4592c7(0x353),_0x157211+=_0x2cfce1('(-)\x20Menos\x20'+_0x4592c7(0x12d)+'s\x20en\x20exces'+'o\x20o\x20indebi'+_0x4592c7(0x11a),_0x4acd28[0x81]||0x0,0x81,_0x4592c7(0x26c)),_0x157211+=_0x2cfce1('Total\x20rete'+'nciones\x20re'+_0x4592c7(0x12c)+_0x4592c7(0x115),_0x4acd28[0x82]||0x0,0x82,_0x4592c7(0x2bf)+':#dce8f4'),_0x157211+=_0x2cfce1(_0x4592c7(0x28c)+'bles\x20del\x20I'+'VA',_0x4acd28[0x83]||0x0,0x83,''),_0x157211+=_0x2cfce1(_0x4592c7(0x1f7)+_0x4592c7(0x25e)+'icios\x20a\x20no'+'\x20residente'+'s\x20(IVA)',_0x4acd28[0x84]||0x0,0x84,''),_0x157211+=_0x2cfce1(_0x4592c7(0x1b8)+'retencione'+_0x4592c7(0x2a6)+_0x4592c7(0x161),_0x4acd28[0x85]||0x0,0x85,_0x4592c7(0x26c)),_0x157211+=_0x2cfce1(_0x4592c7(0x1d3)+_0x4592c7(0x28a)+'A',_0x4acd28[0x86]||0x0,0x86,'background'+':#dce8f4'),_0x157211+=_0x2cfce1('Retencione'+_0x4592c7(0x3a9)+'\x20de\x20timbre'+'\x20nacional',_0x4acd28[0x87]||0x0,0x87,''),_0x157211+=_0x2cfce1(_0x4592c7(0x1d3)+'nciones\x20(1'+'30\x20+\x20134\x20+'+_0x4592c7(0x266),_0x4acd28[0x88]||0x0,0x88,_0x4592c7(0x2bf)+':#c6dced;f'+_0x4592c7(0x17c)+_0x4592c7(0x2fe)),_0x157211+=_0x2cfce1('Sanciones',_0x4acd28[0x89]||0x0,0x89,''),_0x157211+=_0x2cfce1('Total\x20rete'+_0x4592c7(0x202)+'s\x20sancione'+'s',_0x4acd28[0x8a]||0x0,0x8a,'background'+_0x4592c7(0x1f3)+'ont-size:1'+_0x4592c7(0x3b2)+_0x4592c7(0x29a)),_0x157211+=_0x4592c7(0x223)+'=\x22display:'+_0x4592c7(0x2a0)+_0x4592c7(0x130)+_0x4592c7(0x325)+_0x4592c7(0x1a6)+_0x4592c7(0x281)+'op:3px\x20sol'+_0x4592c7(0x3c6)+'nt-weight:'+_0x4592c7(0x1fb)+'ize:14px;b'+'ackground:'+_0x4592c7(0x1e0)+'\x20\x20\x20\x20<div\x20s'+_0x4592c7(0x1cf)+_0x4592c7(0x1e1)+_0x4592c7(0x1ef)+'ago\x20total\x20'+_0x4592c7(0x1b9)+_0x4592c7(0x340)+'le=\x22text-a'+_0x4592c7(0x1a0)+';padding:8'+'px\x2012px;fo'+'nt-family:'+_0x4592c7(0x211)+'\x20Mono\x27,mon'+'ospace;bor'+'der-left:2'+'px\x20solid\x20#'+'000;font-s'+_0x4592c7(0x230)+_0x4506fc(_0x4acd28[0x8a]||0x0)+('</div>\x0a\x20\x20\x20'+'\x20<div\x20styl'+_0x4592c7(0x1dc)+':8px\x204px;t'+'ext-align:'+'center;fon'+_0x4592c7(0x2cd)+';color:#66'+_0x4592c7(0x32e)+'eft:1px\x20so'+'lid\x20#999\x22>'+_0x4592c7(0x29d)+_0x4592c7(0x14b)),_0x157211+='<div\x20class'+'=\x22dian-foo'+'ter\x22><stro'+'ng>BORRADO'+_0x4592c7(0x13f)+'\x20—\x20Generad'+'o\x20automáti'+_0x4592c7(0x3c7)+_0x4592c7(0x367)+'nto\x20NO\x20es\x20'+_0x4592c7(0x24b)+'ación\x20ofic'+_0x4592c7(0x3cf)+_0x4592c7(0x258)+_0x4592c7(0x1c9)+_0x4592c7(0x1da)+_0x4592c7(0x250)+'\x20portal\x20DI'+'AN.</div>',_0x157211+='</div>',document[_0x4592c7(0x366)+_0x4592c7(0x2be)]('form350Vis'+_0x4592c7(0x29e))['innerHTML']=_0x157211,document[_0x4592c7(0x366)+'ById']('resultStat'+'s')['innerHTML']=_0x4592c7(0x2dd)+'class=\x22sta'+_0x4592c7(0x376)+_0x4592c7(0x198)+_0x4592c7(0x278)+'$'+fN(_0x4acd28[0x82])+('</div><div'+'\x20class=\x22lb'+_0x4592c7(0x1bb)+'nta\x20(130)<'+_0x4592c7(0x34c)+_0x4592c7(0x362)+_0x4592c7(0x177)+_0x4592c7(0x3d3)+'ber\x22><div\x20'+_0x4592c7(0x1c7)+'\x22>$')+fN(_0x4acd28[0x86])+('</div><div'+_0x4592c7(0x259)+'l\x22>Ret.\x20IV'+'A\x20(134)</d'+_0x4592c7(0x242)+_0x4592c7(0x128)+_0x4592c7(0x393)+_0x4592c7(0x2c4)+'n\x22><div\x20cl'+'ass=\x22val\x22>'+'$')+fN(_0x4acd28[0x88])+(_0x4592c7(0x139)+_0x4592c7(0x259)+'l\x22>Total\x20R'+'et.\x20(136)<'+'/div></div'+'>\x0a\x20\x20\x20\x20<div'+_0x4592c7(0x177)+'at-card\x20re'+'d\x22><div\x20cl'+'ass=\x22val\x22>'+'$')+fN(_0x4acd28[0x8a])+('</div><div'+'\x20class=\x22lb'+'l\x22>Pago\x20To'+_0x4592c7(0x21d)+_0x4592c7(0x34c)+'>');}function renderDet(){const _0x8ee505=_0x2c1b43,_0x44f797=Object[_0x8ee505(0x16b)](result350['det'])[_0x8ee505(0x355)]((_0x3669b8,_0x5b32cc)=>{const _0x422733=_0x8ee505,_0x168c2e=Object['values'](_0x3669b8['conceptos'])[_0x422733(0x3ae)]((_0x403319,_0x8e37e8)=>_0x403319+_0x8e37e8['ret'],0x0),_0x31a6bc=Object['values'](_0x5b32cc['conceptos'])[_0x422733(0x3ae)]((_0x34ea7a,_0x4eb22d)=>_0x34ea7a+_0x4eb22d['ret'],0x0);return _0x31a6bc-_0x168c2e;});let _0x4401e6='<table\x20cla'+'ss=\x22map-ta'+_0x8ee505(0x117)+_0x8ee505(0x26f)+_0x8ee505(0x369)+'>Tercero</'+'th><th>Tip'+_0x8ee505(0x2ad)+'Concepto</'+'th><th\x20cla'+'ss=\x22text-r'+_0x8ee505(0x2c9)+'</th><th\x20c'+'lass=\x22text'+'-right\x22>Re'+_0x8ee505(0x2e6)+_0x8ee505(0x3bc)+'B</th><th>'+_0x8ee505(0x380)+_0x8ee505(0x1ae)+_0x8ee505(0x148);_0x44f797['forEach'](_0x5d1248=>{const _0x37912d=_0x8ee505,_0x30571c=Object['values'](_0x5d1248[_0x37912d(0x26b)]);_0x30571c[_0x37912d(0x27f)]((_0xfe4e07,_0x57bc14)=>{const _0x2aedde=_0x37912d;_0x4401e6+='<tr>'+(_0x57bc14===0x0?_0x2aedde(0x3be)+'\x22mono\x22\x20row'+'span=\x22'+_0x30571c[_0x2aedde(0x208)]+'\x22>'+_0x5d1248['id']+(_0x2aedde(0x3c9)+_0x2aedde(0x1fc))+_0x30571c[_0x2aedde(0x208)]+'\x22>'+_0x5d1248[_0x2aedde(0x204)]+('</td><td\x20c'+_0x2aedde(0x39d)+_0x2aedde(0x169)+_0x2aedde(0x1fc))+_0x30571c['length']+(_0x2aedde(0x251)+'ass=\x22badge'+'\x20')+(_0x5d1248[_0x2aedde(0x339)]?'badge-pj':'badge-pn')+'\x22>'+(_0x5d1248['isPJ']?'PJ':'PN')+(_0x2aedde(0x145)+'d>'):'')+(_0x2aedde(0x381)+'>')+_0xfe4e07[_0x2aedde(0x1e8)]+('</td><td\x20c'+_0x2aedde(0x39d)+'-right\x20mon'+'o\x22>')+fN(_0xfe4e07['base'])+('</td><td\x20c'+'lass=\x22text'+_0x2aedde(0x33a)+_0x2aedde(0x2ae))+fN(_0xfe4e07[_0x2aedde(0x20e)])+('</td>\x0a\x20\x20\x20\x20'+_0x2aedde(0x2b6)+_0x2aedde(0x35f)+'nter\x20mono\x22'+'>')+(_0xfe4e07['cb']||'—')+(_0x2aedde(0x267)+_0x2aedde(0x39d)+'-center\x20mo'+_0x2aedde(0x2b0))+(_0xfe4e07['cr']||'—')+'</td></tr>';});}),_0x4401e6+='</tbody></'+'table>',document[_0x8ee505(0x366)+_0x8ee505(0x2be)](_0x8ee505(0x200)+'e')[_0x8ee505(0x239)]=_0x4401e6;}async function exportXls350(){const _0x4d9a35=_0x2c1b43,_0x353c56=result350['cas'],_0x2b8059=await fetch(_0x4d9a35(0x34e)+'50.xlsx');if(!_0x2b8059['ok'])throw new Error('No\x20se\x20pudo'+_0x4d9a35(0x213)+_0x4d9a35(0x227)+'\x20del\x20350.');const _0x314751=new ExcelJS['Workbook']();await _0x314751['xlsx'][_0x4d9a35(0x14f)](await _0x2b8059['arrayBuffe'+'r']()),_0x314751[_0x4d9a35(0x131)+_0x4d9a35(0x2f1)]={'fullCalcOnLoad':!![]};const _0x32f34c=_0x314751[_0x4d9a35(0x385)+'et']('350'),_0x2889dc={0x1d:['T19'],0x2a:[_0x4d9a35(0x2c2)],0x4f:['AG19'],0x5f:[_0x4d9a35(0x265)],0x1e:['T20'],0x2b:[_0x4d9a35(0x13c)],0x50:[_0x4d9a35(0x309)],0x60:[_0x4d9a35(0x37d)],0x1f:['T21'],0x2c:['AB21'],0x51:['AG21'],0x61:['AV21'],0x20:[_0x4d9a35(0x3ca)],0x2d:[_0x4d9a35(0x2ef)],0x52:['AG22'],0x62:['AV22'],0x21:['T23'],0x2e:['AB23'],0x53:['AG23'],0x63:['AV23'],0x22:[_0x4d9a35(0x36a)],0x2f:['AB24'],0x54:[_0x4d9a35(0x18a)],0x64:[_0x4d9a35(0x127)],0x23:['T25'],0x30:['AB25'],0x55:[_0x4d9a35(0x1e9)],0x65:[_0x4d9a35(0x3aa)],0x24:[_0x4d9a35(0x30b)],0x31:['AB26'],0x56:[_0x4d9a35(0x1d5)],0x66:[_0x4d9a35(0x38f)],0x25:[_0x4d9a35(0x20f)],0x32:[_0x4d9a35(0x3af)],0x57:[_0x4d9a35(0x193)],0x67:['AV27'],0x26:['T28'],0x33:[_0x4d9a35(0x1a3)],0x58:[_0x4d9a35(0x11d)],0x68:[_0x4d9a35(0x30d)],0x59:[_0x4d9a35(0x240)],0x69:[_0x4d9a35(0x14d)],0x27:['T30'],0x34:[_0x4d9a35(0x165)],0x5a:['AG30'],0x6a:['AV30'],0x28:[_0x4d9a35(0x343)],0x35:[_0x4d9a35(0x23e)],0x5b:[_0x4d9a35(0x269)],0x6b:[_0x4d9a35(0x27d)],0x29:[_0x4d9a35(0x15e)],0x36:['AB32'],0x5c:[_0x4d9a35(0x293)],0x6c:['AV32'],0x37:[_0x4d9a35(0x238)],0x39:[_0x4d9a35(0x1e7)],0x6d:['AG33'],0x6f:['AV33'],0x38:['T34'],0x3a:[_0x4d9a35(0x22f)],0x6e:[_0x4d9a35(0x12f)],0x70:[_0x4d9a35(0x118)],0x3b:['T35'],0x44:['AB35'],0x3c:['T36'],0x45:[_0x4d9a35(0x14c)],0x71:[_0x4d9a35(0x2f4)],0x79:[_0x4d9a35(0x352)],0x3d:['T37'],0x46:[_0x4d9a35(0x14e)],0x72:[_0x4d9a35(0x277)],0x7a:[_0x4d9a35(0x10c)],0x3e:[_0x4d9a35(0x21c)],0x47:[_0x4d9a35(0x17d)],0x73:['AG38'],0x7b:[_0x4d9a35(0x329)],0x3f:['T39'],0x48:['AB39'],0x74:[_0x4d9a35(0x3bb)],0x7c:[_0x4d9a35(0x170)],0x40:[_0x4d9a35(0x28f)],0x49:['AB40'],0x75:[_0x4d9a35(0x1db)],0x7d:[_0x4d9a35(0x2eb)],0x41:['T41'],0x4a:[_0x4d9a35(0x2d2)],0x76:[_0x4d9a35(0x1a2)],0x7e:['AV41'],0x42:[_0x4d9a35(0x25a)],0x4b:['AB42'],0x77:[_0x4d9a35(0x244)],0x7f:[_0x4d9a35(0x311)],0x43:[_0x4d9a35(0x2aa)],0x4c:['AB43'],0x78:['AG43'],0x80:[_0x4d9a35(0x34b)],0x4d:['AG17'],0x5d:['AV17'],0x4e:[_0x4d9a35(0x22b)],0x5e:[_0x4d9a35(0x35b)],0x81:['AV44'],0x83:['AV47'],0x84:['AV48'],0x85:[_0x4d9a35(0x25b)],0x87:[_0x4d9a35(0x205)],0x89:[_0x4d9a35(0x1d0)]},_0x5c9427={0x82:'AV45',0x86:_0x4d9a35(0x38b),0x88:_0x4d9a35(0x23f),0x8a:_0x4d9a35(0x2f0)};for(const [_0x552c38,_0x4d0b79]of Object[_0x4d9a35(0x163)](_0x2889dc)){const _0x374528=_0x353c56[_0x552c38]||0x0;if(_0x374528)for(const _0x4c223c of _0x4d0b79){_0x32f34c[_0x4d9a35(0x134)](_0x4c223c)[_0x4d9a35(0x384)]=_0x374528;}}for(const [_0x427e51,_0x521e8e]of Object['entries'](_0x5c9427)){const _0x1972cc=_0x32f34c[_0x4d9a35(0x134)](_0x521e8e),_0x4fdada=_0x353c56[_0x427e51]||0x0;_0x1972cc['value']&&typeof _0x1972cc['value']===_0x4d9a35(0x17a)&&_0x1972cc['value'][_0x4d9a35(0x2d1)]?_0x1972cc['value']={'formula':_0x1972cc[_0x4d9a35(0x384)]['formula'],'result':_0x4fdada}:_0x1972cc['value']=_0x4fdada;}const _0x2f88a5=await _0x314751['xlsx'][_0x4d9a35(0x248)+'r'](),_0x3a8c24=new Blob([_0x2f88a5],{'type':'applicatio'+'n/vnd.open'+_0x4d9a35(0x2cf)+_0x4d9a35(0x33c)+_0x4d9a35(0x1d2)+'adsheetml.'+'sheet'}),_0x3f14f2=URL['createObje'+_0x4d9a35(0x17e)](_0x3a8c24),_0x1620f4=document['createElem'+'ent']('a'),_0xefc15e=document['getElement'+'ById'](_0x4d9a35(0x297))[_0x4d9a35(0x384)],_0x54ffe6=document[_0x4d9a35(0x366)+'ById'](_0x4d9a35(0x199))['value'],_0x54e932=document[_0x4d9a35(0x366)+_0x4d9a35(0x2be)]('cfgMonth')[_0x4d9a35(0x384)];_0x1620f4['href']=_0x3f14f2,_0x1620f4[_0x4d9a35(0x372)]=_0x4d9a35(0x1a7)+_0xefc15e+'_'+_0x54e932+'_'+(_0x54ffe6||_0x4d9a35(0x34d))+'.xlsx',document['body']['appendChil'+'d'](_0x1620f4),_0x1620f4['click'](),document[_0x4d9a35(0x2de)]['removeChil'+'d'](_0x1620f4),URL['revokeObje'+'ctURL'](_0x3f14f2);}function goStep(_0x535bfc){const _0x5d4c8c=_0x2c1b43;for(let _0x1bb6ae=0x1;_0x1bb6ae<=0x4;_0x1bb6ae++){const _0x3e2597=document['getElement'+'ById']('step'+_0x1bb6ae);if(_0x3e2597)_0x3e2597[_0x5d4c8c(0x319)]['toggle']('hidden',_0x1bb6ae!==_0x535bfc);}document['querySelec'+_0x5d4c8c(0x191)](_0x5d4c8c(0x38e))['forEach']((_0x58db49,_0x492541)=>{const _0xec4ab4=_0x5d4c8c;_0x58db49[_0xec4ab4(0x319)]['remove']('active','done');if(_0x492541+0x1<_0x535bfc)_0x58db49['classList'][_0xec4ab4(0x13d)]('done');if(_0x492541+0x1===_0x535bfc)_0x58db49[_0xec4ab4(0x319)][_0xec4ab4(0x13d)](_0xec4ab4(0x2bd));}),window[_0x5d4c8c(0x398)]({'top':0x0,'behavior':_0x5d4c8c(0x16c)});}function _0x2539(_0x10be6a,_0x54a90d){_0x10be6a=_0x10be6a-0x10b;const _0x473cdc=_0x473c();let _0x253990=_0x473cdc[_0x10be6a];if(_0x2539['ZbUGGQ']===undefined){var _0x5a77df=function(_0x2144a4){const _0x372e20='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x29ab59='',_0x27a9d8='';for(let _0x41d5c5=0x0,_0x136299,_0x2cc37c,_0x4329cb=0x0;_0x2cc37c=_0x2144a4['charAt'](_0x4329cb++);~_0x2cc37c&&(_0x136299=_0x41d5c5%0x4?_0x136299*0x40+_0x2cc37c:_0x2cc37c,_0x41d5c5++%0x4)?_0x29ab59+=String['fromCharCode'](0xff&_0x136299>>(-0x2*_0x41d5c5&0x6)):0x0){_0x2cc37c=_0x372e20['indexOf'](_0x2cc37c);}for(let _0x5c66ea=0x0,_0x536b44=_0x29ab59['length'];_0x5c66ea<_0x536b44;_0x5c66ea++){_0x27a9d8+='%'+('00'+_0x29ab59['charCodeAt'](_0x5c66ea)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x27a9d8);};_0x2539['gVWmQI']=_0x5a77df,_0x2539['zMlmZA']={},_0x2539['ZbUGGQ']=!![];}const _0x3a86a0=_0x473cdc[0x0],_0x4d73ed=_0x10be6a+_0x3a86a0,_0x470e3b=_0x2539['zMlmZA'][_0x4d73ed];return!_0x470e3b?(_0x253990=_0x2539['gVWmQI'](_0x253990),_0x2539['zMlmZA'][_0x4d73ed]=_0x253990):_0x253990=_0x470e3b,_0x253990;}function switchTab(_0x2e0e22,_0xed5d0){const _0xff1ece=_0x2c1b43;_0x2e0e22[_0xff1ece(0x18b)+_0xff1ece(0x13b)][_0xff1ece(0x2fa)+_0xff1ece(0x191)](_0xff1ece(0x2fc))['forEach'](_0x43ddb1=>_0x43ddb1['classList']['remove'](_0xff1ece(0x2bd))),_0x2e0e22['classList'][_0xff1ece(0x13d)]('active'),_0x2e0e22[_0xff1ece(0x19c)]('.card')[_0xff1ece(0x2fa)+_0xff1ece(0x191)](_0xff1ece(0x1f4)+'nt')[_0xff1ece(0x27f)](_0xfbec39=>_0xfbec39['classList'][_0xff1ece(0x10b)](_0xff1ece(0x2bd))),document[_0xff1ece(0x366)+'ById'](_0xed5d0)[_0xff1ece(0x319)]['add'](_0xff1ece(0x2bd));}async function descargarEjemplo350(){const _0x4205de=_0x2c1b43,_0x209e98=document[_0x4205de(0x272)+'ent']('a');_0x209e98[_0x4205de(0x22d)]=_0x4205de(0x34e)+'50.xlsx',_0x209e98[_0x4205de(0x372)]=_0x4205de(0x112)+'tencion350'+_0x4205de(0x1ba)+_0x4205de(0x3d8),document['body'][_0x4205de(0x183)+'d'](_0x209e98),_0x209e98[_0x4205de(0x16e)](),document['body'][_0x4205de(0x2cc)+'d'](_0x209e98);}async function btnLoading(_0x4a5c0f,_0x31c66a){const _0x4cfce4=_0x2c1b43;if(_0x4a5c0f['disabled'])return;const _0x147c60=_0x4a5c0f[_0x4cfce4(0x239)];_0x4a5c0f['disabled']=!![],_0x4a5c0f[_0x4cfce4(0x31e)]['opacity']='.6',_0x4a5c0f[_0x4cfce4(0x239)]=_0x4cfce4(0x3ce)+'..';try{await _0x31c66a();}catch(_0x229c15){exoToast(_0x4cfce4(0x28b)+_0x229c15[_0x4cfce4(0x181)],'error'),console['error'](_0x229c15);}finally{_0x4a5c0f['disabled']=![],_0x4a5c0f[_0x4cfce4(0x31e)]['opacity']='',_0x4a5c0f['innerHTML']=_0x147c60;}}</script>
+
+<script>
+function esc(s){return(s==null?'':String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+/* ═══ DEFAULTS ═══ */
+const DEFAULT_MAP=[
+  {prefix:'236505',name:'Salarios y pagos laborales',concepto:'rentas_trabajo',aplica:'PN',tarifa:0,casPJb:null,casPJr:null,casPNb:77,casPNr:93},
+  {prefix:'236510',name:'Dividendos',concepto:'dividendos',aplica:'AMBOS',tarifa:7.5,casPJb:35,casPJr:48,casPNb:85,casPNr:101},
+  {prefix:'236515',name:'Honorarios',concepto:'honorarios',aplica:'AMBOS',tarifa:11,casPJb:29,casPJr:42,casPNb:79,casPNr:95},
+  {prefix:'236520',name:'Comisiones',concepto:'comisiones',aplica:'AMBOS',tarifa:11,casPJb:30,casPJr:43,casPNb:80,casPNr:96},
+  {prefix:'236525',name:'Servicios',concepto:'servicios',aplica:'AMBOS',tarifa:4,casPJb:31,casPJr:44,casPNb:81,casPNr:97},
+  {prefix:'236530',name:'Arrendamientos',concepto:'arrendamientos',aplica:'AMBOS',tarifa:3.5,casPJb:33,casPJr:46,casPNb:83,casPNr:99},
+  {prefix:'236535',name:'Rendimientos financieros',concepto:'rendimientos',aplica:'AMBOS',tarifa:4,casPJb:32,casPJr:45,casPNb:82,casPNr:98},
+  {prefix:'236540',name:'Compras',concepto:'compras',aplica:'AMBOS',tarifa:2.5,casPJb:36,casPJr:49,casPNb:86,casPNr:102},
+  {prefix:'236545',name:'Enajenación activos PN',concepto:'enajenacion',aplica:'PN',tarifa:1,casPJb:null,casPJr:null,casPNb:89,casPNr:105},
+  {prefix:'236550',name:'Loterías y rifas',concepto:'loterias',aplica:'AMBOS',tarifa:20,casPJb:39,casPJr:52,casPNb:90,casPNr:106},
+  {prefix:'236555',name:'Pagos al exterior',concepto:'exterior_sin',aplica:'AMBOS',tarifa:20,casPJb:55,casPJr:57,casPNb:109,casPNr:111},
+  {prefix:'236560',name:'Hidrocarburos',concepto:'hidrocarburos',aplica:'AMBOS',tarifa:1,casPJb:40,casPJr:53,casPNb:91,casPNr:107},
+  {prefix:'236565',name:'Tarjetas débito/crédito',concepto:'tarjetas',aplica:'AMBOS',tarifa:1.5,casPJb:37,casPJr:50,casPNb:87,casPNr:103},
+  {prefix:'236568',name:'Contratos construcción',concepto:'construccion',aplica:'AMBOS',tarifa:2,casPJb:38,casPJr:51,casPNb:88,casPNr:104},
+  {prefix:'236570',name:'Autorretención especial',concepto:'autoret_114',aplica:'PJ',tarifa:0.80,casPJb:59,casPJr:68,casPNb:null,casPNr:null},
+  {prefix:'236575',name:'Autorretención ventas',concepto:'autoret_ventas',aplica:'PJ',tarifa:0.80,casPJb:60,casPJr:69,casPNb:113,casPNr:121},
+  {prefix:'236580',name:'Autorretención servicios',concepto:'autoret_serv',aplica:'PJ',tarifa:0.80,casPJb:63,casPJr:72,casPNb:null,casPNr:null},
+  {prefix:'236595',name:'Otros pagos',concepto:'otros',aplica:'AMBOS',tarifa:3.5,casPJb:41,casPJr:54,casPNb:92,casPNr:108},
+  {prefix:'236597',name:'Regalías',concepto:'regalias',aplica:'AMBOS',tarifa:3.5,casPJb:34,casPJr:47,casPNb:84,casPNr:100},
+  {prefix:'236599',name:'Pensiones',concepto:'pensiones',aplica:'PN',tarifa:0,casPJb:null,casPJr:null,casPNb:78,casPNr:94},
+];
+const KEYWORDS={
+  rentas_trabajo:['salario','laboral','trabajo','sueldo','383'],pensiones:['pension'],honorarios:['honorar'],
+  comisiones:['comision'],servicios:['servicio','transport','programa','informatico','restaurante'],
+  rendimientos:['rendimiento','interes','financiero'],arrendamientos:['arrend','alquiler'],
+  compras:['compra','adquisicion'],dividendos:['dividend','participacion'],loterias:['loteria','rifa'],
+  exterior_sin:['exterior'],hidrocarburos:['hidrocarburo','carbon','minero'],tarjetas:['tarjeta'],
+  construccion:['construcc','urbaniz'],enajenacion:['enajenacion','activo fijo'],
+  autoret_114:['exonerado','cree','114-1'],autoret_ventas:['autorretencion','decreto 2201','2201'],
+  autoret_serv:['autorretencion.*servic'],otros:['otro'],regalias:['regal','propiedad intelectual'],
+};
+
+/* ═══ GLOBALS ═══ */
+let rawData=[], parsedAccounts=[], mappings=[], result350={};
+let detectedHeaderRow=-1;
+let colMap={code:-1,name:-1,id:-1,tercero:-1,deb:-1,cre:-1};
+
+// Column field definitions for the mapper UI
+const COL_FIELDS=[
+  {key:'code', label:'Código Cuenta', required:true, icon:'🔢', hints:['cuenta','codigo','código','code','account']},
+  {key:'name', label:'Nombre Cuenta', required:false, icon:'📝', hints:['descripcion','nombre cuenta','cuenta contable','description']},
+  {key:'id', label:'ID Tercero', required:true, icon:'🆔', hints:['tercero','identificacion','identificación','nit','cedula','id','document']},
+  {key:'tercero', label:'Nombre Tercero', required:false, icon:'👤', hints:['razon social','razón social','nombre tercero','third party','name']},
+  {key:'deb', label:'Débitos', required:true, icon:'📤', hints:['debito','débito','debitos','débitos','debit']},
+  {key:'cre', label:'Créditos', required:true, icon:'📥', hints:['credito','crédito','creditos','créditos','credit']},
+];
+
+function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim()}
+function toNum(v){if(typeof v==='number')return v;if(!v)return 0;let s=String(v).replace(/[$\s]/g,'');if(s.includes(',')&&s.includes('.')){if(s.lastIndexOf(',')>s.lastIndexOf('.'))s=s.replace(/\./g,'').replace(',','.');else s=s.replace(/,/g,'')}else if(s.includes(',')&&!s.includes('.')){const p=s.split(',');if(p[p.length-1].length<=2)s=s.replace(',','.');else s=s.replace(/,/g,'')}return parseFloat(s)||0}
+function fN(n){return(n||0).toLocaleString('es-CO',{minimumFractionDigits:0,maximumFractionDigits:0})}
+function cellStr(v){const s=String(v??'').trim();return(s==='undefined'||s==='null'||s==='NaN')?'':s}
+
+/* ═══ FILE LOADING ═══ */
+document.getElementById('fileInput').addEventListener('change',e=>{if(e.target.files.length)loadFile(e.target.files[0])});
+const dz=document.getElementById('dz');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files.length)loadFile(e.dataTransfer.files[0])});
+
+function loadFile(file){
+  var MAX_FILE_SIZE=20*1024*1024;
+  if(file.size>MAX_FILE_SIZE){exoToast('El archivo excede el límite de 20 MB.','warning');return}
+  document.getElementById('fileName').textContent='✓ '+file.name;
+  const reader=new FileReader();
+  reader.onerror=function(){L.classList.remove('active')};
+  reader.onload=function(e){
+    try{
+    const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});
+    rawData=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''});
+    afterFileLoaded();
+    }finally{L.classList.remove('active')}
+  };
+  var L=document.getElementById('loadingOverlay');L.classList.add('active');
+  reader.readAsArrayBuffer(file);
+}
+
+function afterFileLoaded(){
+  // Extract meta from first rows
+  extractMeta();
+  // Auto-detect header row
+  detectedHeaderRow = autoDetectHeaderRow();
+  // Go to step 2
+  goStep(2);
+  // Build the column mapper UI
+  buildColumnMapper();
+}
+
+function extractMeta(){
+  for(let i=0;i<Math.min(10,rawData.length);i++){
+    const row=rawData[i];if(!row)continue;
+    for(let j=0;j<row.length;j++){
+      const cs=String(row[j]||'');
+      const cM=cs.match(/Compa[ñn][ií]a:\s*([^\n\\]+)/i);
+      if(cM)document.getElementById('cfgEmpresa').value=cM[1].trim().split('\\n')[0];
+      const pM=cs.match(/Periodos?:\s*(\d{4})(\d{2})_/i);
+      if(pM){document.getElementById('cfgYear').value=pM[1];document.getElementById('cfgMonth').value=pM[2]}
+    }
+    const r0=String(row[0]||'').trim();
+    if(/^\d{9}\s*-\s*\d$/.test(r0))document.getElementById('cfgNit').value=r0;
+    const cv=document.getElementById('cfgEmpresa').value;
+    if(!cv&&/^[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ\s.]{4,}$/.test(r0)&&!/^(MOV|LIB|REP|TOT|ELA)/i.test(r0))document.getElementById('cfgEmpresa').value=r0;
+    const dM=r0.match(/(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre).*?(\d{4})/i);
+    if(dM){
+      document.getElementById('cfgYear').value=dM[2];
+      const mN=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+      const mi=mN.findIndex(m=>norm(r0).includes(m));
+      if(mi>=0)document.getElementById('cfgMonth').value=String(mi+1).padStart(2,'0');
+    }
+  }
+}
+
+function autoDetectHeaderRow(){
+  for(let i=0;i<Math.min(15,rawData.length);i++){
+    const row=rawData[i];if(!row)continue;
+    const rn=row.map(c=>norm(cellStr(c)));
+    // Score: how many cells look like headers?
+    let score=0;
+    const allHints=COL_FIELDS.flatMap(f=>f.hints);
+    for(const h of rn){if(!h)continue;for(const hint of allHints){if(h.includes(hint)){score++;break}}}
+    if(score>=2)return i;
+  }
+  return 0; // default to row 0
+}
+
+function autoDetectColumns(hdrRow){
+  colMap={code:-1,name:-1,id:-1,tercero:-1,deb:-1,cre:-1};
+  const row=rawData[hdrRow];if(!row)return;
+  for(let j=0;j<row.length;j++){
+    const h=norm(cellStr(row[j]));
+    if(!h)continue;
+    for(const field of COL_FIELDS){
+      if(colMap[field.key]!==-1)continue;
+      for(const hint of field.hints){
+        if(h===hint||h.includes(hint)){colMap[field.key]=j;break}
+      }
+    }
+  }
+}
+
+/* ═══ COLUMN MAPPER UI ═══ */
+function buildColumnMapper(){
+  const hdrRow=detectedHeaderRow;
+  
+  // Build header row selector
+  const sel=document.getElementById('hdrRowSelect');
+  sel.innerHTML='';
+  const maxR=Math.min(15,rawData.length);
+  for(let i=0;i<maxR;i++){
+    const row=rawData[i];if(!row)continue;
+    const preview=row.slice(0,4).map(c=>cellStr(c)).filter(Boolean).join(' | ').substring(0,80);
+    const opt=document.createElement('option');
+    opt.value=i;opt.textContent=`Fila ${i}: ${preview}`;
+    if(i===hdrRow)opt.selected=true;
+    sel.appendChild(opt);
+  }
+  updateHdrPreview();
+
+  // Auto-detect columns for the selected header row
+  autoDetectColumns(hdrRow);
+
+  // Render raw data preview
+  renderRawPreview();
+
+  // Render column mapper cards
+  renderColMapper();
+}
+
+function onHeaderRowChange(){
+  detectedHeaderRow=parseInt(document.getElementById('hdrRowSelect').value);
+  autoDetectColumns(detectedHeaderRow);
+  renderRawPreview();
+  renderColMapper();
+  updateHdrPreview();
+}
+
+function updateHdrPreview(){
+  const row=rawData[detectedHeaderRow];
+  if(!row)return;
+  const txt=row.map(c=>cellStr(c)).filter(Boolean).join(' · ');
+  document.getElementById('hdrPreviewText').textContent=txt.substring(0,120)+(txt.length>120?'…':'');
+}
+
+function renderRawPreview(){
+  const hdr=detectedHeaderRow;
+  // Show 2 rows before header + header + 5 data rows
+  const startR=Math.max(0,hdr-2);
+  const endR=Math.min(rawData.length,hdr+8);
+  const maxCols=Math.min((rawData[hdr]||[]).length,12);
+  
+  let h='<table>';
+  // Column index header
+  h+='<tr><th style="background:#eee;color:#999">Fila</th>';
+  for(let j=0;j<maxCols;j++)h+=`<th style="background:#eee;color:#999">Col ${j}</th>`;
+  h+='</tr>';
+  for(let i=startR;i<endR;i++){
+    const row=rawData[i];if(!row)continue;
+    const isHdr=i===hdr;
+    h+=`<tr class="${isHdr?'hdr-row':''}"><td style="font-weight:700;color:${isHdr?'var(--amber)':'#999'};font-size:.7rem">${isHdr?'📌 ':''}${i}</td>`;
+    for(let j=0;j<maxCols;j++){
+      const val=cellStr(row[j]);
+      h+=`<td title="${val}">${val.substring(0,35)}${val.length>35?'…':''}</td>`;
+    }
+    h+='</tr>';
+  }
+  h+='</table>';
+  document.getElementById('rawPreview').innerHTML=h;
+}
+
+function renderColMapper(){
+  const hdr=rawData[detectedHeaderRow]||[];
+  const numCols=hdr.length;
+  // Build options: "— No asignada —" + each column
+  let optsHtml='<option value="-1">— No asignada —</option>';
+  for(let j=0;j<numCols;j++){
+    const label=cellStr(hdr[j]);
+    optsHtml+=`<option value="${j}">Col ${j}: ${label?label.substring(0,25):'(vacía)'}</option>`;
+  }
+
+  let html='';
+  COL_FIELDS.forEach(field=>{
+    const cur=colMap[field.key];
+    const isMapped=cur>=0;
+    const sampleRow=rawData[detectedHeaderRow+1]||[];
+    // Find a row with actual data for better samples
+    let sample='';
+    for(let i=detectedHeaderRow+1;i<Math.min(rawData.length,detectedHeaderRow+50);i++){
+      const r=rawData[i];if(!r)continue;
+      if(cur>=0){
+        const v=cellStr(r[cur]);
+        if(v&&v!=='0'){sample=v;break}
+      }
+    }
+
+    html+=`<div class="col-map-item ${isMapped?'mapped':''} ${field.required&&!isMapped?'required':''}">
+      <div class="cml">${field.icon} ${field.label} ${field.required?'<span class="req">*</span>':''}</div>
+      <select onchange="onColChange('${field.key}',this.value)" id="sel_${field.key}">
+        ${optsHtml.replace(`value="${cur}"`,`value="${cur}" selected`)}
+      </select>
+      <div class="sample" id="samp_${field.key}">${sample?`Ej: <strong>${sample.substring(0,30)}</strong>`:'<em>sin datos</em>'}</div>
+    </div>`;
+  });
+  document.getElementById('colMapper').innerHTML=html;
+}
+
+function onColChange(key,val){
+  const v=parseInt(val);
+  colMap[key]=v;
+  // Update sample
+  let sample='';
+  for(let i=detectedHeaderRow+1;i<Math.min(rawData.length,detectedHeaderRow+50);i++){
+    const r=rawData[i];if(!r)continue;
+    if(v>=0){const s=cellStr(r[v]);if(s&&s!=='0'){sample=s;break}}
+  }
+  const el=document.getElementById('samp_'+key);
+  if(el)el.innerHTML=sample?`Ej: <strong>${sample.substring(0,30)}</strong>`:'<em>sin datos</em>';
+  // Update card styling
+  const card=el?.closest('.col-map-item');
+  if(card){
+    const field=COL_FIELDS.find(f=>f.key===key);
+    card.classList.toggle('mapped',v>=0);
+    card.classList.toggle('required',field?.required&&v<0);
+  }
+}
+
+/* ═══ CONFIRM & PROCESS ═══ */
+function confirmColumns(){
+  // Validate required columns
+  const missing=COL_FIELDS.filter(f=>f.required&&colMap[f.key]<0);
+  if(missing.length){
+    exoToast('Faltan columnas obligatorias:\n'+missing.map(f=>'• '+f.label).join('\n'),'warning');
+    return;
+  }
+  processData();
+}
+
+function processData(){
+  parsedAccounts=[];
+  let skipSub=0;
+  for(let i=detectedHeaderRow+1;i<rawData.length;i++){
+    const row=rawData[i];if(!row)continue;
+    const code=cellStr(row[colMap.code]);
+    if(!code||/^(total|procesado|elaborado)/i.test(code))continue;
+    if(!code.startsWith('2365')&&!code.startsWith('2367')&&!code.startsWith('2368'))continue;
+    const name=colMap.name>=0?cellStr(row[colMap.name]):'';
+    const id=colMap.id>=0?String(row[colMap.id]||'').replace(/\s/g,''):'';
+    const tercero=colMap.tercero>=0?cellStr(row[colMap.tercero]):'';
+    const deb=colMap.deb>=0?toNum(row[colMap.deb]):0;
+    const cre=colMap.cre>=0?toNum(row[colMap.cre]):0;
+    // Skip subtotals (no valid ID)
+    const idClean=id.replace(/[^0-9]/g,'');
+    if(!idClean||idClean.length<4){skipSub++;continue}
+    if(deb===0&&cre===0)continue;
+    const isPJ=idClean.length===9||/S\.?A\.?S|LTDA|S\.?A\b|E\.?U\b|SOCIEDAD|COOPERATIVA|FUNDACI|ASOCIACI|CORPORACI|FONDO|ENTIDAD|EMPRESA|INC\b|CORP\b|E\.?S\.?P\b|E\.?S\.?A\.?L/i.test(tercero);
+    parsedAccounts.push({code,name,id:idClean,tercero,deb,cre,isPJ,tipo:isPJ?'PJ':'PN'});
+  }
+  showPreview();
+}
+
+function showPreview(){
+  document.getElementById('previewCard').classList.remove('hidden');
+  const byC={};let tCre=0,tDeb=0;const tercs=new Set();
+  parsedAccounts.forEach(a=>{
+    if(!byC[a.code])byC[a.code]={code:a.code,name:a.name,deb:0,cre:0,count:0,terceros:new Set()};
+    byC[a.code].deb+=a.deb;byC[a.code].cre+=a.cre;byC[a.code].count++;
+    if(a.id){byC[a.code].terceros.add(a.id);tercs.add(a.id)}
+    tCre+=a.cre;tDeb+=a.deb;
+  });
+  const ctas=Object.values(byC);
+  document.getElementById('alertNot2365').classList.toggle('hidden',ctas.length>0);
+  const aOk=document.getElementById('alertOk');
+  if(parsedAccounts.length>0){
+    aOk.classList.remove('hidden');
+    document.getElementById('alertOkText').innerHTML=`<strong>${ctas.length} subcuentas</strong> con <strong>${parsedAccounts.length} movimientos</strong> de ${tercs.size} terceros. Retención neta: <strong>$${fN(tCre-tDeb)}</strong>`;
+  }else aOk.classList.add('hidden');
+  document.getElementById('fileStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${ctas.length}</div><div class="lbl">Subcuentas</div></div>
+    <div class="stat-card green"><div class="val">${parsedAccounts.length}</div><div class="lbl">Movimientos</div></div>
+    <div class="stat-card amber"><div class="val">${tercs.size}</div><div class="lbl">Terceros</div></div>
+    <div class="stat-card red"><div class="val">$${fN(tCre-tDeb)}</div><div class="lbl">Retención neta</div></div>`;
+  let h='<table class="map-table"><thead><tr><th>Cuenta</th><th>Nombre</th><th>Mov.</th><th>Terceros</th><th class="text-right">Débitos</th><th class="text-right">Créditos</th><th class="text-right">Neto</th></tr></thead><tbody>';
+  ctas.sort((a,b)=>a.code.localeCompare(b.code)).forEach(c=>{
+    h+=`<tr><td class="mono fw600">${c.code}</td><td>${c.name}</td><td class="text-center">${c.count}</td><td class="text-center">${c.terceros.size}</td><td class="text-right mono">${fN(c.deb)}</td><td class="text-right mono">${fN(c.cre)}</td><td class="text-right mono fw600">${fN(c.cre-c.deb)}</td></tr>`;
+  });
+  h+='</tbody></table>';
+  document.getElementById('previewTable').innerHTML=h;
+  // Scroll to preview
+  document.getElementById('previewCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* ═══ STEP 3: PUC MAPPING ═══ */
+function goToStep3(){if(!parsedAccounts.length){exoToast('No hay movimientos.','warning');return}goStep(3);buildMappingTable()}
+
+function autoMapAccount(code,name){
+  const n=norm(name),c=String(code);
+  for(const m of DEFAULT_MAP)if(c.startsWith(m.prefix))return{...m};
+  for(const m of DEFAULT_MAP){const kws=KEYWORDS[m.concepto]||[];for(const kw of kws){if(kw.includes('.*')){if(new RegExp(kw).test(n))return{...m,prefix:c}}else if(n.includes(kw))return{...m,prefix:c}}}
+  if(c.startsWith('2367'))return{prefix:c,name:'Retención IVA',concepto:'reteiva',aplica:'AMBOS',tarifa:15,casPJb:null,casPJr:131,casPNb:null,casPNr:131};
+  if(c.startsWith('2368'))return{prefix:c,name:'Retención Timbre',concepto:'timbre',aplica:'AMBOS',tarifa:0,casPJb:null,casPJr:135,casPNb:null,casPNr:135};
+  return{prefix:c,name:name||'Otros',concepto:'otros',aplica:'AMBOS',tarifa:3.5,casPJb:41,casPJr:54,casPNb:92,casPNr:108};
+}
+function extractTarifa(name){const m=name.match(/(\d+[.,]?\d*)\s*%/);return m?parseFloat(m[1].replace(',','.'))||null:null}
+
+function buildMappingTable(){
+  const byCode={};
+  parsedAccounts.forEach(a=>{if(!byCode[a.code])byCode[a.code]={code:a.code,name:a.name,totalDeb:0,totalCre:0,count:0};byCode[a.code].totalDeb+=a.deb;byCode[a.code].totalCre+=a.cre;byCode[a.code].count++});
+  const accs=Object.values(byCode).sort((a,b)=>a.code.localeCompare(b.code));
+  mappings=accs.map(acc=>{
+    const mapped=autoMapAccount(acc.code,acc.name);
+    const tName=extractTarifa(acc.name);
+    return{...acc,...mapped,userTarifa:tName!==null?tName:mapped.tarifa};
+  });
+  const opts=DEFAULT_MAP.map(m=>`<option value="${m.concepto}">${m.name}</option>`).join('')+'<option value="reteiva">Retención IVA</option><option value="timbre">Retención Timbre</option><option value="ignorar">— Ignorar —</option>';
+  const body=document.getElementById('mapBody');body.innerHTML='';
+  mappings.forEach((m,idx)=>{
+    const net=m.totalCre-m.totalDeb;
+    const base=m.userTarifa>0?Math.round(net/(m.userTarifa/100)):0;
+    const badge=m.aplica==='PJ'?'<span class="badge badge-pj">PJ</span>':m.aplica==='PN'?'<span class="badge badge-pn">PN</span>':'<span class="badge badge-both">Ambos</span>';
+    body.innerHTML+=`<tr><td class="mono fw600">${m.code}</td><td>${m.name} <span style="color:#999;font-size:.7rem">(${m.count})</span></td>
+      <td><select onchange="updateMap(${idx},'c',this.value)">${opts.replace('value="'+m.concepto+'"','value="'+m.concepto+'" selected')}</select></td>
+      <td class="text-center">${badge}</td>
+      <td><input type="number" value="${m.userTarifa}" step="0.01" min="0" max="100" onchange="updateMap(${idx},'t',this.value)" style="width:60px"></td>
+      <td class="text-right mono fw600">$${fN(net)}</td>
+      <td class="text-right mono" id="b${idx}">$${fN(base)}</td>
+      <td class="text-center mono">${m.casPJb||m.casPNb||'—'}</td>
+      <td class="text-center mono">${m.casPJr||m.casPNr||'—'}</td></tr>`;
+  });
+  const pjI=new Set(),pnI=new Set();
+  parsedAccounts.forEach(a=>{if(a.isPJ)pjI.add(a.id);else pnI.add(a.id)});
+  document.getElementById('mappedCount').textContent=mappings.length;
+  document.getElementById('pjCount').textContent=pjI.size;
+  document.getElementById('pnCount').textContent=pnI.size;
+}
+
+function updateMap(idx,f,v){
+  if(f==='c'){const d=DEFAULT_MAP.find(m=>m.concepto===v);if(d)Object.assign(mappings[idx],d,{concepto:v});else if(v==='reteiva')Object.assign(mappings[idx],{concepto:'reteiva',casPJr:131,casPNr:131,casPJb:null,casPNb:null});else if(v==='timbre')Object.assign(mappings[idx],{concepto:'timbre',casPJr:135,casPNr:135,casPJb:null,casPNb:null});else mappings[idx].concepto='ignorar'}
+  if(f==='t')mappings[idx].userTarifa=parseFloat(v)||0;
+  const m=mappings[idx],net=m.totalCre-m.totalDeb,base=m.userTarifa>0?Math.round(net/(m.userTarifa/100)):0;
+  const el=document.getElementById('b'+idx);if(el)el.textContent='$'+fN(base);
+}
+
+/* ═══ STEP 4: FORM 350 ═══ */
+function goStep4(){goStep(4);calc350();render350();renderDet()}
+
+function calc350(){
+  const c={};for(let i=29;i<=155;i++)c[i]=0;
+  const cM={};mappings.forEach(m=>{cM[m.code]=m});
+  const det={};
+  parsedAccounts.forEach(a=>{
+    const m=cM[a.code];if(!m||m.concepto==='ignorar')return;
+    const net=a.cre-a.deb;if(net===0)return;
+    const t=m.userTarifa||0,base=t>0?Math.round(net/(t/100)):0;
+    let cb,cr;
+    if(a.isPJ&&m.casPJr){cb=m.casPJb;cr=m.casPJr}else if(!a.isPJ&&m.casPNr){cb=m.casPNb;cr=m.casPNr}else{cb=m.casPJb||m.casPNb;cr=m.casPJr||m.casPNr}
+    if(cb)c[cb]=(c[cb]||0)+base;if(cr)c[cr]=(c[cr]||0)+net;
+    const k=a.id||'SIN_ID';
+    if(!det[k])det[k]={id:a.id,tercero:a.tercero,isPJ:a.isPJ,conceptos:{}};
+    if(!det[k].conceptos[m.concepto])det[k].conceptos[m.concepto]={name:m.name,base:0,ret:0,cb,cr};
+    det[k].conceptos[m.concepto].base+=base;det[k].conceptos[m.concepto].ret+=net;
+  });
+  for(const k in c)if(c[k]<0)c[k]=0;
+  c[129]=0;
+  const rr=[42,43,44,45,46,47,48,49,50,51,52,53,54,57,58,68,69,70,71,72,73,74,75,76,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,111,112,121,122,123,124,125,126,127,128];
+  c[130]=rr.reduce((s,x)=>s+(c[x]||0),0)-(c[129]||0);
+  c[133]=0;c[134]=(c[131]||0)+(c[132]||0)-(c[133]||0);
+  c[136]=(c[130]||0)+(c[134]||0)+(c[135]||0);c[137]=0;c[138]=(c[136]||0)+(c[137]||0);
+  result350={cas:c,det};
+}
+
+function render350(){
+  const c=result350.cas;
+  const emp=document.getElementById('cfgEmpresa').value;
+  const nit=document.getElementById('cfgNit').value;
+  const yr=document.getElementById('cfgYear').value;
+  const mo=document.getElementById('cfgMonth').value;
+  const moName=['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][parseInt(mo)]||mo;
+  function cv(n){return n?(n).toLocaleString('es-CO'):''}
+  function cvc(cas){const v=c[cas]||0;return`<div class="cas-val${v?' filled':'zero'}">${v?cv(v):''}</div><div class="cas-num">${cas}</div>`}
+  function cvb(bCas,rCas){const vb=bCas?c[bCas]||0:0;const vr=rCas?c[rCas]||0:0;
+    return`<div class="cas-val${vb?' filled':''}">${vb?cv(vb):''}</div><div class="cas-num">${bCas||''}</div><div class="cas-val${vr?' filled':''}">${vr?cv(vr):''}</div><div class="cas-num">${rCas||''}</div>`}
+
+  // Row helper: concepto | basePJ casNum | retPJ casNum | basePN casNum | retPN casNum
+  function dRow(label,bJ,rJ,bN,rN){
+    return`<div class="dian-row"><div class="concepto">${label}</div>${cvb(bJ,rJ)}${cvb(bN,rN)}</div>`}
+
+  let h=`<div class="dian-form">
+    <!-- TOP BAR -->
+    <div class="dian-top">
+      <div class="dian-top-left">DIAN<br><span style="font-size:7px;font-weight:400">Dirección de Impuestos<br>y Aduanas Nacionales</span></div>
+      <div class="dian-top-center">
+        <div class="dian-title">Declaración de Retenciones en la Fuente</div>
+        <div class="dian-subtitle">Resolución 000031 de 2024 — Borrador generado automáticamente</div>
+      </div>
+      <div class="dian-top-right">350</div>
+    </div>
+    <!-- DATOS DECLARANTE -->
+    <div class="dian-datos">
+      <div><span class="lbl">1. Año</span><span class="val">${yr}</span></div>
+      <div class="razon"><span class="lbl">11. Razón social</span><span class="val">${emp}</span></div>
+      <div><span class="lbl">3. Período</span><span class="val">${mo} ${moName}</span></div>
+      <div><span class="lbl">5. NIT</span><span class="val">${nit}</span></div>
+    </div>
+    <!-- COLUMN HEADERS (2 levels: PJ / PN, then Base / Retención) -->
+    <div class="dian-sec">A título de impuesto sobre la renta y complementario — Retenciones</div>
+    <div style="display:grid;grid-template-columns:200px repeat(4,1fr) repeat(4,1fr);font-size:8px;font-weight:700;text-align:center;border-bottom:2px solid #000">
+      <div style="grid-row:span 2;display:flex;align-items:center;justify-content:center;border-right:1px solid #999;padding:4px;background:#f5f5f5">Concepto</div>
+      <div style="grid-column:span 4;background:#c6dced;border-right:1px solid #999;border-bottom:1px solid #999;padding:3px">PERSONAS JURÍDICAS Y ASIMILADAS</div>
+      <div style="grid-column:span 4;background:#d5e8d4;border-bottom:1px solid #999;padding:3px">PERSONAS NATURALES Y ASIMILADAS</div>
+      <div style="background:#dce8f4;border-right:1px solid #eee;padding:2px">Pagos/abonos</div>
+      <div style="background:#dce8f4;border-right:1px solid #eee;padding:2px">Cas.</div>
+      <div style="background:#dce8f4;border-right:1px solid #eee;padding:2px">Retención</div>
+      <div style="background:#dce8f4;border-right:1px solid #999;padding:2px">Cas.</div>
+      <div style="background:#e5f0e0;border-right:1px solid #eee;padding:2px">Pagos/abonos</div>
+      <div style="background:#e5f0e0;border-right:1px solid #eee;padding:2px">Cas.</div>
+      <div style="background:#e5f0e0;border-right:1px solid #eee;padding:2px">Retención</div>
+      <div style="background:#e5f0e0;padding:2px">Cas.</div>
+    </div>`;
+
+  // Helper for 8-col rows (PJ base, PJ cas, PJ ret, PJ cas, PN base, PN cas, PN ret, PN cas)
+  function fRow(label,bJ,rJ,bN,rN){
+    const vbJ=bJ?c[bJ]||0:0,vrJ=rJ?c[rJ]||0:0,vbN=bN?c[bN]||0:0,vrN=rN?c[rN]||0:0;
+    return`<div style="display:grid;grid-template-columns:200px repeat(8,1fr);font-size:10px;border-bottom:1px solid #e0e0e0">
+      <div style="padding:3px 8px;border-right:1px solid #ddd;font-size:9.5px">${label}</div>
+      <div style="text-align:right;padding:3px 6px;font-family:'JetBrains Mono',monospace;border-right:1px solid #eee;${vbJ?'background:#edf4ff;font-weight:600':''}">${vbJ?cv(vbJ):''}</div>
+      <div style="text-align:center;padding:3px 2px;font-size:8px;color:#888;background:#fafafa;border-right:1px solid #eee">${bJ||''}</div>
+      <div style="text-align:right;padding:3px 6px;font-family:'JetBrains Mono',monospace;border-right:1px solid #eee;${vrJ?'background:#edf4ff;font-weight:600':''}">${vrJ?cv(vrJ):''}</div>
+      <div style="text-align:center;padding:3px 2px;font-size:8px;color:#888;background:#fafafa;border-right:1px solid #999">${rJ||''}</div>
+      <div style="text-align:right;padding:3px 6px;font-family:'JetBrains Mono',monospace;border-right:1px solid #eee;${vbN?'background:#f0f8ef;font-weight:600':''}">${vbN?cv(vbN):''}</div>
+      <div style="text-align:center;padding:3px 2px;font-size:8px;color:#888;background:#fafafa;border-right:1px solid #eee">${bN||''}</div>
+      <div style="text-align:right;padding:3px 6px;font-family:'JetBrains Mono',monospace;border-right:1px solid #eee;${vrN?'background:#f0f8ef;font-weight:600':''}">${vrN?cv(vrN):''}</div>
+      <div style="text-align:center;padding:3px 2px;font-size:8px;color:#888;background:#fafafa">${rN||''}</div>
+    </div>`}
+
+  // BASE SUJETA A RETENCIÓN + RETENCIONES (side by side)
+  h+=fRow('Rentas de trabajo',null,null,77,93);
+  h+=fRow('Rentas de pensiones',null,null,78,94);
+  h+=fRow('Honorarios',29,42,79,95);
+  h+=fRow('Comisiones',30,43,80,96);
+  h+=fRow('Servicios',31,44,81,97);
+  h+=fRow('Rendimientos financieros',32,45,82,98);
+  h+=fRow('Arrendamientos (muebles e inmuebles)',33,46,83,99);
+  h+=fRow('Regalías y propiedad intelectual',34,47,84,100);
+  h+=fRow('Dividendos y participaciones',35,48,85,101);
+  h+=fRow('Compras',36,49,86,102);
+  h+=fRow('Transacciones tarjetas débito/crédito',37,50,87,103);
+  h+=fRow('Contratos de construcción',38,51,88,104);
+  h+=fRow('Enajenación activos fijos PN',null,null,89,105);
+  h+=fRow('Loterías, rifas, apuestas',39,52,90,106);
+  h+=fRow('Hidrocarburos y prod. mineros',40,53,91,107);
+  h+=fRow('Otros pagos sujetos a retención',41,54,92,108);
+
+  h+=`<div class="dian-sec">Pagos al exterior</div>`;
+  h+=fRow('A países sin convenio',55,57,109,111);
+  h+=fRow('A países con convenio vigente',56,58,110,112);
+
+  h+=`<div class="dian-sec">Autorretenciones a título de renta</div>`;
+  h+=fRow('Contribuyentes exonerados (Art. 114-1 E.T.)',59,68,null,null);
+  h+=fRow('Ventas',60,69,113,121);
+  h+=fRow('Honorarios',61,70,114,122);
+  h+=fRow('Comisiones',62,71,115,123);
+  h+=fRow('Servicios',63,72,116,124);
+  h+=fRow('Rendimientos financieros',64,73,117,125);
+  h+=fRow('Otros conceptos',67,76,120,128);
+
+  // TOTALS section
+  function tRow(label,val,cas,style){
+    const sty=style||'';
+    return`<div style="display:grid;grid-template-columns:1fr 200px 50px;border-bottom:2px solid #999;font-size:11px;font-weight:700;${sty}">
+      <div style="padding:5px 10px">${label}</div>
+      <div style="text-align:right;padding:5px 10px;font-family:'JetBrains Mono',monospace;border-left:1px solid #ccc">${cv(val)}</div>
+      <div style="text-align:center;padding:5px 4px;font-size:9px;color:#666;background:#fafafa;border-left:1px solid #ccc">${cas}</div>
+    </div>`}
+
+  h+=`<div class="dian-sec" style="border-top:2px solid #000">Totales</div>`;
+  h+=tRow('(-) Menos retenciones en exceso o indebidas',c[129]||0,129,'color:#c00');
+  h+=tRow('Total retenciones renta y complementario',c[130]||0,130,'background:#dce8f4');
+  h+=tRow('A responsables del IVA',c[131]||0,131,'');
+  h+=tRow('Practicadas por servicios a no residentes (IVA)',c[132]||0,132,'');
+  h+=tRow('(-) Menos retenciones IVA en exceso',c[133]||0,133,'color:#c00');
+  h+=tRow('Total retenciones IVA',c[134]||0,134,'background:#dce8f4');
+  h+=tRow('Retenciones impuesto de timbre nacional',c[135]||0,135,'');
+  h+=tRow('Total retenciones (130 + 134 + 135)',c[136]||0,136,'background:#c6dced;font-size:13px');
+  h+=tRow('Sanciones',c[137]||0,137,'');
+  h+=tRow('Total retenciones más sanciones',c[138]||0,138,'background:#b6d7a8;font-size:14px;color:#1a5c1a');
+
+  // 980 Pago total
+  h+=`<div style="display:grid;grid-template-columns:1fr 200px 50px;border-top:3px solid #000;font-weight:900;font-size:14px;background:#f0f0f0">
+    <div style="padding:8px 12px">980. Pago total $</div>
+    <div style="text-align:right;padding:8px 12px;font-family:'JetBrains Mono',monospace;border-left:2px solid #000;font-size:16px">${cv(c[138]||0)}</div>
+    <div style="padding:8px 4px;text-align:center;font-size:9px;color:#666;border-left:1px solid #999">138</div>
+  </div>`;
+
+  h+=`<div class="dian-footer"><strong>BORRADOR</strong> — Generado automáticamente. Este documento NO es una declaración oficial. Debe ser verificado y presentado a través del portal DIAN.</div>`;
+  h+=`</div>`; // close dian-form
+
+  document.getElementById('form350Visual').innerHTML=h;
+  document.getElementById('resultStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">$${fN(c[130])}</div><div class="lbl">Ret. Renta (130)</div></div>
+    <div class="stat-card amber"><div class="val">$${fN(c[134])}</div><div class="lbl">Ret. IVA (134)</div></div>
+    <div class="stat-card green"><div class="val">$${fN(c[136])}</div><div class="lbl">Total Ret. (136)</div></div>
+    <div class="stat-card red"><div class="val">$${fN(c[138])}</div><div class="lbl">Pago Total (138)</div></div>`;
+}
+
+function renderDet(){
+  const entries=Object.values(result350.det).sort((a,b)=>{const tA=Object.values(a.conceptos).reduce((s,c)=>s+c.ret,0);const tB=Object.values(b.conceptos).reduce((s,c)=>s+c.ret,0);return tB-tA});
+  let h='<table class="map-table"><thead><tr><th>ID</th><th>Tercero</th><th>Tipo</th><th>Concepto</th><th class="text-right">Base</th><th class="text-right">Retención</th><th>Cas.B</th><th>Cas.R</th></tr></thead><tbody>';
+  entries.forEach(e=>{
+    const cs=Object.values(e.conceptos);
+    cs.forEach((cc,i)=>{h+=`<tr>${i===0?`<td class="mono" rowspan="${cs.length}">${e.id}</td><td rowspan="${cs.length}">${e.tercero}</td><td class="text-center" rowspan="${cs.length}"><span class="badge ${e.isPJ?'badge-pj':'badge-pn'}">${e.isPJ?'PJ':'PN'}</span></td>`:''}
+      <td>${cc.name}</td><td class="text-right mono">${fN(cc.base)}</td><td class="text-right mono fw600">${fN(cc.ret)}</td>
+      <td class="text-center mono">${cc.cb||'—'}</td><td class="text-center mono">${cc.cr||'—'}</td></tr>`});
+  });
+  h+='</tbody></table>';
+  document.getElementById('detailTable').innerHTML=h;
+}
+
+/* ═══ EXCEL EXPORT ═══ */
+async function exportXls350(){
+  const cas=result350.cas;
+  const tplRes=await fetch('template_350.xlsx');
+  if(!tplRes.ok)throw new Error('No se pudo cargar la plantilla del 350.');
+  const wb=new ExcelJS.Workbook();
+  await wb.xlsx.load(await tplRes.arrayBuffer());
+  wb.calcProperties={fullCalcOnLoad:true};
+
+  const ws=wb.getWorksheet('350');
+
+  // Mapa casilla -> celda en la plantilla
+  // PJ Base (col T), PJ Retencion (col AB), PN Base (col AG), PN Retencion (col AV)
+  const map={
+    // PJ Base, PJ Ret, PN Base, PN Ret
+    // Honorarios
+    29:['T19'],42:['AB19'],79:['AG19'],95:['AV19'],
+    // Comisiones
+    30:['T20'],43:['AB20'],80:['AG20'],96:['AV20'],
+    // Servicios
+    31:['T21'],44:['AB21'],81:['AG21'],97:['AV21'],
+    // Rendimientos financieros
+    32:['T22'],45:['AB22'],82:['AG22'],98:['AV22'],
+    // Arrendamientos
+    33:['T23'],46:['AB23'],83:['AG23'],99:['AV23'],
+    // Regalias
+    34:['T24'],47:['AB24'],84:['AG24'],100:['AV24'],
+    // Dividendos
+    35:['T25'],48:['AB25'],85:['AG25'],101:['AV25'],
+    // Compras
+    36:['T26'],49:['AB26'],86:['AG26'],102:['AV26'],
+    // Tarjetas
+    37:['T27'],50:['AB27'],87:['AG27'],103:['AV27'],
+    // Construccion
+    38:['T28'],51:['AB28'],88:['AG28'],104:['AV28'],
+    // Enajenacion activos fijos PN
+    89:['AG29'],105:['AV29'],
+    // Loterias
+    39:['T30'],52:['AB30'],90:['AG30'],106:['AV30'],
+    // Hidrocarburos
+    40:['T31'],53:['AB31'],91:['AG31'],107:['AV31'],
+    // Otros pagos
+    41:['T32'],54:['AB32'],92:['AG32'],108:['AV32'],
+    // Exterior sin convenio
+    55:['T33'],57:['AB33'],109:['AG33'],111:['AV33'],
+    // Exterior con convenio
+    56:['T34'],58:['AB34'],110:['AG34'],112:['AV34'],
+    // Autorretenciones
+    59:['T35'],68:['AB35'],
+    60:['T36'],69:['AB36'],113:['AG36'],121:['AV36'],
+    61:['T37'],70:['AB37'],114:['AG37'],122:['AV37'],
+    62:['T38'],71:['AB38'],115:['AG38'],123:['AV38'],
+    63:['T39'],72:['AB39'],116:['AG39'],124:['AV39'],
+    64:['T40'],73:['AB40'],117:['AG40'],125:['AV40'],
+    65:['T41'],74:['AB41'],118:['AG41'],126:['AV41'],
+    66:['T42'],75:['AB42'],119:['AG42'],127:['AV42'],
+    67:['T43'],76:['AB43'],120:['AG43'],128:['AV43'],
+    // Rentas de trabajo y pensiones PN
+    77:['AG17'],93:['AV17'],
+    78:['AG18'],94:['AV18'],
+    // Resumen
+    129:['AV44'],131:['AV47'],132:['AV48'],133:['AV49'],135:['AV51'],137:['AV53'],
+  };
+
+  // Casillas calculadas (formulas en la plantilla)
+  const calcMap={130:'AV45',134:'AV50',136:'AV52',138:'AV54'};
+
+  // Escribir valores base
+  for(const[k,cells] of Object.entries(map)){
+    const val=cas[k]||0;
+    if(val){
+      for(const cell of cells){
+        ws.getCell(cell).value=val;
+      }
+    }
+  }
+
+  // Escribir valores calculados con formula+result
+  for(const[k,cell] of Object.entries(calcMap)){
+    const c=ws.getCell(cell);
+    const val=cas[k]||0;
+    if(c.value&&typeof c.value==='object'&&c.value.formula){
+      c.value={formula:c.value.formula,result:val};
+    }else{
+      c.value=val;
+    }
+  }
+
+  // Descargar
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const yr=document.getElementById('cfgYear').value;
+  const nit=document.getElementById('cfgNit').value;
+  const mo=document.getElementById('cfgMonth').value;
+  a.href=url;a.download='F350_RTE_'+yr+'_'+mo+'_'+(nit||'SIN_NIT')+'.xlsx';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ═══ NAV ═══ */
+function goStep(n){
+  for(let i=1;i<=4;i++){const el=document.getElementById('step'+i);if(el)el.classList.toggle('hidden',i!==n)}
+  document.querySelectorAll('.step-pill').forEach((el,i)=>{el.classList.remove('active','done');if(i+1<n)el.classList.add('done');if(i+1===n)el.classList.add('active')});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function switchTab(el,id){el.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');el.closest('.card').querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active')}
+
+async function descargarEjemplo350(){
+  const a=document.createElement('a');
+  a.href='template_350.xlsx';
+  a.download='Ejemplo_Retencion350_ExogenaDIAN.xlsx';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+}
+
+// Wrapper: deshabilitar boton mientras genera archivo
+async function btnLoading(btn,fn){
+  if(btn.disabled)return;
+  const orig=btn.innerHTML;
+  btn.disabled=true;btn.style.opacity='.6';
+  btn.innerHTML='Generando...';
+  try{await fn()}catch(e){exoToast('Error: '+e.message,'error');console.error(e)}
+  finally{btn.disabled=false;btn.style.opacity='';btn.innerHTML=orig}
+}
+</script>
 <div style="margin-top:32px;padding:16px 20px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;font-size:.76rem;color:#9ca3af;line-height:1.6">
-  <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">Exógena DIAN</a> &middot; Herramienta de asistencia &mdash; El contador debe validar antes de presentar a la DIAN<br>
+  <a href="index.html" style="color:#059669;text-decoration:none;font-weight:600">Exógena DIAN</a> &middot; Los valores calculados son estimaciones basadas en el balance cargado. Deben ser verificados y ajustados por un contador p&uacute;blico o revisor fiscal antes de su presentaci&oacute;n oficial.<br>
   &#128274; Tus archivos se procesan 100% en tu navegador &middot; Nunca se env&iacute;an a servidores &middot; Sin IA &middot; Sin almacenamiento &middot; <a href="https://exogenadian.com/politica-privacidad.html" style="color:#059669">Pol&iacute;tica de privacidad</a> &middot; <a href="https://exogenadian.com/politica-privacidad.html" style="color:#059669">C&oacute;mo protegemos tus datos</a>
 </div>
 <div id="main"></div>

@@ -168,6 +168,7 @@
   '      <div class="tn-dd">'+
   '        <a href="exogena.html">📊 Exógena DIAN</a>'+
   '        <a href="renta110.html">📑 Renta F110</a>'+
+  '        <a href="formato2516.html">📝 2516 Conciliación Fiscal</a>'+
   '        <a href="iva300.html">📋 IVA 300</a>'+
   '        <a href="retencion350.html">🧮 Retención 350</a>'+
   '        <a href="retencion-dividendos.html">💰 Retención Dividendos</a>'+
@@ -251,6 +252,7 @@
   '          <h6>Tributarias</h6>'+
   '          <a href="exogena.html"><div class="dd-icon" style="background:#ECFDF5">📊</div> Exógena DIAN</a>'+
   '          <a href="renta110.html"><div class="dd-icon" style="background:#F5F3FF">📑</div> Renta F110</a>'+
+  '          <a href="formato2516.html"><div class="dd-icon" style="background:#FEF3C7">📝</div> 2516 Conciliación Fiscal</a>'+
   '          <a href="iva300.html"><div class="dd-icon" style="background:#FFFBEB">📋</div> IVA 300</a>'+
   '          <a href="retencion350.html"><div class="dd-icon" style="background:#EFF6FF">🧮</div> Retención 350</a>'+
   '          <a href="retencion-dividendos.html"><div class="dd-icon" style="background:#F5F3FF">💰</div> Retención Dividendos</a>'+

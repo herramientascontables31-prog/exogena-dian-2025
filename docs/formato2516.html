@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="shared/cookie-consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-S7SM6ST4CC');</script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#059669">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Formato 2516 — Conciliacion Fiscal | ExogenaDIAN</title>
+<meta name="description" content="Genera el Formato 2516 Version 9 (Conciliacion Fiscal) desde tu balance de prueba. Replica exacta del prevalidador DIAN con 7 hojas: ESF Patrimonio, ERI Renta Liquida, Impuesto Diferido, Activos Fijos. Excel formulado.">
+<link rel="canonical" href="https://exogenadian.com/formato2516.html">
+<meta property="og:title" content="Formato 2516 Conciliacion Fiscal — Prevalidador DIAN | ExogenaDIAN">
+<meta property="og:description" content="Genera el F2516 V9 desde tu balance. Replica del prevalidador DIAN con las 7 hojas. Excel formulado listo para MUISCA.">
+<meta property="og:url" content="https://exogenadian.com/formato2516.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="ExogenaDIAN">
+<meta property="og:image" content="https://exogenadian.com/og-image.png">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Formato 2516 Conciliacion Fiscal","url":"https://exogenadian.com/formato2516.html","description":"Genera el Formato 2516 V9 de Conciliacion Fiscal desde balance de prueba. Prevalidador DIAN completo.","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"COP"},"author":{"@type":"Organization","name":"ExogenaDIAN","url":"https://exogenadian.com"}}
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" integrity="sha384-Pqp51FUN2/qzfxZxBCtF0stpc9ONI6MYZpVqmo8m20SoaQCzf+arZvACkLkirlPz" crossorigin="anonymous"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f0f2f5;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--pri:#1B3A5C;--pri2:#2E75B6;--pri3:#D6E4F0;--green:#548235;--green2:#E2EFDA;--red:#CC0000;--amber:#D97706;--amber2:#FFF8E1;--border:#e2e8f0;--radius:10px;--shadow:0 2px 12px rgba(0,0,0,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#1B3A5C 0%,#2E75B6 100%);padding:28px 32px;border-radius:16px;margin-bottom:24px;color:#fff;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:1.5rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.header h1 span{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:600}
+.header p{opacity:.8;font-size:.85rem;margin-top:4px}
+.header-right{text-align:right;font-size:.8rem;opacity:.7}
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.card-title{font-size:1.05rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.btn{padding:10px 24px;border:none;border-radius:8px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--pri2);color:#fff}.btn-primary:hover{background:var(--pri);transform:translateY(-1px)}
+.btn-success{background:var(--green);color:#fff}.btn-success:hover{opacity:.9}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--pri2);color:var(--pri)}
+.actions{display:flex;gap:12px;justify-content:center;margin-top:20px}
+.alert{padding:14px 18px;border-radius:8px;font-size:.85rem;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.alert-info{background:var(--pri3);color:var(--pri);border:1px solid #B4C6E7}
+.alert-warn{background:var(--amber2);color:#92400E;border:1px solid #FDE68A}
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.config-item{display:flex;flex-direction:column;gap:4px}
+.config-item label{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.config-item input,.config-item select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.9rem;font-family:inherit}
+.config-item input:focus,.config-item select:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 3px rgba(46,117,182,.15)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--border);text-align:center}
+.stat-card .val{font-size:1.3rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.stat-card .lbl{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-top:4px}
+.stat-card.blue .val{color:var(--pri2)}.stat-card.green .val{color:var(--green)}.stat-card.amber .val{color:var(--amber)}.stat-card.red .val{color:var(--red)}
+.hidden{display:none!important}
+.steps-indicator{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.step-ind{display:flex;align-items:center;gap:6px;padding:6px 16px;border-radius:20px;font-size:.82rem;font-weight:600;background:var(--card);border:1px solid var(--border);color:var(--muted);transition:.3s}
+.step-ind.active{background:var(--pri);color:#fff;border-color:var(--pri)}
+.step-ind.done{background:var(--green2);color:var(--green);border-color:var(--green)}
+.step-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;background:rgba(0,0,0,.08)}
+.step-ind.active .step-num{background:rgba(255,255,255,.25)}
+.step-arrow{color:var(--muted);font-size:.8rem}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);overflow-x:auto}
+.tab{padding:10px 18px;font-size:.8rem;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;color:var(--muted);white-space:nowrap;transition:.2s}
+.tab:hover{color:var(--pri)}
+.tab.active{color:var(--pri);border-bottom-color:var(--pri2)}
+.scroll-box{overflow:auto;max-height:500px}
+.map-table{width:100%;border-collapse:collapse;font-size:.78rem}
+.map-table th{background:var(--pri);color:#fff;padding:6px 10px;text-align:left;position:sticky;top:0;z-index:1;font-size:.72rem;text-transform:uppercase}
+.map-table td{padding:5px 10px;border-bottom:1px solid var(--border)}
+.map-table tr:hover{background:#f8fafc}
+.text-right{text-align:right}
+.mono{font-family:'JetBrains Mono',monospace}
+.fmt-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.68rem;font-weight:700;color:#fff}
+.fmt-h2{background:#1B3A5C}.fmt-h3{background:#2E75B6}.fmt-h4{background:#D97706}.fmt-h5{background:#7C3AED}.fmt-h6{background:#059669}.fmt-h7{background:#DC2626}
+.help-btn{background:var(--pri3);border:1px solid var(--pri2);color:var(--pri);width:20px;height:20px;border-radius:50%;font-size:.7rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+.exo-loading{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.92);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.exo-loading.active{display:flex}
+.spinner{width:48px;height:48px;border:4px solid var(--border);border-top-color:var(--pri2);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner-text{font-size:.9rem;color:var(--muted);font-weight:600}
+@media(max-width:900px){.config-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.steps-indicator{gap:4px}.step-ind{padding:4px 10px;font-size:.72rem}}
+</style>
+</head>
+<body>
+<div class="exo-loading" id="loadingOverlay"><div class="spinner"></div><div class="spinner-text" id="spinnerText">Procesando balance...</div></div>
+<div id="nav-container"></div>
+<script src="shared/pro.js"></script>
+<script src="shared/toast.js"></script>
+<script src="shared/nav.js"></script>
+<script src="shared/pro-banner.js"></script>
+<div class="container">
+  <div class="header" style="padding:20px 28px"><div>
+    <h1><span>2516</span> Conciliacion Fiscal</h1>
+    <p>Version 9 · Reporte de Conciliacion Fiscal · AG 2025 · Replica del Prevalidador DIAN</p>
+  </div><div class="header-right"><span id="proBadgeHeader" style="display:none;background:rgba(255,255,255,.2);padding:3px 10px;border-radius:12px;font-size:.75rem;font-weight:700">PRO</span><br>100% en navegador</div></div>
+
+  <!-- STEPS -->
+  <div class="steps-indicator">
+    <div class="step-ind active" id="si1"><div class="step-num">1</div> Cargar Balance</div>
+    <div class="step-arrow">&rarr;</div>
+    <div class="step-ind" id="si2"><div class="step-num">2</div> Clasificar</div>
+    <div class="step-arrow">&rarr;</div>
+    <div class="step-ind" id="si3"><div class="step-num">3</div> Revisar 2516</div>
+    <div class="step-arrow">&rarr;</div>
+    <div class="step-ind" id="si4"><div class="step-num">4</div> Descargar</div>
+  </div>
+
+  <!-- ═══ STEP 1: CARGAR BALANCE ═══ -->
+  <div id="step1">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="card-title">1. Cargar Balance de Prueba</div>
+        <span style="font-size:.72rem;color:var(--green);font-weight:600;background:var(--green2);padding:3px 10px;border-radius:12px">100% en tu equipo</span>
+      </div>
+      <div class="alert alert-info"><span>&#128161;</span><div>Sube el mismo balance de prueba que usaste para el Formulario 110. La herramienta clasifica automaticamente cada cuenta en las secciones del 2516 (ESF Patrimonio, ERI Renta Liquida, etc.). <strong>Los valores generados son borradores que deben ser verificados por un contador publico.</strong></div></div>
+      <div id="uploadZone" style="border:2px dashed var(--border);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:.3s;position:relative" onclick="document.getElementById('fileInput2516').click()">
+        <input type="file" accept=".xlsx,.xls,.csv" id="fileInput2516" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer">
+        <div style="font-size:2rem;margin-bottom:8px">&#128196;</div>
+        <div style="font-weight:600;color:var(--pri)">Arrastra tu balance aqui o haz clic para seleccionar</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:4px">Excel (.xlsx, .xls) o CSV · Maximo 20 MB</div>
+        <div id="fileName" style="margin-top:8px;font-size:.82rem;color:var(--green);font-weight:600;display:none"></div>
+      </div>
+      <div id="errorMsg" class="hidden" style="margin-top:12px;padding:10px;background:#FEE2E2;border:1px solid #FECACA;border-radius:8px;color:#991B1B;font-size:.82rem"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Datos del Declarante</div>
+      <div class="config-grid">
+        <div class="config-item"><label>5. NIT</label><input type="text" id="cfgNit" placeholder="Ej: 900875335"></div>
+        <div class="config-item"><label>11. Razon Social</label><input type="text" id="cfgRazon" placeholder="Ej: MI EMPRESA S.A.S."></div>
+        <div class="config-item"><label>1. Ano Gravable</label><select id="cfgYear"><option value="2025" selected>2025</option><option value="2024">2024</option><option value="2026">2026</option></select></div>
+        <div class="config-item"><label>12. Cod. Direccion Seccional</label><input type="text" id="cfgDirSec" placeholder="Ej: 11"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="btnProcesar" onclick="procesarBalance()" disabled>Clasificar Balance &rarr;</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 2: CLASIFICACION ═══ -->
+  <div id="step2" class="hidden">
+    <div class="card">
+      <div class="card-title">2. Clasificacion del Balance en Secciones 2516</div>
+      <div id="clasifStats" class="stats"></div>
+      <div class="alert alert-warn"><span>&#9888;&#65039;</span><div>Revisa la clasificacion. Puedes cambiar la seccion de cualquier cuenta usando el dropdown. Las cuentas sin clasificar no se incluiran en el 2516.</div></div>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:12px 16px;display:flex;gap:12px;align-items:center;border-bottom:1px solid var(--border)">
+        <select id="seccionFilter" onchange="filtrarClasificacion()" style="padding:6px 12px;border:1px solid var(--border);border-radius:8px;font-size:.82rem;font-family:inherit">
+          <option value="">Todas las secciones</option>
+          <option value="H2">H2 — ESF Patrimonio</option>
+          <option value="H3">H3 — ERI Renta Liquida</option>
+          <option value="H4">H4 — Impuesto Diferido</option>
+          <option value="H7">H7 — Resumen</option>
+          <option value="—">Sin clasificar</option>
+        </select>
+        <span id="clasifCount" style="font-size:.78rem;color:var(--muted)"></span>
+      </div>
+      <div class="scroll-box" id="clasifTable"></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="goStep(1)">&larr; Volver</button>
+      <button class="btn btn-primary" onclick="goStep(3)">Revisar 2516 &rarr;</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 3: VISTA PREVIA 2516 ═══ -->
+  <div id="step3" class="hidden">
+    <div class="card">
+      <div class="card-title">3. Vista Previa del Formato 2516</div>
+      <div class="tabs" id="hojaTabs"></div>
+      <div id="hojaContent" style="padding:16px"></div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="goStep(2)">&larr; Volver a Clasificacion</button>
+      <button class="btn btn-primary" onclick="goStep(4)">Descargar Excel &rarr;</button>
+    </div>
+  </div>
+
+  <!-- ═══ STEP 4: DESCARGAR ═══ -->
+  <div id="step4" class="hidden">
+    <div class="card" style="text-align:center;padding:32px">
+      <div class="card-title" style="justify-content:center">4. Descargar Formato 2516</div>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:20px">Excel formulado con las 7 hojas del prevalidador DIAN + Formulario 110 integrado.<br>Los valores deben ser verificados por un contador publico antes de presentarlos.</p>
+      <button onclick="btnLoading(this,exportExcel2516)" class="btn btn-success" style="padding:14px 32px;font-size:1rem">Descargar Excel 2516</button>
+      <div style="margin-top:16px;padding:12px 16px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;font-size:.82rem;color:#166534;text-align:left">
+        <strong>Siguiente paso:</strong><br>
+        1. Abre el Excel y revisa cada hoja.<br>
+        2. Completa los valores que no se llenaron automaticamente (ajustes fiscales, impuesto diferido, etc.).<br>
+        3. Usa el Prevalidador DIAN para generar el XML y subirlo al MUISCA.
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="goStep(3)">&larr; Volver</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="text-align:center;padding:20px;font-size:.75rem;color:var(--muted)">
+    Los formatos generados son borradores que deben ser revisados y validados por un contador publico antes de presentarlos a la DIAN.<br>
+    ExogenaDIAN es una herramienta de apoyo, no reemplaza el criterio profesional contable.<br>
+    <a href="https://exogenadian.com" style="color:var(--pri2)">ExogenaDIAN.com</a>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   FORMATO 2516 V9 — CONCILIACION FISCAL
+   ═══════════════════════════════════════════════════════════ */
+
+const fN=n=>typeof n==='number'?Math.round(n).toLocaleString('es-CO'):'0';
+function btnLoading(btn,fn){btn.disabled=true;const t=btn.textContent;btn.textContent='Generando...';fn().then(()=>{btn.textContent=t;btn.disabled=false}).catch(e=>{btn.textContent=t;btn.disabled=false;exoToast('Error: '+e.message,'error');console.error(e)})}
+
+/* ── NAVIGATION ── */
+function goStep(n){
+  for(let i=1;i<=4;i++){
+    document.getElementById('step'+i).classList.toggle('hidden',i!==n);
+    const si=document.getElementById('si'+i);
+    si.classList.remove('active','done');
+    if(i<n)si.classList.add('done');
+    if(i===n)si.classList.add('active');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===3)renderVistaPrevia();
+}
+
+/* ── FILE UPLOAD ── */
+let archivoData=null;
+let cuentas2516=[]; // {code,name,val,valFiscal,hoja,concepto2516,descConcepto}
+
+document.getElementById('fileInput2516').addEventListener('change',e=>{
+  if(e.target.files[0])cargarArchivo(e.target.files[0]);
+});
+const dz=document.getElementById('uploadZone');
+['dragover','dragenter'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.style.borderColor='var(--pri2)'}));
+['dragleave','drop'].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.style.borderColor='var(--border)'}));
+dz.addEventListener('drop',e=>{if(e.dataTransfer.files[0])cargarArchivo(e.dataTransfer.files[0])});
+
+function cargarArchivo(file){
+  if(file.size>20*1024*1024){exoToast('Archivo demasiado grande (max 20 MB)','error');return}
+  const fn=document.getElementById('fileName');
+  fn.textContent=file.name;fn.style.display='block';
+  document.getElementById('btnProcesar').disabled=false;
+  const reader=new FileReader();
+  reader.onload=ev=>{archivoData=ev.target.result};
+  reader.readAsArrayBuffer(file);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MAPEO PUC → SECCIONES 2516
+   ═══════════════════════════════════════════════════════════ */
+
+// H2: ESF - Patrimonio (mapeo PUC → concepto 2516)
+// Formato: {puc:'prefijo', num:concepto2516, desc:'descripcion'}
+const MAP_H2=[
+  // ═══ ACTIVOS ═══
+  // 11 - Efectivo y equivalentes
+  {puc:'1105',num:12,desc:'Efectivo'},{puc:'1110',num:12,desc:'Efectivo'},{puc:'1115',num:12,desc:'Efectivo'},
+  {puc:'1120',num:13,desc:'Equivalentes al efectivo'},{puc:'1125',num:13,desc:'Equivalentes al efectivo'},
+  {puc:'1130',num:14,desc:'Efectivo restringido'},{puc:'1195',num:12,desc:'Efectivo'},
+  // 12 - Inversiones
+  {puc:'1205',num:23,desc:'Inv. deuda o patrimonio al costo'},{puc:'1210',num:22,desc:'Inv. deuda a costo amortizado'},
+  {puc:'1215',num:24,desc:'Inv. valor razonable con cambios en resultados'},{puc:'1220',num:25,desc:'Inv. valor razonable con cambios en ORI'},
+  {puc:'1225',num:28,desc:'Derechos fiduciarios'},{puc:'1230',num:26,desc:'Derivados con fines de negociacion'},
+  {puc:'1235',num:27,desc:'Derivados con fines de cobertura'},
+  {puc:'1240',num:29,desc:'Otras inversiones'},{puc:'1245',num:29,desc:'Otras inversiones'},
+  {puc:'1250',num:29,desc:'Otras inversiones'},{puc:'1255',num:29,desc:'Otras inversiones'},
+  {puc:'1260',num:29,desc:'Otras inversiones'},{puc:'1295',num:29,desc:'Otras inversiones'},
+  {puc:'1299',num:37,desc:'Deterioro acumulado inversiones - Otros'},
+  // 13 - Deudores / Cuentas por cobrar
+  {puc:'1305',num:41,desc:'Cuentas comerciales por cobrar'},{puc:'1310',num:46,desc:'CxC partes relacionadas'},
+  {puc:'1315',num:44,desc:'Dividendos y participaciones por cobrar'},{puc:'1320',num:45,desc:'CxC socios accionistas'},
+  {puc:'1325',num:43,desc:'Arrendamiento financiero o leasing'},{puc:'1328',num:42,desc:'CxC concesion'},
+  {puc:'1330',num:50,desc:'Anticipos de pagos'},{puc:'1332',num:50,desc:'Anticipos de pagos'},
+  {puc:'1335',num:50,desc:'Anticipos de pagos'},{puc:'1340',num:49,desc:'Reclamaciones por cobrar'},
+  {puc:'1345',num:51,desc:'Otras CxC'},{puc:'1350',num:51,desc:'Otras CxC'},
+  {puc:'1355',num:82,desc:'Activos imp corrientes - Anticipos'},
+  {puc:'135505',num:79,desc:'Saldo a favor imp renta'},{puc:'135515',num:80,desc:'Saldo a favor otros impuestos'},
+  {puc:'135517',num:80,desc:'Saldo a favor otros impuestos'},{puc:'135518',num:81,desc:'Descuentos tributarios'},
+  {puc:'1360',num:51,desc:'Otras CxC'},{puc:'1365',num:51,desc:'Otras CxC'},
+  {puc:'1370',num:48,desc:'Cartera dificil cobro'},{puc:'1380',num:51,desc:'Otras CxC'},
+  {puc:'1385',num:51,desc:'Otras CxC'},{puc:'1390',num:51,desc:'Otras CxC'},
+  {puc:'1399',num:54,desc:'Deterioro CxC comerciales'},
+  // 14 - Inventarios
+  {puc:'1405',num:64,desc:'Materias primas'},{puc:'1410',num:65,desc:'En proceso'},
+  {puc:'1415',num:65,desc:'En proceso'},{puc:'1420',num:67,desc:'Producto terminado'},
+  {puc:'1425',num:63,desc:'Inventario en transito'},{puc:'1430',num:62,desc:'Para la venta no producidos'},
+  {puc:'1435',num:62,desc:'Para la venta no producidos'},{puc:'1440',num:68,desc:'Obras en construccion para venta'},
+  {puc:'1445',num:69,desc:'Obras terminadas para venta'},{puc:'1450',num:66,desc:'Costos prestadores servicios'},
+  {puc:'1455',num:70,desc:'Repuestos clasificados como inventario'},{puc:'1460',num:62,desc:'Inventarios'},
+  {puc:'1465',num:71,desc:'Inventario actividad extraccion'},{puc:'1499',num:72,desc:'Deterioro inventarios'},
+  // 15 - Propiedad planta y equipo
+  {puc:'1504',num:85,desc:'Terrenos'},{puc:'1506',num:86,desc:'Construcciones en proceso'},
+  {puc:'1508',num:86,desc:'Construcciones en proceso'},{puc:'1512',num:87,desc:'Edificios - Costo'},
+  {puc:'1516',num:87,desc:'Edificios - Costo'},{puc:'1520',num:90,desc:'Otras PPE - Costo'},
+  {puc:'1524',num:90,desc:'Otras PPE - Costo'},{puc:'1528',num:90,desc:'Otras PPE - Costo'},
+  {puc:'1532',num:90,desc:'Otras PPE - Costo'},{puc:'1536',num:90,desc:'Otras PPE - Costo'},
+  {puc:'1540',num:90,desc:'Otras PPE - Costo'},{puc:'1544',num:90,desc:'Otras PPE - Costo'},
+  {puc:'1548',num:90,desc:'Otras PPE - Costo'},{puc:'1552',num:90,desc:'Otras PPE - Costo'},
+  {puc:'1556',num:90,desc:'Otras PPE - Costo'},{puc:'1560',num:90,desc:'Otras PPE - Costo'},
+  {puc:'1564',num:90,desc:'Otras PPE - Costo'},{puc:'1568',num:90,desc:'Otras PPE - Costo'},
+  {puc:'1572',num:90,desc:'Otras PPE - Costo'},{puc:'1576',num:90,desc:'Otras PPE - Costo'},
+  {puc:'1580',num:90,desc:'Otras PPE - Costo'},{puc:'1584',num:90,desc:'Otras PPE - Costo'},
+  {puc:'1588',num:90,desc:'Otras PPE - Costo'},
+  {puc:'1592',num:92,desc:'Depreciacion acumulada PPE'},{puc:'1596',num:91,desc:'Ajuste revaluaciones PPE'},
+  {puc:'1597',num:93,desc:'Deterioro acumulado PPE'},{puc:'1598',num:88,desc:'Ajuste revaluaciones edificios'},
+  // 16 - Intangibles
+  {puc:'1605',num:102,desc:'Otros intangibles - Costo'},{puc:'1610',num:98,desc:'Marcas patentes licencias - Costo'},
+  {puc:'1615',num:98,desc:'Marcas patentes licencias - Costo'},{puc:'1620',num:102,desc:'Otros intangibles - Costo'},
+  {puc:'1625',num:102,desc:'Otros intangibles - Costo'},{puc:'1630',num:102,desc:'Otros intangibles - Costo'},
+  {puc:'1635',num:107,desc:'Plusvalia - Adquisicion establecimiento comercio'},
+  {puc:'1698',num:104,desc:'Amortizacion acumulada intangibles'},
+  {puc:'1699',num:105,desc:'Deterioro acumulado intangibles'},
+  // 17 - Diferidos / Gastos pagados por anticipado
+  {puc:'1705',num:77,desc:'Gastos pagados anticipado - Otros'},{puc:'1710',num:74,desc:'Gastos pagados anticipado - Publicidad'},
+  {puc:'1715',num:75,desc:'Gastos pagados anticipado - Seguros'},{puc:'1720',num:76,desc:'Gastos pagados anticipado - Arrendamientos'},
+  {puc:'1725',num:77,desc:'Gastos pagados anticipado - Otros'},{puc:'1730',num:77,desc:'Gastos pagados anticipado - Otros'},
+  {puc:'1798',num:77,desc:'Gastos pagados anticipado - Otros'},
+  // 18 - Otros activos
+  {puc:'1805',num:142,desc:'Otros activos'},{puc:'1810',num:142,desc:'Otros activos'},
+  {puc:'1815',num:141,desc:'Activos plan beneficios empleados'},{puc:'1895',num:142,desc:'Otros activos'},
+  {puc:'1899',num:142,desc:'Otros activos'},
+  // 19 - Valorizaciones / Activos no corrientes para venta
+  {puc:'1905',num:88,desc:'Ajuste revaluaciones'},{puc:'1910',num:119,desc:'Mantenidos para la venta'},
+  {puc:'1995',num:142,desc:'Otros activos'},
+  // ═══ PASIVOS ═══
+  // 21 - Obligaciones financieras
+  {puc:'2105',num:147,desc:'Oblig financieras moneda local'},{puc:'2110',num:148,desc:'Oblig financieras moneda extranjera'},
+  {puc:'2115',num:148,desc:'Oblig financieras moneda extranjera'},{puc:'2120',num:147,desc:'Oblig financieras moneda local'},
+  {puc:'2125',num:149,desc:'Depositos y exigibilidades'},{puc:'2130',num:147,desc:'Oblig financieras moneda local'},
+  {puc:'2135',num:164,desc:'Bonos y documentos equivalentes'},{puc:'2195',num:157,desc:'Otras CxP moneda local'},
+  // 22 - Proveedores y CxP
+  {puc:'2205',num:150,desc:'CxP comerciales moneda local'},{puc:'2210',num:151,desc:'CxP comerciales moneda extranjera'},
+  {puc:'2215',num:150,desc:'CxP comerciales moneda local'},{puc:'2220',num:152,desc:'Dividendos por pagar'},
+  {puc:'2225',num:153,desc:'CxP socios accionistas'},{puc:'2230',num:154,desc:'CxP partes relacionadas'},
+  {puc:'2235',num:157,desc:'Otras CxP moneda local'},{puc:'2240',num:157,desc:'Otras CxP moneda local'},
+  {puc:'2245',num:157,desc:'Otras CxP moneda local'},{puc:'2250',num:157,desc:'Otras CxP moneda local'},
+  {puc:'2255',num:157,desc:'Otras CxP moneda local'},{puc:'2260',num:157,desc:'Otras CxP moneda local'},
+  {puc:'2295',num:157,desc:'Otras CxP moneda local'},
+  // 23 - Cuentas por pagar
+  {puc:'2305',num:157,desc:'Otras CxP'},{puc:'2310',num:157,desc:'Otras CxP'},{puc:'2315',num:157,desc:'Otras CxP'},
+  {puc:'2320',num:157,desc:'Otras CxP'},{puc:'2325',num:157,desc:'Otras CxP'},{puc:'2330',num:157,desc:'Otras CxP'},
+  {puc:'2335',num:157,desc:'Otras CxP'},{puc:'2340',num:157,desc:'Otras CxP'},{puc:'2345',num:157,desc:'Otras CxP'},
+  {puc:'2350',num:157,desc:'Otras CxP'},{puc:'2355',num:156,desc:'Recaudo a favor de terceros'},
+  {puc:'2360',num:152,desc:'Dividendos por pagar'},{puc:'2365',num:172,desc:'Otros impuestos por pagar'},
+  {puc:'2367',num:171,desc:'IVA por pagar'},{puc:'2368',num:172,desc:'Otros impuestos por pagar'},
+  {puc:'2370',num:172,desc:'Otros impuestos por pagar'},{puc:'2380',num:157,desc:'Otras CxP'},
+  {puc:'2390',num:157,desc:'Otras CxP'},{puc:'2395',num:157,desc:'Otras CxP'},
+  // 24 - Impuestos por pagar
+  {puc:'2404',num:170,desc:'Impuesto de renta'},{puc:'2408',num:171,desc:'IVA por pagar'},
+  {puc:'2412',num:172,desc:'Otros impuestos'},{puc:'2416',num:172,desc:'Otros impuestos'},
+  {puc:'2420',num:172,desc:'Otros impuestos'},{puc:'2424',num:172,desc:'Otros impuestos'},
+  {puc:'2428',num:172,desc:'Otros impuestos'},{puc:'2432',num:172,desc:'Otros impuestos'},
+  {puc:'2436',num:172,desc:'Otros impuestos'},{puc:'2440',num:172,desc:'Otros impuestos'},
+  {puc:'2444',num:172,desc:'Otros impuestos'},{puc:'2448',num:172,desc:'Otros impuestos'},
+  // 25 - Obligaciones laborales
+  {puc:'2505',num:175,desc:'Benef empleados corto plazo'},{puc:'2510',num:175,desc:'Benef empleados corto plazo'},
+  {puc:'2515',num:175,desc:'Benef empleados corto plazo'},{puc:'2520',num:175,desc:'Benef empleados corto plazo'},
+  {puc:'2525',num:175,desc:'Benef empleados corto plazo'},{puc:'2530',num:178,desc:'Benef empleados post empleo'},
+  {puc:'2532',num:178,desc:'Benef empleados post empleo'},{puc:'2535',num:176,desc:'Benef empleados largo plazo'},
+  {puc:'2540',num:177,desc:'Benef empleados por terminacion'},
+  // 26 - Pasivos estimados / Provisiones
+  {puc:'2605',num:190,desc:'Otras provisiones'},{puc:'2610',num:182,desc:'Prov obligaciones fiscales'},
+  {puc:'2615',num:190,desc:'Otras provisiones'},{puc:'2620',num:180,desc:'Prov litigios y demandas'},
+  {puc:'2625',num:184,desc:'Prov garantias'},{puc:'2630',num:190,desc:'Otras provisiones'},
+  {puc:'2635',num:183,desc:'Prov desmantelamiento'},{puc:'2640',num:185,desc:'Prov contratos onerosos'},
+  {puc:'2695',num:190,desc:'Otras provisiones'},
+  // 27 - Diferidos / Ingresos diferidos
+  {puc:'2705',num:192,desc:'Anticipos recibidos de clientes'},{puc:'2710',num:195,desc:'Otros ingresos diferidos'},
+  {puc:'2715',num:194,desc:'Subvenciones del gobierno'},{puc:'2720',num:195,desc:'Otros ingresos diferidos'},
+  {puc:'2725',num:195,desc:'Otros ingresos diferidos'},{puc:'2730',num:195,desc:'Otros ingresos diferidos'},
+  // 28 - Otros pasivos
+  {puc:'2805',num:197,desc:'Depositos recibidos'},{puc:'2810',num:203,desc:'Otros pasivos'},
+  {puc:'2815',num:198,desc:'Retenciones a terceros'},{puc:'2820',num:199,desc:'Embargos judiciales'},
+  {puc:'2825',num:200,desc:'Cuentas en participacion'},{puc:'2830',num:203,desc:'Otros pasivos'},
+  {puc:'2835',num:203,desc:'Otros pasivos'},{puc:'2840',num:203,desc:'Otros pasivos'},
+  {puc:'2895',num:203,desc:'Otros pasivos'},{puc:'2905',num:203,desc:'Otros pasivos'},
+  // ═══ PATRIMONIO ═══
+  {puc:'3105',num:209,desc:'Capital pagado'},{puc:'3110',num:210,desc:'Acciones propias en cartera'},
+  {puc:'3115',num:211,desc:'Aportes sociales'},{puc:'3120',num:212,desc:'Capital asignado'},
+  {puc:'3125',num:213,desc:'Fondo social mutual'},{puc:'3130',num:214,desc:'Superavit de capital'},
+  {puc:'3135',num:215,desc:'Donaciones patrimonio'},
+  {puc:'3205',num:216,desc:'Reservas legales'},{puc:'3210',num:217,desc:'Reservas ocasionales'},
+  {puc:'3215',num:217,desc:'Reservas ocasionales'},{puc:'3220',num:218,desc:'Reservas entidades solidarias'},
+  {puc:'3225',num:219,desc:'Asignaciones permanentes RTE'},
+  {puc:'3305',num:220,desc:'Superavit por revaluaciones'},{puc:'3310',num:221,desc:'Superavit metodo participacion'},
+  {puc:'3405',num:231,desc:'Utilidades acumuladas no constitutivas de renta'},
+  {puc:'3410',num:232,desc:'Utilidades acumuladas gravadas'},
+  {puc:'3415',num:233,desc:'Utilidades acum ajustes correcciones errores'},
+  {puc:'3505',num:244,desc:'ORI - Ganancias acumuladas'},{puc:'3510',num:245,desc:'ORI - Perdidas acumuladas'},
+  {puc:'3605',num:226,desc:'Utilidad del ejercicio'},{puc:'3610',num:228,desc:'Perdida del ejercicio'},
+  {puc:'3705',num:231,desc:'Utilidades acumuladas'},{puc:'3710',num:235,desc:'Perdidas acumuladas'},
+];
+
+// H3: ERI - Renta Liquida (mapeo PUC → concepto 2516)
+const MAP_H3=[
+  // ═══ INGRESOS OPERACIONALES ═══
+  // 41 - Ingresos operacionales
+  {puc:'4105',num:13,desc:'Venta de bienes al territorio nacional'},
+  {puc:'4110',num:13,desc:'Venta de bienes al territorio nacional'},
+  {puc:'4115',num:13,desc:'Venta de bienes al territorio nacional'},
+  {puc:'4120',num:13,desc:'Venta de bienes al territorio nacional'},
+  {puc:'4125',num:13,desc:'Venta de bienes al territorio nacional'},
+  {puc:'4130',num:13,desc:'Venta de bienes al territorio nacional'},
+  {puc:'4135',num:13,desc:'Venta de bienes al territorio nacional'},
+  {puc:'4140',num:19,desc:'Prestacion de servicios al territorio nacional'},
+  {puc:'4145',num:34,desc:'Otros ingresos operacionales'},
+  {puc:'4150',num:34,desc:'Otros ingresos operacionales'},
+  {puc:'4155',num:25,desc:'Servicios de construccion'},
+  {puc:'4160',num:27,desc:'Arrendamientos operativos'},
+  {puc:'4165',num:28,desc:'Regalias'},
+  {puc:'4168',num:30,desc:'Honorarios profesionales'},
+  {puc:'4170',num:34,desc:'Otros ingresos operacionales'},
+  {puc:'4175',num:36,desc:'Devoluciones en venta de bienes'},
+  // 42 - Ingresos no operacionales
+  {puc:'4205',num:46,desc:'Otros ingresos financieros'},
+  {puc:'4210',num:42,desc:'Intereses por prestamos a terceros'},
+  {puc:'4215',num:42,desc:'Intereses por prestamos a terceros'},
+  {puc:'4220',num:29,desc:'Comisiones (relaciones de agencia)'},
+  {puc:'4225',num:34,desc:'Otros ingresos'},
+  {puc:'4230',num:50,desc:'Dividendos no constitutivos de renta'},
+  {puc:'4235',num:114,desc:'Otros ingresos'},
+  {puc:'4240',num:114,desc:'Otros ingresos - Arrendamientos'},
+  {puc:'4245',num:114,desc:'Otros ingresos'},
+  {puc:'4248',num:114,desc:'Otros ingresos'},
+  {puc:'4250',num:113,desc:'Otras reversiones o recuperaciones'},
+  {puc:'4255',num:112,desc:'Reembolsos companias seguros (indemnizaciones)'},
+  {puc:'4260',num:45,desc:'Diferencia en cambio ingreso'},
+  {puc:'4265',num:114,desc:'Otros ingresos'},
+  {puc:'4275',num:110,desc:'Donaciones aportaciones y similares (ingreso)'},
+  {puc:'4295',num:114,desc:'Otros ingresos'},
+  // ═══ COSTOS ═══
+  // 61 - Costo de ventas y servicios
+  {puc:'6105',num:126,desc:'Costo de ventas sistema permanente'},
+  {puc:'6110',num:126,desc:'Costo de ventas'},
+  {puc:'6115',num:126,desc:'Costo de ventas'},
+  {puc:'6120',num:131,desc:'Costos bienes vendidos - Inventario inicial'},
+  {puc:'6125',num:132,desc:'Costos bienes vendidos - Compras locales'},
+  {puc:'6130',num:133,desc:'Costos bienes vendidos - Importaciones'},
+  {puc:'6135',num:126,desc:'Costo de ventas mercancias'},
+  {puc:'6140',num:139,desc:'Costos en prestacion de servicios'},
+  {puc:'6145',num:139,desc:'Costos en prestacion de servicios'},
+  {puc:'6150',num:143,desc:'Mano de obra - Beneficios corto plazo'},
+  {puc:'6155',num:143,desc:'Mano de obra - Beneficios corto plazo'},
+  {puc:'6160',num:148,desc:'Depreciacion PPE en costo - Del costo'},
+  {puc:'6165',num:183,desc:'Otros conceptos reconocidos como costo'},
+  {puc:'6170',num:173,desc:'Otros costos - Arrendamientos'},
+  {puc:'6175',num:174,desc:'Otros costos - Seguros'},
+  {puc:'6180',num:175,desc:'Otros costos - Servicios'},
+  {puc:'6185',num:176,desc:'Otros costos - Honorarios'},
+  {puc:'6195',num:183,desc:'Otros conceptos reconocidos como costo'},
+  {puc:'6205',num:126,desc:'Costo de ventas - Compras'},
+  {puc:'6210',num:126,desc:'Costo de ventas - Compras'},
+  {puc:'6215',num:126,desc:'Costo de ventas'},
+  {puc:'6220',num:134,desc:'Inventario final (resta)'},
+  {puc:'6225',num:183,desc:'Otros conceptos reconocidos como costo'},
+  {puc:'7',num:183,desc:'Costos de produccion'},
+  // ═══ GASTOS DE ADMINISTRACION (51xx) ═══
+  {puc:'5105',num:190,desc:'Gtos admin - Beneficios empleados corto plazo'},
+  {puc:'5110',num:198,desc:'Gtos admin - Honorarios'},
+  {puc:'5115',num:195,desc:'Gtos admin - Impuestos distintos imp renta'},
+  {puc:'5120',num:196,desc:'Gtos admin - Arrendamientos operativos'},
+  {puc:'5125',num:199,desc:'Gtos admin - Seguros'},
+  {puc:'5130',num:209,desc:'Gtos admin - Otros servicios'},
+  {puc:'5135',num:211,desc:'Gtos admin - Gastos legales'},
+  {puc:'5140',num:209,desc:'Gtos admin - Otros servicios (publicos)'},
+  {puc:'5145',num:214,desc:'Gtos admin - Otros gastos (viaje)'},
+  {puc:'5150',num:214,desc:'Gtos admin - Otros gastos (publicidad)'},
+  {puc:'5155',num:212,desc:'Gtos admin - Reparacion mantenimiento'},
+  {puc:'5160',num:216,desc:'Gtos admin - Depreciacion PPE del costo'},
+  {puc:'5165',num:223,desc:'Gtos admin - Amortizacion intangibles del costo'},
+  {puc:'5170',num:336,desc:'Donaciones aportaciones y similares (gasto)'},
+  {puc:'5195',num:214,desc:'Gtos admin - Otros gastos'},
+  {puc:'5199',num:214,desc:'Gtos admin - Otros gastos (Provisiones)'},
+  // ═══ GASTOS DE VENTAS (52xx) ═══
+  {puc:'5205',num:242,desc:'Gtos ventas - Beneficios empleados corto plazo'},
+  {puc:'5210',num:250,desc:'Gtos ventas - Honorarios'},
+  {puc:'5215',num:247,desc:'Gtos ventas - Impuestos'},
+  {puc:'5220',num:248,desc:'Gtos ventas - Arrendamientos operativos'},
+  {puc:'5225',num:251,desc:'Gtos ventas - Seguros'},
+  {puc:'5230',num:261,desc:'Gtos ventas - Otros servicios'},
+  {puc:'5235',num:263,desc:'Gtos ventas - Gastos legales'},
+  {puc:'5240',num:261,desc:'Gtos ventas - Otros servicios'},
+  {puc:'5245',num:269,desc:'Gtos ventas - Otros gastos'},
+  {puc:'5250',num:269,desc:'Gtos ventas - Otros gastos'},
+  {puc:'5255',num:264,desc:'Gtos ventas - Reparacion mantenimiento'},
+  {puc:'5260',num:271,desc:'Gtos ventas - Depreciacion PPE del costo'},
+  {puc:'5265',num:277,desc:'Gtos ventas - Amortizacion intangibles del costo'},
+  {puc:'5270',num:336,desc:'Donaciones aportaciones y similares (gasto)'},
+  {puc:'5295',num:269,desc:'Gtos ventas - Otros gastos'},
+  {puc:'5299',num:269,desc:'Gtos ventas - Otros gastos'},
+  // ═══ GASTOS NO OPERACIONALES / FINANCIEROS (53xx) ═══
+  {puc:'5305',num:298,desc:'Gtos financieros - Intereses sector financiero'},
+  {puc:'530505',num:306,desc:'Gtos financieros - Otros (intereses mora)'},
+  {puc:'530510',num:298,desc:'Gtos financieros - Intereses sector financiero'},
+  {puc:'530515',num:299,desc:'Gtos financieros - Intereses prestamos terceros'},
+  {puc:'530520',num:301,desc:'Gtos financieros - Costos de transaccion'},
+  {puc:'530525',num:306,desc:'Gtos financieros - Otros (multas sanciones)'},
+  {puc:'530530',num:302,desc:'Gtos financieros - Diferencia en cambio'},
+  {puc:'530535',num:306,desc:'Gtos financieros - Otros (sanciones tributarias)'},
+  {puc:'530540',num:303,desc:'Gtos financieros - Intereses implicitos'},
+  {puc:'530545',num:304,desc:'Gtos financieros - Actualizacion provisiones'},
+  {puc:'5310',num:317,desc:'Perdida en venta PPE'},
+  {puc:'5313',num:322,desc:'Perdida venta activos intangibles'},
+  {puc:'5315',num:338,desc:'Otros gastos'},
+  // ═══ GASTOS EXTRAORDINARIOS / OTROS ═══
+  {puc:'5395',num:338,desc:'Otros gastos'},
+  {puc:'5399',num:338,desc:'Otros gastos'},
+  // ═══ PROVISIONES EN GASTOS ═══
+  {puc:'5299',num:333,desc:'Gastos por provisiones - Otros'},
+];
+
+/* ── CLASIFICAR BALANCE ── */
+function procesarBalance(){
+  if(!archivoData){exoToast('Primero sube un archivo','error');return}
+  const L=document.getElementById('loadingOverlay');
+  document.getElementById('spinnerText').textContent='Clasificando cuentas...';
+  L.classList.add('active');
+
+  setTimeout(()=>{
+    try{
+      const wb=XLSX.read(archivoData,{type:'array'});
+      // Detect best sheet
+      let sheetName=wb.SheetNames[0];
+      for(const sn of wb.SheetNames){
+        const snl=sn.toLowerCase();
+        if(snl.includes('balance')||snl.includes('prueba')||snl.includes('puc')){sheetName=sn;break}
+      }
+      const ws=wb.Sheets[sheetName];
+      const data=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+
+      // Detect header row
+      let hdrRow=0;
+      const kwRe=/cuenta|codigo|nombre|descripci|debito|credito|saldo|cargo|abono/i;
+      let bestScore=0;
+      for(let i=0;i<Math.min(data.length,20);i++){
+        const row=data[i];if(!row)continue;
+        let score=0;
+        for(const cell of row){if(typeof cell==='string'&&kwRe.test(cell))score+=10}
+        if(score>bestScore){bestScore=score;hdrRow=i}
+      }
+
+      // Detect columns
+      const hdrs=(data[hdrRow]||[]).map(h=>(h||'').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim());
+      const colMap={code:-1,name:-1,deb:-1,cre:-1,saldoFin:-1,saldoIni:-1};
+      for(let ci=0;ci<hdrs.length;ci++){
+        const h=hdrs[ci];
+        if(colMap.code<0&&/^(cuenta|codigo|code|puc|cta)/.test(h))colMap.code=ci;
+        if(colMap.name<0&&/^(nombre|descripci|detalle)/.test(h))colMap.name=ci;
+        if(colMap.saldoFin<0&&/saldo.*(final|total|actual)|^final$|^saldo$/.test(h))colMap.saldoFin=ci;
+        if(colMap.saldoIni<0&&/saldo.*(inicial|anterior)|^inicial$/.test(h))colMap.saldoIni=ci;
+        if(colMap.deb<0&&/^(debito|debe|cargo|mov.*deb)/.test(h))colMap.deb=ci;
+        if(colMap.cre<0&&/^(credito|haber|abono|mov.*cre)/.test(h))colMap.cre=ci;
+      }
+      if(colMap.code<0)colMap.code=0;
+      if(colMap.name<0)colMap.name=1;
+
+      // Parse rows
+      const toNum=v=>{if(typeof v==='number')return v;let s=String(v||'').replace(/[$\s]/g,'');if(!s)return 0;s=s.replace(/,/g,'');return parseFloat(s)||0};
+      const filas=[];
+      const allCodes=new Set();
+      for(let i=hdrRow+1;i<data.length;i++){
+        const row=data[i];if(!row)continue;
+        let code=String(row[colMap.code]||'').replace(/[.\-\s]/g,'').trim();
+        if(!code||!/^\d{2,}/.test(code))continue;
+        if(/^(total|procesado|elaborado)/i.test(code))continue;
+        const name=String(row[colMap.name]||'').trim();
+        const deb=toNum(row[colMap.deb]);
+        const cre=toNum(row[colMap.cre]);
+        const si=colMap.saldoIni>=0?toNum(row[colMap.saldoIni]):0;
+        let sf=colMap.saldoFin>=0?toNum(row[colMap.saldoFin]):0;
+        if(sf===0&&(deb!==0||cre!==0)){
+          const fd=code[0];
+          if(['1','5','6','7'].includes(fd))sf=deb-cre+si;
+          else sf=cre-deb+si;
+        }
+        if(sf===0)continue;
+        allCodes.add(code);
+        filas.push({code,name,val:sf});
+      }
+
+      // Filter parents (keep only leaf accounts)
+      const leafs=filas.filter(f=>{
+        for(const c of allCodes){
+          if(c!==f.code&&c.startsWith(f.code)&&c.length>f.code.length)return false;
+        }
+        return true;
+      });
+
+      // Classify each account
+      cuentas2516=[];
+      for(const f of leafs){
+        let hoja='—',concepto=0,descC='Sin clasificar';
+
+        // Try H2 (ESF) first - accounts classes 1, 2, 3
+        if(['1','2','3'].includes(f.code[0])){
+          // Find best match (longest prefix)
+          let bestMatch=null,bestLen=0;
+          for(const m of MAP_H2){
+            if(f.code.startsWith(m.puc)&&m.puc.length>bestLen){
+              bestMatch=m;bestLen=m.puc.length;
+            }
+          }
+          if(bestMatch){
+            hoja='H2';concepto=bestMatch.num;descC=bestMatch.desc;
+          }
+        }
+
+        // Try H3 (ERI) - accounts classes 4, 5, 6, 7
+        if(['4','5','6','7'].includes(f.code[0])){
+          let bestMatch=null,bestLen=0;
+          for(const m of MAP_H3){
+            if(f.code.startsWith(m.puc)&&m.puc.length>bestLen){
+              bestMatch=m;bestLen=m.puc.length;
+            }
+          }
+          if(bestMatch){
+            hoja='H3';concepto=bestMatch.num;descC=bestMatch.desc;
+          }
+        }
+
+        // Valor fiscal = valor contable por defecto (usuario puede ajustar)
+        const valFiscal=Math.round(f.val);
+
+        cuentas2516.push({
+          code:f.code,
+          name:f.name,
+          val:Math.round(f.val),
+          valFiscal,
+          hoja,
+          concepto2516:concepto,
+          descConcepto:descC
+        });
+      }
+
+      renderClasificacion();
+      goStep(2);
+      gtag('event','f2516_balance_procesado',{cuentas:cuentas2516.length});
+
+    }catch(ex){
+      document.getElementById('errorMsg').classList.remove('hidden');
+      document.getElementById('errorMsg').textContent='Error procesando el archivo: '+ex.message;
+      console.error(ex);
+    }finally{
+      L.classList.remove('active');
+    }
+  },100);
+}
+
+/* ── RENDER CLASIFICACION ── */
+function renderClasificacion(){
+  const stats={};
+  for(const c of cuentas2516){
+    if(!stats[c.hoja])stats[c.hoja]={count:0,total:0};
+    stats[c.hoja].count++;
+    stats[c.hoja].total+=Math.abs(c.val);
+  }
+
+  const h2=stats['H2']||{count:0};
+  const h3=stats['H3']||{count:0};
+  const sin=stats['—']||{count:0};
+
+  document.getElementById('clasifStats').innerHTML=`
+    <div class="stat-card blue"><div class="val">${h2.count}</div><div class="lbl">H2 ESF Patrimonio</div></div>
+    <div class="stat-card green"><div class="val">${h3.count}</div><div class="lbl">H3 ERI Renta</div></div>
+    <div class="stat-card amber"><div class="val">${sin.count}</div><div class="lbl">Sin clasificar</div></div>
+    <div class="stat-card blue"><div class="val">${cuentas2516.length}</div><div class="lbl">Total cuentas</div></div>`;
+
+  filtrarClasificacion();
+}
+
+function filtrarClasificacion(){
+  const filtro=document.getElementById('seccionFilter').value;
+  const datos=filtro?cuentas2516.filter(c=>c.hoja===filtro):cuentas2516;
+  document.getElementById('clasifCount').textContent=datos.length+' cuentas';
+
+  let h='<table class="map-table"><thead><tr><th>#</th><th>Seccion</th><th>Concepto</th><th>Cuenta PUC</th><th>Nombre</th><th>Valor Contable</th><th>Valor Fiscal</th></tr></thead><tbody>';
+  const sorted=datos.slice().sort((a,b)=>a.code.localeCompare(b.code));
+
+  // Class separators
+  const claseNoms={'1':'ACTIVOS','2':'PASIVOS','3':'PATRIMONIO','4':'INGRESOS','5':'GASTOS','6':'COSTOS','7':'COSTOS PRODUCCION'};
+  let lastCls='';
+
+  for(let i=0;i<sorted.length;i++){
+    const c=sorted[i];
+    const idx=cuentas2516.indexOf(c);
+    const cls=c.code[0];
+
+    if(cls!==lastCls&&claseNoms[cls]&&!filtro){
+      h+=`<tr style="background:var(--pri3)"><td colspan="7" style="padding:6px 12px;font-weight:700;color:var(--pri)">${claseNoms[cls]}</td></tr>`;
+      lastCls=cls;
+    }
+
+    const badge=c.hoja==='—'?'<span style="color:var(--amber);font-weight:700">—</span>':`<span class="fmt-badge fmt-${c.hoja.toLowerCase()}">${c.hoja}</span>`;
+
+    h+=`<tr${c.hoja==='—'?' style="background:#FFF8E1"':''}>
+      <td>${i+1}</td>
+      <td>${badge}
+        <select onchange="cambiarHoja(${idx},this.value)" style="font-size:.68rem;padding:1px 3px;border:1px solid var(--border);border-radius:4px;max-width:70px;margin-left:4px">
+          <option value="H2"${c.hoja==='H2'?' selected':''}>H2 ESF</option>
+          <option value="H3"${c.hoja==='H3'?' selected':''}>H3 ERI</option>
+          <option value="H4"${c.hoja==='H4'?' selected':''}>H4 Dif</option>
+          <option value="H7"${c.hoja==='H7'?' selected':''}>H7 Res</option>
+          <option value="—"${c.hoja==='—'?' selected':''}>—</option>
+        </select>
+      </td>
+      <td class="mono" style="font-size:.68rem">${c.concepto2516||'—'} <span style="color:var(--muted);font-size:.6rem">${c.descConcepto.substring(0,30)}</span></td>
+      <td class="mono">${c.code}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c.name}">${c.name}</td>
+      <td class="text-right mono">${fN(c.val)}</td>
+      <td class="text-right mono"><input type="text" value="${fN(c.valFiscal)}" onchange="editarFiscal2516(${idx},this.value)" style="width:90px;text-align:right;padding:2px 4px;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:.75rem"></td>
+    </tr>`;
+  }
+
+  // Totals
+  const totalCtb=datos.reduce((s,c)=>s+c.val,0);
+  const totalFis=datos.reduce((s,c)=>s+c.valFiscal,0);
+  h+=`<tr style="background:#f0f9ff;font-weight:700"><td colspan="5" class="text-right" style="padding-right:12px">TOTALES</td><td class="text-right mono">${fN(totalCtb)}</td><td class="text-right mono">${fN(totalFis)}</td></tr>`;
+  h+='</tbody></table>';
+  document.getElementById('clasifTable').innerHTML=h;
+}
+
+function cambiarHoja(idx,hoja){
+  cuentas2516[idx].hoja=hoja;
+  renderClasificacion();
+  exoToast(`${cuentas2516[idx].code} movida a ${hoja}`,'success');
+}
+
+function editarFiscal2516(idx,valor){
+  const n=parseInt(String(valor).replace(/[,.\s$]/g,''))||0;
+  cuentas2516[idx].valFiscal=n;
+}
+
+/* ── VISTA PREVIA ── */
+function renderVistaPrevia(){
+  const hojas=['H2','H3','H4','H5','H6','H7'];
+  const nombres={H2:'ESF Patrimonio',H3:'ERI Renta Liquida',H4:'Impuesto Diferido',H5:'Ingresos y Facturacion',H6:'Activos Fijos',H7:'Resumen ESF-ERI'};
+
+  let tabs='';
+  for(const h of hojas){
+    const count=cuentas2516.filter(c=>c.hoja===h).length;
+    tabs+=`<div class="tab${h==='H2'?' active':''}" onclick="mostrarHoja('${h}',this)">${h} <span style="font-size:.65rem;color:var(--muted)">(${count})</span></div>`;
+  }
+  document.getElementById('hojaTabs').innerHTML=tabs;
+  mostrarHoja('H2',document.querySelector('.tab'));
+}
+
+function mostrarHoja(hoja,tabEl){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  if(tabEl)tabEl.classList.add('active');
+
+  const cuentasHoja=cuentas2516.filter(c=>c.hoja===hoja).sort((a,b)=>a.concepto2516-b.concepto2516);
+
+  // Group by concepto
+  const grupos={};
+  for(const c of cuentasHoja){
+    const k=c.concepto2516;
+    if(!grupos[k])grupos[k]={concepto:k,desc:c.descConcepto,contable:0,fiscal:0,cuentas:[]};
+    grupos[k].contable+=c.val;
+    grupos[k].fiscal+=c.valFiscal;
+    grupos[k].cuentas.push(c);
+  }
+
+  let h=`<div style="font-size:.82rem;margin-bottom:12px;color:var(--muted)">Hoja ${hoja}: ${cuentasHoja.length} cuentas clasificadas en ${Object.keys(grupos).length} conceptos del 2516</div>`;
+  h+='<table class="map-table"><thead><tr><th>Concepto</th><th>Descripcion</th><th>Valor Contable</th><th>Ajuste</th><th>Valor Fiscal</th><th>Cuentas PUC</th></tr></thead><tbody>';
+
+  for(const[k,g] of Object.entries(grupos).sort((a,b)=>a[0]-b[0])){
+    const ajuste=g.fiscal-g.contable;
+    const ctaList=g.cuentas.map(c=>c.code).join(', ');
+    h+=`<tr>
+      <td class="mono" style="font-weight:700;color:var(--pri)">${g.concepto}</td>
+      <td style="font-size:.75rem">${g.desc}</td>
+      <td class="text-right mono">${fN(g.contable)}</td>
+      <td class="text-right mono" style="color:${ajuste>0?'var(--green)':ajuste<0?'var(--red)':'var(--muted)'}">${ajuste?fN(ajuste):'—'}</td>
+      <td class="text-right mono" style="font-weight:700">${fN(g.fiscal)}</td>
+      <td style="font-size:.68rem;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${ctaList}">${ctaList}</td>
+    </tr>`;
+  }
+
+  const totalCtb=cuentasHoja.reduce((s,c)=>s+c.val,0);
+  const totalFis=cuentasHoja.reduce((s,c)=>s+c.valFiscal,0);
+  const totalAj=totalFis-totalCtb;
+  h+=`<tr style="background:#f0f9ff;font-weight:700"><td colspan="2" class="text-right">TOTAL ${hoja}</td><td class="text-right mono">${fN(totalCtb)}</td><td class="text-right mono">${fN(totalAj)}</td><td class="text-right mono">${fN(totalFis)}</td><td></td></tr>`;
+  h+='</tbody></table>';
+
+  document.getElementById('hojaContent').innerHTML=h;
+}
+
+/* ── EXPORTAR EXCEL 2516 ── */
+async function exportExcel2516(){
+  const wb=new ExcelJS.Workbook();
+  wb.calcProperties={fullCalcOnLoad:true};
+  const nit=document.getElementById('cfgNit').value||'';
+  const razon=document.getElementById('cfgRazon').value||'';
+  const year=document.getElementById('cfgYear').value||'2025';
+  const dirSec=document.getElementById('cfgDirSec').value||'';
+
+  const fB={name:'Arial',size:10,bold:true},fN={name:'Arial',size:10};
+  const DB='FF1A3C6E',GR='FF059669',WH='FFFFFFFF',GY='FFF3F4F6',AM='FFFFF3E0';
+  const bt={top:{style:'thin',color:{argb:'FFD1D5DB'}},bottom:{style:'thin',color:{argb:'FFD1D5DB'}},left:{style:'thin',color:{argb:'FFD1D5DB'}},right:{style:'thin',color:{argb:'FFD1D5DB'}}};
+  const fH={type:'pattern',pattern:'solid',fgColor:{argb:DB}};
+  const fGy={type:'pattern',pattern:'solid',fgColor:{argb:GY}};
+
+  // Helper: sum by hoja+concepto
+  const sumBy=(hoja,concepto,field)=>cuentas2516.filter(c=>c.hoja===hoja&&c.concepto2516===concepto).reduce((s,c)=>s+c[field],0);
+
+  // ── H1: CARATULA ──
+  const ws1=wb.addWorksheet('H1 (Caratula)');
+  ws1.getColumn(1).width=5;ws1.getColumn(2).width=40;ws1.getColumn(3).width=25;ws1.getColumn(4).width=25;
+  ws1.getCell('B2').value='REPORTE DE CONCILIACION FISCAL';ws1.getCell('B2').font={...fB,size:16,color:{argb:DB}};
+  ws1.getCell('B4').value='Formato 2516 - Version 9';ws1.getCell('B4').font={...fN,italic:true,color:{argb:'FF6B7280'}};
+  ws1.getCell('B6').value='1. Ano';ws1.getCell('C6').value=parseInt(year);ws1.getCell('C6').font=fB;
+  ws1.getCell('B8').value='5. NIT';ws1.getCell('C8').value=nit;ws1.getCell('C8').font=fB;
+  ws1.getCell('B9').value='11. Razon Social';ws1.getCell('C9').value=razon;ws1.getCell('C9').font=fB;
+  ws1.getCell('B10').value='12. Cod. Direccion Seccional';ws1.getCell('C10').value=dirSec;ws1.getCell('C10').font=fB;
+  ws1.getCell('B12').value='Generado por ExogenaDIAN.com — Los valores deben ser verificados por un contador publico';
+  ws1.getCell('B12').font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
+
+  // ── H2: ESF PATRIMONIO ──
+  const ws2=wb.addWorksheet('H2 (ESF - Patrimonio)');
+  ws2.properties.showGridLines=false;
+  ws2.getColumn(1).width=6;ws2.getColumn(2).width=45;ws2.getColumn(3).width=18;ws2.getColumn(4).width=18;ws2.getColumn(5).width=18;ws2.getColumn(6).width=18;ws2.getColumn(7).width=18;
+  ws2.getCell('B1').value='Estado de Situacion Financiera - Patrimonio';ws2.getCell('B1').font={...fB,size:14,color:{argb:DB}};
+  ws2.getCell('B2').value=razon+' — NIT '+nit+' — AG '+year;ws2.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+
+  // Headers
+  const h2Headers=['NUM','CONCEPTO','VALOR CONTABLE\n(VAL1)','EFECTO DE\nCONVERSION\n(VAL2)','MENOR VALOR\nFISCAL\n(VAL3)','MAYOR VALOR\nFISCAL\n(VAL4)','VALOR FISCAL\n(VAL5)'];
+  let r2=4;
+  h2Headers.forEach((h,i)=>{
+    ws2.getCell(r2,i+1).value=h;ws2.getCell(r2,i+1).font={...fB,size:9,color:{argb:WH}};
+    ws2.getCell(r2,i+1).fill=fH;ws2.getCell(r2,i+1).border=bt;ws2.getCell(r2,i+1).alignment={horizontal:'center',vertical:'middle',wrapText:true};
+  });
+  ws2.getRow(r2).height=42;
+  r2++;
+
+  // Data rows for H2 - grouped by concepto
+  const h2Cuentas=cuentas2516.filter(c=>c.hoja==='H2');
+  const h2Conceptos=[...new Set(h2Cuentas.map(c=>c.concepto2516))].sort((a,b)=>a-b);
+
+  // Section headers
+  const h2Sections=[
+    {num:10,desc:'ACTIVOS',isSec:true},
+    {num:145,desc:'PASIVOS',isSec:true},
+    {num:207,desc:'DETALLE PATRIMONIO CONTABLE',isSec:true},
+  ];
+
+  // Write each concepto
+  let lastSection='';
+  for(const cn of h2Conceptos){
+    // Check if we need a section header
+    for(const sec of h2Sections){
+      if(cn>=sec.num&&lastSection!==sec.desc){
+        ws2.getCell(r2,1).value=sec.num;
+        ws2.getCell(r2,2).value=sec.desc;
+        ws2.getCell(r2,2).font={...fB,size:10,color:{argb:DB}};
+        ws2.getCell(r2,1).fill=fGy;ws2.getCell(r2,2).fill=fGy;
+        for(let ci=1;ci<=7;ci++)ws2.getCell(r2,ci).border=bt;
+        r2++;lastSection=sec.desc;
+      }
+    }
+
+    const ctb=sumBy('H2',cn,'val');
+    const fis=sumBy('H2',cn,'valFiscal');
+    const ajuste=fis-ctb;
+    const desc=h2Cuentas.find(c=>c.concepto2516===cn)?.descConcepto||'';
+
+    ws2.getCell(r2,1).value=cn;ws2.getCell(r2,1).font={...fN,size:9};ws2.getCell(r2,1).border=bt;
+    ws2.getCell(r2,2).value=desc;ws2.getCell(r2,2).font=fN;ws2.getCell(r2,2).border=bt;
+    ws2.getCell(r2,3).value=ctb;ws2.getCell(r2,3).numFmt='#,##0';ws2.getCell(r2,3).font=fN;ws2.getCell(r2,3).border=bt;
+    ws2.getCell(r2,4).value=0;ws2.getCell(r2,4).numFmt='#,##0';ws2.getCell(r2,4).border=bt; // Efecto conversion
+    ws2.getCell(r2,5).value=ajuste<0?Math.abs(ajuste):0;ws2.getCell(r2,5).numFmt='#,##0';ws2.getCell(r2,5).border=bt; // Menor valor fiscal
+    ws2.getCell(r2,6).value=ajuste>0?ajuste:0;ws2.getCell(r2,6).numFmt='#,##0';ws2.getCell(r2,6).border=bt; // Mayor valor fiscal
+    ws2.getCell(r2,7).value=fis;ws2.getCell(r2,7).numFmt='#,##0';ws2.getCell(r2,7).font=fB;ws2.getCell(r2,7).border=bt;
+    r2++;
+  }
+
+  // Totals
+  const totalActCtb=h2Cuentas.filter(c=>c.code[0]==='1').reduce((s,c)=>s+c.val,0);
+  const totalActFis=h2Cuentas.filter(c=>c.code[0]==='1').reduce((s,c)=>s+c.valFiscal,0);
+  ws2.getCell(r2,2).value='TOTAL ACTIVOS';ws2.getCell(r2,2).font={...fB,color:{argb:DB}};
+  ws2.getCell(r2,3).value=totalActCtb;ws2.getCell(r2,3).numFmt='#,##0';ws2.getCell(r2,3).font=fB;
+  ws2.getCell(r2,7).value=totalActFis;ws2.getCell(r2,7).numFmt='#,##0';ws2.getCell(r2,7).font=fB;
+  for(let ci=1;ci<=7;ci++){ws2.getCell(r2,ci).border=bt;ws2.getCell(r2,ci).fill=fGy}
+  r2++;
+
+  const totalPasCtb=h2Cuentas.filter(c=>c.code[0]==='2').reduce((s,c)=>s+c.val,0);
+  const totalPasFis=h2Cuentas.filter(c=>c.code[0]==='2').reduce((s,c)=>s+c.valFiscal,0);
+  ws2.getCell(r2,2).value='TOTAL PASIVOS';ws2.getCell(r2,2).font={...fB,color:{argb:DB}};
+  ws2.getCell(r2,3).value=totalPasCtb;ws2.getCell(r2,3).numFmt='#,##0';ws2.getCell(r2,3).font=fB;
+  ws2.getCell(r2,7).value=totalPasFis;ws2.getCell(r2,7).numFmt='#,##0';ws2.getCell(r2,7).font=fB;
+  for(let ci=1;ci<=7;ci++){ws2.getCell(r2,ci).border=bt;ws2.getCell(r2,ci).fill=fGy}
+  r2++;
+
+  ws2.getCell(r2,2).value='PATRIMONIO (ACTIVOS - PASIVOS)';ws2.getCell(r2,2).font={...fB,size:11,color:{argb:DB}};
+  ws2.getCell(r2,3).value=totalActCtb-totalPasCtb;ws2.getCell(r2,3).numFmt='#,##0';ws2.getCell(r2,3).font={...fB,size:11};
+  ws2.getCell(r2,7).value=totalActFis-totalPasFis;ws2.getCell(r2,7).numFmt='#,##0';ws2.getCell(r2,7).font={...fB,size:11};
+  for(let ci=1;ci<=7;ci++){ws2.getCell(r2,ci).border=bt;ws2.getCell(r2,ci).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8F5E9'}}}
+
+  // ── H3: ERI RENTA LIQUIDA ──
+  const ws3=wb.addWorksheet('H3 (ERI - Renta Liquida)');
+  ws3.properties.showGridLines=false;
+  ws3.getColumn(1).width=6;ws3.getColumn(2).width=50;ws3.getColumn(3).width=18;ws3.getColumn(4).width=18;ws3.getColumn(5).width=18;ws3.getColumn(6).width=18;ws3.getColumn(7).width=18;
+  ws3.getCell('B1').value='Estado de Resultados - Impuesto de Renta y Complementarios';ws3.getCell('B1').font={...fB,size:14,color:{argb:DB}};
+  ws3.getCell('B2').value=razon+' — NIT '+nit+' — AG '+year;ws3.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+
+  const h3Headers=['NUM','CONCEPTO','VALOR CONTABLE\n(VAL1)','EFECTO DE\nCONVERSION\n(VAL2)','MENOR VALOR\nFISCAL\n(VAL3)','MAYOR VALOR\nFISCAL\n(VAL4)','VALOR FISCAL\nTOTAL\n(VAL5)'];
+  let r3=4;
+  h3Headers.forEach((h,i)=>{
+    ws3.getCell(r3,i+1).value=h;ws3.getCell(r3,i+1).font={...fB,size:9,color:{argb:WH}};
+    ws3.getCell(r3,i+1).fill=fH;ws3.getCell(r3,i+1).border=bt;ws3.getCell(r3,i+1).alignment={horizontal:'center',vertical:'middle',wrapText:true};
+  });
+  ws3.getRow(r3).height=42;
+  r3++;
+
+  const h3Cuentas=cuentas2516.filter(c=>c.hoja==='H3');
+  const h3Conceptos=[...new Set(h3Cuentas.map(c=>c.concepto2516))].sort((a,b)=>a-b);
+
+  const h3Sections=[
+    {min:11,max:123,desc:'INGRESOS'},
+    {min:124,max:186,desc:'COSTOS'},
+    {min:187,max:342,desc:'GASTOS'},
+  ];
+
+  let currentSection='';
+  for(const cn of h3Conceptos){
+    for(const sec of h3Sections){
+      if(cn>=sec.min&&cn<=sec.max&&currentSection!==sec.desc){
+        ws3.getCell(r3,2).value=sec.desc;
+        ws3.getCell(r3,2).font={...fB,size:11,color:{argb:DB}};
+        ws3.getCell(r3,1).fill=fGy;ws3.getCell(r3,2).fill=fGy;
+        for(let ci=1;ci<=7;ci++)ws3.getCell(r3,ci).border=bt;
+        r3++;currentSection=sec.desc;
+      }
+    }
+
+    const ctb=sumBy('H3',cn,'val');
+    const fis=sumBy('H3',cn,'valFiscal');
+    const ajuste=fis-ctb;
+    const desc=h3Cuentas.find(c=>c.concepto2516===cn)?.descConcepto||'';
+
+    ws3.getCell(r3,1).value=cn;ws3.getCell(r3,1).font={...fN,size:9};ws3.getCell(r3,1).border=bt;
+    ws3.getCell(r3,2).value=desc;ws3.getCell(r3,2).font=fN;ws3.getCell(r3,2).border=bt;
+    ws3.getCell(r3,3).value=ctb;ws3.getCell(r3,3).numFmt='#,##0';ws3.getCell(r3,3).font=fN;ws3.getCell(r3,3).border=bt;
+    ws3.getCell(r3,4).value=0;ws3.getCell(r3,4).numFmt='#,##0';ws3.getCell(r3,4).border=bt;
+    ws3.getCell(r3,5).value=ajuste<0?Math.abs(ajuste):0;ws3.getCell(r3,5).numFmt='#,##0';ws3.getCell(r3,5).border=bt;
+    ws3.getCell(r3,6).value=ajuste>0?ajuste:0;ws3.getCell(r3,6).numFmt='#,##0';ws3.getCell(r3,6).border=bt;
+    ws3.getCell(r3,7).value=fis;ws3.getCell(r3,7).numFmt='#,##0';ws3.getCell(r3,7).font=fB;ws3.getCell(r3,7).border=bt;
+    r3++;
+  }
+
+  // ERI Totals
+  const totalIngCtb=h3Cuentas.filter(c=>c.code[0]==='4').reduce((s,c)=>s+c.val,0);
+  const totalIngFis=h3Cuentas.filter(c=>c.code[0]==='4').reduce((s,c)=>s+c.valFiscal,0);
+  const totalCosCtb=h3Cuentas.filter(c=>c.code[0]==='6'||c.code[0]==='7').reduce((s,c)=>s+c.val,0);
+  const totalCosFis=h3Cuentas.filter(c=>c.code[0]==='6'||c.code[0]==='7').reduce((s,c)=>s+c.valFiscal,0);
+  const totalGasCtb=h3Cuentas.filter(c=>c.code[0]==='5').reduce((s,c)=>s+c.val,0);
+  const totalGasFis=h3Cuentas.filter(c=>c.code[0]==='5').reduce((s,c)=>s+c.valFiscal,0);
+
+  [['TOTAL INGRESOS',totalIngCtb,totalIngFis],
+   ['TOTAL COSTOS',totalCosCtb,totalCosFis],
+   ['TOTAL GASTOS',totalGasCtb,totalGasFis],
+   ['GANANCIA O PERDIDA ANTES DE IMPUESTO',totalIngCtb-totalCosCtb-totalGasCtb,totalIngFis-totalCosFis-totalGasFis]
+  ].forEach(([label,ctb,fis])=>{
+    ws3.getCell(r3,2).value=label;ws3.getCell(r3,2).font={...fB,color:{argb:DB}};
+    ws3.getCell(r3,3).value=ctb;ws3.getCell(r3,3).numFmt='#,##0';ws3.getCell(r3,3).font=fB;
+    ws3.getCell(r3,7).value=fis;ws3.getCell(r3,7).numFmt='#,##0';ws3.getCell(r3,7).font=fB;
+    for(let ci=1;ci<=7;ci++){ws3.getCell(r3,ci).border=bt;ws3.getCell(r3,ci).fill=fGy}
+    r3++;
+  });
+
+  // ── H4: IMPUESTO DIFERIDO ──
+  const ws4=wb.addWorksheet('H4 (Impuesto Diferido)');
+  ws4.properties.showGridLines=false;
+  ws4.getColumn(1).width=6;ws4.getColumn(2).width=42;ws4.getColumn(3).width=18;ws4.getColumn(4).width=18;
+  ws4.getColumn(5).width=18;ws4.getColumn(6).width=18;ws4.getColumn(7).width=18;ws4.getColumn(8).width=18;
+  ws4.getColumn(9).width=18;ws4.getColumn(10).width=12;
+  ws4.getCell('B1').value='Activos y pasivos por impuestos diferidos';ws4.getCell('B1').font={...fB,size:14,color:{argb:DB}};
+  ws4.getCell('B2').value=razon+' — NIT '+nit+' — AG '+year+' — Debe ser verificado por un contador publico';
+  ws4.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+  // H4 headers
+  const h4Hdr=['NUM','Concepto','Base contable','Base Fiscal','Diferencia\nTemporaria','Diferencia\nPermanente',
+    'Saldo imp diferido\na 31-Dic '+year,'Saldo imp diferido\na 31-Dic '+(parseInt(year)-1),'Variacion','Tasa fiscal\naplicada'];
+  let r4=4;
+  h4Hdr.forEach((h,i)=>{
+    ws4.getCell(r4,i+1).value=h;ws4.getCell(r4,i+1).font={...fB,size:8,color:{argb:WH}};
+    ws4.getCell(r4,i+1).fill=fH;ws4.getCell(r4,i+1).border=bt;ws4.getCell(r4,i+1).alignment={horizontal:'center',vertical:'middle',wrapText:true};
+  });
+  ws4.getRow(r4).height=40;r4++;
+  // H4 Section 1: Activo (Diferencias temporarias deducibles)
+  ws4.getCell(r4,2).value='1. Impuestos diferidos provenientes de diferencias temporarias';
+  ws4.getCell(r4,2).font={...fB,color:{argb:DB}};for(let ci=1;ci<=10;ci++){ws4.getCell(r4,ci).fill=fGy;ws4.getCell(r4,ci).border=bt}r4++;
+  ws4.getCell(r4,2).value='Activo (Diferencias temporarias deducibles)';
+  ws4.getCell(r4,2).font={...fB,size:10,color:{argb:DB}};for(let ci=1;ci<=10;ci++)ws4.getCell(r4,ci).border=bt;r4++;
+  // Rows from prevalidador: 13-30
+  const h4ActRows=[
+    {num:13,desc:'Efectivo y equivalentes al efectivo'},
+    {num:14,desc:'Inversiones e instrumentos derivados'},
+    {num:15,desc:'Cuentas por cobrar'},
+    {num:16,desc:'Inventarios'},
+    {num:17,desc:'Propiedades, planta y equipo'},
+    {num:18,desc:'Activos intangibles'},
+    {num:19,desc:'Propiedades de inversion'},
+    {num:20,desc:'Activos biologicos'},
+    {num:21,desc:'Activos no corrientes mantenidos para la venta'},
+    {num:22,desc:'Pasivos financieros y cuentas por pagar'},
+    {num:23,desc:'Impuestos, gravamenes y tasas'},
+    {num:24,desc:'Beneficios a Empleados'},
+    {num:25,desc:'Provisiones'},
+    {num:26,desc:'Otros Pasivos Anticipos y avances recibidos'},
+    {num:27,desc:'Operaciones con titulos y derivados'},
+    {num:28,desc:'Perdidas fiscales y/o excesos de renta presuntiva'},
+    {num:29,desc:'Activos reconocidos solamente para fines fiscales'},
+    {num:30,desc:'Otros activos'},
+  ];
+  // Map H2 cuentas to H4 categories for auto-fill
+  const h4Map={
+    13:['11'],14:['12'],15:['13'],16:['14'],17:['15'],18:['16'],19:['18'],20:['19'],
+    22:['21','22','23'],23:['24'],24:['25'],25:['26'],26:['27','28'],
+  };
+  for(const row of h4ActRows){
+    const prefixes=h4Map[row.num]||[];
+    const ctsH2=cuentas2516.filter(c=>c.hoja==='H2'&&prefixes.some(p=>c.code.startsWith(p)));
+    const baseCtb=ctsH2.reduce((s,c)=>s+c.val,0);
+    const baseFis=ctsH2.reduce((s,c)=>s+c.valFiscal,0);
+    const difTemp=baseFis-baseCtb;
+    ws4.getCell(r4,1).value=row.num;ws4.getCell(r4,1).font={...fN,size:9};ws4.getCell(r4,1).border=bt;
+    ws4.getCell(r4,2).value=row.desc;ws4.getCell(r4,2).font=fN;ws4.getCell(r4,2).border=bt;
+    ws4.getCell(r4,3).value=baseCtb||'';ws4.getCell(r4,3).numFmt='#,##0';ws4.getCell(r4,3).border=bt;
+    ws4.getCell(r4,4).value=baseFis||'';ws4.getCell(r4,4).numFmt='#,##0';ws4.getCell(r4,4).border=bt;
+    // Diferencia temporaria (formula: Fiscal - Contable)
+    const cC=_cL(3),cD=_cL(4);
+    ws4.getCell(r4,5).value=difTemp!==0?{formula:cD+r4+'-'+cC+r4,result:difTemp}:'';
+    ws4.getCell(r4,5).numFmt='#,##0';ws4.getCell(r4,5).border=bt;
+    ws4.getCell(r4,6).value='';ws4.getCell(r4,6).border=bt;ws4.getCell(r4,6).numFmt='#,##0'; // Dif permanente: manual
+    ws4.getCell(r4,7).value='';ws4.getCell(r4,7).border=bt;ws4.getCell(r4,7).numFmt='#,##0'; // Saldo DTA actual: manual
+    ws4.getCell(r4,8).value='';ws4.getCell(r4,8).border=bt;ws4.getCell(r4,8).numFmt='#,##0'; // Saldo DTA anterior: manual
+    // Variacion = actual - anterior (formula)
+    const cG=_cL(7),cH=_cL(8);
+    ws4.getCell(r4,9).value={formula:cG+r4+'-'+cH+r4,result:0};ws4.getCell(r4,9).numFmt='#,##0';ws4.getCell(r4,9).border=bt;
+    ws4.getCell(r4,10).value='';ws4.getCell(r4,10).border=bt; // Tasa: manual
+    r4++;
+  }
+  // Total activo DTA
+  const r4ActStart=r4-h4ActRows.length;
+  ws4.getCell(r4,1).value=31;ws4.getCell(r4,2).value='Valor total Activo DTA';ws4.getCell(r4,2).font={...fB,color:{argb:DB}};
+  for(let ci=3;ci<=9;ci++){
+    const col=_cL(ci);
+    ws4.getCell(r4,ci).value={formula:'SUM('+col+r4ActStart+':'+col+(r4-1)+')',result:0};
+    ws4.getCell(r4,ci).numFmt='#,##0';ws4.getCell(r4,ci).font=fB;
+  }
+  for(let ci=1;ci<=10;ci++){ws4.getCell(r4,ci).border=bt;ws4.getCell(r4,ci).fill=fGy}
+  r4+=2;
+  // H4 Section 2: Pasivo (Diferencias temporarias imponibles)
+  ws4.getCell(r4,2).value='Pasivo (Diferencias temporarias imponibles)';
+  ws4.getCell(r4,2).font={...fB,size:10,color:{argb:DB}};for(let ci=1;ci<=10;ci++)ws4.getCell(r4,ci).border=bt;r4++;
+  const h4PasRows=[
+    {num:33,desc:'Efectivo y equivalentes al efectivo'},
+    {num:34,desc:'Inversiones e instrumentos derivados'},
+    {num:35,desc:'Cuentas por cobrar'},
+    {num:36,desc:'Inventarios'},
+    {num:37,desc:'Propiedades, planta y equipo'},
+    {num:38,desc:'Activos intangibles'},
+    {num:39,desc:'Propiedades de inversion'},
+    {num:40,desc:'Activos biologicos'},
+    {num:41,desc:'Activos no corrientes mantenidos para la venta'},
+    {num:42,desc:'Pasivos financieros y cuentas por pagar'},
+    {num:43,desc:'Impuestos, gravamenes y tasas'},
+    {num:44,desc:'Beneficios a Empleados'},
+    {num:45,desc:'Provisiones'},
+    {num:46,desc:'Otros Pasivos Anticipos y avances recibidos'},
+    {num:47,desc:'Operaciones con titulos y derivados'},
+    {num:48,desc:'Pasivos reconocidos solamente para fines fiscales'},
+    {num:49,desc:'Otros pasivos'},
+    {num:50,desc:'Otros'},
+  ];
+  for(const row of h4PasRows){
+    ws4.getCell(r4,1).value=row.num;ws4.getCell(r4,1).font={...fN,size:9};ws4.getCell(r4,1).border=bt;
+    ws4.getCell(r4,2).value=row.desc;ws4.getCell(r4,2).font=fN;ws4.getCell(r4,2).border=bt;
+    for(let ci=3;ci<=10;ci++){ws4.getCell(r4,ci).value='';ws4.getCell(r4,ci).border=bt;ws4.getCell(r4,ci).numFmt='#,##0'}
+    const cC4=_cL(3),cD4=_cL(4),cG4=_cL(7),cH4=_cL(8);
+    ws4.getCell(r4,5).value={formula:cD4+r4+'-'+cC4+r4,result:0};ws4.getCell(r4,5).numFmt='#,##0';
+    ws4.getCell(r4,9).value={formula:cG4+r4+'-'+cH4+r4,result:0};ws4.getCell(r4,9).numFmt='#,##0';
+    r4++;
+  }
+  // Total pasivo DTL
+  const r4PasStart=r4-h4PasRows.length;
+  ws4.getCell(r4,1).value=51;ws4.getCell(r4,2).value='Valor total Pasivo DTL';ws4.getCell(r4,2).font={...fB,color:{argb:DB}};
+  for(let ci=3;ci<=9;ci++){
+    const col=_cL(ci);
+    ws4.getCell(r4,ci).value={formula:'SUM('+col+r4PasStart+':'+col+(r4-1)+')',result:0};
+    ws4.getCell(r4,ci).numFmt='#,##0';ws4.getCell(r4,ci).font=fB;
+  }
+  for(let ci=1;ci<=10;ci++){ws4.getCell(r4,ci).border=bt;ws4.getCell(r4,ci).fill=fGy}
+  r4+=2;
+  ws4.getCell(r4,2).value='Nota: Las bases contable y fiscal de activos se precargan del balance. Las columnas de Saldo Impuesto Diferido actual/anterior y Tasa fiscal deben ser diligenciadas por el contador.';
+  ws4.getCell(r4,2).font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
+
+  // ── H5: INGRESOS Y FACTURACION ──
+  const ws5=wb.addWorksheet('H5 (Ingresos y Facturacion)');
+  ws5.properties.showGridLines=false;
+  ws5.getColumn(1).width=6;ws5.getColumn(2).width=28;
+  for(let ci=3;ci<=14;ci++)ws5.getColumn(ci).width=16;
+  ws5.getCell('B1').value='Conciliacion ingreso contable (devengado) y facturacion';ws5.getCell('B1').font={...fB,size:14,color:{argb:DB}};
+  ws5.getCell('B2').value=razon+' — AG '+year;ws5.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+  // Headers (2 rows)
+  const h5r1=['NUM','Concepto','Pasivo por ingreso diferido','','','','Facturacion emitida en el periodo','','','','','Ingreso contable devengado en el periodo'];
+  const h5r2=['','','Saldo inicio','Registrado como ingreso','Generado periodo','Saldo final','Devengada periodos ant.','Devengada periodo','Registrada como pasivo','Solo facturado','Valor total','Sin facturar'];
+  let r5=4;
+  h5r1.forEach((h,i)=>{ws5.getCell(r5,i+1).value=h;ws5.getCell(r5,i+1).font={...fB,size:8,color:{argb:WH}};ws5.getCell(r5,i+1).fill=fH;ws5.getCell(r5,i+1).border=bt;ws5.getCell(r5,i+1).alignment={horizontal:'center',wrapText:true}});
+  r5++;
+  h5r2.forEach((h,i)=>{ws5.getCell(r5,i+1).value=h;ws5.getCell(r5,i+1).font={...fB,size:7,color:{argb:WH}};ws5.getCell(r5,i+1).fill=fH;ws5.getCell(r5,i+1).border=bt;ws5.getCell(r5,i+1).alignment={horizontal:'center',wrapText:true}});
+  ws5.getRow(r5).height=36;r5++;
+  const h5Rows=[{num:12,desc:'Venta de bienes'},{num:13,desc:'Prestacion de servicios'},{num:14,desc:'Otros ingresos'},{num:15,desc:'Ingresos para terceros'},{num:16,desc:'Ajustes al valor facturado'}];
+  for(const row of h5Rows){
+    ws5.getCell(r5,1).value=row.num;ws5.getCell(r5,1).font={...fN,size:9};ws5.getCell(r5,1).border=bt;
+    ws5.getCell(r5,2).value=row.desc;ws5.getCell(r5,2).font=fN;ws5.getCell(r5,2).border=bt;
+    for(let ci=3;ci<=12;ci++){ws5.getCell(r5,ci).value='';ws5.getCell(r5,ci).border=bt;ws5.getCell(r5,ci).numFmt='#,##0'}
+    // Saldo final = col3 - col4 + col5
+    const c3=_cL(3),c4=_cL(4),c5=_cL(5);
+    ws5.getCell(r5,6).value={formula:c3+r5+'-'+c4+r5+'+'+c5+r5,result:0};ws5.getCell(r5,6).numFmt='#,##0';
+    // Valor total facturacion = col7+col8+col9+col10
+    const c7=_cL(7),c8=_cL(8),c9=_cL(9),c10=_cL(10);
+    ws5.getCell(r5,11).value={formula:c7+r5+'+'+c8+r5+'+'+c9+r5+'+'+c10+r5,result:0};ws5.getCell(r5,11).numFmt='#,##0';
+    r5++;
+  }
+  // Total
+  ws5.getCell(r5,1).value=17;ws5.getCell(r5,2).value='TOTAL';ws5.getCell(r5,2).font={...fB,color:{argb:DB}};
+  const r5Start=r5-h5Rows.length;
+  for(let ci=3;ci<=12;ci++){
+    const col=_cL(ci);
+    ws5.getCell(r5,ci).value={formula:'SUM('+col+r5Start+':'+col+(r5-1)+')',result:0};
+    ws5.getCell(r5,ci).numFmt='#,##0';ws5.getCell(r5,ci).font=fB;
+  }
+  for(let ci=1;ci<=12;ci++){ws5.getCell(r5,ci).border=bt;ws5.getCell(r5,ci).fill=fGy}
+  r5+=2;
+  ws5.getCell(r5,2).value='Esta hoja debe ser diligenciada manualmente comparando ingresos devengados vs facturacion emitida.';
+  ws5.getCell(r5,2).font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
+
+  // ── H6: ACTIVOS FIJOS ──
+  const ws6=wb.addWorksheet('H6 (Activos fijos)');
+  ws6.properties.showGridLines=false;
+  ws6.getColumn(1).width=6;ws6.getColumn(2).width=30;ws6.getColumn(3).width=16;ws6.getColumn(4).width=16;
+  for(let ci=5;ci<=14;ci++)ws6.getColumn(ci).width=15;
+  ws6.getCell('B1').value='Conciliacion Propiedades, planta y equipo (PPE), propiedades de inversion y activos intangibles';
+  ws6.getCell('B1').font={...fB,size:13,color:{argb:DB}};
+  ws6.getCell('B2').value=razon+' — AG '+year+' — Valores contables y fiscales';
+  ws6.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+  // Simplified H6 headers (contable side)
+  const h6Hdr=['NUM','CONCEPTO','Importe inicio\n(Costo)','Adquisiciones','Bajas','Depreciacion\nacumulada','Deterioro\nacumulado',
+    'Saldo final\ncontable','Costo fiscal\ninicio','Depreciacion\nfiscal acum','Saldo final\nfiscal','Diferencia'];
+  let r6=4;
+  h6Hdr.forEach((h,i)=>{
+    ws6.getCell(r6,i+1).value=h;ws6.getCell(r6,i+1).font={...fB,size:8,color:{argb:WH}};
+    ws6.getCell(r6,i+1).fill=fH;ws6.getCell(r6,i+1).border=bt;ws6.getCell(r6,i+1).alignment={horizontal:'center',vertical:'middle',wrapText:true};
+  });
+  ws6.getRow(r6).height=40;r6++;
+  // PPE rows
+  ws6.getCell(r6,2).value='Propiedades, planta y equipo';ws6.getCell(r6,2).font={...fB,color:{argb:DB}};
+  for(let ci=1;ci<=12;ci++){ws6.getCell(r6,ci).fill=fGy;ws6.getCell(r6,ci).border=bt}r6++;
+  const h6PPE=[
+    {num:13,desc:'Terrenos',puc:'1504'},{num:14,desc:'Edificios',puc:'1516'},
+    {num:15,desc:'Maquinaria',puc:'1520'},{num:18,desc:'Equipos de Transporte',puc:'1540'},
+    {num:19,desc:'Enseres y accesorios',puc:'1524'},{num:20,desc:'Equipos informaticos',puc:'1528'},
+    {num:29,desc:'Construcciones en proceso',puc:'1506'},{num:30,desc:'Otras PPE',puc:'1548'},
+  ];
+  for(const row of h6PPE){
+    const cts=cuentas2516.filter(c=>c.hoja==='H2'&&c.code.startsWith(row.puc));
+    const ctb=cts.reduce((s,c)=>s+c.val,0);
+    const fis=cts.reduce((s,c)=>s+c.valFiscal,0);
+    ws6.getCell(r6,1).value=row.num;ws6.getCell(r6,1).font={...fN,size:9};ws6.getCell(r6,1).border=bt;
+    ws6.getCell(r6,2).value=row.desc;ws6.getCell(r6,2).font=fN;ws6.getCell(r6,2).border=bt;
+    for(let ci=3;ci<=12;ci++){ws6.getCell(r6,ci).value='';ws6.getCell(r6,ci).border=bt;ws6.getCell(r6,ci).numFmt='#,##0'}
+    ws6.getCell(r6,8).value=ctb||'';ws6.getCell(r6,8).numFmt='#,##0';ws6.getCell(r6,8).font=fB;
+    ws6.getCell(r6,11).value=fis||'';ws6.getCell(r6,11).numFmt='#,##0';ws6.getCell(r6,11).font=fB;
+    const c8=_cL(8),c11=_cL(11);
+    ws6.getCell(r6,12).value={formula:c11+r6+'-'+c8+r6,result:fis-ctb};ws6.getCell(r6,12).numFmt='#,##0';ws6.getCell(r6,12).border=bt;
+    r6++;
+  }
+  // Depreciation row
+  const depCtb=cuentas2516.filter(c=>c.hoja==='H2'&&c.code.startsWith('1592')).reduce((s,c)=>s+c.val,0);
+  const depFis=cuentas2516.filter(c=>c.hoja==='H2'&&c.code.startsWith('1592')).reduce((s,c)=>s+c.valFiscal,0);
+  ws6.getCell(r6,2).value='Depreciacion acumulada total';ws6.getCell(r6,2).font={...fB,color:{argb:'FFC62828'}};
+  ws6.getCell(r6,8).value=depCtb;ws6.getCell(r6,8).numFmt='#,##0';ws6.getCell(r6,8).font=fB;
+  ws6.getCell(r6,11).value=depFis;ws6.getCell(r6,11).numFmt='#,##0';ws6.getCell(r6,11).font=fB;
+  for(let ci=1;ci<=12;ci++){ws6.getCell(r6,ci).border=bt;ws6.getCell(r6,ci).fill=fGy}
+  r6+=2;
+  // Total PPE
+  const ppeCtb=cuentas2516.filter(c=>c.hoja==='H2'&&c.code.startsWith('15')).reduce((s,c)=>s+c.val,0);
+  const ppeFis=cuentas2516.filter(c=>c.hoja==='H2'&&c.code.startsWith('15')).reduce((s,c)=>s+c.valFiscal,0);
+  ws6.getCell(r6,2).value='TOTAL PPE NETO';ws6.getCell(r6,2).font={...fB,size:11,color:{argb:DB}};
+  ws6.getCell(r6,8).value=ppeCtb;ws6.getCell(r6,8).numFmt='#,##0';ws6.getCell(r6,8).font={...fB,size:11};
+  ws6.getCell(r6,11).value=ppeFis;ws6.getCell(r6,11).numFmt='#,##0';ws6.getCell(r6,11).font={...fB,size:11};
+  ws6.getCell(r6,12).value=ppeFis-ppeCtb;ws6.getCell(r6,12).numFmt='#,##0';ws6.getCell(r6,12).font={...fB,size:11};
+  for(let ci=1;ci<=12;ci++){ws6.getCell(r6,ci).border=bt;ws6.getCell(r6,ci).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8F5E9'}}}
+  r6+=2;
+  ws6.getCell(r6,2).value='Las columnas de Adquisiciones, Bajas, Costo fiscal inicio y Depreciacion fiscal deben ser completadas por el contador. Los saldos contable y fiscal finales se precargaron del balance.';
+  ws6.getCell(r6,2).font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
+
+  // ── H7: RESUMEN ESF-ERI ──
+  const ws7=wb.addWorksheet('H7 (Resumen ESF-ERI)');
+  ws7.properties.showGridLines=false;
+  ws7.getColumn(1).width=6;ws7.getColumn(2).width=50;ws7.getColumn(3).width=18;ws7.getColumn(4).width=18;ws7.getColumn(5).width=18;
+  ws7.getCell('B1').value='RESUMEN ESF - PATRIMONIO y ERI - RENTA LIQUIDA';ws7.getCell('B1').font={...fB,size:14,color:{argb:DB}};
+  ws7.getCell('B2').value=razon+' — AG '+year;ws7.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+
+  let r7=4;
+  ['NUM','CONCEPTO','VALOR CONTABLE','VALOR FISCAL','VARIACION'].forEach((h,i)=>{
+    ws7.getCell(r7,i+1).value=h;ws7.getCell(r7,i+1).font={...fB,size:9,color:{argb:WH}};
+    ws7.getCell(r7,i+1).fill=fH;ws7.getCell(r7,i+1).border=bt;ws7.getCell(r7,i+1).alignment={horizontal:'center'};
+  });
+  r7++;
+
+  // ESF Summary
+  ws7.getCell(r7,2).value='ESTADO DE SITUACION FINANCIERA - PATRIMONIO';ws7.getCell(r7,2).font={...fB,color:{argb:DB}};
+  for(let ci=1;ci<=5;ci++){ws7.getCell(r7,ci).fill=fGy;ws7.getCell(r7,ci).border=bt}r7++;
+
+  const resumen=[
+    ['Activos',totalActCtb,totalActFis],
+    ['Pasivos',totalPasCtb,totalPasFis],
+    ['Patrimonio (Activos - Pasivos)',totalActCtb-totalPasCtb,totalActFis-totalPasFis],
+  ];
+  resumen.forEach(([label,ctb,fis])=>{
+    ws7.getCell(r7,2).value=label;ws7.getCell(r7,2).font=fN;ws7.getCell(r7,2).border=bt;
+    ws7.getCell(r7,3).value=ctb;ws7.getCell(r7,3).numFmt='#,##0';ws7.getCell(r7,3).font=fN;ws7.getCell(r7,3).border=bt;
+    ws7.getCell(r7,4).value=fis;ws7.getCell(r7,4).numFmt='#,##0';ws7.getCell(r7,4).font=fB;ws7.getCell(r7,4).border=bt;
+    ws7.getCell(r7,5).value=fis-ctb;ws7.getCell(r7,5).numFmt='#,##0';ws7.getCell(r7,5).font=fN;ws7.getCell(r7,5).border=bt;
+    r7++;
+  });
+
+  r7++;
+  ws7.getCell(r7,2).value='ESTADO DE RESULTADOS - RENTA LIQUIDA';ws7.getCell(r7,2).font={...fB,color:{argb:DB}};
+  for(let ci=1;ci<=5;ci++){ws7.getCell(r7,ci).fill=fGy;ws7.getCell(r7,ci).border=bt}r7++;
+
+  const resumenERI=[
+    ['Ingresos',totalIngCtb,totalIngFis],
+    ['Costos',totalCosCtb,totalCosFis],
+    ['Gastos',totalGasCtb,totalGasFis],
+    ['Ganancia o Perdida',totalIngCtb-totalCosCtb-totalGasCtb,totalIngFis-totalCosFis-totalGasFis],
+  ];
+  resumenERI.forEach(([label,ctb,fis])=>{
+    ws7.getCell(r7,2).value=label;ws7.getCell(r7,2).font=fN;ws7.getCell(r7,2).border=bt;
+    ws7.getCell(r7,3).value=ctb;ws7.getCell(r7,3).numFmt='#,##0';ws7.getCell(r7,3).font=fN;ws7.getCell(r7,3).border=bt;
+    ws7.getCell(r7,4).value=fis;ws7.getCell(r7,4).numFmt='#,##0';ws7.getCell(r7,4).font=fB;ws7.getCell(r7,4).border=bt;
+    ws7.getCell(r7,5).value=fis-ctb;ws7.getCell(r7,5).numFmt='#,##0';ws7.getCell(r7,5).font=fN;ws7.getCell(r7,5).border=bt;
+    r7++;
+  });
+
+  // ── F110: SIMULACION FORMULARIO 110 (alimentado por valores fiscales del 2516) ──
+  const ws110=wb.addWorksheet('Formulario 110');
+  ws110.properties.showGridLines=false;
+  ws110.getColumn(1).width=8;ws110.getColumn(2).width=50;ws110.getColumn(3).width=20;
+  ws110.getCell('B1').value='SIMULACION FORMULARIO 110 — Generado desde F2516';ws110.getCell('B1').font={...fB,size:14,color:{argb:DB}};
+  ws110.getCell('B2').value=razon+' — NIT '+nit+' — AG '+year+' — BORRADOR - Verificar con contador publico';
+  ws110.getCell('B2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+  // F110 casillas alimentadas por valores fiscales del 2516
+  const sumFiscal=(hoja,prefijos)=>cuentas2516.filter(c=>c.hoja===hoja&&prefijos.some(p=>c.code.startsWith(p))).reduce((s,c)=>s+c.valFiscal,0);
+  const f110Data=[
+    {sec:'PATRIMONIO',rows:[
+      {cas:36,desc:'Efectivo y equivalentes al efectivo',val:sumFiscal('H2',['11'])},
+      {cas:37,desc:'Inversiones e instrumentos financieros derivados',val:sumFiscal('H2',['12'])},
+      {cas:38,desc:'Cuentas, documentos y arrendamientos financieros por cobrar',val:sumFiscal('H2',['13'])},
+      {cas:39,desc:'Inventarios',val:sumFiscal('H2',['14'])},
+      {cas:40,desc:'Activos intangibles',val:sumFiscal('H2',['16'])},
+      {cas:41,desc:'Activos biologicos',val:sumFiscal('H2',['19'])},
+      {cas:42,desc:'Propiedades, planta y equipo, propiedades de inversion',val:sumFiscal('H2',['15','18'])},
+      {cas:43,desc:'Otros activos',val:sumFiscal('H2',['17','1805','1895','1899'])},
+    ]},
+    {sec:'',rows:[
+      {cas:44,desc:'Total patrimonio bruto (36+37+38+39+40+41+42+43)',val:totalActFis,bold:true},
+      {cas:45,desc:'Pasivos',val:totalPasFis},
+      {cas:46,desc:'Total patrimonio liquido (44-45)',val:totalActFis-totalPasFis,bold:true},
+    ]},
+    {sec:'INGRESOS',rows:[
+      {cas:47,desc:'Ingresos brutos de actividades ordinarias',val:sumFiscal('H3',['41'])},
+      {cas:48,desc:'Ingresos financieros',val:sumFiscal('H3',['4210','4215','4205'])},
+      {cas:57,desc:'Otros ingresos',val:sumFiscal('H3',['42'])-sumFiscal('H3',['4210','4215','4205','4230'])},
+    ]},
+    {sec:'COSTOS Y GASTOS',rows:[
+      {cas:62,desc:'Costos',val:totalCosFis},
+      {cas:63,desc:'Gastos de administracion',val:sumFiscal('H3',['51'])},
+      {cas:64,desc:'Gastos de distribucion y ventas',val:sumFiscal('H3',['52'])},
+      {cas:65,desc:'Gastos financieros',val:sumFiscal('H3',['5305','530505','530510','530515','530520','530525','530530','530535','530540','530545'])},
+      {cas:66,desc:'Otros gastos y deducciones',val:sumFiscal('H3',['5310','5313','5315','5395','5399','5170','5270'])},
+    ]},
+    {sec:'RENTA',rows:[
+      {cas:72,desc:'Renta liquida ordinaria',val:Math.max(totalIngFis-totalCosFis-totalGasFis,0),bold:true},
+      {cas:73,desc:'Perdida liquida',val:Math.max(-(totalIngFis-totalCosFis-totalGasFis),0)},
+    ]},
+  ];
+  let r110=4;
+  ['Casilla','Concepto','Valor Fiscal'].forEach((h,i)=>{
+    ws110.getCell(r110,i+1).value=h;ws110.getCell(r110,i+1).font={...fB,size:9,color:{argb:WH}};
+    ws110.getCell(r110,i+1).fill=fH;ws110.getCell(r110,i+1).border=bt;ws110.getCell(r110,i+1).alignment={horizontal:'center'};
+  });r110++;
+  for(const section of f110Data){
+    if(section.sec){
+      ws110.getCell(r110,2).value=section.sec;ws110.getCell(r110,2).font={...fB,color:{argb:DB}};
+      for(let ci=1;ci<=3;ci++){ws110.getCell(r110,ci).fill=fGy;ws110.getCell(r110,ci).border=bt}r110++;
+    }
+    for(const row of section.rows){
+      ws110.getCell(r110,1).value=row.cas;ws110.getCell(r110,1).font={...fB,size:9,color:{argb:GR}};ws110.getCell(r110,1).border=bt;ws110.getCell(r110,1).alignment={horizontal:'center'};
+      ws110.getCell(r110,2).value=row.desc;ws110.getCell(r110,2).font=row.bold?{...fB,color:{argb:DB}}:fN;ws110.getCell(r110,2).border=bt;
+      ws110.getCell(r110,3).value=Math.round(row.val);ws110.getCell(r110,3).numFmt='#,##0';ws110.getCell(r110,3).font=row.bold?{...fB,size:11,color:{argb:DB}}:fB;ws110.getCell(r110,3).border=bt;
+      if(row.bold){for(let ci=1;ci<=3;ci++)ws110.getCell(r110,ci).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFE8F5E9'}}}
+      r110++;
+    }
+  }
+  r110+=2;
+  ws110.getCell(r110,2).value='Esta simulacion del F110 se genera automaticamente desde los valores fiscales del 2516. Las casillas de descuentos tributarios, anticipo, retenciones y saldo a pagar deben calcularse aparte.';
+  ws110.getCell(r110,2).font={...fN,size:9,italic:true,color:{argb:'FF9CA3AF'}};
+
+  // ── BALANCE CLASIFICADO (hoja adicional) ──
+  const wsBC=wb.addWorksheet('Balance Clasificado');
+  wsBC.getColumn(1).width=14;wsBC.getColumn(2).width=40;wsBC.getColumn(3).width=18;wsBC.getColumn(4).width=18;wsBC.getColumn(5).width=10;wsBC.getColumn(6).width=35;wsBC.getColumn(7).width=10;
+  wsBC.getCell('A1').value='BALANCE DE PRUEBA CLASIFICADO PARA 2516';wsBC.getCell('A1').font={...fB,size:13,color:{argb:DB}};
+  wsBC.getCell('A2').value=razon+' — NIT '+nit+' — AG '+year+' — Debe ser verificado por un contador publico';
+  wsBC.getCell('A2').font={...fN,size:9,italic:true,color:{argb:'FF6B7280'}};
+  let rBC=4;
+  ['Cuenta','Nombre','Valor Contable','Valor Fiscal','Hoja','Concepto 2516','Num'].forEach((h,i)=>{
+    wsBC.getCell(rBC,i+1).value=h;wsBC.getCell(rBC,i+1).font={...fB,size:9,color:{argb:WH}};
+    wsBC.getCell(rBC,i+1).fill=fH;wsBC.getCell(rBC,i+1).border=bt;
+  });
+  rBC++;
+  for(const c of cuentas2516.sort((a,b)=>a.code.localeCompare(b.code))){
+    wsBC.getCell(rBC,1).value=c.code;wsBC.getCell(rBC,1).font={...fN,name:'Consolas',size:9};wsBC.getCell(rBC,1).border=bt;
+    wsBC.getCell(rBC,2).value=c.name;wsBC.getCell(rBC,2).font=fN;wsBC.getCell(rBC,2).border=bt;
+    wsBC.getCell(rBC,3).value=c.val;wsBC.getCell(rBC,3).numFmt='#,##0';wsBC.getCell(rBC,3).font=fN;wsBC.getCell(rBC,3).border=bt;
+    wsBC.getCell(rBC,4).value=c.valFiscal;wsBC.getCell(rBC,4).numFmt='#,##0';wsBC.getCell(rBC,4).font=fB;wsBC.getCell(rBC,4).border=bt;
+    wsBC.getCell(rBC,5).value=c.hoja;wsBC.getCell(rBC,5).font={...fB,size:9,color:{argb:GR}};wsBC.getCell(rBC,5).border=bt;
+    wsBC.getCell(rBC,6).value=c.descConcepto;wsBC.getCell(rBC,6).font={...fN,size:9};wsBC.getCell(rBC,6).border=bt;
+    wsBC.getCell(rBC,7).value=c.concepto2516;wsBC.getCell(rBC,7).font={...fN,size:9};wsBC.getCell(rBC,7).border=bt;
+    rBC++;
+  }
+
+  // Download
+  const buf=await wb.xlsx.writeBuffer();
+  const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='F2516_V9_AG'+year+'_'+(nit||'SIN_NIT')+'.xlsx';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  exoToast('Excel 2516 descargado','success');
+  gtag('event','f2516_excel_descargado',{cuentas:cuentas2516.length});
+}
+</script>
+</body>
+</html>
