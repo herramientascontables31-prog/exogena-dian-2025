@@ -180,6 +180,7 @@
   '        <a href="dashboard.html">📊 Dashboard</a>'+
   '        <a href="conciliacion.html">🏦 Conciliación</a>'+
   '        <a href="credito.html">🏦 Simulador Crédito</a>'+
+  '        <a href="oficina.html">📋 Mi Oficina Contable</a>'+
   '      </div>'+
   '    </div>'+
        /* Sanciones */
@@ -261,6 +262,7 @@
   '          <a href="dashboard.html"><div class="dd-icon" style="background:#1E293B">📊</div> Dashboard</a>'+
   '          <a href="conciliacion.html"><div class="dd-icon" style="background:#ECFEFF">🏦</div> Conciliación Bancaria</a>'+
   '          <a href="credito.html"><div class="dd-icon" style="background:#DBEAFE">🏦</div> Simulador Crédito</a>'+
+  '          <a href="oficina.html"><div class="dd-icon" style="background:#D1FAE5">📋</div> Mi Oficina Contable</a>'+
   '        </div>'+
            /* ── Col 3: Sanciones y Mora ── */
   '        <div class="mega-col">'+
