@@ -811,7 +811,7 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
 <!-- Escuela access control: cursos gratis vs PRO -->
 <script>
 (function(){
-  var FREE_COURSES=['escuela/iva300.html','escuela/exogena.html','escuela/ia-automatizacion.html'];
+  var FREE_COURSES=['escuela/iva300.html','escuela/ia-automatizacion.html'];
 
   function isPro(){
     if(typeof exoPro==='undefined') return false;
@@ -860,11 +860,10 @@ body{font-family:'Outfit',sans-serif;background:#fff;color:var(--gray-900);overf
       if(grid){
         var banner=document.createElement('div');
         banner.style.cssText='grid-column:1/-1;background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:2px solid #A7F3D0;border-radius:16px;padding:20px 24px;text-align:center;order:-1';
-        banner.innerHTML='<div style="font-size:.82rem;font-weight:700;color:#065F46;margin-bottom:8px">&#127891; Empieza gratis con estos cursos:</div>'+
+        banner.innerHTML='<div style="font-size:.82rem;font-weight:700;color:#065F46;margin-bottom:8px">&#127891; Empieza gratis:</div>'+
           '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+
-            '<a href="escuela/iva300.html" style="padding:8px 18px;background:#059669;color:#fff;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;transition:all .2s" onmouseover="this.style.background=\'#047857\'" onmouseout="this.style.background=\'#059669\'">IVA 300 (gratis)</a>'+
-            '<a href="escuela/exogena.html" style="padding:8px 18px;background:#059669;color:#fff;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;transition:all .2s" onmouseover="this.style.background=\'#047857\'" onmouseout="this.style.background=\'#059669\'">Ex\u00f3gena (gratis)</a>'+
-            '<a href="escuela/ia-automatizacion.html" style="padding:8px 18px;background:#059669;color:#fff;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;transition:all .2s" onmouseover="this.style.background=\'#047857\'" onmouseout="this.style.background=\'#059669\'">IA para Contadores (gratis)</a>'+
+            '<a href="escuela/iva300.html" style="padding:10px 22px;background:#059669;color:#fff;border-radius:10px;font-weight:700;font-size:.92rem;text-decoration:none;transition:all .2s;box-shadow:0 4px 12px rgba(5,150,105,.25)" onmouseover="this.style.background=\'#047857\'" onmouseout="this.style.background=\'#059669\'">IVA 300 \u2014 Gratis \u2192</a>'+
+            '<a href="escuela/ia-automatizacion.html" style="padding:10px 22px;background:#059669;color:#fff;border-radius:10px;font-weight:700;font-size:.92rem;text-decoration:none;transition:all .2s;box-shadow:0 4px 12px rgba(5,150,105,.25)" onmouseover="this.style.background=\'#047857\'" onmouseout="this.style.background=\'#059669\'">IA para Contadores \u2014 Gratis \u2192</a>'+
           '</div>'+
           '<div style="font-size:.75rem;color:#6B7280;margin-top:8px">Los dem\u00e1s cursos se desbloquean con <a href="precios.html" style="color:#EA580C;font-weight:700;text-decoration:none">PRO + Escuela</a></div>';
         grid.insertAdjacentElement('afterbegin',banner);

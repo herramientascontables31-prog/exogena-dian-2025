@@ -10,7 +10,7 @@
   'use strict';
 
   // Cursos gratuitos que NO requieren Escuela
-  var FREE_COURSES = ['iva300.html'];
+  var FREE_COURSES = ['iva300.html', 'ia-automatizacion.html'];
   var page = location.pathname.split('/').pop() || '';
   if (FREE_COURSES.indexOf(page) !== -1) return;
 
