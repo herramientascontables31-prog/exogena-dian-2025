@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<script src="../shared/cookie-consent.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-S7SM6ST4CC"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-S7SM6ST4CC');
+</script>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta name="theme-color" content="#059669">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curso IA y Automatizaci&oacute;n para Contadores &mdash; Escuela Contable IA | Ex&oacute;genaDIAN</title>
+<meta name="description" content="8 m&oacute;dulos para llevar tu firma contable al siguiente nivel con inteligencia artificial y automatizaci&oacute;n. No necesitas programar: solo conectar los puntos.">
+<link rel="canonical" href="https://exogenadian.com/escuela/ia-automatizacion.html">
+<meta name="robots" content="index, follow">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-900:#064E3B;--green-800:#065F46;--green-700:#047857;--green-600:#059669;--green-500:#10B981;--green-400:#34D399;--green-300:#6EE7B7;--green-200:#A7F3D0;--green-100:#D1FAE5;--green-50:#ECFDF5;
+  --white:#FFF;--gray-50:#F9FAFB;--gray-100:#F3F4F6;--gray-200:#E5E7EB;--gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-500:#6B7280;--gray-600:#4B5563;--gray-700:#374151;--gray-800:#1F2937;--gray-900:#111827;
+  --amber-50:#FFFBEB;--amber-100:#FEF3C7;--amber-500:#F59E0B;--amber-700:#92400E;--amber-800:#78350F;
+  --blue-50:#EFF6FF;--blue-100:#DBEAFE;--blue-500:#3B82F6;--blue-700:#1D4ED8;
+  --purple-50:#F5F3FF;--purple-100:#EDE9FE;--purple-500:#8B5CF6;--purple-700:#6D28D9;
+  --rose-50:#FFF1F2;--rose-500:#F43F5E;--rose-700:#BE123C;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.6}
+
+/* ===== LAYOUT ===== */
+.curso-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+@media(max-width:900px){.curso-layout{grid-template-columns:1fr}}
+
+/* ===== SIDEBAR ===== */
+.sidebar{background:var(--white);border-right:1px solid var(--gray-200);padding:20px 0;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.sidebar-header{padding:16px 20px;border-bottom:1px solid var(--gray-100)}
+.sidebar-header a{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--gray-800);font-weight:800;font-size:.9rem}
+.sidebar-header a div{width:28px;height:28px;background:linear-gradient(135deg,#059669,#34D399);border-radius:7px;display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:900}
+.sidebar-header small{display:block;font-size:.72rem;color:var(--gray-400);font-weight:500;margin-top:2px}
+.sidebar-curso{padding:16px 20px;border-bottom:1px solid var(--gray-100)}
+.sidebar-curso h3{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--green-700);margin-bottom:4px}
+.sidebar-curso p{font-size:.88rem;font-weight:700;color:var(--gray-800)}
+.sidebar-nav{padding:12px 0;flex:1}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:10px 20px;text-decoration:none;color:var(--gray-500);font-size:.85rem;font-weight:500;transition:all .15s;border-left:3px solid transparent}
+.sidebar-nav a:hover{background:var(--green-50);color:var(--green-700)}
+.sidebar-nav a.active{background:var(--green-50);color:var(--green-700);font-weight:700;border-left-color:var(--green-600)}
+.sidebar-nav a .nav-num{width:24px;height:24px;border-radius:50%;background:var(--gray-100);color:var(--gray-500);display:grid;place-items:center;font-size:.72rem;font-weight:700;flex-shrink:0}
+.sidebar-nav a.active .nav-num{background:var(--green-600);color:#fff}
+.sidebar-nav a.completed .nav-num{background:var(--green-200);color:var(--green-700)}
+.sidebar-back{padding:16px 20px;border-top:1px solid var(--gray-100);margin-top:auto}
+.sidebar-back a{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--gray-400);font-size:.82rem;font-weight:500;transition:color .15s}
+.sidebar-back a:hover{color:var(--gray-700)}
+.sidebar-toggle{display:none;position:fixed;bottom:20px;left:20px;z-index:200;width:48px;height:48px;border-radius:50%;background:var(--green-600);color:#fff;border:none;font-size:1.2rem;cursor:pointer;box-shadow:0 4px 16px rgba(5,150,105,.3)}
+@media(max-width:900px){
+  .sidebar{display:none;position:fixed;top:0;left:0;z-index:199;width:280px;box-shadow:4px 0 20px rgba(0,0,0,.1)}
+  .sidebar.open{display:flex}
+  .sidebar-toggle{display:block}
+  .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:198}
+  .sidebar-overlay.open{display:block}
+}
+
+/* ===== MAIN CONTENT ===== */
+.curso-main{padding:32px 40px 60px;max-width:860px}
+@media(max-width:900px){.curso-main{padding:20px 16px 80px}}
+
+/* Module header */
+.mod-header{margin-bottom:32px}
+.mod-breadcrumb{font-size:.78rem;color:var(--gray-400);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mod-breadcrumb a{color:var(--gray-400);text-decoration:none}
+.mod-breadcrumb a:hover{color:var(--green-600)}
+.mod-num{display:inline-flex;align-items:center;gap:8px;background:var(--green-50);color:var(--green-800);padding:4px 14px;border-radius:100px;font-size:.78rem;font-weight:700;margin-bottom:12px}
+.mod-header h1{font-family:'Fraunces',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px;line-height:1.2}
+.mod-header .mod-desc{font-size:1rem;color:var(--gray-500);max-width:600px;line-height:1.6}
+
+/* Content blocks */
+.content-block{margin-bottom:28px}
+.content-block h2{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;margin-bottom:12px;color:var(--gray-900);padding-bottom:8px;border-bottom:2px solid var(--green-200)}
+.content-block h3{font-size:1.05rem;font-weight:700;margin:20px 0 8px;color:var(--gray-800)}
+.content-block p{font-size:.92rem;color:var(--gray-600);line-height:1.7;margin-bottom:12px}
+.content-block ul,.content-block ol{margin:8px 0 16px 20px;display:flex;flex-direction:column;gap:6px}
+.content-block li{font-size:.9rem;color:var(--gray-600);line-height:1.6}
+
+/* Norma card */
+.norma{background:var(--amber-50);border:1.5px solid #FDE68A;border-radius:14px;padding:20px 24px;margin:20px 0}
+.norma-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.norma-icon{width:32px;height:32px;border-radius:8px;background:#FDE68A;display:grid;place-items:center;font-size:.9rem;flex-shrink:0}
+.norma-header h4{font-size:.92rem;font-weight:700;color:var(--amber-800)}
+.norma-header .norma-tag{font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--amber-500);color:#fff;text-transform:uppercase;letter-spacing:.04em}
+.norma blockquote{font-size:.88rem;color:#78350F;line-height:1.65;padding:12px 16px;background:rgba(255,255,255,.6);border-radius:8px;border-left:3px solid var(--amber-500);margin:8px 0;font-style:italic}
+.norma blockquote strong{font-style:normal;color:var(--amber-800)}
+.norma p{font-size:.85rem;color:#78350F;line-height:1.6;margin:8px 0}
+.norma .norma-aplicacion{font-size:.82rem;color:var(--green-800);background:var(--green-50);padding:10px 14px;border-radius:8px;border:1px solid var(--green-200);margin-top:12px}
+.norma .norma-aplicacion strong{color:var(--green-700)}
+
+/* Tip card */
+.tip{background:var(--blue-50);border:1.5px solid #BFDBFE;border-radius:14px;padding:18px 22px;margin:20px 0}
+.tip-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.tip-header h4{font-size:.88rem;font-weight:700;color:var(--blue-700)}
+.tip p{font-size:.88rem;color:#1E40AF;line-height:1.6}
+
+/* Error com&uacute;n */
+.error-comun{background:var(--rose-50);border:1.5px solid #FECACA;border-radius:14px;padding:18px 22px;margin:20px 0}
+.error-comun-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.error-comun-header h4{font-size:.88rem;font-weight:700;color:var(--rose-700)}
+.error-comun p{font-size:.88rem;color:#9F1239;line-height:1.6}
+
+/* Tabla normativa */
+.tabla-norm{width:100%;border-collapse:collapse;margin:16px 0;border-radius:10px;overflow:hidden;border:1px solid var(--gray-200)}
+.tabla-norm th{background:var(--gray-100);padding:10px 14px;text-align:left;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-500)}
+.tabla-norm td{padding:10px 14px;font-size:.85rem;border-top:1px solid var(--gray-100);color:var(--gray-700)}
+.tabla-norm tr:hover{background:var(--green-50)}
+.tabla-norm code{font-family:'JetBrains Mono',monospace;font-size:.8rem;background:var(--gray-100);padding:1px 6px;border-radius:4px}
+
+/* Ejemplo pr&aacute;ctico */
+.ejemplo{background:var(--white);border:1.5px solid var(--gray-200);border-radius:14px;overflow:hidden;margin:20px 0;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+.ejemplo-header{background:var(--gray-50);padding:12px 20px;border-bottom:1px solid var(--gray-200);display:flex;align-items:center;gap:8px}
+.ejemplo-header h4{font-size:.85rem;font-weight:700;color:var(--gray-700)}
+.ejemplo-body{padding:16px 20px}
+.ejemplo-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-100);font-size:.88rem}
+.ejemplo-row:last-child{border-bottom:none}
+.ejemplo-row .label{color:var(--gray-600)}
+.ejemplo-row .value{font-weight:700;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.ejemplo-row.total{border-top:2px solid var(--green-200);border-bottom:none;padding-top:12px;margin-top:4px}
+.ejemplo-row.total .label{font-weight:700;color:var(--gray-900)}
+.ejemplo-row.total .value{color:var(--green-700);font-size:.95rem}
+
+/* Navigation between modules */
+.mod-nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:2px solid var(--gray-200)}
+.mod-nav a{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:12px;text-decoration:none;font-weight:700;font-size:.92rem;transition:all .2s}
+.mod-nav .prev{background:var(--gray-100);color:var(--gray-700)}
+.mod-nav .prev:hover{background:var(--gray-200)}
+.mod-nav .next{background:var(--green-600);color:#fff;box-shadow:0 4px 12px rgba(5,150,105,.25)}
+.mod-nav .next:hover{background:var(--green-700);transform:translateY(-1px)}
+
+/* CTA practica */
+.cta-practica{background:linear-gradient(135deg,var(--green-50),#D1FAE5);border:2px solid var(--green-300);border-radius:16px;padding:28px 24px;text-align:center;margin:28px 0}
+.cta-practica h3{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;color:var(--green-800);margin-bottom:8px}
+.cta-practica p{font-size:.92rem;color:var(--green-700);margin-bottom:16px}
+.cta-practica a{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;background:var(--green-600);color:#fff;border-radius:12px;font-weight:700;font-size:1rem;text-decoration:none;box-shadow:0 4px 16px rgba(5,150,105,.3);transition:all .2s}
+.cta-practica a:hover{background:var(--green-700);transform:translateY(-2px)}
+
+/* Progress */
+.progress-bar{height:4px;background:var(--gray-200);border-radius:2px;margin:12px 20px;overflow:hidden}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,var(--green-500),var(--green-400));border-radius:2px;transition:width .3s}
+
+/* Expand/collapse */
+.expandible{margin:12px 0}
+.expandible-toggle{display:flex;align-items:center;gap:8px;width:100%;padding:10px 14px;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;color:var(--gray-700);transition:all .15s;text-align:left}
+.expandible-toggle:hover{background:var(--gray-100)}
+.expandible-toggle svg{width:16px;height:16px;transition:transform .2s;flex-shrink:0}
+.expandible-content{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.expandible.open .expandible-content{max-height:2000px}
+.expandible.open .expandible-toggle svg{transform:rotate(180deg)}
+
+/* Flow diagram */
+.flow-diagram{background:var(--white);border:1.5px solid var(--green-200);border-radius:14px;padding:24px;margin:20px 0;text-align:center}
+.flow-step{display:inline-block;background:var(--green-50);border:1px solid var(--green-300);border-radius:10px;padding:10px 18px;font-size:.85rem;font-weight:600;color:var(--green-800);margin:4px}
+.flow-arrow{display:block;color:var(--green-400);font-size:1.4rem;margin:4px auto;line-height:1}
+.flow-diagram h4{font-size:.92rem;font-weight:700;color:var(--gray-700);margin-bottom:16px}
+
+/* Pseudocode block */
+.pseudocode{background:var(--gray-800);color:var(--green-300);border-radius:12px;padding:20px 24px;margin:16px 0;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.8;overflow-x:auto}
+.pseudocode .comment{color:var(--gray-400)}
+.pseudocode .step-num{color:var(--amber-500);font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+<div class="curso-layout">
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="../index.html">
+        <div>E</div>
+        Ex&oacute;genaDIAN
+      </a>
+    </div>
+    <div class="sidebar-curso">
+      <h3>Escuela Contable IA</h3>
+      <p>IA y Automatizaci&oacute;n</p>
+    </div>
+    <div class="progress-bar"><div class="fill" id="progressFill" style="width:12%"></div></div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <a href="#modulo-1" class="active" onclick="navigateTo(1)">
+        <span class="nav-num">1</span> Qu&eacute; puede hacer la IA
+      </a>
+      <a href="#modulo-2" onclick="navigateTo(2)">
+        <span class="nav-num">2</span> Auditor DIAN con IA
+      </a>
+      <a href="#modulo-3" onclick="navigateTo(3)">
+        <span class="nav-num">3</span> Consultar el ET con IA
+      </a>
+      <a href="#modulo-4" onclick="navigateTo(4)">
+        <span class="nav-num">4</span> Requerimientos DIAN
+      </a>
+      <a href="#modulo-5" onclick="navigateTo(5)">
+        <span class="nav-num">5</span> Software + Google Sheets
+      </a>
+      <a href="#modulo-6" onclick="navigateTo(6)">
+        <span class="nav-num">6</span> Apps Script autom&aacute;tico
+      </a>
+      <a href="#modulo-7" onclick="navigateTo(7)">
+        <span class="nav-num">7</span> Dashboards autom&aacute;ticos
+      </a>
+      <a href="#modulo-8" onclick="navigateTo(8)">
+        <span class="nav-num">8</span> Tu firma al siguiente nivel
+      </a>
+    </nav>
+    <div class="sidebar-back">
+      <a href="../escuela.html">&larr; Volver a la Escuela</a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div class="curso-main">
+
+    <!-- ===================== M&Oacute;DULO 1 ===================== -->
+    <section id="modulo-1" class="modulo-section">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 1
+        </div>
+        <div class="mod-num">M&oacute;dulo 1 de 8</div>
+        <h1>Qu&eacute; puede hacer la IA por un contador (y qu&eacute; no)</h1>
+        <p class="mod-desc">La inteligencia artificial no piensa. No razona como t&uacute;. Pero puede procesar, clasificar y revisar informaci&oacute;n a una velocidad que ning&uacute;n humano alcanza. Aqu&iacute; separamos lo real de la fantas&iacute;a.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>&iquest;Qu&eacute; es realmente la inteligencia artificial?</h2>
+        <p>La IA no &ldquo;piensa&rdquo; ni &ldquo;entiende&rdquo;. Es <strong>reconocimiento de patrones a escala masiva</strong>. Un modelo de IA ha le&iacute;do millones de textos y aprendi&oacute; a predecir qu&eacute; palabra viene despu&eacute;s de otra. Cuando le preguntas sobre el Art&iacute;culo 240 del Estatuto Tributario, no est&aacute; &ldquo;consultando&rdquo; el ET &mdash; est&aacute; prediciendo qu&eacute; respuesta es m&aacute;s probable basado en todo lo que ley&oacute;.</p>
+        <p>Esto es poderoso y peligroso al mismo tiempo. Poderoso porque puede procesar en segundos lo que a ti te tomar&iacute;a horas. Peligroso porque <strong>puede inventar cosas que suenan perfectas pero son completamente falsas</strong>.</p>
+
+        <h3>IA entrenada en normativa colombiana vs. ChatGPT gen&eacute;rico</h3>
+        <p>No es lo mismo preguntarle a ChatGPT gen&eacute;rico sobre impuestos colombianos que usar una IA entrenada espec&iacute;ficamente con el Estatuto Tributario, conceptos DIAN y doctrina colombiana. La diferencia:</p>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Aspecto</th><th>ChatGPT gen&eacute;rico</th><th>IA entrenada en ET colombiano</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fuente de datos</td>
+              <td>Internet general, mezcla de pa&iacute;ses</td>
+              <td>Estatuto Tributario, conceptos DIAN, doctrina</td>
+            </tr>
+            <tr>
+              <td>Art&iacute;culos citados</td>
+              <td>Puede inventar n&uacute;meros de art&iacute;culos</td>
+              <td>Cita art&iacute;culos que realmente existen en el ET</td>
+            </tr>
+            <tr>
+              <td>Valores UVT</td>
+              <td>Frecuentemente desactualizados o incorrectos</td>
+              <td>Actualizado al a&ntilde;o gravable vigente</td>
+            </tr>
+            <tr>
+              <td>Contexto colombiano</td>
+              <td>Mezcla normas de otros pa&iacute;ses</td>
+              <td>Espec&iacute;fico para Colombia</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Qu&eacute; S&Iacute; puedes delegarle a la IA</h3>
+        <ul>
+          <li><strong>Clasificaci&oacute;n:</strong> organizar cuentas, identificar conceptos de retenci&oacute;n, categorizar gastos</li>
+          <li><strong>Borradores:</strong> generar un primer borrador de respuesta a requerimientos, informes, notas</li>
+          <li><strong>Revisi&oacute;n:</strong> cruzar tu balance contra reglas tributarias, detectar inconsistencias</li>
+          <li><strong>C&aacute;lculos:</strong> verificar operaciones aritm&eacute;ticas, aplicar tarifas, calcular proporcionalidades</li>
+          <li><strong>Investigaci&oacute;n:</strong> buscar art&iacute;culos del ET, identificar conceptos DIAN aplicables, comparar tratamientos</li>
+        </ul>
+
+        <h3>Qu&eacute; NUNCA debes delegarle a la IA</h3>
+        <ul>
+          <li><strong>Juicio final:</strong> la decisi&oacute;n de c&oacute;mo tratar una operaci&oacute;n ambigua es tuya, no de la IA</li>
+          <li><strong>Firma:</strong> t&uacute; firmas, t&uacute; respondes. La IA no tiene tarjeta profesional</li>
+          <li><strong>Comunicaci&oacute;n con el cliente:</strong> la IA no conoce el contexto, la relaci&oacute;n ni las sensibilidades del cliente</li>
+          <li><strong>Interpretaci&oacute;n de normas ambiguas:</strong> cuando dos lecturas del ET son v&aacute;lidas, la elecci&oacute;n es criterio profesional</li>
+        </ul>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Riesgos reales de la IA en contabilidad</h4>
+            <span class="norma-tag">Cr&iacute;tico</span>
+          </div>
+          <blockquote>
+            La IA puede generar: <strong>art&iacute;culos que no existen</strong> (ej. &ldquo;Art. 437-5 ET&rdquo; &mdash; ese art&iacute;culo no existe), <strong>plazos inventados</strong>, <strong>valores de UVT incorrectos</strong>, <strong>conceptos DIAN que nunca se emitieron</strong>, y <strong>tratamientos tributarios de otros pa&iacute;ses</strong> presentados como si fueran colombianos.
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Regla de oro:</strong> La IA es tu asistente, no tu reemplazo. T&uacute; eres el supervisor. Cada dato que la IA te d&eacute; &mdash; art&iacute;culo, fecha, UVT, concepto &mdash; debe ser verificado contra la fuente oficial antes de usarlo.
+          </div>
+        </div>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; C&oacute;mo atrapar un error de la IA</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">La IA dice:</span><span class="value">&ldquo;Seg&uacute;n Art. 437-5 ET...&rdquo;</span></div>
+            <div class="ejemplo-row"><span class="label">T&uacute; verificas:</span><span class="value">Abres el ET &rarr; Art. 437-5 no existe</span></div>
+            <div class="ejemplo-row"><span class="label">La IA quer&iacute;a decir:</span><span class="value">Probablemente Art. 437-1 o 437-2</span></div>
+            <div class="ejemplo-row total"><span class="label">Acci&oacute;n correcta:</span><span class="value">Siempre verificar el n&uacute;mero de art&iacute;culo</span></div>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p><strong>Siempre verifica 3 cosas</strong> cuando la IA te cite normativa: (1) que el n&uacute;mero del art&iacute;culo exista, (2) que el contenido citado corresponda al art&iacute;culo real, y (3) que el valor en UVT o pesos sea del a&ntilde;o gravable correcto. Estas son las 3 &aacute;reas donde la IA falla m&aacute;s.</p>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Caso real: respuesta con conceptos falsos</h4>
+          </div>
+          <p>Un contador us&oacute; ChatGPT para responder un requerimiento ordinario de la DIAN. La respuesta citaba 3 &ldquo;Conceptos DIAN&rdquo; con n&uacute;mero y fecha que <strong>nunca existieron</strong>. La DIAN rechaz&oacute; la respuesta y el contribuyente perdi&oacute; la oportunidad procesal de contestar oportunamente. <strong>La IA no firma. T&uacute; s&iacute;.</strong></p>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <span></span>
+        <a href="#modulo-2" class="next" onclick="navigateTo(2)">M&oacute;dulo 2: Auditor DIAN con IA &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 2 ===================== -->
+    <section id="modulo-2" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 2
+        </div>
+        <div class="mod-num">M&oacute;dulo 2 de 8</div>
+        <h1>Revisar tu informaci&oacute;n con IA: el Auditor DIAN</h1>
+        <p class="mod-desc">Antes de presentar cualquier declaraci&oacute;n, deja que la IA revise tu balance con los mismos ojos que usar&iacute;a un fiscalizador de la DIAN. Prevenir es mucho m&aacute;s barato que corregir.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>&iquest;Qu&eacute; hace el Auditor DIAN?</h2>
+        <p>El Auditor DIAN de Ex&oacute;genaDIAN analiza tu balance de prueba aplicando las mismas reglas y cruces que la DIAN usa en sus programas de fiscalizaci&oacute;n. No reemplaza una auditor&iacute;a formal, pero detecta las inconsistencias m&aacute;s comunes <strong>antes</strong> de que la DIAN te env&iacute;e un requerimiento.</p>
+
+        <h3>Cruces que la IA realiza autom&aacute;ticamente</h3>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Cruce</th><th>Qu&eacute; compara</th><th>Riesgo si no cuadra</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>F300 vs F350</strong></td>
+              <td>IVA generado en tus ventas vs. retenci&oacute;n de IVA practicada por tus clientes</td>
+              <td>Requerimiento por diferencia en IVA declarado</td>
+            </tr>
+            <tr>
+              <td><strong>Renta vs Ex&oacute;gena</strong></td>
+              <td>Ingresos en renta vs. ingresos reportados en informaci&oacute;n ex&oacute;gena por terceros</td>
+              <td>Inconsistencia fiscal que genera auto de verificaci&oacute;n</td>
+            </tr>
+            <tr>
+              <td><strong>IVA generado vs Facturaci&oacute;n</strong></td>
+              <td>Lo que declaraste como ventas gravadas vs. lo que facturaste electr&oacute;nicamente</td>
+              <td>Omisi&oacute;n de ingresos (sanci&oacute;n por inexactitud Art. 647 ET)</td>
+            </tr>
+            <tr>
+              <td><strong>Retenciones vs Certificados</strong></td>
+              <td>Retenciones declaradas vs. certificados emitidos</td>
+              <td>Diferencia en lo descontado en renta</td>
+            </tr>
+            <tr>
+              <td><strong>Proporcionalidad gastos</strong></td>
+              <td>Relaci&oacute;n gastos vs. ingresos por sector econ&oacute;mico</td>
+              <td>Gastos desproporcionados que activan fiscalizaci&oacute;n</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>&iquest;Qu&eacute; busca la DIAN en una fiscalizaci&oacute;n?</h3>
+        <p>La DIAN no revisa todo. Tiene un sistema de <strong>cruces autom&aacute;ticos</strong> que prioriza contribuyentes con:</p>
+        <ul>
+          <li><strong>Inconsistencias entre formularios:</strong> tu F300 dice una cosa, tu F110 dice otra</li>
+          <li><strong>Omisiones:</strong> terceros reportaron pagos a tu NIT pero t&uacute; no declaraste esos ingresos</li>
+          <li><strong>Desproporciones:</strong> gastos excesivos respecto a los ingresos del sector</li>
+          <li><strong>Saldos a favor recurrentes:</strong> solicitudes de devoluci&oacute;n frecuentes</li>
+          <li><strong>Cambios bruscos:</strong> ingresos que caen 50% de un a&ntilde;o a otro sin justificaci&oacute;n</li>
+        </ul>
+
+        <h3>C&oacute;mo leer los hallazgos de la IA</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Niveles de alerta del Auditor</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Nivel</th><th>Significado</th><th>Acci&oacute;n requerida</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="color:var(--rose-700);font-weight:700">Cr&iacute;tico</td>
+                <td>Inconsistencia que la DIAN detectar&aacute; en cruce autom&aacute;tico</td>
+                <td>Corregir ANTES de presentar</td>
+              </tr>
+              <tr>
+                <td style="color:var(--amber-700);font-weight:700">Informativo</td>
+                <td>Situaci&oacute;n at&iacute;pica que podr&iacute;a generar preguntas</td>
+                <td>Documentar la justificaci&oacute;n</td>
+              </tr>
+              <tr>
+                <td style="color:var(--blue-700);font-weight:700">Sugerencia</td>
+                <td>Oportunidad de mejora u optimizaci&oacute;n tributaria</td>
+                <td>Evaluar si aplica al cliente</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p><strong>Pasa el Auditor ANTES de presentar, no despu&eacute;s.</strong> El valor de la herramienta es preventivo. Una vez presentada la declaraci&oacute;n, ya no puedes corregir sin sanci&oacute;n (Art. 644 ET). Haz del Auditor tu &uacute;ltimo paso antes de firmar.</p>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n</h4>
+          </div>
+          <p>Presentar la declaraci&oacute;n sin revisar cruces y descubrir la inconsistencia cuando llega el requerimiento. Corregir despu&eacute;s genera <strong>sanci&oacute;n por inexactitud</strong> (100% de la mayor retenci&oacute;n o menor saldo a favor, Art. 647 ET) o <strong>sanci&oacute;n por correcci&oacute;n</strong> (10% o 20% de la diferencia, Art. 644 ET).</p>
+        </div>
+
+        <div class="cta-practica">
+          <h3>Prueba el Auditor DIAN ahora</h3>
+          <p>Sube tu balance de prueba y deja que la IA identifique riesgos antes de que la DIAN lo haga.</p>
+          <a href="../ia-analisis-balance.html">Abrir Auditor DIAN &rarr;</a>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-1" class="prev" onclick="navigateTo(1)">&larr; M&oacute;dulo 1</a>
+        <a href="#modulo-3" class="next" onclick="navigateTo(3)">M&oacute;dulo 3: Consultar el ET con IA &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 3 ===================== -->
+    <section id="modulo-3" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 3
+        </div>
+        <div class="mod-num">M&oacute;dulo 3 de 8</div>
+        <h1>Consultar normativa con IA: el Estatuto Tributario a tu alcance</h1>
+        <p class="mod-desc">Saber preguntar es la mitad de la respuesta. La IA entrenada en el ET colombiano puede ahorrarte horas de b&uacute;squeda &mdash; si sabes c&oacute;mo formular la pregunta correcta.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>El arte de preguntar bien</h2>
+        <p>La calidad de la respuesta de la IA depende directamente de la calidad de tu pregunta. Una pregunta vaga produce una respuesta gen&eacute;rica. Una pregunta espec&iacute;fica produce una respuesta &uacute;til.</p>
+
+        <h3>Preguntas malas vs. preguntas buenas</h3>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Pregunta mala</th><th>Pregunta buena</th><th>Por qu&eacute; es mejor</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>&ldquo;&iquest;C&oacute;mo hago la renta?&rdquo;</td>
+              <td>&ldquo;&iquest;Cu&aacute;l es la tarifa del Art. 240 ET para personas jur&iacute;dicas con ingresos superiores a 800 millones en AG 2025?&rdquo;</td>
+              <td>Especifica el art&iacute;culo, tipo de contribuyente, monto y a&ntilde;o</td>
+            </tr>
+            <tr>
+              <td>&ldquo;&iquest;Qu&eacute; gastos son deducibles?&rdquo;</td>
+              <td>&ldquo;&iquest;Los gastos de representaci&oacute;n del Art. 107-1 ET tienen l&iacute;mite para una SAS del sector servicios en AG 2025?&rdquo;</td>
+              <td>Especifica el tipo de gasto, art&iacute;culo, tipo de empresa y per&iacute;odo</td>
+            </tr>
+            <tr>
+              <td>&ldquo;&iquest;C&oacute;mo funciona la retenci&oacute;n?&rdquo;</td>
+              <td>&ldquo;&iquest;Cu&aacute;l es la base m&iacute;nima en UVT para practicar retenci&oacute;n por servicios generales seg&uacute;n el Art. 392 ET?&rdquo;</td>
+              <td>Especifica el concepto de retenci&oacute;n y el art&iacute;culo</td>
+            </tr>
+            <tr>
+              <td>&ldquo;&iquest;Qu&eacute; pasa si no pago IVA?&rdquo;</td>
+              <td>&ldquo;&iquest;Cu&aacute;l es la sanci&oacute;n por extemporaneidad del Art. 641 ET para una declaraci&oacute;n de IVA bimestral presentada 3 meses tarde con saldo a pagar de $15M?&rdquo;</td>
+              <td>Da todos los datos para que la IA calcule el resultado espec&iacute;fico</td>
+            </tr>
+            <tr>
+              <td>&ldquo;&iquest;Qu&eacute; es ex&oacute;gena?&rdquo;</td>
+              <td>&ldquo;&iquest;Qu&eacute; formatos de ex&oacute;gena debe presentar una SAS con ingresos de $2.000M en el AG 2025 seg&uacute;n la Resoluci&oacute;n DIAN vigente?&rdquo;</td>
+              <td>Especifica tipo de contribuyente, monto y a&ntilde;o para respuesta precisa</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>C&oacute;mo verificar la respuesta</h3>
+        <p>Incluso con una IA entrenada en el ET colombiano, debes verificar:</p>
+        <ol>
+          <li><strong>El n&uacute;mero del art&iacute;culo existe:</strong> busca el art&iacute;culo en el ET real. Si la IA dice &ldquo;Art. 437-5&rdquo; y no existe, la respuesta es inventada.</li>
+          <li><strong>El contenido coincide:</strong> que el art&iacute;culo citado realmente diga lo que la IA afirma. A veces cita el art&iacute;culo correcto pero atribuye contenido de otro.</li>
+          <li><strong>La versi&oacute;n es vigente:</strong> el ET se modifica frecuentemente. Un art&iacute;culo que dec&iacute;a X en 2022 puede decir Y en 2025 por reforma tributaria.</li>
+        </ol>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Concepto DIAN vs. opini&oacute;n de la IA vs. doctrina</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Fuente</th><th>Fuerza vinculante</th><th>Fiabilidad</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Art&iacute;culo del ET</strong></td>
+                <td>Ley &mdash; obligatoria</td>
+                <td>M&aacute;xima (es la norma)</td>
+              </tr>
+              <tr>
+                <td><strong>Concepto DIAN</strong></td>
+                <td>Doctrina oficial &mdash; vinculante para la DIAN</td>
+                <td>Alta (posici&oacute;n oficial de la DIAN)</td>
+              </tr>
+              <tr>
+                <td><strong>Sentencia C.E. / C. Const.</strong></td>
+                <td>Jurisprudencia &mdash; vinculante</td>
+                <td>Alta (interpretaci&oacute;n judicial)</td>
+              </tr>
+              <tr>
+                <td><strong>Doctrina acad&eacute;mica</strong></td>
+                <td>Orientadora &mdash; no vinculante</td>
+                <td>Media (depende del autor)</td>
+              </tr>
+              <tr>
+                <td><strong>Opini&oacute;n de la IA</strong></td>
+                <td>Ninguna &mdash; no es fuente de derecho</td>
+                <td>Variable (debe verificarse siempre)</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="norma-aplicacion">
+            <strong>Clave:</strong> La IA es una herramienta de b&uacute;squeda inteligente, no una fuente de derecho. Nunca cites &ldquo;seg&uacute;n la IA&rdquo; en un documento formal. Cita el art&iacute;culo del ET que la IA te ayud&oacute; a encontrar.
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p><strong>Usa la IA como punto de partida, no como punto final.</strong> Preg&uacute;ntale a la IA, obt&eacute;n los art&iacute;culos relevantes, y luego ve directamente al Estatuto Tributario a confirmar. Es m&aacute;s r&aacute;pido que buscar desde cero, pero m&aacute;s seguro que confiar ciegamente.</p>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n</h4>
+          </div>
+          <p>Copiar y pegar la respuesta de la IA sin verificar. Si la IA te dice &ldquo;seg&uacute;n el Concepto DIAN 015432 de 2023&rdquo;, <strong>busca ese concepto</strong>. Si no existe, est&aacute;s citando fuentes fantasma en un documento con tu firma profesional.</p>
+        </div>
+
+        <div class="cta-practica">
+          <h3>Consulta el Estatuto Tributario con IA</h3>
+          <p>Haz preguntas espec&iacute;ficas y obt&eacute;n respuestas con art&iacute;culos reales del ET colombiano.</p>
+          <a href="../ia-chat-et.html">Abrir Chat ET &rarr;</a>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-2" class="prev" onclick="navigateTo(2)">&larr; M&oacute;dulo 2</a>
+        <a href="#modulo-4" class="next" onclick="navigateTo(4)">M&oacute;dulo 4: Requerimientos DIAN &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 4 ===================== -->
+    <section id="modulo-4" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 4
+        </div>
+        <div class="mod-num">M&oacute;dulo 4 de 8</div>
+        <h1>Responder requerimientos DIAN con asistencia de IA</h1>
+        <p class="mod-desc">Recibir un requerimiento de la DIAN genera estr&eacute;s. La IA puede ayudarte a estructurar una respuesta s&oacute;lida &mdash; pero la revisi&oacute;n final y la firma son tuyas.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>Anatom&iacute;a de un requerimiento DIAN</h2>
+        <p>Un requerimiento ordinario (Art. 684 ET) tiene una estructura predecible que la IA puede analizar:</p>
+        <ul>
+          <li><strong>Encabezado:</strong> datos del contribuyente, NIT, a&ntilde;o gravable, n&uacute;mero del acto administrativo</li>
+          <li><strong>Hechos:</strong> lo que la DIAN detect&oacute; en sus cruces (la inconsistencia espec&iacute;fica)</li>
+          <li><strong>Fundamentos legales:</strong> art&iacute;culos del ET y normas que cita la DIAN para sustentar su posici&oacute;n</li>
+          <li><strong>Petici&oacute;n:</strong> lo que la DIAN pide (explicaci&oacute;n, pruebas, correcci&oacute;n)</li>
+          <li><strong>Plazo:</strong> t&eacute;rmino para responder (generalmente 15 d&iacute;as h&aacute;biles, Art. 261 de la Ley 1564 de 2012)</li>
+        </ul>
+
+        <h3>C&oacute;mo funciona la herramienta de IA para requerimientos</h3>
+        <p>La herramienta de Ex&oacute;genaDIAN recibe el texto del requerimiento y:</p>
+        <ol>
+          <li>Identifica los art&iacute;culos del ET citados por la DIAN</li>
+          <li>Analiza el tipo de inconsistencia que se&ntilde;ala</li>
+          <li>Genera un borrador de respuesta con la estructura correcta</li>
+          <li>Sugiere los argumentos legales relevantes</li>
+          <li>Indica qu&eacute; pruebas deber&iacute;as adjuntar</li>
+        </ol>
+
+        <h3>Estructura de la respuesta</h3>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Estructura recomendada para responder un requerimiento</h4>
+          </div>
+          <table class="tabla-norm">
+            <thead>
+              <tr><th>Secci&oacute;n</th><th>Contenido</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>1. Encabezado</strong></td>
+                <td>Se&ntilde;ores DIAN, referencia al acto administrativo, datos del contribuyente</td>
+              </tr>
+              <tr>
+                <td><strong>2. Hechos</strong></td>
+                <td>Narrar la situaci&oacute;n f&aacute;ctica con precisi&oacute;n &mdash; qu&eacute; pas&oacute; y por qu&eacute;</td>
+              </tr>
+              <tr>
+                <td><strong>3. Fundamentos de derecho</strong></td>
+                <td>Art&iacute;culos del ET que respaldan tu posici&oacute;n, conceptos DIAN aplicables</td>
+              </tr>
+              <tr>
+                <td><strong>4. Pruebas</strong></td>
+                <td>Lista detallada de documentos adjuntos (facturas, certificados, libros)</td>
+              </tr>
+              <tr>
+                <td><strong>5. Petici&oacute;n</strong></td>
+                <td>Solicitud concreta: archivar, aceptar explicaci&oacute;n, cerrar investigaci&oacute;n</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Qu&eacute; revisar ANTES de enviar la respuesta generada por IA</h3>
+        <ul>
+          <li><strong>Verificar cada art&iacute;culo citado:</strong> que exista y diga lo que la IA afirma</li>
+          <li><strong>Agregar evidencia espec&iacute;fica:</strong> la IA no conoce tus documentos &mdash; a&ntilde;ade facturas, certificados, libros contables</li>
+          <li><strong>Revisar c&aacute;lculos:</strong> si la respuesta incluye n&uacute;meros, verif&iacute;calos contra tu contabilidad</li>
+          <li><strong>Adaptar el tono:</strong> la IA puede ser demasiado t&eacute;cnica o demasiado informal para la ocasi&oacute;n</li>
+          <li><strong>Verificar plazos:</strong> aseg&uacute;rate de que est&aacute;s respondiendo dentro del t&eacute;rmino legal</li>
+        </ul>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error cr&iacute;tico: enviar sin revisar</h4>
+          </div>
+          <p><strong>Nunca env&iacute;es una respuesta generada por IA sin revisi&oacute;n exhaustiva.</strong> Es TU firma, no la de la IA. Un art&iacute;culo mal citado, un c&aacute;lculo incorrecto o una argumentaci&oacute;n inveros&iacute;mil destruyen tu credibilidad profesional ante la DIAN y pueden perjudicar gravemente a tu cliente.</p>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p><strong>Usa la IA para el primer borrador y dedica tu tiempo a lo que importa:</strong> revisar que los art&iacute;culos sean correctos, que la argumentaci&oacute;n sea s&oacute;lida, que las pruebas est&eacute;n completas y que el tono sea apropiado. Esto es mucho m&aacute;s eficiente que escribir todo desde cero.</p>
+        </div>
+
+        <div class="cta-practica">
+          <h3>Genera borradores de respuesta a requerimientos</h3>
+          <p>Pega el texto del requerimiento y obt&eacute;n un borrador estructurado con fundamentos legales.</p>
+          <a href="../ia-respuesta-requerimiento.html">Abrir Asistente de Requerimientos &rarr;</a>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-3" class="prev" onclick="navigateTo(3)">&larr; M&oacute;dulo 3</a>
+        <a href="#modulo-5" class="next" onclick="navigateTo(5)">M&oacute;dulo 5: Software + Google Sheets &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 5 ===================== -->
+    <section id="modulo-5" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 5
+        </div>
+        <div class="mod-num">M&oacute;dulo 5 de 8</div>
+        <h1>Conecta tu software contable con Google Sheets</h1>
+        <p class="mod-desc">Tu software contable tiene datos atrapados. Google Sheets los libera. Una vez que tus datos est&aacute;n en Sheets, todo lo dem&aacute;s &mdash; scripts, dashboards, IA &mdash; se vuelve posible.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>El concepto: liberar tus datos</h2>
+        <p>Siigo, World Office, Helisa, Alegra &mdash; todos son excelentes para registrar operaciones. Pero cuando necesitas <strong>analizar</strong>, <strong>cruzar</strong> o <strong>automatizar</strong>, te quedas corto. Los datos est&aacute;n encerrados en el software.</p>
+        <p>Google Sheets es el puente. Es gratuito, est&aacute; en la nube, permite colaboraci&oacute;n en tiempo real, y tiene un motor de automatizaci&oacute;n integrado (Apps Script). Una vez que tu balance est&aacute; en Sheets, puedes hacer <strong>todo lo que el software contable no te deja hacer</strong>.</p>
+
+        <h3>Paso a paso: del software contable a Sheets</h3>
+        <ol>
+          <li><strong>Exporta el balance de prueba:</strong> todos los software contables permiten exportar a Excel (.xlsx) o CSV</li>
+          <li><strong>Sube a Google Drive:</strong> arrastra el archivo a tu carpeta organizada en Drive</li>
+          <li><strong>Abre con Google Sheets:</strong> clic derecho &rarr; Abrir con &rarr; Google Sheets</li>
+          <li><strong>Limpia el formato:</strong> elimina filas de encabezado innecesarias, aseg&uacute;rate de que los n&uacute;meros sean n&uacute;meros (no texto)</li>
+          <li><strong>Guarda como Sheets nativo:</strong> Archivo &rarr; Guardar como Google Sheets (para usar Apps Script despu&eacute;s)</li>
+        </ol>
+
+        <h3>Formato de exportaci&oacute;n por software</h3>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Software</th><th>Ruta de exportaci&oacute;n</th><th>Formato</th><th>Notas</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Siigo Nube</strong></td>
+              <td>Informes &rarr; Balance de prueba &rarr; Exportar</td>
+              <td>Excel (.xlsx)</td>
+              <td>Viene con formato limpio, importa directo</td>
+            </tr>
+            <tr>
+              <td><strong>World Office</strong></td>
+              <td>Contabilidad &rarr; Informes &rarr; Balance &rarr; Excel</td>
+              <td>Excel (.xls)</td>
+              <td>Puede requerir limpieza de filas de t&iacute;tulo</td>
+            </tr>
+            <tr>
+              <td><strong>Helisa</strong></td>
+              <td>M&oacute;dulo contable &rarr; Reportes &rarr; Balance</td>
+              <td>Excel (.xlsx) o CSV</td>
+              <td>CSV es m&aacute;s limpio para importar</td>
+            </tr>
+            <tr>
+              <td><strong>Alegra</strong></td>
+              <td>Reportes &rarr; Balance de prueba &rarr; Descargar</td>
+              <td>Excel (.xlsx)</td>
+              <td>Formato moderno, importa sin problemas</td>
+            </tr>
+            <tr>
+              <td><strong>Contai / M&oacute;nica</strong></td>
+              <td>Informes &rarr; Balance &rarr; Generar &rarr; Exportar</td>
+              <td>Excel (.xls) o TXT</td>
+              <td>Formatos antiguos, puede requerir limpieza</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Crea tu &ldquo;data lake contable&rdquo;</h3>
+        <p>Un data lake suena t&eacute;cnico, pero es simplemente <strong>un lugar organizado donde viven todos tus datos</strong>. En tu caso: una carpeta en Google Drive con una estructura consistente.</p>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p><strong>Nombra tus archivos de forma consistente:</strong> <code>Balance_[NombreCliente]_[YYYY-MM].xlsx</code>. Por ejemplo: <code>Balance_DistribuidoraXYZ_2025-12.xlsx</code>. Esto permite que los scripts los encuentren autom&aacute;ticamente y que t&uacute; sepas exactamente qu&eacute; contiene cada archivo sin abrirlo.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: Estructura de carpetas en Drive para una firma con 10 clientes
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <div class="pseudocode">
+<span class="comment">// Estructura recomendada en Google Drive</span>
+<br><br>
+<span class="step-num">Mi Firma Contable/</span>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;2025/
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cliente_DistribuidoraXYZ/
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Balance_DistribuidoraXYZ_2025-01.xlsx
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Balance_DistribuidoraXYZ_2025-02.xlsx
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Balance_DistribuidoraXYZ_2025-12.xlsx
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Borradores/
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Borrador_IVA_Bim1.gsheet
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Borrador_ReteFte_Ene.gsheet
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cliente_RestauranteLaMesa/
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Balance_RestauranteLaMesa_2025-01.xlsx
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cliente_ConsultoraABC/
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+<br>&nbsp;&nbsp;&nbsp;&nbsp;2026/
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Misma estructura, nuevo a&ntilde;o</span>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;Plantillas/
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Plantilla_Balance_Vacio.gsheet
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dashboard_Modelo.gsheet
+            </div>
+            <p style="font-size:.85rem;color:var(--gray-600);margin-top:12px">Esta estructura te permite encontrar cualquier balance en 3 clics y automatizar con scripts que recorren la carpeta de cada cliente.</p>
+          </div>
+        </div>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>El poder de tener datos en Sheets</h4>
+          </div>
+          <blockquote>
+            Una vez que tus datos est&aacute;n en Google Sheets, puedes: <strong>escribir scripts</strong> que calculen borradores de declaraciones autom&aacute;ticamente, <strong>crear dashboards</strong> que tu cliente ve en tiempo real, <strong>alimentar herramientas de IA</strong> que analicen tu informaci&oacute;n, y <strong>compartir</strong> con tu equipo sin enviar archivos por correo.
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>La inversi&oacute;n:</strong> 30 minutos al mes por cliente para exportar e importar. <strong>El retorno:</strong> horas ahorradas en c&aacute;lculos manuales, cero errores de transcripci&oacute;n, y la capacidad de automatizar todo lo que viene despu&eacute;s.
+          </div>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n</h4>
+          </div>
+          <p>Guardar los archivos con nombres como &ldquo;Balance final (2).xlsx&rdquo;, &ldquo;Balance corregido NUEVO.xlsx&rdquo; o &ldquo;Copia de copia&rdquo;. <strong>No sabr&aacute;s cu&aacute;l es el correcto</strong> y ning&uacute;n script podr&aacute; encontrarlos autom&aacute;ticamente. Usa el formato: <code>Balance_[Cliente]_[YYYY-MM].xlsx</code> desde el primer d&iacute;a.</p>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-4" class="prev" onclick="navigateTo(4)">&larr; M&oacute;dulo 4</a>
+        <a href="#modulo-6" class="next" onclick="navigateTo(6)">M&oacute;dulo 6: Apps Script autom&aacute;tico &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 6 ===================== -->
+    <section id="modulo-6" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 6
+        </div>
+        <div class="mod-num">M&oacute;dulo 6 de 8</div>
+        <h1>Apps Script: borradores autom&aacute;ticos de impuestos</h1>
+        <p class="mod-desc">Google Apps Script es el lenguaje de automatizaci&oacute;n de Google Sheets. Es gratuito, no requiere instalaci&oacute;n, y no necesitas ser programador para usarlo. Solo necesitas describir tu proceso.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>&iquest;Qu&eacute; es Apps Script?</h2>
+        <p>Apps Script es la herramienta de automatizaci&oacute;n integrada en Google Sheets. Funciona en la nube (no instalas nada en tu computador), es completamente gratuita, y te permite automatizar tareas repetitivas que hoy haces a mano.</p>
+        <p><strong>No necesitas ser programador.</strong> La mayor&iacute;a de scripts &uacute;tiles para contabilidad siguen el mismo patr&oacute;n: leer datos de una hoja, hacer un c&aacute;lculo, y escribir el resultado en otra hoja. Es describir tu proceso en un lenguaje que el computador entiende.</p>
+
+        <h3>&iquest;Qu&eacute; puedes automatizar?</h3>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Tarea manual</th><th>Automatizaci&oacute;n con Apps Script</th><th>Tiempo ahorrado</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Leer balance y calcular casillas del IVA 300</td>
+              <td>Script lee cuentas 2408/2404 &rarr; calcula IVA generado/descontable &rarr; escribe borrador</td>
+              <td>2-3 horas por cliente/bimestre</td>
+            </tr>
+            <tr>
+              <td>Calcular retenci&oacute;n en la fuente por empleado</td>
+              <td>Script lee n&oacute;mina &rarr; aplica tabla Art. 383 ET &rarr; genera resumen de retenci&oacute;n</td>
+              <td>4-6 horas por mes</td>
+            </tr>
+            <tr>
+              <td>Pre-depurar renta: identificar gastos no deducibles</td>
+              <td>Script lee balance &rarr; aplica 63 reglas de l&iacute;mites &rarr; marca gastos que exceden topes</td>
+              <td>1-2 d&iacute;as por cliente</td>
+            </tr>
+            <tr>
+              <td>Clasificar cuentas para ex&oacute;gena</td>
+              <td>Script lee m&uacute;ltiples balances &rarr; clasifica por concepto de ex&oacute;gena &rarr; genera archivo</td>
+              <td>Medio d&iacute;a por cliente</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>C&oacute;mo piensa un script (sin c&oacute;digo)</h3>
+        <p>Un script no es m&aacute;s que <strong>tu proceso manual escrito paso a paso</strong>. Veamos un ejemplo: c&oacute;mo calcular&iacute;as el IVA generado del bimestre.</p>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Ejemplo &mdash; L&oacute;gica de un script para IVA generado</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="pseudocode">
+<span class="step-num">Paso 1.</span> Abrir la hoja "Balance_ClienteX_2025-02"
+<br><span class="step-num">Paso 2.</span> Buscar todas las filas con c&oacute;digo de cuenta que empiece con "2408" <span class="comment">// IVA generado</span>
+<br><span class="step-num">Paso 3.</span> Para cada fila encontrada: sumar el saldo cr&eacute;dito
+<br><span class="step-num">Paso 4.</span> El resultado = Total IVA generado del periodo
+<br><span class="step-num">Paso 5.</span> Escribir ese valor en la hoja "Borrador_IVA", casilla 29
+<br>
+<br><span class="step-num">Paso 6.</span> Repetir para cuentas "2404" <span class="comment">// IVA descontable</span>
+<br><span class="step-num">Paso 7.</span> Sumar saldos d&eacute;bito = Total IVA descontable
+<br><span class="step-num">Paso 8.</span> Escribir en casilla 52 del borrador
+<br>
+<br><span class="step-num">Paso 9.</span> Calcular: IVA generado - IVA descontable = Saldo
+<br><span class="step-num">Paso 10.</span> Si saldo &gt; 0 &rarr; "Saldo a pagar" <span class="comment">// casilla 80</span>
+<br><span class="step-num">Paso 10.</span> Si saldo &lt; 0 &rarr; "Saldo a favor" <span class="comment">// casilla 84</span>
+            </div>
+          </div>
+        </div>
+
+        <p>&iquest;Ves? No hay nada m&iacute;stico. Es exactamente lo que t&uacute; haces a mano, pero el computador lo hace en 2 segundos en vez de 2 horas. <strong>El cambio mental es clave:</strong> no est&aacute;s &ldquo;programando&rdquo;, est&aacute;s <strong>describiendo tu proceso</strong> para que el computador lo ejecute.</p>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>El cambio de mentalidad</h4>
+          </div>
+          <blockquote>
+            Cada vez que te encuentres haciendo una tarea repetitiva &mdash; copiar n&uacute;meros de un lado a otro, buscar cuentas espec&iacute;ficas, sumar columnas, aplicar la misma f&oacute;rmula para 20 clientes &mdash; <strong>preg&uacute;ntate: &iquest;puedo describir esto como pasos?</strong> Si la respuesta es s&iacute;, un script puede hacerlo por ti.
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>No necesitas escribir el script t&uacute; mismo.</strong> Puedes pedirle a la IA que lo genere a partir de tu descripci&oacute;n en lenguaje natural. T&uacute; describes el proceso, la IA escribe el c&oacute;digo, t&uacute; lo pegas en Apps Script, lo ejecutas y verificas el resultado.
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p><strong>Empieza peque&ntilde;o.</strong> No intentes automatizar toda tu firma el primer d&iacute;a. Elige UNA tarea para UN cliente: por ejemplo, calcular el IVA generado del bimestre para tu cliente m&aacute;s grande. Una vez que funcione, rep&iacute;telo para los dem&aacute;s. As&iacute; construyes confianza en el proceso.</p>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n</h4>
+          </div>
+          <p>Querer automatizar todo al mismo tiempo. El resultado: frustraci&oacute;n, scripts a medio terminar y volver al m&eacute;todo manual. <strong>La automatizaci&oacute;n exitosa es incremental:</strong> una tarea a la vez, un cliente a la vez, un formulario a la vez.</p>
+        </div>
+
+        <div class="expandible" onclick="this.classList.toggle('open')">
+          <button class="expandible-toggle">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
+            Ver: C&oacute;mo abrir Apps Script en Google Sheets
+          </button>
+          <div class="expandible-content" style="padding:12px 14px">
+            <ol style="font-size:.85rem;color:var(--gray-600);line-height:1.7;padding-left:20px">
+              <li>Abre cualquier archivo de Google Sheets</li>
+              <li>Men&uacute; superior: <strong>Extensiones</strong> &rarr; <strong>Apps Script</strong></li>
+              <li>Se abre un editor en una nueva pesta&ntilde;a</li>
+              <li>Pega el c&oacute;digo del script (el que la IA te gener&oacute; o que copiaste de una fuente confiable)</li>
+              <li>Haz clic en el bot&oacute;n <strong>Ejecutar</strong> (triangulito de play)</li>
+              <li>La primera vez pedir&aacute; permisos &mdash; acept&aacute; (es tu propia cuenta de Google)</li>
+              <li>El script se ejecuta y los resultados aparecen en tu hoja</li>
+            </ol>
+            <p style="font-size:.85rem;color:var(--gray-600);margin-top:12px"><strong>Tiempo total:</strong> menos de 5 minutos la primera vez. Despu&eacute;s, un clic.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-5" class="prev" onclick="navigateTo(5)">&larr; M&oacute;dulo 5</a>
+        <a href="#modulo-7" class="next" onclick="navigateTo(7)">M&oacute;dulo 7: Dashboards autom&aacute;ticos &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 7 ===================== -->
+    <section id="modulo-7" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 7
+        </div>
+        <div class="mod-num">M&oacute;dulo 7 de 8</div>
+        <h1>Dashboards autom&aacute;ticos: muestra resultados, no solo n&uacute;meros</h1>
+        <p class="mod-desc">Tu cliente no quiere un PDF de 30 p&aacute;ginas. Quiere saber c&oacute;mo va su negocio en 10 segundos. Los dashboards transforman tu trabajo contable en valor visible.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>&iquest;Por qu&eacute; importan los dashboards?</h2>
+        <p>La contabilidad es invisible para la mayor&iacute;a de los empresarios. Ven n&uacute;meros que no entienden en estados financieros que no leen. Un dashboard cambia eso: <strong>convierte datos contables en decisiones de negocio</strong>.</p>
+        <p>La diferencia competitiva es real:</p>
+
+        <div class="ejemplo">
+          <div class="ejemplo-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <h4>Antes vs. Despu&eacute;s &mdash; C&oacute;mo presentas la informaci&oacute;n</h4>
+          </div>
+          <div class="ejemplo-body">
+            <div class="ejemplo-row"><span class="label">Antes: enviar por correo</span><span class="value">PDF del balance + ERI en Excel</span></div>
+            <div class="ejemplo-row"><span class="label">El cliente hace:</span><span class="value">Lo ignora o lo archiva</span></div>
+            <div class="ejemplo-row" style="border-top:2px solid var(--green-200);margin-top:8px;padding-top:12px"><span class="label">Despu&eacute;s: compartir un link</span><span class="value">Dashboard interactivo en tiempo real</span></div>
+            <div class="ejemplo-row"><span class="label">El cliente hace:</span><span class="value">Lo consulta cada semana</span></div>
+            <div class="ejemplo-row total"><span class="label">Diferencia real:</span><span class="value">Tu cliente te percibe como estratega, no solo como obligatorio</span></div>
+          </div>
+        </div>
+
+        <h3>Opci&oacute;n 1: Dashboards en Google Sheets</h3>
+        <p>No necesitas herramientas externas para empezar. Google Sheets ya tiene todo lo que necesitas:</p>
+        <ul>
+          <li><strong>Tablas din&aacute;micas:</strong> agrupa ingresos por mes, gastos por categor&iacute;a, impuestos por tipo</li>
+          <li><strong>Formato condicional:</strong> sem&aacute;foro rojo/amarillo/verde para indicadores clave</li>
+          <li><strong>Sparklines:</strong> mini-gr&aacute;ficos dentro de celdas que muestran tendencias</li>
+          <li><strong>Gr&aacute;ficos:</strong> barras, l&iacute;neas, tortas &mdash; vinculados a los datos que se actualizan solos</li>
+        </ul>
+
+        <h3>Indicadores clave para un dashboard contable</h3>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Indicador</th><th>Tipo de gr&aacute;fico</th><th>Fuente de datos</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ingresos mensuales</strong></td>
+              <td>L&iacute;nea (tendencia 12 meses)</td>
+              <td>Cuentas 41xx del balance mensual</td>
+            </tr>
+            <tr>
+              <td><strong>Gastos por categor&iacute;a</strong></td>
+              <td>Torta o barras horizontales</td>
+              <td>Cuentas 51xx, 52xx agrupadas</td>
+            </tr>
+            <tr>
+              <td><strong>Impuestos pagados vs. causados</strong></td>
+              <td>Barras comparativas</td>
+              <td>Cuentas 2408, 2404, 2365, 2368</td>
+            </tr>
+            <tr>
+              <td><strong>Cartera por antig&uuml;edad</strong></td>
+              <td>Barras apiladas (0-30, 31-60, 61-90, &gt;90 d&iacute;as)</td>
+              <td>Cuentas 1305xx con auxiliar por tercero</td>
+            </tr>
+            <tr>
+              <td><strong>Obligaciones tributarias</strong></td>
+              <td>Sem&aacute;foro (al d&iacute;a / pr&oacute;ximo / vencido)</td>
+              <td>Calendario tributario del cliente</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Opci&oacute;n 2: Looker Studio (gratuito)</h3>
+        <p>Si quieres un nivel m&aacute;s profesional, <strong>Looker Studio</strong> (antes Google Data Studio) es la herramienta gratuita de Google para crear dashboards interactivos:</p>
+        <ul>
+          <li>Se conecta directamente a Google Sheets (tus datos ya est&aacute;n ah&iacute;)</li>
+          <li>Interfaz de arrastrar y soltar &mdash; no requiere c&oacute;digo</li>
+          <li>Genera un link compartible &mdash; tu cliente lo abre en el navegador</li>
+          <li>Se actualiza autom&aacute;ticamente cuando los datos en Sheets cambian</li>
+          <li>Puedes personalizar con los colores de la marca de tu cliente</li>
+        </ul>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>La ventaja competitiva real</h4>
+          </div>
+          <blockquote>
+            &ldquo;Mi contador me manda un link donde veo mis indicadores en tiempo real&rdquo; vs. &ldquo;Mi contador me manda un PDF una vez al mes que no entiendo&rdquo;. <strong>La percepci&oacute;n de valor del cliente cambia radicalmente.</strong> El contador que muestra dashboards retiene clientes, cobra m&aacute;s y se diferencia de la competencia.
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Dato clave:</strong> Crear un dashboard b&aacute;sico en Looker Studio conectado a Sheets toma entre 2 y 4 horas la primera vez. Pero una vez creado el modelo, replicarlo para cada cliente toma 30 minutos. La inversi&oacute;n se paga con el primer cliente que decide quedarse porque &ldquo;su contador le da m&aacute;s que n&uacute;meros&rdquo;.
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tip pr&aacute;ctico</h4>
+          </div>
+          <p><strong>Empieza con un dashboard de Sheets para tu mejor cliente.</strong> No necesitas Looker Studio desde el d&iacute;a 1. Una hoja con 4 gr&aacute;ficos bien hechos y formato condicional tipo sem&aacute;foro ya impresiona m&aacute;s que cualquier PDF. Cuando domines Sheets, migra a Looker Studio para el acabado profesional.</p>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>Error com&uacute;n</h4>
+          </div>
+          <p>Crear un dashboard con 20 indicadores que nadie entiende. <strong>Menos es m&aacute;s.</strong> Tu cliente necesita 4-5 indicadores clave, no un tablero de avi&oacute;n. Preg&uacute;ntale: &ldquo;&iquest;Qu&eacute; 3 cosas quieres saber de tu negocio cada semana?&rdquo; y construye el dashboard alrededor de esas respuestas.</p>
+        </div>
+
+        <div class="cta-practica">
+          <h3>Explora el Dashboard de Ex&oacute;genaDIAN</h3>
+          <p>Mira c&oacute;mo se ve un dashboard contable profesional y &uacute;salo de referencia para crear el tuyo.</p>
+          <a href="../dashboard.html">Ver Dashboard &rarr;</a>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-6" class="prev" onclick="navigateTo(6)">&larr; M&oacute;dulo 6</a>
+        <a href="#modulo-8" class="next" onclick="navigateTo(8)">M&oacute;dulo 8: Tu firma al siguiente nivel &rarr;</a>
+      </div>
+    </section>
+
+    <!-- ===================== M&Oacute;DULO 8 ===================== -->
+    <section id="modulo-8" class="modulo-section" style="display:none">
+      <div class="mod-header">
+        <div class="mod-breadcrumb">
+          <a href="../escuela.html">Escuela</a> &rsaquo; <a href="#">IA y Automatizaci&oacute;n</a> &rsaquo; M&oacute;dulo 8
+        </div>
+        <div class="mod-num">M&oacute;dulo 8 de 8</div>
+        <h1>Pr&aacute;ctica: lleva tu firma al siguiente nivel</h1>
+        <p class="mod-desc">Ya tienes el mapa completo. Ahora es cuesti&oacute;n de conectar los puntos. Aqu&iacute; ves el flujo completo de una firma contable automatizada &mdash; y el plan para llegar ah&iacute; en 6 meses.</p>
+      </div>
+
+      <div class="content-block">
+        <h2>El flujo completo de una firma automatizada</h2>
+        <p>Este es el camino que recorre la informaci&oacute;n desde tu software contable hasta la declaraci&oacute;n presentada ante la DIAN. Cada paso ya tiene una herramienta disponible:</p>
+
+        <div class="flow-diagram">
+          <h4>Flujo de automatizaci&oacute;n contable</h4>
+          <span class="flow-step">Software Contable (Siigo / WO / Helisa / Alegra)</span>
+          <span class="flow-arrow">&darr;</span>
+          <span class="flow-step">Exportar a Excel</span>
+          <span class="flow-arrow">&darr;</span>
+          <span class="flow-step">Google Sheets (tu data lake contable)</span>
+          <span class="flow-arrow">&darr;</span>
+          <span class="flow-step">Apps Script (c&aacute;lculos autom&aacute;ticos)</span>
+          <span class="flow-arrow">&darr;</span>
+          <span class="flow-step">Borradores autom&aacute;ticos (IVA, ReteFte, Renta)</span>
+          <span class="flow-arrow">&darr;</span>
+          <span class="flow-step">Ex&oacute;genaDIAN (procesar + validar con IA)</span>
+          <span class="flow-arrow">&darr;</span>
+          <span class="flow-step">Dashboard (presentar al cliente)</span>
+          <span class="flow-arrow">&darr;</span>
+          <span class="flow-step">DIAN (presentar declaraciones con confianza)</span>
+        </div>
+
+        <h3>Roadmap realista para una firma peque&ntilde;a</h3>
+        <p>No tienes que hacer todo de una vez. Este es un plan de 6 meses que funciona:</p>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Mes</th><th>Objetivo</th><th>Resultado</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Mes 1</strong></td>
+              <td>Organizar datos en Google Sheets: exportar balances de tus 3 clientes principales, crear estructura de carpetas en Drive</td>
+              <td>Datos accesibles desde cualquier lugar</td>
+            </tr>
+            <tr>
+              <td><strong>Mes 2</strong></td>
+              <td>Primer Apps Script: automatizar el c&aacute;lculo de IVA generado y descontable para un cliente</td>
+              <td>Borrador de IVA 300 en 2 segundos</td>
+            </tr>
+            <tr>
+              <td><strong>Mes 3</strong></td>
+              <td>Crear un dashboard b&aacute;sico en Sheets para tu mejor cliente: ingresos, gastos, impuestos, cartera</td>
+              <td>Cliente impresionado, percepci&oacute;n de valor</td>
+            </tr>
+            <tr>
+              <td><strong>Mes 4</strong></td>
+              <td>Replicar el script de IVA y el dashboard para los dem&aacute;s clientes</td>
+              <td>Proceso estandarizado y escalable</td>
+            </tr>
+            <tr>
+              <td><strong>Mes 5</strong></td>
+              <td>Automatizar retenci&oacute;n en la fuente: script para calcular ReteFte mensual</td>
+              <td>Dos formularios automatizados (300 + 350)</td>
+            </tr>
+            <tr>
+              <td><strong>Mes 6</strong></td>
+              <td>Flujo completo operativo: software &rarr; Sheets &rarr; scripts &rarr; Ex&oacute;genaDIAN &rarr; dashboard &rarr; DIAN</td>
+              <td>Firma contable del siglo XXI</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="norma">
+          <div class="norma-header">
+            <div class="norma-icon">&#9878;</div>
+            <h4>Lo que ya existe en Ex&oacute;genaDIAN</h4>
+          </div>
+          <blockquote>
+            No necesitas construir todo desde cero. <strong>Estas herramientas ya est&aacute;n listas para usar:</strong> Auditor DIAN con IA, Chat con el Estatuto Tributario, Asistente para Requerimientos, Procesador de IVA 300, Procesador de Renta 110, Procesador de ReteFte 350, Procesador de Ex&oacute;gena, Dashboard Contable y Mi Oficina Contable.
+          </blockquote>
+          <div class="norma-aplicacion">
+            <strong>Tu trabajo:</strong> conectar los puntos. Los datos de tu software contable alimentan estas herramientas. Los resultados de estas herramientas alimentan tu dashboard. El dashboard alimenta la confianza de tu cliente.
+          </div>
+        </div>
+
+        <h3>Todas las herramientas en un solo lugar</h3>
+
+        <table class="tabla-norm">
+          <thead>
+            <tr><th>Herramienta</th><th>Para qu&eacute; sirve</th><th>Enlace</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Auditor DIAN</strong></td>
+              <td>Revisar tu balance con ojos de fiscalizador</td>
+              <td><a href="../ia-analisis-balance.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
+            </tr>
+            <tr>
+              <td><strong>Chat Estatuto Tributario</strong></td>
+              <td>Consultar normativa con IA entrenada en el ET</td>
+              <td><a href="../ia-chat-et.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
+            </tr>
+            <tr>
+              <td><strong>Asistente Requerimientos</strong></td>
+              <td>Generar borradores de respuesta a requerimientos DIAN</td>
+              <td><a href="../ia-respuesta-requerimiento.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
+            </tr>
+            <tr>
+              <td><strong>IVA 300</strong></td>
+              <td>Procesar balance &rarr; borrador formulario 300</td>
+              <td><a href="../iva300.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
+            </tr>
+            <tr>
+              <td><strong>Renta 110</strong></td>
+              <td>Procesar balance &rarr; borrador formulario 110</td>
+              <td><a href="../renta110.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
+            </tr>
+            <tr>
+              <td><strong>ReteFte 350</strong></td>
+              <td>Procesar balance &rarr; borrador formulario 350</td>
+              <td><a href="../retefuente350.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
+            </tr>
+            <tr>
+              <td><strong>Ex&oacute;gena</strong></td>
+              <td>Procesar balance &rarr; archivos XML de informaci&oacute;n ex&oacute;gena</td>
+              <td><a href="../index.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
+            </tr>
+            <tr>
+              <td><strong>Dashboard Contable</strong></td>
+              <td>Visualizar indicadores financieros del cliente</td>
+              <td><a href="../dashboard.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
+            </tr>
+            <tr>
+              <td><strong>Mi Oficina Contable</strong></td>
+              <td>Gestionar obligaciones y clientes de tu firma</td>
+              <td><a href="../mi-oficina.html" style="color:var(--green-700);font-weight:600">Abrir &rarr;</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="tip">
+          <div class="tip-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <h4>Tu siguiente paso concreto</h4>
+          </div>
+          <p><strong>Hoy mismo:</strong> abre el Auditor DIAN, sube el balance de prueba de tu cliente principal, y mira qu&eacute; encuentra. Eso es todo. Un paso. Ma&ntilde;ana das el siguiente. En 6 meses tu firma opera de forma completamente diferente.</p>
+        </div>
+
+        <div class="error-comun">
+          <div class="error-comun-header">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#BE123C" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <h4>El &uacute;nico error imperdonable</h4>
+          </div>
+          <p><strong>Seguir haciendo todo manual.</strong> No porque sea &ldquo;malo&rdquo; &mdash; es que es insostenible. Tus clientes esperan m&aacute;s, la DIAN cruza m&aacute;s, la competencia se automatiza m&aacute;s. El contador que no se adapta no desaparece de golpe: se va quedando sin clientes lentamente. La buena noticia es que adaptarse nunca fue tan f&aacute;cil como hoy.</p>
+        </div>
+
+        <div style="background:linear-gradient(135deg,var(--green-50),#A7F3D0);border:2px solid var(--green-400);border-radius:16px;padding:36px 28px;text-align:center;margin:32px 0">
+          <h3 style="font-family:'Fraunces',serif;font-size:1.4rem;font-weight:700;color:var(--green-900);margin-bottom:12px">Tu competencia sigue haciendo todo manual. T&uacute; ya no.</h3>
+          <p style="font-size:.95rem;color:var(--green-800);margin-bottom:20px;max-width:500px;margin-left:auto;margin-right:auto">Tienes las herramientas, tienes el plan, tienes el conocimiento. Solo falta empezar. Y el mejor momento para empezar es ahora.</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <a href="../ia-analisis-balance.html" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--green-700);color:#fff;border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;box-shadow:0 4px 16px rgba(5,150,105,.3);transition:all .2s" onmouseover="this.style.background='#064E3B'" onmouseout="this.style.background='#047857'">Empezar con el Auditor DIAN &rarr;</a>
+            <a href="../escuela.html" style="display:inline-flex;align-items:center;gap:8px;padding:14px 28px;background:var(--white);color:var(--green-800);border:2px solid var(--green-300);border-radius:12px;font-weight:700;font-size:.95rem;text-decoration:none;transition:all .2s" onmouseover="this.style.background='#ECFDF5'" onmouseout="this.style.background='#FFF'">Volver a la Escuela &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="mod-nav">
+        <a href="#modulo-7" class="prev" onclick="navigateTo(7)">&larr; M&oacute;dulo 7</a>
+        <a href="../escuela.html" class="next" style="background:var(--gray-800)">Volver a la Escuela &rarr;</a>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Abrir men&uacute;">&#9776;</button>
+
+<script>
+/* Module navigation */
+var currentModule = 1;
+var totalModules = 8;
+
+function navigateTo(n) {
+  // Hide all modules
+  document.querySelectorAll('.modulo-section').forEach(function(s){ s.style.display = 'none'; });
+  // Show target
+  var target = document.getElementById('modulo-' + n);
+  if (target) target.style.display = 'block';
+  // Update sidebar
+  var links = document.querySelectorAll('.sidebar-nav a');
+  links.forEach(function(a, i) {
+    a.classList.remove('active');
+    if (i < n - 1) a.classList.add('completed');
+    if (i === n - 1) a.classList.add('active');
+  });
+  // Update progress
+  var pct = Math.round((n / totalModules) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  currentModule = n;
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  // Track
+  if (typeof gtag !== 'undefined') gtag('event', 'escuela_modulo', { curso: 'ia-automatizacion', modulo: n });
+}
+
+/* Sidebar toggle for mobile */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+</script>
+</body>
+</html>
